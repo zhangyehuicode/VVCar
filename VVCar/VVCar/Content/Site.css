@@ -1,0 +1,130 @@
+﻿body {
+    font-family: "Microsoft Yahei UI", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    /*padding-top: 50px;
+    padding-bottom: 20px;*/
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Styles for validation helpers */
+.field-validation-error {
+    color: #a94442;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    background-color: #f2dede;
+    border-color: #a94442;
+}
+
+.validation-summary-errors {
+    font-weight: bold;
+    color: #a94442;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/* Styles for icons */
+.icon-spin {
+    -webkit-animation: icon-spin 2s infinite linear;
+    animation: icon-spin 2s infinite linear;
+}
+
+@-webkit-keyframes icon-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes icon-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+/*loginpage*/
+
+body {
+    /*background: url("image/loginbgimg.jpg") no-repeat;
+    background-attachment: fixed;
+    background-size: cover;*/
+    background: #1f2025;
+}
+
+.main {
+    /*position: relative;
+    background: hsla(0,0%,100%,.3);
+    overflow: hidden;
+    filter: blur(8px);*/
+    width: 400px;
+    height: 300px;
+    margin: 18% auto 0 auto;
+    text-align: center;
+}
+
+    .main::before {
+        /*content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: -30px;
+        */
+    }
+
+input {
+    width: 300px;
+    height: 45px;
+    border: none;
+    background: #fff;
+    color: #000;
+    margin: 5px;
+    padding-left: 10px;
+}
+
+    input::-webkit-input-placeholder {
+        color: #000;
+        opacity: .2;
+    }
+
+.loginbtn {
+    width: 300px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 15px;
+    color: #000;
+    background: #fff;
+    margin: 10px auto;
+    cursor: pointer;
+}
+
+.loginglyphicon {
+    display: none;
+}
+
+.errorinput {
+    border: 1px #ff0000 solid;
+}

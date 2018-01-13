@@ -1,0 +1,100 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+    <div id="vuecon" class="main">
+        <input class="username" placeholder="用户名" type="text" v-model="UserName" />
+        <input class="password" placeholder="密码" type="text" onfocus="this.type='password'" v-model="Password" />
+        <div class="loginbtn" v-on:click="login">
+            <span class="glyphicon glyphicon-refresh icon-spin" hidden="hidden"></span>
+            <span>登 录</span>
+        </div>
+        <div class="alert alert-danger operationError" role="alert" style="display: none;"></div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerycookie")
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script type="text/javascript">
+        var _viewModel = new Vue({
+            el: '#vuecon',
+            data: {
+                UserName: '',
+                Password: '',
+            },
+            methods: {
+                login: function (event) {
+                    login(event);
+                }
+            }
+        });
+        function login(event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            //var validater = $('#formLogin').validate();
+            //if (!validater.checkForm()) {
+            //    validater.showErrors();
+            //    return;
+            //}
+            if (_viewModel.UserName == '' || _viewModel.Password == '') {
+                if (_viewModel.UserName == '')
+                    $('.username').addClass('errorinput');
+                if (_viewModel.Password == '')
+                    $('.password').addClass('errorinput');
+                return;
+            }
+            $('.loginbtn').text('登录中...');
+            $('.glyphicon').show();
+            $('.loginbtn').attr("disabled", true);
+            $.ajax({
+                url: "/Login",
+                data: {
+                    UserName: _viewModel.UserName,
+                    Password: _viewModel.Password,
+                },
+                type: 'POST',
+                beforeSend: function () {
+                    $('.operationError').hide();
+                },
+                success: function (data) {
+                    if (data != null && data.IsSuccess == true) {
+                        $.cookie('lastLoginUser', data.UserCode);
+                        //var txtCompanyCode = $('#CompanyCode');
+                        //if (txtCompanyCode != null) {
+                        //    $.cookie('CompanyCode', txtCompanyCode.val());
+                        //}
+                        sessionStorage.setItem('userCode', data.UserCode);
+                        sessionStorage.setItem('userName', data.UserName);
+                        sessionStorage.setItem('userToken', data.UserToken);
+                        window.location.href = "/";
+                    } else {
+                        $('.operationError').text(data.ErrorMsg).show();
+                        $('.loginbtn').text('登录');
+                        $('.glyphicon').hide();
+                        $('.loginbtn').attr("disabled", false);
+                    }
+                },
+                error: function () {
+                    $('.operationError').text('登录失败，请重试。错误原因：未知错误。').show();
+                    $('.loginbtn').text('登录');
+                    $('.glyphicon').hide();
+                    $('.loginbtn').attr("disabled", false);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1381 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{47ADD088-9691-428B-A11E-B2CB86AB1C41}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VVCar</RootNamespace>
+    <AssemblyName>VVCar</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Owin, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Owin.4.0.0\lib\net45\Autofac.Integration.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.WebApi2.4.0.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi.Owin, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.WebApi2.Owin.4.0.0\lib\net45\Autofac.Integration.WebApi.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Cors, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Cors.3.1.0\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Cors, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.0.0\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http.Owin, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.3\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.Agent.Intercept">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.DependencyCollector">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.2.0\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.PerfCounterCollector">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.2.0\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.2.0\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.WindowsServer">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.2.0\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.Web">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.2.0\lib\net45\Microsoft.AI.Web.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\InitializeConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.App.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
+    <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
+    <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
+    <Compile Include="Areas\HelpPage\HelpPageAreaRegistration.cs" />
+    <Compile Include="Areas\HelpPage\HelpPageConfigurationExtensions.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\CollectionModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ComplexTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\DictionaryModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumValueDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\IModelDocumentationProvider.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\KeyValuePairModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescriptionGenerator.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameAttribute.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameHelper.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterAnnotation.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\SimpleTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Models\HelpPageApiModel.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleGenerator.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleKey.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\ImageSample.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\InvalidSample.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\ObjectGenerator.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
+    <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\Api\DepartmentController.cs" />
+    <Compile Include="Controllers\Api\PermissionController.cs" />
+    <Compile Include="Controllers\Api\RoleController.cs" />
+    <Compile Include="Controllers\Api\SysMenuController.cs" />
+    <Compile Include="Controllers\Api\UserController.cs" />
+    <Compile Include="Controllers\Api\UserRoleController.cs" />
+    <Compile Include="Controllers\BaseApiController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\LoginResult.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ApiAuthorizeAttribute.cs" />
+    <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Providers\AspNetSessionProvider.cs" />
+    <Compile Include="Scripts\plugin\UEditor\net\App_Code\Config.cs" />
+    <Compile Include="Scripts\plugin\UEditor\net\App_Code\ConfigHandler.cs" />
+    <Compile Include="Scripts\plugin\UEditor\net\App_Code\CrawlerHandler.cs" />
+    <Compile Include="Scripts\plugin\UEditor\net\App_Code\Handler.cs" />
+    <Compile Include="Scripts\plugin\UEditor\net\App_Code\ListFileHandler.cs" />
+    <Compile Include="Scripts\plugin\UEditor\net\App_Code\NotSupportedHandler.cs" />
+    <Compile Include="Scripts\plugin\UEditor\net\App_Code\PathFormater.cs" />
+    <Compile Include="Scripts\plugin\UEditor\net\App_Code\UploadHandler.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\daterangepicker.css" />
+    <Content Include="Content\ext-custom.css" />
+    <Content Include="Content\icons.css" />
+    <Content Include="Content\image\loginbgimg.jpg" />
+    <Content Include="Content\jquery-weui.css" />
+    <Content Include="Content\jquery-weui.min.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\ConsumeReport.js" />
+    <Content Include="Scripts\app\controller\Coupon.js" />
+    <Content Include="Scripts\app\controller\DataDict.js" />
+    <Content Include="Scripts\app\controller\Department.js" />
+    <Content Include="Scripts\app\controller\Login.js" />
+    <Content Include="Scripts\app\controller\Main.js" />
+    <Content Include="Scripts\app\controller\MakeCodeRule.js" />
+    <Content Include="Scripts\app\controller\Member.js" />
+    <Content Include="Scripts\app\controller\MemberCard.js" />
+    <Content Include="Scripts\app\controller\MemberCardActivate.js" />
+    <Content Include="Scripts\app\controller\MemberCardType.js" />
+    <Content Include="Scripts\app\controller\MemberGrade.js" />
+    <Content Include="Scripts\app\controller\MemberGroup.js" />
+    <Content Include="Scripts\app\controller\MemberPoint.js" />
+    <Content Include="Scripts\app\controller\MemberRecharge.js" />
+    <Content Include="Scripts\app\controller\MemberTrade.js" />
+    <Content Include="Scripts\app\controller\Permission.js" />
+    <Content Include="Scripts\app\controller\PointExchangeCoupon.js" />
+    <Content Include="Scripts\app\controller\RechargePlan.js" />
+    <Content Include="Scripts\app\controller\RechargeReport.js" />
+    <Content Include="Scripts\app\controller\Role.js" />
+    <Content Include="Scripts\app\controller\RolePermission.js" />
+    <Content Include="Scripts\app\controller\SysMenu.js" />
+    <Content Include="Scripts\app\controller\SystemSetting.js" />
+    <Content Include="Scripts\app\controller\User.js" />
+    <Content Include="Scripts\app\controller\UserRole.js" />
+    <Content Include="Scripts\app\controller\WeChatFans.js" />
+    <Content Include="Scripts\app\model\BaseData\CardInfoModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CardThemeCategoryMenuModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CardThemeCategoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CouponTemplateInfoModel.js" />
+    <Content Include="Scripts\app\model\BaseData\DepartmentModel.js" />
+    <Content Include="Scripts\app\model\BaseData\IDCodeNameModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MakeCodeRuleModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberBaseInfoModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberCardModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberCardThemeGroupModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberCardThemeModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberCardTypeModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberGradeModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberGradeRightModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberGroupModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberPointModel.js" />
+    <Content Include="Scripts\app\model\BaseData\PermissionFuncModel.js" />
+    <Content Include="Scripts\app\model\BaseData\PointExchangeCouponModel.js" />
+    <Content Include="Scripts\app\model\BaseData\RechargeHistoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\RechargePlanModel.js" />
+    <Content Include="Scripts\app\model\BaseData\RoleModel.js" />
+    <Content Include="Scripts\app\model\BaseData\RolePermissionModel.js" />
+    <Content Include="Scripts\app\model\BaseData\SysMenuModel.js" />
+    <Content Include="Scripts\app\model\BaseData\SysNavMenuModel.js" />
+    <Content Include="Scripts\app\model\BaseData\SystemSettingModel.js" />
+    <Content Include="Scripts\app\model\BaseData\TradeHistoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\UserModel.js" />
+    <Content Include="Scripts\app\model\BaseData\UserRoleModel.js" />
+    <Content Include="Scripts\app\model\BaseData\ValidCouponTemplateModel.js" />
+    <Content Include="Scripts\app\model\BaseData\WeChatFansModel.js" />
+    <Content Include="Scripts\app\model\BaseData\WeChatFansTagModel.js" />
+    <Content Include="Scripts\app\model\DataDict\DataDictModel.js" />
+    <Content Include="Scripts\app\model\DataDict\DataDictTypeModel.js" />
+    <Content Include="Scripts\app\store\BaseData\CardThemeCategoryMenuStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CardThemeCategoryStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CouponTemplateInfoStore.js" />
+    <Content Include="Scripts\app\store\BaseData\DepartmentStore.js" />
+    <Content Include="Scripts\app\store\BaseData\DepartmentTreeStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MakeCodeRuleStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MemberCardStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MemberCardThemeGroupStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MemberCardThemeStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MemberCardTypeStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MemberGradeStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MemberGroupStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MemberGroupTreeStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MemberPointStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MemberStore.js" />
+    <Content Include="Scripts\app\store\BaseData\PermissionStore.js" />
+    <Content Include="Scripts\app\store\BaseData\PointExchangeCouponStore.js" />
+    <Content Include="Scripts\app\store\BaseData\PosProductStore.js" />
+    <Content Include="Scripts\app\store\BaseData\PosRetailPlanStore.js" />
+    <Content Include="Scripts\app\store\BaseData\RechargeHistoryReportStore.js" />
+    <Content Include="Scripts\app\store\BaseData\RechargeHistoryStore.js" />
+    <Content Include="Scripts\app\store\BaseData\RechargePlanStore.js" />
+    <Content Include="Scripts\app\store\BaseData\RoleStore.js" />
+    <Content Include="Scripts\app\store\BaseData\SysMenuStore.js" />
+    <Content Include="Scripts\app\store\BaseData\SysNavMenuStore.js" />
+    <Content Include="Scripts\app\store\BaseData\SystemSettingStore.js" />
+    <Content Include="Scripts\app\store\BaseData\TradeHistoryStore.js" />
+    <Content Include="Scripts\app\store\BaseData\UserRoleStore.js" />
+    <Content Include="Scripts\app\store\BaseData\UserStore.js" />
+    <Content Include="Scripts\app\store\BaseData\ValidCouponTemplateStore.js" />
+    <Content Include="Scripts\app\store\BaseData\WeChatFansStore.js" />
+    <Content Include="Scripts\app\store\BaseData\WeChatFansTagStore.js" />
+    <Content Include="Scripts\app\store\BaseData\WeChatFansTagTreeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\AdjustMemberPointTypeDicStore.js" />
+    <Content Include="Scripts\app\store\DataDict\AdjustTypeDicStore.js" />
+    <Content Include="Scripts\app\store\DataDict\BusinessTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\ConsumeReportTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\ConsumeTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\CouponTemplateTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\CouponTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\DataDictStore.js" />
+    <Content Include="Scripts\app\store\DataDict\DataDictTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\DataDictValueStore.js" />
+    <Content Include="Scripts\app\store\DataDict\EnableDisableTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\MemberCardStatusStore.js" />
+    <Content Include="Scripts\app\store\DataDict\MemberGradeStatusStore.js" />
+    <Content Include="Scripts\app\store\DataDict\PaymentTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\PermissionTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\RechargePlanTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\RechargeReportTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\SexStore.js" />
+    <Content Include="Scripts\app\store\DataDict\TradeSourceStore.js" />
+    <Content Include="Scripts\app\store\DataDict\UserStore.js" />
+    <Content Include="Scripts\app\store\DataDict\YesNoTypeStore.js" />
+    <Content Include="Scripts\app\store\Reporting\ConsumeReportStore.js" />
+    <Content Include="Scripts\app\store\Reporting\RechargeReportStore.js" />
+    <Content Include="Scripts\app\view\ConsumeReport\ConsumeReport.js" />
+    <Content Include="Scripts\app\view\Coupon\Coupon.js" />
+    <Content Include="Scripts\app\view\DataDict\DataDictList.js" />
+    <Content Include="Scripts\app\view\Department\DepartmentEdit.js" />
+    <Content Include="Scripts\app\view\Department\DepartmentList.js" />
+    <Content Include="Scripts\app\view\Index.js" />
+    <Content Include="Scripts\app\view\Login.js" />
+    <Content Include="Scripts\app\view\Main.js" />
+    <Content Include="Scripts\app\view\MakeCodeRule\MakeCodeRuleList.js" />
+    <Content Include="Scripts\app\view\MemberCardActivate\MemberCardActivate.js" />
+    <Content Include="Scripts\app\view\MemberCardTheme\MemberCardTheme.js" />
+    <Content Include="Scripts\app\view\MemberCardTheme\MemberCardThemeEdit.js" />
+    <Content Include="Scripts\app\view\MemberCardTheme\MemberCardThemeGroup.js" />
+    <Content Include="Scripts\app\view\MemberCardTheme\MemberCardThemeGroupEdit.js" />
+    <Content Include="Scripts\app\view\MemberCardTheme\MenberChoseDepartmentEdit.js" />
+    <Content Include="Scripts\app\view\MemberCardType\MemberCardTypeEdit.js" />
+    <Content Include="Scripts\app\view\MemberCardType\MemberCardTypeList.js" />
+    <Content Include="Scripts\app\view\MemberCard\GenerateMemberCard.js" />
+    <Content Include="Scripts\app\view\MemberCard\MemberCard.js" />
+    <Content Include="Scripts\app\view\MemberCard\MemberCardEdit.js" />
+    <Content Include="Scripts\app\view\MemberCard\ModifyCardRemark.js" />
+    <Content Include="Scripts\app\view\MemberGrade\MemberGradeEdit.js" />
+    <Content Include="Scripts\app\view\MemberGrade\MemberGradeList.js" />
+    <Content Include="Scripts\app\view\MemberGroup\MemberGroup.js" />
+    <Content Include="Scripts\app\view\MemberGroup\MemberGroupEdit.js" />
+    <Content Include="Scripts\app\view\MemberGroup\MemberGroupList.js" />
+    <Content Include="Scripts\app\view\MemberPoint\MemberPoint.js" />
+    <Content Include="Scripts\app\view\MemberRecharge\MemberRecharge.js" />
+    <Content Include="Scripts\app\view\MemberRecharge\RechargeHistory.js" />
+    <Content Include="Scripts\app\view\MemberTrade\MemberTrade.js" />
+    <Content Include="Scripts\app\view\MemberTrade\TradeHistory.js" />
+    <Content Include="Scripts\app\view\MemberTrade\VerifyPassword.js" />
+    <Content Include="Scripts\app\view\Member\AdjustBalance.js" />
+    <Content Include="Scripts\app\view\Member\AdjustMemberPoint.js" />
+    <Content Include="Scripts\app\view\Member\ChangeCard.js" />
+    <Content Include="Scripts\app\view\Member\ChangeMemberGroup.js" />
+    <Content Include="Scripts\app\view\Member\EditMember.js" />
+    <Content Include="Scripts\app\view\Member\Member.js" />
+    <Content Include="Scripts\app\view\Permission\PermissionEdit.js" />
+    <Content Include="Scripts\app\view\Permission\PermissionList.js" />
+    <Content Include="Scripts\app\view\Permission\RolePermission.js" />
+    <Content Include="Scripts\app\view\PointExchangeCoupon\PointExchangeCoupon.js" />
+    <Content Include="Scripts\app\view\PointExchangeCoupon\PointExchangeCouponEdit.js" />
+    <Content Include="Scripts\app\view\RechargePlan\RechargePlanCoupon.js" />
+    <Content Include="Scripts\app\view\RechargePlan\RechargePlanEdit.js" />
+    <Content Include="Scripts\app\view\RechargePlan\RechargePlanList.js" />
+    <Content Include="Scripts\app\view\RechargeReport\RechargeReport.js" />
+    <Content Include="Scripts\app\view\RechargeReport\RHDepartmentReport.js" />
+    <Content Include="Scripts\app\view\RechargeReport\RHMemberReport.js" />
+    <Content Include="Scripts\app\view\RechargeReport\RHPayTypeReport.js" />
+    <Content Include="Scripts\app\view\Role\RoleEdit.js" />
+    <Content Include="Scripts\app\view\Role\RoleList.js" />
+    <Content Include="Scripts\app\view\selector\CouponTemplateSelector.js" />
+    <Content Include="Scripts\app\view\selector\PosProductSelector.js" />
+    <Content Include="Scripts\app\view\selector\PosRetailPlanSelector.js" />
+    <Content Include="Scripts\app\view\selector\UserSelector.js" />
+    <Content Include="Scripts\app\view\SysMenu\AddSysMenu.js" />
+    <Content Include="Scripts\app\view\SysMenu\SysMenu.js" />
+    <Content Include="Scripts\app\view\SysMenu\SysMenuTreeComboBox.js" />
+    <Content Include="Scripts\app\view\SystemSetting\SystemSetting.js" />
+    <Content Include="Scripts\app\view\UserRole\UserRole.js" />
+    <Content Include="Scripts\app\view\User\ChangePassword.js" />
+    <Content Include="Scripts\app\view\User\UserEdit.js" />
+    <Content Include="Scripts\app\view\User\UserList.js" />
+    <Content Include="Scripts\app\view\WeChatFans\WeChatFans.js" />
+    <Content Include="Scripts\app\view\WeChatFans\WeChatFansSetTag.js" />
+    <Content Include="Scripts\app\view\WeChatFans\WeChatFansTagEdit.js" />
+    <Content Include="Scripts\app\view\WeChatFans\WeChatFansTagList.js" />
+    <Content Include="Scripts\bootbox.js" />
+    <Content Include="Scripts\bootbox.min.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\bootstrap-paginator.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Web.config" />
+    <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\ResourceModel.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\Index.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\TextSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\SimpleTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Samples.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Parameters.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ModelDescriptionLink.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\KeyValuePairModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\InvalidSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ImageSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageApiModel.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\EnumTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\DictionaryModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ComplexTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="Scripts\CouponCenter.js" />
+    <Content Include="Scripts\daterangepicker.js" />
+    <Content Include="Scripts\echarts.min.js" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\fonts\ext-watermark.eot" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\fonts\ext-watermark.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\fonts\ext-watermark.woff" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\selection.json" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\font-ext\fonts\ExtJS.eot" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\font-ext\fonts\ExtJS.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\font-ext\fonts\ExtJS.woff" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\fonts\OpenSans-Bold.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\fonts\OpenSans-BoldItalic.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\fonts\OpenSans-ExtraBold.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\fonts\OpenSans-ExtraBoldItalic.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\fonts\OpenSans-Italic.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\fonts\OpenSans-Light.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\fonts\OpenSans-LightItalic.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\fonts\OpenSans-Regular.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\fonts\OpenSans-Semibold.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\fonts\OpenSans-SemiboldItalic.ttf" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\Readme.md" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\demo-files\demo.css" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\demo-files\demo.js" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\demo.html" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\fonts\ext-watermark.svg" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\Read Me.txt" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\style.css" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\font-ext\fonts\ExtJS.svg" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-arrow-open-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-arrow-open.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-scroll-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-scroll-right.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-split-arrow-open-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-split-arrow-open.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-split-arrow-over-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-split-arrow-over.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-split-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\breadcrumb\default-split-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn-group\btn-group-default-framed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn-group\btn-group-default-framed-notitle-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn-group\btn-group-default-framed-notitle-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn-group\btn-group-default-framed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-disabled-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-disabled-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-focus-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-focus-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-focus-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-focus-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-focus-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-focus-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-large-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-disabled-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-disabled-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-focus-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-focus-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-focus-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-focus-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-focus-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-focus-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-medium-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-disabled-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-disabled-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-focus-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-focus-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-focus-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-focus-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-focus-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-focus-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-small-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-disabled-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-disabled-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-focus-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-focus-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-focus-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-focus-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-focus-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-focus-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-large-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-disabled-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-disabled-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-focus-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-focus-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-focus-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-focus-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-focus-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-focus-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-medium-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-disabled-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-disabled-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-focus-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-focus-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-focus-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-focus-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-focus-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-focus-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-default-toolbar-small-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-large-focus-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-large-focus-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-large-focus-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-large-focus-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-large-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-large-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-large-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-large-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-medium-focus-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-medium-focus-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-medium-focus-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-medium-focus-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-medium-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-medium-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-medium-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-medium-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-small-focus-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-small-focus-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-small-focus-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-small-focus-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-small-over-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-small-over-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-small-pressed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\btn\btn-plain-toolbar-small-pressed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-large-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-large-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-large-s-arrow-b-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-large-s-arrow-b.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-large-s-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-large-s-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-medium-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-medium-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-medium-s-arrow-b-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-medium-s-arrow-b.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-medium-s-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-medium-s-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-small-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-small-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-small-s-arrow-b-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-small-s-arrow-b.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-small-s-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-small-s-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-large-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-large-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-large-s-arrow-b-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-large-s-arrow-b.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-large-s-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-large-s-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-medium-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-medium-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-medium-s-arrow-b-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-medium-s-arrow-b.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-medium-s-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-medium-s-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-small-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-small-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-small-s-arrow-b-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-small-s-arrow-b.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-small-s-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\default-toolbar-small-s-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\grid-cell-small-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\grid-cell-small-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\grid-cell-small-s-arrow-b.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\grid-cell-small-s-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\grid-cell-small-s-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-large-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-large-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-large-s-arrow-b-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-large-s-arrow-b.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-large-s-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-large-s-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-medium-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-medium-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-medium-s-arrow-b-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-medium-s-arrow-b.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-medium-s-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-medium-s-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-small-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-small-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-small-s-arrow-b-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-small-s-arrow-b.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-small-s-arrow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\button\plain-toolbar-small-s-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\datepicker\arrow-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\datepicker\arrow-right.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\datepicker\month-arrow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\dd\drop-add.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\dd\drop-no.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\dd\drop-yes.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\editor\tb-sprite.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\fieldset\collapse-tool.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\checkbox.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\clear-trigger-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\clear-trigger.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\date-trigger-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\date-trigger.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\exclamation.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\radio.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\search-trigger-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\search-trigger.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\spinner-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\spinner.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\tag-field-item-close.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\trigger-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\form\trigger.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid-row-editor-buttons\grid-row-editor-buttons-default-bottom-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid-row-editor-buttons\grid-row-editor-buttons-default-bottom-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid-row-editor-buttons\grid-row-editor-buttons-default-top-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid-row-editor-buttons\grid-row-editor-buttons-default-top-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\col-move-bottom.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\col-move-top.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\columns.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\dd-insert-arrow-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\dd-insert-arrow-right.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\dirty-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\dirty.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\drop-no.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\drop-yes.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\filters\equals.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\filters\find.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\filters\greater_than.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\filters\less_than.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\group-by.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\group-collapse.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\group-expand.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\hd-pop.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\hmenu-asc.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\hmenu-desc.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\hmenu-lock.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\hmenu-unlock.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\loading.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\page-first.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\page-last.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\page-next.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\page-prev.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\pick-button.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\refresh.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\sort_asc.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\grid\sort_desc.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\loadmask\loading.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\magnify.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\menu\default-checked.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\menu\default-group-checked.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\menu\default-menu-parent-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\menu\default-menu-parent.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\menu\default-menubar-menu-parent.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\menu\default-scroll-bottom.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\menu\default-scroll-top.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\menu\default-unchecked.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-bottom-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-bottom-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-collapsed-bottom-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-collapsed-bottom-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-collapsed-left-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-collapsed-left-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-collapsed-left-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-collapsed-right-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-collapsed-right-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-collapsed-right-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-collapsed-top-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-collapsed-top-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-left-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-left-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-left-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-right-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-right-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-right-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-top-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-default-framed-top-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-bottom-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-bottom-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-collapsed-bottom-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-collapsed-bottom-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-collapsed-left-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-collapsed-left-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-collapsed-left-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-collapsed-right-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-collapsed-right-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-collapsed-right-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-collapsed-top-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-collapsed-top-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-left-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-left-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-left-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-right-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-right-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-right-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-top-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel-header\panel-header-light-framed-top-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel\panel-default-framed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel\panel-default-framed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel\panel-light-framed-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\panel\panel-light-framed-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\shared\icon-error.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\shared\icon-info.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\shared\icon-question.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\shared\icon-warning.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\sizer\e-handle.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\sizer\ne-handle.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\sizer\nw-handle.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\sizer\s-handle.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\sizer\se-handle.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\sizer\sw-handle.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\slider\slider-bg.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\slider\slider-thumb.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\slider\slider-v-bg.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\slider\slider-v-thumb.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-more-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-more.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-plain-more-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-plain-more.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-plain-scroll-bottom.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-plain-scroll-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-plain-scroll-right.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-plain-scroll-top.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-scroll-bottom.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-scroll-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-scroll-right.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab-bar\default-scroll-top.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-bottom-active-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-bottom-focus-active-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-bottom-focus-over-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-bottom-over-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-close.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-left-active-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-left-focus-active-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-left-focus-over-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-left-over-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-right-active-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-right-focus-active-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-right-focus-over-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-right-over-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-top-active-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-top-focus-active-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-top-focus-over-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tab\tab-default-top-over-fbg.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tip\tip-default-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tip\tip-default-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tip\tip-form-invalid-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tip\tip-form-invalid-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\toolbar\default-more-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\toolbar\default-more.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\toolbar\default-scroll-bottom.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\toolbar\default-scroll-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\toolbar\default-scroll-right.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\toolbar\default-scroll-top.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\toolbar\footer-more-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\toolbar\footer-more.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\toolbar\footer-scroll-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\toolbar\footer-scroll-right.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tools\tool-sprites-dark.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tools\tool-sprites.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\arrows-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\arrows.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-above.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-add.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-add.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-append.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-below.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-between.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-between.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-no.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-no.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-over.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-over.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-under.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-under.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-yes.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\drop-yes.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-end-minus-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-end-minus.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-end-plus-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-end-plus.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-end-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-end.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-line-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-line.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-minus-nl-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-minus-nl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-minus-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-minus.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-plus-nl-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-plus-nl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-plus-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-plus.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\elbow.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\folder-open-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\folder-open.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\folder-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\folder.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\leaf-rtl.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\leaf.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\tree\loading.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\util\splitter\mini-bottom.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\util\splitter\mini-left.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\util\splitter\mini-right.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\util\splitter\mini-top.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-bottom-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-bottom-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-collapsed-bottom-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-collapsed-bottom-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-collapsed-left-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-collapsed-left-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-collapsed-left-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-collapsed-right-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-collapsed-right-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-collapsed-right-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-collapsed-top-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-collapsed-top-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-left-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-left-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-left-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-right-corners-rtl.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-right-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-right-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-top-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window-header\window-header-default-top-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window\toast\fade-blue.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window\toast\fader.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window\toast\icon16_error.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window\toast\icon16_info.png" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window\window-default-corners.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\images\window\window-default-sides.gif" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\theme-triton-all.css" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\theme-triton-all_1.css" />
+    <Content Include="Scripts\ext\classic\theme-triton\resources\theme-triton-all_2.css" />
+    <Content Include="Scripts\ext\classic\theme-triton\theme-triton-debug.js" />
+    <Content Include="Scripts\ext\classic\theme-triton\theme-triton.js" />
+    <Content Include="Scripts\ext\ext-all-debug.js" />
+    <Content Include="Scripts\ext\ext-all.js" />
+    <Content Include="Scripts\ext\ext.js" />
+    <Content Include="Scripts\iscroll.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery-2.2.2.min.map" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <None Include="Scripts\jquery-2.2.2.intellisense.js" />
+    <Content Include="Scripts\jquery-2.2.2.js" />
+    <Content Include="Scripts\jquery-2.2.2.min.js" />
+    <Content Include="Scripts\jquery-fileupload\cors\jquery.postmessage-transport.js" />
+    <Content Include="Scripts\jquery-fileupload\cors\jquery.xdr-transport.js" />
+    <Content Include="Scripts\jquery-fileupload\jquery.fileupload-angular.js" />
+    <Content Include="Scripts\jquery-fileupload\jquery.fileupload-audio.js" />
+    <Content Include="Scripts\jquery-fileupload\jquery.fileupload-image.js" />
+    <Content Include="Scripts\jquery-fileupload\jquery.fileupload-jquery-ui.js" />
+    <Content Include="Scripts\jquery-fileupload\jquery.fileupload-process.js" />
+    <Content Include="Scripts\jquery-fileupload\jquery.fileupload-ui.js" />
+    <Content Include="Scripts\jquery-fileupload\jquery.fileupload-validate.js" />
+    <Content Include="Scripts\jquery-fileupload\jquery.fileupload-video.js" />
+    <Content Include="Scripts\jquery-fileupload\jquery.fileupload.js" />
+    <Content Include="Scripts\jquery-fileupload\jquery.iframe-transport.js" />
+    <Content Include="Scripts\jquery-fileupload\vendor\jquery.ui.widget.js" />
+    <Content Include="Scripts\jquery-weui.js" />
+    <Content Include="Scripts\jquery-weui.min.js" />
+    <Content Include="Scripts\jquery.cookie-1.4.1.min.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
+    <Content Include="Scripts\jquery.qrcode.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\JsBarcode.all.min.js" />
+    <Content Include="Scripts\knockout-3.4.0.debug.js" />
+    <Content Include="Scripts\knockout-3.4.0.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\anchor\anchor.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\attachment.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\attachment.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\attachment.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_chm.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_default.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_doc.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_exe.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_jpg.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_mp3.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_mv.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_pdf.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_ppt.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_psd.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_rar.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_txt.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\fileTypeImages\icon_xls.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\alignicon.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\alignicon.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\bg.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\file-icons.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\file-icons.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\icons.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\icons.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\image.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\progress.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\success.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\attachment\images\success.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\background\background.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\background\background.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\background\background.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\background\images\bg.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\background\images\success.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\charts\chart.config.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\charts\charts.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\charts\charts.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\charts\charts.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\charts\images\charts0.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\charts\images\charts1.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\charts\images\charts2.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\charts\images\charts3.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\charts\images\charts4.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\charts\images\charts5.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\emotion.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\emotion.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\emotion.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\images\0.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\images\bface.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\images\cface.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\images\fface.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\images\jxface2.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\images\neweditor-tab-bg.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\images\tface.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\images\wface.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\emotion\images\yface.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\gmap\gmap.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\help\help.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\help\help.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\help\help.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\image.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\image.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\image.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\images\alignicon.jpg" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\images\bg.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\images\icons.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\images\icons.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\images\image.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\images\progress.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\images\success.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\image\images\success.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\insertframe\insertframe.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\internal.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\link\link.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\map\map.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\map\show.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\music\music.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\music\music.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\music\music.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\preview\preview.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\addimg.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\brush.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\delimg.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\delimgH.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\empty.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\emptyH.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\eraser.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\redo.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\redoH.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\scale.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\scaleH.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\size.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\undo.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\images\undoH.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\scrawl.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\scrawl.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\scrawl\scrawl.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\searchreplace\searchreplace.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\searchreplace\searchreplace.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\snapscreen\snapscreen.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\spechars\spechars.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\spechars\spechars.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\table\dragicon.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\table\edittable.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\table\edittable.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\table\edittable.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\table\edittd.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\table\edittip.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\template\config.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\template\images\bg.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\template\images\pre0.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\template\images\pre1.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\template\images\pre2.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\template\images\pre3.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\template\images\pre4.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\template\template.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\template\template.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\template\template.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\bg.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\center_focus.jpg" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\file-icons.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\file-icons.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\icons.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\icons.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\image.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\left_focus.jpg" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\none_focus.jpg" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\progress.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\right_focus.jpg" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\success.gif" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\images\success.png" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\video.css" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\video.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\video\video.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\webapp\webapp.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\wordimage\fClipboard_ueditor.swf" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\wordimage\imageUploader.swf" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\wordimage\tangram.js" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\wordimage\wordimage.html" />
+    <Content Include="Scripts\plugin\UEditor\dialogs\wordimage\wordimage.js" />
+    <Content Include="Scripts\plugin\UEditor\index.html" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\en.js" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\addimage.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\alldeletebtnhoverskin.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\alldeletebtnupskin.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\background.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\button.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\copy.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\deletedisable.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\deleteenable.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\listbackground.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\localimage.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\music.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\rotateleftdisable.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\rotateleftenable.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\rotaterightdisable.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\rotaterightenable.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\en\images\upload.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\zh-cn\images\copy.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\zh-cn\images\localimage.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\zh-cn\images\music.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\zh-cn\images\upload.png" />
+    <Content Include="Scripts\plugin\UEditor\lang\zh-cn\zh-cn.js" />
+    <Content Include="Scripts\plugin\UEditor\net\net.sln" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\css\ueditor.css" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\css\ueditor.min.css" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\dialogbase.css" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\anchor.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\arrow.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\arrow_down.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\arrow_up.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\button-bg.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\cancelbutton.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\charts.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\cursor_h.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\cursor_h.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\cursor_v.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\cursor_v.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\dialog-title-bg.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\filescan.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\highlighted.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\icons-all.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\icons.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\icons.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\loaderror.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\loading.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\lock.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\neweditor-tab-bg.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\pagebreak.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\scale.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\sortable.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\spacer.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\sparator_v.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\table-cell-align.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\tangram-colorpicker.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\toolbar_bg.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\unhighlighted.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\upload.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\videologo.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\word.gif" />
+    <Content Include="Scripts\plugin\UEditor\themes\default\images\wordpaste.png" />
+    <Content Include="Scripts\plugin\UEditor\themes\iframe.css" />
+    <Content Include="Scripts\plugin\UEditor\third-party\codemirror\codemirror.css" />
+    <Content Include="Scripts\plugin\UEditor\third-party\codemirror\codemirror.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\adapters\mootools-adapter.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\adapters\mootools-adapter.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\adapters\prototype-adapter.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\adapters\prototype-adapter.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\adapters\standalone-framework.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\adapters\standalone-framework.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\highcharts-more.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\highcharts-more.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\highcharts.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\highcharts.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\annotations.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\annotations.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\canvas-tools.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\canvas-tools.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\data.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\data.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\drilldown.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\drilldown.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\exporting.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\exporting.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\funnel.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\funnel.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\heatmap.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\heatmap.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\map.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\map.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\no-data-to-display.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\modules\no-data-to-display.src.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\themes\dark-blue.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\themes\dark-green.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\themes\gray.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\themes\grid.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\highcharts\themes\skies.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\jquery-1.10.2.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\snapscreen\UEditorSnapscreen.exe" />
+    <Content Include="Scripts\plugin\UEditor\third-party\SyntaxHighlighter\shCore.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\SyntaxHighlighter\shCoreDefault.css" />
+    <Content Include="Scripts\plugin\UEditor\third-party\video-js\font\vjs.svg" />
+    <Content Include="Scripts\plugin\UEditor\third-party\video-js\video-js.css" />
+    <Content Include="Scripts\plugin\UEditor\third-party\video-js\video-js.min.css" />
+    <Content Include="Scripts\plugin\UEditor\third-party\video-js\video-js.swf" />
+    <Content Include="Scripts\plugin\UEditor\third-party\video-js\video.dev.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\video-js\video.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\Uploader.swf" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.css" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.custom.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.custom.min.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.flashonly.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.flashonly.min.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.html5only.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.html5only.min.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.min.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.withoutimage.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\webuploader\webuploader.withoutimage.min.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\xss.min.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\zeroclipboard\ZeroClipboard.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\zeroclipboard\ZeroClipboard.min.js" />
+    <Content Include="Scripts\plugin\UEditor\third-party\zeroclipboard\ZeroClipboard.swf" />
+    <Content Include="Scripts\plugin\UEditor\ueditor.all.js" />
+    <Content Include="Scripts\plugin\UEditor\ueditor.all.min.js" />
+    <Content Include="Scripts\plugin\UEditor\ueditor.config.js" />
+    <Content Include="Scripts\plugin\UEditor\ueditor.parse.js" />
+    <Content Include="Scripts\plugin\UEditor\ueditor.parse.min.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\vswd-ext_2.0.2.js" />
+    <None Include="Scripts\_references.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_ExtLayout.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Scripts\plugin\UEditor\net\config.json" />
+    <Content Include="Scripts\plugin\UEditor\net\controller.ashx" />
+    <Content Include="Scripts\plugin\UEditor\net\README.md" />
+    <Content Include="Scripts\plugin\UEditor\net\Web.config" />
+    <Content Include="Scripts\plugin\UEditor\third-party\jquery-1.10.2.min.map" />
+    <Content Include="Scripts\plugin\UEditor\third-party\video-js\font\vjs.eot" />
+    <Content Include="Scripts\plugin\UEditor\third-party\video-js\font\vjs.ttf" />
+    <Content Include="Scripts\plugin\UEditor\third-party\video-js\font\vjs.woff" />
+    <Content Include="Views\Login\Page.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Scripts\plugin\UEditor\net\Bin\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VVCar.BaseData.Domain\VVCar.BaseData.Domain.csproj">
+      <Project>{2575eda0-b3ba-473a-8ceb-455404bcdf06}</Project>
+      <Name>VVCar.BaseData.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YEF.Core\YEF.Core.csproj">
+      <Project>{3897ea87-56ff-459d-a321-9821c6269617}</Project>
+      <Name>YEF.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YEF.Data\YEF.Data.csproj">
+      <Project>{34ceeb57-6237-4154-ae0a-6ec82c4f2b8f}</Project>
+      <Name>YEF.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>52915</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:52915/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

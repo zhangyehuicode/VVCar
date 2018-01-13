@@ -1,0 +1,67 @@
+﻿.add {
+    background-image: url(icons/add.png) !important;
+}
+
+.delete {
+    background-image: url(icons/delete.png) !important;
+}
+
+.edit {
+    background-image: url(icons/edit.png) !important;
+}
+
+.refresh {
+    background-image: url(icons/refresh.png) !important;
+}
+
+.search {
+    background-image: url(icons/search_r.png) !important;
+}
+
+.list {
+    background-image: url(icons/list.png) !important;
+}
+
+.logout {
+    background-image: url(icons/logout.png) !important;
+}
+
+.expand {
+    background-image: url(icons/expand.png) !important;
+}
+
+.reset {
+    background-image: url(icons/reset.png) !important;
+}
+
+.restore {
+    background-image: url(icons/restore.png) !important;
+}
+
+.login {
+    background-image: url(icons/login3.png) !important;
+}
+
+.reportLoss {
+    background-image: url(icons/reportLoss.png) !important;
+}
+
+.cancelLoss {
+    background-image: url(icons/cancelLoss.png) !important;
+}
+
+.accept {
+    background-image: url(icons/accept.png) !important;
+}
+
+.stop {
+    background-image: url(icons/stop.png) !important;
+}
+
+.switch {
+    background-image: url(icons/arrow_switch.png) !important;
+}
+
+.adjust {
+    background-image: url(icons/adjust.png) !important;
+}

@@ -1,0 +1,126 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="container body-content">
+        <div class="panel panel-primary center-block" style="margin:18% auto; width: 460px;">
+            <div class="panel-heading">
+                <h3 class="panel-title">@ViewBag.Title</h3>
+            </div>
+            <div class="panel-body">
+                <form id="formLogin" role="form" class="center-block" style="margin:10px auto; width: 400px;">
+                    @if (ViewBag.ShowCompanyCode == true)
+                    {
+                        <div class="form-group input-group input-group-lg">
+                            <span class="input-group-addon" title="商户号"><span class="glyphicon glyphicon-globe"></span></span>
+                            <input type="text" class="form-control" id="CompanyCode" name="CompanyCode" placeholder="商户号" required
+                                   data-val="true" data-val-required="商户号不能为空！" />
+                        </div>
+                        @*<span class="field-validation-valid" data-valmsg-for="CompanyCode" data-valmsg-replace="true"></span>*@
+                    }
+                    <div class="form-group input-group input-group-lg">
+                        <span class="input-group-addon" title="用户名"><span class="glyphicon glyphicon-user"></span></span>
+                        <input type="text" class="form-control" id="UserName" name="UserName" placeholder="用户名" required
+                               data-val="true" data-val-required="用户名不能为空！" />
+                    </div>
+                    @*<span class="field-validation-valid" data-valmsg-for="UserName" data-valmsg-replace="true"></span>*@
+                    <div class="form-group input-group input-group-lg">
+                        <span class="input-group-addon" title="密码"><span class="glyphicon glyphicon-lock"></span></span>
+                        <input type="password" class="form-control" id="Password" name="Password" placeholder="密码" required
+                               data-val="true" data-val-required="密码不能为空！" />
+                    </div>
+                    @*<span class="field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>*@
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" id="btnLogin">
+                            <span class="glyphicon glyphicon-refresh icon-spin" style="display: none;"></span>
+                            <span class="button-content"> 登录</span>
+                        </button>
+                    </div>
+                </form>
+                @*<div id="operationHint" class="alert alert-info" role="alert" style="display: none;">
+                        <span class="glyphicon glyphicon-refresh icon-spin"></span>  登录中......
+                    </div>*@
+                <div id="operationError" class="alert alert-danger" role="alert" style="display: none;"></div>
+            </div>
+        </div>
+        <footer class="navbar-fixed-bottom" style="padding: 10px 20px;">
+            <p>&copy; VVCar @DateTime.Now.Year</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerycookie")
+    <script>
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).closest('div').removeClass('has-success').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('div').removeClass('has-error').addClass('has-success');
+            },
+        });
+
+        $("#formLogin").submit(function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            var validater = $('#formLogin').validate();
+            if (!validater.checkForm()) {
+                validater.showErrors();
+                return;
+            }
+            $('#btnLogin').attr("disabled", true).children('.glyphicon').show();
+            $('#btnLogin .button-content').text('登录中...');
+            $.ajax({
+                url: "/Login",
+                data: $("#formLogin").serialize(),
+                type: 'POST',
+                beforeSend: function () {
+                    $('#operationError').hide();
+                },
+                success: function (data) {
+                    if (data != null && data.IsSuccess == true) {
+                        $.cookie('lastLoginUser', data.UserCode);
+                        var txtCompanyCode = $('#CompanyCode');
+                        if (txtCompanyCode != null) {
+                            $.cookie('CompanyCode', txtCompanyCode.val());
+                        }
+                        sessionStorage.setItem('userCode', data.UserCode);
+                        sessionStorage.setItem('userName', data.UserName);
+                        sessionStorage.setItem('userToken', data.UserToken);
+                        window.location.href = "/";
+                    } else {
+                        $('#operationError').text('登录失败，请重试。错误原因：' + data.ErrorMsg).show();
+                        $('#btnLogin').attr("disabled", false).children('.glyphicon').hide();
+                        $('#btnLogin .button-content').text('登录');
+                    }
+                },
+                error: function () {
+                    $('#operationError').text('登录失败，请重试。错误原因：未知错误。').show();
+                    $('#btnLogin').attr("disabled", false).children('.glyphicon').hide();
+                    $('#btnLogin .button-content').text('登录');
+                }
+            });
+        });
+
+        $(function () {
+            $('#UserName').val($.cookie('lastLoginUser'));
+            var txtCompanyCode = $('#CompanyCode');
+            if (txtCompanyCode != null) {
+                $('#CompanyCode').val($.cookie('CompanyCode'));
+            }
+        });
+    </script>
+</body>
+</html>
