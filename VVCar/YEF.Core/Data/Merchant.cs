@@ -10,7 +10,7 @@ namespace YEF.Core.Data
     /// <summary>
     /// 商户
     /// </summary>
-    public class Merchant : EntityBase
+    public class Merchant : NormalEntityBase
     {
         /// <summary>
         /// 代码
@@ -23,6 +23,12 @@ namespace YEF.Core.Data
         /// </summary>
         [Display(Name = "名称")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// 是否总部
+        /// </summary>
+        [Display(Name = "是否总部")]
+        public bool IsHQ { get; set; }
 
         /// <summary>
         /// 创建时间

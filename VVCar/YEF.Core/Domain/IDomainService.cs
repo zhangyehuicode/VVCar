@@ -17,7 +17,7 @@ namespace YEF.Core.Domain
     /// <typeparam name="TKey"></typeparam>
     public interface IDomainService<TRepository, TEntity, in TKey> : IDependency
         where TRepository : IRepository<TEntity, TKey>
-        where TEntity : EntityBase<TKey>, new()
+        where TEntity : NormalEntityBase<TKey>, new()
     {
         /// <summary>
         /// 新增

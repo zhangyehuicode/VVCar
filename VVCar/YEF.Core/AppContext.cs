@@ -101,6 +101,21 @@ namespace YEF.Core
         }
 
         /// <summary>
+        /// 商户ID
+        /// </summary>
+        public static Guid? MerchantID { get; set; }
+
+        /// <summary>
+        /// 商户号
+        /// </summary>
+        public static string MerchantCode { get; set; }
+
+        /// <summary>
+        /// 商户名称
+        /// </summary>
+        public static string MerchantName { get; set; }
+
+        /// <summary>
         /// 部门ID
         /// </summary>
         public static Guid? DepartmentID { get; set; }

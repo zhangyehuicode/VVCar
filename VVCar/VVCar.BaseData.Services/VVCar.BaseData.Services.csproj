@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AutoMapper\DtoMapper.cs" />
     <Compile Include="DomainServices\DepartmentService.cs" />
+    <Compile Include="DomainServices\MerchantService.cs" />
     <Compile Include="DomainServices\PermissionFuncService.cs" />
     <Compile Include="DomainServices\RolePermissionService.cs" />
     <Compile Include="DomainServices\RoleService.cs" />

@@ -4,22 +4,22 @@
 }
 
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title</title>
+    <title>@ViewBag.Title - 登录</title>
     @Styles.Render("~/Content/css")
 </head>
 <body>
     <div id="vuecon" class="main">
+        <div class="systemtitle">@ViewBag.Title</div>
         <input class="username" placeholder="用户名" type="text" v-model="UserName" />
         <input class="password" placeholder="密码" type="text" onfocus="this.type='password'" v-model="Password" />
         <div class="loginbtn" v-on:click="login">
-            <span class="glyphicon glyphicon-refresh icon-spin" hidden="hidden"></span>
-            <span>登 录</span>
+            <span class="glyphicon glyphicon-refresh icon-spin" style="display:none;"></span>
+            <span class="logintext">登 录</span>
         </div>
         <div class="alert alert-danger operationError" role="alert" style="display: none;"></div>
     </div>
@@ -41,9 +41,16 @@
                 }
             }
         });
+        $('input').keydown(function (e) {
+            if (e.keyCode == 13) {
+                login(e);
+            }
+        });
         function login(event) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
+            if (event != null) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
             //var validater = $('#formLogin').validate();
             //if (!validater.checkForm()) {
             //    validater.showErrors();
@@ -56,7 +63,7 @@
                     $('.password').addClass('errorinput');
                 return;
             }
-            $('.loginbtn').text('登录中...');
+            $('.logintext').text('登录中...');
             $('.glyphicon').show();
             $('.loginbtn').attr("disabled", true);
             $.ajax({
@@ -82,14 +89,14 @@
                         window.location.href = "/";
                     } else {
                         $('.operationError').text(data.ErrorMsg).show();
-                        $('.loginbtn').text('登录');
+                        $('.logintext').text('登录');
                         $('.glyphicon').hide();
                         $('.loginbtn').attr("disabled", false);
                     }
                 },
                 error: function () {
                     $('.operationError').text('登录失败，请重试。错误原因：未知错误。').show();
-                    $('.loginbtn').text('登录');
+                    $('.logintext').text('登录');
                     $('.glyphicon').hide();
                     $('.loginbtn').attr("disabled", false);
                 }

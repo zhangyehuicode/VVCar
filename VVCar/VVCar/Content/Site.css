@@ -128,3 +128,11 @@ input {
 .errorinput {
     border: 1px #ff0000 solid;
 }
+
+.systemtitle {
+    color: #fff;
+    font-size: 20px;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 20px;
+}

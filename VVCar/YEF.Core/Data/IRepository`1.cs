@@ -9,7 +9,7 @@ namespace YEF.Core.Data
     /// Guid主键实体仓储接口
     /// </summary>
     /// <typeparam name="TEntity">主键类型为Guid的实体类型</typeparam>
-    public interface IRepository<TEntity> : IRepository<TEntity, Guid> where TEntity : EntityBase<Guid>, new()
+    public interface IRepository<TEntity> : IRepository<TEntity, Guid> where TEntity : NormalEntityBase<Guid>, new()
     {
     }
 }

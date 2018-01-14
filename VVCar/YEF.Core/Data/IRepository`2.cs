@@ -13,7 +13,7 @@ namespace YEF.Core.Data
     /// </summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <typeparam name="TKey">实体主键类型</typeparam>
-    public interface IRepository<TEntity, in TKey> : IDependency where TEntity : EntityBase<TKey>, new()
+    public interface IRepository<TEntity, in TKey> : IDependency where TEntity : NormalEntityBase<TKey>, new()
     {
         #region properties
 

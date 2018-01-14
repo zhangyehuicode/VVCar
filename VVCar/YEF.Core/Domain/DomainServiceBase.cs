@@ -18,7 +18,7 @@ namespace YEF.Core.Domain
     /// <typeparam name="TKey">领域实体主键类型</typeparam>
     public abstract class DomainServiceBase<TRepository, TEntity, TKey> : IDomainService<TRepository, TEntity, TKey>
         where TRepository : IRepository<TEntity, TKey>
-        where TEntity : EntityBase<TKey>, new()
+        where TEntity : NormalEntityBase<TKey>, new()
     {
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace YEF.Core.Domain
                 return null;
             return this.Repository.Add(entity);
         }
-        
+
         /// <summary>
         /// 删除
         /// </summary>

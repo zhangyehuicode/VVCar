@@ -29,7 +29,7 @@ namespace VVCar.Controllers
 
         public ActionResult Page()
         {
-            ViewBag.Title = AppContext.Settings.SystemTitle + " - 登录";
+            ViewBag.Title = AppContext.Settings.SystemTitle;
             return View();
         }
 

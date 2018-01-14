@@ -4,6 +4,7 @@ using VVCar.BaseData.Domain;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Enums;
 using YEF.Core;
+using YEF.Core.Data;
 using YEF.Data.Initializer;
 
 namespace VVCar.BaseData.Data
@@ -47,6 +48,19 @@ namespace VVCar.BaseData.Data
             //SeedCardThemeCategory(context);
         }
 
+        void SeedMerchant(DbContext context)
+        {
+            var merchantSet = context.Set<Merchant>();
+            merchantSet.Add(new Merchant
+            {
+                ID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                Code = "VVCar",
+                Name = "VVCar",
+                IsHQ = true,
+                CreatedDate = DateTime.Now,
+            });
+        }
+
         //void SeedDictType(DbContext context)
         //{
         //    var dictTypeSet = context.Set<DataDictType>();
@@ -80,7 +94,8 @@ namespace VVCar.BaseData.Data
                 AdministrationRegion = "ZB",
                 CreatedUserID = Guid.Empty,
                 CreatedUser = _systemUserName,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
             });
         }
 
@@ -100,7 +115,8 @@ namespace VVCar.BaseData.Data
                 Password = "AD0A291E6FCB621F836866D99F62D2C0",
                 CreatedUserID = Guid.Empty,
                 CreatedUser = _systemUserName,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
             });
         }
 
