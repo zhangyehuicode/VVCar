@@ -36,7 +36,7 @@ namespace VVCar.BaseData.Services.DomainServices
                 return null;
             entity.ID = Util.NewID();
             entity.IsHQ = false;
-            entity.Code = DateTime.Now.ToString("yyyyMMddHHmmss");
+            entity.Code = DateTime.Now.ToString("yyyyMMddHHmmssfff");
             entity.CreatedDate = DateTime.Now;
             return base.Add(entity);
         }

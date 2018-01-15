@@ -11,7 +11,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 礼品卡主题分组时间子表
     /// </summary>
-    public class CardThemeGroupUseTime : EntityBase
+    public class CardThemeGroupUseTime : NormalEntityBase
     {
         /// <summary>
         /// 礼品卡主题分组的ID

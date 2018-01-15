@@ -11,7 +11,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 会员礼品卡
     /// </summary>
-    public class MemberGiftCard : EntityBase
+    public class MemberGiftCard : NormalEntityBase
     {
         /// <summary>
         /// 卡片主题ID

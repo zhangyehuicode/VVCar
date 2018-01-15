@@ -43,6 +43,21 @@ namespace YEF.Core.Session
         /// </summary>
         public string DepartmentName { get; set; }
 
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        public Guid MerchantID { get; set; }
+
+        /// <summary>
+        /// 商户号
+        /// </summary>
+        public string MerchantCode { get; set; }
+
+        /// <summary>
+        /// 商户名称
+        /// </summary>
+        public string MerchantName { get; set; }
+
         #endregion
 
         #region ISessionProvider 成员

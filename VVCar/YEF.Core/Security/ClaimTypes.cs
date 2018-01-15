@@ -29,6 +29,16 @@ namespace YEF.Core.Security
         /// <summary>
         /// 商户号
         /// </summary>
-        public const string CompanyCode = "http://schemas.VVCar.com/identity/claims/companyCode";
+        public const string MerchantCode = "http://schemas.VVCar.com/identity/claims/merchantCode";
+
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        public const string MerchantID = "http://schemas.VVCar.com/identity/claims/merchantID";
+
+        /// <summary>
+        /// 商户名称
+        /// </summary>
+        public const string MerchantName = "http://schemas.VVCar.com/identity/claims/merchantName";
     }
 }

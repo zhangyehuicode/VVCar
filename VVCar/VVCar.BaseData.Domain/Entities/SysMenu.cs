@@ -12,7 +12,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 菜单管理
     /// </summary>
-    public class SysMenu : EntityBase
+    public class SysMenu : NormalEntityBase
     {
         public SysMenu()
         {

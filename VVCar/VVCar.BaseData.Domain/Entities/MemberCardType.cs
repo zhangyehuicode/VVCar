@@ -11,7 +11,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 卡片类型
     /// </summary>
-    public class MemberCardType : EntityBase
+    public class MemberCardType : NormalEntityBase
     {
         /// <summary>
         /// 卡片名称

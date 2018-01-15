@@ -39,6 +39,10 @@ namespace VVCar
                 {
                     actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, new { Message = "已拒绝为此请求授权。" });
                 }
+                if (AppContext.CurrentSession.MerchantID == Guid.Empty)
+                {
+                    actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, new { Message = "商户信息为空。" });
+                }
             }
             base.OnAuthorization(actionContext);
         }
@@ -93,7 +97,7 @@ namespace VVCar
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.UserCode, "system"));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentId, departmentId));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentName, departmentName));
-            identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.CompanyCode, companyCode));
+            identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
             return identity;
         }
 

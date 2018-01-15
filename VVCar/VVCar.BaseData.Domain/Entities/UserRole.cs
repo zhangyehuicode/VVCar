@@ -11,7 +11,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 用户角色关联表
     /// </summary>
-    public class UserRole : EntityBase
+    public class UserRole : NormalEntityBase
     {
         /// <summary>
         /// 用户ID

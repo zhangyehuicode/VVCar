@@ -9,6 +9,7 @@ using YEF.Core;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using VVCar.BaseData.Domain.Services;
+using VVCar.BaseData.Domain.Filters;
 
 namespace VVCar.Providers
 {
@@ -96,7 +97,7 @@ namespace VVCar.Providers
                 if (AppContext.Settings.IsDynamicCompany)
                 {
                     var identity = new ClaimsIdentity();
-                    identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.CompanyCode, companyCode));
+                    identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
                     Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
                 }
                 var userService = ServiceLocator.Instance.GetService<IUserService>();
@@ -133,7 +134,8 @@ namespace VVCar.Providers
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.UserCode, loginUser.Code));
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentId, loginUser.DepartmentID.ToString()));
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentName, loginUser.DepartmentName));
-            oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.CompanyCode, companyCode));
+            oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
+            oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantID, loginUser.MerchantID.ToString()));
             var props = new AuthenticationProperties(new Dictionary<string, string>
             {
                 { "userCode", loginUser.Code },
@@ -166,7 +168,15 @@ namespace VVCar.Providers
         {
             var companyCode = context.OwinContext.Get<string>(COMPANY_CODE);
             var oAuthIdentity = new ClaimsIdentity(context.Options.AuthenticationType);
-            oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.CompanyCode, companyCode));
+            oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
+            if (!string.IsNullOrEmpty(companyCode))
+            {
+                var merchantService = ServiceLocator.Instance.GetService<IMerchantService>();
+                var totalCount = 0;
+                var merchant = merchantService.Search(new MerchantFilter { Code = companyCode }, out totalCount).FirstOrDefault();
+                if (merchant != null)
+                    oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantID, merchant.ID.ToString()));
+            }
             if (AppContext.DepartmentID.HasValue)
             {
                 oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentId, AppContext.DepartmentID.Value.ToString()));

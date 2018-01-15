@@ -13,9 +13,9 @@ namespace YEF.Core.Data
     public class Merchant : NormalEntityBase
     {
         /// <summary>
-        /// 代码
+        /// 商户号
         /// </summary>
-        [Display(Name = "代码")]
+        [Display(Name = "商户号")]
         public string Code { get; set; }
 
         /// <summary>

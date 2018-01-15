@@ -11,7 +11,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 卡片主题分组
     /// </summary>
-    public class CardThemeGroup : EntityBase
+    public class CardThemeGroup : NormalEntityBase
     {
         /// <summary>
         /// 卡片主题分组

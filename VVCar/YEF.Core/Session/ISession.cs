@@ -41,6 +41,21 @@ namespace YEF.Core
         /// 部门名称
         /// </summary>
         string DepartmentName { get; set; }
+
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        Guid MerchantID { get; set; }
+
+        /// <summary>
+        /// 商户号
+        /// </summary>
+        string MerchantCode { get; set; }
+
+        /// <summary>
+        /// 商户名称
+        /// </summary>
+        string MerchantName { get; set; }
     }
 
     /// <summary>

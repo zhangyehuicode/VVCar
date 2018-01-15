@@ -13,7 +13,7 @@ namespace YEF.Core.Data
     /// </summary>
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <typeparam name="TKey">实体主键类型</typeparam>
-    public interface IRepositoryAsync<TEntity, in TKey> : IDependency where TEntity : EntityBase<TKey>
+    public interface IRepositoryAsync<TEntity, in TKey> : IDependency where TEntity : NormalEntityBase<TKey>
     {
         /// <summary>
         /// 异步插入实体
@@ -114,7 +114,7 @@ namespace YEF.Core.Data
         Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
     }
 
-    public interface IRepositoryAsync<TEntity> : IRepositoryAsync<TEntity, Guid> where TEntity : EntityBase<Guid>
+    public interface IRepositoryAsync<TEntity> : IRepositoryAsync<TEntity, Guid> where TEntity : NormalEntityBase<Guid>
     {
     }
 }

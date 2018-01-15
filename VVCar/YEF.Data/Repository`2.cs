@@ -18,7 +18,7 @@ namespace YEF.Data
     /// <typeparam name="TEntity">实体类型</typeparam>
     /// <typeparam name="TKey">实体主键类型</typeparam>
     public class Repository<TEntity, TKey> : IRepository<TEntity, TKey>, IRepositoryAsync<TEntity, TKey>
-        where TEntity : EntityBase<TKey>, new()
+        where TEntity : NormalEntityBase<TKey>, new()
     {
         #region fields
         const string EFDynamicProxyNamesapce = "System.Data.Entity.DynamicProxies";

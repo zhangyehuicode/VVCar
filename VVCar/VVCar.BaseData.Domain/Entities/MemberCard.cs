@@ -12,7 +12,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 会员卡
     /// </summary>
-    public class MemberCard : EntityBase
+    public class MemberCard : NormalEntityBase
     {
         /// <summary>
         /// 卡片编号

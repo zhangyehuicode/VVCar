@@ -33,6 +33,7 @@ namespace VVCar.BaseData.Data
         {
             //SeedDictType(context);
             //SeedDictValue(context);
+            SeedMerchant(context);
             SeedDepartment(context);
             SeedUser(context);
             SeedRole(context);
@@ -132,7 +133,8 @@ namespace VVCar.BaseData.Data
                 IsAdmin = true,
                 CreatedUserID = Guid.Empty,
                 CreatedUser = _systemUserName,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
             });
         }
 
@@ -148,7 +150,7 @@ namespace VVCar.BaseData.Data
                 RoleID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 CreatedUserID = Guid.Empty,
                 CreatedUser = _systemUserName,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
             });
         }
 

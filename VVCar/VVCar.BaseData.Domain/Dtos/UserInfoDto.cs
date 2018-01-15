@@ -12,6 +12,11 @@ namespace VVCar.BaseData.Domain.Dtos
     public class UserInfoDto
     {
         /// <summary>
+        /// 商户ID
+        /// </summary>
+        public Guid MerchantID { get; set; }
+
+        /// <summary>
         /// 用户ID
         /// </summary>
         public Guid ID { get; set; }

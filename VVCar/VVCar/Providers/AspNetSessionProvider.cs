@@ -55,7 +55,7 @@ namespace VVCar.Providers
         {
             get
             {
-                return GetClaimsPrincipalValue(YEF.Core.Security.ClaimTypes.CompanyCode);
+                return GetClaimsPrincipalValue(YEF.Core.Security.ClaimTypes.MerchantCode);
             }
             set { }
         }
@@ -118,6 +118,43 @@ namespace VVCar.Providers
             get
             {
                 return GetClaimsPrincipalValue(YEF.Core.Security.ClaimTypes.DepartmentName);
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        public Guid MerchantID
+        {
+            get
+            {
+                var mchId = GetClaimsPrincipalValue(YEF.Core.Security.ClaimTypes.MerchantID);
+                return string.IsNullOrEmpty(mchId) ? Guid.Empty : Guid.Parse(mchId);
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// 商户号
+        /// </summary>
+        public string MerchantCode
+        {
+            get
+            {
+                return GetClaimsPrincipalValue(YEF.Core.Security.ClaimTypes.MerchantCode);
+            }
+            set { }
+        }
+
+        /// <summary>
+        /// 商户名称
+        /// </summary>
+        public string MerchantName
+        {
+            get
+            {
+                return GetClaimsPrincipalValue(YEF.Core.Security.ClaimTypes.MerchantName);
             }
             set { }
         }

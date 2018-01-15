@@ -12,7 +12,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 会员历史记录
     /// </summary>
-    public abstract class MemberHistoryEntity : EntityBase
+    public abstract class MemberHistoryEntity : NormalEntityBase
     {
         /// <summary>
         /// 交易流水号

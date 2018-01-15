@@ -12,7 +12,7 @@ namespace YEF.Data
     /// </summary>
     /// <typeparam name="TEntity">主键类型为Guid的实体类型</typeparam>
     public class Repository<TEntity> : Repository<TEntity, Guid>, IRepository<TEntity>, IRepositoryAsync<TEntity>
-        where TEntity : EntityBase<Guid>, new()
+        where TEntity : NormalEntityBase<Guid>, new()
     {
         public Repository(IUnitOfWork unitOfWork)
             : base(unitOfWork)
