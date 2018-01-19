@@ -135,6 +135,7 @@
     <Compile Include="Dtos\TreeNodeModel.cs" />
     <Compile Include="EMail\EmailHelper.cs" />
     <Compile Include="Enums\EDataSource.cs" />
+    <Compile Include="Enums\ESex.cs" />
     <Compile Include="Exceptions\DomainException.cs" />
     <Compile Include="Extensions\DecimalExtensions.cs" />
     <Compile Include="License\ActivateInfo.cs" />

@@ -41,8 +41,8 @@ namespace VVCar.BaseData.Data
             SeedSysMenu(context);
             //SeedSystemSetting(context);
             //SeedPermissionFunc(context);
-            //SeedMakeCodeRule(context);
-            SeedMemberCardType(context);
+            SeedMakeCodeRule(context);
+            //SeedMemberCardType(context);
             //SeedMemberGrade(context);
             //SeedMemberGroup(context);
             //SeedMemberCardTheme(context);
@@ -151,6 +151,7 @@ namespace VVCar.BaseData.Data
                 CreatedUserID = Guid.Empty,
                 CreatedUser = _systemUserName,
                 CreatedDate = DateTime.Now,
+                MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
             });
         }
 
@@ -177,11 +178,11 @@ namespace VVCar.BaseData.Data
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000303"), Name = "会员储值统计", Component = "RechargeReport", SysMenuUrl = "RechargeReport", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000300"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 3 });
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000304"), Name = "会员消费统计", Component = "ConsumeReport", SysMenuUrl = "ConsumeReport", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000300"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 4 });
 
-            //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000400"), Name = "基础信息设置", Component = "BaseData", SysMenuUrl = "BaseData", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 5 });
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000400"), Name = "基础信息设置", Component = "BaseData", SysMenuUrl = "BaseData", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 5 });
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000401"), Name = "数据字典", Component = "DataDict", SysMenuUrl = "DataDictList", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000401"), Name = "门店管理", Component = "Department", SysMenuUrl = "DepartmentList", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 2 });
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000403"), Name = "系统参数设置", Component = "SystemSetting", SysMenuUrl = "SystemSetting", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 3 });
-            //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000404"), Name = "单据编码规则", Component = "MakeCodeRule", SysMenuUrl = "MakeCodeRule", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 4 });
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000404"), Name = "单据编码规则", Component = "MakeCodeRule", SysMenuUrl = "MakeCodeRule", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 4 });
 
             sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000500"), Name = "系统管理", Component = "SystemManage", SysMenuUrl = "SystemManage", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 6 });
             sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000501"), Name = "用户管理", Component = "User", SysMenuUrl = "UserList", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000500"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
@@ -236,23 +237,23 @@ namespace VVCar.BaseData.Data
         //    rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), RoleCode = "admin", PermissionCode = "MemberCard.AdjustBalance", PermissionType = EPermissionType.PortalAction });
         //}
 
-        //void SeedMakeCodeRule(DbContext context)
-        //{
-        //    var makeCodeRuleSet = context.Set<MakeCodeRule>();
-        //    makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "WeChatMemberCard", Name = "微信会员卡", IsAvailable = true, IsManualMake = false, Length = 10, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "WX", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
-        //    makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Code = "RechargeBill", Name = "储值订单", IsAvailable = true, IsManualMake = false, Length = 10, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "CZ", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
-        //    makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Code = "ConsumeBill", Name = "消费订单", IsAvailable = true, IsManualMake = false, Length = 10, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "XF", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
-        //    makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000004"), Code = "MemberCardBatchCode", Name = "卡片批次代码", IsAvailable = true, IsManualMake = false, Length = 9, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Date, Prefix1Length = 7, Prefix1 = "yyMMdd-", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
-        //    makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), Code = "CouponTemplateCode", Name = "优惠券模板代码", IsAvailable = true, IsManualMake = false, Length = 12, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Date, Prefix1Length = 8, Prefix1 = "yyyyMMdd", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
-        //}
-
-        void SeedMemberCardType(DbContext context)
+        void SeedMakeCodeRule(DbContext context)
         {
-            var memberCardTypeSet = context.Set<MemberCardType>();
-            memberCardTypeSet.Add(new MemberCardType { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "储值卡", AllowStoreActivate = true, AllowDiscount = false, AllowRecharge = true, MaxRecharge = 0, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
-            memberCardTypeSet.Add(new MemberCardType { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "折扣卡", AllowStoreActivate = true, AllowDiscount = true, AllowRecharge = false, MaxRecharge = 0, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
-            memberCardTypeSet.Add(new MemberCardType { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "礼品卡", AllowStoreActivate = true, AllowDiscount = false, AllowRecharge = false, MaxRecharge = 0, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+            var makeCodeRuleSet = context.Set<MakeCodeRule>();
+            makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "WeChatMemberCard", Name = "微信会员卡", IsAvailable = true, IsManualMake = false, Length = 10, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "WX", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
+            makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Code = "RechargeBill", Name = "储值订单", IsAvailable = true, IsManualMake = false, Length = 10, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "CZ", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
+            makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Code = "ConsumeBill", Name = "消费订单", IsAvailable = true, IsManualMake = false, Length = 10, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "XF", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
+            makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000004"), Code = "MemberCardBatchCode", Name = "卡片批次代码", IsAvailable = true, IsManualMake = false, Length = 9, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Date, Prefix1Length = 7, Prefix1 = "yyMMdd-", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
+            makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), Code = "CouponTemplateCode", Name = "优惠券模板代码", IsAvailable = true, IsManualMake = false, Length = 12, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Date, Prefix1Length = 8, Prefix1 = "yyyyMMdd", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
         }
+
+        //void SeedMemberCardType(DbContext context)
+        //{
+        //    var memberCardTypeSet = context.Set<MemberCardType>();
+        //    memberCardTypeSet.Add(new MemberCardType { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "储值卡", AllowStoreActivate = true, AllowDiscount = false, AllowRecharge = true, MaxRecharge = 0, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+        //    memberCardTypeSet.Add(new MemberCardType { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "折扣卡", AllowStoreActivate = true, AllowDiscount = true, AllowRecharge = false, MaxRecharge = 0, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+        //    memberCardTypeSet.Add(new MemberCardType { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "礼品卡", AllowStoreActivate = true, AllowDiscount = false, AllowRecharge = false, MaxRecharge = 0, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+        //}
 
         //void SeedMemberGrade(DbContext context)
         //{

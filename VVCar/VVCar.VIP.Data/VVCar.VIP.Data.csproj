@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{85A9BF37-D694-4D9F-AB6C-4C9C12A2BB46}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VVCar.VIP.Data</RootNamespace>
+    <AssemblyName>VVCar.VIP.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CreateDBSeedAction.cs" />
+    <Compile Include="Mapping\CardThemeCategoryMap.cs" />
+    <Compile Include="Mapping\CardThemeGroupMap.cs" />
+    <Compile Include="Mapping\CardThemeGroupUseTimeMap.cs" />
+    <Compile Include="Mapping\MemberCardMap.cs" />
+    <Compile Include="Mapping\MemberCardThemeMap.cs" />
+    <Compile Include="Mapping\MemberCardTypeMap.cs" />
+    <Compile Include="Mapping\MemberGiftCardMap.cs" />
+    <Compile Include="Mapping\MemberMap.cs" />
+    <Compile Include="Mapping\MemberPointHistoryMap.cs" />
+    <Compile Include="Mapping\RechargeHistoryMap.cs" />
+    <Compile Include="Mapping\RechargePlanMap.cs" />
+    <Compile Include="Mapping\TradeHistoryMap.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VVCar.BaseData.Domain\VVCar.BaseData.Domain.csproj">
+      <Project>{2575eda0-b3ba-473a-8ceb-455404bcdf06}</Project>
+      <Name>VVCar.BaseData.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VVCar.VIP.Domain\VVCar.VIP.Domain.csproj">
+      <Project>{5e2b30a6-bd56-4e3f-9626-2f717340a7cc}</Project>
+      <Name>VVCar.VIP.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YEF.Core\YEF.Core.csproj">
+      <Project>{3897ea87-56ff-459d-a321-9821c6269617}</Project>
+      <Name>YEF.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YEF.Data\YEF.Data.csproj">
+      <Project>{34ceeb57-6237-4154-ae0a-6ec82c4f2b8f}</Project>
+      <Name>YEF.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)*" "$(SolutionDir)VVCar\bin" /Y</PostBuildEvent>
+  </PropertyGroup>
+</Project>

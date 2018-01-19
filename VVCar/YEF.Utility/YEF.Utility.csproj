@@ -94,6 +94,7 @@
     <Compile Include="Extensions\HttpClientExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="HardwareInfo.cs" />
+    <Compile Include="HttpHelper.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="LifeServiceHelper.cs" />
     <Compile Include="MathUtil.cs" />

@@ -12,7 +12,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 权限
     /// </summary>
-    public class PermissionFunc : NormalEntityBase
+    public class PermissionFunc : EntityBase
     {
         /// <summary>
         ///权限代码

@@ -47,9 +47,6 @@ namespace VVCar.BaseData.Services
             //Mapper.CreateMap<MemberRegisterDto, Member>();
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Member, IDCodeNameDto>()
-                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.CardNumber));
-
                 cfg.CreateMap<SysMenu, SysNavMenuDto>()
                 .ForMember(dest => dest.leaf, opt => opt.MapFrom(src => src.IsLeaf))
                 .ForMember(dest => dest.text, opt => opt.MapFrom(src => src.Name));

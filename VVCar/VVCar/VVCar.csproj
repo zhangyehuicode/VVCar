@@ -238,6 +238,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\Api\DepartmentController.cs" />
+    <Compile Include="Controllers\Api\MakeCodeRuleController.cs" />
     <Compile Include="Controllers\Api\MerchantController.cs" />
     <Compile Include="Controllers\Api\PermissionController.cs" />
     <Compile Include="Controllers\Api\RoleController.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\VIP\MemberController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -530,6 +532,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />
     <Content Include="Scripts\ext\classic\theme-triton\resources\ext\ext-watermark\demo-files\demo.css" />
@@ -1328,6 +1331,10 @@
     <ProjectReference Include="..\VVCar.BaseData.Domain\VVCar.BaseData.Domain.csproj">
       <Project>{2575eda0-b3ba-473a-8ceb-455404bcdf06}</Project>
       <Name>VVCar.BaseData.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VVCar.VIP.Domain\VVCar.VIP.Domain.csproj">
+      <Project>{5e2b30a6-bd56-4e3f-9626-2f717340a7cc}</Project>
+      <Name>VVCar.VIP.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\YEF.Core\YEF.Core.csproj">
       <Project>{3897ea87-56ff-459d-a321-9821c6269617}</Project>
