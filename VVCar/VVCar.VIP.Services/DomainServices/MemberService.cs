@@ -11,6 +11,8 @@ using YEF.Core;
 using VVCar.VIP.Domain.Enums;
 using VVCar.VIP.Domain.Dtos;
 using YEF.Utility;
+using YEF.Core.Dtos;
+using VVCar.VIP.Domain.Filters;
 
 namespace VVCar.VIP.Services.DomainServices
 {
@@ -39,6 +41,23 @@ namespace VVCar.VIP.Services.DomainServices
                     _memberCardService = ServiceLocator.Instance.GetService<IMemberCardService>();
                 }
                 return _memberCardService;
+            }
+        }
+
+        IRechargeHistoryService _rechargeHistoryService;
+
+        /// <summary>
+        /// 储值记录
+        /// </summary>
+        IRechargeHistoryService RechargeHistoryService
+        {
+            get
+            {
+                if (_rechargeHistoryService == null)
+                {
+                    _rechargeHistoryService = ServiceLocator.Instance.GetService<IRechargeHistoryService>();
+                }
+                return _rechargeHistoryService;
             }
         }
 
@@ -204,6 +223,51 @@ namespace VVCar.VIP.Services.DomainServices
             member.LastUpdateUser = AppContext.CurrentSession.UserName;
             member.LastUpdateDate = DateTime.Now;
             return base.Update(member);
+        }
+
+        public PagedResultDto<MemberDto> Search(MemberFilter filter)
+        {
+            var result = new PagedResultDto<MemberDto>();
+            var queryable = Repository.GetQueryable(false);
+            if (filter != null)
+            {
+                if (!string.IsNullOrEmpty(filter.MobilePhoneNo))
+                    queryable = queryable.Where(p => p.MobilePhoneNo.Contains(filter.MobilePhoneNo));
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    queryable = queryable.Where(p => p.CardNumber.Contains(filter.Keyword)
+                    || p.MobilePhoneNo.Contains(filter.Keyword) || p.Name.Contains(filter.Keyword));
+                }
+                if (filter.Status.HasValue)
+                    queryable = queryable.Where(p => p.Card.Status == filter.Status.Value);
+                if (filter.CardTypeID.HasValue)
+                    queryable = queryable.Where(p => p.Card.CardTypeID == filter.CardTypeID.Value);
+                //if (filter.MemberGroupID.HasValue && filter.MemberGroupID != Guid.Empty)
+                //{
+                //    queryable = queryable.Where(t => t.MemberGroupID == filter.MemberGroupID);
+                //}
+                //if (filter.MemberGradeID.HasValue)
+                //{
+                //    queryable = queryable.Where(t => t.MemberGradeID == filter.MemberGradeID);
+                //}
+            }
+            queryable = queryable.OrderByDescending(t => t.CreatedDate);
+            if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
+            {
+                result.TotalCount = queryable.Count();
+                result.Items = queryable.Skip(filter.Start.Value).Take(filter.Limit.Value)
+                    .MapTo<MemberDto>().ToArray();
+            }
+            else
+            {
+                result.Items = queryable.MapTo<MemberDto>().ToArray();
+                result.TotalCount = result.Items.Count();
+            }
+            result.Items.ForEach(t =>
+            {
+                t.CardTypeDesc = t.CardType != null ? t.CardType.Name : string.Empty;
+            });
+            return result;
         }
 
         /// <summary>
@@ -396,128 +460,128 @@ namespace VVCar.VIP.Services.DomainServices
             return true;
         }
 
-        ///// <summary>
-        ///// 更新会员信息
-        ///// </summary>
-        ///// <param name="updateMember"></param>
-        ///// <returns></returns>
-        //public bool UpdateMemberInfoForWeChat(UpdateMemberDto updateMember)
-        //{
-        //    if (updateMember == null)
-        //        return false;
-        //    var member = Repository.GetByKey(updateMember.MemberID);
-        //    if (member == null)
-        //        throw new DomainException("未找到对应的会员信息");
-        //    member.Name = updateMember.Name;
-        //    if (!member.Birthday.HasValue)
-        //        member.Birthday = updateMember.Birthday;
-        //    member.Sex = updateMember.Sex;
-        //    Repository.Update(member);
-        //    return true;
-        //}
+        /// <summary>
+        /// 更新会员信息
+        /// </summary>
+        /// <param name="updateMember"></param>
+        /// <returns></returns>
+        public bool UpdateMemberInfoForWeChat(UpdateMemberDto updateMember)
+        {
+            if (updateMember == null)
+                return false;
+            var member = Repository.GetByKey(updateMember.MemberID);
+            if (member == null)
+                throw new DomainException("未找到对应的会员信息");
+            member.Name = updateMember.Name;
+            if (!updateMember.Birthday.HasValue)
+                member.Birthday = updateMember.Birthday;
+            member.Sex = updateMember.Sex;
+            Repository.Update(member);
+            return true;
+        }
 
-        ///// <summary>
-        ///// 获取会员基本信息
-        ///// </summary>
-        ///// <param name="memberId"></param>
-        ///// <returns></returns>
-        //public MemberBaseInfoDto GetBaseInfo(Guid memberId)
-        //{
-        //    var member = Repository.GetInclude(p => p.Card).FirstOrDefault(p => p.ID == memberId);
-        //    if (member == null)
-        //        throw new DomainException("未找到相关信息");
+        /// <summary>
+        /// 获取会员基本信息
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        public MemberBaseInfoDto GetBaseInfo(Guid memberId)
+        {
+            var member = Repository.GetInclude(p => p.Card).FirstOrDefault(p => p.ID == memberId);
+            if (member == null)
+                throw new DomainException("未找到相关信息");
 
-        //    var memberInfo = new MemberBaseInfoDto
-        //    {
-        //        Status = member.Card.Status.GetDescription(),
-        //        EffectiveDate = member.Card.EffectiveDate.HasValue ? member.Card.EffectiveDate.Value.ToDateString() : string.Empty,
-        //        ExpiredDate = member.Card.ExpiredDate.HasValue ? member.Card.ExpiredDate.Value.ToDateString() : string.Empty,
-        //        LastRechargeMoney = RechargeHistoryService.LastRecharge(p => p.CardID == member.CardID).ToString("f1"),
-        //        CardBalance = member.Card.CardBalance.ToString("f1"),
-        //        TotalConsume = member.Card.TotalConsume.ToString("f1"),
-        //        TotalRecharge = member.Card.TotalRecharge.ToString("f1")
-        //    };
-        //    return memberInfo;
-        //}
+            var memberInfo = new MemberBaseInfoDto
+            {
+                Status = member.Card.Status.GetDescription(),
+                EffectiveDate = member.Card.EffectiveDate.HasValue ? member.Card.EffectiveDate.Value.ToDateString() : string.Empty,
+                ExpiredDate = member.Card.ExpiredDate.HasValue ? member.Card.ExpiredDate.Value.ToDateString() : string.Empty,
+                LastRechargeMoney = RechargeHistoryService.LastRecharge(p => p.CardID == member.CardID).ToString("f1"),
+                CardBalance = member.Card.CardBalance.ToString("f1"),
+                TotalConsume = member.Card.TotalConsume.ToString("f1"),
+                TotalRecharge = member.Card.TotalRecharge.ToString("f1")
+            };
+            return memberInfo;
+        }
 
-        ///// <summary>
-        ///// 获取顾客会员信息
-        ///// </summary>
-        ///// <param name="mobilePhoneNo">手机号码</param>
-        ///// <param name="wechatOpenID">微信openID</param>
-        ///// <returns></returns>
-        //public MemberDto GetCustomerMemberInfo(string mobilePhoneNo, string wechatOpenID)
-        //{
-        //    if (string.IsNullOrEmpty(mobilePhoneNo) && string.IsNullOrEmpty(wechatOpenID))
-        //        throw new DomainException("参数错误");
-        //    var queryable = Repository.GetQueryable(false);
-        //    if (!string.IsNullOrEmpty(mobilePhoneNo))
-        //    {
-        //        queryable = queryable.Where(p => p.MobilePhoneNo == mobilePhoneNo);
-        //    }
-        //    if (!string.IsNullOrEmpty(wechatOpenID))
-        //    {
-        //        queryable = queryable.Where(p => p.WeChatOpenID == wechatOpenID);
-        //    }
-        //    return queryable.MapTo<MemberDto>().FirstOrDefault();
-        //}
+        /// <summary>
+        /// 获取顾客会员信息
+        /// </summary>
+        /// <param name="mobilePhoneNo">手机号码</param>
+        /// <param name="wechatOpenID">微信openID</param>
+        /// <returns></returns>
+        public MemberDto GetCustomerMemberInfo(string mobilePhoneNo, string wechatOpenID)
+        {
+            if (string.IsNullOrEmpty(mobilePhoneNo) && string.IsNullOrEmpty(wechatOpenID))
+                throw new DomainException("参数错误");
+            var queryable = Repository.GetQueryable(false);
+            if (!string.IsNullOrEmpty(mobilePhoneNo))
+            {
+                queryable = queryable.Where(p => p.MobilePhoneNo == mobilePhoneNo);
+            }
+            if (!string.IsNullOrEmpty(wechatOpenID))
+            {
+                queryable = queryable.Where(p => p.WeChatOpenID == wechatOpenID);
+            }
+            return queryable.MapTo<MemberDto>().FirstOrDefault();
+        }
 
-        ///// <summary>
-        ///// 根据微信OpenID获取会员信息
-        ///// </summary>
-        ///// <param name="openID"></param>
-        ///// <returns></returns>
-        //public MemberCardDto GetMemberInfoByWeChat(string openID)
-        //{
-        //    if (string.IsNullOrEmpty(openID))
-        //        return null;
-        //    var member = this.Repository.GetIncludes(false, "Card", "OwnerGroup", "MemberGrade")
-        //        .FirstOrDefault(t => t.WeChatOpenID == openID);
+        /// <summary>
+        /// 根据微信OpenID获取会员信息
+        /// </summary>
+        /// <param name="openID"></param>
+        /// <returns></returns>
+        public MemberCardDto GetMemberInfoByWeChat(string openID)
+        {
+            if (string.IsNullOrEmpty(openID))
+                return null;
+            var member = this.Repository.GetIncludes(false, "Card")//, "OwnerGroup", "MemberGrade"
+                .FirstOrDefault(t => t.WeChatOpenID == openID);
 
-        //    if (member == null)
-        //        return null;
-        //    MemberGrade highGrade = null;
-        //    var limitDate = DateTime.Now;
-        //    if (member.MemberGrade != null)
-        //    {
-        //        highGrade = MemberGradeRepo.GetQueryable(false)
-        //                    .Where(t => !t.IsNotOpen && t.Status == EMemberGradeStatus.Enabled && t.Level > member.MemberGrade.Level && t.IsQualifyByConsume).OrderBy(t => t.Level).FirstOrDefault();
-        //        if (highGrade != null)
-        //            limitDate = DateTime.Today.AddMonths(-1 * highGrade.QualifyByConsumeLimitedMonths.Value);
-        //    }
-        //    var consumeAmountOfReachNextGrade = highGrade?.QualifyByConsumeTotalAmount;
-        //    var consumeCountOfReachNextGrade = highGrade?.QualifyByConsumeTotalCount;
-        //    var consumeAmountOfCurrentGrade = TradeHistoryRepo.GetQueryable(false).Where(t => t.MemberID == member.ID && t.MemberGradeID == member.MemberGradeID).GroupBy(t => 1).Select(t => t.Sum(s => s.TradeAmount)).FirstOrDefault();
-        //    var consumeCountOfCurrentGrade = TradeHistoryRepo.Count(t => t.MemberID == member.ID && t.MemberGradeID == member.MemberGradeID && t.CreatedDate > limitDate);
-        //    var cardInfo = new MemberCardDto
-        //    {
-        //        MemberID = member.ID,
-        //        MemberName = member.Name,
-        //        MemberPoint = member.Point,
-        //        MobilePhoneNo = member.MobilePhoneNo,
-        //        Birthday = member.Birthday.HasValue ? member.Birthday.Value.ToDateString() : string.Empty,
-        //        Sex = ((int)member.Sex).ToString(),
-        //        MemberGroup = member.OwnerGroup == null ? "普通会员" : member.OwnerGroup.Name,
-        //        CardID = member.Card.ID,
-        //        CardNumber = member.Card.Code,
-        //        CardType = member.Card.CardType != null ? member.Card.CardType.Name : String.Empty,
-        //        AllowDiscount = member.Card.CardType != null ? member.Card.CardType.AllowDiscount : true,
-        //        AllowRecharge = member.Card.CardType != null ? member.Card.CardType.AllowRecharge : true,
-        //        CardStatus = member.Card.Status.GetDescription(),
-        //        EffectiveDate = member.Card.EffectiveDate.HasValue ? member.Card.EffectiveDate.Value.ToDateString() : string.Empty,
-        //        ExpiredDate = member.Card.ExpiredDate.HasValue ? member.Card.ExpiredDate.Value.ToDateString() : string.Empty,
-        //        CardBalance = member.Card.CardBalance,
-        //        MemberGrade = member.MemberGrade != null ? member.MemberGrade.Name : string.Empty,
-        //        IsNotOpen = member.MemberGrade != null ? member.MemberGrade.IsNotOpen : false,
-        //        ConsumeAmountOfReachNextGrade = consumeAmountOfReachNextGrade,
-        //        ConsumeCountOfReachNextGrade = consumeCountOfReachNextGrade,
-        //        ConsumeAmountOfCurrentGrade = consumeAmountOfCurrentGrade,
-        //        ConsumeCountOfCurrentGrade = consumeCountOfCurrentGrade,
-        //        CurrentConsumeAmountRate = consumeAmountOfReachNextGrade != null ? consumeAmountOfCurrentGrade / consumeAmountOfReachNextGrade.Value : 0,
-        //        CurrentConsumeCountRate = consumeCountOfReachNextGrade != null ? (decimal)consumeCountOfCurrentGrade / consumeCountOfReachNextGrade.Value : 0,
-        //    };
-        //    return cardInfo;
-        //}
+            if (member == null)
+                return null;
+            //MemberGrade highGrade = null;
+            //var limitDate = DateTime.Now;
+            //if (member.MemberGrade != null)
+            //{
+            //    highGrade = MemberGradeRepo.GetQueryable(false)
+            //                .Where(t => !t.IsNotOpen && t.Status == EMemberGradeStatus.Enabled && t.Level > member.MemberGrade.Level && t.IsQualifyByConsume).OrderBy(t => t.Level).FirstOrDefault();
+            //    if (highGrade != null)
+            //        limitDate = DateTime.Today.AddMonths(-1 * highGrade.QualifyByConsumeLimitedMonths.Value);
+            //}
+            //var consumeAmountOfReachNextGrade = highGrade?.QualifyByConsumeTotalAmount;
+            //var consumeCountOfReachNextGrade = highGrade?.QualifyByConsumeTotalCount;
+            //var consumeAmountOfCurrentGrade = TradeHistoryRepo.GetQueryable(false).Where(t => t.MemberID == member.ID && t.MemberGradeID == member.MemberGradeID).GroupBy(t => 1).Select(t => t.Sum(s => s.TradeAmount)).FirstOrDefault();
+            //var consumeCountOfCurrentGrade = TradeHistoryRepo.Count(t => t.MemberID == member.ID && t.MemberGradeID == member.MemberGradeID && t.CreatedDate > limitDate);
+            var cardInfo = new MemberCardDto
+            {
+                MemberID = member.ID,
+                MemberName = member.Name,
+                MemberPoint = member.Point,
+                MobilePhoneNo = member.MobilePhoneNo,
+                Birthday = member.Birthday.HasValue ? member.Birthday.Value.ToDateString() : string.Empty,
+                Sex = ((int)member.Sex).ToString(),
+                MemberGroup = "普通会员",//member.OwnerGroup == null ? "普通会员" : member.OwnerGroup.Name,
+                CardID = member.Card.ID,
+                CardNumber = member.Card.Code,
+                CardType = member.Card.CardType != null ? member.Card.CardType.Name : String.Empty,
+                AllowDiscount = member.Card.CardType != null ? member.Card.CardType.AllowDiscount : true,
+                AllowRecharge = member.Card.CardType != null ? member.Card.CardType.AllowRecharge : true,
+                CardStatus = member.Card.Status.GetDescription(),
+                EffectiveDate = member.Card.EffectiveDate.HasValue ? member.Card.EffectiveDate.Value.ToDateString() : string.Empty,
+                ExpiredDate = member.Card.ExpiredDate.HasValue ? member.Card.ExpiredDate.Value.ToDateString() : string.Empty,
+                CardBalance = member.Card.CardBalance,
+                MemberGrade = "",//member.MemberGrade != null ? member.MemberGrade.Name : string.Empty,
+                IsNotOpen = false,//member.MemberGrade != null ? member.MemberGrade.IsNotOpen : false,
+                //ConsumeAmountOfReachNextGrade = consumeAmountOfReachNextGrade,
+                //ConsumeCountOfReachNextGrade = consumeCountOfReachNextGrade,
+                //ConsumeAmountOfCurrentGrade = consumeAmountOfCurrentGrade,
+                //ConsumeCountOfCurrentGrade = consumeCountOfCurrentGrade,
+                //CurrentConsumeAmountRate = consumeAmountOfReachNextGrade != null ? consumeAmountOfCurrentGrade / consumeAmountOfReachNextGrade.Value : 0,
+                //CurrentConsumeCountRate = consumeCountOfReachNextGrade != null ? (decimal)consumeCountOfCurrentGrade / consumeCountOfReachNextGrade.Value : 0,
+            };
+            return cardInfo;
+        }
 
         #endregion
 

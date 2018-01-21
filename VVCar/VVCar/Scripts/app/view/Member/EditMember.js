@@ -163,7 +163,7 @@
                     items: [{
                         xtype: "textfield",
                         name: "OwnerDepartment",
-                        fieldLabel: "所属门店",
+                        fieldLabel: "所属基地",
                         readOnly: true,
                     }, {
                         xtype: "textfield",
@@ -189,47 +189,47 @@
                         width: 285,
                         allowBlank: false,
                     }]
-                }, {
-                    xtype: "container",
-                    layout: "hbox",
-                    defaults: {
-                        margin: "5 20 0 15",
-                        labelWidth: 70,
-                        fieldStyle: "font-size:14px;",
-                        labelStyle: "width:60px;font-size:14px;",
-                        width: 190
-                    },
-                    items: [{
-                        xtype: 'combobox',
-                        store: membergroupStore,
-                        fieldLabel: '会员分组',
-                        displayField: 'Name',
-                        valueField: 'ID',
-                        editable: false,
-                        name: 'MemberGroupID'
-                    }, {
-                        xtype: "textfield",
-                        name: "MemberGradeName",
-                        fieldLabel: "会员等级",
-                        readOnly: true,
-                    }]
-                }, {
-                    xtype: "container",
-                    layout: "hbox",
-                    defaults: {
-                        margin: "5 20 0 15",
-                        labelWidth: 70,
-                        fieldStyle: "font-size:14px;",
-                        labelStyle: "width:60px;font-size:14px;",
-                        width: 170
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'WeChatOpenID',
-                        fieldLabel: 'OpenId',
-                        width: 315,
-                        readOnly: true,
-                    }]
+                    //}, {
+                    //    xtype: "container",
+                    //    layout: "hbox",
+                    //    defaults: {
+                    //        margin: "5 20 0 15",
+                    //        labelWidth: 70,
+                    //        fieldStyle: "font-size:14px;",
+                    //        labelStyle: "width:60px;font-size:14px;",
+                    //        width: 190
+                    //    },
+                    //    items: [{
+                    //        xtype: 'combobox',
+                    //        store: membergroupStore,
+                    //        fieldLabel: '会员分组',
+                    //        displayField: 'Name',
+                    //        valueField: 'ID',
+                    //        editable: false,
+                    //        name: 'MemberGroupID'
+                    //    }, {
+                    //        xtype: "textfield",
+                    //        name: "MemberGradeName",
+                    //        fieldLabel: "会员等级",
+                    //        readOnly: true,
+                    //    }]
+                    //}, {
+                    //    xtype: "container",
+                    //    layout: "hbox",
+                    //    defaults: {
+                    //        margin: "5 20 0 15",
+                    //        labelWidth: 70,
+                    //        fieldStyle: "font-size:14px;",
+                    //        labelStyle: "width:60px;font-size:14px;",
+                    //        width: 170
+                    //    },
+                    //    items: [{
+                    //        xtype: 'textfield',
+                    //        name: 'WeChatOpenID',
+                    //        fieldLabel: 'OpenId',
+                    //        width: 315,
+                    //        readOnly: true,
+                    //    }]
                 }]
             }]
         }, {

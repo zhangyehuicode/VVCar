@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\VVCar.VIP.Services.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,7 +47,9 @@
   <ItemGroup>
     <Compile Include="AutoMapper\DtoMapper.cs" />
     <Compile Include="DomainServices\MemberCardService.cs" />
+    <Compile Include="DomainServices\MemberCardTypeService.cs" />
     <Compile Include="DomainServices\MemberService.cs" />
+    <Compile Include="DomainServices\RechargeHistoryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

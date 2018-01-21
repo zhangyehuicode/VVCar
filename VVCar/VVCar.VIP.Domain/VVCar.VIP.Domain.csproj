@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\VVCar.VIP.Domain.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,7 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\ChangePasswordDto.cs" />
+    <Compile Include="Dtos\MemberBaseInfoDto.cs" />
+    <Compile Include="Dtos\MemberCardDto.cs" />
+    <Compile Include="Dtos\MemberCardTypeDto.cs" />
+    <Compile Include="Dtos\MemberDto.cs" />
     <Compile Include="Dtos\MemberRegisterDto.cs" />
+    <Compile Include="Dtos\UpdateMemberDto.cs" />
     <Compile Include="Entities\CardThemeCategory.cs" />
     <Compile Include="Entities\CardThemeGroup.cs" />
     <Compile Include="Entities\CardThemeGroupUseTime.cs" />
@@ -64,15 +70,17 @@
     <Compile Include="Enums\EPaymentType.cs" />
     <Compile Include="Enums\EPlanType.cs" />
     <Compile Include="Enums\ETradeSource.cs" />
+    <Compile Include="Filters\MemberCardTypeFilter.cs" />
+    <Compile Include="Filters\MemberFilter.cs" />
     <Compile Include="MakeCodeTypes.cs" />
     <Compile Include="MemberCardTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IMemberCardService.cs" />
+    <Compile Include="Services\IMemberCardTypeService.cs" />
     <Compile Include="Services\IMemberService.cs" />
+    <Compile Include="Services\IRechargeHistoryService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Filters\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\VVCar.BaseData.Domain\VVCar.BaseData.Domain.csproj">
       <Project>{2575eda0-b3ba-473a-8ceb-455404bcdf06}</Project>

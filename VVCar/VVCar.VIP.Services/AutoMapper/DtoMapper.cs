@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using YEF.Core;
 
@@ -28,7 +29,21 @@ namespace VVCar.VIP.Services
             Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<Member, IDCodeNameDto>()
-                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.CardNumber));
+                    .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.CardNumber));
+
+                cfg.CreateMap<Member, MemberDto>()
+                    //.ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType.Name))
+                    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))
+                    .ForMember(dest => dest.CardBalance, opt => opt.MapFrom(src => src.Card.CardBalance))
+                    .ForMember(dest => dest.EffectiveDate, opt => opt.MapFrom(src => src.Card.EffectiveDate))
+                    .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.Card.ExpiredDate))
+                    .ForMember(dest => dest.OwnerDepartment, opt => opt.MapFrom(src => src.OwnerDepartment.Name))
+                    //.ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))
+                    //.ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))
+                    .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType))
+                    .ForMember(dest => dest.Point, opt => opt.MapFrom(src => src.Point));
+
+                cfg.CreateMap<MemberCardType, MemberCardTypeDto>();
             });
         }
 

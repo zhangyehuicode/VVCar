@@ -1,6 +1,4 @@
-﻿/// <reference path="../../ext/ext-all-dev.js" />
-
-Ext.define('WX.store.BaseData.MemberCardStore', {
+﻿Ext.define('WX.store.BaseData.MemberCardStore', {
     extend: 'Ext.data.Store',
     model: 'WX.model.BaseData.MemberCardModel',
     autoLoad: false,

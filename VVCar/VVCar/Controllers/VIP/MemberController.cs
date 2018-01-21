@@ -6,7 +6,9 @@ using System.Net.Http;
 using System.Web.Http;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
+using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
+using YEF.Core;
 using YEF.Core.Dtos;
 
 namespace VVCar.Controllers.VIP
@@ -14,7 +16,7 @@ namespace VVCar.Controllers.VIP
     /// <summary>
     /// 会员
     /// </summary>
-    [RoutePrefix("vipApi/Member")]
+    [RoutePrefix("api/Member")]
     public class MemberController : BaseApiController
     {
         #region ctor.
@@ -75,50 +77,50 @@ namespace VVCar.Controllers.VIP
             return SafeExecute(() => MemberService.Update(member));
         }
 
-        ///// <summary>
-        ///// 更新会员
-        ///// </summary>
-        ///// <param name="member">会员</param>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public JsonActionResult<Member> AddMember(Member member)
-        //{
-        //    return SafeExecute(() => MemberService.Add(member));
-        //}
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="member">会员</param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonActionResult<Member> AddMember(Member member)
+        {
+            return SafeExecute(() => MemberService.Add(member));
+        }
 
-        ///// <summary>
-        ///// 获取会员数据
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public JsonActionResult<Member> GetMember(Guid id)
-        //{
-        //    return SafeExecute(() =>
-        //    {
-        //        return this.MemberService.Get(id);
-        //    });
-        //}
+        /// <summary>
+        /// 获取会员数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonActionResult<Member> GetMember(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return this.MemberService.Get(id);
+            });
+        }
 
-        ///// <summary>
-        ///// 查询会员
-        ///// </summary>
-        ///// <param name="filter">部门过滤条件</param>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public PagedActionResult<MemberDto> Search([FromUri] MMS.Domain.Filters.MemberFilter filter)
-        //{
-        //    return SafeGetPagedData<MemberDto>((result) =>
-        //    {
-        //        if (!ModelState.IsValid)//表示没有过滤参数成功匹配，判定为错误请求。
-        //        {
-        //            throw new DomainException("查询参数错误。");
-        //        }
-        //        var pagedData = this.MemberService.Search(filter);
-        //        result.Data = pagedData.Items;
-        //        result.TotalCount = pagedData.TotalCount;
-        //    });
-        //}
+        /// <summary>
+        /// 查询会员
+        /// </summary>
+        /// <param name="filter">部门过滤条件</param>
+        /// <returns></returns>
+        [HttpGet]
+        public PagedActionResult<MemberDto> Search([FromUri]MemberFilter filter)
+        {
+            return SafeGetPagedData<MemberDto>((result) =>
+            {
+                if (!ModelState.IsValid)//表示没有过滤参数成功匹配，判定为错误请求。
+                {
+                    throw new DomainException("查询参数错误。");
+                }
+                var pagedData = this.MemberService.Search(filter);
+                result.Data = pagedData.Items;
+                result.TotalCount = pagedData.TotalCount;
+            });
+        }
 
         ///// <summary>
         ///// 获取会员分析-用户明细分页数据
@@ -183,49 +185,49 @@ namespace VVCar.Controllers.VIP
         //    });
         //}
 
-        ///// <summary>
-        ///// 获取基本信息
-        ///// </summary>
-        ///// <param name="memberId"></param>
-        ///// <returns></returns>
-        //[HttpGet, Route("GetBaseInfo")]
-        //public JsonActionResult<MemberBaseInfoDto> GetBaseInfo(Guid memberId)
-        //{
-        //    return SafeExecute(() => MemberService.GetBaseInfo(memberId));
-        //}
+        /// <summary>
+        /// 获取基本信息
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetBaseInfo")]
+        public JsonActionResult<MemberBaseInfoDto> GetBaseInfo(Guid memberId)
+        {
+            return SafeExecute(() => MemberService.GetBaseInfo(memberId));
+        }
 
-        ///// <summary>
-        ///// 挂失
-        ///// </summary>
-        ///// <param name="cardNumber"></param>
-        ///// <returns></returns>
-        //[HttpPost, Route("ReportLoss")]
-        //public JsonActionResult<bool> ReportLoss([FromBody]string cardNumber)
-        //{
-        //    return SafeExecute(() => MemberService.ReportLoss(cardNumber));
-        //}
+        /// <summary>
+        /// 挂失
+        /// </summary>
+        /// <param name="cardNumber"></param>
+        /// <returns></returns>
+        [HttpPost, Route("ReportLoss")]
+        public JsonActionResult<bool> ReportLoss([FromBody]string cardNumber)
+        {
+            return SafeExecute(() => MemberService.ReportLoss(cardNumber));
+        }
 
-        ///// <summary>
-        ///// 取消挂失
-        ///// </summary>
-        ///// <param name="cardNumber"></param>
-        ///// <returns></returns>
-        //[HttpPost, Route("CancelLoss")]
-        //public JsonActionResult<bool> CancelLoss([FromBody]string cardNumber)
-        //{
-        //    return SafeExecute(() => MemberService.CancelLoss(cardNumber));
-        //}
+        /// <summary>
+        /// 取消挂失
+        /// </summary>
+        /// <param name="cardNumber"></param>
+        /// <returns></returns>
+        [HttpPost, Route("CancelLoss")]
+        public JsonActionResult<bool> CancelLoss([FromBody]string cardNumber)
+        {
+            return SafeExecute(() => MemberService.CancelLoss(cardNumber));
+        }
 
-        ///// <summary>
-        ///// 重置密码
-        ///// </summary>
-        ///// <param name="memberID"></param>
-        ///// <returns></returns>
-        //[HttpPost, Route("ResetPassword/{memberID}")]
-        //public JsonActionResult<bool> ResetPassword(Guid memberID)
-        //{
-        //    return SafeExecute(() => MemberService.ResetPassword(memberID));
-        //}
+        /// <summary>
+        /// 重置密码
+        /// </summary>
+        /// <param name="memberID"></param>
+        /// <returns></returns>
+        [HttpPost, Route("ResetPassword/{memberID}")]
+        public JsonActionResult<bool> ResetPassword(Guid memberID)
+        {
+            return SafeExecute(() => MemberService.ResetPassword(memberID));
+        }
 
         ///// <summary>
         ///// 换卡
@@ -291,19 +293,19 @@ namespace VVCar.Controllers.VIP
         //    });
         //}
 
-        ///// <summary>
-        ///// 获取号码归属地
-        ///// </summary>
-        ///// <param name="phoneNumber">手机号码</param>
-        ///// <returns></returns>
-        //[HttpGet, Route("GetPhoneLoaction/{phoneNumber}")]
-        //public JsonActionResult<string> GetPhoneLoaction(string phoneNumber)
-        //{
-        //    return SafeExecute(() =>
-        //    {
-        //        return MemberService.GetPhoneLoaction(phoneNumber);
-        //    });
-        //}
+        /// <summary>
+        /// 获取号码归属地
+        /// </summary>
+        /// <param name="phoneNumber">手机号码</param>
+        /// <returns></returns>
+        [HttpGet, Route("GetPhoneLoaction/{phoneNumber}")]
+        public JsonActionResult<string> GetPhoneLoaction(string phoneNumber)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.GetPhoneLoaction(phoneNumber);
+            });
+        }
 
         ///// <summary>
         ///// 会员总计信息

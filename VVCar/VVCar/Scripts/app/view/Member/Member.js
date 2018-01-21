@@ -1,7 +1,7 @@
 ﻿Ext.define('WX.view.Member.Member', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.Member',
-    title: '资料维护',
+    title: '会员信息',
     stripeRows: true,
     loadMask: true,
     closable: true,
@@ -10,9 +10,9 @@
         var me = this;
         var statusStore = Ext.create("WX.store.DataDict.MemberCardStatusStore");
         var memberStore = Ext.create('WX.store.BaseData.MemberStore');
-        var memberGroupStore = Ext.create('WX.store.BaseData.MemberGroupStore');
+        //var memberGroupStore = Ext.create('WX.store.BaseData.MemberGroupStore');
         var memberCardTypeStore = Ext.create('WX.store.BaseData.MemberCardTypeStore');
-        memberGroupStore.load();
+        //memberGroupStore.load();
         var tbar = [{
             xtype: 'form',
             layout: 'column',
@@ -53,18 +53,18 @@
                 labelWidth: 60,
                 forceSelection: true,
                 margin: "0 0 0 5"
-            }, {
-                xtype: 'combobox',
-                fieldLabel: '会员等级',
-                name: "MemberGradeID",
-                store: Ext.create('WX.store.BaseData.MemberGradeStore'),
-                queryMode: 'remote',
-                displayField: "Name",
-                valueField: "ID",
-                width: 170,
-                labelWidth: 60,
-                forceSelection: true,
-                margin: '0 0 0 5',
+                //}, {
+                //    xtype: 'combobox',
+                //    fieldLabel: '会员等级',
+                //    name: "MemberGradeID",
+                //    store: Ext.create('WX.store.BaseData.MemberGradeStore'),
+                //    queryMode: 'remote',
+                //    displayField: "Name",
+                //    valueField: "ID",
+                //    width: 170,
+                //    labelWidth: 60,
+                //    forceSelection: true,
+                //    margin: '0 0 0 5',
             }, {
                 action: "search",
                 xtype: "button",
@@ -72,41 +72,41 @@
                 iconCls: "fa fa-search",
                 cls: "submitBtn",
                 margin: "0 0 0 5"
-            }, {
-                action: "export",
-                xtype: "button",
-                text: "导 出",
-                cls: "submitBtn",
-                margin: "0 0 0 5",
-                permissionCode: 'Member.Member.ExportMember'
+                //}, {
+                //    action: "export",
+                //    xtype: "button",
+                //    text: "导 出",
+                //    cls: "submitBtn",
+                //    margin: "0 0 0 5",
+                //    permissionCode: 'Member.Member.ExportMember'
             }]
         }];
         var columns = [
             { header: "会员卡号", dataIndex: "CardNumber", flex: 1 },
             { header: "卡片类型", dataIndex: "CardTypeDesc", flex: 1 },
-            {
-                header: "分组", dataIndex: "MemberGroupID", flex: 1,
-                renderer: function (value, cellmeta, record) {
-                    if (value != null && value != '') {
-                        var record = memberGroupStore.findRecord('ID', value);
-                        if (record != null) {
-                            return record.data.Name;
-                        }
-                        return "普通会员";
-                    }
-                    return "普通会员";
-                }
-            },
+            //{
+            //    header: "分组", dataIndex: "MemberGroupID", flex: 1,
+            //    renderer: function (value, cellmeta, record) {
+            //        if (value != null && value != '') {
+            //            var record = memberGroupStore.findRecord('ID', value);
+            //            if (record != null) {
+            //                return record.data.Name;
+            //            }
+            //            return "普通会员";
+            //        }
+            //        return "普通会员";
+            //    }
+            //},
             { header: "剩余积分", dataIndex: "Point", flex: 1 },
             { header: "姓名", dataIndex: "Name", flex: 1 },
             { header: "手机号码", dataIndex: "MobilePhoneNo", flex: 1 },
             { header: "归属地", dataIndex: "PhoneLocation", flex: 1 },
             { header: "会员状态", dataIndex: "Status", flex: 1 },
-            { header: "会员等级", dataIndex: "MemberGradeName", flex: 1 },
-            { header: "所属门店", dataIndex: "OwnerDepartment", flex: 1 },
+            //{ header: "会员等级", dataIndex: "MemberGradeName", flex: 1 },
+            { header: "所属基地", dataIndex: "OwnerDepartment", flex: 1 },
             { header: "注册时间", dataIndex: "CreatedDate", xtype: "datecolumn", format: "Y-m-d H:i:s", flex: 1 },
             { header: "余额（元）", dataIndex: "CardBalance", flex: 1, xtype: "numbercolumn" },
-            { header: "OpenId", dataIndex: "WeChatOpenID", flex: 1, },
+            //{ header: "OpenId", dataIndex: "WeChatOpenID", flex: 1, },
         ];
         var bbar = [{
             action: 'resetPassword',
@@ -129,13 +129,13 @@
             scope: me,
             iconCls: 'cancelLoss',
             permissionCode: 'Portal.BaseDataEdit'
-        }, {
-            action: 'changeCard',
-            xtype: 'button',
-            text: '换卡',
-            scope: me,
-            iconCls: 'switch',
-            permissionCode: 'Portal.BaseDataEdit'
+            //}, {
+            //    action: 'changeCard',
+            //    xtype: 'button',
+            //    text: '换卡',
+            //    scope: me,
+            //    iconCls: 'switch',
+            //    permissionCode: 'Portal.BaseDataEdit'
         }, {
             action: 'editMember',
             xtype: 'button',
@@ -157,13 +157,13 @@
             text: '积分调整',
             scope: me,
             //permissionCode: 'Member.Member.adjustMemberPoint',
-        }, {
-            xtype: 'button',
-            name: 'btnChangeMemberGroup',
-            text: '移动分组',
-            scope: me,
-            permissionCode: 'Portal.BaseDataEdit',
-            menu: Ext.create('Ext.menu.Menu')
+            //}, {
+            //    xtype: 'button',
+            //    name: 'btnChangeMemberGroup',
+            //    text: '移动分组',
+            //    scope: me,
+            //    permissionCode: 'Portal.BaseDataEdit',
+            //    menu: Ext.create('Ext.menu.Menu')
         }];
         var dockedItems = [{
             xtype: "pagingtoolbar",
@@ -184,14 +184,12 @@
             dockedItems: dockedItems
         });
 
-        me.memberGroup = Ext.create('WX.view.MemberGroup.MemberGroup', { width: '15%', height: '100%' });
-        me.items = [me.memberGroup, {
-            xtype: 'splitter'
-        }, me.memberGrid],
-            this.callParent();
-    },
+        //me.memberGroup = Ext.create('WX.view.MemberGroup.MemberGroup', { width: '15%', height: '100%' });
+        me.items = [me.memberGrid];
+        //    [me.memberGroup, {
+        //    xtype: 'splitter'
+        //}, me.memberGrid],
 
-    afterRender: function () {
         this.callParent(arguments);
     }
 });
