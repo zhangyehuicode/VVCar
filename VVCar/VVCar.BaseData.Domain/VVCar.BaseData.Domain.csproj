@@ -50,9 +50,13 @@
     <Compile Include="Dtos\OwnerPermissionDto.cs" />
     <Compile Include="Dtos\StoreInfoDto.cs" />
     <Compile Include="Dtos\SysNavMenuDto.cs" />
+    <Compile Include="Dtos\SystemInfoDto.cs" />
     <Compile Include="Dtos\UserInfoDto.cs" />
+    <Compile Include="Entities\DataDictType.cs" />
+    <Compile Include="Entities\DataDictValue.cs" />
     <Compile Include="Entities\Department.cs" />
     <Compile Include="Entities\MakeCodeRule.cs" />
+    <Compile Include="Entities\SystemSetting.cs" />
     <Compile Include="Entities\UserRole.cs" />
     <Compile Include="Enums\ECodePrefixRule.cs" />
     <Compile Include="Enums\ESysMenuType.cs" />
@@ -62,14 +66,18 @@
     <Compile Include="Entities\SysMenu.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Enums\EPermissionType.cs" />
+    <Compile Include="Enums\ESystemSettingType.cs" />
     <Compile Include="Filters\DepartmentFilter.cs" />
     <Compile Include="Filters\MerchantFilter.cs" />
     <Compile Include="Filters\PermissionFilter.cs" />
     <Compile Include="Filters\RoleFilter.cs" />
     <Compile Include="Filters\SysMenuFilter.cs" />
+    <Compile Include="Filters\SystemSettingFilter.cs" />
     <Compile Include="Filters\UserFilter.cs" />
     <Compile Include="Filters\UserRoleFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IDataDictTypeService.cs" />
+    <Compile Include="Services\IDataDictValueService.cs" />
     <Compile Include="Services\IDepartmentService.cs" />
     <Compile Include="Services\IMakeCodeRuleService.cs" />
     <Compile Include="Services\IMerchantService.cs" />
@@ -77,8 +85,10 @@
     <Compile Include="Services\IRolePermissionService.cs" />
     <Compile Include="Services\IRoleService.cs" />
     <Compile Include="Services\ISysMenuService.cs" />
+    <Compile Include="Services\ISystemSettingService.cs" />
     <Compile Include="Services\IUserRoleService.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="SysSettingTypes.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

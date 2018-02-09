@@ -79,6 +79,11 @@ namespace YEF.Data
             return trackEnabled ? Entities : Entities.AsNoTracking();
         }
 
+        public IQueryable<TEntity> GetQueryableAllData(bool trackEnabled = true)
+        {
+            return trackEnabled ? _dbSet : _dbSet.AsNoTracking();
+        }
+
         public TEntity Add(TEntity entity)
         {
             if (entity == null)
@@ -127,6 +132,14 @@ namespace YEF.Data
             return this.UnitOfWork.SaveChanges();
         }
 
+        public int Delete(TKey key)
+        {
+            var entity = new TEntity();
+            entity.ID = key;
+            DoDelete(entity);
+            return this.UnitOfWork.SaveChanges();
+        }
+
         public int Delete(IEnumerable<TEntity> entities)
         {
             if (entities == null)
@@ -164,6 +177,14 @@ namespace YEF.Data
             if (entity == null)
                 return 0;
             DoUpdate(entity);
+            return this.UnitOfWork.SaveChanges();
+        }
+
+        public int Update(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+                return 0;
+            DoUpdate(entities);
             return this.UnitOfWork.SaveChanges();
         }
 

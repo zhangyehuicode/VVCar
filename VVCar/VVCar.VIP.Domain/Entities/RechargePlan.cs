@@ -91,8 +91,8 @@ namespace VVCar.VIP.Domain.Entities
         /// <summary>
         /// 适用卡片类型
         /// </summary>
-        //[Display(Name = "适用卡片类型")]
-        //public string MatchCardType { get; set; }
+        [Display(Name = "适用卡片类型")]
+        public string MatchCardType { get; set; }
 
         /// <summary>
         /// 创建人ID

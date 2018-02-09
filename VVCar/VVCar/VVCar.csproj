@@ -65,6 +65,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -95,6 +98,18 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -239,19 +254,29 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Common\ExportHelper.cs" />
+    <Compile Include="Controllers\Api\DataDictTypeController.cs" />
+    <Compile Include="Controllers\Api\DataDictValueController.cs" />
     <Compile Include="Controllers\Api\DepartmentController.cs" />
     <Compile Include="Controllers\Api\MakeCodeRuleController.cs" />
     <Compile Include="Controllers\Api\MerchantController.cs" />
     <Compile Include="Controllers\Api\PermissionController.cs" />
     <Compile Include="Controllers\Api\RoleController.cs" />
     <Compile Include="Controllers\Api\SysMenuController.cs" />
+    <Compile Include="Controllers\Api\SystemSettingController.cs" />
+    <Compile Include="Controllers\Api\TradeHistoryController.cs" />
     <Compile Include="Controllers\Api\UserController.cs" />
     <Compile Include="Controllers\Api\UserRoleController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\VIP\CouponController.cs" />
     <Compile Include="Controllers\VIP\MemberCardTypeController.cs" />
     <Compile Include="Controllers\VIP\MemberController.cs" />
+    <Compile Include="Controllers\VIP\MemberGradeController.cs" />
+    <Compile Include="Controllers\VIP\MemberGroupController.cs" />
+    <Compile Include="Controllers\VIP\RechargeHistoryController.cs" />
+    <Compile Include="Controllers\VIP\RechargePlanController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -281,6 +306,24 @@
     <Content Include="Content\daterangepicker.css" />
     <Content Include="Content\ext-custom.css" />
     <Content Include="Content\icons.css" />
+    <Content Include="Content\icons\accept.png" />
+    <Content Include="Content\icons\add.png" />
+    <Content Include="Content\icons\adjust.png" />
+    <Content Include="Content\icons\arrow_switch.png" />
+    <Content Include="Content\icons\cancelLoss.png" />
+    <Content Include="Content\icons\delete.png" />
+    <Content Include="Content\icons\edit.png" />
+    <Content Include="Content\icons\expand.png" />
+    <Content Include="Content\icons\list.png" />
+    <Content Include="Content\icons\login3.png" />
+    <Content Include="Content\icons\logout.png" />
+    <Content Include="Content\icons\refresh.png" />
+    <Content Include="Content\icons\reportLoss.png" />
+    <Content Include="Content\icons\reset.png" />
+    <Content Include="Content\icons\restore.png" />
+    <Content Include="Content\icons\search.png" />
+    <Content Include="Content\icons\search_r.png" />
+    <Content Include="Content\icons\stop.png" />
     <Content Include="Content\image\loginbgimg.jpg" />
     <Content Include="Content\jquery-weui.css" />
     <Content Include="Content\jquery-weui.min.css" />

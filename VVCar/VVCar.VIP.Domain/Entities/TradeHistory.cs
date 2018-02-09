@@ -29,6 +29,7 @@ namespace VVCar.VIP.Domain.Entities
         /// <summary>
         /// 会员等级ID
         /// </summary>
-        //public Guid? MemberGradeID { get; set; }
+        [Display(Name = "会员等级ID")]
+        public Guid? MemberGradeID { get; set; }
     }
 }

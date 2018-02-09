@@ -34,5 +34,29 @@ namespace YEF.Core
         {
             return source.ToString().PadRight(totalWidth, paddingChar);
         }
+
+        /// <summary>
+        /// 返回一个新字符串，该字符串通过在此实例中的字符左侧填充指定的 Unicode 字符来达到指定的总长度，从而使这些字符右对齐。
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="totalWidth"></param>
+        /// <param name="paddingChar"></param>
+        /// <returns></returns>
+        public static string PadLeft(this long source, int totalWidth, char paddingChar)
+        {
+            return source.ToString().PadLeft(totalWidth, paddingChar);
+        }
+
+        /// <summary>
+        /// 返回一个新字符串，该字符串通过在此字符串中的字符右侧填充指定的 Unicode 字符来达到指定的总长度，从而使这些字符左对齐。
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="totalWidth"></param>
+        /// <param name="paddingChar"></param>
+        /// <returns></returns>
+        public static string PadRight(this long source, int totalWidth, char paddingChar)
+        {
+            return source.ToString().PadRight(totalWidth, paddingChar);
+        }
     }
 }

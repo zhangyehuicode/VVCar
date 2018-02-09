@@ -44,6 +44,13 @@ namespace VVCar.VIP.Services
                     .ForMember(dest => dest.Point, opt => opt.MapFrom(src => src.Point));
 
                 cfg.CreateMap<MemberCardType, MemberCardTypeDto>();
+
+                cfg.CreateMap<Member, MemberLiteInfoDto>()
+                    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))
+                    .ForMember(dest => dest.CardBalance, opt => opt.MapFrom(src => src.Card.CardBalance))
+                    //.ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))
+                    //.ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))
+                    .ForMember(dest => dest.CardTypeID, opt => opt.MapFrom(src => src.Card.CardTypeID));
             });
         }
 

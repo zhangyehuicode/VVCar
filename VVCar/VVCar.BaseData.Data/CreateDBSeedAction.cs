@@ -31,16 +31,16 @@ namespace VVCar.BaseData.Data
         /// <param name="context">数据上下文</param>
         public void Seed(DbContext context)
         {
-            //SeedDictType(context);
-            //SeedDictValue(context);
+            SeedDictType(context);
+            SeedDictValue(context);
             SeedMerchant(context);
             SeedDepartment(context);
             SeedUser(context);
             SeedRole(context);
             SeedUserRole(context);
             SeedSysMenu(context);
-            //SeedSystemSetting(context);
-            //SeedPermissionFunc(context);
+            SeedSystemSetting(context);
+            SeedPermissionFunc(context);
             SeedMakeCodeRule(context);
             //SeedMemberCardType(context);
             //SeedMemberGrade(context);
@@ -62,26 +62,26 @@ namespace VVCar.BaseData.Data
             });
         }
 
-        //void SeedDictType(DbContext context)
-        //{
-        //    var dictTypeSet = context.Set<DataDictType>();
-        //    dictTypeSet.Add(new DataDictType { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "RoleType", Name = "角色类型", Index = 1 });
-        //    dictTypeSet.Add(new DataDictType { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Code = "DistrictRegion", Name = "地区分区", Index = 2 });
-        //    dictTypeSet.Add(new DataDictType { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Code = "AdministrationRegion", Name = "管理分区", Index = 3 });
-        //}
+        void SeedDictType(DbContext context)
+        {
+            var dictTypeSet = context.Set<DataDictType>();
+            dictTypeSet.Add(new DataDictType { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "RoleType", Name = "角色类型", Index = 1 });
+            dictTypeSet.Add(new DataDictType { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Code = "DistrictRegion", Name = "地区分区", Index = 2 });
+            dictTypeSet.Add(new DataDictType { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Code = "AdministrationRegion", Name = "管理分区", Index = 3 });
+        }
 
-        //void SeedDictValue(DbContext context)
-        //{
-        //    var dictValueSet = context.Set<DataDictValue>();
-        //    //RoleType
-        //    dictValueSet.Add(new DataDictValue { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), DictType = "RoleType", DictValue = "Admin", DictName = "管理员", Index = 1, IsAvailable = false });
+        void SeedDictValue(DbContext context)
+        {
+            var dictValueSet = context.Set<DataDictValue>();
+            //RoleType
+            dictValueSet.Add(new DataDictValue { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), DictType = "RoleType", DictValue = "Admin", DictName = "管理员", Index = 1, IsAvailable = false });
 
-        //    //DistrictRegion
-        //    dictValueSet.Add(new DataDictValue { ID = Guid.Parse("00000000-0000-0000-0000-000000000100"), DictType = "DistrictRegion", DictValue = "HQ", DictName = "总部", Index = 1, IsAvailable = true });
+            //DistrictRegion
+            dictValueSet.Add(new DataDictValue { ID = Guid.Parse("00000000-0000-0000-0000-000000000100"), DictType = "DistrictRegion", DictValue = "HQ", DictName = "总部", Index = 1, IsAvailable = true });
 
-        //    //AdministrationRegion
-        //    dictValueSet.Add(new DataDictValue { ID = Guid.Parse("00000000-0000-0000-0000-000000000200"), DictType = "AdministrationRegion", DictValue = "HQ", DictName = "总部", Index = 1, IsAvailable = true });
-        //}
+            //AdministrationRegion
+            dictValueSet.Add(new DataDictValue { ID = Guid.Parse("00000000-0000-0000-0000-000000000200"), DictType = "AdministrationRegion", DictValue = "HQ", DictName = "总部", Index = 1, IsAvailable = true });
+        }
 
         void SeedDepartment(DbContext context)
         {
@@ -179,9 +179,9 @@ namespace VVCar.BaseData.Data
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000304"), Name = "会员消费统计", Component = "ConsumeReport", SysMenuUrl = "ConsumeReport", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000300"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 4 });
 
             sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000400"), Name = "基础信息", Component = "BaseData", SysMenuUrl = "BaseData", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 5 });
-            //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000401"), Name = "数据字典", Component = "DataDict", SysMenuUrl = "DataDictList", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
-            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000401"), Name = "基地中心", Component = "Department", SysMenuUrl = "DepartmentList", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 2 });
-            //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000403"), Name = "系统参数设置", Component = "SystemSetting", SysMenuUrl = "SystemSetting", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 3 });
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000401"), Name = "数据字典", Component = "DataDict", SysMenuUrl = "DataDictList", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000402"), Name = "基地中心", Component = "Department", SysMenuUrl = "DepartmentList", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 2 });
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000403"), Name = "系统参数设置", Component = "SystemSetting", SysMenuUrl = "SystemSetting", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 3 });
             sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000404"), Name = "单据编码规则", Component = "MakeCodeRule", SysMenuUrl = "MakeCodeRule", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000400"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 4 });
 
             sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000500"), Name = "系统管理", Component = "SystemManage", SysMenuUrl = "SystemManage", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 6 });
@@ -209,39 +209,53 @@ namespace VVCar.BaseData.Data
 
         }
 
-        //void SeedSystemSetting(DbContext context)
-        //{
-        //    var systemSettingSet = context.Set<SystemSetting>();
-        //    systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Index = 1, Name = SysSettingTypes.WXMsg_MemberRecharge, Caption = "会员储值微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
-        //    systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Index = 2, Name = SysSettingTypes.WXMsg_MemberConsume, Caption = "会员消费微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
-        //    systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Index = 3, Name = SysSettingTypes.WXMsg_MemberAdjust, Caption = "会员账户调整微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
-        //    systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000004"), Index = 4, Name = SysSettingTypes.WXMsg_CouponReceived, Caption = "优惠券领取微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
-        //    systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), Index = 5, Name = SysSettingTypes.WXMsg_CouponUsed, Caption = "优惠券使用微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
-        //    systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000006"), Index = 6, Name = SysSettingTypes.WXMsg_CouponWillExpire, Caption = "优惠券即将过期微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
-        //}
+        void SeedSystemSetting(DbContext context)
+        {
+            var systemSettingSet = context.Set<SystemSetting>();
+            systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Index = 1, Name = SysSettingTypes.WXMsg_MemberRecharge, Caption = "会员储值微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+            systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Index = 2, Name = SysSettingTypes.WXMsg_MemberConsume, Caption = "会员消费微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+            systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Index = 3, Name = SysSettingTypes.WXMsg_MemberAdjust, Caption = "会员账户调整微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+            systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000004"), Index = 4, Name = SysSettingTypes.WXMsg_CouponReceived, Caption = "优惠券领取微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+            systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), Index = 5, Name = SysSettingTypes.WXMsg_CouponUsed, Caption = "优惠券使用微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+            systemSettingSet.Add(new SystemSetting { ID = Guid.Parse("00000000-0000-0000-0000-000000000006"), Index = 6, Name = SysSettingTypes.WXMsg_CouponWillExpire, Caption = "优惠券即将过期微信通知消息模板", DefaultValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+            systemSettingSet.Add(new SystemSetting
+            {
+                ID = Guid.Parse("00000000-0000-0000-0000-000000000007"),
+                Index = 7,
+                Name = SysSettingTypes.WXMsg_UpGrade,
+                Caption = "会员升级通知消息模板",
+                DefaultValue = string.Empty,
+                IsVisible = true,
+                IsAvailable = true,
+                Type = ESystemSettingType.Parameter,
+                CreatedUserID = Guid.Empty,
+                CreatedUser = _systemUserName,
+                CreatedDate = DateTime.Now
+            });
+        }
 
-        //void SeedPermissionFunc(DbContext context)
-        //{
-        //    var permissionFuncSet = context.Set<PermissionFunc>();
-        //    permissionFuncSet.Add(new PermissionFunc { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "Portal.BaseDataEdit", Name = "管理后台-基础数据维护", PermissionType = EPermissionType.PortalAction, IsManual = true, IsAvailable = true });
-        //    permissionFuncSet.Add(new PermissionFunc { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Code = "Member.Member.adjustBalance", Name = "会员资料-余额调整", PermissionType = EPermissionType.PortalAction, IsManual = true, IsAvailable = true });
-        //    permissionFuncSet.Add(new PermissionFunc { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Code = "Member.Member.ExportMember", Name = "会员管理-资料维护-导出会员", PermissionType = EPermissionType.PortalAction, IsManual = true, IsAvailable = true });
-        //    permissionFuncSet.Add(new PermissionFunc { ID = Guid.Parse("00000000-0000-0000-0000-000000000004"), Code = "Portal.TradeHistory.InvoiceEdit", Name = "会员储值-开发票", PermissionType = EPermissionType.PortalAction, IsManual = true, IsAvailable = true });
-        //    permissionFuncSet.Add(new PermissionFunc { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), Code = "MemberCard.AdjustBalance", Name = "卡片制作-调整余额", PermissionType = EPermissionType.PortalAction, IsManual = true, IsAvailable = true });
+        void SeedPermissionFunc(DbContext context)
+        {
+            var permissionFuncSet = context.Set<PermissionFunc>();
+            permissionFuncSet.Add(new PermissionFunc { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "Portal.BaseDataEdit", Name = "管理后台-基础数据维护", PermissionType = EPermissionType.PortalAction, IsManual = true, IsAvailable = true });
+            permissionFuncSet.Add(new PermissionFunc { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Code = "Member.Member.adjustBalance", Name = "会员资料-余额调整", PermissionType = EPermissionType.PortalAction, IsManual = true, IsAvailable = true });
+            permissionFuncSet.Add(new PermissionFunc { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Code = "Member.Member.ExportMember", Name = "会员管理-资料维护-导出会员", PermissionType = EPermissionType.PortalAction, IsManual = true, IsAvailable = true });
+            permissionFuncSet.Add(new PermissionFunc { ID = Guid.Parse("00000000-0000-0000-0000-000000000004"), Code = "Portal.TradeHistory.InvoiceEdit", Name = "会员储值-开发票", PermissionType = EPermissionType.PortalAction, IsManual = true, IsAvailable = true });
+            permissionFuncSet.Add(new PermissionFunc { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), Code = "MemberCard.AdjustBalance", Name = "卡片制作-调整余额", PermissionType = EPermissionType.PortalAction, IsManual = true, IsAvailable = true });
 
-        //    var rolePermissionSet = context.Set<RolePermission>();
-        //    rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), RoleCode = "admin", PermissionCode = "Portal.BaseDataEdit", PermissionType = EPermissionType.PortalAction });
-        //    rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), RoleCode = "admin", PermissionCode = "Member.Member.adjustBalance", PermissionType = EPermissionType.PortalAction });
-        //    rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), RoleCode = "admin", PermissionCode = "Member.Member.ExportMember", PermissionType = EPermissionType.PortalAction });
-        //    rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000004"), RoleCode = "admin", PermissionCode = "Portal.TradeHistory.InvoiceEdit", PermissionType = EPermissionType.PortalAction });
-        //    rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), RoleCode = "admin", PermissionCode = "MemberCard.AdjustBalance", PermissionType = EPermissionType.PortalAction });
-        //}
+            var rolePermissionSet = context.Set<RolePermission>();
+            rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), RoleCode = "admin", PermissionCode = "Portal.BaseDataEdit", PermissionType = EPermissionType.PortalAction });
+            rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), RoleCode = "admin", PermissionCode = "Member.Member.adjustBalance", PermissionType = EPermissionType.PortalAction });
+            rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), RoleCode = "admin", PermissionCode = "Member.Member.ExportMember", PermissionType = EPermissionType.PortalAction });
+            rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000004"), RoleCode = "admin", PermissionCode = "Portal.TradeHistory.InvoiceEdit", PermissionType = EPermissionType.PortalAction });
+            rolePermissionSet.Add(new RolePermission { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), RoleCode = "admin", PermissionCode = "MemberCard.AdjustBalance", PermissionType = EPermissionType.PortalAction });
+        }
 
         void SeedMakeCodeRule(DbContext context)
         {
             var makeCodeRuleSet = context.Set<MakeCodeRule>();
-            makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "WeChatMemberCard", Name = "微信会员卡", IsAvailable = true, IsManualMake = false, Length = 10, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "WX", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
-            makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Code = "RechargeBill", Name = "储值订单", IsAvailable = true, IsManualMake = false, Length = 10, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "CZ", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
+            makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "WeChatMemberCard", Name = "微信会员卡", IsAvailable = true, IsManualMake = false, Length = 8, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "00", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
+            makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Code = "RechargeBill", Name = "储值订单", IsAvailable = true, IsManualMake = false, Length = 12, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "CZ", Prefix2Rule = ECodePrefixRule.Date, Prefix2Length = 7, Prefix2 = "yyMMdd-", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
             makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Code = "ConsumeBill", Name = "消费订单", IsAvailable = true, IsManualMake = false, Length = 10, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Fixed, Prefix1Length = 2, Prefix1 = "XF", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
             makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000004"), Code = "MemberCardBatchCode", Name = "卡片批次代码", IsAvailable = true, IsManualMake = false, Length = 9, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Date, Prefix1Length = 7, Prefix1 = "yyMMdd-", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });
             makeCodeRuleSet.Add(new MakeCodeRule { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), Code = "CouponTemplateCode", Name = "优惠券模板代码", IsAvailable = true, IsManualMake = false, Length = 12, CurrentValue = 0, Prefix1Rule = ECodePrefixRule.Date, Prefix1Length = 8, Prefix1 = "yyyyMMdd", Prefix2Rule = ECodePrefixRule.None, Prefix2Length = 0, Prefix2 = "", Prefix3Rule = ECodePrefixRule.None, Prefix3Length = 0, Prefix3 = "" });

@@ -30,8 +30,8 @@ namespace VVCar.VIP.Data.Mapping
             this.Property(t => t.LastUpdateUser)
                 .HasMaxLength(20);
 
-            //this.Property(t => t.MatchCardType)
-            //    .HasMaxLength(200);
+            this.Property(t => t.MatchCardType)
+                .HasMaxLength(200);
         }
     }
 }

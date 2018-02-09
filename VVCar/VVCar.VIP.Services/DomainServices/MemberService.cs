@@ -21,6 +21,9 @@ namespace VVCar.VIP.Services.DomainServices
     /// </summary>
     public class MemberService : DomainServiceBase<IRepository<Member>, Member, Guid>, IMemberService
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemberService"/> class.
+        /// </summary>
         public MemberService()
         {
         }
@@ -60,6 +63,23 @@ namespace VVCar.VIP.Services.DomainServices
                 return _rechargeHistoryService;
             }
         }
+
+        IRepository<MemberPoint> MemberPointRepo
+        {
+            get { return UnitOfWork.GetRepository<IRepository<MemberPoint>>(); }
+        }
+
+        IRepository<MemberPointHistory> MemberPointHistoryRepo
+        {
+            get { return UnitOfWork.GetRepository<IRepository<MemberPointHistory>>(); }
+        }
+
+        IMemberGradeService MemberGradeService
+        {
+            get { return UnitOfWork.GetRepository<IMemberGradeService>(); }
+        }
+
+        IMemberGradeHistoryService MemberGradeHistoryService { get => ServiceLocator.Instance.GetService<IMemberGradeHistoryService>(); }
 
         #endregion
 
@@ -108,23 +128,6 @@ namespace VVCar.VIP.Services.DomainServices
         //{
         //    get { return UnitOfWork.GetRepository<IMemberGroupService>(); }
         //}
-
-        //IMemberGradeService MemberGradeService
-        //{
-        //    get { return UnitOfWork.GetRepository<IMemberGradeService>(); }
-        //}
-
-        //IRepository<MemberPoint> MemberPointRepo
-        //{
-        //    get { return UnitOfWork.GetRepository<IRepository<MemberPoint>>(); }
-        //}
-
-        //IRepository<MemberPointHistory> MemberPointHistoryRepo
-        //{
-        //    get { return UnitOfWork.GetRepository<IRepository<MemberPointHistory>>(); }
-        //}
-
-        //IMemberGradeHistoryService MemberGradeHistoryService { get => ServiceLocator.Instance.GetService<IMemberGradeHistoryService>(); }
 
         //IRepository<MemberSignIn> MemberSignInRepo
         //{
@@ -583,6 +586,180 @@ namespace VVCar.VIP.Services.DomainServices
             return cardInfo;
         }
 
+        public bool AdjustMemberPoint(string openId, EMemberPointType pointType, int adjustPoints = 0)
+        {
+            var member = Repository.GetQueryable(false)
+                .Where(t => t.WeChatOpenID == openId)
+                .FirstOrDefault();
+            if (member == null)
+            {
+                throw new DomainException("您还不是会员，请先注册");
+            }
+            if (member.Point + adjustPoints < 0)
+            {
+                throw new DomainException("您的积分不足！");
+            }
+            return AdjustMemberPoint(member.ID, pointType, adjustPoints);
+        }
+
+        public bool AdjustMemberPoint(Guid memberID, EMemberPointType pointType, int adjustPoints, string outTradeNo = "")
+        {
+            var result = false;
+            var remark = string.Empty;
+            var memberPoint = MemberPointRepo.GetInclude(t => t.AdditionalRules, false).Where(t => t.Type == pointType).FirstOrDefault();
+            if (memberPoint != null)
+            {
+                if (!memberPoint.IsAvailable)
+                {
+                    AppContext.Logger.Debug($"设置会员积分失败，对应参数type为{pointType}类型的积分规则未启用");
+                    return result;
+                }
+                var historyQuery = MemberPointHistoryRepo.GetQueryable(false).Where(t => t.Source == pointType && t.MemberID == memberID);
+                var historyCount = historyQuery.Count();
+                var todayCount = historyQuery.Where(t => t.CreatedDate >= DateTime.Today).Count();
+                adjustPoints = memberPoint.Point;
+                var additionalPoints = 0;
+                var additionalRules = memberPoint.AdditionalRules.OrderBy(t => t.Count);
+                if (pointType == EMemberPointType.SignIn)
+                {
+                    foreach (var additional in additionalRules)
+                    {
+                        var oriNum = (historyCount + 1) / (decimal)additional.Count;
+                        if (Math.Ceiling(oriNum) == oriNum)
+                        {
+                            additionalPoints = additional.Point;
+                        }
+                    }
+                    adjustPoints += additionalPoints;
+                }
+                else if (pointType == EMemberPointType.Share || pointType == EMemberPointType.Appraise)
+                {
+                    if (todayCount >= memberPoint.Limit)
+                    {
+                        AppContext.Logger.Error("增加会员积分超过限制次数");
+                        return false;
+                    }
+                    foreach (var additional in additionalRules)
+                    {
+                        if (additional.Count > 0)
+                        {
+                            var oriNum = (historyCount + 1) / (decimal)additional.Count;
+                            if (Math.Ceiling(oriNum) == oriNum)
+                            {
+                                additionalPoints = additional.Point;
+                            }
+                        }
+                    }
+                    adjustPoints += additionalPoints;
+                }
+            }
+            var member = Repository.GetByKey(memberID);
+            if (member == null)
+            {
+                AppContext.Logger.Debug($"调整会员积分失败，会员信息不存在");
+                return result;
+            }
+            member.Point += adjustPoints;
+            result = Repository.Update(member) > 0;
+            if (result)
+            {
+                MemberPointHistoryRepo.Add(new MemberPointHistory
+                {
+                    ID = Util.NewID(),
+                    MemberID = member.ID,
+                    Point = adjustPoints,
+                    Source = pointType,
+                    Remark = pointType.GetDescription(),
+                    CreatedDate = DateTime.Now,
+                    OutTradeNo = outTradeNo,
+                });
+            }
+            else
+            {
+                AppContext.Logger.Error("更新会员失败导致设置会员积分失败");
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取会员Lite信息
+        /// </summary>
+        /// <returns></returns>
+        public MemberLiteInfoDto GetMemberLiteInfo(EMemberFindType findType, string keyword)
+        {
+            var memberQueryable = Repository.GetQueryable(false);
+            switch (findType)
+            {
+                case EMemberFindType.Number:
+                    memberQueryable = memberQueryable.Where(t => t.CardNumber == keyword || t.MobilePhoneNo == keyword);
+                    break;
+                case EMemberFindType.WeChatOpenID:
+                    memberQueryable = memberQueryable.Where(t => t.WeChatOpenID == keyword);
+                    break;
+                default:
+                    return null;
+            }
+            return memberQueryable.MapTo<MemberLiteInfoDto>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 设置会员等级
+        /// </summary>
+        /// <param name="memberID">会员ID</param>
+        /// <param name="memberGradeID">会员等级ID</param>
+        /// <returns></returns>
+        public bool SetMemberGrade(Guid memberID, Guid memberGradeID)
+        {
+            var memberGrade = MemberGradeService
+                .Query(grade => grade.ID == memberGradeID)
+                .FirstOrDefault();
+            if (memberGrade == null)
+                throw new DomainException("会员等级参数错误");
+            return SetMemberGrade(memberID, memberGrade);
+        }
+
+        /// <summary>
+        /// 设置会员等级
+        /// </summary>
+        /// <param name="memberID"></param>
+        /// <param name="memberGrade"></param>
+        /// <returns></returns>
+        public bool SetMemberGrade(Guid memberID, MemberGrade memberGrade)
+        {
+            var member = Repository.GetByKey(memberID);
+            return SetMemberGrade(member, memberGrade);
+        }
+
+        /// <summary>
+        /// 设置会员等级
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="memberGrade"></param>
+        /// <returns></returns>
+        bool SetMemberGrade(Member member, MemberGrade memberGrade)
+        {
+            if (member == null)
+            {
+                AppContext.Logger.Debug("设置会员等级失败，会员不存在");
+                return false;
+            }
+            if (member.MemberGradeID == memberGrade.ID)
+                return true;
+            MemberGradeHistoryService.Add(new MemberGradeHistory
+            {
+                MemberID = member.ID,
+                BeforeMemberGradeID = member.MemberGradeID.GetValueOrDefault(),
+                AfterMemberGradeID = memberGrade.ID,
+            });
+            member.MemberGradeID = memberGrade.ID;
+            Repository.Update(member);
+            if (memberGrade.GradePoint > 0)
+            {
+                AdjustMemberPoint(member.ID, EMemberPointType.MemberGradeUpgrade, memberGrade.GradePoint);
+            }
+            return true;
+        }
+
         #endregion
 
         #region methodsTemp
@@ -715,27 +892,6 @@ namespace VVCar.VIP.Services.DomainServices
         //}
 
         ///// <summary>
-        ///// 获取会员Lite信息
-        ///// </summary>
-        ///// <returns></returns>
-        //public MemberLiteInfoDto GetMemberLiteInfo(EMemberFindType findType, string keyword)
-        //{
-        //    var memberQueryable = Repository.GetQueryable(false);
-        //    switch (findType)
-        //    {
-        //        case EMemberFindType.Number:
-        //            memberQueryable = memberQueryable.Where(t => t.CardNumber == keyword || t.MobilePhoneNo == keyword);
-        //            break;
-        //        case EMemberFindType.WeChatOpenID:
-        //            memberQueryable = memberQueryable.Where(t => t.WeChatOpenID == keyword);
-        //            break;
-        //        default:
-        //            return null;
-        //    }
-        //    return memberQueryable.MapTo<MemberLiteInfoDto>().FirstOrDefault();
-        //}
-
-        ///// <summary>
         ///// 获取会员Nano信息
         ///// </summary>
         ///// <returns></returns>
@@ -860,159 +1016,6 @@ namespace VVCar.VIP.Services.DomainServices
         //        .ToList();
         //    memberList.ForEach(t => t.MemberGroupID = memberGroupID);
         //    Repository.Update(memberList);
-        //    return true;
-        //}
-
-        //public bool AdjustMemberPoint(string openId, EMemberPointType pointType, int adjustPoints = 0)
-        //{
-        //    var member = Repository.GetQueryable(false)
-        //        .Where(t => t.WeChatOpenID == openId)
-        //        .FirstOrDefault();
-        //    if (member == null)
-        //    {
-        //        throw new DomainException("您还不是会员，请先注册");
-        //    }
-        //    if (member.Point + adjustPoints < 0)
-        //    {
-        //        throw new DomainException("您的积分不足！");
-        //    }
-        //    return AdjustMemberPoint(member.ID, pointType, adjustPoints);
-        //}
-
-        //public bool AdjustMemberPoint(Guid memberID, EMemberPointType pointType, int adjustPoints, string outTradeNo = "")
-        //{
-        //    var result = false;
-        //    var remark = string.Empty;
-        //    var memberPoint = MemberPointRepo.GetInclude(t => t.AdditionalRules, false).Where(t => t.Type == pointType).FirstOrDefault();
-        //    if (memberPoint != null)
-        //    {
-        //        if (!memberPoint.IsAvailable)
-        //        {
-        //            AppContext.Logger.Debug($"设置会员积分失败，对应参数type为{pointType}类型的积分规则未启用");
-        //            return result;
-        //        }
-        //        var historyQuery = MemberPointHistoryRepo.GetQueryable(false).Where(t => t.Source == pointType && t.MemberID == memberID);
-        //        var historyCount = historyQuery.Count();
-        //        var todayCount = historyQuery.Where(t => t.CreatedDate >= DateTime.Today).Count();
-        //        adjustPoints = memberPoint.Point;
-        //        var additionalPoints = 0;
-        //        var additionalRules = memberPoint.AdditionalRules.OrderBy(t => t.Count);
-        //        if (pointType == EMemberPointType.SignIn)
-        //        {
-        //            foreach (var additional in additionalRules)
-        //            {
-        //                var oriNum = (historyCount + 1) / (decimal)additional.Count;
-        //                if (Math.Ceiling(oriNum) == oriNum)
-        //                {
-        //                    additionalPoints = additional.Point;
-        //                }
-        //            }
-        //            adjustPoints += additionalPoints;
-        //        }
-        //        else if (pointType == EMemberPointType.Share || pointType == EMemberPointType.Appraise)
-        //        {
-        //            if (todayCount >= memberPoint.Limit)
-        //            {
-        //                AppContext.Logger.Error("增加会员积分超过限制次数");
-        //                return false;
-        //            }
-        //            foreach (var additional in additionalRules)
-        //            {
-        //                if (additional.Count > 0)
-        //                {
-        //                    var oriNum = (historyCount + 1) / (decimal)additional.Count;
-        //                    if (Math.Ceiling(oriNum) == oriNum)
-        //                    {
-        //                        additionalPoints = additional.Point;
-        //                    }
-        //                }
-        //            }
-        //            adjustPoints += additionalPoints;
-        //        }
-        //    }
-        //    var member = Repository.GetByKey(memberID);
-        //    if (member == null)
-        //    {
-        //        AppContext.Logger.Debug($"调整会员积分失败，会员信息不存在");
-        //        return result;
-        //    }
-        //    member.Point += adjustPoints;
-        //    result = Repository.Update(member) > 0;
-        //    if (result)
-        //    {
-        //        MemberPointHistoryRepo.Add(new MemberPointHistory
-        //        {
-        //            ID = Util.NewID(),
-        //            MemberID = member.ID,
-        //            Point = adjustPoints,
-        //            Source = pointType,
-        //            Remark = pointType.GetDescription(),
-        //            CreatedDate = DateTime.Now,
-        //            OutTradeNo = outTradeNo,
-        //        });
-        //    }
-        //    else
-        //    {
-        //        AppContext.Logger.Error("更新会员失败导致设置会员积分失败");
-        //    }
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// 设置会员等级
-        ///// </summary>
-        ///// <param name="memberID">会员ID</param>
-        ///// <param name="memberGradeID">会员等级ID</param>
-        ///// <returns></returns>
-        //public bool SetMemberGrade(Guid memberID, Guid memberGradeID)
-        //{
-        //    var memberGrade = MemberGradeService
-        //        .Query(grade => grade.ID == memberGradeID)
-        //        .FirstOrDefault();
-        //    if (memberGrade == null)
-        //        throw new DomainException("会员等级参数错误");
-        //    return SetMemberGrade(memberID, memberGrade);
-        //}
-
-        ///// <summary>
-        ///// 设置会员等级
-        ///// </summary>
-        ///// <param name="memberID"></param>
-        ///// <param name="memberGrade"></param>
-        ///// <returns></returns>
-        //public bool SetMemberGrade(Guid memberID, MemberGrade memberGrade)
-        //{
-        //    var member = Repository.GetByKey(memberID);
-        //    return SetMemberGrade(member, memberGrade);
-        //}
-
-        ///// <summary>
-        ///// 设置会员等级
-        ///// </summary>
-        ///// <param name="member"></param>
-        ///// <param name="memberGrade"></param>
-        ///// <returns></returns>
-        //bool SetMemberGrade(Member member, MemberGrade memberGrade)
-        //{
-        //    if (member == null)
-        //    {
-        //        AppContext.Logger.Debug("设置会员等级失败，会员不存在");
-        //        return false;
-        //    }
-        //    if (member.MemberGradeID == memberGrade.ID)
-        //        return true;
-        //    MemberGradeHistoryService.Add(new MemberGradeHistory
-        //    {
-        //        MemberID = member.ID,
-        //        BeforeMemberGradeID = member.MemberGradeID.GetValueOrDefault(),
-        //        AfterMemberGradeID = memberGrade.ID,
-        //    });
-        //    member.MemberGradeID = memberGrade.ID;
-        //    Repository.Update(member);
-        //    if (memberGrade.GradePoint > 0)
-        //    {
-        //        AdjustMemberPoint(member.ID, EMemberPointType.MemberGradeUpgrade, memberGrade.GradePoint);
-        //    }
         //    return true;
         //}
 

@@ -49,12 +49,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreateDBSeedAction.cs" />
+    <Compile Include="Mapping\DataDictTypeMap.cs" />
+    <Compile Include="Mapping\DataDictValueMap.cs" />
     <Compile Include="Mapping\DepartmentMap.cs" />
     <Compile Include="Mapping\MakeCodeRuleMap.cs" />
     <Compile Include="Mapping\PermissionFuncMap.cs" />
     <Compile Include="Mapping\RoleMap.cs" />
     <Compile Include="Mapping\RolePermissionMap.cs" />
     <Compile Include="Mapping\SysMenuMap.cs" />
+    <Compile Include="Mapping\SystemSettingMap.cs" />
     <Compile Include="Mapping\UserMap.cs" />
     <Compile Include="Mapping\UserRoleMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -234,8 +234,8 @@
 }
 
 .x-treelist-expander-first .x-treelist-item-expander {
-    left: 0;
-    right: auto;
+    left: auto;
+    right: 0;
 }
 
 .x-splitter-default {

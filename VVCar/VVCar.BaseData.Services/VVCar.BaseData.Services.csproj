@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoMapper\DtoMapper.cs" />
+    <Compile Include="DomainServices\DataDictTypeService.cs" />
+    <Compile Include="DomainServices\DataDictValueService.cs" />
     <Compile Include="DomainServices\DepartmentService.cs" />
     <Compile Include="DomainServices\MakeCodeRuleService.cs" />
     <Compile Include="DomainServices\MerchantService.cs" />
@@ -53,6 +55,7 @@
     <Compile Include="DomainServices\RolePermissionService.cs" />
     <Compile Include="DomainServices\RoleService.cs" />
     <Compile Include="DomainServices\SysMenuService.cs" />
+    <Compile Include="DomainServices\SystemSettingService.cs" />
     <Compile Include="DomainServices\UserRoleService.cs" />
     <Compile Include="DomainServices\UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

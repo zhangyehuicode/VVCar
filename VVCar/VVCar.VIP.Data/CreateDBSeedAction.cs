@@ -29,6 +29,10 @@ namespace VVCar.VIP.Data
         public void Seed(DbContext context)
         {
             SeedMemberCardType(context);
+            SeedMemberGrade(context);
+            SeedMemberGroup(context);
+            SeedMemberCardTheme(context);
+            SeedCardThemeCategory(context);
         }
 
         void SeedMemberCardType(DbContext context)
@@ -37,6 +41,33 @@ namespace VVCar.VIP.Data
             memberCardTypeSet.Add(new MemberCardType { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "储值卡", AllowStoreActivate = true, AllowDiscount = false, AllowRecharge = true, MaxRecharge = 0, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
             memberCardTypeSet.Add(new MemberCardType { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "折扣卡", AllowStoreActivate = true, AllowDiscount = true, AllowRecharge = false, MaxRecharge = 0, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
             memberCardTypeSet.Add(new MemberCardType { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "礼品卡", AllowStoreActivate = true, AllowDiscount = false, AllowRecharge = false, MaxRecharge = 0, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+        }
+
+        void SeedMemberGrade(DbContext context)
+        {
+            var memberGradeSet = context.Set<MemberGrade>();
+            memberGradeSet.Add(new MemberGrade { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "默认等级", IsDefault = true, Level = 1, IsNeverExpires = true, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
+        }
+
+        void SeedMemberGroup(DbContext context)
+        {
+            var memberGroupSet = context.Set<MemberGroup>();
+            memberGroupSet.Add(new MemberGroup { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "000", Name = "普通会员", Index = -1 });
+        }
+
+        void SeedMemberCardTheme(DbContext context)
+        {
+            var memberCardThemeSet = context.Set<MemberCardTheme>();
+            memberCardThemeSet.Add(new MemberCardTheme { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Index = 1, CardTypeID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "默认主题", ImgUrl = "/Pictures/MemberCardTheme/default_gift_card_theme.png", IsDefault = true });
+        }
+
+        void SeedCardThemeCategory(DbContext context)
+        {
+            var cardThemeCategorySet = context.Set<CardThemeCategory>();
+            cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000000"), Name = "全部", Grade = 0 });
+            cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "1类推荐", Grade = 1 });
+            cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "2类推荐", Grade = 2 });
+            cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "3类推荐", Grade = 3 });
         }
     }
 }

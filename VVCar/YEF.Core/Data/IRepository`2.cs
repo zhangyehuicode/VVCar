@@ -44,6 +44,13 @@ namespace YEF.Core.Data
         IQueryable<TEntity> GetQueryable(bool trackEnabled = true);
 
         /// <summary>
+        /// 获取IQueryable对象(包含所有数据)
+        /// </summary>
+        /// <param name="trackEnabled"></param>
+        /// <returns></returns>
+        IQueryable<TEntity> GetQueryableAllData(bool trackEnabled = true);
+
+        /// <summary>
         /// 插入实体
         /// </summary>
         /// <param name="entity">实体对象</param>
@@ -79,6 +86,13 @@ namespace YEF.Core.Data
         int Delete(TEntity entity);
 
         /// <summary>
+        /// 删除指定编号的实体
+        /// </summary>
+        /// <param name="key">实体编号</param>
+        /// <returns>操作影响的行数</returns>
+        int Delete(TKey key);
+
+        /// <summary>
         /// 批量删除删除实体
         /// </summary>
         /// <param name="entities">实体对象集合</param>
@@ -112,6 +126,13 @@ namespace YEF.Core.Data
         /// <param name="entity">实体对象</param>
         /// <returns>操作影响的行数</returns>
         int Update(TEntity entity);
+
+        /// <summary>
+        /// 批量更新实体对象
+        /// </summary>
+        /// <param name="entities">实体对象集合</param>
+        /// <returns>操作影响的行数</returns>
+        int Update(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// 批量更新实体对象

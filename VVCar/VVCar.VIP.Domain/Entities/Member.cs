@@ -138,28 +138,28 @@ namespace VVCar.VIP.Domain.Entities
         /// <summary>
         /// 会员分组ID
         /// </summary>
-        //[Display(Name = "会员分组ID")]
-        //public Guid? MemberGroupID { get; set; }
+        [Display(Name = "会员分组ID")]
+        public Guid? MemberGroupID { get; set; }
 
         /// <summary>
         /// 会员分组
         /// </summary>
-        //public virtual MemberGroup OwnerGroup { get; set; }
+        public virtual MemberGroup OwnerGroup { get; set; }
 
         /// <summary>
         /// 会员等级ID
         /// </summary>
-        //[Display(Name = "会员等级ID")]
-        //public Guid? MemberGradeID { get; set; }
+        [Display(Name = "会员等级ID")]
+        public Guid? MemberGradeID { get; set; }
 
         /// <summary>
         /// 会员等级
         /// </summary>
-        //public virtual MemberGrade MemberGrade { get; set; }
+        public virtual MemberGrade MemberGrade { get; set; }
 
-        /// <summary>
-        /// 会员签到
-        /// </summary>
+        ///// <summary>
+        ///// 会员签到
+        ///// </summary>
         //[Display(Name = "会员签到")]
         //public virtual ICollection<MemberSignIn> MemberSignIn { get; set; }
     }

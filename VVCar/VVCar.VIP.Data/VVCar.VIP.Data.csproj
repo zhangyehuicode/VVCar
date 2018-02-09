@@ -53,15 +53,31 @@
     <Compile Include="Mapping\CardThemeCategoryMap.cs" />
     <Compile Include="Mapping\CardThemeGroupMap.cs" />
     <Compile Include="Mapping\CardThemeGroupUseTimeMap.cs" />
+    <Compile Include="Mapping\CouponMap.cs" />
+    <Compile Include="Mapping\CouponPushItemMap.cs" />
+    <Compile Include="Mapping\CouponPushMap.cs" />
+    <Compile Include="Mapping\CouponPushRecordMap.cs" />
+    <Compile Include="Mapping\CouponTemplateMap.cs" />
+    <Compile Include="Mapping\CouponTemplateStockMap.cs" />
+    <Compile Include="Mapping\CouponTemplateUseTimeMap.cs" />
+    <Compile Include="Mapping\GivenCouponRecordMap.cs" />
     <Compile Include="Mapping\MemberCardMap.cs" />
     <Compile Include="Mapping\MemberCardThemeMap.cs" />
     <Compile Include="Mapping\MemberCardTypeMap.cs" />
     <Compile Include="Mapping\MemberGiftCardMap.cs" />
+    <Compile Include="Mapping\MemberGradeHistoryMap.cs" />
+    <Compile Include="Mapping\MemberGradeMap.cs" />
+    <Compile Include="Mapping\MemberGradeRightMap.cs" />
+    <Compile Include="Mapping\MemberGroupMap.cs" />
     <Compile Include="Mapping\MemberMap.cs" />
     <Compile Include="Mapping\MemberPointHistoryMap.cs" />
+    <Compile Include="Mapping\PointExchangeCouponMap.cs" />
     <Compile Include="Mapping\RechargeHistoryMap.cs" />
     <Compile Include="Mapping\RechargePlanMap.cs" />
+    <Compile Include="Mapping\SalesActivityRecordMap.cs" />
     <Compile Include="Mapping\TradeHistoryMap.cs" />
+    <Compile Include="Mapping\VerificationCodeMap.cs" />
+    <Compile Include="Mapping\VerificationRecordMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

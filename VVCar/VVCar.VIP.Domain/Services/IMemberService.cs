@@ -9,6 +9,7 @@ using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
 using YEF.Core.Dtos;
 using VVCar.VIP.Domain.Filters;
+using VVCar.VIP.Domain.Enums;
 
 namespace VVCar.VIP.Domain.Services
 {
@@ -67,11 +68,11 @@ namespace VVCar.VIP.Domain.Services
         /// <returns></returns>
         MemberDto GetCustomerMemberInfo(string mobilePhoneNo, string wechatOpenID);
 
-        ///// <summary>
-        ///// 获取会员Lite信息
-        ///// </summary>
-        ///// <returns></returns>
-        //MemberLiteInfoDto GetMemberLiteInfo(EMemberFindType findType, string keyword);
+        /// <summary>
+        /// 获取会员Lite信息
+        /// </summary>
+        /// <returns></returns>
+        MemberLiteInfoDto GetMemberLiteInfo(EMemberFindType findType, string keyword);
 
         ///// <summary>
         ///// 获取会员Nano信息
@@ -168,40 +169,40 @@ namespace VVCar.VIP.Domain.Services
         ///// <returns></returns>
         //bool ChangeMemberGroup(ChangeMemberGroupDto changeDto);
 
-        ///// <summary>
-        ///// 调整会员积分
-        ///// </summary>
-        ///// <param name="openId"></param>
-        ///// <param name="pointType"></param>
-        ///// <param name="adjustPoints"></param>
-        ///// <returns></returns>
-        //bool AdjustMemberPoint(string openId, EMemberPointType pointType, int adjustPoints = 0);
+        /// <summary>
+        /// 调整会员积分
+        /// </summary>
+        /// <param name="openId"></param>
+        /// <param name="pointType"></param>
+        /// <param name="adjustPoints"></param>
+        /// <returns></returns>
+        bool AdjustMemberPoint(string openId, EMemberPointType pointType, int adjustPoints = 0);
 
-        ///// <summary>
-        ///// 调整会员积分
-        ///// </summary>
-        ///// <param name="memberID">会员ID</param>
-        ///// <param name="pointType">调整积分类型</param>
-        ///// <param name="adjustPoints">调整积分值</param>
-        ///// <param name="outTradeNo">外部交易流水号</param>
-        ///// <returns></returns>
-        //bool AdjustMemberPoint(Guid memberID, EMemberPointType pointType, int adjustPoints, string outTradeNo = "");
+        /// <summary>
+        /// 调整会员积分
+        /// </summary>
+        /// <param name="memberID">会员ID</param>
+        /// <param name="pointType">调整积分类型</param>
+        /// <param name="adjustPoints">调整积分值</param>
+        /// <param name="outTradeNo">外部交易流水号</param>
+        /// <returns></returns>
+        bool AdjustMemberPoint(Guid memberID, EMemberPointType pointType, int adjustPoints, string outTradeNo = "");
 
-        ///// <summary>
-        ///// 设置会员等级
-        ///// </summary>
-        ///// <param name="memberID">会员ID</param>
-        ///// <param name="memberGradeID">会员等级ID</param>
-        ///// <returns></returns>
-        //bool SetMemberGrade(Guid memberID, Guid memberGradeID);
+        /// <summary>
+        /// 设置会员等级
+        /// </summary>
+        /// <param name="memberID">会员ID</param>
+        /// <param name="memberGradeID">会员等级ID</param>
+        /// <returns></returns>
+        bool SetMemberGrade(Guid memberID, Guid memberGradeID);
 
-        ///// <summary>
-        ///// 设置会员等级
-        ///// </summary>
-        ///// <param name="memberID">会员ID</param>
-        ///// <param name="memberGrade">会员等级</param>
-        ///// <returns></returns>
-        //bool SetMemberGrade(Guid memberID, MemberGrade memberGrade);
+        /// <summary>
+        /// 设置会员等级
+        /// </summary>
+        /// <param name="memberID">会员ID</param>
+        /// <param name="memberGrade">会员等级</param>
+        /// <returns></returns>
+        bool SetMemberGrade(Guid memberID, MemberGrade memberGrade);
 
         ///// <summary>
         ///// 校验会员是否享有POS权益

@@ -34,6 +34,21 @@
     <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -46,10 +61,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoMapper\DtoMapper.cs" />
+    <Compile Include="DomainServices\CardThemeCategoryService.cs" />
+    <Compile Include="DomainServices\CardThemeGroupService.cs" />
+    <Compile Include="DomainServices\CardThemeGroupUseTimeService.cs" />
+    <Compile Include="DomainServices\CouponService.cs" />
+    <Compile Include="DomainServices\CouponTemplateService.cs" />
+    <Compile Include="DomainServices\CouponTemplateStockService.cs" />
+    <Compile Include="DomainServices\CouponTemplateUseTimeService.cs" />
+    <Compile Include="DomainServices\GivenCouponRecordService.cs" />
     <Compile Include="DomainServices\MemberCardService.cs" />
+    <Compile Include="DomainServices\MemberCardThemeService.cs" />
     <Compile Include="DomainServices\MemberCardTypeService.cs" />
+    <Compile Include="DomainServices\MemberGiftCardService.cs" />
+    <Compile Include="DomainServices\MemberGradeHistoryService.cs" />
+    <Compile Include="DomainServices\MemberGradeService.cs" />
+    <Compile Include="DomainServices\MemberGroupService.cs" />
     <Compile Include="DomainServices\MemberService.cs" />
     <Compile Include="DomainServices\RechargeHistoryService.cs" />
+    <Compile Include="DomainServices\RechargePlanService.cs" />
+    <Compile Include="DomainServices\TradeHistoryService.cs" />
+    <Compile Include="DomainServices\VerificationRecordService.cs" />
+    <Compile Include="DomainServices\VisitRecordService.cs" />
+    <Compile Include="DomainServices\WeChatService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
