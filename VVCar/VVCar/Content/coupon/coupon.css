@@ -1,0 +1,646 @@
+﻿/* 全局 */
+a {
+    text-decoration: none;
+}
+
+    a:link, a:visited {
+        text-decoration: none;
+    }
+
+.nodata {
+    margin-top: 50px;
+    color: #aaaaaa;
+    text-align: center;
+}
+
+.subscribeGzw {
+    display: none;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 99;
+}
+
+.subscribeGzw-qrcode {
+    margin-top: 30%;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+}
+
+/* 卡券列表 */
+
+.contentDiv {
+    background-color: #efefef;
+    width: 100%;
+    min-height: 100%;
+    position: absolute;
+    padding-bottom: 10px;
+}
+
+.mycoupon-item {
+    position: relative;
+    margin-top: 10px;
+    width: 90%;
+    min-height: 102px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 2px #aaaaaa;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.mycoupon-item-mark {
+    position: absolute;
+    top: 6px;
+    left: -16px;
+    width: 64px;
+    font-size: 10px;
+    text-align: center;
+    background-color: #fff830;
+    color: #8b894e;
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.mycoupon-item-main {
+    display: table;
+    height: 77px;
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    color: #ffffff;
+}
+
+.mycoupon-item-left {
+    width: 76px;
+    text-align: center;
+    padding-left: 10px;
+}
+
+.mycoupon-item-value {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.mycoupon-item-unit {
+    font-size: 15px;
+}
+
+.mycoupon-item-separate {
+    width: 9px;
+    background-image: url(/Content/coupon/images/bg_quanquan@2x.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.mycoupon-item-right {
+    padding: 8px 2px 0 6px;
+}
+
+.mycoupon-item-title {
+    display: block;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.mycoupon-item-remark {
+    display: block;
+    font-size: 12px;
+    height: 36px;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    -ms-word-break: break-all;
+    word-break: break-all;
+    overflow: hidden;
+}
+
+.mycoupon-item-bottom {
+    height: 25px;
+    width: 100%;
+    border-radius: 0 0 4px 4px;
+    background-color: #ffffff;
+    font-size: 11px;
+    line-height: 25px;
+}
+
+.mycoupon-item-exipredHint {
+    color: #ff0000;
+    margin-left: 13px;
+}
+
+.mycoupon-item-expiredDate {
+    color: #bcbcbc;
+    margin-right: 13px;
+    float: right;
+}
+
+/* 卡券详情 */
+.couponinfo {
+    margin: 15px 8px;
+    background-color: #ffffff;
+    /*position: absolute;*/
+}
+
+.couponinfo-top {
+    padding-top: 30px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #c9c9c9;
+}
+
+.couponTitle {
+    /*margin-top: 30px;*/
+    font-size: 25px;
+    color: #262626;
+    /*width: 100%;*/
+    text-align: center;
+}
+
+.couponOperate {
+    display: block;
+    width: 122px;
+    height: 40px;
+    margin: 13px auto 7px auto;
+    font-size: 20px;
+    text-align: center;
+    line-height: 40px;
+    border: 1px solid;
+}
+
+.couponSubTitle {
+    font-size: 13px;
+    color: #262626;
+    /*width: 100%;*/
+    text-align: center;
+}
+
+.couponExplain {
+    margin: 10px 8px 0 14px;
+    /*padding: 10px 8px 12px 8px;*/
+    padding-bottom: 12px;
+    /*border-bottom: 1px dashed #c9c9c9;*/
+    font-size: 12px;
+    color: #9e9e9e;
+}
+
+    .couponExplain tr {
+        padding-bottom: 8px;
+    }
+
+.couponExplain-field {
+    font-size: 12px;
+    color: #262626;
+    width: 65px;
+    vertical-align: text-top;
+}
+
+.coupon-detail {
+    margin: 9px 14px;
+    /*width: 90%;*/
+}
+
+.couponCover {
+    width: 100%;
+}
+
+    .couponCover img {
+        width: 100%;
+    }
+
+.couponCover-intro {
+    position: relative;
+    display: block;
+    margin-top: -22px;
+    height: 22px;
+    line-height: 22px;
+    background-color: rgba(0, 0, 0, 0.40);
+    color: #fff;
+    padding: 0 8px;
+}
+
+/*.couponCover-intro::after{
+    content: '>';
+    float:right;
+}*/
+
+.couponStore {
+    margin-top: 13px;
+    padding-bottom: 14px;
+    font-size: 13px;
+}
+
+.coupon-detail-item {
+    display: block;
+    padding: 14px 0;
+    min-height: 43px;
+    /*line-height: 43px;*/
+    font-size: 14px;
+    color: #262626;
+    border-top: 1px solid #e4e4e4;
+}
+
+.coupon-detail-item-content {
+    display: block;
+    line-height: 16px;
+    font-size: 12px;
+    color: #9e9e9e;
+}
+
+.list-item-link::after {
+    content: '>';
+    float: right;
+    color: #939393;
+    font-weight: bold;
+}
+
+/* 门店列表 begin */
+.sl-body {
+    background-color: #efefef;
+}
+
+.sl-top {
+    text-align: center;
+    height: 35px;
+    line-height: 35px;
+    background: #ffffff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9;
+}
+
+.sl-top-title {
+    background-image: url(/Content/coupon/images/icon_arrow@2x.png);
+    background-size: 17px;
+    background-position: right center;
+    background-repeat: no-repeat;
+    text-align: center;
+    color: #2b2b2b;
+    font-size: 1.2em;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.sl-list {
+    margin-top: 43px;
+    padding-bottom: 10px;
+}
+
+.sl-listitem {
+    margin-top: 8px;
+    background: #ffffff;
+}
+
+.sl-listitem-title {
+    color: #2b2b2b;
+    font-size: 1.2em;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 18px;
+    border-bottom: solid 1px #efefef;
+}
+
+.sl-listitem-address {
+    border-bottom: solid 1px #efefef;
+    padding: 11px 18px;
+}
+
+.sl-store-address {
+    background-image: url(/Content/coupon/images/icon_dingwei@2x.png);
+    background-size: 14px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    color: #959595;
+    font-size: 1em;
+    padding-left: 24px;
+    margin-bottom: 5px;
+}
+
+.sl-store-bus {
+    background-image: url(/Content/coupon/images/icon_qiche@2x.png);
+    background-size: 14px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    color: #959595;
+    font-size: 1em;
+    padding-left: 24px;
+}
+
+.sl-listitem-phone {
+    height: 35px;
+    line-height: 35px;
+    display: -moz-box;
+    display: -webkit-box;
+    display: box;
+}
+
+    .sl-listitem-phone a {
+        text-decoration: none;
+    }
+
+.sl-store-phone {
+    color: #959595;
+    font-size: 1.2em;
+    text-align: right;
+    padding-right: 24px;
+    border-right: solid 1px #efefef;
+    -moz-box-flex: 1;
+    -webkit-box-flex: 1;
+    box-flex: 1;
+}
+
+.sl-store-phoneicon {
+    background-image: url(/Content/coupon/images/icon_phone@2x.png);
+    background-size: 22px;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 67px;
+}
+
+.sl-showcity {
+    background-color: rgba(0,0,0,0.4);
+    z-index: 8;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 35px;
+    bottom: 0;
+    display: none;
+}
+
+.sl-citylist {
+    width: 100px;
+    background: #ffffff;
+    margin: auto;
+}
+
+.sl-cityitem {
+    border-top: solid 1px #b6b6b6;
+    height: 35px;
+    line-height: 35px;
+    color: #959595;
+    text-align: center;
+    font-size: 1em;
+}
+
+/* 门店列表 finish */
+
+/* 使用卡券 */
+.usecoupon {
+    /*margin: 15px 8px;*/
+    background-color: #ffffff;
+    display: flex;
+    -ms-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    justify-content: space-around;
+    position: absolute;
+    left: 8px;
+    top: 15px;
+    bottom: 15px;
+    right: 8px;
+}
+
+.usecoupon-top {
+    padding-top: 35px;
+    height: 105px;
+    border-bottom: 3px dashed #adadad;
+}
+
+.usecoupon-separate {
+    position: relative;
+    display: inline-block;
+    top: -10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+.usecoupon-detail {
+    padding: 9px 0;
+    text-align: center;
+    margin: auto;
+}
+
+.usecoupon-verifycode {
+    width: 115px;
+    font-size: 15px;
+    color: #262626;
+    text-align: center;
+    border-radius: 0;
+    padding-bottom: 5px;
+    border: none;
+    border-bottom: solid 1px #1f1f1f;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.usecoupon-confirm {
+    margin-top: 24px;
+    width: 125px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    text-align: center;
+    color: #ffffff;
+    border-radius: 4px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.usecoupon-successMark {
+    display: block;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 50%;
+    border: solid 3px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 40px;
+}
+
+.usecoupon-successHint {
+    margin-top: 15px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.usecoupon-scancode {
+    display: none;
+    margin-top: -20px;
+}
+
+.usecoupon-qrcode {
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    height: 200px;
+}
+
+.mycoupontitle-container {
+    display: table;
+    margin: auto;
+    padding: 20px 0 10px 0;
+}
+
+.mycoupontitle-item {
+    display: table-cell;
+    border: 1px #000 solid;
+    padding: 5px 10px;
+    background-color: #fff;
+    width: 101px;
+    text-align: center;
+}
+
+.mycoupontitle-itemselected {
+    color: #fff;
+    background-color: #000;
+}
+
+.mycoupon-point {
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+}
+
+.mycoupontitle-leftitem {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-right: none;
+}
+
+.mycoupontitle-rightitem {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.mycoupon-centercontainer {
+    display: table;
+    width: 100%;
+    padding: 10px 10px 0 10px;
+    max-height: 100px;
+}
+
+.mycoupon-centeritemcontainer {
+    display: table;
+    width: 100%;
+}
+
+.mycoupon-centeractioncouponvaluecontainer {
+    display: table;
+}
+
+.mycoupon-centeritem {
+    display: table-cell;
+}
+
+.mycoupon-centeritemsub {
+    width: 100%;
+}
+
+.mycoupon-centeritemsubbottom {
+    padding: 2px 0;
+    border-top: 1px #efefef solid;
+}
+
+.mycouponcenteritemsubbottomchangge {
+    padding: 2px 0;
+    border-top: 1px #efefef solid;
+}
+
+.mycoupon-centerleftitemcontainer {
+    background-color: #fff;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    font-size: 10px;
+    padding: 0 10px;
+}
+
+.mycoupon-centeraction {
+    width: 80px;
+    height: 80px;
+    color: #fff;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    font-size: 12px;
+}
+
+.mycoupon-centeractionitem {
+    text-align: center;
+}
+
+.mycoupon-centeractionbtn {
+    background-color: #fff;
+    border-radius: 10px;
+    margin: 13px 5px;
+    height: 22px;
+    line-height: 22px;
+    vertical-align: middle;
+}
+
+.mycouponcenteractionbtnchange {
+    margin: 6px 5px;
+}
+
+.mycoupon-centeractionitemtop {
+    padding-top: 11px;
+}
+
+.mycoupon-centeractionitemtopcontent {
+    position: relative;
+    top: 20px;
+}
+
+.mycoupon-centerpartition {
+    background-color: #fff;
+}
+
+.mycoupon-centeractiontitlefont {
+    font-size: 15px;
+}
+
+.mycoupon-centeractioncouponvaluefont {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.mycoupon-centeractioncouponvalueunitfont {
+    font-size: 13px;
+}
+
+.mycoupon-centeractionusecondition {
+    padding: 2px 0;
+    font-weight: 400;
+}
+
+.mycoupon-centeractioncouponvalue {
+    width: 45px;
+    text-align: left;
+}
+
+.mycoupon-centeractionpoint {
+    color: red;
+}
+
+.mycoupon-centeractionbottomfont {
+    color: silver;
+}
+
+.mycoupon-centeractionexchangedate {
+    text-align: right;
+}
+
+.mycoupon-centerinnercontainer {
+    width: 100%;
+    display: table;
+    box-shadow: 0px 3px 6px #959595;
+    border-radius: 3px;
+}

@@ -1,0 +1,2289 @@
+﻿@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Coupon/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="btn-group btn-group-justified" role="group" aria-label="..." id="stepimg" style="padding:5px;">
+    <div class="btn-group" role="group" style="text-align:center;">
+        <img id="firststepimg" />
+        <h5>选择优惠券类别</h5>
+    </div>
+    <div class="btn-group" role="group" style="text-align:center;">
+        <hr style="height:3px;border:none;border-top:3px solid #b6b6b6;" id="firststepline" />
+    </div>
+    <div class="btn-group" role="group" style="text-align:center;">
+        <img id="secondstepimg" />
+        <h5>填写优惠券信息</h5>
+    </div>
+    <div class="btn-group" role="group" style="text-align:center;">
+        <hr style="height:3px;border:none;border-top:3px solid #b6b6b6;" id="secondstepline" />
+    </div>
+    <div class="btn-group" role="group" style="text-align:center;">
+        <img id="thirdstepimg" />
+        <h5>功能设置</h5>
+    </div>
+    <div class="btn-group" role="group" style="text-align:center;">
+        <hr style="height:3px;border:none;border-top:3px solid #b6b6b6;" id="thirdstepline" />
+    </div>
+    <div class="btn-group" role="group" style="text-align:center;">
+        <img id="laststepimg" />
+        <h5 data-bind="text:ModifyCouponTemplate()!=null?'修改成功':'创建成功'"></h5>
+    </div>
+</div>
+<div id="firststep" style="padding:100px;">
+    <table>
+        <tr>
+            <td>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="coupontype" value="1" id="voucher" data-bind="checked:CouponType">抵用券
+                    </label>
+                </div>
+                <p class="help-block">可为用户提供抵扣现金服务。可设置为“消费X商品，抵用商品金额X元”</p>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="coupontype" value="0" id="cash" data-bind="checked:CouponType">代金券
+                    </label>
+                </div>
+                <p class="help-block">可为用户提供抵扣现金服务。可设置为“满X元，减X元”</p>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="coupontype" value="2" id="exchange" data-bind="checked:CouponType">兑换券
+                    </label>
+                </div>
+                <p class="help-block">可为用户提供消费赠送服务</p>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="coupontype" value="3" id="discount" data-bind="checked:CouponType">折扣券
+                    </label>
+                </div>
+                <p class="help-block">可为用户提供消费折扣</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div style="text-align:center;">
+                    <button id="firststepconfirm" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">确定</button>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <br>
+                <br>
+                <div class="alert alert-warning alert-dismissible" role="alert" hidden="hidden" id="firststepalert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="false">&times;</span></button>
+                    <strong>提示!</strong>&nbsp;&nbsp;未选择任何优惠券类型.
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="container-fluid" id="secondstep" hidden="hidden">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="col-md-11" style="padding-top:20px;padding-bottom:20px;" data-bind="style:{backgroundColor: BaseInfo().CouponColor}">
+                <div style="border:1px solid #cccccc; background-color:#fff">
+                    <h4 style="color:#ff6a00;text-align:center;" data-bind="text:BaseInfo().Title"></h4>
+                    <div style="text-align:center;">
+                        <button type="button" class="btn btn-default" style="background-color:#4695f6;width:100px;">立即使用</button>
+                    </div>
+                    <h6 style="color:#ff6a00;text-align:center;" data-bind="text:BaseInfo().SubTitle"></h6>
+                    <h5 style="color:#ff6a00;padding-left:20px;"><b>抵用金额：</b><span style="color:black;" data-bind="text:BaseInfo().CouponValue"></span></h5>
+                    <h5 style="color:#ff6a00;padding-left:20px;"><b>使用条件：</b><span style="color:black;" data-bind="text:UC"></span></h5>
+                    <h5 style="color:#ff6a00;padding-left:20px;">
+                        <b>可用时间：</b>
+                        <span style="color:black;" id="fiexeddateAT" data-bind="text:FiexedDateAT,visible:BaseInfo().IsFiexedEffectPeriod()=='true'"></span>
+                        <span style="color:black;" id="aftergetAT" data-bind="text:AfterGetAT,visible:BaseInfo().IsFiexedEffectPeriod()=='false'"></span>
+                    </h5>
+                    <img style="width:100%;height:130px;padding:0px 20px 0px 20px" data-bind="attr: { src: BaseInfo().CoverImage() }">
+                    <h5 style="color:#808080;padding-left:20px;" data-bind="text:BaseInfo().CoverIntro"></h5>
+                    <h5 style="color:#ff6a00;padding-left:20px;"><b>使用须知：</b></h5><h5 style="color:#808080;padding:0px 20px 0px 20px;word-wrap: break-word;" data-bind="text:BaseInfo().UseInstructions"></h5>
+                    <h5 style="color:#ff6a00;padding-left:20px;"><b>电话：</b><a style="color:#4695f6;" data-bind="text:BaseInfo().MerchantPhoneNo"></a></h5>
+                    <h5 style="color:#ff6a00;padding-left:20px;"><b>服务：</b><span style="color:black;" data-bind="text:Service" hidden="hidden"></span></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <form class="form-horizontal">
+                <fieldset>
+                    <legend>基本信息</legend>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="txtColor">卡券颜色</label>
+                        <div class="col-md-3">
+                            <div class="minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-right minicolors-focus">
+                                <input type="text" id="txtColor" class="form-control demo minicolors-input" data-position="bottom right" value="#0088cc" size="7" data-bind="value:BaseInfo().CouponColor" name="couponcolor"
+                                       data-val="true" data-val-required="不能为空" />
+                                <span class="minicolors-swatch">
+                                    <span class="minicolors-swatch-color" style="background-color: rgb(48, 75, 89);">
+                                    </span>
+                                </span>
+                                <div class="minicolors-panel minicolors-slider-hue" style="display: none;">
+                                    <div class="minicolors-slider">
+                                        <div class="minicolors-picker" style="top: 66.6667px;">
+                                        </div>
+                                    </div>
+                                    <div class="minicolors-opacity-slider">
+                                        <div class="minicolors-picker">
+                                        </div>
+                                    </div>
+                                    <div class="minicolors-grid" style="background-color: rgb(0, 166, 255);">
+                                        <div class="minicolors-grid-inner">
+                                        </div>
+                                        <div class="minicolors-picker" style="top: 97px; left: 69px;">
+                                            <div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="field-validation-valid" data-valmsg-for="couponcolor" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>
+                    <div id="secondstepvoucher" hidden="hidden">
+                        @*抵用券*@
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">抵用金额</label>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" data-bind="value:BaseInfo().CouponValue" name="inputvoucher"
+                                           data-val="true" data-val-number="请输入数字" data-val-required="不能为空" data-val-range-min="0" data-val-range-max="100000" data-val-range="不能大于100000或小于0" />
+                                    <span class="input-group-addon">元</span>
+                                </div>
+                                <span class="field-validation-valid" data-valmsg-for="inputvoucher" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">抵用券标题</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" placeholder="抵用券标题" name="vourchertitle" data-bind="value:BaseInfo().Title"
+                                       data-val="true" data-val-required="不能为空，输入1~12个字符" data-val-length="1~12个字符" data-val-length-max="12" data-val-length-min="1" />
+                                <span class="field-validation-valid" data-valmsg-for="vourchertitle" data-valmsg-replace="true"></span>
+                                <p class="help-block">建议填写抵用券“抵用额度”及自定义内容，描述卡券提供的具体优惠</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">抵用券副标题 (选填)</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" placeholder="抵用券副标题" data-bind="value:BaseInfo().SubTitle" name="vourchersubtitle"
+                                       data-val="true" data-val-length="0~18个字符" data-val-length-min="0" data-val-length-max="18" />
+                                <span class="field-validation-valid" data-valmsg-for="vourchersubtitle" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="secondstepchsh" hidden="hidden">
+                        @*代金券*@
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">减免金额</label>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" data-bind="value:BaseInfo().CouponValue" name="inputcash"
+                                           data-val="true" data-val-number="请输入数字" data-val-required="不能为空" data-val-range-min="0" data-val-range-max="100000" data-val-range="不能大于100000或小于0" />
+                                    <span class="input-group-addon">元</span>
+                                </div>
+                                <span class="field-validation-valid" data-valmsg-for="inputcash" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">代金劵标题</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" placeholder="代金劵标题" data-bind="value:BaseInfo().Title" name="cashtitle"
+                                       data-val="true" data-val-required="不能为空，输入1~12个字符" data-val-length="1~12个字符" data-val-length-min="1" data-val-length-max="12" />
+                                <span class="field-validation-valid" data-valmsg-for="cashtitle" data-valmsg-replace="true"></span>
+                                <p class="help-block">建议填写代金券“代金额度”及自定义内容，描述卡券提供的具体优惠</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">代金劵副标题 (选填)</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" placeholder="代金劵副标题" data-bind="value:BaseInfo().SubTitle" name="cashsubtitle"
+                                       data-val="true" data-val-length="0~18个字符" data-val-length-min="0" data-val-length-max="18" />
+                                <span class="field-validation-valid" data-valmsg-for="cashsubtitle" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="secondstepexchange" hidden="hidden">
+                        @*兑换券*@
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">兑换物品价值</label>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" data-bind="value:BaseInfo().CouponValue" name="inputexchange"
+                                           data-val="true" data-val-number="请输入数字" data-val-required="不能为空" data-val-range-min="0" data-val-range-max="100000" data-val-range="不能大于100000或小于0" />
+                                    <span class="input-group-addon">元</span>
+                                </div>
+                                <span class="field-validation-valid" data-valmsg-for="inputexchange" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">兑换券标题</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" placeholder="兑换券标题" data-bind="value:BaseInfo().Title" name="exchangetitle"
+                                       data-val="true" data-val-required="不能为空，输入1~12个字符" data-val-length="1~12个字符" data-val-length-min="1" data-val-length-max="12" />
+                                <span class="field-validation-valid" data-valmsg-for="exchangetitle" data-valmsg-replace="true"></span>
+                                <p class="help-block">
+                                    建议填写兑换券提供的服务或礼品名称，描述卡券提供的具体优惠
+                                    <br />
+                                    在下方适用范围选择需要兑换的商品，交易时会将商品价格变为0元
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">兑换券副标题 (选填)</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" placeholder="兑换券副标题" data-bind="value:BaseInfo().SubTitle" name="exchangesubtitle"
+                                       data-val="true" data-val-length="0~18个字符" data-val-length-min="0" data-val-length-max="18" />
+                                <span class="field-validation-valid" data-valmsg-for="exchangesubtitle" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="secondstepdiscount" hidden="hidden">
+                        @*折扣券*@
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">折扣额度</label>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" data-bind="value:BaseInfo().CouponValue" name="inputdiscount"
+                                           data-val="true" data-val-number="请输入数字" data-val-required="不能为空" data-val-range-min="1" data-val-range-max="9.9" data-val-range="不能大于9.9或小于1" />
+                                    <span class="input-group-addon">折</span>
+                                </div>
+                                <span class="field-validation-valid" data-valmsg-for="inputdiscount" data-valmsg-replace="true"></span>
+                                <p class="help-block">请填写1~9.9之间的数字，精确到小数点后一位</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">折扣券标题</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" placeholder="折扣券标题" data-bind="value:BaseInfo().Title" name="discounttitle"
+                                       data-val="true" data-val-required="不能为空，输入1~12个字符" data-val-length="1~12个字符" data-val-length-min="1" data-val-length-max="12" />
+                                <span class="field-validation-valid" data-valmsg-for="discounttitle" data-valmsg-replace="true"></span>
+                                <p class="help-block">建议填写折扣券“折扣额度”及自定义内容，描述卡券提供的具体优惠</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">折扣券副标题 (选填)</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" placeholder="折扣券副标题" data-bind="value:BaseInfo().SubTitle" name="discountsubtitle"
+                                       data-val="true" data-val-length="0~18个字符" data-val-length-min="0" data-val-length-max="18" />
+                                <span class="field-validation-valid" data-valmsg-for="discountsubtitle" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">使用条件</label>
+                        <div class="col-md-5">
+                            <div>
+                                <div class="checkbox inline">
+                                    <label>
+                                        <input type="checkbox" data-bind="checked:BaseInfo().IsMinConsumeLimit" />最低消费
+                                    </label>
+                                </div>
+                                <div class="inline" data-bind="visible:BaseInfo().IsMinConsumeLimit">
+                                    满 <input type="text" class="form-control inline" style="width: 80px" placeholder=">=0" data-bind="value:BaseInfo().MinConsume" name="minconsume"
+                                             data-val="true" data-val-required="不能为空" data-val-number="请输入数字" data-val-range-min="0" data-val-range-max="100000" data-val-range="不能大于100000或小于0" /> 元可用
+                                </div>
+                            </div>
+                            <span class="field-validation-valid" data-valmsg-for="minconsume" data-valmsg-replace="true" style="padding-left:100px;" data-bind="visible:BaseInfo().IsMinConsumeLimit"></span>
+                            <div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="1" data-bind="checked:BaseInfo().IsExclusive" />不与其他优惠共享
+                                    </label>
+                                </div>
+                                <p class="help-block">使用条件的设置会在券上展示，请务必仔细确认</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">抵扣顺序</label>
+                        <div class="col-md-5">
+                            <div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="DeductionOrder" id="DiscountFirst" />先折扣再抵扣
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="DeductionOrder" id="DeductionFirst" />先抵扣再折扣
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">适用范围 (选填)</label>
+                        <div class="col-md-5">
+                            <div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="goods" id="suitgoods" />适用商品
+                                    </label>
+                                </div>
+                                <a id="selectsuitgoods" hidden="hidden" style="cursor:pointer;" data-toggle="modal" data-target="#suitgoodsmodal">选择商品</a>
+                            </div>
+                            <div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="goods" id="unsuitgoods" />不适用商品
+                                    </label>
+                                </div>
+                                <a id="selectunsuitgoods" hidden="hidden" style="cursor:pointer;" data-toggle="modal" data-target="#unsuitgoodsmodal">选择商品</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">限时投放</label>
+                        <div class="col-md-10">
+                            <div>
+                                <input class="form-control" style="width:200px;" id="timelimit" />
+                                <p class="help-block">优惠券仅能在投放时间内领取</p>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="putintimelimit" value="true" checked data-bind="checked: BaseInfo().PutInIsUseAllTime" id="putinisusealltime" />全部时段
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="putintimelimit" value="false" data-bind="checked: BaseInfo().PutInIsUseAllTime" />部分时段
+                                        </label>
+                                    </div>
+                                </div>
+                                <div data-bind="visible: BaseInfo().PutInIsUseAllTime() == 'false'">
+                                    <div class="row">
+                                        <div class="col-auto">日期：</div>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="PutInUseDaysOfWeek" value="1" data-bind="checked:PutInUseDaysOfWeek"> 周一
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="PutInUseDaysOfWeek" value="2" data-bind="checked:PutInUseDaysOfWeek"> 周二
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="PutInUseDaysOfWeek" value="3" data-bind="checked:PutInUseDaysOfWeek"> 周三
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="PutInUseDaysOfWeek" value="4" data-bind="checked:PutInUseDaysOfWeek"> 周四
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="PutInUseDaysOfWeek" value="5" data-bind="checked:PutInUseDaysOfWeek"> 周五
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="PutInUseDaysOfWeek" value="6" data-bind="checked:PutInUseDaysOfWeek"> 周六
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="PutInUseDaysOfWeek" value="0" data-bind="checked:PutInUseDaysOfWeek"> 周日
+                                        </label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-auto">时间：</div>
+                                        <div class="col-md-10">
+                                            <div class="row">
+                                                <div class="col-md-10 padding-clear">
+                                                    <ul id="putintimeul"></ul>
+                                                    <a id="putinsecondstepaddtime" style="cursor:pointer;padding-left:50px;">添加时间段</a>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-auto">
+                                                    <p class="help-block">请使用24小时制输入时间，格式如11:00至14:30</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">有效期</label>
+                        <div class="col-md-10">
+                            <div class="row">
+                                <div class="radio col-auto">
+                                    <label>
+                                        <input type="radio" name="effectivedate" id="fiexeddate" value="true" data-bind="checked: BaseInfo().IsFiexedEffectPeriod" />固定日期
+                                    </label>
+                                </div>
+                                <div data-bind="visible: BaseInfo().IsFiexedEffectPeriod() == 'true'">
+                                    @*<div class="col-md-3">
+                                            <div class="input-group date">
+                                                <input type="text" class="form-control" data-bind="value:BaseInfo().EffectiveDate">
+                                                <div class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-th"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto padding-clear" style="padding-top:5px;">至</div>
+                                        <div class="col-md-3">
+                                            <div class="input-group date" data-provide="datepicker">
+                                                <input type="text" class="form-control" data-bind="value:BaseInfo().ExpiredDate">
+                                                <div class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-th"></span>
+                                                </div>
+                                            </div>
+                                        </div>*@
+                                    @*<div class="col-md-5">
+                                            <div class="input-group input-daterange">
+                                                <input type="text" class="form-control" name="start" data-bind="value:BaseInfo().EffectiveDate">
+                                                <span class="input-group-addon">至</span>
+                                                <input type="text" class="form-control" name="end" data-bind="value:BaseInfo().ExpiredDate">
+                                            </div>
+                                        </div>*@
+                                    <div class="col-md-3">
+                                        <input class="form-control" id="daterangepicker" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="radio col-auto">
+                                    <label>
+                                        <input type="radio" name="effectivedate" id="afterget" value="false" data-bind="checked: BaseInfo().IsFiexedEffectPeriod" />领取后
+                                    </label>
+                                </div>
+                                <div class="col-auto" data-bind="visible: BaseInfo().IsFiexedEffectPeriod() == 'false'">
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control" id="aftereffectivedays" data-bind="value:BaseInfo().EffectiveDaysAfterReceived" />
+                                    </div>
+                                    <div class="col-auto padding-clear" style="padding-top:5px;">天生效，有效天数</div>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control" id="effectivedays" data-bind="value:BaseInfo().EffectiveDays" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">可用时段</label>
+                        <div class="col-md-10">
+                            <div class="row">
+                                <div class="radio col-auto">
+                                    <label>
+                                        <input type="radio" name="timeframe" value="true" checked data-bind="checked: BaseInfo().IsUseAllTime" id="isusealltime" />全部时段
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="radio col-auto">
+                                    <label>
+                                        <input type="radio" name="timeframe" value="false" data-bind="checked: BaseInfo().IsUseAllTime" />部分时段
+                                    </label>
+                                </div>
+                            </div>
+                            <div data-bind="visible: BaseInfo().IsUseAllTime() == 'false'">
+                                <div class="row">
+                                    <div class="col-auto">日期：</div>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="UseDaysOfWeek" value="1" data-bind="checked:UseDaysOfWeek"> 周一
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="UseDaysOfWeek" value="2" data-bind="checked:UseDaysOfWeek"> 周二
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="UseDaysOfWeek" value="3" data-bind="checked:UseDaysOfWeek"> 周三
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="UseDaysOfWeek" value="4" data-bind="checked:UseDaysOfWeek"> 周四
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="UseDaysOfWeek" value="5" data-bind="checked:UseDaysOfWeek"> 周五
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="UseDaysOfWeek" value="6" data-bind="checked:UseDaysOfWeek"> 周六
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="UseDaysOfWeek" value="0" data-bind="checked:UseDaysOfWeek"> 周日
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-auto">时间：</div>
+                                    <div class="col-md-10">
+                                        <div class="row">
+                                            <div class="col-md-10 padding-clear">
+                                                <ul id="timeul">
+                                                    @*
+                                                        <li style="list-style-type:none;">
+                                                            <div class="form-group">
+                                                                <div class="col-auto">
+                                                                    <input class="form-control" type="text" style="width:150px;margin:5px;" />
+                                                                </div>
+                                                                <div class="col-auto" style="padding-top:10px;">
+                                                                    至
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <input class="form-control" type="text" style="width:150px;margin:5px;" />
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <a style="cursor:pointer;">删除时间段</a>
+                                                                </div>
+                                                            </div>
+                                                        </li>*@
+                                                </ul>
+                                                <a id="secondstepaddtime" style="cursor:pointer;padding-left:50px;">添加时间段</a>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <p class="help-block">请使用24小时制输入时间，格式如11:00至14:30</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                            <label class="col-md-2 control-label">投放日期</label>
+                            <div class="col-md-3">
+                                <input class="form-control" id="deliveryDaterangepicker" name="deliveryDate"
+                                       data-val="true" data-val-required="投放日期不能为空" />
+                                <span class="field-validation-valid" data-valmsg-for="deliveryDate" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>*@
+                </fieldset>
+                <fieldset>
+                    <legend>优惠信息</legend>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">封面图片</label>
+                        <div class="col-md-5">
+                            <div id="uploadCoverImage">
+                                <span class="btn btn-default fileinput-button">
+                                    <span>上传图片</span>
+                                    <input id="fileupload" type="file" name="files[]">
+                                </span>
+                                <p class="help-block">图片建议尺寸：850像素*350像素，大小不要超过1M</p>
+                                <div data-bind="visible: BaseInfo().CoverImage() != null && BaseInfo().CoverImage() != ''">
+                                    <img data-bind="attr: { src: BaseInfo().CoverImage() }" style="width: 425px; height: 140px;" />
+                                    <div class="bottom">
+                                        <a class="border" href="javascript:;" data-bind="click: $root.removeCoverImage">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">封面简介</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" placeholder="请输入封面图片的简介内容" data-bind="value:BaseInfo().CoverIntro" name="coverintro"
+                                   data-val="true" data-val-length="1~12个字符" data-val-length-min="1" data-val-length-max="12" data-val-required="不能为空" />
+                            <span class="field-validation-valid" data-valmsg-for="coverintro" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">使用须知（选填）</label>
+                        <div class="col-md-5">
+                            <textarea class="form-control" rows="3" placeholder="请填写使用本优惠券的注意事项" data-bind="value:BaseInfo().UseInstructions" name="useinstructions"
+                                      data-val="true" data-val-length="0~300个字符" data-val-length-min="0" data-val-length-max="300"></textarea>
+                            <span class="field-validation-valid" data-valmsg-for="useinstructions" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">图文介绍（选填）</label>
+                        <div class="col-md-5">
+                            <script id="container" name="content" type="text/plain">
+                                @*富文本框*@
+                            </script>
+                            <p class="help-block">
+                                图片建议尺寸：900像素*500像素，大小不超过1M
+                                <br />
+                                至少上传1组图文，最多输入5000字
+                            </p>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>商户介绍（选填）</legend>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">电话</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" placeholder="手机或固话" data-bind="value:BaseInfo().MerchantPhoneNo" name="merchantphoneno"
+                                   data-val="true" data-val-length="0~20个字符" data-val-length-max="20" />
+                        </div>
+                        <span class="field-validation-valid" data-valmsg-for="merchantphoneno" data-valmsg-replace="true"></span>
+                    </div>
+                    @*<div class="form-group">
+                            <label class="col-md-2 control-label">服务</label>
+                            <div class="col-md-8">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="MerchantService" value="1" onclick="FreeWifiClicked(this)" data-bind="checked:MerchantService" /> 免费Wifi
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="MerchantService" value="2" onclick="AllowPetsClicked(this)" data-bind="checked:MerchantService" /> 可带宠物
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="MerchantService" value="4" onclick="FreeParkClicked(this)" data-bind="checked:MerchantService" /> 免费停车
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="MerchantService" value="8" onclick="TakeOutClicked(this)" data-bind="checked:MerchantService" /> 外卖
+                                </label>
+                            </div>
+                        </div>*@
+                </fieldset>
+                <fieldset>
+                    <legend>备注（选填）</legend>
+                    <textarea class="form-control" style="height:150px;width:800px;" id="remark"></textarea>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <div class="form-group" style="text-align:center;padding-top:20px;">
+        <button id="secondstepback" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">上一步</button>
+        <button id="secondstepconfirm" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">下一步</button>
+    </div>
+</div>
+<div id="thirdstep" hidden="hidden" style="padding-left:100px;width:80%;">
+    <form class="form-horizontal">
+        <fieldset>
+            <legend>使用设置</legend>
+            <div class="form-group" style="padding-left:20px;">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>库存</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <input class="form-control" type="text" data-bind="value:BaseInfo().Stock" name="stock"
+                                   data-val="true" data-val-required="不能为空" data-val-digits="请输入整数" data-val-range="不能小于1且不能大于99999999" data-val-range-max="99999999" data-val-range-min="1" />
+                            <span class="input-group-addon">份</span>
+                        </div>
+                        <span class="field-validation-valid" data-valmsg-for="stock" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>领券限制</label>
+                        <p class="help-block">(选填)</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="radio-inline col-md-2">
+                            <label>
+                                <input type="radio" name="IsNoCollarQuantityLimit" value="0" data-bind="checked:BaseInfo().IsNoCollarQuantityLimit" />有
+                            </label>
+                        </div>
+                        <div class="radio-inline col-md-2">
+                            <label>
+                                <input type="radio" name="IsNoCollarQuantityLimit" value="1" data-bind="checked:BaseInfo().IsNoCollarQuantityLimit" />无
+                            </label>
+                        </div>
+                    </div>
+                    @*<div class="col-md-2" data-bind="visible:BaseInfo().IsCollarQuantityLimit()=='1'">
+                            <div class="input-group">
+                                <input type="text" class="form-control" data-bind="value:BaseInfo().CollarQuantityLimit" name="collarquantitylimit"
+                                       data-val="true" data-val-digits="请输入整数" data-val-range="不能小于0" data-val-range-min="0" />
+                                <span class="input-group-addon">张</span>
+                            </div>
+                            <span class="field-validation-valid" data-valmsg-for="collarquantitylimit" data-valmsg-replace="true"></span>
+                            <p class="help-block">每个用户领券上限，如不填，则默认为1</p>
+                        </div>*@
+                </div>
+                <div class="form-group" style="padding-left:185px;">
+                    <div class="col-md-2" data-bind="visible:BaseInfo().IsNoCollarQuantityLimit()=='0'">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-bind="value:BaseInfo().CollarQuantityLimit" name="collarquantitylimit"
+                                   data-val="true" data-val-digits="请输入整数" data-val-range="不能小于0" data-val-range-min="0" />
+                            <span class="input-group-addon">张</span>
+                        </div>
+                        <span class="field-validation-valid" data-valmsg-for="collarquantitylimit" data-valmsg-replace="true"></span>
+                        <p class="help-block">每个用户领券上限，如不填，则默认为1</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <label>分享与赠送</label>
+                        <p class="help-block">(选填)</p>
+                    </div>
+                    <div class="col-md-15">
+                        <label class="checkbox-inline">
+                            <input type="radio" class="sharegive" name="sharegive" value="true" data-bind="checked:BaseInfo().CanShareByPeople()" id="cansharebypeople" />用户可以分享领券链接
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="radio" class="sharegive" name="sharegive" id="cangivetopeople" />用户可以赠送优惠券
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="radio" class="sharegive" name="sharegive" id="cannotgiveshare" />既不分享也不赠送
+                        </label>
+                    </div>
+                    @*<div class="col-md-10">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="sharegive" data-bind="checked:BaseInfo().CanGiveToPeople" />用户可以赠送优惠券
+                            </label>
+                        </div>*@
+                </div>
+                <label class="col-md-6 control-label">核销方式</label>
+                <div class="form-group" style="padding-left:50px;">
+                    <div class="col-md-10">
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" style="padding-left:5px;" name="VerificationMode" value="0" data-bind="checked:BaseInfo().VerificationMode" />自助核销
+                            </label>
+                        </div>
+                        <p class="help-block">消费者到店后通过自助点击卡券上的核销按钮，选择门店完成卡券核销</p>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" style="padding-left:5px;" name="VerificationMode" value="2" id="isspecialcoupon" data-bind="checked:BaseInfo().VerificationMode" />特殊代销券
+                            </label>
+                        </div>
+                        <p class="help-block">特殊代销券无须领取，仅需核销。用于代其他渠道的优惠券核销统计与记录</p>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend> 门店信息 </legend>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <h5 style="padding-left:5px;">适用门店</h5>
+                </div>
+                <div class="col-md-9">
+                    <ul>
+                        <li style="list-style-type:none;">
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" name="suitdepartment" value="true" data-bind="checked:BaseInfo().IsApplyAllStore" id="isapplyallstore" />全部门店适用
+                                </label>
+                            </div>
+                        </li>
+                        <li style="list-style-type:none;">
+                            <div class="radio-inline">
+                                <label>
+                                    <input type="radio" name="suitdepartment" value="false" data-bind="checked:BaseInfo().IsApplyAllStore" />指定门店适用<br><a style="color:#4695f6;padding-left:15px;cursor:pointer;" data-toggle="modal" data-target="#departmentmodal" data-bind="visible:BaseInfo().IsApplyAllStore()=='false'">添加使用门店</a>
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3">
+                    <h5 style="padding-left:5px;">操作提示</h5>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" style="width:200px;" data-bind="value:BaseInfo().OperationTips" name="operationtips"
+                           data-val="true" data-val-length="0~16个字符" data-val-length-min="0" data-val-length-max="16" />
+                    <span class="field-validation-valid" data-valmsg-for="operationtips" data-valmsg-replace="true"></span>
+                    <p class="help-block">建议引导用户到店出示卡券，由店员完成核销操作</p>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset style="display:none;">
+            <legend>显示设置</legend>
+            <div class="form-group" style="height:300px;">
+                <div class="col-md-12">
+                    <h5 class="col-md-3">是否可在顾客微信公众号显示</h5>
+                    <div class="radio-inline col-md-2" data-bind="visible:BaseInfo().VerificationMode()!='2'">
+                        <label>
+                            <input type="radio" name="Putaway" value="1" data-bind="checked:BaseInfo().IsPutaway" />是
+                        </label>
+                    </div>
+                    <div class="radio-inline col-md-2">
+                        <label>
+                            <input type="radio" name="Putaway" value="0" data-bind="checked:BaseInfo().IsPutaway" />否
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12" data-bind="visible:IsPutaway()=='1'&&BaseInfo().IsPutaway()=='1'">
+                    <div class="col-md-2" style="text-align:right;padding-top:8px;">
+                        <label>上架时间</label>
+                    </div>
+                    <div class="col-md-2" style="text-align:left;">
+                        <input class="form-control" id="putawaydaterangepicker" data-bind="value:BaseInfo().PutawayTime" />
+                    </div>
+                    <div class="col-md-1" style="text-align:right;padding-top:8px;">
+                        <label>下架时间</label>
+                    </div>
+                    <div class="col-md-2" style="text-align:left;">
+                        <input class="form-control" id="soldoutdaterangepicker" data-bind="value:BaseInfo().SoldOutTime" />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <div class="form-group" style="text-align:center;padding-top:20px;">
+        <button id="thirdstepback" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">上一步</button>
+        <button id="thirdsteponfirm" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;" data-bind="text:ModifyCouponTemplate()!= null?'确认修改':'确认创建'"></button>
+    </div>
+</div>
+<div id="laststep" hidden="hidden" style="text-align:center;padding-top:250px;">
+    <div class="form-group">
+        <div class="col-md-12">
+            <img src="~/Areas/resource/img/icon_succed.png" />&nbsp;&nbsp;&nbsp;您已成功创建一张优惠券，等待审核员通过后就可以到卡券管理进行投放啦！<br>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12">
+            @*<button id="continuecreate" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">继续创建</button>*@
+        </div>
+    </div>
+</div>
+<div id="modifylaststep" hidden="hidden" style="text-align:center;padding-top:250px;">
+    <div class="form-group">
+        <div class="col-md-12">
+            <img src="~/Areas/resource/img/icon_succed.png" />&nbsp;&nbsp;&nbsp;修改成功！<br>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12">
+            @*<button id="continuecreate" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">继续创建</button>*@
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="suitgoodsmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:1065px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">选择商品</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="padding:15px;">
+                    <div style="border:1px solid #d7d7d7;width:500px;height:500px;padding:10px;" class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-6" style="width:155px;">
+                                <select class="form-control" style="width:150px;" id="productparent" data-bind="options: ProductCategoryList, optionsText: 'Name',value: SelectedCategory"></select>
+                                @*<select class="form-control" style="width:150px;" id="productparent">
+                                        <option value="00" selected="selected">全部类别</option>
+
+                                    </select>*@
+                            </div>
+                            <div class="col-lg-6" style="width:155px;">
+                                <button class="btn btn-default" id="suitproductselectedall">全选</button>
+                            </div>
+                        </div>
+                        @*产品列表*@
+                        <div id="suitproductlist" style="overflow:auto;width:100%;height:450px;padding:10px;">
+                            <!-- ko if: SelectedCategory() != null && SelectedCategory().Products != null -->
+                            <!-- ko foreach: SelectedCategory().Products -->
+                            <button style="margin:5px;" class="btn btn-default" data-bind="attr:{id:Code},click:suitproductlistclick"><span data-bind="text:Name"></span></button>
+                            <!-- /ko -->
+                            <!-- /ko -->
+                            @*<button style="margin:5px;" class="btn btn-default" data-bind="attr:{id:Code}"><span data-bind="text:Name"></span></button>*@
+                        </div>
+                    </div>
+                    <div style="width:20px;height:500px;padding:5px;" class="col-lg-6">
+                        <span class="glyphicon glyphicon-menu-right"></span>
+                    </div>
+                    <div style="overflow:auto;border:1px solid #d7d7d7;width:500px;height:500px;padding:10px;" class="col-lg-6" id="suitproductselected">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center;">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="width:80px;" id="suitgoodscancel">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" style="width:80px;" id="goodsconfirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="unsuitgoodsmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:1065px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">选择商品</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="padding:15px;">
+                    <div style="border:1px solid #d7d7d7;width:500px;height:500px;padding:10px;" class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-6" style="width:155px;">
+                                <select class="form-control" style="width:150px;" id="productparent" data-bind="options: ProductCategoryList, optionsText: 'Name',value: SelectedCategory"></select>
+                                @*<select class="form-control" style="width:150px;" id="productparent">
+                                        <option value="00" selected="selected">全部类别</option>
+
+                                    </select>*@
+                            </div>
+                            <div class="col-lg-6" style="width:155px;">
+                                <button class="btn btn-default" id="unsuitproductselectedall">全选</button>
+                            </div>
+                        </div>
+                        @*产品列表*@
+                        <div id="unsuitproductlist" style="overflow:auto;width:100%;height:450px;padding:10px;">
+                            <!-- ko if: SelectedCategory() != null && SelectedCategory().Products != null -->
+                            <!-- ko foreach: SelectedCategory().Products -->
+                            <button style="margin:5px;" class="btn btn-default" data-bind="attr:{id:Code},click:unsuitproductlistclick"><span data-bind=" text:Name"></span></button>
+                            <!-- /ko -->
+                            <!-- /ko -->
+                            @*<button style="margin:5px;" class="btn btn-default" data-bind="attr:{id:Code}"><span data-bind="text:Name"></span></button>*@
+                        </div>
+                    </div>
+                    <div style="width:20px;height:500px;padding:5px;" class="col-lg-6">
+                        <span class="glyphicon glyphicon-menu-right"></span>
+                    </div>
+                    <div style="overflow:auto;border:1px solid #d7d7d7;width:500px;height:500px;padding:10px;" class="col-lg-6" id="unsuitproductselected">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center;">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="width:80px;" id="unsuitgoodscancel">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" style="width:80px;" id="goodsconfirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="departmentmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">选择门店</h4>
+            </div>
+            <div class="modal-body">
+                @*<div class="row" style="padding:10px;padding-left:0px;">
+                        <div class="col-lg-6" style="width:200px;">
+                            <input type="text" class="form-control" style="width:200px;" />
+                        </div>
+                        <div class="col-lg-6">
+                            <button class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                        </div>
+                    </div>*@
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>@*<input type="checkbox" id="checkalldepartment" />*@门店名称</th>
+                            @*
+                                <th>地址</th>*@
+                        </tr>
+                    </thead>
+                    <tbody id="departmentlist">
+                        <!-- ko foreach: DepartmentList() -->
+                        <tr>
+                            <td><label class="checkbox-inline"><input type="checkbox" data-bind="attr:{id:Code}" /><span data-bind="text:Name"></span></label></td>
+                        </tr>
+                        <!-- /ko -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer" style="text-align:center;">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="width:80px;" id="deptmodalcancel">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" style="width:80px;" id="deptmodalconfirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="imgmagnify" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">查看图片</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <img style="width:550px;height:330px;" />
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center;">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" style="width:80px;">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <style>
+        .form-horizontal .control-label {
+            text-align: left;
+            font-weight: normal;
+        }
+
+        .col-md-2 .control-label {
+            width: 160px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        label {
+            font-weight: normal;
+        }
+
+        .col-auto {
+            float: left;
+            display: inline-block;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .inline {
+            display: inline-block;
+        }
+
+        .help-block {
+            margin-bottom: 0;
+            font-size: 10px;
+            width: 500px;
+        }
+
+        .padding-clear {
+            padding: 0;
+        }
+
+        .inputerror {
+            border: 1px solid #f31414;
+        }
+
+        .sharegive {
+            padding: 0;
+        }
+    </style>
+    @Styles.Render("~/content/jquery-fileupd")
+    @Scripts.Render("~/bundles/jquery-fileupd")
+    @Scripts.Render("~/bundles/ko")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Areas/resource/js/jquery.minicolors.min.js"></script>
+    <link rel="stylesheet" href="~/Areas/resource/css/jquery.minicolors.css">
+    <script id="template-upload" type="text/x-jquery-tmpl">
+    </script>
+    <script id="template-download" type="text/x-jquery-tmpl">
+    </script>
+    <script type="text/javascript" src="~/Scripts/plugin/UEditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="~/Scripts/plugin/UEditor/ueditor.all.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="~/Scripts/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/daterangepicker.js"></script>
+    <link type="text/css" rel="stylesheet" href="~/Content/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="~/Content/bootstrap-datepicker.css" />
+    <script>
+        // file upload
+        'use strict';
+
+        $('#uploadCoverImage').fileupload({
+            dropZone: $('#uploadCoverImage'),
+            pasteZone: $('#uploadCoverImage'),
+            dataType: 'json',
+            autoUpload: true,
+            url: "/Api/UploadFile/Coupon",
+            add: function (e, data) {
+                var uploadErrors = [];
+                var acceptFileTypes = /(gif|jpe?g|png|bmp)$/i;
+                if (!acceptFileTypes.test(data.originalFiles[0]['name'])) {
+                    uploadErrors.push('不允许的文件类型');
+                }
+                if (uploadErrors.length > 0) {
+                    alert(uploadErrors.join(", "));
+                } else {
+                    data.submit();
+                }
+            },
+            //send: function (e, data) {
+            //    $(".loading").show();
+            //},
+            done: function (e, data) {
+                if (data.result.success == true) {
+                    window._rootModel.BaseInfo().CoverImage(data.result.FileUrl);
+                } else {
+                    alert(data.result.errorMessage);
+                }
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+        var doc = this;
+        var userToken = '';
+        var PageViewModel = function () {
+            var me = this;
+            me.BaseInfo = ko.observable();
+            me.ProductList = ko.observableArray([]);
+            me.ProductCategoryList = ko.observableArray([]);
+            me.DepartmentList = ko.observableArray([]);
+            me.DepartmentVisible = ko.observable('nosuitdepartment');
+            me.IsSpecialCoupon = ko.observable('0');
+            me.ModifyCouponTemplate = ko.observable(null);
+            me.CouponType = ko.observable("-1");
+            me.UseDaysOfWeek = ko.observableArray([]);
+            me.PutInUseDaysOfWeek = ko.observable([]);
+            me.MerchantService = ko.observableArray([]);
+
+            var AppropriateGoods = [];//适用商品
+            var UnAppropriateGoods = [];
+            var UseTimeList = [];//TemplateID,BeginTime,EndTime
+            var MerchantService = [];//商户服务
+
+            Date.prototype.Format = function (fmt) { //author: meizz
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+
+            var baseInfo = {
+                CouponColor: ko.observable(),
+                CouponValue: ko.observable(),//抵用金额
+                Title: ko.observable(''),
+                SubTitle: ko.observable(''),
+                IsMinConsumeLimit: ko.observable(true),
+                MinConsume: ko.observable(''),//最低消费金额，单位(元)
+                IsExclusive: ko.observable(),
+                AvailableTime: ko.observableArray([]),//可用时间
+                IsFiexedEffectPeriod: ko.observable(''),//是否固定有效期
+                EffectiveDate: ko.observable(''),//生效日期
+                ExpiredDate: ko.observable(''),//截止日期
+                PutInStartDate: ko.observable(''),//投放开始日期
+                PutInEndDate: ko.observable(''),//投放结束日期
+                EffectiveDaysAfterReceived: ko.observable(0),//几天后生效
+                EffectiveDays: ko.observable(0),
+                IsUseAllTime: ko.observable('true'),//是否全部时段
+                PutInIsUseAllTime: ko.observable('true'),//投放是否全部时段
+                DeliveryStartDate: ko.observable(''),//投放开始日期
+                DeliveryFinishDate: ko.observable(''),//投放结束日期
+                CoverImage: ko.observable(''),
+                CoverIntro: ko.observable(''),
+                UseInstructions: ko.observable(''),//使用须知
+                Phone: ko.observable(''),
+                FreeWifi: ko.observable(''),//免费WIFI
+                AllowPets: ko.observable(''),//可帶宠物
+                FreePark: ko.observable(''),//免费停车
+                TakeOut: ko.observable(''),//外卖
+                CanShareByPeople: ko.observable('true'),//用户可以分享领券链接
+                CanGiveToPeople: ko.observable(false),//用户可以赠送优惠券
+                VerificationMode: ko.observable('0'),//核销方式
+                IsApplyAllStore: ko.observable('true'),//全部门店适用
+                OperationTips: ko.observable(''),//操作提示
+                Stock: ko.observable(1),//库存
+                CollarQuantityLimit: ko.observable(1),//领券数量限制
+                IsNoCollarQuantityLimit: ko.observable('0'),//是否没有领券数量限制
+                MerchantPhoneNo: ko.observable(''),//手机或固话
+                IntroDetail: ko.observable(''),//图文介绍
+                IsPutaway: ko.observable('0'),//是否在微信领券中心显示(是否上架)
+                PutawayTime: ko.observable(null),//上架时间
+                SoldOutTime: ko.observable(null),//下架时间
+            }
+            me.BaseInfo(baseInfo);
+
+            me.CanShareByPeople = function () {
+                me.BaseInfo().CanShareByPeople(!me.BaseInfo().CanShareByPeople());
+            }
+
+            me.CanGiveToPeople = function () {
+                me.BaseInfo().CanGiveToPeople(!me.BaseInfo().CanGiveToPeople());
+            }
+
+            //初始化富文本框
+            var ue = UE.getEditor('container', {
+                toolbars: [
+                    [
+                        'source',
+                        'undo',//撤销
+                        'redo',//重做
+                        'bold',//加粗
+                        'italic',//斜体
+                        'underline',//下划线
+                        'simpleupload',//单图上传
+                        'preview',//预览
+                        'removeformat',//清除格式
+                        'time',//时间
+                        'date',//日期
+                        'fontfamily',//字体
+                        'fontsize',//字号
+                        'emotion',//表情
+                        'spechars',//特殊字符
+                        'forecolor',//字体颜色
+                        'backcolor',//背景色
+                        'imagecenter',//居中
+                        'wordimage',//图片转序
+                    ]
+                ],
+                elementPathEnabled: false,
+                maximumWords: 5000,
+                initialFrameHeight: 200,
+                enableAutoSave: false
+            });
+            me.Ue = ko.observable(ue);
+
+            //修改恢复数据
+            me.IsFromModify = ko.observable($.getUrlParam('isfrommodify'));
+            var modifyCouponTemplate = JSON.parse(sessionStorage.getItem('coupontemplate'));
+            me.modifyrecoverdata = function () {
+                if (modifyCouponTemplate != null && me.IsFromModify() != null && me.IsFromModify()) {
+                    me.ModifyCouponTemplate(modifyCouponTemplate);
+                    me.CouponType(String(me.ModifyCouponTemplate().CouponType));
+
+                    me.initdaterangepicker(me.ModifyCouponTemplate().PutawayTime, me.ModifyCouponTemplate().SoldOutTime);
+
+                    if (me.ModifyCouponTemplate().IsDeductionFirst) {
+                        $('#DeductionFirst').attr("checked", true);
+                    } else {
+                        $('#DiscountFirst').attr("checked", true);
+                    }
+
+                    me.BaseInfo().CouponColor(me.ModifyCouponTemplate().Color);
+                    me.BaseInfo().CouponValue(me.ModifyCouponTemplate().CouponValue);
+                    me.BaseInfo().Title(me.ModifyCouponTemplate().Title);
+                    if (me.ModifyCouponTemplate().SubTitle != null) {
+                        me.BaseInfo().SubTitle(me.ModifyCouponTemplate().SubTitle);
+                    }
+                    me.BaseInfo().IsMinConsumeLimit(me.ModifyCouponTemplate().IsMinConsumeLimit);
+                    me.BaseInfo().MinConsume(me.ModifyCouponTemplate().MinConsume);
+                    me.BaseInfo().IsExclusive(me.ModifyCouponTemplate().IsExclusive);
+                    if (me.ModifyCouponTemplate().ExcludeProducts != null && me.ModifyCouponTemplate().ExcludeProducts.length > 0) {
+                        $('#unsuitgoods').attr('checked', true);
+                        $('#selectunsuitgoods').show();
+                        var modifyunsutiproducts = [];
+                        if (me.ModifyCouponTemplate().ExcludeProducts != null) {
+                            modifyunsutiproducts = me.ModifyCouponTemplate().ExcludeProducts.split(',');
+                        }
+                        var products = [];
+                        for (var i = 0; i < me.ProductCategoryList().length; i++) {
+                            //products.push(me.ProductCategoryList()[i].Products);
+                            for (var j = 0; j < me.ProductCategoryList()[i].Products.length; j++) {
+                                products.push(me.ProductCategoryList()[i].Products[j]);
+                            }
+                        }
+                        for (var i = 0; i < modifyunsutiproducts.length; i++) {
+                            for (var j = 0; j < products.length; j++) {
+                                if (modifyunsutiproducts[i] == products[j].Code) {
+                                    $('#unsuitproductselected').append('<button style="margin:5px;" class="btn btn-default" id="' + products[j].Code + '">' + products[j].Name + '<span class="glyphicon glyphicon-remove-circle" style="margin:5px;"></span></button>');
+                                }
+                            }
+                        }
+                    }
+                    if (me.ModifyCouponTemplate().IncludeProducts != null && me.ModifyCouponTemplate().IncludeProducts.length > 0) {
+                        $('#suitgoods').attr('checked', true);
+                        $('#selectsuitgoods').show();
+                        var modifysutiproducts = []
+                        if (me.ModifyCouponTemplate().IncludeProducts != null) {
+                            modifysutiproducts = me.ModifyCouponTemplate().IncludeProducts.split(',');
+                        }
+                        var products = [];
+                        for (var i = 0; i < me.ProductCategoryList().length; i++) {
+                            //products.push(me.ProductCategoryList()[i].Products);
+                            for (var j = 0; j < me.ProductCategoryList()[i].Products.length; j++) {
+                                products.push(me.ProductCategoryList()[i].Products[j]);
+                            }
+                        }
+                        console.log('modifysutiproducts:' + modifysutiproducts);
+                        console.log('products:' + products[0].Code);
+                        for (var i = 0; i < modifysutiproducts.length; i++) {
+                            for (var j = 0; j < products.length; j++) {
+                                if (modifysutiproducts[i] == products[j].Code) {
+                                    $('#suitproductselected').append('<button style="margin:5px;" class="btn btn-default" id="' + products[j].Code + '">' + products[j].Name + '<span class="glyphicon glyphicon-remove-circle" style="margin:5px;"></span></button>');
+                                }
+                            }
+                        }
+                    }
+                    var isFiexedEffectPeriod = me.ModifyCouponTemplate().IsFiexedEffectPeriod ? 'true' : 'false';
+                    me.BaseInfo().IsFiexedEffectPeriod(isFiexedEffectPeriod);
+                    if (me.ModifyCouponTemplate().Remark != null && me.ModifyCouponTemplate().Remark != '') {
+                        $('#remark').val(me.ModifyCouponTemplate().Remark);
+                    }
+                    if (me.ModifyCouponTemplate().PutInEndDate != null) {
+                        me.BaseInfo().PutInEndDate(new Date(me.ModifyCouponTemplate().PutInEndDate).Format('yyyy-MM-dd'));
+                    }
+                    if (me.ModifyCouponTemplate().PutInStartDate != null) {
+                        me.BaseInfo().PutInStartDate(new Date(me.ModifyCouponTemplate().PutInStartDate).Format('yyyy-MM-dd'));
+                    }
+                    $('#timelimit').val(new Date(me.ModifyCouponTemplate().PutInStartDate).Format('yyyy-MM-dd') + '~' + new Date(me.ModifyCouponTemplate().PutInEndDate).Format('yyyy-MM-dd'));
+                    if (me.ModifyCouponTemplate().IsFiexedEffectPeriod && me.ModifyCouponTemplate().EffectiveDate != null) {
+                        me.BaseInfo().EffectiveDate(me.ModifyCouponTemplate().EffectiveDate);
+                    }
+                    if (me.ModifyCouponTemplate().IsFiexedEffectPeriod && me.ModifyCouponTemplate().ExpiredDate != null) {
+                        me.BaseInfo().ExpiredDate(String(me.ModifyCouponTemplate().ExpiredDate));
+                    }
+                    $('#daterangepicker').val(me.BaseInfo().EffectiveDate() + '~' + me.BaseInfo().ExpiredDate());
+                    console.log(me.ModifyCouponTemplate().EffectiveDate);
+                    if (me.ModifyCouponTemplate().EffectiveDaysAfterReceived != null) {
+                        me.BaseInfo().EffectiveDaysAfterReceived(me.ModifyCouponTemplate().EffectiveDaysAfterReceived);
+                    }
+                    if (me.ModifyCouponTemplate().EffectiveDays != null) {
+                        me.BaseInfo().EffectiveDays(me.ModifyCouponTemplate().EffectiveDays);
+                    }
+                    var useDaysOfWeek = [];
+                    if (me.ModifyCouponTemplate().UseDaysOfWeek != null) {
+                        useDaysOfWeek = me.ModifyCouponTemplate().UseDaysOfWeek.split(',');
+                    }
+                    var isUseAllTime = me.ModifyCouponTemplate().IsUseAllTime ? 'true' : 'false';
+                    me.BaseInfo().IsUseAllTime(isUseAllTime);
+                    me.UseDaysOfWeek(useDaysOfWeek);
+                    //限时投放
+                    var putinUseDaysOfWeek = [];
+                    if (me.ModifyCouponTemplate().PutInUseDaysOfWeek != null) {
+                        putinUseDaysOfWeek = me.ModifyCouponTemplate().PutInUseDaysOfWeek.split(',');
+                    }
+                    var putinIsUseAllTime = me.ModifyCouponTemplate().PutInIsUseAllTime ? 'true' : 'false';
+                    me.BaseInfo().PutInIsUseAllTime(putinIsUseAllTime);
+                    me.PutInUseDaysOfWeek(putinUseDaysOfWeek);
+                    //end
+                    var useTimeList = me.ModifyCouponTemplate().UseTimeList;
+                    for (var i = 0; i < useTimeList.length; i++) {
+                        if (useTimeList[i].Type == 0) {
+                            $('#timeul').append('<li style="list-style-type:none;">' +
+                                '<div class="form-group">' +
+                                '<div class="col-auto">' +
+                                '<input class="form-control" type="text" style="width:150px;margin:5px;" value="' + useTimeList[i].BeginTime + '"/>' +
+                                '</div>' +
+                                '<div class="col-auto" style="padding-top:10px;">' +
+                                '至' +
+                                '</div>' +
+                                '<div class="col-auto">' +
+                                '<input class="form-control" type="text" style="width:150px;margin:5px;" value="' + useTimeList[i].EndTime + '"/>' +
+                                '</div>' +
+                                '<div class="col-auto" style="padding-top:10px;">' +
+                                '<a style="cursor:pointer;">删除时间段</a>' +
+                                '</div>' +
+                                '</div>' +
+                                '</li>');
+                            $('#timeul').find('a').click(function () { $($($($(this).parent('div')).parent('div')).parent('li')).remove() });
+                        } else {
+                            $('#putintimeul').append('<li style="list-style-type:none;">' +
+                                '<div class="form-group">' +
+                                '<div class="col-auto">' +
+                                '<input class="form-control" type="text" style="width:150px;margin:5px;" value="' + useTimeList[i].BeginTime + '"/>' +
+                                '</div>' +
+                                '<div class="col-auto" style="padding-top:10px;">' +
+                                '至' +
+                                '</div>' +
+                                '<div class="col-auto">' +
+                                '<input class="form-control" type="text" style="width:150px;margin:5px;" value="' + useTimeList[i].EndTime + '"/>' +
+                                '</div>' +
+                                '<div class="col-auto" style="padding-top:10px;">' +
+                                '<a style="cursor:pointer;">删除时间段</a>' +
+                                '</div>' +
+                                '</div>' +
+                                '</li>');
+                            $('#putintimeul').find('a').click(function () { $($($($(this).parent('div')).parent('div')).parent('li')).remove() });
+                        }
+                    }
+                    me.BaseInfo().CoverImage(me.ModifyCouponTemplate().CoverImage);
+                    me.BaseInfo().CoverIntro(me.ModifyCouponTemplate().CoverIntro);
+                    if (me.ModifyCouponTemplate().UseInstructions != null) {
+                        me.BaseInfo().UseInstructions(me.ModifyCouponTemplate().UseInstructions);
+                    }
+                    ue.addListener("ready", function () {
+                        if (me.ModifyCouponTemplate().IntroDetail != null) {
+                            UE.getEditor('container').setContent(me.ModifyCouponTemplate().IntroDetail);
+                        }
+                    });
+                    if (me.ModifyCouponTemplate().MerchantPhoneNo != null) {
+                        me.BaseInfo().MerchantPhoneNo(me.ModifyCouponTemplate().MerchantPhoneNo);
+                    }
+                    var merchantService = me.ModifyCouponTemplate().MerchantService;
+                    if (merchantService != 0) {
+                        if ((merchantService & 1) == 1) {
+                            me.MerchantService.push("1");
+                            me.BaseInfo().FreeWifi("免费WIFI");
+                        }
+                        if ((merchantService & 2) == 2) {
+                            me.MerchantService.push("2");
+                            me.BaseInfo().AllowPets("可帶宠物");
+                        }
+                        if ((merchantService & 4) == 4) {
+                            me.MerchantService.push("4");
+                            me.BaseInfo().FreePark("免费停车");
+                        }
+                        if ((merchantService & 8) == 8) {
+                            me.MerchantService.push("8");
+                            me.BaseInfo().TakeOut("外卖");
+                        }
+                    }
+                    me.BaseInfo().Stock(me.ModifyCouponTemplate().Stock);
+                    var isNoCollarQuantityLimit = me.ModifyCouponTemplate().IsNoCollarQuantityLimit ? '1' : '0';
+                    me.BaseInfo().IsNoCollarQuantityLimit(isNoCollarQuantityLimit);
+                    me.BaseInfo().CollarQuantityLimit(me.ModifyCouponTemplate().CollarQuantityLimit);
+                    me.BaseInfo().CanShareByPeople(me.ModifyCouponTemplate().CanShareByPeople ? 'true' : 'false');
+                    if (me.ModifyCouponTemplate().CanGiveToPeople) {
+                        $('#cangivetopeople')[0].checked = true;
+                    }
+                    if (!me.ModifyCouponTemplate().CanGiveToPeople && !me.ModifyCouponTemplate().CanShareByPeople) {
+                        $('#cannotgiveshare')[0].checked = true;
+                    }
+                    var verificationMode = String(me.ModifyCouponTemplate().VerificationMode);
+                    me.BaseInfo().VerificationMode(verificationMode);
+                    if (me.ModifyCouponTemplate().IsSpecialCoupon) {
+                        me.BaseInfo().VerificationMode('2');
+                    }
+                    var isApplyAllStore = me.ModifyCouponTemplate().IsApplyAllStore ? 'true' : 'false';
+                    me.BaseInfo().IsApplyAllStore(isApplyAllStore);
+                    if (!me.ModifyCouponTemplate().IsApplyAllStore) {
+                        var applyStores = [];
+                        if (me.ModifyCouponTemplate().ApplyStores != null) {
+                            applyStores = me.ModifyCouponTemplate().ApplyStores.split(',');
+                        }
+                        var departmentList = $('#departmentlist').find('input');
+                        for (var i = 0; i < applyStores.length; i++) {
+                            for (var j = 0; j < departmentList.length; j++) {
+                                if (applyStores[i] == $(departmentList[j]).attr('id')) {
+                                    $(departmentList[j]).attr('checked', true);
+                                }
+                            }
+                        }
+                    }
+                    if (me.ModifyCouponTemplate().OperationTips != null) {
+                        me.BaseInfo().OperationTips(me.ModifyCouponTemplate().OperationTips);
+                    }
+                    if (me.ModifyCouponTemplate().IsPutaway) {
+                        me.BaseInfo().IsPutaway(String('1'));
+                    } else {
+                        me.BaseInfo().IsPutaway(String('0'));
+                    }
+                    //me.BaseInfo().PutawayTime(me.ModifyCouponTemplate().PutawayTime);
+                    //me.BaseInfo().SoldOutTime(me.ModifyCouponTemplate().SoldOutTime);
+
+                    //me.initdaterangepicker(me.ModifyCouponTemplate().PutawayTime, me.ModifyCouponTemplate().SoldOutTime);
+
+                    //console.log(me.BaseInfo().PutawayTime());
+                    //console.log(me.BaseInfo().SoldOutTime());
+                } else {
+                    me.initdaterangepicker(null, null);
+                    $('#DiscountFirst').attr("checked", true);
+                }
+            }
+            //end
+
+            //$.ajax({
+            //    url: '/api/Product',//posService + '/OpenApi/Member/ProductList'
+            //    type: 'GET',
+            //    success: function (res) {
+            //        if (res.IsSuccessful) {
+            //            me.ProductCategoryList(res.Data);
+            //            $.ajax({
+            //                url: '/Api/Department/DepartmentList',
+            //                headers: { 'Authorization': userToken },
+            //                type: 'GET',
+            //                success: function (res) {
+            //                    if (res.IsSuccessful) {
+            //                        me.DepartmentList(res.Data);
+            //                        me.modifyrecoverdata();
+            //                    }
+            //                }
+            //            });
+            //        }
+            //    }
+            //});
+
+            //初始化daterangepicker(日期选择)
+            me.initdaterangepicker = function (putawayTime, soldOutTime) {
+                $('#daterangepicker').daterangepicker({
+                    //"startDate": "07/09/2016",
+                    //"endDate": "07/15/2016"
+                    'minDate': new Date(),
+                    'showDropdowns': true,
+                    'locale': {
+                        'format': 'YYYY-MM-DD',
+                        'applyLabel': '确定',
+                        'cancelLabel': '取消',
+                        'fromLabel': '起始时间',
+                        'toLabel': '结束时间',
+                        'daysOfWeek': ['日', '一', '二', '三', '四', '五', '六'],
+                        'monthNames': ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                    }
+                }, function (start, end, label) {
+                    //me.BaseInfo().EffectiveDate(start.format('YYYY-MM-DD'));
+                    //me.BaseInfo().ExpiredDate(end.format('YYYY-MM-DD'));
+                });
+                //$('#daterangepicker').val('');
+                //$('#daterangepicker').val(me.BaseInfo().EffectiveDate() + '~' + me.BaseInfo().ExpiredDate());
+                $('#daterangepicker').on('apply.daterangepicker', function (ev, picker) {
+                    $('#daterangepicker').val(picker.startDate.format('YYYY-MM-DD') + '~' + picker.endDate.format('YYYY-MM-DD'));
+                    me.BaseInfo().EffectiveDate(picker.startDate.format('YYYY-MM-DD'));
+                    me.BaseInfo().ExpiredDate(picker.endDate.format('YYYY-MM-DD'));
+                });
+                $('#daterangepicker').on('cancel.daterangepicker', function (ev, picker) {
+                    $('#daterangepicker').val('');
+                    me.BaseInfo().EffectiveDate('');
+                    me.BaseInfo().ExpiredDate('');
+                });
+                $('#daterangepicker').on('hide.daterangepicker', function (ev, picker) {
+                    $('#daterangepicker').val('');
+                    me.BaseInfo().EffectiveDate('');
+                    me.BaseInfo().ExpiredDate('');
+                });
+
+                $('#putawaydaterangepicker').daterangepicker({
+                    'showDropdowns': true,
+                    'singleDatePicker': true,
+                    'locale': {
+                        'format': 'YYYY-MM-DD',
+                        'applyLabel': '确定',
+                        'cancelLabel': '取消',
+                        'fromLabel': '起始时间',
+                        'toLabel': '结束时间',
+                        'daysOfWeek': ['日', '一', '二', '三', '四', '五', '六'],
+                        'monthNames': ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                    }
+                }, function (start, end, label) {
+                    me.BaseInfo().PutawayTime(start.format('YYYY-MM-DD'));
+                });
+                me.BaseInfo().PutawayTime(putawayTime);
+                me.BaseInfo().SoldOutTime(soldOutTime);
+                console.log(me.BaseInfo().PutawayTime());
+                console.log(me.BaseInfo().SoldOutTime());
+                $('#putawaydaterangepicker').val(me.BaseInfo().PutawayTime());
+                $('#putawaydaterangepicker').on('apply.putawaydaterangepicker', function (ev, picker) {
+                    me.BaseInfo().PutawayTime(start.format('YYYY-MM-DD'));
+                });
+                $('#putawaydaterangepicker').on('cancel.putawaydaterangepicker', function (ev, picker) {
+                    $('#putawaydaterangepicker').val('');
+                    me.BaseInfo().PutawayTime(null);
+                });
+                $('#putawaydaterangepicker').on('hide.putawaydaterangepicker', function (ev, picker) {
+                    $('#putawaydaterangepicker').val('');
+                    me.BaseInfo().PutawayTime(null);
+                });
+
+                $('#soldoutdaterangepicker').daterangepicker({
+                    'showDropdowns': true,
+                    'singleDatePicker': true,
+                    'locale': {
+                        'format': 'YYYY-MM-DD',
+                        'applyLabel': '确定',
+                        'cancelLabel': '取消',
+                        'fromLabel': '起始时间',
+                        'toLabel': '结束时间',
+                        'daysOfWeek': ['日', '一', '二', '三', '四', '五', '六'],
+                        'monthNames': ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                    }
+                }, function (start, end, label) {
+                    me.BaseInfo().SoldOutTime(start.format('YYYY-MM-DD'));
+                });
+                me.BaseInfo().PutawayTime(putawayTime);
+                me.BaseInfo().SoldOutTime(soldOutTime);
+                console.log(me.BaseInfo().PutawayTime());
+                console.log(me.BaseInfo().SoldOutTime());
+                $('#soldoutdaterangepicker').val(me.BaseInfo().SoldOutTime());
+                $('#soldoutdaterangepicker').on('apply.soldoutdaterangepicker', function (ev, picker) {
+                    me.BaseInfo().SoldOutTime(picker.startDate.format('YYYY-MM-DD'));
+                });
+                $('#soldoutdaterangepicker').on('cancel.soldoutdaterangepicker', function (ev, picker) {
+                    $('#soldoutdaterangepicker').val('');
+                    me.BaseInfo().SoldOutTime(null);
+                });
+                $('#soldoutdaterangepicker').on('hide.soldoutdaterangepicker', function (ev, picker) {
+                    $('#soldoutdaterangepicker').val('');
+                    me.BaseInfo().SoldOutTime(null);
+                });
+            }
+
+            me.initdaterangepicker(null, null);
+            $('#DiscountFirst').attr("checked", true);
+
+            //限时投放
+            var startDate = new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1);
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            $('#timelimit').daterangepicker({
+                //"startDate": "07/09/2016",
+                //"endDate": "07/15/2016"
+                'minDate': new Date(),
+                'showDropdowns': true,
+                'locale': {
+                    'format': 'YYYY-MM-DD',
+                    'applyLabel': '确定',
+                    'cancelLabel': '取消',
+                    'fromLabel': '起始时间',
+                    'toLabel': '结束时间',
+                    'daysOfWeek': ['日', '一', '二', '三', '四', '五', '六'],
+                    'monthNames': ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                }
+            }, function (start, end, label) {
+                //me.BaseInfo().PutInStartDate(start.format('YYYY-MM-DD'));
+                //me.BaseInfo().PutInEndDate(end.format('YYYY-MM-DD'));
+            });
+            $('#timelimit').val('');
+            //$('#timelimit').val(me.BaseInfo().PutInStartDate() + '~' + me.BaseInfo().PutInEndDate());
+            $('#timelimit').on('apply.daterangepicker', function (ev, picker) {
+                $('#timelimit').val(picker.startDate.format('YYYY-MM-DD') + '~' + picker.endDate.format('YYYY-MM-DD'));
+                me.BaseInfo().PutInStartDate(picker.startDate.format('YYYY-MM-DD'));
+                me.BaseInfo().PutInEndDate(picker.endDate.format('YYYY-MM-DD'));
+            });
+            $('#timelimit').on('cancel.daterangepicker', function (ev, picker) {
+                $('#timelimit').val('');
+                me.BaseInfo().PutInStartDate('');
+                me.BaseInfo().PutInEndDate('');
+            })
+            $('#timelimit').on('hide.daterangepicker', function (ev, picker) {
+                $('#timelimit').val('');
+                me.BaseInfo().PutInStartDate('');
+                me.BaseInfo().PutInEndDate('');
+            });
+            //end
+
+            me.IsPutaway = ko.pureComputed(function () {
+                //me.BaseInfo().IsPutaway('0');
+                if (me.BaseInfo().VerificationMode() == '2') {
+                    me.BaseInfo().IsPutaway('0');
+                    return '0';
+                } else {
+                    return '1';
+                }
+            });
+
+            me.removeCoverImage = function () {
+                me.BaseInfo().CoverImage("");
+            };
+
+            $('#fiexeddate').click(function () {
+                $('#daterangepicker').val('');
+                $('#aftergetAT').hide();
+                $('#fiexeddateAT').show();
+                me.BaseInfo().EffectiveDaysAfterReceived('');
+                me.BaseInfo().EffectiveDays('');
+            });
+            $('#afterget').click(function () {
+                $('#daterangepicker').val('');
+                $('#fiexeddateAT').hide();
+                $('#aftergetAT').show();
+                me.BaseInfo().EffectiveDate('');
+                me.BaseInfo().ExpiredDate('');
+            });
+            doc.DateFormat = function (date) {
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var day = date.getDate();
+                return year + '-' + month + '-' + day;
+            }
+            //me.BaseInfo().IsApplyAllStore = ko.pureComputed(function () {
+            //    if (me.DepartmentVisible == "suitalldepartment") {
+            //        return '1';
+            //    } else {
+            //        return '0';
+            //    }
+            //});
+            me.FiexedDateAT = ko.pureComputed(function () {
+                return me.BaseInfo().EffectiveDate() + '~' + me.BaseInfo().ExpiredDate();
+            });
+            me.AfterGetAT = ko.pureComputed(function () {
+
+                var today = new Date();
+                var stardate = new Date();
+                var enddate = new Date();
+
+                var startday = parseInt((me.BaseInfo().EffectiveDaysAfterReceived() != '' ? me.BaseInfo().EffectiveDaysAfterReceived() : 0)) + parseInt(today.getDate());
+                var endday = parseInt((me.BaseInfo().EffectiveDays() != '' ? (me.BaseInfo().EffectiveDays() - 1) : 0)) + parseInt(startday);
+
+                stardate.setDate(startday);
+                enddate.setDate(endday);
+
+                return DateFormat(stardate) + '~' + DateFormat(enddate);
+            });
+
+            this.UC = ko.pureComputed(function () {
+                var uc = "";
+                if (me.BaseInfo().IsMinConsumeLimit())
+                    uc += '满' + me.BaseInfo().MinConsume() + '元可用';
+                if (me.BaseInfo().IsExclusive())
+                    uc += " 不与其他优惠共享";
+                return uc;
+            });
+            this.Service = ko.pureComputed(function () {
+                return me.BaseInfo().FreeWifi() + " " + me.BaseInfo().AllowPets() + " " + me.BaseInfo().FreePark() + " " + me.BaseInfo().TakeOut();
+            });
+            doc.FreeWifiClicked = function (value) {
+                if (value.checked) {
+                    me.BaseInfo().FreeWifi("免费WIFI");
+                } else {
+                    me.BaseInfo().FreeWifi("");
+                }
+            }
+            doc.AllowPetsClicked = function (value) {
+                if (value.checked) {
+                    me.BaseInfo().AllowPets("可帶宠物");
+                } else {
+                    me.BaseInfo().AllowPets("");
+                }
+            }
+            doc.FreeParkClicked = function (value) {
+                if (value.checked) {
+                    me.BaseInfo().FreePark("免费停车");
+                } else {
+                    me.BaseInfo().FreePark("");
+                }
+            }
+            doc.TakeOutClicked = function (value) {
+                if (value.checked) {
+                    me.BaseInfo().TakeOut("外卖");
+                } else {
+                    me.BaseInfo().TakeOut("");
+                }
+            }
+
+            me.SelectedCategory = ko.observable({ Products: [] });
+            me.onProductCategoryChange = function (data, event) {
+                me.SelectedCategory(data);
+            }
+
+        }
+
+        $(document).ready(function () {
+            userToken = sessionStorage.getItem('userToken');
+            window._rootModel = new PageViewModel();
+            ko.applyBindings(window._rootModel);
+
+            //加载图标
+            $('#firststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number1_selected.png');
+            $('#secondstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number2_normal.png');
+            $('#thirdstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number3_normal.png');
+            $('#laststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number4_normal.png');
+
+            //日期控件
+            //$('.date').datepicker({
+            //    format: 'yyyy-mm-dd',
+            //    startDate: new Date(),
+            //    autoclose: true,
+            //    language: 'zh-CN'
+            //});
+            //$('.input-daterange input').each(function () {
+            //    //$(this).datepicker("clearDates");
+            //    $(this).datepicker({
+            //        format: 'yyyy-mm-dd',
+            //        startDate: new Date(),
+            //        autoclose: true,
+            //        language: 'zh-CN',
+            //        todayBtn: "linked"
+            //    });
+            //});
+            //$('.input-daterange input[name=start]').datepicker('changeDate', function () {
+            //    $('.input-daterange input[name=end]').setStartDate($('.input-daterange input[name=start]').getStartDate());
+            //});
+            //$('.input-daterange input[name=end]').datepicker({
+            //    format: 'yyyy-mm-dd',
+            //    startDate: new Date(),
+            //    autoclose: true,
+            //    language: 'zh-CN',
+            //    todayBtn: "linked"
+            //});
+
+
+            ////初始化deliveryDaterangepicker(投放日期选择)
+            //$('#deliveryDaterangepicker').daterangepicker({
+            //    //"startDate": "07/09/2016",
+            //    //"endDate": "07/15/2016"
+            //    'minDate': new Date(),
+            //    'showDropdowns': true,
+            //    'locale': {
+            //        'format': 'YYYY-MM-DD',
+            //        'applyLabel': '确定',
+            //        'cancelLabel': '取消',
+            //        'fromLabel': '起始时间',
+            //        'toLabel': '结束时间',
+            //        'daysOfWeek': ['日', '一', '二', '三', '四', '五', '六'],
+            //        'monthNames': ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+            //    }
+            //}, function (start, end, label) {
+            //    window._rootModel.BaseInfo().DeliveryStartDate(start.format('YYYY-MM-DD'));
+            //    window._rootModel.BaseInfo().DeliveryFinishDate(end.format('YYYY-MM-DD'));
+            //});
+            //$('#deliveryDaterangepicker').val('');
+            //$('#deliveryDaterangepicker').on('apply.daterangepicker', function (ev, picker) {
+            //    $('#deliveryDaterangepicker').val(picker.startDate.format('YYYY-MM-DD') + '~' + picker.endDate.format('YYYY-MM-DD'));
+            //    window._rootModel.BaseInfo().DeliveryStartDate(picker.startDate.format('YYYY-MM-DD'));
+            //    window._rootModel.BaseInfo().DeliveryFinishDate(picker.endDate.format('YYYY-MM-DD'));
+            //});
+            //$('#deliveryDaterangepicker').on('cancel.daterangepicker', function (ev, picker) {
+            //    $('#deliveryDaterangepicker').val('');
+            //    window._rootModel.BaseInfo().DeliveryStartDate('');
+            //    window._rootModel.BaseInfo().DeliveryFinishDate('');
+            //});
+            //$('#deliveryDaterangepicker').on('hide.daterangepicker', function (ev, picker) {
+            //    $('#deliveryDaterangepicker').val('');
+            //    window._rootModel.BaseInfo().DeliveryStartDate('');
+            //    window._rootModel.BaseInfo().DeliveryFinishDate('');
+            //});
+
+            $('#firststep').show();
+            $('#secondstep').hide();
+            $('#firststepconfirm').click(function () {
+                var coupontypechecked = $('#firststep input[name="coupontype"]:checked');
+                if (coupontypechecked.length > 0) {
+                    var coupontype = coupontypechecked.attr('id');
+                    if (coupontype == "voucher") {
+                        $('#secondstepvoucher').show();
+                    } else if (coupontype == "cash") {
+                        $('#secondstepchsh').show();
+                    } else if (coupontype == "exchange") {
+                        $('#secondstepexchange').show();
+                    } else if (coupontype == "discount") {
+                        $('#secondstepdiscount').show();
+                    }
+                    $('#firststep').hide();
+                    $('#secondstep').show();
+                    $('#firststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number1_selected.png');
+                    $('#secondstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number2_selected.png');
+                    $('#thirdstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number3_normal.png');
+                    $('#laststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number4_normal.png');
+                    $('#firststepline').css('border-top', '3px solid #126daf');
+                } else {
+                    $('#firststepalert').show();
+                }
+
+            });
+            $('#secondstepback').click(function () {
+                $('#secondstep').hide();
+                $('#secondstepvoucher').hide();
+                $('#secondstepchsh').hide();
+                $('#secondstepexchange').hide();
+                $('#secondstepdiscount').hide();
+                $('#firststep').show();
+
+                $('#firststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number1_selected.png');
+                $('#secondstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number2_normal.png');
+                $('#thirdstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number3_normal.png');
+                $('#laststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number4_normal.png');
+                $('#firststepline').css('border-top', '3px solid #b6b6b6');
+            });
+            $('#secondstepconfirm').click(function () {
+                var validate = $($('#secondstep').find('form')).validate();
+                if (!validate.checkForm()) {
+                    validate.showErrors();
+                } else if (window._rootModel.BaseInfo().PutInStartDate() == '' || window._rootModel.BaseInfo().PutInEndDate() == '') {
+                    bootbox.dialog({
+                        title: '提示',
+                        message: '请选择限时投放日期',
+                        size: 'small',
+                        buttons: {
+                            Ok: {
+                                label: '确定'
+                            }
+                        }
+                    });
+                    return;
+                } else if (window._rootModel.BaseInfo().IsFiexedEffectPeriod() == null || window._rootModel.BaseInfo().IsFiexedEffectPeriod() == '' || (window._rootModel.BaseInfo().IsFiexedEffectPeriod() == 'true' && (window._rootModel.BaseInfo().EffectiveDate() == '' || window._rootModel.BaseInfo().ExpiredDate() == ''))) {
+                    bootbox.dialog({
+                        title: '提示',
+                        message: '未选择有效期',
+                        size: 'small',
+                        buttons: {
+                            Ok: {
+                                label: '确定',
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    return;
+                } else if (new Date(window._rootModel.BaseInfo().PutInStartDate()) > new Date(window._rootModel.BaseInfo().EffectiveDate())) {
+                    bootbox.dialog({
+                        title: '提示',
+                        message: '有效期起始时间不能早于投放日期起始时间',
+                        size: 'small',
+                        buttons: {
+                            Ok: {
+                                label: '确定',
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    return;
+                } else if (!window._rootModel.BaseInfo().IsMinConsumeLimit() && !window._rootModel.BaseInfo().IsExclusive()) {
+                    bootbox.dialog({
+                        title: '提示',
+                        message: '使用条件为必选项',
+                        size: 'small',
+                        buttons: {
+                            Ok: {
+                                label: '确定',
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    return;
+                } else if (window._rootModel.BaseInfo().CoverImage() == null || window._rootModel.BaseInfo().CoverImage() == "") {
+                    bootbox.dialog({
+                        title: '提示',
+                        message: '未上传封面图片',
+                        size: 'small',
+                        buttons: {
+                            Ok: {
+                                label: '确定'
+                            }
+                        }
+                    });
+                    return;
+                } else {
+                    $('#secondstep').hide();
+                    $('#thirdstep').show();
+                    $('#firststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number1_selected.png');
+                    $('#secondstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number2_selected.png');
+                    $('#thirdstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number3_selected.png');
+                    $('#laststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number4_normal.png');
+                    $('#secondstepline').css('border-top', '3px solid #126daf');
+                }
+            });
+            $('#thirdstepback').click(function () {
+                $('#thirdstep').hide();
+                $('#secondstep').show();
+                $('#firststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number1_selected.png');
+                $('#secondstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number2_selected.png');
+                $('#thirdstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number3_normal.png');
+                $('#laststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number4_normal.png');
+                $('#secondstepline').css('border-top', '3px solid #b6b6b6');
+            });
+            //确认创建
+            $('#thirdsteponfirm').click(function () {
+                var validate = $($('#thirdstep').find('form')).validate();
+                if (!validate.checkForm()) {
+                    validate.showErrors();
+                } else if (parseInt(window._rootModel.BaseInfo().Stock()) < parseInt(window._rootModel.BaseInfo().CollarQuantityLimit())) {
+                    bootbox.dialog({
+                        title: '提示',
+                        message: '领取限制数量不能大于库存',
+                        size: 'small',
+                        buttons: {
+                            Ok: {
+                                label: '确定'
+                            }
+                        }
+                    });
+                    return;
+                } else {
+                    var UseTimeList = [];//{
+                    //    BeginTime: '',
+                    //    EndTime: '',
+                    //};//可用部分时段
+                    var lis = $('#timeul').find('li');
+                    for (var i = 0; i < lis.length; i++) {
+                        UseTimeList.push({ BeginTime: $(lis[i]).find('input')[0].value, EndTime: $(lis[i]).find('input')[1].value, Type: 0 });
+                    }
+                    //可用部分时段
+                    var putinlis = $('#putintimeul').find('li');
+                    for (var i = 0; i < putinlis.length; i++) {
+                        UseTimeList.push({ BeginTime: $(putinlis[i]).find('input')[0].value, EndTime: $(putinlis[i]).find('input')[1].value, Type: 1 });
+                    }
+                    console.log(UseTimeList);
+                    var Stock = {
+                        Stock: window._rootModel.BaseInfo().Stock,//库存
+                        CollarQuantityLimit: window._rootModel.BaseInfo().CollarQuantityLimit,//领券数量限制
+                        IsNoCollarQuantityLimit: window._rootModel.BaseInfo().IsNoCollarQuantityLimit() != '0' ? true : false,//是否有领券限制
+                    };//优惠券库存
+                    //适用商品
+                    var IncludeProducts = '';
+                    var suitproductselecteds = $('#suitproductselected').find('button');
+                    for (var i = 0; i < suitproductselecteds.length; i++) {
+                        IncludeProducts += $(suitproductselecteds[i]).attr('id') + ',';
+                    }
+                    IncludeProducts = IncludeProducts.substring(0, IncludeProducts.length - 1);
+                    //不适用商品
+                    var ExcludeProducts = '';
+                    var unsuitproductselecteds = $('#unsuitproductselected').find('button');
+                    for (var i = 0; i < unsuitproductselecteds.length; i++) {
+                        ExcludeProducts += $(unsuitproductselecteds[i]).attr('id') + ',';
+                    }
+                    ExcludeProducts = ExcludeProducts.substring(0, ExcludeProducts.length - 1);
+                    //日期
+                    var UseDaysOfWeek = '';
+                    var usedaysofweeklis = $('input:checkbox:checked[name=UseDaysOfWeek]');
+                    for (var i = 0; i < usedaysofweeklis.length; i++) {
+                        UseDaysOfWeek += $(usedaysofweeklis[i]).val() + ',';
+                    }
+                    UseDaysOfWeek = UseDaysOfWeek.substring(0, UseDaysOfWeek.length - 1);
+                    //投放日期
+                    var PutInUseDaysOfWeek = '';
+                    var putinUsedaysofweeklis = $('input:checkbox:checked[name=PutInUseDaysOfWeek]');
+                    for (var i = 0; i < putinUsedaysofweeklis.length; i++) {
+                        PutInUseDaysOfWeek += $(putinUsedaysofweeklis[i]).val() + ',';
+                    }
+                    PutInUseDaysOfWeek = PutInUseDaysOfWeek.substring(0, PutInUseDaysOfWeek.length - 1);
+                    //商户服务
+                    var MerchantService = 0;
+                    var merchantservicelis = $('input:checkbox:checked[name=MerchantService]');
+                    for (var i = 0; i < merchantservicelis.length; i++) {
+                        MerchantService = MerchantService | merchantservicelis[i].value;
+                    }
+                    //适用门店编码
+                    var ApplyStores = '';
+                    var deptlis = $('#departmentlist').find('input:checkbox:checked');
+                    for (var i = 0; i < deptlis.length; i++) {
+                        ApplyStores += $(deptlis[i]).attr('id') + ',';
+                    }
+                    ApplyStores = ApplyStores.substring(0, ApplyStores.length - 1);
+                    if (window._rootModel.BaseInfo().IsPutaway() != '1') {
+                        window._rootModel.BaseInfo().PutawayTime(null);
+                        window._rootModel.BaseInfo().SoldOutTime(null);
+                    }
+                    var coupon = {
+                        TemplateCode: '',//优惠券编号
+                        CouponType: $($('#firststep').find('input:radio:checked')).val(),//类型
+                        Color: window._rootModel.BaseInfo().CouponColor,//颜色
+                        CouponValue: window._rootModel.BaseInfo().CouponValue,//抵用金额
+                        Title: window._rootModel.BaseInfo().Title,//标题
+                        SubTitle: window._rootModel.BaseInfo().SubTitle,//副标题
+                        IsMinConsumeLimit: window._rootModel.BaseInfo().IsMinConsumeLimit,//是否限制最低消费
+                        MinConsume: window._rootModel.BaseInfo().MinConsume,//最低消费金额
+                        IsExclusive: window._rootModel.BaseInfo().IsExclusive,//不与其他优惠共享
+                        IncludeProducts: IncludeProducts,//适用商品
+                        ExcludeProducts: ExcludeProducts,//不适用商品
+                        IsFiexedEffectPeriod: window._rootModel.BaseInfo().IsFiexedEffectPeriod,//是否固定有效期
+                        EffectiveDate: window._rootModel.BaseInfo().EffectiveDate,//生效日期
+                        ExpiredDate: window._rootModel.BaseInfo().ExpiredDate,//截止日期
+                        EffectiveDaysAfterReceived: window._rootModel.BaseInfo().EffectiveDaysAfterReceived,//领取后多少天生效
+                        PutInStartDate: window._rootModel.BaseInfo().PutInStartDate,//投放开始日期
+                        PutInEndDate: window._rootModel.BaseInfo().PutInEndDate,//投放结束日期
+                        EffectiveDays: window._rootModel.BaseInfo().EffectiveDays,//有效天数
+                        IsUseAllTime: window._rootModel.BaseInfo().IsUseAllTime,//是否全时段
+                        PutInIsUseAllTime: window._rootModel.BaseInfo().PutInIsUseAllTime,//投放是否全时段
+                        UseDaysOfWeek: UseDaysOfWeek,//可用的日期,周日到周六为0..6递增以,分隔
+                        PutInUseDaysOfWeek: PutInUseDaysOfWeek,//可用的日期,周日到周六为0..6递增以,分隔
+                        Remark: $('#remark').val(),
+                        //DeliveryStartDate: window._rootModel.BaseInfo().DeliveryStartDate,//投放开始日期
+                        //DeliveryFinishDate: window._rootModel.BaseInfo().DeliveryFinishDate,//投放结束日期
+                        CoverImage: window._rootModel.BaseInfo().CoverImage,//封面图片
+                        CoverIntro: window._rootModel.BaseInfo().CoverIntro,//封面简介
+                        UseInstructions: window._rootModel.BaseInfo().UseInstructions,//使用须知
+                        IntroDetail: window._rootModel.Ue().getContent(),//图文介绍
+                        MerchantPhoneNo: window._rootModel.BaseInfo().MerchantPhoneNo,//商户电话
+                        MerchantService: MerchantService,//商户服务
+                        CanShareByPeople: $('#cansharebypeople')[0].checked,//window._rootModel.BaseInfo().CanShareByPeople() == true ? window._rootModel.BaseInfo().CanShareByPeople() : (window._rootModel.BaseInfo().CanShareByPeople() == 'true' ? true : false),//用户可分享链接
+                        CanGiveToPeople: $('#cangivetopeople')[0].checked,//window._rootModel.BaseInfo().CanShareByPeople() == 'true' ? true : false,//用户可以赠送优惠券
+                        VerificationMode: window._rootModel.BaseInfo().VerificationMode() == '2' ? '0' : window._rootModel.BaseInfo().VerificationMode(),//核销方式
+                        IsApplyAllStore: window._rootModel.BaseInfo().IsApplyAllStore,//全部门店适用
+                        ApplyStores: ApplyStores,//适用门店编码
+                        OperationTips: window._rootModel.BaseInfo().OperationTips,//操作提示
+                        ApproveStatus: '0',//审核状态
+                        // DeliveryMode: '',//投放方式
+                        Stock: Stock,//优惠券库存
+                        UseTimeList: UseTimeList,//可用部分时段
+                        //Stock: window._rootModel.BaseInfo().Stock,//库存
+                        //CollarQuantityLimit: window._rootModel.BaseInfo().CollarQuantityLimit,//领券数量限制
+                        IsSpecialCoupon: $('#isspecialcoupon')[0].checked,//window._rootModel.IsSpecialCoupon(),//是否为特殊代销券
+                        IsPutaway: window._rootModel.BaseInfo().IsPutaway() != '0' ? true : false,
+                        PutawayTime: window._rootModel.BaseInfo().PutawayTime(),
+                        SoldOutTime: window._rootModel.BaseInfo().SoldOutTime(),
+                        IsDeductionFirst: $('#DeductionFirst')[0].checked,
+                    };
+                    var url = '/api/CouponTemplate/';
+                    var confirmcallback = function () {
+                        $('#laststep').show();
+                    }
+                    if (window._rootModel.ModifyCouponTemplate() != null && window._rootModel.IsFromModify() != null && window._rootModel.IsFromModify()) {
+                        coupon.ID = window._rootModel.ModifyCouponTemplate().ID;
+                        coupon.TemplateCode = window._rootModel.ModifyCouponTemplate().TemplateCode;
+                        url = '/api/CouponTemplate/Update';
+                        confirmcallback = function () {
+                            $('#modifylaststep').show();
+                        }
+                    }
+                    //console.log(coupon);
+                    //return;
+                    $.ajax({
+                        url: url,
+                        headers: { 'Authorization': userToken },
+                        type: 'POST',
+                        data: coupon,
+                        success: function (res) {
+                            $('#thirdstep').hide();
+                            $('#firststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number1_selected.png');
+                            $('#secondstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number2_selected.png');
+                            $('#thirdstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number3_selected.png');
+                            $('#laststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number4_selected.png');
+                            $('#thirdstepline').css('border-top', '3px solid #126daf');
+                            confirmcallback();
+                            sessionStorage.removeItem('coupontemplate');
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            sessionStorage.removeItem('coupontemplate');
+                            var errormsg = JSON.parse(jqXHR);
+                            alert(errormsg);
+                        }
+                    });
+                }
+            });
+            $('#continuecreate').click(function () {
+                $('#laststep').hide();
+                $('#secondstepvoucher').hide();
+                $('#secondstepchsh').hide();
+                $('#secondstepexchange').hide();
+                $('#secondstepdiscount').hide();
+
+                $('#firststep').show();
+                $('#firststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number1_selected.png');
+                $('#secondstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number2_normal.png');
+                $('#thirdstepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number3_normal.png');
+                $('#laststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number4_normal.png');
+            });
+
+
+            $('#secondstepaddtime').click(function () {
+                $('#timeul').append('<li style="list-style-type:none;">' +
+                    '<div class="form-group">' +
+                    '<div class="col-auto">' +
+                    '<input class="form-control" type="text" style="width:150px;margin:5px;" />' +
+                    '</div>' +
+                    '<div class="col-auto" style="padding-top:10px;">' +
+                    '至' +
+                    '</div>' +
+                    '<div class="col-auto">' +
+                    '<input class="form-control" type="text" style="width:150px;margin:5px;" />' +
+                    '</div>' +
+                    '<div class="col-auto" style="padding-top:10px;">' +
+                    '<a style="cursor:pointer;">删除时间段</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>');
+                $('#timeul').find('a').click(function () { $($($($(this).parent('div')).parent('div')).parent('li')).remove() });
+            });
+            $('#putinsecondstepaddtime').click(function () {
+                $('#putintimeul').append('<li style="list-style-type:none;">' +
+                    '<div class="form-group">' +
+                    '<div class="col-auto">' +
+                    '<input class="form-control" type="text" style="width:150px;margin:5px;" />' +
+                    '</div>' +
+                    '<div class="col-auto" style="padding-top:10px;">' +
+                    '至' +
+                    '</div>' +
+                    '<div class="col-auto">' +
+                    '<input class="form-control" type="text" style="width:150px;margin:5px;" />' +
+                    '</div>' +
+                    '<div class="col-auto" style="padding-top:10px;">' +
+                    '<a style="cursor:pointer;">删除时间段</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</li>');
+                $('#putintimeul').find('a').click(function () { $($($($(this).parent('div')).parent('div')).parent('li')).remove() });
+            });
+
+            $('#suitgoods').click(function () {
+                $('#selectunsuitgoods').hide();
+                $('#selectsuitgoods').show();
+                $('#unsuitproductselected').html('');
+            });
+            $('#unsuitgoods').click(function () {
+                $('#selectsuitgoods').hide();
+                $('#selectunsuitgoods').show();
+                $('#suitproductselected').html('');
+            });
+
+
+            $('.demo').each(function () {
+                $(this).minicolors({
+                    control: $(this).attr('data-control') || 'hue',
+                    defaultValue: $(this).attr('data-defaultValue') || '',
+                    inline: $(this).attr('data-inline') === 'true',
+                    letterCase: $(this).attr('data-letterCase') || 'lowercase',
+                    opacity: $(this).attr('data-opacity'),
+                    position: $(this).attr('data-position') || 'bottom left',
+                    change: function (hex, opacity) {
+                        if (!hex) return;
+                        if (opacity) hex += ', ' + opacity;
+                        try {
+                            $('.minicolors-swatch-color').css('background-color', hex);
+                        } catch (e) { }
+                    },
+                    theme: 'bootstrap'
+                });
+            });
+
+            $('#checkalldepartment').click(function () {
+                alert($('#checkalldepartment').val());
+                if ($('#checkalldepartment').attr('checked')) {
+                    $('#departmentlist').find('input').attr('checked', true);
+                } else {
+                    $('#departmentlist').find('input').attr('checked', false);
+                }
+            });
+
+            doc.suitproductlistclick = function (data, event) {
+                var selectedproduct = $(this);
+                $('#suitproductselected').append('<button style="margin:5px;" class="btn btn-default" id="' + selectedproduct[0].Code + '">' + selectedproduct[0].Name + '<span class="glyphicon glyphicon-remove-circle" style="margin:5px;"></span></button>');
+                $('#suitproductselected button').click(function () {
+                    var me = $(this);
+                    $('#suitproductlist').find('#' + me.attr('id') + '').show();
+                    me.remove();
+                });
+                if (event != null) {
+                    $(event.currentTarget).hide();
+                }
+            };
+
+            $('#suitproductselectedall').click(function () {
+                var products = $('#suitproductlist button');
+                for (var i = 0; i < products.length; i++) {
+                    $('#suitproductselected').append('<button style="margin:5px;" class="btn btn-default" id="' + $(products[i]).attr('id') + '">' + $(products[i]).text() + '<span class="glyphicon glyphicon-remove-circle" style="margin:5px;"></span></button>');
+                }
+                $('#suitproductselected button').click(function () {
+                    var me = $(this);
+                    $('#suitproductlist').find('#' + me.attr('id') + '').show();
+                    me.remove();
+                });
+                $('#suitproductlist').find('button:visible').hide();
+            });
+
+            doc.unsuitproductlistclick = function (data, event) {
+                var selectedproduct = $(this);
+                $('#unsuitproductselected').append('<button style="margin:5px;" class="btn btn-default" id="' + selectedproduct[0].Code + '">' + selectedproduct[0].Name + '<span class="glyphicon glyphicon-remove-circle" style="margin:5px;"></span></button>');
+                $('#unsuitproductselected button').click(function () {
+                    var me = $(this);
+                    $('#unsuitproductlist').find('#' + me.attr('id') + '').show();
+                    me.remove();
+                });
+                if (event != null) {
+                    $(event.currentTarget).hide();
+                }
+            };
+
+            $('#unsuitproductselectedall').click(function () {
+                var products = $('#unsuitproductlist button');
+                for (var i = 0; i < products.length; i++) {
+                    $('#unsuitproductselected').append('<button style="margin:5px;" class="btn btn-default" id="' + $(products[i]).attr('id') + '">' + $(products[i]).text() + '<span class="glyphicon glyphicon-remove-circle" style="margin:5px;"></span></button>');
+                }
+                $('#unsuitproductselected button').click(function () {
+                    var me = $(this);
+                    $('#unsuitproductlist').find('#' + me.attr('id') + '').show();
+                    me.remove();
+                });
+                $('#unsuitproductlist').find('button:visible').hide();
+            });
+
+            $('#suitgoodscancel').click(function () {
+                $('#suitgoodsmodal').hide();
+                $('#suitproductselected').html('');
+            });
+            $('#unsuitgoodscancel').click(function () {
+                $('#unsuitgoodsmodal').hide();
+                $('#unsuitproductselected').html('');
+            });
+            $('#goodsconfirm').click(function () {
+                $('#suitgoodsmodal').hide();
+                $('#unsuitgoodsmodal').hide();
+            });
+            $('#deptmodalcancel').click(function () {
+                $($('#departmentlist').find('input:checkbox:checked')).attr('checked', false);
+            });
+
+            $('#introdetailimg').click(function () {
+                $('#imgmagnify').find('img').attr('src', $('#introdetailimg').attr('src'));
+                $('#imgmagnify').modal();
+            });
+            $('#coverimageimg').click(function () {
+                $('#imgmagnify').find('img').attr('src', $('#coverimageimg').attr('src'));
+                $('#imgmagnify').modal();
+            });
+
+            $('#isapplyallstore').click(function () {
+                $($('#departmentlist').find('input:checkbox:checked')).attr('checked', false);
+            });
+
+            $('#isusealltime').click(function () {
+                $('input:checkbox:checked[name=UseDaysOfWeek]').attr('checked', false);
+                $('#timeul').html('');
+            });
+
+        });
+
+    </script>
+}
+

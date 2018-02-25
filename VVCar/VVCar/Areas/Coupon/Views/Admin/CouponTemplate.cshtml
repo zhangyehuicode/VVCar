@@ -1,0 +1,997 @@
+﻿
+@{
+    ViewBag.Title = "CouponTemplate";
+    Layout = "~/Areas/Coupon/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="form-group row" style="padding:20px 0px 0px 20px;">
+    <div class="col-md-2">
+        <select class="form-control" id="coupontemplatepagecoupontype">
+            <option value="-1" selected="selected">全部类型</option>
+            <option value="1">抵用券</option>
+            <option value="0">代金券</option>
+            <option value="2">兑换券</option>
+            <option value="3">折扣券</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select class="form-control" id="coupontemplatepageapprovsetatus">
+            <option value="-2" selected="selected">全部状态</option>
+            <option value="0">未审核</option>
+            <option value="1">已审核待投放</option>
+            <option value="2">已审核已投放</option>
+            <option value="-1">已拒绝</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" placeholder="标题" data-bind="textInput:coupontemplatedata().Title,event:{keypress:onSearchFormEnter}" />
+    </div>
+    <div class="col-md-1">
+        <button class="form-control" style="background-color:#0094ff;color:white;" id="coupontemplatesearch" data-bind="click:coupontemplatesearch">搜索</button>
+    </div>
+    <div class="col-md-1">
+        <button class="form-control" id="coupontemplaterefresh" data-bind="click:coupontemplatesearch">刷新</button>
+    </div>
+    @*<div class="col-md-1">
+            <button class="form-control" style="background-color:#0094ff;color:white;" id="jumptototalreportpage">整体报表</button>
+        </div>
+        <div class="col-md-2">
+            <button class="form-control" style="background-color:#0094ff;color:white;width:100px;" id="jumptocreatecouponpage">新建优惠券</button>
+        </div>*@
+    <div class="col-md-2">
+        @*<button class="form-control" style="width:130px;" id="exportexistcoupon">导入已有优惠券</button>*@
+    </div>
+</div>
+<div class="form-group row" style="padding:20px 0px 0px 20px;">
+    <div class="col-md-12">
+        <table style="width:100%;text-align:center;margin:0px 0px 10px 0px;" id="coupontemplatelist">
+            <tr>
+                <td class="cell_title">类型</td>
+                <td class="cell_title">编号</td>
+                <td class="cell_title">创建时间</td>
+                <td class="cell_title">投放时间</td>
+                <td class="cell_title">标题</td>
+                <td class="cell_title">有效期</td>
+                <td class="cell_title">状态</td>
+                <td class="cell_title">发行量</td>
+                @*<td class="cell_title">领券中心领取</td>*@
+                <td class="cell_title">分享与赠送</td>
+                <td class="cell_title">库存</td>
+                <td class="cell_title">备注</td>
+                <td class="cell_title">操作</td>
+            </tr>
+            <!--ko foreach:CouponTemplateList()-->
+            <tr>
+                <td class="cell_content"><span data-bind="text:CouponTypeName"></span></td>
+                <td class="cell_content"><span data-bind="text:TemplateCode"></span> </td>
+                <td class="cell_content"><span data-bind="text:CreatedDate"></span> </td>
+                <td class="cell_content"><span data-bind="text:PutInDate"></span></td>
+                <td class="cell_content"><span data-bind="text:Title"></span> </td>
+                <td class="cell_content"><span data-bind="text:Validity"></span> </td>
+                <td class="cell_content"><span data-bind="text:AproveStatusText"></span> </td>
+                <td class="cell_content"><span data-bind="text:Stock"></span></td>
+                @*<td class="cell_content"><span data-bind="text:IsPutaway?'是':'否'"></span></td>*@
+                <td class="cell_content"><span data-bind="text:CanGiveToPeople?'赠送':(CanShareByPeople?'分享':'无')"></span></td>
+                <td class="cell_content"><span data-bind="text:FreeStock"></span><span class="glyphicon glyphicon-pencil" style="cursor:pointer;padding-left:20px;" data-bind="click:$root.ModifyStock"></span></td>
+                <td class="cell_content"><span data-bind="text:(Remark!=null&&Remark.length>20)?Remark.substring(0,19)+'...':Remark"></span></td>
+                <td class="cell_content"><a style="cursor:pointer;padding-right:3px;" data-bind="attr:{id:ID},click:$root.CouponDelivery,text:AproveStatus==2?'查看二维码':'投放'"></a><a style="padding-left:3px;cursor:pointer;" data-bind="click:$root.coupondetails">详情</a><a style="cursor:pointer;padding-left:5px;" data-bind="click:$root.CouponTempReport">报表</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.CouponModify,visible:AproveStatus!=2">修改</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.CouponDelete,visible:AproveStatus!=2">删除</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.ReceivedRecord,visible:AproveStatus==2">领取记录</a></td>
+            </tr>
+            <!--/ko-->
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="coupondeliverymodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body modal-footer">
+                <div class="form-group">
+                    <div class="col-md-12" style="padding:50px 0 50px 0;">
+                        <div class="col-md-6" style="text-align:center;">
+                            <img style="width:200px;height:200px;" />
+                        </div>
+                        <div class="col-md-6" style="padding-top: 50px;">
+                            <button class="form-control" style="width:150px;" id="downloadQrCode"><a>下载二维码</a></button>
+                            @*<iframe height="0" width="0" name="saveImage" id="saveImage"></iframe>
+                                <a href="#saveImage" onclick="saveImage.document.execCommand('saveAs');">Click Me</a>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12" style="padding:50px 0 50px 0;">
+                        <div class="col-md-6">
+                            <input class="form-control" id="qrcodelink" />
+                        </div>
+                        <div class="col-md-6">
+                            <button class="form-control" style="width:150px;" id="copyqrcodelink">复制链接</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="modal-footer" style="text-align:center;">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" style="width:80px;">关闭</button>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="coupontemplatemodifystock" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:300px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body modal-footer">
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <div class="col-md-6 radio" style="text-align:center;">
+                            <label>
+                                <input type="radio" name="stockmodifyradio" id="addstock" value="1" checked="checked" />增加
+                            </label>
+                        </div>
+                        <div class="col-md-6 radio" style="text-align:center;padding-top:15px;">
+                            <label>
+                                <input type="radio" name="stockmodifyradio" id="reducestock" value="0" checked="" />减少
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12" style="padding-top:10px;">
+                        <div class="col-md-10">
+                            <form>
+                                <input class="form-control" placeholder="" id="modifiedstock" name="modifiedstock"
+                                       data-val="true" data-val-digits="请输入整数" data-val-required="不能为空" data-val-range-min="0" data-val-range-max="99999999" data-val-range="请输入不小于0和不大于99999999的数" />
+                                <span class="field-validation-valid" data-valmsg-for="modifiedstock" data-valmsg-replace="true"></span>
+                            </form>
+                        </div>
+                        <div class="col-md-2" style="padding-top:5px;">份</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align:center;">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" style="width:80px;">取消</button>
+                <button type="button" class="btn btn-primary" style="width:80px;" id="modifystockconfirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*分页*@
+<div style="display:table;width:100%;text-align:right;">
+    <div class="paging" style="display:table-cell;">
+        <ul id="coupontemplatepaging"></ul>
+    </div>
+    <div style="display:table-cell;width:400px;height:100%;vertical-align:middle;color:#6c6c6c;">
+        <div style="display:table;padding-bottom:7px;">
+            <div style="display:table-cell;padding-right:10px;" data-bind="text:'共'+PagingTotalPages()+'页'"></div>
+            <input class="form-control" style="display:table-cell;width:60px;margin-right:10px;height:33px;" data-bind="textInput:CurrentPage,event:{keypress:turnToPagekeyPress}" />
+            <button class="form-control" style="width:60px;display:table-cell;margin-right:20px;height:33px;" data-bind="click:turnToPage">跳转</button>
+            <div style="display:table-cell;" data-bind="text:'第'+ parseInt(LoadTotal()>0?coupontemplatedata().Start()+1:0)+'~'+parseInt(coupontemplatedata().Start()+LoadTotal()) +'条 共'+ToTalCount()+'条'"></div>@*'第'+ me.coupontemplatedata().Start()+1+'~'+me.coupontemplatedata().Start()+1+ me.coupontemplatedata().Limit()+'条 共'+ToTalCount()+'条'*@
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/ko")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="~/Scripts/bootstrap-paginator.min.js"></script>
+    <script src="/Scripts/jquery-weui.js"></script>
+    <link href="//res.wx.qq.com/open/libs/weui/0.4.2/weui.css" rel="stylesheet" />
+    <link href="/Content/jquery-weui.css" rel="stylesheet" />
+    <style type="text/css">
+        .paging {
+            /*width: 100%;*/
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .cell_title {
+            font-size: 1em;
+            color: #6c6c6c;
+            border: 1px solid #e7e7eb;
+            background-color: #f4f5f9;
+            text-align: center;
+            height: 30px;
+        }
+
+        .cell_content {
+            font-size: 1em;
+            color: #393939;
+            text-align: center;
+            word-wrap: break-word;
+            word-break: break-all;
+            border: 1px solid #e7e7eb;
+            height: 30px;
+        }
+    </style>
+    <script type="text/javascript">
+
+        var userToken = sessionStorage.getItem('userToken');
+
+        var PageViewModel = function () {
+            var me = this;
+            this.CouponTemplateList = ko.observableArray([]);
+            this.CouponTempReport = function (data) {
+                window.parent.navigateLink("/CouponAdmin/Report?CouponType=" + data.CouponType + "&TemplateCode=" + data.TemplateCode, "报表");
+            }
+            this.ReceivedRecord = function (data) {
+                window.parent.navigateLink("/CouponAdmin/ReceivedCouponRecord?CouponType=" + data.CouponType + "&TemplateCode=" + data.TemplateCode, data.Title + "领取记录");
+            }
+            this.CouponDelete = function (data) {
+                if (data.AproveStatus == 2) {
+                    bootbox.dialog({
+                        title: '提示',
+                        message: '优惠券已投放,不能删除',
+                        size: 'small',
+                        buttons: {
+                            Ok: {
+                                label: '确定',
+                                callback: function () {
+
+                                }
+                            }
+                        }
+                    });
+                    return;
+                }
+                bootbox.dialog({
+                    title: '提示',
+                    message: '确定删除?',
+                    size: 'small',
+                    buttons: {
+                        Ok: {
+                            label: '确定',
+                            callback: function () {
+                                $.ajax({
+                                    url: '/api/CouponTemplate/Delete?id=' + data.ID,
+                                    headers: { 'Authorization': userToken },
+                                    type: 'GET',
+                                    success: function (res) {
+                                        if (res.IsSuccessful) {
+                                            if (res.Data) {
+                                                bootbox.dialog({
+                                                    title: '提示',
+                                                    message: '删除成功',
+                                                    size: 'small',
+                                                    buttons: {
+                                                        Ok: {
+                                                            label: '确定',
+                                                            callback: function () {
+
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                                //刷新优惠券列表
+                                                $.ajax({
+                                                    url: '/api/CouponTemplate/GetCouponTemplateInfo',
+                                                    headers: { 'Authorization': userToken },
+                                                    type: 'GET',
+                                                    data: window._rootModel.coupontemplatedata(),
+                                                    beforeSend: function () {
+                                                        $.showLoading();
+                                                    },
+                                                    success: function (res) {
+                                                        $.hideLoading();
+                                                        if (res.IsSuccessful) {
+                                                            console.log(res.Data);
+                                                            window._rootModel.CouponTemplateList(res.Data);
+                                                        }
+                                                    },
+                                                    error: function () {
+                                                        $.hideLoading();
+                                                    }
+                                                });
+                                            } else {
+                                                bootbox.dialog({
+                                                    title: '提示',
+                                                    message: '删除失败,' + res.ErrorMessage,
+                                                    size: 'small',
+                                                    buttons: {
+                                                        Ok: {
+                                                            label: '确定',
+                                                            callback: function () {
+
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        Cancel: {
+                            label: '取消',
+                            callback: function () {
+                            }
+                        }
+                    }
+                });
+            };
+            this.coupontemplatedata = ko.observable({
+                CouponType: ko.observable('-1'),
+                AproveStatus: ko.observable('-2'),
+                Title: ko.observable(''),
+                Start: ko.observable(0),
+                Limit: ko.observable(18),
+            });
+            this.ModifyData = ko.observable();
+            this.Params = ko.observable();
+            this.ModifyStock = function (data) {
+                console.log(data);
+                me.ModifyData(data);
+                var params = {
+                    ID: data.ID,
+                    Stock: data.Stock,
+                }
+                me.Params(params);
+                //bootbox.dialog({
+                //    title: '修改库存',
+                //    message: '<div class="from-group"><div class="col-md-6"><input type="radio" />增加</div></div><div class="col-md-6"><input type="radio" />减少</div>' +
+                //               '<div class="from-group"><div class="col-md-10"><input type="text" class="form-control" />份</div></div>',
+                //    size: 'small',
+                //    buttons: {
+                //        Ok: {
+                //            label: '确定',
+                //            callback: function () {
+
+                //            }
+                //        },
+                //        Cancel: {
+                //            label: '取消',
+                //            callback: function () {
+
+                //            }
+                //        }
+                //    }
+                //});
+                $('#coupontemplatemodifystock').find('input:radio')[0].checked = true;
+                $('#coupontemplatemodifystock').find('input:radio')[1].checked = false;
+                $('#coupontemplatemodifystock').find('input:text').val('');
+                $('#coupontemplatemodifystock').modal();
+
+            };
+
+            var userToken = sessionStorage.getItem('userToken');
+            this.CouponDelivery = function (data) {
+                if (data.Stock < 1 && data.AproveStatus == 1) {
+                    bootbox.dialog({
+                        title: '提示',
+                        message: '库存小于1,不能投放.',
+                        size: 'small',
+                        buttons: {
+                            Ok: {
+                                label: '确定',
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    return;
+                } else if (data.AproveStatus == 0) {
+                    bootbox.dialog({
+                        title: '提示',
+                        message: '未审核',
+                        size: 'small',
+                        buttons: {
+                            Ok: {
+                                label: '确定',
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    return;
+                } else if (data.AproveStatus == -1) {
+                    bootbox.dialog({
+                        title: '提示',
+                        message: '审核已拒绝,审核未通过.',
+                        size: 'small',
+                        buttons: {
+                            Ok: {
+                                label: '确定',
+                                callback: function () {
+                                }
+                            }
+                        }
+                    });
+                    return;
+                } else if (data.AproveStatus == 1) {
+                    data.DeliveryMode = 2;
+                    data.AproveStatus = 2;
+                    $.ajax({
+                        url: '/api/CouponTemplate/UpdateStatus',
+                        headers: { 'Authorization': userToken },
+                        type: 'PUT',
+                        data: data,
+                        success: function (res) {
+                            if (res.IsSuccessful) {
+                                console.log(res.Data);
+                                if (res.Data) {
+                                    bootbox.dialog({
+                                        title: '提示',
+                                        message: '投放成功',
+                                        size: 'small',
+                                        buttons: {
+                                            Ok: {
+                                                label: '确定',
+                                                callback: function () {
+                                                    var url = '';
+                                                    if (data.IsSpecialCoupon) {
+                                                        //如果是特殊代销券则先向Coupon添加一条数据,即投放成功时自动领取一张可重复核销的卡券
+                                                        var coupon = {
+                                                            //TemplateID: data.ID,
+                                                            //EffectiveDate: data.EffectiveDate,
+                                                            //ExpiredDate: data.ExpiredDate,
+                                                            //Status: 0,
+                                                            //IsCanReuse: true
+                                                            ReceiveOpenID: 'specialcoupon',
+                                                            CouponTemplateIDs: [data.ID]
+                                                        };
+                                                        $.ajax({
+                                                            url: '/api/Coupon/ReceiveCouponsWidthCode',
+                                                            headers: { 'Authorization': userToken },
+                                                            data: coupon,
+                                                            type: 'POST',
+                                                            success: function (res) {
+                                                                //url = res.Data.CouponCode;
+                                                                if (res.IsSuccessful) {
+                                                                    url = res.Data;
+                                                                    me.GenerateQRCode(url);
+                                                                    //刷新优惠券列表
+                                                                    $.ajax({
+                                                                        url: '/api/CouponTemplate/GetCouponTemplateInfo',
+                                                                        headers: { 'Authorization': userToken },
+                                                                        type: 'GET',
+                                                                        data: window._rootModel.coupontemplatedata(),
+                                                                        beforeSend: function () {
+                                                                            $.showLoading();
+                                                                        },
+                                                                        success: function (res) {
+                                                                            $.hideLoading();
+                                                                            if (res.IsSuccessful) {
+                                                                                console.log(res.Data);
+                                                                                window._rootModel.CouponTemplateList(res.Data);
+                                                                            }
+                                                                        },
+                                                                        error: function () {
+                                                                            $.hideLoading();
+                                                                        }
+                                                                    });
+                                                                } else {
+                                                                    $.alert('特殊券自动领取失败，' + res.ErrorMessage);
+                                                                }
+                                                            }
+                                                        });
+                                                    } else {
+                                                        $.ajax({
+                                                            url: '/api/Common/ConfigInfo',
+                                                            headers: { 'Authorization': userToken },
+                                                            type: 'GET',
+                                                            success: function (res) {
+                                                                console.log(res);
+                                                                url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
+                                                                me.GenerateQRCode(url);
+                                                            }
+                                                        });
+                                                    }
+                                                    //生成二维码
+                                                    //$.ajax({
+                                                    //    url: '/api/Common/ConfigInfo',
+                                                    //    headers: { 'Authorization': userToken },
+                                                    //    type: 'GET',
+                                                    //    success: function (res) {
+                                                    //        console.log(res);
+                                                    //        url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
+                                                    //$.ajax({
+                                                    //    url: '/api/CouponTemplate/GenerateQRCode?url=' + encodeURIComponent(url),
+                                                    //    headers: { 'Authorization': userToken },
+                                                    //    type: 'GET',
+                                                    //    success: function (res) {
+                                                    //        if (res.IsSuccessful) {
+                                                    //            console.log(res.Data);
+                                                    //            $('#coupondeliverymodal').find('img').attr('src', res.Data);
+                                                    //            $('#coupondeliverymodal').find('iframe').attr('src', res.Data);
+                                                    //            $($('#coupondeliverymodal').find('input:text')[0]).val(url);
+                                                    //            $('#coupondeliverymodal').find('a').attr('href', '/CouponAdmin/DownloadFile?url=' + $('#coupondeliverymodal').find('img').attr('src'));
+                                                    //            $('#coupondeliverymodal').modal();
+                                                    //        }
+                                                    //    }
+                                                    //});
+                                                    //    }
+                                                    //});
+
+                                                    //刷新优惠券列表
+                                                    //$.ajax({
+                                                    //    url: '/api/CouponTemplate/GetCouponTemplateInfo',
+                                                    //    headers: { 'Authorization': userToken },
+                                                    //    type: 'GET',
+                                                    //    data: window._rootModel.coupontemplatedata(),
+                                                    //    beforeSend: function () {
+                                                    //        $.showLoading();
+                                                    //    },
+                                                    //    success: function (res) {
+                                                    //        $.hideLoading();
+                                                    //        if (res.IsSuccessful) {
+                                                    //            console.log(res.Data);
+                                                    //            window._rootModel.CouponTemplateList(res.Data);
+                                                    //        }
+                                                    //    },
+                                                    //    error: function () {
+                                                    //        $.hideLoading();
+                                                    //    }
+                                                    //});
+                                                    me.coupontemplatesearch();
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            } else {
+                                data.AproveStatus = 1;
+                                $.alert('投放失败，' + res.ErrorMessage, '提示');
+                            }
+                        }
+                    });
+                } else {
+                    //生成二维码
+                    var url = '';
+                    if (data.IsSpecialCoupon) {
+                        url = data.CouponCode;
+                        me.GenerateQRCode(url);
+                    } else {
+                        $.ajax({
+                            url: '/api/Common/ConfigInfo',
+                            headers: { 'Authorization': userToken },
+                            type: 'GET',
+                            success: function (res) {
+                                console.log(res);
+                                //var url = res.Data.SiteDomain + '/Coupon/CouponInfo/' + data.ID;
+                                url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
+                                me.GenerateQRCode(url);
+                            }
+                        });
+                    }
+                    //$.ajax({
+                    //    url: '/api/Common/ConfigInfo',
+                    //    headers: { 'Authorization': userToken },
+                    //    type: 'GET',
+                    //    success: function (res) {
+                    //        console.log(res);
+                    //        //var url = res.Data.SiteDomain + '/Coupon/CouponInfo/' + data.ID;
+                    //        var url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
+                    //$.ajax({
+                    //    url: '/api/CouponTemplate/GenerateQRCode?url=' + encodeURIComponent(url),
+                    //    headers: { 'Authorization': userToken },
+                    //    type: 'GET',
+                    //    success: function (res) {
+                    //        if (res.IsSuccessful) {
+                    //            console.log(res.Data);
+                    //            $('#coupondeliverymodal').find('img').attr('src', res.Data);
+                    //            $('#coupondeliverymodal').find('iframe').attr('src', res.Data);
+                    //            $($('#coupondeliverymodal').find('input:text')[0]).val(url);
+                    //            $('#coupondeliverymodal').find('a').attr('href', '/CouponAdmin/DownloadFile?url=' + $('#coupondeliverymodal').find('img').attr('src'));
+                    //            $('#coupondeliverymodal').modal();
+                    //        }
+                    //    }
+                    //});
+                    //    }
+                    //});
+                }
+                console.log(data);
+            }
+            this.GenerateQRCode = function (url) {
+                $.ajax({
+                    url: '/api/CouponTemplate/GenerateQRCode?url=' + encodeURIComponent(url),
+                    headers: { 'Authorization': userToken },
+                    type: 'GET',
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            console.log(res.Data);
+                            $('#coupondeliverymodal').find('img').attr('src', res.Data);
+                            $('#coupondeliverymodal').find('iframe').attr('src', res.Data);
+                            $($('#coupondeliverymodal').find('input:text')[0]).val(url);
+                            $('#coupondeliverymodal').find('a').attr('href', '/CouponAdmin/DownloadFile?url=' + $('#coupondeliverymodal').find('img').attr('src'));
+                            $('#coupondeliverymodal').modal();
+                        }
+                    }
+                });
+            }
+            this.coupondetails = function (data) {
+                sessionStorage.setItem('couponTemp', JSON.stringify(data));
+                window.parent.navigateLink("/CouponAdmin/CouponDetails", data.Title + "详情");
+            }
+            this.CouponModify = function (data) {
+                $.ajax({
+                    url: '/api/PointExchangeCoupon/ExistRecordByCouponTemplateId/' + data.ID,
+                    headers: { 'Authorization': userToken },
+                    type: 'GET',
+                    data: window._rootModel.coupontemplatedata(),
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            console.log(res.Data);
+                            if (!res.Data) {
+                                sessionStorage.setItem('coupontemplate', JSON.stringify(data));
+                                window.parent.navigateLink("/CouponAdmin?isfrommodify=true", "修改" + data.Title);
+                            } else {
+                                $.alert("该优惠券模板已在领券中心配置,不可编辑");
+                            }
+
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+
+            }
+            //this.refresh = function () {
+            //    $.ajax({
+            //        url: '/api/CouponTemplate/GetCouponTemplateInfo',
+            //        headers: { 'Authorization': userToken },
+            //        type: 'GET',
+            //        data: window._rootModel.coupontemplatedata(),
+            //        beforeSend: function () {
+            //            $.showLoading();
+            //        },
+            //        success: function (res) {
+            //            $.hideLoading();
+            //            if (res.IsSuccessful) {
+            //                console.log(res.Data);
+            //                window._rootModel.CouponTemplateList(res.Data);
+            //            }
+            //        },
+            //        error: function () {
+            //            $.hideLoading();
+            //        }
+            //    });
+            //}
+            this.onSearchFormEnter = function (data, event) {
+                if (event.keyCode == 13) {
+                    //me.refresh();
+                    me.coupontemplatesearch('data', 'event');
+                    return false;
+                }
+                return true;
+            };
+
+            me.turnToPagekeyPress = function (data, event) {
+                if (event != null && event.keyCode == 13) {
+                    me.turnToPage();
+                    return false;
+                }
+                return true;
+            }
+
+            me.turnToPage = function () {
+                if (me.CurrentPage() > me.PagingTotalPages()) {
+                    $.alert("超过最大页数" + me.PagingTotalPages());
+                    return;
+                } else if (me.CurrentPage() <= 0) {
+                    $.alert("页数不在有效范围内");
+                    return;
+                }
+                me.coupontemplatedata().Start(me.coupontemplatedata().Limit() * (me.CurrentPage() - 1));
+                me.coupontemplatesearch();
+            }
+
+            me.LoadTotal = ko.observable(0);
+            me.ToTalCount = ko.observable(0);
+            me.CurrentPage = ko.observable(1);
+            me.PagingTotalPages = ko.observable(1);
+            me.coupontemplatesearch = function (data, event) {
+                if (event != null) {
+                    me.CurrentPage(1);
+                    me.coupontemplatedata().Start(0);
+                }
+                $.ajax({
+                    url: '/api/CouponTemplate/GetCouponTemplateInfo',
+                    headers: { 'Authorization': userToken },
+                    type: 'GET',
+                    data: me.coupontemplatedata(),
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            console.log(res.Data);
+                            me.CouponTemplateList(res.Data);
+
+                            me.ToTalCount(res.TotalCount);
+                            if (res.Data != null) {
+                                me.LoadTotal(res.Data.length);
+                            }
+
+                            var pagingparams = me.coupontemplatedata();
+                            if (res.TotalCount == 0) {
+                                me.PagingTotalPages(1);
+                            } else {
+                                me.PagingTotalPages(Math.ceil(res.TotalCount / pagingparams.Limit()));
+                            }
+
+                            //初始化分页
+                            var pagingoptions = {
+                                currentPage: me.CurrentPage(),
+                                totalPages: me.PagingTotalPages(),
+                                numberOfPages: 3,
+                                bootstrapMajorVersion: 3,
+                                tooltipTitles: function (type, page, current) {
+                                    switch (type) {
+                                        case "first":
+                                            return "第一页";
+                                        case "prev":
+                                            return "上一页";
+                                        case "next":
+                                            return "下一页";
+                                        case "last":
+                                            return "最后一页";
+                                        case "page":
+                                            return "第" + page + "页";
+                                    }
+                                },
+                                onPageClicked: function (event, originalEvent, type, page) {
+                                    var pagingparams = me.coupontemplatedata();
+                                    pagingparams.Start(pagingparams.Limit() * (page - 1));
+                                    me.CurrentPage(page);
+                                    me.coupontemplatesearch();
+                                }
+                            }
+                            $('#coupontemplatepaging').bootstrapPaginator(pagingoptions);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            };
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            window._rootModel = new PageViewModel();
+            ko.applyBindings(window._rootModel);
+
+            $('#jumptototalreportpage').click(function () {
+                window.location.href = '/CouponAdmin/TotalReport';
+            });
+            $('#jumptocreatecouponpage').click(function () {
+                window.location.href = '/CouponAdmin/Index';
+            });
+
+            //coupontemplate请求参数
+            //var coupontemplatedata = {
+            //    CouponType: '-1',
+            //    AproveStatus: '-2'
+            //};
+
+            var userToken = sessionStorage.getItem('userToken');
+
+            //$('#coupontemplatesearch').click(function () {
+            //    $.ajax({
+            //        url: '/api/CouponTemplate/GetCouponTemplateInfo',
+            //        headers: { 'Authorization': userToken },
+            //        type: 'GET',
+            //        data: window._rootModel.coupontemplatedata(),
+            //        beforeSend: function () {
+            //            $.showLoading();
+            //        },
+            //        success: function (res) {
+            //            $.hideLoading();
+            //            if (res.IsSuccessful) {
+            //                console.log(res.Data);
+            //                window._rootModel.CouponTemplateList(res.Data);
+            //            }
+            //        },
+            //        error: function () {
+            //            $.hideLoading();
+            //        }
+            //    });
+            //});
+
+            $('#coupontemplatepagecoupontype').change(function () {
+                window._rootModel.coupontemplatedata().CouponType($(this).val());
+                //$('#coupontemplatesearch').trigger('click');
+                window._rootModel.coupontemplatesearch('data', 'event');
+            });
+            $('#coupontemplatepageapprovsetatus').change(function () {
+                window._rootModel.coupontemplatedata().AproveStatus($(this).val());
+                //$('#coupontemplatesearch').trigger('click');
+                window._rootModel.coupontemplatesearch('data', 'event');
+            });
+
+            //$('#coupontemplatesearch').trigger('click');
+            window._rootModel.coupontemplatesearch();
+
+            $('#downloadQrCode').click(function () {
+                //window.location.href = $('#coupondeliverymodal').find('img').attr('src');
+                //$('#coupondeliverymodal').find('img')[0].document.execCommand('SaveAs');
+                //$.ajax({
+                //    url: '/api/CouponTemplate/GenerateQRCodeFile?url=' + $('#coupondeliverymodal').find('img').attr('src'),
+                //    headers: { 'Authorization': userToken },
+                //    type: 'GET',
+                //    success: function (res) {
+                //        console.log(res);
+                //        if (res.IsSuccessful) {
+                //            console.log(res.Data);
+                //            window.location.href = res.Data;
+                //        }
+                //    }
+                //});
+            });
+
+            $('#copyqrcodelink').click(function () {
+                $('#qrcodelink').select();
+                document.execCommand('Copy');
+                bootbox.dialog({
+                    title: '提示',
+                    message: '已复制',
+                    size: 'small',
+                    buttons: {
+                        Ok: {
+                            label: '确定',
+                        }
+                    }
+                });
+            });
+
+            $('#modifystockconfirm').click(function () {
+                var validate = $('#coupontemplatemodifystock').find('form').validate();
+                if (!validate.checkForm()) {
+                    validate.showErrors();
+                } else {
+                    //if ($(this).find('input:radio:checked').length < 1) {
+                    //    bootbox.dialog({
+                    //        title: '提示',
+                    //        message: '请选择增加或减少库存',
+                    //        size: 'small',
+                    //        buttons: {
+                    //            Ok: {
+                    //                label: '确定',
+                    //                callback: function () {
+                    //                }
+                    //            }
+                    //        }
+                    //    });
+                    //} else {
+                    var isadd = $($('#coupontemplatemodifystock').find('input:radio:checked')[0]).val() != 0;
+                    var data = window._rootModel.ModifyData();
+                    var modifiedstock = parseInt(window._rootModel.ModifyData().FreeStock);
+                    if (isadd) {
+                        //data.Stock = parseInt(data.Stock) + parseInt($('#modifiedstock').val());
+                        //data.Stock = +parseInt($('#modifiedstock').val());
+                        modifiedstock += parseInt($('#modifiedstock').val());
+                    } else {
+                        //data.Stock = parseInt(data.Stock) - parseInt($('#modifiedstock').val());
+                        //data.Stock = -parseInt($('#modifiedstock').val());
+                        modifiedstock -= parseInt($('#modifiedstock').val());
+                    }
+                    if (modifiedstock < 0 || modifiedstock > 99999999) {
+                        bootbox.dialog({
+                            title: '提示',
+                            message: '减少的库存不能大于现有库存且不能大于99999999',
+                            size: 'small',
+                            buttons: {
+                                Ok: {
+                                    label: '确定',
+                                    callback: function () {
+                                        //window._rootModel.ModifyData().Stock += parseInt($('#modifiedstock').val());
+                                    }
+                                }
+                            }
+                        });
+                        return;
+                    } else {
+                        if (isadd) {
+                            data.Stock = +parseInt($('#modifiedstock').val());
+                        } else {
+                            data.Stock = -parseInt($('#modifiedstock').val());
+                        }
+                        console.log(data);
+                        window._rootModel.Params({ ID: data.ID, Stock: data.Stock });
+                        console.log(window._rootModel.Params());
+                        $.ajax({
+                            url: '/api/CouponTemplateStock/UpdateStock',
+                            headers: { 'Authorization': userToken },
+                            type: 'PUT',
+                            data: window._rootModel.Params(),
+                            success: function (res) {
+                                if (res.IsSuccessful) {
+                                    console.log(res.Data);
+                                    if (res.Data) {
+                                        bootbox.dialog({
+                                            title: '提示',
+                                            message: '修改库存成功',
+                                            size: 'small',
+                                            buttons: {
+                                                Ok: {
+                                                    label: '确定',
+                                                    callback: function () {
+                                                        $('#coupontemplatemodifystock').modal('hide');
+                                                    }
+                                                }
+                                            }
+                                        });
+                                        //刷新优惠券列表
+                                        $.ajax({
+                                            url: '/api/CouponTemplate/GetCouponTemplateInfo',
+                                            headers: { 'Authorization': userToken },
+                                            type: 'GET',
+                                            data: window._rootModel.coupontemplatedata(),
+                                            beforeSend: function () {
+                                                $.showLoading();
+                                            },
+                                            success: function (res) {
+                                                $.hideLoading();
+                                                if (res.IsSuccessful) {
+                                                    console.log(res.Data);
+                                                    window._rootModel.CouponTemplateList(res.Data);
+                                                }
+                                            },
+                                            error: function () {
+                                                $.hideLoading();
+                                            }
+                                        });
+                                    } else {
+                                        bootbox.dialog({
+                                            title: '提示',
+                                            message: '修改库存失败,' + res.ErrorMessage,
+                                            size: 'small',
+                                            buttons: {
+                                                Ok: {
+                                                    label: '确定',
+                                                    callback: function () {
+
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    //  }
+                }
+            });
+
+            //$('#coupontemplaterefresh').click(function () {
+            //    $.ajax({
+            //        url: '/api/CouponTemplate/GetCouponTemplateInfo',
+            //        headers: { 'Authorization': userToken },
+            //        type: 'GET',
+            //        data: window._rootModel.coupontemplatedata(),
+            //        beforeSend: function () {
+            //            $.showLoading();
+            //        },
+            //        success: function (res) {
+            //            $.hideLoading();
+            //            if (res.IsSuccessful) {
+            //                console.log(res.Data);
+            //                window._rootModel.CouponTemplateList(res.Data);
+            //            }
+            //        },
+            //        error: function () {
+            //            $.hideLoading();
+            //        }
+            //    });
+            //});
+
+        });
+    </script>
+}
+

@@ -1,0 +1,486 @@
+﻿
+@{
+    ViewBag.Title = "CouponDetails";
+    Layout = "~/Areas/Coupon/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="title">
+    <table>
+        <tr>
+            <td class="cell-title">优惠券状态</td>
+            <td class="cell-content" data-bind="text:CouponTemp().AproveStatusText"></td>
+            <td><button class="form-control" style="width:80px;" data-bind="click:modifycoupontemplate">修改</button></td>
+        </tr>
+        <tr>
+            <td class="cell-title">优惠券ID</td>
+            <td class="cell-content" data-bind="text:CouponTemp().TemplateCode"></td>
+        </tr>
+    </table>
+</div>
+
+<div class="main">
+    <div class="demo">
+        <div class="coupon" data-bind="style:{backgroundColor: CouponTemp().Color}">
+            <div class="coupon-content">
+                <h4 class="coupon-fontcolor coupon-textalign" data-bind="text:CouponTemp().Title"></h4>
+                <div class="coupon-textalign">
+                    <button type="button" class="btn btn-default">立即使用</button>
+                </div>
+                <h6 class="coupon-fontcolor coupon-textalign" data-bind="text:CouponTemp().SubTitle"></h6>
+                <h5 class="coupon-fontcolor coupon-padding" data-bind="text:CouponTemp().CouponType==3?'折扣比例：'+CouponTemp().CouponValue:'抵用金额：'+CouponTemp().CouponValue"></h5>@*<span class="coupon-contentfontcolor" data-bind="text:CouponTemp().CouponValue"></span>*@
+                <h5 class="coupon-fontcolor coupon-padding">使用条件：<span class="coupon-coverintrocolor" data-bind="text:(CouponTemp().IsMinConsumeLimit?'满'+CouponTemp().MinConsume+'元可用':'')+(CouponTemp().IsExclusive?',不与其他优惠共享':'')"></span></h5>
+                <h5 class="coupon-fontcolor coupon-padding">
+                    可用时间：
+                    <span data-bind="text:CouponTemp().Validity"></span>
+                </h5>
+                <img data-bind="attr: { src: CouponTemp().CoverImage }">
+                <h5 class="coupon-padding coupon-coverintrocolor" data-bind="text:CouponTemp().CoverIntro"></h5>
+                <h5 class="coupon-fontcolor coupon-padding">使用须知：</h5><h5 class="coupon-coverintrocolor coupon-introcontent" data-bind="text:CouponTemp().UseInstructions"></h5>
+                <h5 class="coupon-fontcolor coupon-padding">电话：<a class="coupon-phonecolor" data-bind="text:CouponTemp().MerchantPhoneNo"></a></h5>
+                <h5 class="coupon-fontcolor coupon-padding">服务：<span class="coupon-coverintrocolor" data-bind="text:CouponTemp().MerchantServiceDesc"></span></h5>
+            </div>
+        </div>
+    </div>
+    <div class="details">
+        <table>
+            <tr>
+                <td class="details-title">基本信息</td>
+            </tr>
+            <tr>
+                <td class="details-content">卡券类型</td>
+                <td class="content" data-bind="text:CouponTemp().CouponTypeName"></td>
+            </tr>
+            <tr>
+                <td class="details-content">卡券标题</td>
+                <td class="content" data-bind="text:CouponTemp().Title"></td>
+            </tr>
+            <tr>
+                <td class="details-content">副标题</td>
+                <td class="content" data-bind="text:CouponTemp().SubTitle"></td>
+            </tr>
+            <tr>
+                <td class="details-content">抵用顺序</td>
+                <td class="content" data-bind="text:CouponTemp().IsDeductionFirst?'先抵扣再折扣':'先折扣再抵扣'"></td>
+            </tr>
+            <tr>
+                <td class="details-content">卡券颜色</td>
+                <td class="content"><div class="couponcolor" data-bind="style:{backgroundColor: CouponTemp().Color}"></div></td>
+            </tr>
+            <tr>
+                <td class="details-content" data-bind="text:CouponTemp().CouponType==3?'折扣比例':'减免金额'"></td>
+                <td class="content" data-bind="text:CouponTemp().CouponValue"></td>
+            </tr>
+            <tr>
+                <td class="details-content">抵扣条件</td>
+                <td class="content" data-bind="text:(CouponTemp().IsMinConsumeLimit?'满'+CouponTemp().MinConsume+'元可用':'')+(CouponTemp().IsExclusive?'不与其他优惠共享':'')"></td>
+            </tr>
+            <tr>
+                <td class="details-content">适用商品</td>
+                <td class="content" data-bind="text:CouponTemp().IncludeProductNames"></td>
+            </tr>
+            <tr>
+                <td class="details-content">不适用商品</td>
+                <td class="content" data-bind="text:CouponTemp().ExcludeProductNames"></td>
+            </tr>
+            <tr>
+                <td class="details-content">有效期</td>
+                <td class="content" data-bind="text:CouponTemp().Validity"></td>
+            </tr>
+            <tr>
+                <td class="details-content">可用时段</td>
+                <td class="daysofweek">
+                    <table>
+                        <tr>
+                            <td data-bind="text:CouponTemp().DaysOfWeekTemp"></td>
+                        </tr>
+                        <!--ko foreach:CouponTemp().UseTimeListTemp-->
+                        <tr>
+                            <td>
+                                <span class="content" data-bind="text:BeginTime+'~'"></span>
+                                <span class="content" data-bind="text:EndTime"></span>
+                            </td>
+                        </tr>
+                        <!--/ko-->
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="details-content">投放时间</td>
+                <td class="content" data-bind="text:CouponTemp().PutInDate"></td>
+            </tr>
+            <tr>
+                <td class="details-content">投放可用时段</td>
+                <td class="daysofweek">
+                    <table>
+                        <tr>
+                            <td data-bind="text:CouponTemp().PutInDaysofweekTemp"></td>
+                        </tr>
+                        <!--ko foreach:CouponTemp().PutInUseTimeListTemp-->
+                        <tr>
+                            <td>
+                                <span class="content" data-bind="text:BeginTime+'~'"></span>
+                                <span class="content" data-bind="text:EndTime"></span>
+                            </td>
+                        </tr>
+                        <!--/ko-->
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="details-title">商户介绍</td>
+            </tr>
+            <tr>
+                <td class="details-content">客服电话</td>
+                <td class="content" data-bind="text:CouponTemp().MerchantPhoneNo"></td>
+            </tr>
+            <tr>
+                <td class="details-content">商户服务</td>
+                <td class="content" data-bind="text:CouponTemp().MerchantServiceDesc"></td>
+            </tr>
+            <tr>
+                <td class="details-title">详情</td>
+            </tr>
+            <tr>
+                <td class="details-content">使用须知</td>
+                <td class="content" data-bind="text:CouponTemp().UseInstructions"></td>
+            </tr>
+            <tr>
+                <td class="details-title">门店信息</td>
+            </tr>
+            <tr>
+                <td class="details-content">适用门店</td>
+                <td class="content">
+                    <span data-bind="visible:CouponTemp().IsApplyAllStore">全部门店适用</span>
+                    <table class="deptinfo" data-bind="visible:!CouponTemp().IsApplyAllStore&&CouponTemp().ApplyStoresNameTemp().length>0">
+                        <thead>
+                            <tr>
+                                <th class="head">门店名称</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--ko foreach:CouponTemp().ApplyStoresNameTemp-->
+                            <tr>
+                                <td data-bind="text:Name"></td>
+                            </tr>
+                            <!--/ko-->
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="details-title">使用设置</td>
+            </tr>
+            <tr>
+                <td class="details-content">库存</td>
+                <td class="content" data-bind="text:CouponTemp().Stock"></td>
+            </tr>
+            <tr>
+                <td class="details-content">领取限制</td>
+                <td class="content" data-bind="text:CouponTemp().IsNoCollarQuantityLimit?'无':CouponTemp().CollarQuantityLimit"></td>
+            </tr>
+            <tr>
+                <td class="details-content">分享与赠送</td>
+                <td class="content" data-bind="text:CouponTemp().CanShareByPeople?'用户可分享领券链接':CouponTemp().CanGiveToPeople?'用户可以赠送优惠券':'既不分享也不赠送'"></td>
+            </tr>
+            <tr>
+                <td class="details-content">销券方式</td>
+                <td class="content" data-bind="text:CouponTemp().IsSpecialCoupon?'特殊代销券':CouponTemp().VerificationModeDesc"></td>
+            </tr>
+            <tr>
+                <td class="details-content">操作提示</td>
+                <td class="content" data-bind="text:CouponTemp().OperationTips"></td>
+            </tr>
+            <tr>
+                <td class="details-content">备注</td>
+                <td class="content" style="white-space: pre-line;" data-bind="text:CouponTemp().Remark"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/ko")
+    <style>
+        .main {
+            display: table;
+            padding: 0 0 0 100px;
+        }
+
+        .demo {
+            width: 330px;
+            display: table-cell;
+        }
+
+        .title {
+            background-color: #f4f5f9;
+            height: 100px;
+            margin: 20px 70px;
+        }
+
+            .title table {
+                height: 100%;
+                width: 100%;
+            }
+
+        .cell-title {
+            font-size: 15px;
+            color: #333333;
+            width: 120px;
+            padding: 0 0 0 30px;
+            font-weight: 300;
+        }
+
+        .cell-content {
+            font-size: 15px;
+            color: #808080;
+            font-weight: 300;
+        }
+
+        .details-title {
+            color: #333333;
+            width: 100px;
+            padding-bottom: 30px;
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        .content {
+            color: #333333;
+            padding-bottom: 30px;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .details-content {
+            color: #808080;
+            padding-bottom: 30px;
+            font-weight: 300;
+            word-wrap: break-word;
+            word-break: break-all;
+            vertical-align: top;
+        }
+
+        .details {
+            display: table-cell;
+            vertical-align: top;
+            padding: 0 0 0 150px;
+            width: 500px;
+        }
+
+        .couponcolor {
+            width: 20px;
+            height: 20px;
+        }
+
+        .deptinfo {
+            border: 1px #d7d7db solid;
+            width: 200px;
+            border-radius: 10px;
+        }
+
+            .deptinfo .head {
+                background-color: #f4f5f9;
+                text-align: center;
+                font-weight: 400;
+                color: #333333;
+            }
+
+            .deptinfo tr {
+                border: 1px #d7d7db solid;
+                height: 30px;
+                text-align: center;
+                font-weight: 400;
+                color: #333333;
+            }
+
+        .coupon {
+            padding: 20px;
+        }
+
+            .coupon button {
+                background-color: #4695f6;
+                width: 100px;
+            }
+
+        .coupon-content {
+            border: 1px solid #cccccc;
+            background-color: #fff;
+            min-height: 430px;
+        }
+
+            .coupon-content img {
+                width: 100%;
+                height: 130px;
+                padding: 0px 20px 0px 20px;
+            }
+
+        .coupon-fontcolor {
+            color: #ff6a00;
+        }
+
+        .coupon-padding {
+            padding-left: 20px;
+        }
+
+        .coupon-coverintrocolor {
+            color: #808080;
+        }
+
+        .coupon-textalign {
+            text-align: center;
+        }
+
+        .coupon-contentfontcolor {
+            color: black;
+        }
+
+        .coupon-introcontent {
+            padding: 0px 20px 0px 20px;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .coupon-phonecolor {
+            color: #4695f6;
+        }
+
+        .daysofweek {
+            vertical-align: top;
+        }
+    </style>
+    <script type="text/javascript" src="~/Scripts/bootstrap-paginator.min.js"></script>
+    <script src="/Scripts/jquery-weui.js"></script>
+    <link href="//res.wx.qq.com/open/libs/weui/0.4.2/weui.css" rel="stylesheet" />
+    <link href="/Content/jquery-weui.css" rel="stylesheet" />
+    <script type="text/javascript">
+        var userToken = sessionStorage.getItem('userToken');
+        var pageViewModel = function () {
+            var me = this;
+            this.CouponTemp = ko.observable({ ApplyStoresNameTemp: ko.observableArray([]) });
+            var coupontemplate = JSON.parse(sessionStorage.getItem('couponTemp'));
+            me.modifycoupontemplate = function () {
+                $.ajax({
+                    url: '/api/PointExchangeCoupon/ExistRecordByCouponTemplateId/' + coupontemplate.ID,
+                    headers: { 'Authorization': userToken },
+                    type: 'GET',
+                    //data: window._rootModel.coupontemplatedata(),
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            console.log(res.Data);
+                            if (!res.Data) {
+                                sessionStorage.setItem('coupontemplate', JSON.stringify(coupontemplate));
+                                window.parent.navigateLink("/CouponAdmin?isfrommodify=true", "修改" + coupontemplate.Title);
+                            } else {
+                                $.alert("该优惠券模板已在领券中心配置,不可编辑");
+                            }
+
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            Date.prototype.Format = function (fmt) { //author: meizz
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+
+            window._rootModel = new pageViewModel();
+            ko.applyBindings(window._rootModel);
+
+            var couponTemp = JSON.parse(sessionStorage.getItem('couponTemp'));
+            couponTemp.EffectiveDate = couponTemp.EffectiveDate.substring(0, 10);
+            couponTemp.ExpiredDate = couponTemp.ExpiredDate.substring(0, 10);
+
+            couponTemp.ApplyStoresNameTemp = ko.observableArray([]);
+            couponTemp.UseTimeListTemp = ko.observableArray([]);
+            couponTemp.PutInUseTimeListTemp = ko.observableArray([]);
+            for (var i = 0; i < couponTemp.UseTimeList.length; i++) {
+                if (couponTemp.UseTimeList[i].Type == 0) {
+                    couponTemp.UseTimeListTemp.push(couponTemp.UseTimeList[i]);
+                } else {
+                    couponTemp.PutInUseTimeListTemp.push(couponTemp.UseTimeList[i]);
+                }
+            }
+            for (var i = 0; i < couponTemp.ApplyStoresName.length; i++) {
+                couponTemp.ApplyStoresNameTemp.push({ 'Name': couponTemp.ApplyStoresName[i] });
+            }
+            var daysofweek = [];
+            if (couponTemp.UseDaysOfWeek != null) {
+                daysofweek = couponTemp.UseDaysOfWeek.split(',');
+            }
+            var daysofweekTemp = '';
+            for (var i = 0; i < daysofweek.length; i++) {
+                switch (daysofweek[i]) {
+                    case "1": daysofweekTemp += "周一,";
+                        break;
+                    case "2": daysofweekTemp += "周二,";
+                        break;
+                    case "3": daysofweekTemp += "周三,";
+                        break;
+                    case "4": daysofweekTemp += "周四,";
+                        break;
+                    case "5": daysofweekTemp += "周五,";
+                        break;
+                    case "6": daysofweekTemp += "周六,";
+                        break;
+                    case "0": daysofweekTemp += "周日,";
+                        break;
+                }
+            }
+            if (daysofweekTemp.length > 0) {
+                daysofweekTemp = daysofweekTemp.substring(0, daysofweekTemp.length - 1);
+            }
+            couponTemp.DaysOfWeekTemp = daysofweekTemp;
+            //限时投放
+            var putindaysofweek = [];
+            if (couponTemp.PutInUseDaysOfWeek != null) {
+                putindaysofweek = couponTemp.PutInUseDaysOfWeek.split(',');
+            }
+            var putinDaysofweekTemp = '';
+            for (var i = 0; i < putindaysofweek.length; i++) {
+                switch (putindaysofweek[i]) {
+                    case "1": putinDaysofweekTemp += "周一,";
+                        break;
+                    case "2": putinDaysofweekTemp += "周二,";
+                        break;
+                    case "3": putinDaysofweekTemp += "周三,";
+                        break;
+                    case "4": putinDaysofweekTemp += "周四,";
+                        break;
+                    case "5": putinDaysofweekTemp += "周五,";
+                        break;
+                    case "6": putinDaysofweekTemp += "周六,";
+                        break;
+                    case "0": putinDaysofweekTemp += "周日,";
+                        break;
+                }
+            }
+            if (putinDaysofweekTemp.length > 0) {
+                putinDaysofweekTemp = putinDaysofweekTemp.substring(0, putinDaysofweekTemp.length - 1);
+            }
+            couponTemp.PutInDaysofweekTemp = putinDaysofweekTemp;
+            //end
+            couponTemp.PutInDate = ko.observable(new Date(couponTemp.PutInStartDate).Format('yyyy-MM-dd') + '~' + new Date(couponTemp.PutInEndDate).Format('yyyy-MM-dd'));
+            window._rootModel.CouponTemp(couponTemp);
+            console.log(window._rootModel.CouponTemp());
+        });
+    </script>
+}
+

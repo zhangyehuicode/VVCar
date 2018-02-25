@@ -1,0 +1,528 @@
+﻿
+@{
+    ViewBag.Title = "ReceivedCouponRecord";
+    Layout = "~/Areas/Coupon/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="form-group row" style="padding:20px 0px 0px 20px;">
+    <div class="col-md-2" style="width:150px;">
+        <select class="form-control" id="selectcoupontype">
+            <option value="-1" selected="selected">全部类型</option>
+            <option value="1">抵用券</option>
+            <option value="0">代金券</option>
+            <option value="2">兑换券</option>
+            <option value="3">折扣券</option>
+        </select>
+    </div>
+    <div class="col-md-2" style="width:150px;">
+        <select class="form-control" id="selectdays">
+            <option value="7" selected="selected">最近7天</option>
+            <option value="15">最近15天</option>
+            <option value="30">最近30天</option>
+            <option value="-2">自选</option>
+        </select>
+    </div>
+    <div class="col-md-2" style="width:220px;">
+        <input class="form-control" id="receivedcouponrecorddaterangepicker" />
+    </div>
+    <div class="col-md-2" style="width:200px;">
+        <select class="form-control" id="departmentselect" data-bind="options:DepartmentList,optionsText:'Name',optionsValue:'Code',value:'allstore',optionsCaption:'全部门店'"></select>
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" placeholder="优惠券名" data-bind="textInput:TemplateTitle,event:{keypress:onSearchFormEnter}" />
+    </div>
+    <div class="col-md-2">
+        <input class="form-control" placeholder="优惠券模板编号" data-bind="textInput:TemplateCode,event:{keypress:onSearchFormEnter}" />
+    </div>
+    <div class="col-md-1">
+        <button class="form-control search" id="search">搜索</button>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <table class="datatable" id="receivedcouponrecorddata">
+        <tr>
+            <td class="cell_title">优惠券模板编号</td>
+            <td class="cell_title">优惠券编号</td>
+            <td class="cell_title">时间</td>
+            <td class="cell_title">券名</td>
+            <td class="cell_title">OpenId</td>
+            <td class="cell_title">昵称</td>
+            <td class="cell_title">操作</td>
+        </tr>
+        <!--ko foreach:ReceivedCouponRecords()-->
+        <tr>
+            <td class="cell_content"><span data-bind="text:TemplateCode"></span></td>
+            <td class="cell_content"><span data-bind="text:CouponCode"></span></td>
+            <td class="cell_content"><span data-bind="text:CreatedDate"></span> </td>
+            <td class="cell_content"><span data-bind="text:Title"></span> </td>
+            <td class="cell_content"><span data-bind="text:OwnerOpenID"></span> </td>
+            <td class="cell_content"><span data-bind="text:OwnerNickName"></span></td>
+            <td class="cell_content"><span data-bind="visible:CanGiveToPeople,click:$root.givenrecord"><a>赠送记录</a></span></td>
+        </tr>
+        <!--/ko-->
+    </table>
+</div>
+
+@*分页*@
+@*<div class="paging">
+        <ul id="memberdetailspaging"></ul>
+    </div>*@
+<div style="display:table;width:100%;text-align:right;">
+    <div class="paging" style="display:table-cell;">
+        <ul id="memberdetailspaging"></ul>
+    </div>
+    <div style="display:table-cell;width:400px;height:100%;vertical-align:middle;color:#6c6c6c;">
+        <div style="display:table;padding-bottom:7px;">
+            <div style="display:table-cell;padding-right:10px;" data-bind="text:'共'+PagingTotalPages()+'页'"></div>
+            <input class="form-control" style="display:table-cell;width:60px;margin-right:10px;height:33px;" data-bind="textInput:CurrentPage,event:{keypress:turnToPagekeyPress}" />
+            <button class="form-control" style="width:60px;display:table-cell;margin-right:20px;height:33px;" data-bind="click:turnToPage">跳转</button>
+            <div style="display:table-cell;" data-bind="text:'第'+ parseInt(LoadTotal()>0?paramsTemp().Start()+1:0)+'~'+parseInt(paramsTemp().Start()+LoadTotal()) +'条 共'+ToTalCount()+'条'"></div>@*'第'+ me.coupontemplatedata().Start()+1+'~'+me.coupontemplatedata().Start()+1+ me.coupontemplatedata().Limit()+'条 共'+ToTalCount()+'条'*@
+        </div>
+    </div>
+</div>
+
+<!--赠送记录-->
+<div class="modal fade" id="givenrecordmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">赠送记录</h4>
+            </div>
+            <div class="modal-body">
+                <!--ko foreach:GivenRecordList()-->
+                <i class="glyphicon glyphicon-arrow-up givenrecord-uparrow" data-bind="visible:Index!=0"></i>
+                <div class="givenrecord-container">
+                    <div class="givenrecord-headimgurl-container">
+                        <img class="givenrecord-headimgurl" data-bind="attr:{src:DonorHeadImgUrl}" />
+                    </div>
+                    <div class="givenrecord-nickname" data-bind="text:DonorNickName"></div>
+                </div>
+                <div class="givenrecord-receiveddate" data-bind="text:DonorReceivedDate"></div>
+                <!--/ko-->
+            </div>
+            @*<div class="modal-footer" style="text-align:center;">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" style="width:80px;">关闭</button>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/ko")
+    <script type="text/javascript" src="~/Scripts/bootstrap-paginator.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/daterangepicker.js"></script>
+    <link type="text/css" rel="stylesheet" href="~/Content/daterangepicker.css" />
+    <script src="/Scripts/jquery-weui.js"></script>
+    <link href="//res.wx.qq.com/open/libs/weui/0.4.2/weui.css" rel="stylesheet" />
+    <link href="/Content/jquery-weui.css" rel="stylesheet" />
+    <style type="text/css">
+        .cell_title {
+            font-size: 1em;
+            color: #6c6c6c;
+            border: 1px solid #e7e7eb;
+            background-color: #f4f5f9;
+            text-align: center;
+            height: 30px;
+        }
+
+        .cell_content {
+            font-size: 1em;
+            color: #393939;
+            text-align: center;
+            word-wrap: break-word;
+            word-break: break-all;
+            border: 1px solid #e7e7eb;
+            height: 30px;
+        }
+
+        .datatable {
+            width: 100%;
+            text-align: center;
+            margin: 0px 0px 10px 0px;
+        }
+
+        .search {
+            background-color: #0094ff;
+            color: white;
+        }
+
+        .paging {
+            /*width: 100%;
+            text-align: right;
+            padding-right: 60px;*/
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .givenrecord-container {
+            display: table;
+        }
+
+        .givenrecord-headimgurl-container {
+            display: table-cell;
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+        }
+
+        .givenrecord-headimgurl {
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+        }
+
+        .givenrecord-nickname {
+            display: table-cell;
+            font-size: 15px;
+            font-family: 'Microsoft YaHei';
+            padding-left: 20px;
+        }
+
+        .givenrecord-receiveddate {
+            font-size: 15px;
+            font-family: 'Microsoft YaHei';
+            padding-left: 50px;
+        }
+
+        .givenrecord-uparrow {
+            padding-left: 7px;
+        }
+    </style>
+    <script type="text/javascript">
+        var pageViewModel = function () {
+            var me = this;
+            this.ReceivedCouponRecords = ko.observableArray([]);
+            me.CouponCode = ko.observable('');
+            me.DepartmentList = ko.observableArray([]);
+            var userToken = sessionStorage.getItem('userToken');
+            me.TemplateCode = ko.observable('');
+            me.TemplateTitle = ko.observable('');
+            me.CouponType = ko.observable(-1);
+            me.IsFirstTimeEntry = ko.observable(true);
+            //me.PagingParams = ko.observable({
+            //    Start: ko.observable(0),
+            //    Limit: ko.observable(13)
+            //});
+            me.PagingTotalPages = ko.observable(1);
+            me.CurrentPage = ko.observable(1);
+
+            me.GivenRecordList = ko.observableArray([]);
+
+            //me.GivenRecordList([{
+            //    Index: 0,
+            //    DonorHeadImgUrl: 'http://wx.qlogo.cn/mmopen/mIGicGfz4lwibU4rOn1HAZrYEvgicbFvUvJP0wMqicTgeuS1LOsibz9IDFdyvwgIrT4Mh5QQ0zL7anWrsvxV2aZiaYKdsIQm7LibjVf/0',
+            //    DonorNickName: '张烨晖',
+            //    DonorReceivedDate: '2016-12-07 10:43:02.643'
+            //}, {
+            //    Index: 1,
+            //    DonorHeadImgUrl: 'http://wx.qlogo.cn/mmopen/mIGicGfz4lwibU4rOn1HAZrTDwDq2EyNcRYRZz0fAvia6qxHhjpIPqR2icNdqvq9gQraN34pR9seu847KPh06BnBvOXNn9cOEZBz/0',
+            //    DonorNickName: '邓欣圆',
+            //    DonorReceivedDate: '2016-12-07 10:44:36.433'
+            //}]);
+
+            me.givenrecord = function (data) {
+                $.ajax({
+                    url: '/api/GivenCouponRecord/GetGivenCouponRecord',
+                    data: { CouponID: data.CouponID },
+                    headers: { 'Authorization': userToken },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            console.log(res.Data);
+                            for (var i = 0; i < res.Data.length; i++) {
+                                res.Data[i].Index = i + 1;
+                            }
+                            me.GivenRecordList(res.Data);
+                            if (me.GivenRecordList().length < 1) {
+                                $.alert('暂无赠送记录');
+                            } else {
+                                me.GivenRecordList.unshift({
+                                    Index: 0,
+                                    DonorHeadImgUrl: res.Data[0].OwnerHeadImgUrl,
+                                    DonorNickName: res.Data[0].OwnerNickName,
+                                    DonorReceivedDate: res.Data[0].CreatedDate
+                                });
+                                $('#givenrecordmodal').modal();
+                            }
+                            //$('#givenrecordmodal').modal();
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
+            Date.prototype.Format = function (fmt) { //author: meizz
+                var o = {
+                    "M+": this.getMonth() + 1, //月份
+                    "d+": this.getDate(), //日
+                    "h+": this.getHours(), //小时
+                    "m+": this.getMinutes(), //分
+                    "s+": this.getSeconds(), //秒
+                    "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                    "S": this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
+
+            me.params = {
+                StartTime: new Date(new Date().setDate(new Date().getDate() - 6)).Format('yyyy-MM-dd'),
+                EndTime: new Date(new Date().setDate(new Date().getDate())).Format('yyyy-MM-dd'),
+                CouponType: me.CouponType(),
+                CouponCode: me.CouponCode(),
+                TemplateCode: me.TemplateCode(),
+                TemplateTitle: me.TemplateTitle(),
+                Start: ko.observable(0),
+                Limit: ko.observable(20),
+                DepartmentCode: 'allstore'
+            }
+
+            //从优惠券列表链接来
+            var templateCode = $.getUrlParam('TemplateCode');
+            var couponType = $.getUrlParam('CouponType');
+            if (templateCode != null && couponType != null) {
+                me.TemplateCode(templateCode);
+                me.params.TemplateCode = templateCode;
+                me.CouponType(couponType);
+                $('#selectcoupontype').val(me.CouponType());
+                console.log('TemplateCode:' + templateCode + ',CouponType:' + couponType);
+            }
+
+            //初始化daterangepicker
+            $('#receivedcouponrecorddaterangepicker').daterangepicker({
+                'showDropdowns': true,
+                'locale': {
+                    'format': 'YYYY-MM-DD',
+                    'applyLabel': '确定',
+                    'cancelLabel': '取消',
+                    'fromLabel': '起始时间',
+                    'toLabel': '结束时间',
+                    'daysOfWeek': ['日', '一', '二', '三', '四', '五', '六'],
+                    'monthNames': ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+                }
+            }, function (start, end, label) {
+                me.params.StartTime = start.format('YYYY-MM-DD');
+                me.params.EndTime = end.format('YYYY-MM-DD');
+            });
+
+            //if (templateCode != null && couponType != null) {
+            //$('#receivedcouponrecorddaterangepicker').val('');
+            //} else {
+            $('#receivedcouponrecorddaterangepicker').val(me.params.StartTime + '~' + me.params.EndTime);
+            //}
+
+            $('#receivedcouponrecorddaterangepicker').on('apply.daterangepicker', function (ev, picker) {
+                $('#receivedcouponrecorddaterangepicker').val(picker.startDate.format('YYYY-MM-DD') + '~' + picker.endDate.format('YYYY-MM-DD'));
+                me.params.StartTime = picker.startDate.format('YYYY-MM-DD');
+                me.params.EndTime = picker.endDate.format('YYYY-MM-DD');
+                if ((templateCode == null || couponType == null) && !me.IsFirstTimeEntry()) {
+                    $('#search').trigger('click');
+                }
+            });
+            $('#receivedcouponrecorddaterangepicker').on('cancel.daterangepicker', function (ev, picker) {
+                $('#receivedcouponrecorddaterangepicker').val('');
+                me.params.StartTime = '';
+                me.params.EndTime = '';
+            });
+            $('#receivedcouponrecorddaterangepicker').on('hide.daterangepicker', function (ev, picker) {
+                $('#receivedcouponrecorddaterangepicker').val('');
+                me.params.StartTime = '';
+                me.params.EndTime = '';
+                //$('#search').trigger('click');
+            });
+
+            $('#selectdays').change(function () {
+                switch ($(this).val()) {
+                    case '7':
+                        me.params.StartTime = new Date(new Date().setDate(new Date().getDate() - 6)).Format('yyyy-MM-dd');
+                        me.params.EndTime = new Date(new Date().setDate(new Date().getDate())).Format('yyyy-MM-dd');
+                        $('#receivedcouponrecorddaterangepicker').val(me.params.StartTime + '~' + me.params.EndTime);
+                        break;
+                    case '15':
+                        me.params.StartTime = new Date(new Date().setDate(new Date().getDate() - 14)).Format('yyyy-MM-dd');
+                        me.params.EndTime = new Date(new Date().setDate(new Date().getDate())).Format('yyyy-MM-dd');
+                        $('#receivedcouponrecorddaterangepicker').val(me.params.StartTime + '~' + me.params.EndTime);
+                        break;
+                    case '30':
+                        me.params.StartTime = new Date(new Date().setDate(new Date().getDate() - 29)).Format('yyyy-MM-dd');
+                        me.params.EndTime = new Date(new Date().setDate(new Date().getDate())).Format('yyyy-MM-dd');
+                        $('#receivedcouponrecorddaterangepicker').val(me.params.StartTime + '~' + me.params.EndTime);
+                        break;
+                    case '-2':
+                        me.params.StartTime = '';
+                        me.params.EndTime = '';
+                        $('#receivedcouponrecorddaterangepicker').val('');
+                        $('#receivedcouponrecorddaterangepicker').focus();
+                        break;
+                };
+                if ((templateCode == null || couponType == null) && !me.IsFirstTimeEntry()) {
+                    $('#search').trigger('click');
+                }
+            });
+
+            $('#selectcoupontype').change(function () {
+                if ((templateCode == null || couponType == null) && !me.IsFirstTimeEntry()) {
+                    me.params.CouponType = $(this).val();
+                    me.refresh(true);
+                }
+            });
+
+            me.onSearchFormEnter = function (data, event) {
+                if (event.keyCode == 13) {
+                    me.refresh(true);
+                    return false;
+                }
+                return true;
+            }
+
+            me.turnToPagekeyPress = function (data, event) {
+                if (event != null && event.keyCode == 13) {
+                    me.turnToPage();
+                    return false;
+                }
+                return true;
+            }
+
+            me.turnToPage = function () {
+                if (me.CurrentPage() > me.PagingTotalPages()) {
+                    $.alert("超过最大页数" + me.PagingTotalPages());
+                    return;
+                } else if (me.CurrentPage() <= 0) {
+                    $.alert("页数不在有效范围内");
+                    return;
+                }
+                me.params.Start(me.params.Limit() * (me.CurrentPage() - 1));
+                me.params.Start(me.params.Limit() * (me.CurrentPage() - 1));
+                me.refresh();
+            }
+
+            me.paramsTemp = ko.observable(me.params);
+            me.LoadTotal = ko.observable(0);
+            me.ToTalCount = ko.observable(0);
+
+            me.refresh = function (isfromsearch) {
+                templateCode = null;
+                couponType = null;
+                me.IsFirstTimeEntry(false);
+                me.params.CouponCode = me.CouponCode();
+                me.params.DepartmentCode = $('#departmentselect').val();
+                me.params.TemplateTitle = me.TemplateTitle();
+                me.params.TemplateCode = me.TemplateCode();
+                if (isfromsearch != null && isfromsearch) {
+                    me.CurrentPage(1);
+                    me.params.Start(0);
+                }
+                $.ajax({
+                    url: '/api/Coupon/GetCoupon',
+                    data: me.params,
+                    headers: { 'Authorization': userToken },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            me.ReceivedCouponRecords(res.Data);
+
+                            me.ToTalCount(res.TotalCount);
+                            if (res.Data != null) {
+                                me.LoadTotal(res.Data.length);
+                            }
+
+                            var pagingparams = me.params;
+                            if (res.TotalCount == 0) {
+                                me.PagingTotalPages(1);
+                            } else {
+                                me.PagingTotalPages(Math.ceil(res.TotalCount / pagingparams.Limit()));
+                            }
+
+                            //初始化分页
+                            var pagingoptions = {
+                                currentPage: me.CurrentPage(),
+                                totalPages: me.PagingTotalPages(),
+                                numberOfPages: 3,
+                                bootstrapMajorVersion: 3,
+                                tooltipTitles: function (type, page, current) {
+                                    switch (type) {
+                                        case "first":
+                                            return "第一页";
+                                        case "prev":
+                                            return "上一页";
+                                        case "next":
+                                            return "下一页";
+                                        case "last":
+                                            return "最后一页";
+                                        case "page":
+                                            return "第" + page + "页";
+                                    }
+                                },
+                                onPageClicked: function (event, originalEvent, type, page) {
+                                    var pagingparams = me.params;
+                                    pagingparams.Start(pagingparams.Limit() * (page - 1));
+                                    me.CurrentPage(page);
+                                    me.refresh(false);
+                                }
+                            }
+                            $('#memberdetailspaging').bootstrapPaginator(pagingoptions);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
+            $('#search').click(function () {
+                me.params.TemplateCode = me.TemplateCode();
+                me.refresh(true);
+            });
+            //,event:{keypress:searchkeydown}
+            me.searchkeydown = function (data, event) {
+                if (event.keyCode == 13) {
+                    console.log(me.CouponCode());
+                    console.log(me.params);
+                    me.refresh(true);
+                    return false;
+                }
+                return true;
+            }
+
+            me.getDepartmentList = function () {
+                $.ajax({
+                    url: '/api/Department/DepartmentList',
+                    type: 'GET',
+                    headers: { 'Authorization': userToken },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            me.DepartmentList(res.Data);
+                        }
+                    }
+                });
+            }
+
+            $('#departmentselect').change(function () {
+                me.refresh(true);
+            });
+
+            me.getDepartmentList();
+            //me.refresh();
+        }
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            window._rootModel = new pageViewModel();
+            ko.applyBindings(window._rootModel);
+        });
+    </script>
+}
+
