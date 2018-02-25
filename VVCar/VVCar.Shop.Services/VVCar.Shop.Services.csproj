@@ -41,11 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainServices\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AutoMapper\" />
-    <Folder Include="DomainServices\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VVCar.Shop.Domain\VVCar.Shop.Domain.csproj">
+      <Project>{3f12d42f-efd2-4743-b79a-f8599d1e98f0}</Project>
+      <Name>VVCar.Shop.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YEF.Core\YEF.Core.csproj">
+      <Project>{3897ea87-56ff-459d-a321-9821c6269617}</Project>
+      <Name>YEF.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

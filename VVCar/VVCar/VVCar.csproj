@@ -274,6 +274,7 @@
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\Shop\ProductController.cs" />
     <Compile Include="Controllers\VIP\CouponController.cs" />
     <Compile Include="Controllers\VIP\MemberCardTypeController.cs" />
     <Compile Include="Controllers\VIP\MemberController.cs" />
@@ -1486,6 +1487,10 @@
     <ProjectReference Include="..\VVCar.BaseData.Domain\VVCar.BaseData.Domain.csproj">
       <Project>{2575eda0-b3ba-473a-8ceb-455404bcdf06}</Project>
       <Name>VVCar.BaseData.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VVCar.Shop.Domain\VVCar.Shop.Domain.csproj">
+      <Project>{3f12d42f-efd2-4743-b79a-f8599d1e98f0}</Project>
+      <Name>VVCar.Shop.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\VVCar.VIP.Domain\VVCar.VIP.Domain.csproj">
       <Project>{5e2b30a6-bd56-4e3f-9626-2f717340a7cc}</Project>
