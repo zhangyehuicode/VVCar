@@ -80,13 +80,13 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
-        /// 上传积分商品图片
+        /// 上传商品图片
         /// </summary>
         /// <returns></returns>
-        [HttpPost, Route("UploadPointGoods")]
+        [HttpPost, Route("UploadProduct")]
         public UploadFileResult UploadPointGoods()
         {
-            return UploadAction("Pictures/PointGoods");
+            return UploadAction("Pictures/Product");
         }
 
         private UploadFileResult UploadAction(string targetDirPath)

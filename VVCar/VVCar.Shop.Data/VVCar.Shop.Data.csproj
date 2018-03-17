@@ -48,8 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateDBSeedAction.cs" />
     <Compile Include="Mapping\OrderItemMap.cs" />
     <Compile Include="Mapping\OrderMap.cs" />
+    <Compile Include="Mapping\ProductCategoryMap.cs" />
     <Compile Include="Mapping\ProductMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -66,6 +68,13 @@
       <Project>{3897ea87-56ff-459d-a321-9821c6269617}</Project>
       <Name>YEF.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\YEF.Data\YEF.Data.csproj">
+      <Project>{34ceeb57-6237-4154-ae0a-6ec82c4f2b8f}</Project>
+      <Name>YEF.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)*" "$(SolutionDir)VVCar\bin" /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

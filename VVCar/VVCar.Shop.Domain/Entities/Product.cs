@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Enums;
 using YEF.Core.Data;
 
 namespace VVCar.Shop.Domain.Entities
@@ -24,6 +25,12 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "标题")]
         public string Title { get; set; }
+
+        /// <summary>
+        /// 产品类型
+        /// </summary>
+        //[Display(Name = "产品类型")]
+        //public EProductType ProductType { get; set; }
 
         /// <summary>
         /// 图片

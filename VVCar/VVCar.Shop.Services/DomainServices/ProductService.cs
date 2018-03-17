@@ -52,10 +52,13 @@ namespace VVCar.Shop.Services.DomainServices
                 return false;
             var pointGoods = Repository.GetByKey(entity.ID);
             if (pointGoods == null)
-                throw new DomainException("更新的积分商品不存在");
+                throw new DomainException("更新的产品不存在");
 
+            //pointGoods.ProductType = entity.ProductType;
             pointGoods.Title = entity.Title;
             pointGoods.ImgUrl = entity.ImgUrl;
+            pointGoods.BasePrice = entity.BasePrice;
+            pointGoods.PriceSale = entity.PriceSale;
             pointGoods.Points = entity.Points;
             pointGoods.UpperLimit = entity.UpperLimit;
             pointGoods.IsPublish = entity.IsPublish;

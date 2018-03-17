@@ -88,6 +88,28 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 根据父级ID获取导航菜单（菜单管理）
+        /// </summary>
+        /// <param name="parentID"></param>
+        /// <returns></returns>
+        [HttpGet, Route("NavManageMenu/{parentID}")]
+        public TreeActionResult<SysNavMenuDto> GetNavManageMenu(Guid? parentID)
+        {
+            return SafeGetTreeData(() =>
+            {
+                if (parentID.HasValue && parentID != Guid.Empty)
+                    return null;
+                var item = new SysNavMenuDto
+                {
+                    ID = Guid.Parse("00000000-0000-0000-0000-000000000000"),
+                    text = "菜单目录",
+                    Children = MenuService.GetNavMenu(),
+                };
+                return new List<SysNavMenuDto>() { item };
+            });
+        }
+
+        /// <summary>
         /// 修改
         /// </summary>
         /// <param name="entity"></param>

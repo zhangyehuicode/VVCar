@@ -2,7 +2,7 @@
 (function () {
 
     //var store = Ext.create("WX.store.BaseData.SysMenuStore");
-    var store = Ext.create("WX.store.BaseData.SysNavMenuStore");
+    var store = Ext.create("WX.store.BaseData.SysNavManageMenuStore");
     //store.load();
     Ext.define('WX.view.SysMenu.SysMenuTreeComboBox', {
         extend: 'Ext.form.field.ComboBox',

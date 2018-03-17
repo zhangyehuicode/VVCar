@@ -4,6 +4,7 @@
     fields: [
         { name: 'ID' },
         { name: 'ParentID' },
+        { name: "Children" },
         { name: 'Name' },
         { name: "leaf" },
         { name: "expanded" },

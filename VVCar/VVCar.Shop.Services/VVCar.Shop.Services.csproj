@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainServices\OrderService.cs" />
     <Compile Include="DomainServices\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -48,6 +49,14 @@
     <Folder Include="AutoMapper\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\VVCar.BaseData.Domain\VVCar.BaseData.Domain.csproj">
+      <Project>{2575eda0-b3ba-473a-8ceb-455404bcdf06}</Project>
+      <Name>VVCar.BaseData.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VVCar.BaseData.Services\VVCar.BaseData.Services.csproj">
+      <Project>{153375cb-27fc-4a3d-97d2-5ded37821abb}</Project>
+      <Name>VVCar.BaseData.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VVCar.Shop.Domain\VVCar.Shop.Domain.csproj">
       <Project>{3f12d42f-efd2-4743-b79a-f8599d1e98f0}</Project>
       <Name>VVCar.Shop.Domain</Name>
@@ -58,4 +67,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)*" "$(SolutionDir)VVCar\bin" /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -18,6 +18,10 @@ namespace VVCar.Controllers.Shop
     [RoutePrefix("api/Product")]
     public class ProductController : BaseApiController
     {
+        /// <summary>
+        /// 产品
+        /// </summary>
+        /// <param name="productService"></param>
         public ProductController(IProductService productService)
         {
             ProductService = productService;

@@ -24,7 +24,7 @@ namespace VVCar.Controllers.VIP
         /// <summary>
         /// 会员
         /// </summary>
-        /// <param name="deptService"></param>
+        /// <param name="memberService"></param>
         public MemberController(IMemberService memberService)
         {
             MemberService = memberService;

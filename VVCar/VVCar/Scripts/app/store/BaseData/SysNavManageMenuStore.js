@@ -1,5 +1,4 @@
-﻿
-Ext.define('WX.store.BaseData.SysNavMenuStore', {
+﻿Ext.define('WX.store.BaseData.SysNavManageMenuStore', {
     extend: 'Ext.data.TreeStore',
     model: 'WX.model.BaseData.SysNavMenuModel',
     autoLoad: true,
@@ -16,7 +15,7 @@ Ext.define('WX.store.BaseData.SysNavMenuStore', {
         type: 'rest',
         url: Ext.GlobalConfig.ApiDomainUrl + 'api/SysMenu',
         api: {
-            read: Ext.GlobalConfig.ApiDomainUrl + 'api/SysMenu/NavMenu',
+            read: Ext.GlobalConfig.ApiDomainUrl + 'api/SysMenu/NavManageMenu',
         },
         reader: {
             type: 'json',
