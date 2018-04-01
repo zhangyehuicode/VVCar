@@ -43,6 +43,11 @@ namespace YEF.Core
         string DepartmentName { get; set; }
 
         /// <summary>
+        /// 部门编号
+        /// </summary>
+        string DepartmentCode { get; set; }
+
+        /// <summary>
         /// 商户ID
         /// </summary>
         Guid MerchantID { get; set; }

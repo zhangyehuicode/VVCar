@@ -39,6 +39,10 @@ namespace VVCar
                 {
                     actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, new { Message = "已拒绝为此请求授权。" });
                 }
+                if (string.IsNullOrEmpty(AppContext.CurrentSession.DepartmentCode) || AppContext.CurrentSession.DepartmentID == null)
+                {
+                    actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, new { Message = "门店信息为空。" });
+                }
                 if (AppContext.CurrentSession.MerchantID == Guid.Empty)
                 {
                     actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, new { Message = "商户信息为空。" });
@@ -78,10 +82,12 @@ namespace VVCar
         {
             string departmentId = "00000000-0000-0000-0000-000000000001";
             var departmentName = "system";
+            var departmentCode = "";
             if (AppContext.Settings.IsStoreService)
             {
                 departmentId = AppContext.DepartmentID.GetValueOrDefault().ToString();
                 departmentName = AppContext.DepartmentName;
+                departmentCode = AppContext.DepartmentCode;
             }
             if (string.IsNullOrEmpty(companyCode) && !AppContext.Settings.IsDynamicCompany)
             {
@@ -97,6 +103,7 @@ namespace VVCar
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.UserCode, "system"));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentId, departmentId));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentName, departmentName));
+            identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentCode, departmentCode));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
             return identity;
         }

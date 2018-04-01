@@ -234,7 +234,6 @@
                     success: function (res) {
                         $.hideLoading();
                         if (res.IsSuccessful) {
-                            console.log(res.Data);
                             for (var i = 0; i < res.Data.length; i++) {
                                 res.Data[i].Index = i + 1;
                             }
@@ -295,7 +294,6 @@
                 me.params.TemplateCode = templateCode;
                 me.CouponType(couponType);
                 $('#selectcoupontype').val(me.CouponType());
-                console.log('TemplateCode:' + templateCode + ',CouponType:' + couponType);
             }
 
             //初始化daterangepicker

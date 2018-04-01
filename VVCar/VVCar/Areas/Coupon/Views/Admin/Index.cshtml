@@ -82,25 +82,25 @@
 <div class="container-fluid" id="secondstep" hidden="hidden">
     <div class="row">
         <div class="col-md-3">
-            <div class="col-md-11" style="padding-top:20px;padding-bottom:20px;" data-bind="style:{backgroundColor: BaseInfo().CouponColor}">
+            <div class="col-md-11" style="width:280px;padding-top:20px;padding-bottom:20px;" data-bind="style:{backgroundColor: BaseInfo().CouponColor}">
                 <div style="border:1px solid #cccccc; background-color:#fff">
                     <h4 style="color:#ff6a00;text-align:center;" data-bind="text:BaseInfo().Title"></h4>
                     <div style="text-align:center;">
-                        <button type="button" class="btn btn-default" style="background-color:#4695f6;width:100px;">立即使用</button>
+                        <div style="width:100px;text-align:center;border:1px #ccc solid;margin:auto;height:30px;line-height:30px;">立即使用</div>
                     </div>
                     <h6 style="color:#ff6a00;text-align:center;" data-bind="text:BaseInfo().SubTitle"></h6>
-                    <h5 style="color:#ff6a00;padding-left:20px;"><b>抵用金额：</b><span style="color:black;" data-bind="text:BaseInfo().CouponValue"></span></h5>
-                    <h5 style="color:#ff6a00;padding-left:20px;"><b>使用条件：</b><span style="color:black;" data-bind="text:UC"></span></h5>
-                    <h5 style="color:#ff6a00;padding-left:20px;">
+                    <h5 style="color:#262626;padding-left:20px;"><b>抵用金额：</b><span style="color:black;" data-bind="text:BaseInfo().CouponValue"></span></h5>
+                    <h5 style="color:#262626;padding-left:20px;"><b>使用条件：</b><span style="color:black;" data-bind="text:UC"></span></h5>
+                    <h5 style="color:#262626;padding-left:20px;">
                         <b>可用时间：</b>
                         <span style="color:black;" id="fiexeddateAT" data-bind="text:FiexedDateAT,visible:BaseInfo().IsFiexedEffectPeriod()=='true'"></span>
                         <span style="color:black;" id="aftergetAT" data-bind="text:AfterGetAT,visible:BaseInfo().IsFiexedEffectPeriod()=='false'"></span>
                     </h5>
                     <img style="width:100%;height:130px;padding:0px 20px 0px 20px" data-bind="attr: { src: BaseInfo().CoverImage() }">
                     <h5 style="color:#808080;padding-left:20px;" data-bind="text:BaseInfo().CoverIntro"></h5>
-                    <h5 style="color:#ff6a00;padding-left:20px;"><b>使用须知：</b></h5><h5 style="color:#808080;padding:0px 20px 0px 20px;word-wrap: break-word;" data-bind="text:BaseInfo().UseInstructions"></h5>
-                    <h5 style="color:#ff6a00;padding-left:20px;"><b>电话：</b><a style="color:#4695f6;" data-bind="text:BaseInfo().MerchantPhoneNo"></a></h5>
-                    <h5 style="color:#ff6a00;padding-left:20px;"><b>服务：</b><span style="color:black;" data-bind="text:Service" hidden="hidden"></span></h5>
+                    <h5 style="color:#262626;padding-left:20px;"><b>使用须知：</b></h5><h5 style="color:#808080;padding:0px 20px 0px 20px;word-wrap: break-word;" data-bind="text:BaseInfo().UseInstructions"></h5>
+                    <h5 style="color:#262626;padding-left:20px;"><b>电话：</b><a style="color:#4695f6;" data-bind="text:BaseInfo().MerchantPhoneNo"></a></h5>
+                    <h5 style="color:#262626;padding-left:20px;" hidden="hidden"><b>服务：</b><span style="color:black;" data-bind="text:Service" hidden="hidden"></span></h5>
                 </div>
             </div>
         </div>
@@ -559,7 +559,7 @@
                                 </span>
                                 <p class="help-block">图片建议尺寸：850像素*350像素，大小不要超过1M</p>
                                 <div data-bind="visible: BaseInfo().CoverImage() != null && BaseInfo().CoverImage() != ''">
-                                    <img data-bind="attr: { src: BaseInfo().CoverImage() }" style="width: 425px; height: 140px;" />
+                                    <img data-bind="attr: { src: BaseInfo().CoverImage() }" style="width: 300px; height: 160px;" />
                                     <div class="bottom">
                                         <a class="border" href="javascript:;" data-bind="click: $root.removeCoverImage">
                                             <i class="glyphicon glyphicon-trash"></i>
@@ -1275,8 +1275,7 @@
                                 products.push(me.ProductCategoryList()[i].Products[j]);
                             }
                         }
-                        console.log('modifysutiproducts:' + modifysutiproducts);
-                        console.log('products:' + products[0].Code);
+
                         for (var i = 0; i < modifysutiproducts.length; i++) {
                             for (var j = 0; j < products.length; j++) {
                                 if (modifysutiproducts[i] == products[j].Code) {
@@ -1304,7 +1303,7 @@
                         me.BaseInfo().ExpiredDate(String(me.ModifyCouponTemplate().ExpiredDate));
                     }
                     $('#daterangepicker').val(me.BaseInfo().EffectiveDate() + '~' + me.BaseInfo().ExpiredDate());
-                    console.log(me.ModifyCouponTemplate().EffectiveDate);
+
                     if (me.ModifyCouponTemplate().EffectiveDaysAfterReceived != null) {
                         me.BaseInfo().EffectiveDaysAfterReceived(me.ModifyCouponTemplate().EffectiveDaysAfterReceived);
                     }
@@ -1444,8 +1443,6 @@
 
                     //me.initdaterangepicker(me.ModifyCouponTemplate().PutawayTime, me.ModifyCouponTemplate().SoldOutTime);
 
-                    //console.log(me.BaseInfo().PutawayTime());
-                    //console.log(me.BaseInfo().SoldOutTime());
                 } else {
                     me.initdaterangepicker(null, null);
                     $('#DiscountFirst').attr("checked", true);
@@ -1529,8 +1526,7 @@
                 });
                 me.BaseInfo().PutawayTime(putawayTime);
                 me.BaseInfo().SoldOutTime(soldOutTime);
-                console.log(me.BaseInfo().PutawayTime());
-                console.log(me.BaseInfo().SoldOutTime());
+
                 $('#putawaydaterangepicker').val(me.BaseInfo().PutawayTime());
                 $('#putawaydaterangepicker').on('apply.putawaydaterangepicker', function (ev, picker) {
                     me.BaseInfo().PutawayTime(start.format('YYYY-MM-DD'));
@@ -1561,8 +1557,7 @@
                 });
                 me.BaseInfo().PutawayTime(putawayTime);
                 me.BaseInfo().SoldOutTime(soldOutTime);
-                console.log(me.BaseInfo().PutawayTime());
-                console.log(me.BaseInfo().SoldOutTime());
+
                 $('#soldoutdaterangepicker').val(me.BaseInfo().SoldOutTime());
                 $('#soldoutdaterangepicker').on('apply.soldoutdaterangepicker', function (ev, picker) {
                     me.BaseInfo().SoldOutTime(picker.startDate.format('YYYY-MM-DD'));
@@ -1964,7 +1959,7 @@
                     for (var i = 0; i < putinlis.length; i++) {
                         UseTimeList.push({ BeginTime: $(putinlis[i]).find('input')[0].value, EndTime: $(putinlis[i]).find('input')[1].value, Type: 1 });
                     }
-                    console.log(UseTimeList);
+
                     var Stock = {
                         Stock: window._rootModel.BaseInfo().Stock,//库存
                         CollarQuantityLimit: window._rootModel.BaseInfo().CollarQuantityLimit,//领券数量限制
@@ -2077,7 +2072,7 @@
                             $('#modifylaststep').show();
                         }
                     }
-                    //console.log(coupon);
+
                     //return;
                     $.ajax({
                         url: url,

@@ -1,0 +1,252 @@
+﻿using Microsoft.Office.Interop.Word;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using System.Web.Http;
+using VVCar.VIP.Domain.Dtos;
+using VVCar.VIP.Domain.Entities;
+using VVCar.VIP.Domain.Filters;
+using VVCar.VIP.Domain.Services;
+using YEF.Core;
+using YEF.Core.Dtos;
+using YEF.Utility;
+
+namespace VVCar.Controllers.VIP
+{
+    /// <summary>
+    /// 卡券模板
+    /// </summary>
+    [RoutePrefix("api/CouponTemplate")]
+    public class CouponTemplateController : BaseApiController
+    {
+        #region ctor.
+
+        /// <summary>
+        /// 卡券模板
+        /// </summary>
+        /// <param name="couponTemplateService"></param>
+        public CouponTemplateController(ICouponTemplateService couponTemplateService)
+        {
+            CouponTemplateService = couponTemplateService;
+        }
+
+        #endregion ctor.
+
+        #region properties
+
+        ICouponTemplateService CouponTemplateService { get; set; }
+
+        #endregion properties
+
+        /// <summary>
+        /// 新增卡券模板
+        /// </summary>
+        /// <param name="entity">卡券模板</param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonActionResult<CouponTemplate> Add(CouponTemplate entity)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponTemplateService.Add(entity);
+            });
+        }
+
+        /// <summary>
+        /// 更新卡券模板
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost, Route("Update")]
+        public JsonActionResult<bool> Update(CouponTemplate entity)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponTemplateService.Update(entity);
+            });
+        }
+
+        /// <summary>
+        /// 删除卡券
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [HttpGet]
+        [Route("Delete")]
+        public JsonActionResult<bool> Delete(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return this.CouponTemplateService.Delete(id);
+            });
+        }
+
+        /// <summary>
+        /// 更改卡券模板投放状态
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("UpdateStatus")]
+        public JsonActionResult<bool> UpdateStatus(CouponTemplateDto entity)
+        {
+            return SafeExecute(() =>
+            {
+                return this.CouponTemplateService.UpdateStatus(entity);
+            });
+        }
+
+        /// <summary>
+        /// 更改卡券审核状态
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("UpdateAproveStatus")]
+        public JsonActionResult<bool> UpdateAproveStatus(CouponTemplateDto entity)
+        {
+            return SafeExecute(() =>
+            {
+                return this.CouponTemplateService.UpdateAproveStatus(entity);
+            });
+        }
+
+        /// <summary>
+        /// 生成优惠券领取二维码
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GenerateQRCode")]
+        public JsonActionResult<string> GenerateQRCode(string url)
+        {
+            return SafeExecute(() =>
+            {
+                var bmp = QrHelper.Create(url);
+
+                var fileName = string.Concat(DateTime.Now.ToString("yyyyMMddHHmmssfff"), ".png");
+                var targetDir = Path.Combine(AppContext.PathInfo.RootPath, "Pictures", "CouponTemplateDeliveryQrCode");
+                if (!Directory.Exists(targetDir))
+                    Directory.CreateDirectory(targetDir);
+                string targetPath = Path.Combine(targetDir, fileName);
+
+                bmp.Save(targetPath);
+                var result = Path.Combine(AppContext.Settings.SiteDomain, "Pictures", "CouponTemplateDeliveryQrCode", fileName);
+                return result;
+            });
+        }
+
+        /// <summary>
+        /// 下载优惠券二维码
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GenerateQRCodeFile")]
+        public JsonActionResult<string> GenerateQRCodeFile(string url)
+        {
+            return SafeExecute(() =>
+            {
+                Application word = new Application();
+                object nothing = Missing.Value;
+                Document doc = word.Documents.Add();
+
+                string imgName = Path.GetFileName(url);
+                string imgPath = Path.Combine(AppContext.PathInfo.RootPath, "Pictures", "CouponTemplateDeliveryQrCode", imgName);
+
+                var fileName = string.Concat(DateTime.Now.ToString("yyyyMMddHHmmssfff"), ".docx");
+                var targetDir = Path.Combine(AppContext.PathInfo.RootPath, "Files", "CouponTemplateDeliveryQrCodeFiles");
+                if (!Directory.Exists(targetDir))
+                    Directory.CreateDirectory(targetDir);
+                //word保存路径
+                object targetPath = Path.Combine(targetDir, fileName);
+
+                object range = doc.Paragraphs.Last.Range;
+                object linkToFile = false;
+                object saveWithDoc = true;
+                doc.InlineShapes.AddPicture(imgPath, ref linkToFile, ref saveWithDoc, ref range);
+                object format = WdSaveFormat.wdFormatDocumentDefault;
+                doc.SaveAs(ref targetPath, ref format);
+
+                doc.Close();
+                word.Quit();
+
+                string result = Path.Combine(AppContext.Settings.SiteDomain, "Files", "CouponTemplateDeliveryQrCodeFiles", fileName);
+
+                return result;
+            });
+        }
+
+        /// <summary>
+        ///获取特定报表类型包含的优惠券
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public PagedActionResult<CouponTemplate> Query([FromUri]CouponTemplateFilter filter)
+        {
+            return SafeGetPagedData<CouponTemplate>((result) =>
+            {
+                var totalCount = 0;
+                var data = this.CouponTemplateService.Query(filter, out totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        /// 根据id查询CouponTemplateDto
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetCouponTemplateDto/{id}")]
+        public JsonActionResult<CouponTemplateDto> GetCouponTemplateDto(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponTemplateService.GetCouponTemplateDto(id);
+            });
+        }
+
+        /// <summary>
+        ///获取优惠券模板信息
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetCouponTemplateInfo")]
+        public PagedActionResult<CouponTemplateDto> GetCouponTemplateInfo([FromUri]CouponTemplateFilter filter)
+        {
+            return SafeGetPagedData<CouponTemplateDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = this.CouponTemplateService.CouponTemplateInfo(filter, out totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        ///获取优惠券模板信息
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetValidCouponTemplateInfo")]
+        public PagedActionResult<CouponTemplateDto> GetValidCouponTemplateInfo([FromUri]CouponTemplateFilter filter)
+        {
+            return SafeGetPagedData<CouponTemplateDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = this.CouponTemplateService.GetValidCouponTemplateInfo(filter, out totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+    }
+}

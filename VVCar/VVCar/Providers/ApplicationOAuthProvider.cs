@@ -134,6 +134,7 @@ namespace VVCar.Providers
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.UserCode, loginUser.Code));
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentId, loginUser.DepartmentID.ToString()));
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentName, loginUser.DepartmentName));
+            oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentCode, loginUser.DepartmentCode));
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantID, loginUser.MerchantID.ToString()));
             var props = new AuthenticationProperties(new Dictionary<string, string>
@@ -181,6 +182,7 @@ namespace VVCar.Providers
             {
                 oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentId, AppContext.DepartmentID.Value.ToString()));
                 oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentName, AppContext.DepartmentName));
+                oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentCode, AppContext.DepartmentCode));
             }
 
             oAuthIdentity.AddClaim(new Claim(ClaimTypes.Name, context.ClientId));

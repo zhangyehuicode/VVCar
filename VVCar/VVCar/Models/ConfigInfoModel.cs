@@ -19,5 +19,10 @@ namespace VVCar.Models
         /// 商户号
         /// </summary>
         public string CompanyCode { get; set; }
+
+        /// <summary>
+        /// 门店编号
+        /// </summary>
+        public string DepartmentCode { get; set; }
     }
 }

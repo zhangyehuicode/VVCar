@@ -366,7 +366,6 @@
                     //data: window._rootModel.coupontemplatedata(),
                     success: function (res) {
                         if (res.IsSuccessful) {
-                            console.log(res.Data);
                             if (!res.Data) {
                                 sessionStorage.setItem('coupontemplate', JSON.stringify(coupontemplate));
                                 window.parent.navigateLink("/CouponAdmin?isfrommodify=true", "修改" + coupontemplate.Title);
@@ -479,7 +478,6 @@
             //end
             couponTemp.PutInDate = ko.observable(new Date(couponTemp.PutInStartDate).Format('yyyy-MM-dd') + '~' + new Date(couponTemp.PutInEndDate).Format('yyyy-MM-dd'));
             window._rootModel.CouponTemp(couponTemp);
-            console.log(window._rootModel.CouponTemp());
         });
     </script>
 }

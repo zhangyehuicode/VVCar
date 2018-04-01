@@ -27,6 +27,11 @@ namespace YEF.Core.Security
         public const string DepartmentName = "http://schemas.VVCar.com/identity/claims/departmentName";
 
         /// <summary>
+        /// 所属部门编码
+        /// </summary>
+        public const string DepartmentCode = "http://schemas.VVCar.com/identity/claims/departmentCode";
+
+        /// <summary>
         /// 商户号
         /// </summary>
         public const string MerchantCode = "http://schemas.VVCar.com/identity/claims/merchantCode";

@@ -36,7 +36,8 @@ namespace VVCar.Controllers.Api
                 return new ConfigInfoModel
                 {
                     SiteDomain = AppContext.Settings.SiteDomain,
-                    CompanyCode = AppContext.CurrentSession.CompanyCode
+                    CompanyCode = AppContext.CurrentSession.CompanyCode,
+                    DepartmentCode = AppContext.CurrentSession.DepartmentCode,
                 };
             });
         }

@@ -44,6 +44,11 @@ namespace YEF.Core.Session
         public string DepartmentName { get; set; }
 
         /// <summary>
+        /// 部门编号
+        /// </summary>
+        public string DepartmentCode { get; set; }
+
+        /// <summary>
         /// 商户ID
         /// </summary>
         public Guid MerchantID { get; set; }

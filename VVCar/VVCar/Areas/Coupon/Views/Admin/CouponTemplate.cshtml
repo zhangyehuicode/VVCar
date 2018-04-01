@@ -280,7 +280,6 @@
                                                     success: function (res) {
                                                         $.hideLoading();
                                                         if (res.IsSuccessful) {
-                                                            console.log(res.Data);
                                                             window._rootModel.CouponTemplateList(res.Data);
                                                         }
                                                     },
@@ -326,7 +325,6 @@
             this.ModifyData = ko.observable();
             this.Params = ko.observable();
             this.ModifyStock = function (data) {
-                console.log(data);
                 me.ModifyData(data);
                 var params = {
                     ID: data.ID,
@@ -414,7 +412,6 @@
                         data: data,
                         success: function (res) {
                             if (res.IsSuccessful) {
-                                console.log(res.Data);
                                 if (res.Data) {
                                     bootbox.dialog({
                                         title: '提示',
@@ -458,7 +455,6 @@
                                                                         success: function (res) {
                                                                             $.hideLoading();
                                                                             if (res.IsSuccessful) {
-                                                                                console.log(res.Data);
                                                                                 window._rootModel.CouponTemplateList(res.Data);
                                                                             }
                                                                         },
@@ -477,8 +473,7 @@
                                                             headers: { 'Authorization': userToken },
                                                             type: 'GET',
                                                             success: function (res) {
-                                                                console.log(res);
-                                                                url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
+                                                                url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.DepartmentCode + "&ctid=" + data.ID;
                                                                 me.GenerateQRCode(url);
                                                             }
                                                         });
@@ -489,15 +484,13 @@
                                                     //    headers: { 'Authorization': userToken },
                                                     //    type: 'GET',
                                                     //    success: function (res) {
-                                                    //        console.log(res);
-                                                    //        url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
+                                                    //        url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.DepartmentCode + "&ctid=" + data.ID;
                                                     //$.ajax({
                                                     //    url: '/api/CouponTemplate/GenerateQRCode?url=' + encodeURIComponent(url),
                                                     //    headers: { 'Authorization': userToken },
                                                     //    type: 'GET',
                                                     //    success: function (res) {
                                                     //        if (res.IsSuccessful) {
-                                                    //            console.log(res.Data);
                                                     //            $('#coupondeliverymodal').find('img').attr('src', res.Data);
                                                     //            $('#coupondeliverymodal').find('iframe').attr('src', res.Data);
                                                     //            $($('#coupondeliverymodal').find('input:text')[0]).val(url);
@@ -521,7 +514,6 @@
                                                     //    success: function (res) {
                                                     //        $.hideLoading();
                                                     //        if (res.IsSuccessful) {
-                                                    //            console.log(res.Data);
                                                     //            window._rootModel.CouponTemplateList(res.Data);
                                                     //        }
                                                     //    },
@@ -553,9 +545,8 @@
                             headers: { 'Authorization': userToken },
                             type: 'GET',
                             success: function (res) {
-                                console.log(res);
                                 //var url = res.Data.SiteDomain + '/Coupon/CouponInfo/' + data.ID;
-                                url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
+                                url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.DepartmentCode + "&ctid=" + data.ID;
                                 me.GenerateQRCode(url);
                             }
                         });
@@ -565,16 +556,14 @@
                     //    headers: { 'Authorization': userToken },
                     //    type: 'GET',
                     //    success: function (res) {
-                    //        console.log(res);
                     //        //var url = res.Data.SiteDomain + '/Coupon/CouponInfo/' + data.ID;
-                    //        var url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
+                    //        var url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.DepartmentCode + "&ctid=" + data.ID;
                     //$.ajax({
                     //    url: '/api/CouponTemplate/GenerateQRCode?url=' + encodeURIComponent(url),
                     //    headers: { 'Authorization': userToken },
                     //    type: 'GET',
                     //    success: function (res) {
                     //        if (res.IsSuccessful) {
-                    //            console.log(res.Data);
                     //            $('#coupondeliverymodal').find('img').attr('src', res.Data);
                     //            $('#coupondeliverymodal').find('iframe').attr('src', res.Data);
                     //            $($('#coupondeliverymodal').find('input:text')[0]).val(url);
@@ -586,7 +575,6 @@
                     //    }
                     //});
                 }
-                console.log(data);
             }
             this.GenerateQRCode = function (url) {
                 $.ajax({
@@ -595,7 +583,6 @@
                     type: 'GET',
                     success: function (res) {
                         if (res.IsSuccessful) {
-                            console.log(res.Data);
                             $('#coupondeliverymodal').find('img').attr('src', res.Data);
                             $('#coupondeliverymodal').find('iframe').attr('src', res.Data);
                             $($('#coupondeliverymodal').find('input:text')[0]).val(url);
@@ -621,7 +608,6 @@
                     success: function (res) {
                         $.hideLoading();
                         if (res.IsSuccessful) {
-                            console.log(res.Data);
                             if (!res.Data) {
                                 sessionStorage.setItem('coupontemplate', JSON.stringify(data));
                                 window.parent.navigateLink("/CouponAdmin?isfrommodify=true", "修改" + data.Title);
@@ -649,7 +635,6 @@
             //        success: function (res) {
             //            $.hideLoading();
             //            if (res.IsSuccessful) {
-            //                console.log(res.Data);
             //                window._rootModel.CouponTemplateList(res.Data);
             //            }
             //        },
@@ -707,7 +692,6 @@
                     success: function (res) {
                         $.hideLoading();
                         if (res.IsSuccessful) {
-                            console.log(res.Data);
                             me.CouponTemplateList(res.Data);
 
                             me.ToTalCount(res.TotalCount);
@@ -792,7 +776,6 @@
             //        success: function (res) {
             //            $.hideLoading();
             //            if (res.IsSuccessful) {
-            //                console.log(res.Data);
             //                window._rootModel.CouponTemplateList(res.Data);
             //            }
             //        },
@@ -824,9 +807,7 @@
                 //    headers: { 'Authorization': userToken },
                 //    type: 'GET',
                 //    success: function (res) {
-                //        console.log(res);
                 //        if (res.IsSuccessful) {
-                //            console.log(res.Data);
                 //            window.location.href = res.Data;
                 //        }
                 //    }
@@ -900,9 +881,7 @@
                         } else {
                             data.Stock = -parseInt($('#modifiedstock').val());
                         }
-                        console.log(data);
                         window._rootModel.Params({ ID: data.ID, Stock: data.Stock });
-                        console.log(window._rootModel.Params());
                         $.ajax({
                             url: '/api/CouponTemplateStock/UpdateStock',
                             headers: { 'Authorization': userToken },
@@ -910,7 +889,6 @@
                             data: window._rootModel.Params(),
                             success: function (res) {
                                 if (res.IsSuccessful) {
-                                    console.log(res.Data);
                                     if (res.Data) {
                                         bootbox.dialog({
                                             title: '提示',
@@ -937,7 +915,6 @@
                                             success: function (res) {
                                                 $.hideLoading();
                                                 if (res.IsSuccessful) {
-                                                    console.log(res.Data);
                                                     window._rootModel.CouponTemplateList(res.Data);
                                                 }
                                             },
@@ -981,7 +958,6 @@
             //        success: function (res) {
             //            $.hideLoading();
             //            if (res.IsSuccessful) {
-            //                console.log(res.Data);
             //                window._rootModel.CouponTemplateList(res.Data);
             //            }
             //        },

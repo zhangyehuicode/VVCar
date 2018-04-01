@@ -123,6 +123,18 @@ namespace VVCar.Providers
         }
 
         /// <summary>
+        /// 部门名称
+        /// </summary>
+        public string DepartmentCode
+        {
+            get
+            {
+                return GetClaimsPrincipalValue(YEF.Core.Security.ClaimTypes.DepartmentCode);
+            }
+            set { }
+        }
+
+        /// <summary>
         /// 商户ID
         /// </summary>
         public Guid MerchantID
