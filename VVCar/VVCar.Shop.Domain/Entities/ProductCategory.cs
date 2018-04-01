@@ -18,25 +18,71 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         public ProductCategory()
         {
-            ProductList = new List<Product>();
+            SubProducts = new List<Product>();
         }
 
         /// <summary>
-        /// 名称
+        /// 父级ID
         /// </summary>
-        [Display(Name = "名称")]
-        public string Name { get; set; }
+        public Guid? ParentId { get; set; }
 
         /// <summary>
-        /// 代码
+        /// 类别编号
         /// </summary>
-        [Display(Name = "代码")]
+        [Display(Name = "类别编号")]
         public string Code { get; set; }
 
         /// <summary>
-        /// 产品列表
+        /// 类别名称
         /// </summary>
-        [Display(Name = "产品列表")]
-        public ICollection<Product> ProductList { get; set; }
+        [Display(Name = "类别名称")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        [Display(Name = "排序")]
+        public int Index { get; set; }
+
+        /// <summary>
+        /// 创建人ID
+        /// </summary>
+        [Display(Name = "创建人ID")]
+        public Guid CreatedUserID { get; set; }
+
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        [Display(Name = "创建人")]
+        public string CreatedUser { get; set; }
+
+        /// <summary>
+        /// 创建日期
+        /// </summary>
+        [Display(Name = "创建日期")]
+        public DateTime CreatedDate { get; set; }
+
+        /// <summary>
+        /// 最后修改人ID
+        /// </summary>
+        [Display(Name = "最后修改人ID")]
+        public Guid? LastUpdateUserID { get; set; }
+
+        /// <summary>
+        /// 最后修改人
+        /// </summary>
+        [Display(Name = "最后修改人")]
+        public string LastUpdateUser { get; set; }
+
+        /// <summary>
+        /// 最后修改日期
+        /// </summary>
+        [Display(Name = "最后修改日期")]
+        public DateTime? LastUpdateDate { get; set; }
+
+        /// <summary>
+        /// 下级子产品
+        /// </summary>
+        public virtual ICollection<Product> SubProducts { get; set; }
     }
 }
