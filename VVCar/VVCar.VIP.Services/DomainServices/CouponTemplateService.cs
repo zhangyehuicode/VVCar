@@ -76,6 +76,7 @@ namespace VVCar.VIP.Services.DomainServices
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.CreatedDate = DateTime.Now;
+            entity.ApproveStatus = EApproveStatus.Approved;
             if (entity.UseTimeList != null && entity.UseTimeList.Count > 0)
             {
                 entity.UseTimeList.ForEach(ut => ut.ID = Util.NewID());

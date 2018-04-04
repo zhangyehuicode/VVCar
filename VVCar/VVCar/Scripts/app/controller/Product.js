@@ -1,14 +1,17 @@
 ﻿Ext.define('WX.controller.Product', {
     extend: 'Ext.app.Controller',
-    requires: ['WX.store.BaseData.ProductStore'],
-    models: ['BaseData.ProductModel'],
-    views: ['Shop.Product', 'Shop.ProductEdit'],
+    requires: ['WX.store.BaseData.ProductStore', 'WX.store.BaseData.ProductCategoryTreeStore'],
+    models: ['BaseData.ProductModel', 'BaseData.ProductCategoryModel', 'BaseData.ProductCategoryTreeModel'],
+    views: ['Shop.Product', 'Shop.ProductEdit', 'Shop.ProductCategoryList', 'Shop.ProductCategoryEdit'],
     refs: [{
         ref: 'product',
-        selector: 'Product'
+        selector: 'Product grid'
     }, {
         ref: 'productEdit',
         selector: 'ProductEdit'
+    }, {
+        ref: 'treegridProductCategory',
+        selector: 'ProductCategoryList treepanel[name=treegridProductCategory]'
     }],
     init: function () {
         var me = this;
@@ -18,6 +21,9 @@
             },
             'Product button[action=search]': {
                 click: me.search
+            },
+            'Product button[action=manageProductCategory]': {
+                click: me.manageProductCategory
             },
             'Product': {
                 itemdblclick: me.edit,
@@ -33,7 +39,135 @@
             'ProductEdit button[action=uploadpic]': {
                 click: me.uploadProductPic
             },
+            'ProductCategoryList button[action=addProductCategory]': {
+                click: me.addProductCategory
+            },
+            'ProductCategoryList button[action=editProductCategory]': {
+                click: me.EditProductCategory
+            },
+            'ProductCategoryList button[action=delProductCategory]': {
+                click: me.delProductCategory
+            },
+            'ProductCategoryEdit button[action=save]': {
+                click: me.saveProductCategory
+            },
         });
+    },
+    saveProductCategory: function (btn) {
+        var me = this;
+        var win = btn.up('window');
+        var form = win.form.getForm();
+        var formValues = form.getValues();
+        if (form.isValid()) {
+            var store = me.getTreegridProductCategory().getStore();
+            var treeProductCategoryStore = me.getTreeProductCategory().getStore();
+            if (form.actionMethod == 'POST') {
+                store.addProductCategory(formValues, function (request, success, response) {
+                    if (response.timedout) {
+                        Ext.Msg.alert('提示', '操作超时');
+                        store.reload();
+                        return;
+                    }
+                    var result = JSON.parse(response.responseText);
+                    if (success) {
+                        if (result.IsSuccessful) {
+                            Ext.Msg.alert('提示', '操作成功');
+                            win.close();
+                            store.reload();
+                            treeProductCategoryStore.load();
+                        } else {
+                            Ext.Msg.alert('提示', result.ErrorMessage);
+                        }
+                    } else {
+                        Ext.Msg.alert('提示', result.Message);
+                    }
+                });
+            } else {
+                if (!form.isDirty()) {
+                    win.close();
+                    return;
+                }
+                form.updateRecord();
+                store.updateProductCategory(formValues, function (request, success, response) {
+                    if (response.timedout) {
+                        Ext.Msg.alert('提示', '操作超时');
+                        store.reload();
+                        return;
+                    }
+                    var result = JSON.parse(response.responseText);
+                    if (success) {
+                        if (result.IsSuccessful) {
+                            Ext.Msg.alert('提示', '操作成功');
+                            win.close();
+                            treeProductCategoryStore.load();
+                            store.reload();
+                        } else {
+                            Ext.Msg.alert('提示', result.ErrorMessage);
+                        }
+                    } else {
+                        Ext.Msg.alert('提示', result.Message);
+                    }
+                });
+            }
+            this.hasUpdateDeptRegion = true;
+        }
+    },
+    delProductCategory: function (btn) {
+        var me = this;
+        var selectedItems = this.getTreegridProductCategory().getView().getSelectionModel().getSelection();
+        if (selectedItems.length < 1) {
+            Ext.MessageBox.alert("提示", "请先选中需要删除的数据");
+            return;
+        }
+        var ID = selectedItems[0].get('ID');
+        Ext.MessageBox.confirm('询问', '您确定要删除吗?', function (opt) {
+            if (opt == 'yes') {
+                var store = me.getTreegridProductCategory().getStore();
+                Ext.Msg.wait('正在处理数据，请稍候……', '状态提示');
+                store.deleteProductCategory(ID, function (request, success, response) {
+                    if (response.timedout) {
+                        Ext.Msg.alert('提示', '操作超时');
+                        store.reload();
+                        return;
+                    }
+                    var result = JSON.parse(response.responseText);
+                    if (success) {
+                        if (result.IsSuccessful && result.Data) {
+                            Ext.Msg.alert('提示', '操作成功');
+                            store.reload();
+                        } else {
+                            Ext.Msg.alert('提示', "操作失败" + result.ErrorMessage);
+                        }
+                    } else {
+                        Ext.Msg.alert('提示', result.Message);
+                    }
+                });
+            }
+        });
+    },
+    EditProductCategory: function (btn) {
+        var selectedItems = this.getTreegridProductCategory().getView().getSelectionModel().getSelection();
+        if (selectedItems.length < 1) {
+            Ext.MessageBox.alert("提示", "请先选中需要编辑的数据");
+            return;
+        }
+        var win = Ext.widget("ProductCategoryEdit");
+        win.form.loadRecord(selectedItems[0]);
+        win.form.getForm().actionMethod = 'PUT';
+        win.setTitle('修改分类');
+        win.show();
+    },
+    addProductCategory: function (button) {
+        var win = Ext.widget("ProductCategoryEdit");
+        win.form.getForm().actionMethod = 'POST';
+        win.setTitle('添加分类');
+        //win.down('[name=ParentProductCategoryID]').disable();
+        win.show();
+    },
+    manageProductCategory: function (btn) {
+        var win = Ext.widget("ProductCategoryList");
+        win.setTitle('分类管理');
+        win.show();
     },
     addProduct: function (button) {
         var win = Ext.widget("ProductEdit");

@@ -158,7 +158,12 @@ namespace VVCar.BaseData.Data
         void SeedSysMenu(DbContext context)
         {
             var sysMenuSet = context.Set<SysMenu>();
-            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "会员", Component = "MemberManage", SysMenuUrl = "MemberManage", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
+
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000010"), Name = "商城", Component = "Shop", SysMenuUrl = "Shop", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000011"), Name = "产品", Component = "Product", SysMenuUrl = "Product", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000010"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000012"), Name = "订单", Component = "Order", SysMenuUrl = "Order", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000010"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 2 });
+
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "会员", Component = "MemberManage", SysMenuUrl = "MemberManage", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 2 });
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "卡片制作", Component = "MemberCard", SysMenuUrl = "MemberCard", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000001"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
             sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000101"), Name = "会员信息", Component = "Member", SysMenuUrl = "Member", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000001"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
             sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000102"), Name = "卡片类型", Component = "MemberCardType", SysMenuUrl = "MemberCardTypeList", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000001"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 2 });

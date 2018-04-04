@@ -279,6 +279,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\Shop\OrderController.cs" />
+    <Compile Include="Controllers\Shop\ProductCategoryController.cs" />
     <Compile Include="Controllers\Shop\ProductController.cs" />
     <Compile Include="Controllers\VIP\CouponController.cs" />
     <Compile Include="Controllers\VIP\CouponTemplateController.cs" />
@@ -490,6 +491,8 @@
     <Content Include="Scripts\app\model\BaseData\OrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\PermissionFuncModel.js" />
     <Content Include="Scripts\app\model\BaseData\PointExchangeCouponModel.js" />
+    <Content Include="Scripts\app\model\BaseData\ProductCategoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\ProductCategoryTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\ProductModel.js" />
     <Content Include="Scripts\app\model\BaseData\RechargeHistoryModel.js" />
     <Content Include="Scripts\app\model\BaseData\RechargePlanModel.js" />
@@ -526,6 +529,7 @@
     <Content Include="Scripts\app\store\BaseData\PointExchangeCouponStore.js" />
     <Content Include="Scripts\app\store\BaseData\PosProductStore.js" />
     <Content Include="Scripts\app\store\BaseData\PosRetailPlanStore.js" />
+    <Content Include="Scripts\app\store\BaseData\ProductCategoryTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\ProductStore.js" />
     <Content Include="Scripts\app\store\BaseData\RechargeHistoryReportStore.js" />
     <Content Include="Scripts\app\store\BaseData\RechargeHistoryStore.js" />
@@ -622,9 +626,12 @@
     <Content Include="Scripts\app\view\selector\PosProductSelector.js" />
     <Content Include="Scripts\app\view\selector\PosRetailPlanSelector.js" />
     <Content Include="Scripts\app\view\selector\UserSelector.js" />
+    <Content Include="Scripts\app\view\Shop\ChangeCategory.js" />
     <Content Include="Scripts\app\view\Shop\Order.js" />
     <Content Include="Scripts\app\view\Shop\OrderEdit.js" />
     <Content Include="Scripts\app\view\Shop\Product.js" />
+    <Content Include="Scripts\app\view\Shop\ProductCategoryEdit.js" />
+    <Content Include="Scripts\app\view\Shop\ProductCategoryList.js" />
     <Content Include="Scripts\app\view\Shop\ProductEdit.js" />
     <Content Include="Scripts\app\view\SysMenu\AddSysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenu.js" />

@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\AdjustIndexParam.cs" />
+    <Compile Include="Dtos\ProductCategoryTreeDto.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderItem.cs" />
     <Compile Include="Entities\Product.cs" />
@@ -51,9 +52,11 @@
     <Compile Include="Enums\EPointOrderStatus.cs" />
     <Compile Include="Enums\EProductType.cs" />
     <Compile Include="Filters\OrderFilter.cs" />
+    <Compile Include="Filters\ProductCategoryFilter.cs" />
     <Compile Include="Filters\ProductFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IOrderService.cs" />
+    <Compile Include="Services\IProductCategoryService.cs" />
     <Compile Include="Services\IProductService.cs" />
   </ItemGroup>
   <ItemGroup />

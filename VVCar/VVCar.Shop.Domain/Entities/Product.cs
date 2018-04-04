@@ -15,6 +15,17 @@ namespace VVCar.Shop.Domain.Entities
     public class Product : EntityBase
     {
         /// <summary>
+        /// 类别ID
+        /// </summary>
+        [Display(Name = "类别ID")]
+        public Guid? ProductCategoryID { get; set; }
+
+        /// <summary>
+        /// 类别
+        /// </summary>
+        public virtual ProductCategory ProductCategory { get; set; }
+
+        /// <summary>
         /// 排序
         /// </summary>
         [Display(Name = "排序")]
