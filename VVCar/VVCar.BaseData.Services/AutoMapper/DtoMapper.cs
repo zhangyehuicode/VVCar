@@ -9,6 +9,8 @@ using AutoMapper.QueryableExtensions;
 using VVCar.BaseData.Domain.Dtos;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Services.DomainServices;
+using VVCar.Shop.Domain.Dtos;
+using VVCar.Shop.Domain.Entities;
 using YEF.Core;
 
 namespace VVCar.BaseData.Services
@@ -50,6 +52,8 @@ namespace VVCar.BaseData.Services
                 cfg.CreateMap<SysMenu, SysNavMenuDto>()
                 .ForMember(dest => dest.leaf, opt => opt.MapFrom(src => src.IsLeaf))
                 .ForMember(dest => dest.text, opt => opt.MapFrom(src => src.Name));
+
+                cfg.CreateMap<ProductCategory, ProductCategoryTreeDto>();
             });
             //Mapper.CreateMap<Member, MemberDto>()
             //    //.ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType.Name))
@@ -123,6 +127,18 @@ namespace VVCar.BaseData.Services
         /// <param name="source"></param>
         /// <returns></returns>
         public static IQueryable<TResult> MapTo<TResult>(this IQueryable source)
+        {
+            return source.ProjectTo<TResult>();
+        }
+
+        /// <summary>
+        /// 映射到目标
+        /// </summary>
+        /// <typeparam name="TSource">Source type</typeparam>
+        /// <typeparam name="TResult">Destination type</typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static IQueryable<TResult> MapTo<TSource, TResult>(this IQueryable<TSource> source)
         {
             return source.ProjectTo<TResult>();
         }

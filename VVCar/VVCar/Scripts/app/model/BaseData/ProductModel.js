@@ -3,7 +3,7 @@
     idProperty: "ID",
     fields: [
         { name: "Index" },
-        { name: "Title" },
+        { name: "Name" },
         { name: "ImgUrl" },
         { name: "Points" },
         { name: "UpperLimit" },

@@ -2,14 +2,14 @@
     extend: 'Ext.data.TreeStore',
     model: 'WX.model.BaseData.ProductCategoryTreeModel',
     nodeParam: 'ParentId',
-    defaultRootId: '',
+    defaultRootId: '00000000-0000-0000-0000-000000000001',
     defaultRootProperty: 'Children',
     rootProperty: 'Children',
     proxy: {
         type: 'rest',
         url: Ext.GlobalConfig.ApiDomainUrl + 'api/ProductCategory',
         api: {
-            read: Ext.GlobalConfig.ApiDomainUrl + 'api/ProductCategory/GetTree',
+            read: Ext.GlobalConfig.ApiDomainUrl + 'api/ProductCategory/GetTree?parentID=',
             create: Ext.GlobalConfig.ApiDomainUrl + 'api/ProductCategory',
             update: Ext.GlobalConfig.ApiDomainUrl + 'api/ProductCategory',
             destroy: Ext.GlobalConfig.ApiDomainUrl + 'api/ProductCategory',
@@ -23,7 +23,7 @@
     },
     root: {
         Text: '全部分类',
-        id: '',
+        id: '00000000-0000-0000-0000-000000000001',
         expanded: true,
     },
     addProductCategory: function (entity, cb) {

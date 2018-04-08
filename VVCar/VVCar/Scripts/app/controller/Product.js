@@ -2,7 +2,7 @@
     extend: 'Ext.app.Controller',
     requires: ['WX.store.BaseData.ProductStore', 'WX.store.BaseData.ProductCategoryTreeStore'],
     models: ['BaseData.ProductModel', 'BaseData.ProductCategoryModel', 'BaseData.ProductCategoryTreeModel'],
-    views: ['Shop.Product', 'Shop.ProductEdit', 'Shop.ProductCategoryList', 'Shop.ProductCategoryEdit'],
+    views: ['Shop.Product', 'Shop.ProductEdit', 'Shop.ProductCategoryList', 'Shop.ProductCategoryEdit', 'Shop.ChangeCategory'],
     refs: [{
         ref: 'product',
         selector: 'Product grid'
@@ -12,10 +12,16 @@
     }, {
         ref: 'treegridProductCategory',
         selector: 'ProductCategoryList treepanel[name=treegridProductCategory]'
+    }, {
+        ref: 'treeProductCategory',
+        selector: 'Product treepanel[name=treeProductCategory]',
     }],
     init: function () {
         var me = this;
         me.control({
+            'Product treepanel[name=treeProductCategory]': {
+                itemclick: me.ontreeProductCategoryItemClick
+            },
             'Product button[action=add]': {
                 click: me.addProduct
             },
@@ -25,8 +31,10 @@
             'Product button[action=manageProductCategory]': {
                 click: me.manageProductCategory
             },
-            'Product': {
+            'Product grid': {
                 itemdblclick: me.edit,
+            },
+            'Product': {
                 editActionClick: me.edit,
                 deleteActionClick: me.deleteProduct,
                 escActionClick: me.escActionClick,
@@ -51,7 +59,95 @@
             'ProductCategoryEdit button[action=save]': {
                 click: me.saveProductCategory
             },
+            'ChangeCategory button[action=saveProductCategoryBtn]': {
+                click: me.ProductChangeCategory
+            },
+            'Product button[action=changeCategory]': {
+                click: me.changeProductCategory
+            },
         });
+    },
+    ontreeProductCategoryItemClick: function (tree, record, item) {
+        var myStore = this.getProduct().getStore();
+        Ext.apply(myStore.proxy.extraParams, {
+            All: false, ProductCategoryID: record.data.ID
+        });
+        myStore.loadPage(1);
+    },
+    ProductChangeCategory: function (btn) {
+        var me = this;
+        var win = btn.up('window');
+        var form = win.form.getForm();
+        var formValues = form.getValues();
+        var record = form.getRecord().data;
+        record.ProductCategoryID = formValues.DestCategory;
+        if (form.isValid()) {
+            var myStore = me.getProduct().getStore();
+            var rr = myStore.getById(record.ID);
+            rr.ProductCategoryID = record.ProductCategoryID;
+            Ext.MessageBox.show({
+                msg: '正在请求数据, 请稍侯',
+                progressText: '正在请求数据',
+                width: 300,
+                wait: true,
+                waitConfig: {
+                    interval: 200
+                }
+            });
+            var url = Ext.GlobalConfig.ApiDomainUrl + 'api/Product';
+            var tms = rr.data;
+            Ext.Ajax.request({
+                url: url,
+                method: 'PUT',
+                clientValidation: true,
+                jsonData: Ext.JSON.encode(tms),
+                callback: function (options, success, response) {
+                    if (success) {
+                        Ext.MessageBox.hide();
+                        myStore.load();
+                        win.close();
+                        Ext.MessageBox.alert("操作成功", "更新成功");
+                    } else {
+                        Ext.MessageBox.hide();
+                        Ext.MessageBox.alert("失败，请重试", response.responseText);
+                    }
+                },
+                failure: function (response, options) {
+                    Ext.MessageBox.hide();
+                    Ext.MessageBox.alert("警告", "出现异常错误！请联系管理员！");
+                },
+                success: function (response, options) {
+                    Ext.MessageBox.hide();
+                }
+            });
+
+            this.hasUpdateDeptRegion = true;
+        }
+    },
+    changeProductCategory: function (btn) {
+        var gridDept = btn.up('grid');
+        var selectedItems = gridDept.getSelectionModel().getSelection();
+        if (selectedItems.length < 1) {
+            Ext.MessageBox.alert("提示", "请选择数据");
+            return;
+        }
+        var selectedData = selectedItems[0].data;
+        var win = Ext.widget("ChangeCategory");
+        win.form.getForm().actionMethod = 'PUT';
+        win.form.loadRecord(selectedItems[0]);
+        var cmbCurrentRegion = win.down('combo[name=CurrCategory]');
+        var cmbDestRegion = win.down('combo[name=DestCategory]');
+        //因为cmbCurrentRegion和cmbDestRegion绑定的store是同一对象，
+        //所以这里对cmbCurrentRegion的store做的修改也会影响到cmbDestRegion
+        cmbCurrentRegion.store.clearFilter();
+        cmbCurrentRegion.store.load({
+            params: {
+                All: true
+            }
+        });
+        cmbCurrentRegion.setValue(selectedData.ProductCategoryID);
+        cmbDestRegion.setValue(selectedData.ProductCategoryID);
+        win.show();
     },
     saveProductCategory: function (btn) {
         var me = this;
@@ -170,10 +266,20 @@
         win.show();
     },
     addProduct: function (button) {
-        var win = Ext.widget("ProductEdit");
-        win.form.getForm().actionMethod = 'POST';
-        win.setTitle('添加商品');
-        win.show();
+        var me = this;
+        var tree = Ext.ComponentQuery.query('treepanel[name=treeProductCategory]');
+        var selectedItems = tree[0].getView().getSelectionModel().getSelection();
+        if (selectedItems.length > 0 && selectedItems[0].data.ID != '' && selectedItems[0].data.ID != null && selectedItems[0].data.ID != '00000000-0000-0000-0000-000000000001') {
+            var win = Ext.widget("ProductEdit");
+
+            win.down('textfield[name=ProductCategoryID]').setValue(selectedItems[0].data.ID);
+
+            win.form.getForm().actionMethod = 'POST';
+            win.setTitle('添加商品');
+            win.show();
+        } else {
+            Ext.MessageBox.alert('提示', '未选择分类');
+        }
     },
     edit: function (grid, record) {
         var win = Ext.widget("ProductEdit");

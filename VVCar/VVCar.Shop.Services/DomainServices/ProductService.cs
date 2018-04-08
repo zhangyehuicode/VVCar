@@ -50,34 +50,37 @@ namespace VVCar.Shop.Services.DomainServices
         {
             if (entity == null)
                 return false;
-            var pointGoods = Repository.GetByKey(entity.ID);
-            if (pointGoods == null)
+            var product = Repository.GetByKey(entity.ID);
+            if (product == null)
                 throw new DomainException("更新的产品不存在");
 
             //pointGoods.ProductType = entity.ProductType;
-            pointGoods.Title = entity.Title;
-            pointGoods.ImgUrl = entity.ImgUrl;
-            pointGoods.BasePrice = entity.BasePrice;
-            pointGoods.PriceSale = entity.PriceSale;
-            pointGoods.Points = entity.Points;
-            pointGoods.UpperLimit = entity.UpperLimit;
-            pointGoods.IsPublish = entity.IsPublish;
-            pointGoods.IsRecommend = entity.IsRecommend;
-            pointGoods.Stock = entity.Stock;
-            pointGoods.EffectiveDate = entity.EffectiveDate;
-            pointGoods.ExpiredDate = entity.ExpiredDate;
-            pointGoods.LastUpdateDate = DateTime.Now;
-            pointGoods.LastUpdateUser = AppContext.CurrentSession.UserName;
-            pointGoods.LastUpdateUserID = AppContext.CurrentSession.UserID;
+            product.ProductCategoryID = entity.ProductCategoryID;
+            product.Name = entity.Name;
+            product.ImgUrl = entity.ImgUrl;
+            product.BasePrice = entity.BasePrice;
+            product.PriceSale = entity.PriceSale;
+            product.Points = entity.Points;
+            product.UpperLimit = entity.UpperLimit;
+            product.IsPublish = entity.IsPublish;
+            product.IsRecommend = entity.IsRecommend;
+            product.Stock = entity.Stock;
+            product.EffectiveDate = entity.EffectiveDate;
+            product.ExpiredDate = entity.ExpiredDate;
+            product.LastUpdateDate = DateTime.Now;
+            product.LastUpdateUser = AppContext.CurrentSession.UserName;
+            product.LastUpdateUserID = AppContext.CurrentSession.UserID;
 
-            return base.Update(pointGoods);
+            return base.Update(product);
         }
 
         public IEnumerable<Product> Search(ProductFilter filter, out int totalCount)
         {
             var queryable = Repository.GetQueryable(false);
-            if (!string.IsNullOrEmpty(filter.Title))
-                queryable = queryable.Where(t => t.Title.Contains(filter.Title));
+            if (!string.IsNullOrEmpty(filter.Name))
+                queryable = queryable.Where(t => t.Name.Contains(filter.Name));
+            if (filter.ProductCategoryID.HasValue && filter.ProductCategoryID.Value != Guid.Parse("00000000-0000-0000-0000-000000000001"))
+                queryable = queryable.Where(t => t.ProductCategoryID == filter.ProductCategoryID.Value);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderBy(t => t.Index).Skip(filter.Start.Value).Take(filter.Limit.Value);

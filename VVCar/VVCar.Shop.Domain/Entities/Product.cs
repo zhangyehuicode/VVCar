@@ -18,7 +18,7 @@ namespace VVCar.Shop.Domain.Entities
         /// 类别ID
         /// </summary>
         [Display(Name = "类别ID")]
-        public Guid? ProductCategoryID { get; set; }
+        public Guid ProductCategoryID { get; set; }
 
         /// <summary>
         /// 类别
@@ -31,11 +31,17 @@ namespace VVCar.Shop.Domain.Entities
         [Display(Name = "排序")]
         public int Index { get; set; }
 
+        ///// <summary>
+        ///// 编码
+        ///// </summary>
+        //[Display(Name = "编码")]
+        //public string Code { get; set; }
+
         /// <summary>
-        /// 标题
+        /// 名称
         /// </summary>
-        [Display(Name = "标题")]
-        public string Title { get; set; }
+        [Display(Name = "名称")]
+        public string Name { get; set; }
 
         /// <summary>
         /// 产品类型

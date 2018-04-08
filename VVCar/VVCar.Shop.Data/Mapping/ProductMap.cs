@@ -14,7 +14,7 @@ namespace VVCar.Shop.Data.Mapping
         {
             HasKey(t => t.ID);
 
-            Property(t => t.Title)
+            Property(t => t.Name)
                 .IsRequired()
                 .HasMaxLength(50);
 

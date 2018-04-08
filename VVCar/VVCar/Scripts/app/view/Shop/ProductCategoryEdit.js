@@ -3,7 +3,7 @@
     alias: 'widget.ProductCategoryEdit',
     title: '编辑类别',
     layout: 'fit',
-    width: 370,
+    width: 250,
     bodyPadding: 5,
     modal: true,
     initComponent: function () {
@@ -15,7 +15,7 @@
             trackResetOnLoad: true,
             fieldDefaults: {
                 labelAlign: 'left',
-                labelWidth: 100,
+                labelWidth: 60,
                 anchor: '100%'
             },
             items: [{
@@ -59,56 +59,16 @@
             }, {
                 xtype: 'numberfield',
                 name: 'Index',
-                fieldLabel: 'Pos排序',
+                fieldLabel: '排序',
                 minValue: 0,
                 allowBlank: false,
-                allowDecimals: false
-            }, {
-                xtype: 'checkbox',
-                fieldLabel: '零售显示',
-                name: 'IsPosUsed',
-                blankText: '是否在零售端显示!',
-                inputValue: true,
-            }, {
-                xtype: 'checkbox',
-                fieldLabel: '会员产品',
-                name: 'IsForMember',
-                inputValue: true,
-            }, {
-                xtype: 'checkbox',
-                fieldLabel: '强制选择',
-                name: 'IsRequiredOrderAlert',
-                inputValue: true,
-                value: false,
-            }, {
-                xtype: 'textareafield',
-                name: 'RequiredOrderAlertText',
-                fieldLabel: '强制选择提醒语',
-                maxLength: 64,
-                hidden: true,
-            }, {
-                xtype: 'checkbox',
-                fieldLabel: '重复下单提醒',
-                name: 'IsOverOrderAlert',
-                inputValue: true,
-                value: false,
-            }, {
-                xtype: 'radiogroup',
-                name: 'radioOverOrderAlertType',
-                width: 160,
-                labelWidth: 60,
-                padding: '0 0 0 100',
-                hidden: true,
-                items: [
-                    { boxLabel: '普通提醒', name: 'OverOrderAlertType', inputValue: 0 },
-                    { boxLabel: '强制唯一', name: 'OverOrderAlertType', inputValue: 1, },
-                ]
-            }, {
-                xtype: 'textareafield',
-                name: 'OverOrderAlertText',
-                fieldLabel: '重复下单提醒语',
-                maxLength: 64,
-                hidden: true,
+                allowDecimals: false,
+                value: 1,
+                //}, {
+                //    xtype: 'checkbox',
+                //    fieldLabel: '会员产品',
+                //    name: 'IsForMember',
+                //    inputValue: true,
             }]
         });
         me.items = [me.form];

@@ -529,6 +529,7 @@
     <Content Include="Scripts\app\store\BaseData\PointExchangeCouponStore.js" />
     <Content Include="Scripts\app\store\BaseData\PosProductStore.js" />
     <Content Include="Scripts\app\store\BaseData\PosRetailPlanStore.js" />
+    <Content Include="Scripts\app\store\BaseData\ProductCategoryLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\ProductCategoryTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\ProductStore.js" />
     <Content Include="Scripts\app\store\BaseData\RechargeHistoryReportStore.js" />

@@ -20,7 +20,12 @@
             },
             items: [{
                 xtype: 'textfield',
-                name: 'Title',
+                name: 'ProductCategoryID',
+                fieldLabel: '类别ID',
+                hidden: true,
+            }, {
+                xtype: 'textfield',
+                name: 'Name',
                 fieldLabel: '标题',
                 maxLength: 50,
                 allowBlank: false,

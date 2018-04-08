@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Services;
 using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
@@ -126,7 +127,7 @@ namespace VVCar.Shop.Services.DomainServices
         public IEnumerable<ProductCategoryTreeDto> GetTreeData(Guid? parentID)
         {
             var deptRegions = this.Repository.GetQueryable(false)
-                .MapTo<ProductCategoryTreeDto>()
+                .MapTo<ProductCategory, ProductCategoryTreeDto>()
                 .OrderBy(t => t.ParentId).ThenBy(t => t.Index)
                 .ToList();
 

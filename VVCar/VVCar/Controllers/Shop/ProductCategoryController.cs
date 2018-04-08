@@ -13,6 +13,7 @@ using YEF.Core.Dtos;
 
 namespace VVCar.Controllers.Shop
 {
+    [RoutePrefix("api/ProductCategory")]
     public class ProductCategoryController : BaseApiController
     {
         /// <summary>

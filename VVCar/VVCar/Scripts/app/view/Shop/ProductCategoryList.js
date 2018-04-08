@@ -3,12 +3,12 @@
     alias: 'widget.ProductCategoryList',
     title: '分类管理',
     layout: 'fit',
-    width: 700,
-    height: 600,
+    width: 400,
+    height: 500,
     modal: true,
     initComponent: function () {
         var me = this;
-        //var treegridProductCategoryStore = Ext.create('WX.store.BaseData.ProductCategoryTreeStore');
+        var treegridProductCategoryStore = Ext.create('WX.store.BaseData.ProductCategoryTreeStore');
         me.tbar = [{
             action: 'addProductCategory',
             xtype: 'button',
@@ -29,55 +29,25 @@
             iconCls: 'delete'
         }];
         me.items = [{
-            xtype: 'Ext.tree.Panel',
+            xtype: 'treepanel',
             name: 'treegridProductCategory',
-            store: '',//treegridProductCategoryStore,
+            store: treegridProductCategoryStore,
             useArrows: true,
             rootVisible: false,
             stripeRows: true,
             columns: [
                 { xtype: 'treecolumn', header: '类别代码', dataIndex: 'Code', flex: 1, },
                 { header: '类别名称', dataIndex: 'Name', flex: 1, },
-                { header: 'Pos排序', dataIndex: 'Index', flex: 1, },
-                {
-                    header: '零售显示', dataIndex: 'IsPosUsed', flex: 1,
-                    renderer: function (value) {
-                        if (value == 1) {
-                            return '<span style="color:green;">是</span>';
-                        } else {
-                            return '<span style="color:red;">否</span>';
-                        }
-                    }
-                },
-                {
-                    header: '重复下单提醒', dataIndex: 'OverOrderAlertTypeListShow', flex: 1,
-                    renderer: function (value) {
-                        if (value == "否") {
-                            return '<span style="color:red;">否</span>';
-                        } else {
-                            return '<span style="color:green;">' + value + '</span>';
-                        }
-                    }
-                },
-                {
-                    header: '强制选择', dataIndex: 'IsRequiredOrderAlert', flex: 1,
-                    renderer: function (value) {
-                        if (value == 1) {
-                            return '<span style="color:green;">是</span>';
-                        } else {
-                            return '<span style="color:red;">否</span>';
-                        }
-                    }
-                }, {
-                    header: '会员产品', dataIndex: 'IsForMember', flex: 1,
-                    renderer: function (value) {
-                        if (value == 1) {
-                            return '<span style="color:green;">是</span>';
-                        } else {
-                            return '<span style="color:red;">否</span>';
-                        }
-                    }
-                }
+                //}, {
+                //    header: '会员产品', dataIndex: 'IsForMember', flex: 1,
+                //    renderer: function (value) {
+                //        if (value == 1) {
+                //            return '<span style="color:green;">是</span>';
+                //        } else {
+                //            return '<span style="color:red;">否</span>';
+                //        }
+                //    }
+                //}
             ],
         }];
         me.buttons = [{
@@ -88,7 +58,6 @@
         }];
         this.callParent();
     },
-
     afterRender: function () {
         this.callParent(arguments);
     }

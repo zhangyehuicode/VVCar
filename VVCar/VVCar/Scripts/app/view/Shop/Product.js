@@ -59,8 +59,8 @@
                     iconCls: 'fa fa-plus-circle',
                 }, {
                     xtype: 'textfield',
-                    name: 'Title',
-                    fieldLabel: '标题',
+                    name: 'Name',
+                    fieldLabel: '名称',
                     width: 170,
                     labelWidth: 30,
                     margin: '0 0 0 15'
@@ -82,7 +82,7 @@
             }],
             columns: [
                 { header: '排序', dataIndex: 'Index', width: 60 },
-                { header: '标题', dataIndex: 'Title', width: 60 },
+                { header: '标题', dataIndex: 'Name', width: 60 },
                 {
                     header: '商品图片', dataIndex: 'ImgUrl', width: 100,
                     renderer: function (value) {
@@ -194,9 +194,9 @@
                 displayInfo: true
             }]
         }];
-        this.callParent();
+        this.callParent(arguments);
     },
-    afterRender: function () {
-        this.callParent();
-    },
+    //afterRender: function () {
+    //    this.callParent(arguments);
+    //},
 });

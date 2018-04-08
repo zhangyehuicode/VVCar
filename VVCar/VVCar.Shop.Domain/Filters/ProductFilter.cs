@@ -11,9 +11,15 @@ namespace VVCar.Shop.Domain.Filters
     public class ProductFilter : BasePageFilter
     {
         /// <summary>
-        /// 标题
+        /// 名称
         /// </summary>
-        [Display(Name = "标题")]
-        public string Title { get; set; }
+        [Display(Name = "名称")]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 类别ID
+        /// </summary>
+        [Display(Name = "类别ID")]
+        public Guid? ProductCategoryID { get; set; }
     }
 }

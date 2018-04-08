@@ -27,12 +27,12 @@
                     hidden: true,
                     hideLabel: true
                 },
-                {
-                    xtype: 'textfield',
-                    name: 'Code',
-                    fieldLabel: '产品代码',
-                    readOnly: true,
-                },
+                //{
+                //    xtype: 'textfield',
+                //    name: 'Code',
+                //    fieldLabel: '产品代码',
+                //    readOnly: true,
+                //},
                 {
                     xtype: 'textfield',
                     name: 'Name',
