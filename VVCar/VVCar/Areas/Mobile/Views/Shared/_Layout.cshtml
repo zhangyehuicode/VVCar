@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>@ViewBag.Title</title>
+    <link href="//res.wx.qq.com/open/libs/weui/1.1.1/weui.min.css" rel="stylesheet" />
+    <link href="//cdn.bootcss.com/jquery-weui/1.0.0/css/jquery-weui.min.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    @RenderBody()
+    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-weui/1.0.0/js/jquery-weui.min.js"></script>
+    <script>
+        (function ($) {
+            jQuery.getUrlParam = function (name) {
+                if (window.location.search == "") return null;
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", 'i');
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return decodeURI(r[2]); return null;
+            };
+            jQuery.getSelfUrlParam = function (orgStr, name) {
+                if (orgStr == "") return null;
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", 'i');
+                var r = orgStr.substr(1).match(reg);
+                if (r != null) return decodeURI(r[2]); return null;
+            };
+        })(jQuery);
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

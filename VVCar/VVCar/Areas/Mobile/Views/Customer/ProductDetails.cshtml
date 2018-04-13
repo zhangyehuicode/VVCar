@@ -1,0 +1,114 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="productdetails">
+    <div class="top_box">
+        <div class="top_box_text">会员卡名称</div>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a class="top_box2"></a>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
+    </div>
+    <img src="~/Areas/resource/img/mobile/5.jpg" class="sp_img">
+    <div class="sp_text">
+        商品名称，一整行的商品名称
+        <a href="#"><img src="~/Areas/resource/img/mobile/fx.png"></a>
+    </div>
+    <div class="sp_text2" style="border:none;">￥450<img src="~/Areas/resource/img/mobile/jiajian.png" style="width:25%; padding-top:12px; float:right;"></div>
+    <div class="kc_box"><span style="float:left;">原价：￥550</span>库存：1500<span style="float:right; margin-bottom:10px;">月销：150</span></div>
+    <div class="kc_box2">配送说明：<span style="font-size:14px; color:#666;">本件配件费用为江浙沪10元，其余15元</span></div>
+    <div class="kc_box2">
+        参数类型：<br>
+        <a href="#"><div>参数一</div></a>
+        <a href="#"><div style="background-color:#ddd; color:#666; margin-left:2%; margin-bottom:15px;">参数一</div></a>
+    </div>
+    <div class="kc_box3">
+        商品详情：<br>
+        <div>上市时间</div>
+        <div style="width:70%; color:#666;">2017年春夏</div>
+        <div>材质</div>
+        <div style="width:70%; color:#666;">钛钢</div>
+        <div>品牌</div>
+        <div style="width:70%; color:#666;">凝石轩</div>
+        <div>成色</div>
+        <div style="width:70%; color:#666;">全新</div>
+        <div>是否现货</div>
+        <div style="width:70%; color:#666;">现货</div>
+        <div>货号</div>
+        <div style="width:70%; color:#666;">R3-YOGJZ001</div>
+    </div>
+    <a class="btn1" style="margin-top:20px;" v-on:click="paynow">立即购买</a>
+    <a class="btn2" style="margin-bottom:20px;">加入购物车</a>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#productdetails',
+            data: {
+                Product: {},
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+                paynow: function (event) {
+                    window.location.href = "/Mobile/Customer/ConfirmOrder?mch=" + mch;
+                },
+            }
+        });
+    </script>
+}
+

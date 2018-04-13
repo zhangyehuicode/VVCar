@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.Title = "登录注册";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main" id="loginreg">
+    <img class="bgimg" src="~/Areas/resource/img/mobile/bg.jpg" />
+    <div class="headerimgcon">
+        <img class="headerimg" src="~/Areas/resource/img/mobile/logo.png" />
+        <div class="nickname">@ViewBag.NickName</div>
+    </div>
+    <div class="logininfocon">
+        <div class="zcdl_box3">
+            <img src="~/Areas/resource/img/mobile/gr.png" style="width:16px; float:left; margin-top:19px;">
+            <input type="text" name="address" size="60" maxlength="11" style="color:#fff" value="请输入您的手机号" onFocus="if(this.value=='请输入您的手机号'){this.value=''};this.style.color='#fff';" onBlur="if(this.value==''||this.value=='请输入您的手机号'){this.value='请输入您的手机号';this.style.color='#fff';}" class="zcdl_box4">
+            <a href="#" class="zcdl_text">发送验证码</a>
+        </div>
+        <div class="zcdl_box3" style="margin-top:inherit;">
+            <img src="~/Areas/resource/img/mobile/yzm2.png" style="width:16px; float:left; margin-top:18px;">
+            <input type="text" name="address" size="60" maxlength="60" style="color:#fff" value="请输入验证码" onFocus="if(this.value=='请输入验证码'){this.value=''};this.style.color='#fff';" onBlur="if(this.value==''||this.value=='请输入验证码'){this.value='请输入验证码';this.style.color='#fff';}" class="zcdl_box4">
+        </div>
+        <a href="#" class="zcdl_btn" v-on:click="register">手机微信绑定，注册提交</a>
+    </div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        .bgimg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .indextable {
+            display: table;
+        }
+
+        .indextablecell {
+            display: table-cell;
+        }
+
+        .headerimgcon {
+            width: 100%;
+            text-align: center;
+            top: 50px;
+            position: absolute;
+        }
+
+        .headerimg {
+            width: 80px;
+            height: 80px;
+        }
+
+        .headerimgchange {
+            border-radius: 80px;
+        }
+
+        .logininfocon {
+            position: absolute;
+            top: 200px;
+            width: 100%;
+        }
+
+        .inputheaderimg {
+            width: 23px;
+            height: 23px;
+        }
+
+        .nickname {
+            text-align: center;
+            font-size: 15px;
+            color: #fdc816;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        if ('@ViewBag.HeadImgUrl' != '' && '@ViewBag.HeadImgUrl' != null) {
+            $('.headerimg').attr('src','@ViewBag.HeadImgUrl');
+            $('.headerimg').addClass('headerimgchange');
+        }
+        _payBillViewModel = new Vue({
+            el: '#loginreg',
+            data: {
+                UserInfo: {},
+            },
+            methods: {
+                register: function (event) {
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+            }
+        });
+    </script>
+}

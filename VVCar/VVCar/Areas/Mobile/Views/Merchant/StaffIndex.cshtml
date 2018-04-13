@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="msloginreg">
+    <div class="zcdl_box">
+        <div class="zcdl_box2">
+            <img src="@ViewBag.HeadImgUrl" class="zcdl_img2" style="width:80px;height:80px;border-radius:80px;"><br>
+            <span style=" font-size:15px; color:#2d2d30;">@ViewBag.NickName</span>
+        </div>
+        <div class="zcdl_box3">
+            <img src="~/Areas/resource/img/mobile/master/gr.png" style="width:16px; float:left; margin-top:19px;">
+            <input type="text" name="address" size="60" maxlength="60" style="color:#fff" value="请输入您的手机号" onfocus="if(this.value=='请输入您的手机号'){this.value=''};this.style.color='#fff';" onblur="if(this.value==''||this.value=='请输入您的手机号'){this.value='请输入您的手机号';this.style.color='#fff';}" class="zcdl_box4">
+            <a href="#" class="zcdl_text">发送验证码</a>
+        </div>
+        <div class="zcdl_box3" style="margin-top:inherit;">
+            <img src="~/Areas/resource/img/mobile/master/yzm2.png" style="width:16px; float:left; margin-top:18px;">
+            <input type="text" name="address" size="60" maxlength="60" style="color:#fff" value="请输入验证码" onfocus="if(this.value=='请输入验证码'){this.value=''};this.style.color='#fff';" onblur="if(this.value==''||this.value=='请输入验证码'){this.value='请输入验证码';this.style.color='#fff';}" class="zcdl_box4">
+        </div>
+        <a href="#" class="zcdl_btn" style="background-color:#51b3f0;" v-on:click="staffhome">员工登录/注册</a>
+    </div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#msloginreg',
+            data: {
+                UserInfo: {},
+            },
+            methods: {
+                staffhome: function (event) {
+                    window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                },
+            }
+        });
+    </script>
+}
+

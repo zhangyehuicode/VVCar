@@ -1,0 +1,149 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="paysuccess" style="background-color:#f8f9fe;">
+    <div class="top_box">
+        <div class="top_box_text">支付成功</div>
+        <div v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" class="top_box_img" style="width:5%;"></div>
+        <a class="top_box2" style="width:83%;"></a>
+        <a><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
+    </div>
+    <div class="zfcg_box">
+        <div class="zfcg_text">您已成功支付<span style="font-size:22px; color:#ff0c4b; margin-left:30px;">￥95</span></div>
+        <div class="zfcg_text2">获得95个消费积分<a href="#" style=" width:25%; background-color:#efcb47; height:33px; line-height:33px; float:right; text-align:center; color:#2d2d30; border-radius:5px; margin-bottom:10px;">我的订单</a></span></div>
+        <div class="qr_text">收货人：张三丰（15960248018）</div>
+        <div class="qr_text" style="margin-top:5px; font-size:14px; color:#999;">收货地址：福建省厦门市湖里区</div>
+        <div class="zfcg_box2">
+            <div class="zfcg_text3">订单编号<span style="float:right;">321132131231</span></div>
+            <div class="zfcg_text3">交易流水号<span style="float:right;">321132131231</span></div>
+            <div class="zfcg_text3">创建时间<span style="float:right;">2017-11-11</span></div>
+            <div class="zfcg_text3" style=" margin-bottom:10px;">支付时间<span style="float:right;">2017-11-11</span></div>
+        </div>
+    </div>
+    <div class="shop_box">
+        <div class="shop_box2" style="text-align:center; font-size:18px;">
+            其它商品推荐
+        </div>
+        <div class="shop_box3">
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+        </div>
+        <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+    </div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#paysuccess',
+            data: {
+                ProductList: [],
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+            }
+        });
+    </script>
+}
+

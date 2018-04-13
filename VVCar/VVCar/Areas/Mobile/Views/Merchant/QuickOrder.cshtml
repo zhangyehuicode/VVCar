@@ -1,0 +1,110 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="quickorder">
+    <div class="toubu">
+        <a href="#"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        店长工作终端
+        <a href="#"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="touxiang">
+        <span class="srcph">快捷开单-请输入车牌号码</span>
+        <form action="" method="get">
+            <select name="" class="kjkd_select" style="appearance:none;-moz-appearance:none;-webkit-appearance:none;">
+                <option value="0">闽</option>
+            </select>
+        </form>
+        <input type="text" value="" class="kjkd_select" maxlength="1">
+        <input type="text" value="" class="kjkd_select" maxlength="1">
+        <input type="text" value="" class="kjkd_select" maxlength="1">
+        <input type="text" value="" class="kjkd_select" maxlength="1">
+        <input type="text" value="" class="kjkd_select" maxlength="1">
+        <input type="text" value="" class="kjkd_select" maxlength="1">
+        <div class="kjkd_text2">非会员，首次/多次消费</div>
+    </div>
+    <div class="zdsb" v-on:click="chooseImage">
+        <img src="~/Areas/resource/img/mobile/staff/jh.png" id="licenceplate"><br>
+        <div>车牌拍照，自动识别</div>
+    </div>
+    <a href="#" class="kjtd" style="margin-top:100px; margin-bottom:25px;" v-on:click="openorder">开单</a>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                                'chooseImage',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#quickorder',
+            data: {
+                Data: {},
+            },
+            methods: {
+                openorder: function (event) {
+                    window.location.href = "/Mobile/Merchant/OpenOrder?mch=" + mch;
+                },
+                chooseImage: function (event) {
+                    wx.chooseImage({
+                        count: 1, // 默认9
+                        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                        success: function (res) {
+                            var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                            $.alert(localIds);
+                            if (localIds.length > 0)
+                                $('#licenceplate').attr('src', localIds[0]);
+                        }
+                    });
+                },
+            }
+        });
+    </script>
+}

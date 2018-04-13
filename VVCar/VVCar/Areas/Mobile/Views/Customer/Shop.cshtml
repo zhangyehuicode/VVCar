@@ -1,0 +1,183 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div style="background-color:#f8f9fe;" id="shop">
+    <div class="top_box">
+        <div class="top_box_text">精品商城</div>
+        <a href="#"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="home"></a>
+        <a class="top_box2"></a>
+        <a href="#"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+    </div>
+    <div class="nav_box" style="position:relative;">
+        <div>
+            <a href="#"><img src="~/Areas/resource/img/mobile/erweima.png" v-on:click="scanQRCode"></a><br>
+            扫码付款
+        </div>
+        <div>
+            <a href="#"><img src="~/Areas/resource/img/mobile/kabao.png" v-on:click="membercard"></a><br>
+            会员卡包
+        </div>
+        <div>
+            <a href="#"><img src="~/Areas/resource/img/mobile/jingpin.png"></a><br>
+            精品商城
+        </div>
+        <div>
+            <a href="#"><img src="~/Areas/resource/img/mobile/my.png" v-on:click="percenter"></a><br>
+            个人中心
+        </div>
+    </div>
+    <div class="shop_box2">
+        <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;精品商城
+        <a href="#"><span>更多</span></a>
+    </div>
+    <div class="slide-box">
+        <div class="shop_box4">
+            <a href="#"><img src="~/Areas/resource/img/mobile/5.jpg"></a>
+            <span>汽车空气净化器</span>
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;">￥1000</span>
+        </div>
+        <div class="shop_box4">
+            <a href="#"><img src="~/Areas/resource/img/mobile/5.jpg"></a>
+            <span>汽车空气净化器</span>
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;">￥1000</span>
+        </div>
+    </div>
+    <div class="shop_box">
+        <div class="shop_box2">
+            <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;商品推荐
+            <a href="#"><span>更多</span></a>
+        </div>
+        <div class="shop_box3">
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+            <div class="shop_box3_div">
+                <span class="shop_box3_span">会员卡名</span>
+                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+                <div class="shop_box3_div2">
+                    ￥500
+                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                </div>
+            </div>
+        </div>
+        <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+    </div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#shop',
+            data: {
+                ProductList: [],
+            },
+            methods: {
+                home: function (event) {
+                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                },
+                percenter: function (event) {
+                    window.location.href = "/Mobile/Customer/PerCenter?mch=" + mch;
+                },
+                membercard: function (event) {
+                    window.location.href = "/Mobile/Customer/MemberCard?mch=" + mch;
+                },
+                scanQRCode: function (event) {
+                    wx.scanQRCode({
+                        needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                        scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                        success: function (res) {
+                            var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                        }
+                    });
+                },
+            }
+        });
+    </script>
+}

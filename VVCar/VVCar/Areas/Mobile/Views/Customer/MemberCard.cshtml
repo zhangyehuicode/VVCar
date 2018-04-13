@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="membercard">
+    <div class="top_box">
+        <div class="top_box_text">会员卡包</div>
+        <a href="#"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="home"></a>
+        <a class="top_box2"></a>
+        <a href="#"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+    </div>
+    <div class="nav_box" style="box-shadow:none;">
+        <div>
+            <a href="#"><img src="~/Areas/resource/img/mobile/erweima.png" v-on:click="scanQRCode"></a><br>
+            扫码付款
+        </div>
+        <div>
+            <a href="#"><img src="~/Areas/resource/img/mobile/kabao.png"></a><br>
+            会员卡包
+        </div>
+        <div>
+            <a href="#"><img src="~/Areas/resource/img/mobile/jingpin.png" v-on:click="shop"></a><br>
+            精品商城
+        </div>
+        <div>
+            <a href="#"><img src="~/Areas/resource/img/mobile/my.png" v-on:click="percenter"></a><br>
+            个人中心
+        </div>
+    </div>
+    <div class="jifen">
+        <div>
+            <span style="margin-top:4px;">1000</span>
+            <span style="padding-top:inherit; font-size:13px; color:#2d2d30;">我的积分</span>
+        </div>
+        <div>
+            <span style="margin-top:4px;">15000</span>
+            <span style="padding-top:inherit; font-size:13px; color:#2d2d30;">消费总额</span>
+        </div>
+        <div>
+            <span style="margin-top:4px;">3</span>
+            <span style="padding-top:inherit; font-size:13px; color:#2d2d30;">会员卡数量</span>
+        </div>
+    </div>
+    <div class="bq_box">
+        <a href="#">我的会员卡</a>
+        <a href="#" style="color:#2d2d30; border:none;">我的会员卡</a>
+        <a href="#" style="color:#2d2d30; border:none;">我的会员卡</a>
+    </div>
+    <div class="hykb_box">
+        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;">
+            <a href="#"><img src="~/Areas/resource/img/mobile/6.png"></a>
+            <span class=" hykb_text">会员卡名</span>
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text">卡内余额：￥100</span>
+        </div>
+        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;">
+            <a href="#"><img src="~/Areas/resource/img/mobile/7.png"></a>
+            <span class=" hykb_text">接收者名称（已/未激活）</span>
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class=" hykb_text">卡内余额：￥100</span>
+        </div>
+        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;">
+            <a href="#"><img src="~/Areas/resource/img/mobile/8.png"></a>
+            <span class=" hykb_text">好友微信昵称</span>
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class=" hykb_text">卡有效期：100天</span>
+        </div>
+        <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+    </div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#membercard',
+            data: {
+                ProductList: [],
+            },
+            methods: {
+                home: function (event) {
+                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                },
+                shop: function (event) {
+                    window.location.href = "/Mobile/Customer/Shop?mch=" + mch;
+                },
+                percenter: function (event) {
+                    window.location.href = "/Mobile/Customer/PerCenter?mch=" + mch;
+                },
+                scanQRCode: function (event) {
+                    wx.scanQRCode({
+                        needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                        scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                        success: function (res) {
+                            var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                        }
+                    });
+                },
+            }
+        });
+    </script>
+}

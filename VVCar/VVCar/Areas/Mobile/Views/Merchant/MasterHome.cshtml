@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="masterhome">
+    <div class="toubu">店长工作终端</div>
+    <div class="touxiang">
+        <div style="width:100%; float:left; border-bottom:1px solid #eee;">
+            <img style="border-radius:80px;" src="@ViewBag.HeadImgUrl" class="touxiang_img">
+            <div class="touxiang_div">
+                <span>@ViewBag.NickName</span>
+                <span style=" font-size:14px; color:#999;">绑定手机：15960248018<a href="#" style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[我的信息]</a></span>
+            </div>
+        </div>
+        <ul>
+            <li class="tongzhi">最新动态：XXX会员已到店，请立即迎接</li>
+        </ul>
+    </div>
+    <div class="touxiang">
+        <a class="bq_box" v-on:click="quickorder">
+            <div><img src="~/Areas/resource/img/mobile/master/yhqhz.png" style="width:25px;"></div>
+            <span>快捷开单</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">非会员卡用户</span>
+        </a>
+        <a href="#" class="bq_box" style="width:33.4%">
+            <div><img src="~/Areas/resource/img/mobile/master/hykhx.png" style="width:25px;"></div>
+            <span>今日订单</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">今日已核10笔</span>
+        </a>
+        <a href="#" class="bq_box" style=" border-right:none;">
+            <div><img src="~/Areas/resource/img/mobile/master/hykk.png" style="width:25px; margin-top:2px;"></div>
+            <span>扫码优惠</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">本月已核20笔</span>
+        </a>
+        <a href="#" class="bq_box" style=" border-bottom:none;">
+            <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:25px;"></div>
+            <span>会员开卡</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">本月已销50张</span>
+        </a>
+        <a href="#" class="bq_box" style="width:33.4%;border-bottom:none;">
+            <div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
+            <span>我的业绩</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥10000</span>
+        </a>
+        <a href="#" class="bq_box" style=" border-right:none;border-bottom:none;">
+            <div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:25px;"></div>
+            <span>会员动态</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">100位</span>
+        </a>
+    </div>
+    <div class="bt_box">店长管理端</div>
+    <div class="touxiang" style="margin-top:0px;">
+        <a href="#" class="bq_box">
+            <div><img src="~/Areas/resource/img/mobile/master/dygl.png" style="width:25px; margin-top:5px;"></div>
+            <span>店员管理</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">10人</span>
+        </a>
+        <a href="#" class="bq_box" style="width:33.4%">
+            <div><img src="~/Areas/resource/img/mobile/master/hygl.png" style="width:25px;"></div>
+            <span>会员管理</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">100人</span>
+        </a>
+        <a href="#" class="bq_box" style=" border-right:none;">
+            <div><img src="~/Areas/resource/img/mobile/master/hykgl.png" style="width:25px; margin-top:5px;"></div>
+            <span>会员卡管理</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">已发行200张</span>
+        </a>
+        <a href="#" class="bq_box" style=" border-bottom:none;">
+            <div><img src="~/Areas/resource/img/mobile/master/tqdd.png" style="width:25px;"></div>
+            <span>特权订单</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">享优惠特权订单</span>
+        </a>
+        <a href="#" class="bq_box" style="width:33.4%;border-bottom:none;">
+            <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:21px;"></div>
+            <span>门店报表</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">单店报表</span>
+        </a>
+        <a href="#" class="bq_box" style=" border-right:none;border-bottom:none;">
+            <div><img src="~/Areas/resource/img/mobile/master/hdgl.png" style="width:23px;"></div>
+            <span>库存管理</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">门店库存信息</span>
+        </a>
+    </div>
+    <img src="~/Areas/resource/img/mobile/master/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#masterhome',
+            data: {
+                Data: {},
+            },
+            methods: {
+                register: function (event) {
+                    window.location.href = "/Mobile/Merchant/Home?mch=" + mch;
+                },
+                quickorder: function (event) {
+                    window.location.href = "/Mobile/Merchant/QuickOrder?mch=" + mch;
+                },
+            }
+        });
+    </script>
+}

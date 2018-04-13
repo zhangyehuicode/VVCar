@@ -1,0 +1,1327 @@
+﻿@charset "utf-8";
+/* CSS Document */
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "思源黑体 CN Regular";
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+/*管理中心*/
+.toubu {
+    width: 100%;
+    background-color: #51b3f0;
+    height: 55px;
+    font-size: 18px;
+    color: #fff;
+    line-height: 55px;
+    text-align: center;
+    float: left;
+}
+
+.touxiang {
+    width: 94%;
+    margin-left: 3%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #f1f1f1;
+    float: left;
+    margin-top: 15px;
+    background-color: #fff;
+}
+
+.touxiang_img {
+    width: 17%;
+    float: left;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 3%;
+}
+
+.touxiang_div {
+    width: 77%;
+    float: left;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 3%;
+}
+
+    .touxiang_div span {
+        font-size: 16px;
+        color: #000;
+        float: left;
+        width: 100%;
+        margin-top: 7px;
+    }
+
+.tongzhi {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    line-height: 44px;
+    font-size: 14px;
+    color: #2d2d30;
+}
+
+.bq_box {
+    width: 33.3%;
+    float: left;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+    .bq_box div {
+        width: 100%;
+        text-align: center;
+        line-height: 33px;
+        margin-top: 20px;
+        height: 33px;
+    }
+
+    .bq_box span {
+        width: 100%;
+        text-align: center;
+        font-size: 15px;
+        color: #2d2d30;
+        float: left;
+        margin-top: 10px;
+    }
+
+.bt_box {
+    width: 100%;
+    line-height: 55px;
+    color: #2d2d30;
+    text-align: center;
+    font-size: 16px;
+    float: left;
+}
+
+/*服务项目管理*/
+.xm_box {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    line-height: 50px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #2d2d30;
+}
+
+.xm_input {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    height: 44px;
+    border: 1px solid #eee;
+    text-indent: 1em;
+    outline: none;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.xm_input2 {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    height: 44px;
+    border: 1px solid #eee;
+    text-indent: 1em;
+    outline: none;
+    font-size: 14px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.xm_btn {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    height: 44px;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 44px;
+    font-size: 15px;
+    color: #fff;
+    background-color: #51b3f0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+/*固定成本管理*/
+.cbgl_btn {
+    width: 50%;
+    float: left;
+    text-align: center;
+    font-size: 15px;
+    color: #2d2d30;
+}
+
+/*成本报表*/
+.yj_box {
+    width: 33.3%;
+    float: left;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #51b3f0;
+}
+
+.gzb_box {
+    width: 100%;
+    float: left;
+    line-height: 55px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    color: #2d2d30;
+}
+
+.gzb_box2 {
+    width: 100%;
+    float: left;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+    .gzb_box2 div {
+        width: 50%;
+        float: left;
+        text-align: center;
+        line-height: 44px;
+        border-right: 1px solid #eee;
+        font-size: 14px;
+        color: #2d2d30;
+        box-sizing: border-box;
+    }
+
+/*特权订单*/
+.tqdd_box {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    border-bottom: 1px solid #eee;
+}
+
+    .tqdd_box span {
+        width: 25%;
+        float: left;
+        font-size: 15px;
+        color: #2d2d30;
+        line-height: 44px;
+    }
+
+/*业绩排名*/
+.pm_box {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+}
+
+.pm_text {
+    font-size: 18px;
+    color: #2d2d30;
+    line-height: 55px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.pm_box1 {
+    width: 100%;
+    float: left;
+    border-bottom: 1px solid #eee;
+}
+
+.pm_box2 {
+    width: 33.3%;
+    float: left;
+    font-size: 14px;
+    color: #2d2d30;
+    line-height: 44px;
+}
+
+/*员工信息*/
+.ygxx_box {
+    width: 100%;
+    float: left;
+    border-bottom: 1px solid #eee;
+}
+
+.ygxx {
+    width: 35%;
+    text-align: center;
+    line-height: 50px;
+    border-right: 1px solid #eee;
+    float: left;
+    box-sizing: border-box;
+    color: #2d2d30;
+    font-size: 15px;
+}
+
+.ygxx2 {
+    width: 65%;
+    line-height: 50px;
+    float: left;
+    box-sizing: border-box;
+    color: #666;
+    font-size: 15px;
+}
+
+    .ygxx2 span {
+        margin-left: 10%;
+    }
+
+    .ygxx2 a {
+        width: 45px;
+        height: 30px;
+        background-color: #bbb;
+        color: #fff;
+        font-size: 14px;
+        float: right;
+        border-radius: 4px;
+        text-align: center;
+        line-height: 30px;
+        margin-top: 10px;
+        margin-right: 5%;
+    }
+
+/*营业报表*/
+.yybb_box {
+    width: 100%;
+    float: left;
+    border-bottom: 1px solid #eee;
+}
+
+    .yybb_box div {
+        width: 50%;
+        float: left;
+        line-height: 44px;
+        border-right: 1px solid #eee;
+        font-size: 15px;
+        color: #2d2d30;
+        box-sizing: border-box;
+    }
+
+/*会员管理-会员名单*/
+.hymd {
+    float: right;
+    width: 60px;
+    text-align: center;
+    line-height: 28px;
+    margin-top: 8px;
+    height: 28px;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 4px;
+    background-color: #51b3f0;
+}
+
+/*报表分析*/
+.bbfx_box {
+    float: right;
+    text-align: center;
+    line-height: 33px;
+    width: 70px;
+    height: 33px;
+    background-color: #51b3f0;
+    color: #fff;
+    margin-right: 3%;
+    margin-top: 11px;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+.bbfx_img {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    margin-bottom: 20px;
+}
+
+/*会员详情*/
+.hyxq {
+    float: left;
+    width: 100%;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    color: #2d2d30;
+    line-height: 50px;
+}
+
+/*新员工扫描加入*/
+.saoma {
+    width: 100%;
+    float: left;
+    text-align: center;
+    font-size: 16px;
+    color: #2d2d30;
+}
+
+    .saoma img {
+        width: 60%;
+        border: 5px solid #000;
+        box-sizing: border-box;
+        margin-top: 35px;
+    }
+
+/*员工注册页面*/
+.zcdl_box {
+    width: 100%;
+    float: left;
+}
+
+.zcdl_box2 {
+    width: 100%;
+    text-align: center;
+    float: left;
+}
+
+.zcdl_img2 {
+    width: 80px;
+    margin-top: 40px;
+}
+
+.zcdl_box3 {
+    width: 90%;
+    margin-left: 5%;
+    float: left;
+    margin-top: 30px;
+    border-bottom: 1px solid #eee;
+    font-size: 15px;
+    color: #fff;
+    line-height: 55px;
+    box-sizing: border-box;
+}
+
+.zcdl_box4 {
+    padding-left: 10px;
+    height: 40px;
+    font-size: 15px;
+    color: #ddd;
+    background: none;
+    border: none;
+    width: 60%;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.zcdl_text {
+    width: 30%;
+    height: 33px;
+    line-height: 33px;
+    border-radius: 4px;
+    color: #51b3f0;
+    border: 1px solid #51b3f0;
+    text-align: center;
+    font-size: 14px;
+    float: right;
+    margin-top: 11px;
+}
+
+.zcdl_btn {
+    width: 90%;
+    margin-left: 5%;
+    float: left;
+    margin-top: 50px;
+    height: 44px;
+    border-radius: 5px;
+    background-color: #fdc816;
+    line-height: 44px;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+}
+
+/*快捷开单-输入车牌号*/
+.srcph {
+    width: 94%;
+    float: left;
+    line-height: 55px;
+    font-size: 15px;
+    color: #2d2d30;
+    margin-left: 3%;
+}
+
+.kjkd_select {
+    width: 11%;
+    margin-left: 2.875%;
+    float: left;
+    height: 40px;
+    font-size: 15px;
+    color: #2d2d30;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    text-align: center;
+    outline-style: none;
+    background-color: #fff;
+}
+
+.kjkd_text2 {
+    width: 94%;
+    margin-left: 3%;
+    text-align: center;
+    color: #999;
+    line-height: 44px;
+    font-size: 14px;
+}
+
+.zdsb {
+    width: 94%;
+    float: left;
+    margin-top: 30px;
+    border-radius: 10px;
+    border: 3px dashed #ddd;
+    text-align: center;
+    margin-left: 3%;
+    box-sizing: border-box;
+}
+
+    .zdsb img {
+        width: 30px;
+        margin-top: 40px;
+        margin-bottom: 15px;
+    }
+
+    .zdsb div {
+        width: 100%;
+        color: #999;
+        font-size: 15px;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+/*快捷开单-付款二维码*/
+.kjkd_box {
+    width: 100%;
+    text-align: center;
+    float: left;
+    margin-top: 30px;
+    font-size: 18px;
+    color: #2d2d30;
+}
+
+.kjkd_box2 {
+    width: 100%;
+    text-align: center;
+    float: left;
+    margin-top: 20px;
+}
+
+    .kjkd_box2 img {
+        width: 230px;
+        border: 5px solid #000;
+        box-sizing: border-box;
+    }
+
+.kjkd_text {
+    width: 100%;
+    color: #2d2d30;
+    float: left;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.kjtd {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    margin-top: 90px;
+    height: 44px;
+    border-radius: 22px;
+    background-color: #51b3f0;
+    text-align: center;
+    line-height: 44px;
+    color: #fff;
+    font-size: 15px;
+}
+
+/*快捷开单-现金收款*/
+.xjsk_box {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    margin-top: 30px;
+}
+
+.xjsk_text {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #2d2d30;
+}
+
+.xjsk_btn {
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    border-radius: 22px;
+    background-color: #51b3f0;
+    text-align: center;
+    color: #fff;
+    float: left;
+}
+
+/*会员卡核销*/
+.smewm {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    line-height: 55px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+}
+
+    .smewm a {
+        width: 110px;
+        height: 33px;
+        border-radius: 5px;
+        text-align: center;
+        float: right;
+        line-height: 33px;
+        color: #fff;
+        background-color: #ff0c4c;
+        font-size: 12px;
+        margin-top: 11px;
+    }
+
+.sousuo {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    margin-top: 15px;
+    background-color: #f5f5f5;
+    border-radius: 22px;
+    height: 44px;
+}
+
+    .sousuo input {
+        width: 86%;
+        border: none;
+        background: none;
+        height: 44px;
+        text-indent: 1em;
+        color: #999;
+        outline: none;
+        float: left;
+    }
+
+    .sousuo img {
+        width: 18px;
+        float: left;
+        margin-top: 13px;
+        margin-left: 3%;
+    }
+
+.zt_box {
+    font-size: 13px;
+    line-height: 44px;
+    float: left;
+    text-align: center;
+    color: #ccc;
+    width: 100%;
+}
+
+.hykhx {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #f1f1f1;
+    margin-top: 15px;
+    background-color: #fff;
+}
+
+.hykxz {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    border-bottom: 1px solid #eee;
+}
+
+.kdgk_btn {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    margin-top: 20px;
+    height: 44px;
+    text-align: center;
+    line-height: 44px;
+    color: #fff;
+    background-color: #51b3f0;
+    border-radius: 22px;
+}
+
+/*会员卡核销-店长特权*/
+.hykhx {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #f1f1f1;
+    margin-top: 15px;
+    background-color: #fff;
+}
+
+.hykhx_div {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+}
+
+.hykhx_div_span {
+    width: 100%;
+    float: left;
+    line-height: 50px;
+    font-size: 15px;
+    color: #2d2d30;
+    border-bottom: 1px solid #eee;
+}
+
+.hykhx_div_span2 {
+    width: 100%;
+    float: left;
+    margin-top: 15px;
+    font-size: 24px;
+    color: #ff0c4c;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.hykhx_div_span3 {
+    width: 100%;
+    float: left;
+    font-size: 14px;
+    color: #999;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.jg_box {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    line-height: 50px;
+    font-size: 15px;
+    color: #2d2d30;
+    border-bottom: 1px solid #eee;
+}
+
+/*会员卡核销-好友折扣*/
+.zghyk {
+    width: 33.3%;
+    float: left;
+    text-align: center;
+    line-height: 44px;
+    color: #ff0c4c;
+    font-size: 15px;
+}
+
+.xjzf {
+    width: 33.4%;
+    float: left;
+    text-align: center;
+    line-height: 44px;
+    color: #fff;
+    font-size: 15px;
+    background-color: #ff0c4c;
+}
+
+/*即将到期*/
+.bg_box {
+    width: 100%;
+    float: left;
+    line-height: 44px;
+    border-bottom: 1px solid #eee;
+}
+
+    .bg_box span {
+        width: 50%;
+        float: left;
+        border-right: 1px solid #eee;
+        text-align: center;
+        line-height: 44px;
+        color: #2d2d30;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+/*今日到店*/
+.fanye {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    height: 44px;
+    border-radius: 22px;
+    margin-top: 15px;
+}
+
+.fanye_a {
+    width: 50%;
+    float: left;
+    text-align: center;
+    line-height: 44px;
+    color: #51b3f0;
+    font-size: 15px;
+    height: 44px;
+    border-top-left-radius: 22px;
+    border-bottom-left-radius: 22px;
+    border-bottom: 1px solid #51b3f0;
+    border-top: 1px solid #51b3f0;
+    border-left: 1px solid #51b3f0;
+    box-sizing: border-box;
+}
+
+.fanye_a2 {
+    width: 50%;
+    float: left;
+    text-align: center;
+    line-height: 44px;
+    color: #fff;
+    background-color: #51b3f0;
+    font-size: 15px;
+    height: 44px;
+    border-top-right-radius: 22px;
+    border-bottom-right-radius: 22px;
+}
+
+/*今日订单*/
+.kcd {
+    width: 71%;
+    float: left;
+    margin-left: 3%;
+    height: 44px;
+    font-size: 14px;
+    color: #999;
+    border-radius: 10px;
+    line-height: 44px;
+    border: 1px solid #eee;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-indent: 1em;
+}
+
+/*快捷开单-开车单*/
+.kcd_box {
+    width: 94%;
+    float: left;
+    margin-top: 15px;
+    margin-left: 3%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #f1f1f1;
+    background-color: #fff;
+}
+
+.kcd_bg {
+    width: 100%;
+    float: left;
+    border-bottom: 1px solid #eee;
+    box-sizing: border-box;
+}
+
+.kcd_mc {
+    width: 30%;
+    border-right: 1px solid #eee;
+    line-height: 50px;
+    font-size: 15px;
+    color: #666;
+    text-align: center;
+    float: left;
+    box-sizing: border-box;
+}
+
+.kcd_cph {
+    width: 70%;
+    float: left;
+    text-indent: 1em;
+    font-size: 15px;
+    color: #2d2d30;
+    line-height: 50px;
+}
+
+.kcd_hyk {
+    width: 30%;
+    border-right: 1px solid #eee;
+    line-height: 152px;
+    font-size: 15px;
+    color: #666;
+    text-align: center;
+    float: left;
+    box-sizing: border-box;
+    border-right: 1px solid #eee;
+}
+
+.kcd_hykmc {
+    width: 70%;
+    float: left;
+    text-indent: 1em;
+    font-size: 15px;
+    color: #2d2d30;
+    line-height: 50px;
+    border-bottom: 1px solid #eee;
+    box-sizing: border-box;
+}
+
+    .kcd_hykmc span {
+        float: right;
+        margin-right: 10px;
+        line-height: 50px;
+        color: #ff0c4c;
+        box-sizing: border-box;
+    }
+
+.kcd_box img {
+    width: 90%;
+    float: left;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 5%;
+}
+
+.kcd_box2 {
+    width: 94%;
+    float: left;
+    margin-top: 15px;
+    margin-left: 3%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #f1f1f1;
+    background-color: #fff;
+    height: 60px;
+}
+
+.kcd_input {
+    width: 28%;
+    float: left;
+    margin-left: 4%;
+    height: 40px;
+    font-size: 14px;
+    color: #2d2d30;
+    outline-style: none;
+    margin-top: 10px;
+    background: none;
+    border-color: #eee;
+    border-radius: 5px;
+}
+
+.kcd_btn {
+    width: 28%;
+    float: left;
+    margin-left: 4%;
+    background-color: #51b3f0;
+    height: 40px;
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+    margin-top: 10px;
+    line-height: 40px;
+    border-radius: 5px;
+}
+
+.kcd_bt {
+    width: 94%;
+    margin-left: 3%;
+    line-height: 50px;
+    color: #2d2d30;
+    font-size: 15px;
+    float: left;
+}
+
+.kcd_btn2 {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    background-color: #51b3f0;
+    height: 50px;
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+    margin-top: 20px;
+    line-height: 50px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/*输入核销密码*/
+.hxmm {
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #2d2d30;
+}
+
+.hxmm_box {
+    width: 100%;
+    border: 1px solid #eee;
+    height: 44px;
+    float: left;
+    text-indent: 1em;
+    outline-style: none;
+    margin-bottom: 10px;
+    color: #ccc;
+}
+
+/*库存修改*/
+.kc_span {
+    width: 100%;
+    float: left;
+    border-bottom: 1px solid #eee;
+}
+
+    .kc_span span {
+        font-size: 15px;
+        color: #2d2d30;
+        line-height: 44px;
+        float: left;
+        width: 100%;
+    }
+
+.slide-box {
+    display: -webkit-box;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+    float: left;
+    width: 100%;
+}
+
+.kc_btn {
+    width: 70px;
+    line-height: 28px;
+    border: 1px solid #eee;
+    font-size: 12px;
+    color: #999;
+    height: 28px;
+    text-align: center;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    margin-right: 3%;
+}
+
+.slide-box2 {
+    overflow-y: scroll;
+    float: left;
+    width: 94%;
+    margin-left: 3%;
+    height: 200px;
+}
+
+.kc_box {
+    width: 100%;
+    line-height: 50px;
+    font-size: 15px;
+    color: #2d2d30;
+    border-top: 1px solid #eee;
+}
+
+/*快捷开单购卡*/
+.kdgk_box {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    font-size: 16px;
+    color: #2d2d30;
+    line-height: 50px;
+    border-bottom: 1px solid #eee;
+}
+
+.hykxz {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    border-bottom: 1px solid #eee;
+}
+
+.kdgk_btn {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    margin-top: 20px;
+    height: 44px;
+    text-align: center;
+    line-height: 44px;
+    color: #fff;
+    background-color: #51b3f0;
+    border-radius: 22px;
+}
+
+/*店员分销二维码*/
+.ggy {
+    width: 100%;
+    text-align: center;
+    float: left;
+    margin-top: 30px;
+    font-size: 15px;
+    color: #2d2d30;
+    border: none;
+    outline-style: none;
+}
+
+.erwm {
+    width: 100%;
+    text-align: center;
+    float: left;
+    margin-top: 20px;
+}
+
+    .erwm img {
+        width: 230px;
+        border: 5px solid #000;
+        box-sizing: border-box;
+        margin-bottom: 40px;
+    }
+
+.kjtd {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    margin-top: 90px;
+    height: 44px;
+    border-radius: 22px;
+    background-color: #51b3f0;
+    text-align: center;
+    line-height: 44px;
+    color: #fff;
+    font-size: 15px;
+}
+
+/*付款方式*/
+.anniu {
+    width: 94%;
+    margin-left: 3%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #f1f1f1;
+    float: left;
+    margin-top: 15px;
+    background-color: #51b3f0;
+    color: #fff;
+    line-height: 50px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/*库存管理*/
+.kcgl_input {
+    width: 49%;
+    float: left;
+    margin-left: 3%;
+    height: 40px;
+    font-size: 13px;
+    color: #2d2d30;
+    outline-style: none;
+    margin-top: 10px;
+    border-color: #eee;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    box-sizing: border-box;
+    text-indent: 1em;
+}
+
+.kcgl_btn {
+    width: 13%;
+    float: left;
+    margin-left: 3%;
+    background-color: #51b3f0;
+    height: 40px;
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.kcgl_box {
+    width: 100%;
+    float: left;
+    border-bottom: 1px solid #eee;
+}
+
+.kcgl {
+    width: 35%;
+    text-align: center;
+    line-height: 50px;
+    border-right: 1px solid #eee;
+    float: left;
+    box-sizing: border-box;
+    color: #2d2d30;
+    font-size: 15px;
+}
+
+.kcgl2 {
+    width: 65%;
+    line-height: 50px;
+    float: left;
+    box-sizing: border-box;
+    color: #666;
+    font-size: 15px;
+}
+
+    .kcgl2 span {
+        margin-left: 10%;
+    }
+
+    .kcgl2 a {
+        width: 45px;
+        height: 30px;
+        background-color: #ccc;
+        color: #fff;
+        font-size: 12px;
+        float: right;
+        border-radius: 4px;
+        text-align: center;
+        line-height: 30px;
+        margin-top: 10px;
+        margin-right: 4%;
+    }
+
+.kcgl_box2 {
+    width: 100%;
+    float: left;
+    margin-top: 25px;
+}
+
+/*新增库存管理*/
+.xzkc {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    line-height: 55px;
+    font-size: 14px;
+    color: #2d2d30;
+}
+
+.xzkc_input {
+    width: 60%;
+    float: left;
+    margin-top: 4px;
+    height: 44px;
+    border: none;
+    text-indent: 1em;
+    font-size: 13px;
+    color: #999;
+    outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.xzkc_select {
+    width: 60%;
+    float: left;
+    margin-top: 7px;
+    height: 41px;
+    border-radius: 5px;
+    outline-style: none;
+    border-color: #eee;
+    font-size: 14px;
+    color: #2d2d30;
+    margin-left: 3%;
+}
+
+.xzkc_xian {
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid #eee;
+    float: left;
+    height: 1px;
+}
+
+.xz_span {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+}
+
+    .xz_span span {
+        font-size: 15px;
+        color: #2d2d30;
+        line-height: 50px;
+        float: left;
+        width: 100%;
+    }
+
+.xz_btn {
+    width: 31%;
+    line-height: 70px;
+    border: 1px solid #eee;
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    margin-right: 3%;
+    display: block;
+}
+
+.xz_btn2 {
+    width: 94%;
+    float: left;
+    margin-left: 3%;
+    margin-bottom: 25px;
+    margin-top: 15px;
+    border-radius: 5px;
+    background-color: #51b3f0;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    margin-bottom: 25px;
+}
+
+/*商品出库记录*/
+.spck {
+    width: 94%;
+    margin-left: 3%;
+    float: left;
+    margin-top: 15px;
+    background-color: #f5f5f5;
+    border-radius: 22px;
+    height: 44px;
+}
+
+    .spck input {
+        width: 86%;
+        border: none;
+        background: none;
+        height: 44px;
+        text-indent: 1em;
+        color: #ddd;
+        outline: none;
+        float: left;
+    }
+
+    .spck img {
+        width: 18px;
+        float: left;
+        margin-top: 13px;
+        margin-left: 3%;
+    }
+
+.spck_bg {
+    float: left;
+    margin-left: 3%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-collapse: collapse;
+    border: 1px solid #eee;
+}
+
+.spck_bg2 {
+    width: 35%;
+    height: 40px;
+    background-color: #f5f5f5;
+    font-size: 13px;
+    color: #666;
+}
+
+.spck_bg3 {
+    width: 65%;
+    height: 40px;
+    font-size: 14px;
+    color: #2d2d30;
+    text-indent: 2em;
+}

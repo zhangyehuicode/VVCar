@@ -1,0 +1,133 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="openorder">
+    <div class="toubu">
+        <a href="#"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        店长工作终端
+        <a href="#"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="kcd_box">
+        <div class="kcd_bg">
+            <div class="kcd_mc">车牌号</div>
+            <div class="kcd_cph">闽AB1234</div>
+        </div>
+        <div class="kcd_bg">
+            <div class="kcd_hyk">会员卡</div>
+            <div class="kcd_hykmc">会员卡名<span>￥100</span></div>
+            <div class="kcd_hykmc">会员卡名<span>￥100</span></div>
+            <div class="kcd_hykmc" style="border-bottom:none;">会员卡名<span>￥100</span></div>
+        </div>
+        <img src="~/Areas/resource/img/mobile/master/u35.png">
+    </div>
+    <div class="kcd_box2">
+        <form action="#" method="get">
+            <select name="" class="kcd_input">
+                <option value="0">部位</option>
+
+            </select>
+            <select name="" class="kcd_input">
+                <option value="0">服务</option>
+
+            </select>
+        </form>
+        <div class="kcd_btn">增加</div>
+    </div>
+    <div class="kcd_box">
+        <div class="kcd_bt">实时体现历史数据信息</div>
+        <table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
+            <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
+                <th scope="col" width="25%">项目</th>
+                <th scope="col" width="25%">挖掘空间</th>
+                <th scope="col" width="25%">历史数据</th>
+                <th scope="col" width="25%">操作</th>
+            </tr>
+            <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; ">
+                <td>清洁</td>
+                <td>-</td>
+                <td>无</td>
+                <td>-</td>
+            </tr>
+            <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; ">
+                <td>后档</td>
+                <td>-</td>
+                <td>无</td>
+                <td>-</td>
+            </tr>
+            <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; ">
+                <td>前档</td>
+                <td>-</td>
+                <td>170101贴膜</td>
+                <td>-</td>
+            </tr>
+        </table>
+    </div>
+    <div class="kcd_btn2">确认开单</div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#openorder',
+            data: {
+                Data: {},
+            },
+            methods: {
+                openorder: function (event) {
+                    window.location.href = "/Mobile/Merchant/ConfirmOrder?mch=" + mch;
+                },
+            }
+        });
+    </script>
+}
+
