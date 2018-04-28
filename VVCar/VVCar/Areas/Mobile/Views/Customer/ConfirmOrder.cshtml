@@ -122,6 +122,7 @@
                         url: '/Mobile/Customer/GenerateOutTradeNo',
                         type: 'GET',
                         success: function (res) {
+                            //window.location.href = "http://www.cheyinz.cn:8025/Default.aspx";
                             window.location.href = "http://www.cheyinz.cn:8025/pay/JsApiPayPage.aspx?openid=@ViewBag.OpenId&total_fee=1&out_trade_no="+res+"&mch=" + mch + "&device_info=ZB001&body=汽车空气净化器&notify_url=http://www.cheyinz.cn/Mobile/Customer/PayResult";
                         },
                         error: function () {

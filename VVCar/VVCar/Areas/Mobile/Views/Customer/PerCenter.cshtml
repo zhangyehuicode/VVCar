@@ -25,8 +25,8 @@
             精品商城
         </div>
         <div>
-            <a href="#"><img src="~/Areas/resource/img/mobile/my.png"></a><br>
-            个人中心
+            <a><img src="~/Areas/resource/img/mobile/gwc2.png" v-on:click="shoppingcart"></a><br>
+            购物车
         </div>
     </div>
     <div class="user_box">
@@ -42,21 +42,21 @@
                 <img src="~/Areas/resource/img/mobile/cph.png" style="width:100%;">
             </div>
             <span style="font-size:15px; color:#2d2d30;">我的车牌号</span><br>
-            <span style="font-size:13px; color:#999;">闽AB1234</span><br><br>
+            <span style="font-size:13px; color:#999;">{{MyInfo.Plate}}</span><br><br>
         </a>
         <a href="#" class="user2">
             <div class="user3">
                 <img src="~/Areas/resource/img/mobile/hyk.png" style="width:100%;">
             </div>
             <span style="font-size:15px; color:#2d2d30;">我的会员卡</span><br>
-            <span style="font-size:13px; color:#999;">5张</span><br><br>
+            <span style="font-size:13px; color:#999;">{{MyInfo.CardCount}}张</span><br><br>
         </a>
         <a href="#" class="user2" style="width:33.4%; border-right:none;">
             <div class="user3">
                 <img src="~/Areas/resource/img/mobile/jf.png" style="width:100%;">
             </div>
             <span style="font-size:15px; color:#2d2d30;">我的积分</span><br>
-            <span style="font-size:13px; color:#999;">1000分</span><br><br>
+            <span style="font-size:13px; color:#999;">{{MyInfo.Points}}分</span><br><br>
         </a>
         <a href="#" class="user2">
             <div class="user3">
@@ -72,7 +72,7 @@
             <span style="font-size:15px; color:#2d2d30;">会员服务</span><br>
             <span style="font-size:13px; color:#999;">道路救援等</span><br><br>
         </a>
-        <a href="#" class="user2" style="width:33.4%; border-right:none;">
+        <a class="user2" style="width:33.4%; border-right:none;" v-on:click="callservicetel">
             <div class="user3">
                 <img src="~/Areas/resource/img/mobile/kf.png" style="width:100%;">
             </div>
@@ -82,7 +82,7 @@
     </div>
     <ul>
         <li>
-            <img src="~/Areas/resource/img/mobile/banner.jpg" class="banner">
+            <img src="~/Areas/resource/img/mobile/defaultimg3.png" class="banner bannerbg">
         </li>
     </ul>
     <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
@@ -92,6 +92,10 @@
     <style type="text/css">
         .headerimg {
             border-radius: 80px;
+        }
+
+        .bannerbg {
+            background: #101010;
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
@@ -142,10 +146,14 @@
     </script>
     <script type="text/javascript">
         var mch = $.getUrlParam('mch');
-        _payBillViewModel = new Vue({
+        _viewModel = new Vue({
             el: '#pcenter',
             data: {
-                ProductList: [],
+                MyInfo: {
+                    Plate: '',
+                    CardCount: 0,
+                    Points: 0,
+                }
             },
             methods: {
                 home: function (event) {
@@ -157,6 +165,9 @@
                 membercard: function (event) {
                     window.location.href = "/Mobile/Customer/MemberCard?mch=" + mch;
                 },
+                shoppingcart: function (event) {
+                    window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
+                },
                 scanQRCode: function (event) {
                     wx.scanQRCode({
                         needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
@@ -166,8 +177,41 @@
                         }
                     });
                 },
+                callservicetel: function (event) {
+                    window.location.href = "tel:0592-1234567";
+                },
             }
         });
+
+        function init() {
+            $.ajax({
+                url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                type: 'GET',
+                headers: { 'CompanyCode':mch },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            _viewModel.MyInfo.Plate = res.Data.Plate;
+                            _viewModel.MyInfo.CardCount = res.Data.CardCount;
+                            _viewModel.MyInfo.Points = res.Data.MemberPoint;
+                        }
+                        else
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+        init();
+
     </script>
 }
 

@@ -91,6 +91,11 @@ namespace VVCar.VIP.Services.DomainServices
             get { return UnitOfWork.GetRepository<IRepository<Member>>(); }
         }
 
+        IRepository<Merchant> MerchantRepo
+        {
+            get => UnitOfWork.GetRepository<IRepository<Merchant>>();
+        }
+
         #region SystemSettingService
 
         ISystemSettingService SystemSettingService
@@ -187,7 +192,7 @@ namespace VVCar.VIP.Services.DomainServices
                 }
                 if (!IsCouponOwner(originalcoupon.ID, receiveCouponDto.GivenOpenID))
                 {
-                    throw new DomainException("优惠券已经被别人领走啦！");
+                    throw new DomainException("赠送的优惠券已经被领取啦！");
                 }
                 var receiverCoupons = Repository.GetQueryable(false).Where(t => t.OwnerOpenID == receiveCouponDto.ReceiveOpenID && t.TemplateID == originalcoupon.TemplateID).ToArray();
                 var coupontemplate = CouponTemplateRepo.GetInclude(t => t.Stock, false).Where(t => t.ID == originalcoupon.TemplateID).FirstOrDefault();
@@ -465,12 +470,13 @@ namespace VVCar.VIP.Services.DomainServices
                 .OrderBy(t => t.ExpiredDate)
                 .MapTo<CouponBaseInfoDto>()
                 .ToList();
-            var member = MemberRepo.GetQueryable(false).Where(t => t.WeChatOpenID == userOpenID).FirstOrDefault();
+            var member = MemberRepo.GetInclude(t => t.Card, false).Where(t => t.WeChatOpenID == userOpenID).FirstOrDefault();
             if (member != null)
             {
                 coupons.ForEach(t =>
                 {
                     t.MemberPoint = member.Point;
+                    t.TotalConsume = member.Card.TotalConsume;
                 });
             }
             return coupons;
@@ -638,7 +644,7 @@ namespace VVCar.VIP.Services.DomainServices
                 throw new DomainException("优惠券不存在");
             }
             var defaultDeptId = Guid.Parse("00000000-0000-0000-0000-000000000001");
-            var deptQueryable = DepartmentRepo.GetQueryable(false).Where(d => d.ID != defaultDeptId);
+            var deptQueryable = DepartmentRepo.GetQueryable(false);//.Where(d => d.ID != defaultDeptId);
             if (!couponTemplate.IsApplyAllStore && !string.IsNullOrEmpty(couponTemplate.ApplyStores))
             {
                 var deptCodes = couponTemplate.ApplyStores.Split(',');
@@ -832,7 +838,8 @@ namespace VVCar.VIP.Services.DomainServices
                     t.OwnerOpenID,
                     t.CouponCode,
                     t.ExpiredDate,
-                    CouponTitle = t.Template.Title
+                    CouponTitle = t.Template.Title,
+                    t.Template.MerchantID,
                 }).ToList();
             if (couponlist == null || couponlist.Count < 1)
                 return;
@@ -841,20 +848,26 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 if (string.IsNullOrEmpty(coupon.OwnerOpenID))
                     continue;
+                var merchant = MerchantRepo.GetByKey(coupon.MerchantID, false);
+                if (merchant == null)
+                {
+                    AppContext.Logger.Error($"商户ID为:{coupon.MerchantID}的商户不存在");
+                    continue;
+                }
                 var message = new WeChatTemplateMessageDto
                 {
                     touser = coupon.OwnerOpenID,
                     template_id = templateId,
-                    url = $"{AppContext.Settings.SiteDomain}/Coupon/MyCoupon?mch={AppContext.CurrentSession.CompanyCode}",
+                    url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={merchant.Code}",//{AppContext.CurrentSession.CompanyCode}
                     data = new System.Dynamic.ExpandoObject(),
                 };
-                message.data.first = new WeChatTemplateMessageDto.MessageData(string.Format("您有一张优惠券{0}即将过期，赶紧去使用吧。", coupon.CouponTitle));
-                message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(coupon.CouponCode);
-                message.data.keyword2 = "系统发送（请勿回复）";
-                message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(coupon.ExpiredDate.ToDateTimeString());
-                message.data.keyword4 = "到店消费出示优惠券即可";
-                message.data.remark = new WeChatTemplateMessageDto.MessageData("到公众号我的券包查看优惠券");
-                WeChatService.SendWeChatNotifyAsync(message);
+                message.data.first = new WeChatTemplateMessageDto.MessageData(string.Format("您有一张卡券{0}即将过期，赶紧去使用吧。", ""));//, coupon.CouponTitle
+                message.data.keyword1 = new WeChatTemplateMessageDto.MessageData("0");
+                message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(coupon.CouponTitle);//"系统发送（请勿回复）";
+                message.data.keyword3 = new WeChatTemplateMessageDto.MessageData("1");
+                //message.data.keyword4 = "到店消费出示优惠券即可";
+                message.data.remark = new WeChatTemplateMessageDto.MessageData($"过期时间：{coupon.ExpiredDate.ToDateTimeString()}");
+                WeChatService.SendWeChatNotifyAsync(message, merchant.Code);
             }
         }
 

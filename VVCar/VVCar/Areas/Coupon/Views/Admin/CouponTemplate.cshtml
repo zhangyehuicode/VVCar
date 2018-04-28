@@ -8,19 +8,19 @@
     <div class="col-md-2">
         <select class="form-control" id="coupontemplatepagecoupontype">
             <option value="-1" selected="selected">全部类型</option>
-            <option value="1">抵用券</option>
-            <option value="0">代金券</option>
-            <option value="2">兑换券</option>
-            <option value="3">折扣券</option>
+            <option value="1">抵用</option>
+            <option value="0">代金</option>
+            <option value="2">兑换</option>
+            <option value="3">折扣</option>
         </select>
     </div>
     <div class="col-md-2">
         <select class="form-control" id="coupontemplatepageapprovsetatus">
             <option value="-2" selected="selected">全部状态</option>
-            <option value="0">未审核</option>
-            <option value="1">已审核待投放</option>
-            <option value="2">已审核已投放</option>
-            <option value="-1">已拒绝</option>
+            @*<option value="0">未审核</option>*@
+            <option value="1">待投放</option>
+            <option value="2">已投放</option>
+            @*<option value="-1">已拒绝</option>*@
         </select>
     </div>
     <div class="col-md-2">
@@ -46,7 +46,8 @@
     <div class="col-md-12">
         <table style="width:100%;text-align:center;margin:0px 0px 10px 0px;" id="coupontemplatelist">
             <tr>
-                <td class="cell_title">类型</td>
+                <td class="cell_title">卡券类型</td>
+                <td class="cell_title">优惠类型</td>
                 <td class="cell_title">编号</td>
                 <td class="cell_title">创建时间</td>
                 <td class="cell_title">投放时间</td>
@@ -62,6 +63,7 @@
             </tr>
             <!--ko foreach:CouponTemplateList()-->
             <tr>
+                <td class="cell_content"><span data-bind="text:Nature==0?'优惠券':'会员卡'"></span></td>
                 <td class="cell_content"><span data-bind="text:CouponTypeName"></span></td>
                 <td class="cell_content"><span data-bind="text:TemplateCode"></span> </td>
                 <td class="cell_content"><span data-bind="text:CreatedDate"></span> </td>
@@ -74,7 +76,8 @@
                 <td class="cell_content"><span data-bind="text:CanGiveToPeople?'赠送':(CanShareByPeople?'分享':'无')"></span></td>
                 <td class="cell_content"><span data-bind="text:FreeStock"></span><span class="glyphicon glyphicon-pencil" style="cursor:pointer;padding-left:20px;" data-bind="click:$root.ModifyStock"></span></td>
                 <td class="cell_content"><span data-bind="text:(Remark!=null&&Remark.length>20)?Remark.substring(0,19)+'...':Remark"></span></td>
-                <td class="cell_content"><a style="cursor:pointer;padding-right:3px;" data-bind="attr:{id:ID},click:$root.CouponDelivery,text:AproveStatus==2?'查看二维码':'投放'"></a><a style="padding-left:3px;cursor:pointer;" data-bind="click:$root.coupondetails">详情</a><a style="cursor:pointer;padding-left:5px;" data-bind="click:$root.CouponTempReport">报表</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.CouponModify,visible:AproveStatus!=2">修改</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.CouponDelete,visible:AproveStatus!=2">删除</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.ReceivedRecord,visible:AproveStatus==2">领取记录</a></td>
+                <td class="cell_content"><a style="cursor:pointer;padding-right:3px;" data-bind="attr:{id:ID},click:$root.CouponDelivery,text:AproveStatus==2?'查看二维码':'投放'"></a><a style="padding-left:3px;cursor:pointer;" data-bind="click:$root.coupondetails">详情</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.CouponModify,visible:AproveStatus!=2">修改</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.CouponDelete,visible:AproveStatus!=2">删除</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.ReceivedRecord,visible:AproveStatus==2">领取记录</a></td>
+                @*<a style="cursor:pointer;padding-left:5px;" data-bind="click:$root.CouponTempReport">报表</a>*@
             </tr>
             <!--/ko-->
         </table>
@@ -227,7 +230,7 @@
                 if (data.AproveStatus == 2) {
                     bootbox.dialog({
                         title: '提示',
-                        message: '优惠券已投放,不能删除',
+                        message: '已投放,不能删除',
                         size: 'small',
                         buttons: {
                             Ok: {
@@ -463,7 +466,7 @@
                                                                         }
                                                                     });
                                                                 } else {
-                                                                    $.alert('特殊券自动领取失败，' + res.ErrorMessage);
+                                                                    $.alert('特殊卡券自动领取失败，' + res.ErrorMessage);
                                                                 }
                                                             }
                                                         });
@@ -473,7 +476,7 @@
                                                             headers: { 'Authorization': userToken },
                                                             type: 'GET',
                                                             success: function (res) {
-                                                                url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.DepartmentCode + "&ctid=" + data.ID;
+                                                                url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
                                                                 me.GenerateQRCode(url);
                                                             }
                                                         });
@@ -484,7 +487,7 @@
                                                     //    headers: { 'Authorization': userToken },
                                                     //    type: 'GET',
                                                     //    success: function (res) {
-                                                    //        url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.DepartmentCode + "&ctid=" + data.ID;
+                                                    //        url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
                                                     //$.ajax({
                                                     //    url: '/api/CouponTemplate/GenerateQRCode?url=' + encodeURIComponent(url),
                                                     //    headers: { 'Authorization': userToken },
@@ -546,7 +549,7 @@
                             type: 'GET',
                             success: function (res) {
                                 //var url = res.Data.SiteDomain + '/Coupon/CouponInfo/' + data.ID;
-                                url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.DepartmentCode + "&ctid=" + data.ID;
+                                url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
                                 me.GenerateQRCode(url);
                             }
                         });
@@ -557,7 +560,7 @@
                     //    type: 'GET',
                     //    success: function (res) {
                     //        //var url = res.Data.SiteDomain + '/Coupon/CouponInfo/' + data.ID;
-                    //        var url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.DepartmentCode + "&ctid=" + data.ID;
+                    //        var url = res.Data.SiteDomain + '/Coupon/CouponInfo?mch=' + res.Data.CompanyCode + "&ctid=" + data.ID;
                     //$.ajax({
                     //    url: '/api/CouponTemplate/GenerateQRCode?url=' + encodeURIComponent(url),
                     //    headers: { 'Authorization': userToken },
@@ -597,31 +600,30 @@
                 window.parent.navigateLink("/CouponAdmin/CouponDetails", data.Title + "详情");
             }
             this.CouponModify = function (data) {
-                $.ajax({
-                    url: '/api/PointExchangeCoupon/ExistRecordByCouponTemplateId/' + data.ID,
-                    headers: { 'Authorization': userToken },
-                    type: 'GET',
-                    data: window._rootModel.coupontemplatedata(),
-                    beforeSend: function () {
-                        $.showLoading();
-                    },
-                    success: function (res) {
-                        $.hideLoading();
-                        if (res.IsSuccessful) {
-                            if (!res.Data) {
-                                sessionStorage.setItem('coupontemplate', JSON.stringify(data));
-                                window.parent.navigateLink("/CouponAdmin?isfrommodify=true", "修改" + data.Title);
-                            } else {
-                                $.alert("该优惠券模板已在领券中心配置,不可编辑");
-                            }
+                //$.ajax({
+                //    url: '/api/PointExchangeCoupon/ExistRecordByCouponTemplateId/' + data.ID,
+                //    headers: { 'Authorization': userToken },
+                //    type: 'GET',
+                //    data: window._rootModel.coupontemplatedata(),
+                //    beforeSend: function () {
+                //        $.showLoading();
+                //    },
+                //    success: function (res) {
+                //        $.hideLoading();
+                //        if (res.IsSuccessful) {
+                //            if (!res.Data) {
+                sessionStorage.setItem('coupontemplate', JSON.stringify(data));
+                window.parent.navigateLink("/CouponAdmin?isfrommodify=true", "修改" + data.Title);
+                //            } else {
+                //                $.alert("该优惠卡券模板已在领取中心配置,不可编辑");
+                //            }
 
-                        }
-                    },
-                    error: function () {
-                        $.hideLoading();
-                    }
-                });
-
+                //        }
+                //    },
+                //    error: function () {
+                //        $.hideLoading();
+                //    }
+                //});
             }
             //this.refresh = function () {
             //    $.ajax({

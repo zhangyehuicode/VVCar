@@ -31,11 +31,11 @@ namespace VVCar.Shop.Domain.Entities
         [Display(Name = "排序")]
         public int Index { get; set; }
 
-        ///// <summary>
-        ///// 编码
-        ///// </summary>
-        //[Display(Name = "编码")]
-        //public string Code { get; set; }
+        /// <summary>
+        /// 编码
+        /// </summary>
+        [Display(Name = "编码")]
+        public string Code { get; set; }
 
         /// <summary>
         /// 名称
@@ -46,8 +46,8 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 产品类型
         /// </summary>
-        //[Display(Name = "产品类型")]
-        //public EProductType ProductType { get; set; }
+        [Display(Name = "产品类型")]
+        public EProductType ProductType { get; set; }
 
         /// <summary>
         /// 图片
@@ -108,6 +108,18 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "失效时间")]
         public DateTime? ExpiredDate { get; set; }
+
+        /// <summary>
+        /// 产品介绍
+        /// </summary>
+        [Display(Name = "产品介绍")]
+        public string Introduction { get; set; }
+
+        /// <summary>
+        /// 配送说明
+        /// </summary>
+        [Display(Name = "配送说明")]
+        public string DeliveryNotes { get; set; }
 
         /// <summary>
         /// 创建人ID

@@ -57,7 +57,7 @@ namespace VVCar.Controllers.VIP
         /// </summary>
         /// <param name="registerDto">The register dto.</param>
         /// <returns></returns>
-        [HttpPost, Route("Register")]
+        [HttpPost, Route("Register"), AllowAnonymous]
         public JsonActionResult<string> Register(MemberRegisterDto registerDto)
         {
             return SafeExecute(() =>
@@ -119,6 +119,20 @@ namespace VVCar.Controllers.VIP
                 var pagedData = this.MemberService.Search(filter);
                 result.Data = pagedData.Items;
                 result.TotalCount = pagedData.TotalCount;
+            });
+        }
+
+        /// <summary>
+        /// 根据微信OpenID获取会员信息
+        /// </summary>
+        /// <param name="openID"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetMemberInfoByWeChat"), AllowAnonymous]
+        public JsonActionResult<MemberCardDto> GetMemberInfoByWeChat(string openID)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.GetMemberInfoByWeChat(openID);
             });
         }
 
@@ -329,18 +343,18 @@ namespace VVCar.Controllers.VIP
         //    return SafeExecute(() => MemberService.ChangeMemberGroup(changeDto));
         //}
 
-        ///// <summary>
-        ///// 会员积分调整
-        ///// </summary>
-        ///// <param name="filter"></param>
-        ///// <returns></returns>
-        //[HttpGet, Route("AdjustMemberPoint")]
-        //public JsonActionResult<bool> AdjustMemberPoint([FromUri]AdjustMemberPointFilter filter)
-        //{
-        //    return SafeExecute(() =>
-        //    {
-        //        return MemberService.AdjustMemberPoint(filter.MemberID, filter.PointType, filter.AdjustPoints);
-        //    });
-        //}
+        /// <summary>
+        /// 会员积分调整
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("AdjustMemberPoint")]
+        public JsonActionResult<bool> AdjustMemberPoint([FromUri]AdjustMemberPointFilter filter)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.AdjustMemberPoint(filter.MemberID, filter.PointType, filter.AdjustPoints);
+            });
+        }
     }
 }

@@ -276,9 +276,9 @@ namespace VVCar.BaseData.Services.DomainServices
 
         public IList<DepartmentLiteDto> GetDepartmentLiteData()
         {
-            var defaultDeptId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+            //var defaultDeptId = Guid.Parse("00000000-0000-0000-0000-000000000001");
             return Repository.GetQueryable(false)
-                .Where(d => d.ID != defaultDeptId)
+                //.Where(d => d.ID != defaultDeptId)
                 .MapTo<DepartmentLiteDto>()
                 .ToArray();
         }

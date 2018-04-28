@@ -17,12 +17,12 @@ namespace VVCar.VIP.Domain.Services
         /// 发送微信通知
         /// </summary>
         /// <param name="message"></param>
-        void SendWeChatNotify(WeChatTemplateMessageDto message);
+        void SendWeChatNotify(WeChatTemplateMessageDto message, string companyCode = "");
 
         /// <summary>
         /// 异步发送微信通知
         /// </summary>
         /// <param name="message"></param>
-        void SendWeChatNotifyAsync(WeChatTemplateMessageDto message);
+        void SendWeChatNotifyAsync(WeChatTemplateMessageDto message, string companyCode = "");
     }
 }

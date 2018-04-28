@@ -7,12 +7,12 @@
 <div class="title">
     <table>
         <tr>
-            <td class="cell-title">优惠券状态</td>
+            <td class="cell-title">卡券状态</td>
             <td class="cell-content" data-bind="text:CouponTemp().AproveStatusText"></td>
             <td><button class="form-control" style="width:80px;" data-bind="click:modifycoupontemplate">修改</button></td>
         </tr>
         <tr>
-            <td class="cell-title">优惠券ID</td>
+            <td class="cell-title">卡券ID</td>
             <td class="cell-content" data-bind="text:CouponTemp().TemplateCode"></td>
         </tr>
     </table>
@@ -37,7 +37,7 @@
                 <h5 class="coupon-padding coupon-coverintrocolor" data-bind="text:CouponTemp().CoverIntro"></h5>
                 <h5 class="coupon-fontcolor coupon-padding">使用须知：</h5><h5 class="coupon-coverintrocolor coupon-introcontent" data-bind="text:CouponTemp().UseInstructions"></h5>
                 <h5 class="coupon-fontcolor coupon-padding">电话：<a class="coupon-phonecolor" data-bind="text:CouponTemp().MerchantPhoneNo"></a></h5>
-                <h5 class="coupon-fontcolor coupon-padding">服务：<span class="coupon-coverintrocolor" data-bind="text:CouponTemp().MerchantServiceDesc"></span></h5>
+                <h5 class="coupon-fontcolor coupon-padding" style="display:none;">服务：<span class="coupon-coverintrocolor" data-bind="text:CouponTemp().MerchantServiceDesc"></span></h5>
             </div>
         </div>
     </div>
@@ -48,6 +48,10 @@
             </tr>
             <tr>
                 <td class="details-content">卡券类型</td>
+                <td class="content" data-bind="text:CouponTemp().Nature==0?'优惠券':'会员卡'"></td>
+            </tr>
+            <tr>
+                <td class="details-content">优惠类型</td>
                 <td class="content" data-bind="text:CouponTemp().CouponTypeName"></td>
             </tr>
             <tr>
@@ -63,7 +67,7 @@
                 <td class="content" data-bind="text:CouponTemp().IsDeductionFirst?'先抵扣再折扣':'先折扣再抵扣'"></td>
             </tr>
             <tr>
-                <td class="details-content">卡券颜色</td>
+                <td class="details-content">卡券边框颜色</td>
                 <td class="content"><div class="couponcolor" data-bind="style:{backgroundColor: CouponTemp().Color}"></div></td>
             </tr>
             <tr>
@@ -134,10 +138,6 @@
                 <td class="content" data-bind="text:CouponTemp().MerchantPhoneNo"></td>
             </tr>
             <tr>
-                <td class="details-content">商户服务</td>
-                <td class="content" data-bind="text:CouponTemp().MerchantServiceDesc"></td>
-            </tr>
-            <tr>
                 <td class="details-title">详情</td>
             </tr>
             <tr>
@@ -180,9 +180,9 @@
             </tr>
             <tr>
                 <td class="details-content">分享与赠送</td>
-                <td class="content" data-bind="text:CouponTemp().CanShareByPeople?'用户可分享领券链接':CouponTemp().CanGiveToPeople?'用户可以赠送优惠券':'既不分享也不赠送'"></td>
+                <td class="content" data-bind="text:CouponTemp().CanShareByPeople?'用户可分享领取链接':CouponTemp().CanGiveToPeople?'用户可以赠送卡券':'既不分享也不赠送'"></td>
             </tr>
-            <tr>
+            <tr style="display:none;">
                 <td class="details-content">销券方式</td>
                 <td class="content" data-bind="text:CouponTemp().IsSpecialCoupon?'特殊代销券':CouponTemp().VerificationModeDesc"></td>
             </tr>
@@ -359,25 +359,25 @@
             this.CouponTemp = ko.observable({ ApplyStoresNameTemp: ko.observableArray([]) });
             var coupontemplate = JSON.parse(sessionStorage.getItem('couponTemp'));
             me.modifycoupontemplate = function () {
-                $.ajax({
-                    url: '/api/PointExchangeCoupon/ExistRecordByCouponTemplateId/' + coupontemplate.ID,
-                    headers: { 'Authorization': userToken },
-                    type: 'GET',
-                    //data: window._rootModel.coupontemplatedata(),
-                    success: function (res) {
-                        if (res.IsSuccessful) {
-                            if (!res.Data) {
-                                sessionStorage.setItem('coupontemplate', JSON.stringify(coupontemplate));
-                                window.parent.navigateLink("/CouponAdmin?isfrommodify=true", "修改" + coupontemplate.Title);
-                            } else {
-                                $.alert("该优惠券模板已在领券中心配置,不可编辑");
-                            }
+                //$.ajax({
+                //    url: '/api/PointExchangeCoupon/ExistRecordByCouponTemplateId/' + coupontemplate.ID,
+                //    headers: { 'Authorization': userToken },
+                //    type: 'GET',
+                //    //data: window._rootModel.coupontemplatedata(),
+                //    success: function (res) {
+                //        if (res.IsSuccessful) {
+                //            if (!res.Data) {
+                sessionStorage.setItem('coupontemplate', JSON.stringify(coupontemplate));
+                window.parent.navigateLink("/CouponAdmin?isfrommodify=true", "修改" + coupontemplate.Title);
+                //            } else {
+                //                $.alert("该卡券模板已在领取中心配置,不可编辑");
+                //            }
 
-                        }
-                    },
-                    error: function () {
-                    }
-                });
+                //        }
+                //    },
+                //    error: function () {
+                //    }
+                //});
             }
         }
     </script>

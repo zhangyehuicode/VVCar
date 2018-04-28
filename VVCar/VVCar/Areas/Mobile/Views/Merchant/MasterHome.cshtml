@@ -24,7 +24,7 @@
             <span>快捷开单</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">非会员卡用户</span>
         </a>
-        <a href="#" class="bq_box" style="width:33.4%">
+        <a class="bq_box" style="width:33.4%" v-on:click="order">
             <div><img src="~/Areas/resource/img/mobile/master/hykhx.png" style="width:25px;"></div>
             <span>今日订单</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">今日已核10笔</span>
@@ -134,6 +134,7 @@
         wxConfig();
     </script>
     <script type="text/javascript">
+        sessionStorage.setItem('ismaster', 'true');
         var mch = $.getUrlParam('mch');
         _payBillViewModel = new Vue({
             el: '#masterhome',
@@ -146,6 +147,9 @@
                 },
                 quickorder: function (event) {
                     window.location.href = "/Mobile/Merchant/QuickOrder?mch=" + mch;
+                },
+                order: function (event) {
+                    window.location.href = "/Mobile/Merchant/Order?mch=" + mch;
                 },
             }
         });

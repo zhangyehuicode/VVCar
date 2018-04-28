@@ -8,10 +8,10 @@
     <div class="col-md-2" style="width:150px;">
         <select class="form-control" id="selectcoupontype">
             <option value="-1" selected="selected">全部类型</option>
-            <option value="1">抵用券</option>
-            <option value="0">代金券</option>
-            <option value="2">兑换券</option>
-            <option value="3">折扣券</option>
+            <option value="1">抵用</option>
+            <option value="0">代金</option>
+            <option value="2">兑换</option>
+            <option value="3">折扣</option>
         </select>
     </div>
     <div class="col-md-2" style="width:150px;">
@@ -29,10 +29,10 @@
         <select class="form-control" id="departmentselect" data-bind="options:DepartmentList,optionsText:'Name',optionsValue:'Code',value:'allstore',optionsCaption:'全部门店'"></select>
     </div>
     <div class="col-md-2">
-        <input class="form-control" placeholder="优惠券名" data-bind="textInput:TemplateTitle,event:{keypress:onSearchFormEnter}" />
+        <input class="form-control" placeholder="卡券名称" data-bind="textInput:TemplateTitle,event:{keypress:onSearchFormEnter}" />
     </div>
     <div class="col-md-2">
-        <input class="form-control" placeholder="优惠券模板编号" data-bind="textInput:TemplateCode,event:{keypress:onSearchFormEnter}" />
+        <input class="form-control" placeholder="卡券模板编号" data-bind="textInput:TemplateCode,event:{keypress:onSearchFormEnter}" />
     </div>
     <div class="col-md-1">
         <button class="form-control search" id="search">搜索</button>
@@ -42,10 +42,10 @@
 <div class="col-md-12">
     <table class="datatable" id="receivedcouponrecorddata">
         <tr>
-            <td class="cell_title">优惠券模板编号</td>
-            <td class="cell_title">优惠券编号</td>
+            <td class="cell_title">卡券模板编号</td>
+            <td class="cell_title">卡券编号</td>
             <td class="cell_title">时间</td>
-            <td class="cell_title">券名</td>
+            <td class="cell_title">名称</td>
             <td class="cell_title">OpenId</td>
             <td class="cell_title">昵称</td>
             <td class="cell_title">操作</td>
@@ -216,16 +216,11 @@
             //    DonorHeadImgUrl: 'http://wx.qlogo.cn/mmopen/mIGicGfz4lwibU4rOn1HAZrYEvgicbFvUvJP0wMqicTgeuS1LOsibz9IDFdyvwgIrT4Mh5QQ0zL7anWrsvxV2aZiaYKdsIQm7LibjVf/0',
             //    DonorNickName: '张烨晖',
             //    DonorReceivedDate: '2016-12-07 10:43:02.643'
-            //}, {
-            //    Index: 1,
-            //    DonorHeadImgUrl: 'http://wx.qlogo.cn/mmopen/mIGicGfz4lwibU4rOn1HAZrTDwDq2EyNcRYRZz0fAvia6qxHhjpIPqR2icNdqvq9gQraN34pR9seu847KPh06BnBvOXNn9cOEZBz/0',
-            //    DonorNickName: '邓欣圆',
-            //    DonorReceivedDate: '2016-12-07 10:44:36.433'
-            //}]);
+            //},
 
             me.givenrecord = function (data) {
                 $.ajax({
-                    url: '/api/GivenCouponRecord/GetGivenCouponRecord',
+                    url: '/api/Coupon/GetGivenCouponRecord',
                     data: { CouponID: data.CouponID },
                     headers: { 'Authorization': userToken },
                     beforeSend: function () {
@@ -487,8 +482,6 @@
             //,event:{keypress:searchkeydown}
             me.searchkeydown = function (data, event) {
                 if (event.keyCode == 13) {
-                    console.log(me.CouponCode());
-                    console.log(me.params);
                     me.refresh(true);
                     return false;
                 }

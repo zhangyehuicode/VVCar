@@ -13,15 +13,15 @@ namespace VVCar.VIP.Domain.Enums
     public enum EVerificationMode
     {
         /// <summary>
-        /// 验证码 
-        /// </summary>
-        [Description("验证码")]
-        VerifyCode = 0,
-
-        /// <summary>
         /// 扫码核销
         /// </summary>
         [Description("扫码核销")]
-        ScanCode = 1,
+        ScanCode = 0,
+
+        /// <summary>
+        /// 验证码 
+        /// </summary>
+        [Description("验证码")]
+        VerifyCode = 1,
     }
 }

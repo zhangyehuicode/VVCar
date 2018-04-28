@@ -130,6 +130,7 @@
     <Compile Include="Enums\EMemberPointType.cs" />
     <Compile Include="Enums\EMemberSource.cs" />
     <Compile Include="Enums\EMerchantService.cs" />
+    <Compile Include="Enums\ENature.cs" />
     <Compile Include="Enums\EPaymentType.cs" />
     <Compile Include="Enums\EPeopleSort.cs" />
     <Compile Include="Enums\EPlanType.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Enums\ETradeSource.cs" />
     <Compile Include="Enums\EUseTimeType.cs" />
     <Compile Include="Enums\EVerificationMode.cs" />
+    <Compile Include="Filters\AdjustMemberPointFilter.cs" />
     <Compile Include="Filters\CardThemeCategoryFilter.cs" />
     <Compile Include="Filters\CardThemeGroupFilter.cs" />
     <Compile Include="Filters\CouponFilter.cs" />
@@ -183,6 +185,10 @@
     <ProjectReference Include="..\VVCar.BaseData.Domain\VVCar.BaseData.Domain.csproj">
       <Project>{2575eda0-b3ba-473a-8ceb-455404bcdf06}</Project>
       <Name>VVCar.BaseData.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VVCar.Shop.Domain\VVCar.Shop.Domain.csproj">
+      <Project>{3F12D42F-EFD2-4743-B79A-F8599D1E98F0}</Project>
+      <Name>VVCar.Shop.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\YEF.Core\YEF.Core.csproj">
       <Project>{3897ea87-56ff-459d-a321-9821c6269617}</Project>

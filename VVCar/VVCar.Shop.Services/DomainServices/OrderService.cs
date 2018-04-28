@@ -74,6 +74,7 @@ namespace VVCar.Shop.Services.DomainServices
                 t.ID = Util.NewID();
                 t.OrderID = entity.ID;
             });
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 

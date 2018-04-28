@@ -1,0 +1,400 @@
+﻿
+@{
+    ViewBag.Title = "卡券详情";
+    Layout = "~/Areas/Coupon/Views/Shared/_Layout.cshtml";
+}
+
+<div class="contentDiv" data-bind="style: {backgroundColor: CouponInfo().Color}">
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="nodata">@ViewBag.ErrorMessage</div>
+    }
+    else
+    {
+        <div class="couponinfo">
+            <div class="couponinfo-top">
+                <div class="couponTitle" data-bind="text: CouponInfo().Title"></div>
+                <div id="receiveCoupon" class="couponOperate"
+                     data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text:'立即领取', click: operateCoupon,visible:(!@ViewBag.FromMycoupon)&&ShowGetBtn()">
+                    @*(CouponInfo().CollarQuantityLimit-CouponInfo().UsedStock)>0&&*@
+                    @*&&CouponInfo().CouponID==null*@
+                </div>
+                <div id="useCoupon" class="couponOperate"
+                     data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text: '立即使用', click: useoperateCoupon,visible:!ShowGetBtn()">
+                    @*CouponInfo().CouponID!=null&&*@
+                    @*@ViewBag.FromMycoupon&&*@
+                </div>
+                <div id="giveCoupon" class="couponOperate"
+                     data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text: '赠予好友', click: giveoperateCoupon,visible:CouponInfo().CanGiveToPeople&&!ShowGetBtn()">
+                    @*CouponInfo().CouponID!=null&&*@
+                    @*@ViewBag.FromMycoupon&&*@
+                </div>
+                <div class="couponSubTitle" data-bind="text: CouponInfo().SubTitle"></div>
+                <table class="couponExplain">
+                    <tr>
+                        <td class="couponExplain-field">抵用金额：</td>
+                        <td><span data-bind="text: CouponInfo().CouponValue"></span> <span data-bind="text: CouponInfo().CouponValueUnit"></span></td>
+                    </tr>
+                    <tr>
+                        <td class="couponExplain-field">使用条件：</td>
+                        <td data-bind="text: CouponInfo().UseCondition"></td>
+                    </tr>
+                    <tr>
+                        <td class="couponExplain-field">可用时间：</td>
+                        <td>
+                            <div>
+                                <span data-bind="text: CouponInfo().EffectiveDateDesc"></span> - <span data-bind="text: CouponInfo().ExpiredDateDesc"></span>
+                            </div>
+                            <span data-bind="text: CouponInfo().UseTimeDesc"></span>@*style="white-space: pre-line;"*@
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="coupon-detail">
+                <div class="couponCover">
+                    <a href="javascript:;" data-bind="click: gotoIntroDetail">
+                        <img data-bind="attr: {src: CouponInfo().CoverImage}" />
+                        <span class="couponCover-intro">
+                            <span data-bind="text: CouponInfo().CoverIntro"></span>
+                            @*<span class="glyphicon glyphicon-menu-right" data-bind="visible: CouponInfo().HasIntroDetail"></span>*@
+                        </span>
+                    </a>
+                </div>
+                <div class="coupon-detail-item">
+                    <!--ko if: CouponInfo().UseInstructions != null && CouponInfo().UseInstructions != '' -->
+                    <span>使用须知</span>
+                    <span class="coupon-detail-item-content" style="white-space: pre-line;" data-bind="text: CouponInfo().UseInstructions"></span>
+                    <!--/ko-->
+                </div>
+                <div class="coupon-detail-item list-item-link" data-bind="click: gotoCouponStore">适用门店</div>
+            </div>
+        </div>
+    }
+</div>
+<div class="subscribeGzw">
+    <div class="subscribeGzw-qrcode">
+        <img src="~/Content/image/cheyinzi_qrcode.jpg" />
+        <div style="padding: 0 10px;">长按识别二维码，关注公众号</div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/ko")
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script>
+        var PageViewModel = function () {
+            var self = this;
+            self.CouponInfo = ko.observable({});
+
+            self.operateCoupon = function () {
+                //if ((self.CouponInfo().CollarQuantityLimit - self.CouponInfo().UsedStock) > 0) {
+                var ajaxData = {
+                    ReceiveOpenID: openId,
+                    NickName: '@ViewBag.nickname',
+                    HeadImgUrl:'@ViewBag.headimgurl',
+                    IsFromGiven:_isfromgiven,
+                    CouponID:_couponid,
+                    GivenOpenID:_givenOpenID,
+                    CouponTemplateIDs: [self.CouponInfo().TemplateID]
+                };
+                $.showLoading();
+                $.ajax({
+                    type: "POST",
+                    headers: { 'CompanyCode': _mchCode },
+                    url: "/api/Coupon/ReceiveCoupon",
+                    data: ajaxData,
+                    dataType: "json",
+                    success: function (data) {
+                        setTimeout(function () {
+                            $.hideLoading();
+                            if (data == null || data.IsSuccessful != true) {
+                                $.alert(data.ErrorMessage);
+                                return;
+                            } else {
+                                self.ShowGetBtn(false);
+                                self.CouponInfo().CouponID = data.Data;
+                                if(self.WxGiveData()!=null){
+                                    self.WxGiveData().link = window.location.origin + window.location.pathname + '?source=give&couponid=' + self.CouponInfo().CouponID + '&givenopenid=@ViewBag.openid&ctid=' + _couponTemplateId + '&mch=' + _mchCode;
+                                }
+                                //$('#receiveCoupon').addClass('ty-action-use').text('立即使用');
+                                $('#receiveCoupon').hide();
+                                $('#useCoupon').show();
+                                if(self.CouponInfo().CanGiveToPeople){
+                                    $('#giveCoupon').show();
+                                    wx.onMenuShareAppMessage({
+                                        title: self.WxGiveData().title,
+                                        desc: self.WxGiveData().desc,
+                                        link: self.WxGiveData().link,
+                                        imgUrl: self.WxGiveData().imgUrl,
+                                        success: function (res) {
+                                            //shareSuccess();
+                                            wx.closeWindow();
+                                        }
+                                    });
+                                    wx.showMenuItems({
+                                        menuList: ['menuItem:share:appMessage']
+                                    });
+                                }
+                                //if (subscribe != '1') {
+                                //    $('.subscribeGzw').show();
+                                //}
+                            }
+                        }, 1000);
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+                //   } else {
+                //var now = new Date();
+                //var effectiveDate = new Date(self.CouponInfo().EffectiveDate.replace('-', '/').replace('-', '/'));
+                //var expiredDate = new Date(self.CouponInfo().ExpiredDate.replace('-', '/').replace('-', '/'));
+                //expiredDate.setDate(expiredDate.getDate() + 1);
+                //if (effectiveDate > now || now > expiredDate) {
+                //    $.alert('对不起，该优惠活动尚未开始！');
+                //    return;
+                //}
+                //window.location.href = '/Coupon/UseCoupon?couponid=' + self.CouponInfo().CouponID;
+                //  }
+            };
+            self.useoperateCoupon = function () {
+                var now = new Date();
+                var effectiveDate = new Date(self.CouponInfo().EffectiveDate.replace('-', '/').replace('-', '/'));
+                var expiredDate = new Date(self.CouponInfo().ExpiredDate.replace('-', '/').replace('-', '/'));
+                expiredDate.setDate(expiredDate.getDate() + 1);
+                if (effectiveDate > now || now > expiredDate) {
+                    $.alert('对不起，该优惠活动尚未开始！');
+                    return;
+                }
+                //if (subscribe != '1') {
+                //    $('.subscribeGzw').show();
+                //}else{
+                    window.location.href = '/Coupon/UseCoupon?couponid=' + self.CouponInfo().CouponID;
+                //}
+            }
+            self.giveoperateCoupon=function(){
+                $.alert('点击右上角按钮,选择发送给朋友.');
+            }
+
+            self.gotoIntroDetail = function () {
+                var couponInfo = self.CouponInfo();
+                if (!couponInfo.HasIntroDetail) {
+                    return;
+                }
+                window.location.href = "/Coupon/IntroDetail?ctid=" + couponInfo.TemplateID;
+            };
+
+            self.gotoCouponStore = function () {
+                window.location.href = "/Coupon/CouponStore?ctid=" + self.CouponInfo().TemplateID;
+            };
+
+            self.WxGiveData=ko.observable(null);
+
+            self.shareSuccess=function(callback){
+                @*$.ajax({
+                    url:'/wxapi/Member/SetPoint?openId=@ViewBag.openid&type=2',
+                    type:'GET',
+                    headers: { 'CompanyCode': _mchCode },
+                    success:function(res){
+                        if(res.IsSuccessful){
+                            if (res.Data) {
+                                if (callback != null)*@
+                                    callback();
+                //                console.log('分享送积分成功');
+                //            }
+                //        }
+                //    }
+                //});
+            }
+
+            self.initWeChat = function (wxConfig) {
+                var link = window.location.href
+                var _WxShareData = {
+                    title: self.CouponInfo().Title,
+                    desc: self.CouponInfo().SubTitle,
+                    link: window.location.origin + window.location.pathname + '?source=share&ctid=' + _couponTemplateId + '&mch=' + _mchCode,
+                    imgUrl: self.CouponInfo().CoverImage,
+                };
+
+                var givelink = window.location.origin + window.location.pathname + '?source=share&ctid=' + _couponTemplateId + '&mch=' + _mchCode;
+
+                if(self.CouponInfo().CanGiveToPeople){
+                    givelink = window.location.origin + window.location.pathname + '?source=give&couponid=' + self.CouponInfo().CouponID + '&givenopenid=@ViewBag.openid&ctid=' + _couponTemplateId + '&mch=' + _mchCode;
+                }
+
+                var _WxGiveData = {
+                    title: self.CouponInfo().Title,
+                    desc: self.CouponInfo().SubTitle,
+                    link: givelink,
+                    imgUrl: self.CouponInfo().CoverImage,
+                };
+
+                self.WxGiveData(_WxGiveData);
+
+                wx.config({
+                    debug: false,
+                    appId: wxConfig.appId,
+                    timestamp: wxConfig.timestamp,
+                    nonceStr: wxConfig.nonceStr,
+                    signature: wxConfig.signature,
+                    jsApiList: [
+                      'checkJsApi',
+                      'onMenuShareTimeline',
+                      'onMenuShareAppMessage',
+                      'onMenuShareQQ',
+                      'onMenuShareWeibo',
+                      'hideAllNonBaseMenuItem',
+                      'showMenuItems',
+                      'closeWindow'
+                    ]
+                });
+                wx.ready(function () {
+                    wx.onMenuShareTimeline({
+                        title: _WxShareData.desc,
+                        link: _WxShareData.link,
+                        imgUrl: _WxShareData.imgUrl,
+                        success: function (res) {
+                            //self.shareSuccess();
+                        }
+                    });
+
+                    //wx.onMenuShareAppMessage({
+                    //    title: _WxShareData.title,
+                    //    desc: _WxShareData.desc,
+                    //    link: _WxShareData.link,
+                    //    imgUrl: _WxShareData.imgUrl,
+                    //    success: function (res) {
+                    //        shareSuccess();
+                    //    }
+                    //});
+
+                    wx.onMenuShareAppMessage({
+                        title: _WxGiveData.title,
+                        desc: _WxGiveData.desc,
+                        link: _WxGiveData.link,
+                        imgUrl: _WxGiveData.imgUrl,
+                        success: function (res) {
+                            //shareSuccess();
+                            //if (self.CouponInfo().CanShareByPeople) {
+                            //    self.shareSuccess(function () {
+                            //        wx.closeWindow();
+                            //    });
+                            //} else {
+                                wx.closeWindow();
+                            //}
+                        }
+                    });
+
+                    if(!self.CouponInfo().CanShareByPeople){
+                        wx.hideAllNonBaseMenuItem();
+                    }
+                    if(self.CouponInfo().CanGiveToPeople&&$('#giveCoupon').is(':visible')){
+                        //wx.hideMenuItems({
+                        //    menuList: [timeline]
+                        //});
+                        wx.showMenuItems({
+                            menuList: ['menuItem:share:appMessage']
+                        });
+                    }
+                });
+            };
+            self.ShowGetBtn=ko.observable(true);
+            self.loadData = function () {
+                var ajaxUrl = "/api/Coupon/CouponInfo?userOpenID=" + openId + "&ctid=" + _couponTemplateId;
+                if(@ViewBag.FromMycoupon == true){
+                    var couponId = sessionStorage.getItem('couponId');//'9F07FE79-D031-4E32-A5D0-A8CD015ED043';
+                    //sessionStorage.removeItem('couponId');
+                    if (couponId != null && couponId != '') {
+                        ajaxUrl = "/api/Coupon/CouponInfoByID?userOpenID=" + openId + "&couponId=" + couponId;
+                    }
+                }
+                $.ajax({
+                    type: 'GET',
+                    headers: { 'CompanyCode': _mchCode },
+                    url: ajaxUrl,
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res == null || res == '') {
+                            return;
+                        }
+                        if (res.IsSuccessful) {
+                            res.Data.HasIntroDetail = (res.Data.IntroDetail != null && res.Data.IntroDetail != "")
+                                || (res.Data.MerchantPhoneNo != null && res.Data.MerchantPhoneNo != "")
+                                || res.Data.MerchantService != 0;
+                            if (@ViewBag.FromMycoupon!= true && _source != null && _source != '') {
+                                if (_source == 'give' && _givenOpenID != '' && _givenOpenID == openId) {
+                                    self.ShowGetBtn(false);
+                                    //}else if(_source=='give'&&res.Data.CouponID!=null){
+                                    //    self.ShowGetBtn(false);
+                                } else if (_source == 'share') {
+                                    self.ShowGetBtn(true);
+                                }
+                            } else if (@ViewBag.FromMycoupon== true) {
+                                self.ShowGetBtn(false);
+                            }
+                            self.CouponInfo(res.Data);
+                            console.log(self.CouponInfo().CanGiveToPeople);
+                            if (res.Data.CouponID == null || res.Data.CouponID == '') {
+                                //增加访问量
+                                //$.ajax({
+                                //    url: '/api/Visit/' + res.Data.TemplateID,
+                                //    headers: { 'CompanyCode': _mchCode },
+                                //    type: 'POST',
+                                //    success: function (res) {
+                                //    }
+                                //});
+                            }
+                            $.ajax({
+                                type: "POST",
+                                url: '@YEF.Core.AppContext.Settings.WeChatIntegrationService' + '/api/WeChat/JsApiSignature?companyCode=' + _mchCode + '&url=' + encodeURIComponent(window.location.href),
+                                //url: '@YEF.Core.AppContext.Settings.WeChatIntegrationService/api/WeChat/JsApiSignature/@YEF.Core.AppContext.Settings.CompanyCode',
+                                success: function (res) {
+                                    if (res == null || res.IsSuccessful != true) {
+                                        return;
+                                    }
+                                    self.initWeChat(res.Data);
+                                },
+                                error: function (res) {
+                                }
+                            });
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            self.loadData();
+        }
+    </script>
+    <script type="text/javascript">
+        var openId = '@ViewBag.openid';
+        var subscribe = '@ViewBag.subscribe';
+        var _mchCode = '';
+        var _couponTemplateId = '';
+        var _givenOpenID='';
+
+        var _givenOpenID=$.getUrlParam('givenopenid');
+        var _couponid=$.getUrlParam('couponid');
+        var _source=$.getUrlParam('source');
+        var _isfromgiven=false;
+        if(_source!=null&&_source!=''&&_couponid!=null&&_couponid!=''&&_givenOpenID!=null&&_givenOpenID!=''){
+            _isfromgiven=true;
+        }
+
+        _mchCode = $.getUrlParam('mch');
+        if (_mchCode == null || _mchCode == '') {
+            _mchCode = sessionStorage.getItem('mch');
+        }
+        sessionStorage.setItem('mch', _mchCode);
+        _couponTemplateId = $.getUrlParam('ctid');
+        ko.applyBindings(new PageViewModel());
+        sessionStorage.setItem('frommycoupon','@ViewBag.FromMycoupon');
+    </script>
+}
+

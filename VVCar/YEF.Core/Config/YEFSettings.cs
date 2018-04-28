@@ -166,6 +166,11 @@ namespace YEF.Core.Config
         public string SiteDomain { get; set; }
 
         /// <summary>
+        /// 车牌识别域名
+        /// </summary>
+        public string PRDomain { get; set; }
+
+        /// <summary>
         /// T9 集成
         /// </summary>
         public bool T9Integration { get; set; }

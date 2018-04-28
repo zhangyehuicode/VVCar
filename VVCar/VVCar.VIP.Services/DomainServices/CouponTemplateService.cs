@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
+using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
@@ -85,6 +86,7 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 entity.VerificationMode = EVerificationMode.ScanCode;
             }
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 
@@ -135,7 +137,8 @@ namespace VVCar.VIP.Services.DomainServices
                 //stock.UsedStock = 0;
                 CouponTemplateStockService.Update(stock);
             }
-
+            entity.ApproveStatus = EApproveStatus.Approved;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Update(entity);
         }
 
@@ -233,7 +236,9 @@ namespace VVCar.VIP.Services.DomainServices
             var result = queryable.ToArray().Select(c => new CouponTemplateDto
             {
                 ID = c.ID,
+                IsRecommend = c.IsRecommend,
                 CouponType = (int)c.CouponType,
+                Nature = c.Nature,
                 CouponTypeName = this.GetEnumDescription(c.CouponType),
                 CouponCode = couponQueryable.Where(cou => cou.TemplateID == c.ID).FirstOrDefault() != null ? couponQueryable.Where(cou => cou.TemplateID == c.ID).FirstOrDefault().CouponCode : string.Empty,
                 TemplateCode = c.TemplateCode,
@@ -464,6 +469,76 @@ namespace VVCar.VIP.Services.DomainServices
                             : $"领取后{couponTemplate.EffectiveDaysAfterReceived.GetValueOrDefault()}天生效,{couponTemplate.EffectiveDays.GetValueOrDefault()}天有效",
                 CreatedDate = couponTemplate.CreatedDate,
             };
+        }
+
+        /// <summary>
+        /// 获取推荐会员卡
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Product> GetRecommendCouponTemplate()
+        {
+            var result = new List<Product>();
+            var temp = new List<CouponTemplate>();
+            var queryable = Repository.GetInclude(t => t.Stock, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Nature == ENature.Card && t.Stock.Stock > 0 && t.ApproveStatus == EApproveStatus.Delivered);
+            var recommend = queryable.Where(t => t.IsRecommend).ToList();
+            temp = recommend;
+            if (temp.Count < 4)
+            {
+                var additional = queryable.Where(t => !t.IsRecommend).OrderByDescending(t => t.CreatedDate).ToList();
+                foreach (var item in additional)
+                {
+                    temp.Add(item);
+                    if (temp.Count >= 4)
+                        break;
+                }
+            }
+            else if (temp.Count > 4)
+            {
+                temp = new List<CouponTemplate>();
+                foreach (var item in recommend)
+                {
+                    temp.Add(item);
+                    if (temp.Count >= 4)
+                        break;
+                }
+            }
+            foreach (var item in temp)
+            {
+                result.Add(new Product
+                {
+                    ID = item.ID,
+                    Code = item.TemplateCode,
+                    Name = item.Title,
+                    ImgUrl = item.CoverImage,
+                    Stock = item.Stock.Stock,
+                    BasePrice = item.CouponValue,
+                    PriceSale = item.CouponValue,
+                    Introduction = item.IntroDetail,
+                    DeliveryNotes = "购买后可到会员卡包中查看已有卡券",
+                });
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 获取会员卡
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Product> GetCardOfCouponTemplate()
+        {
+            return Repository.GetInclude(t => t.Stock, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Nature == ENature.Card && t.ApproveStatus == EApproveStatus.Delivered && t.Stock.Stock > 0).ToList()
+                .Select(t => new Product
+                {
+                    ID = t.ID,
+                    Code = t.TemplateCode,
+                    Name = t.Title,
+                    ImgUrl = t.CoverImage,
+                    Stock = t.Stock.Stock,
+                    BasePrice = t.CouponValue,
+                    PriceSale = t.CouponValue,
+                    Introduction = t.IntroDetail,
+                    DeliveryNotes = "购买后可到会员卡包中查看已有卡券",
+                });
         }
     }
 }

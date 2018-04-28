@@ -12,14 +12,14 @@
         </div>
         <div class="zcdl_box3">
             <img src="~/Areas/resource/img/mobile/master/gr.png" style="width:16px; float:left; margin-top:19px;">
-            <input type="text" name="address" size="60" maxlength="60" style="color:#fff" value="请输入您的手机号" onfocus="if(this.value=='请输入您的手机号'){this.value=''};this.style.color='#fff';" onblur="if(this.value==''||this.value=='请输入您的手机号'){this.value='请输入您的手机号';this.style.color='#fff';}" class="zcdl_box4">
-            <a href="#" class="zcdl_text">发送验证码</a>
+            <input v-model="UserInfo.MobilePhoneNo" type="number" placeholder="请输入您的手机号" name="address" size="11" maxlength="11" style="color:#343232" class="zcdl_box4" oninput="if(value.length>11)value=value.slice(0,11)">
+            <a class="zcdl_text" v-on:click="sendSMS">发送验证码</a>
         </div>
         <div class="zcdl_box3" style="margin-top:inherit;">
             <img src="~/Areas/resource/img/mobile/master/yzm2.png" style="width:16px; float:left; margin-top:18px;">
-            <input type="text" name="address" size="60" maxlength="60" style="color:#fff" value="请输入验证码" onfocus="if(this.value=='请输入验证码'){this.value=''};this.style.color='#fff';" onblur="if(this.value==''||this.value=='请输入验证码'){this.value='请输入验证码';this.style.color='#fff';}" class="zcdl_box4">
+            <input v-model="UserInfo.VerificationCode" type="number" placeholder="请输入验证码" name="address" size="6" maxlength="6" style="color:#343232" class="zcdl_box4" oninput="if(value.length>6)value=value.slice(0,6)">
         </div>
-        <a href="#" class="zcdl_btn" style="background-color:#51b3f0;" v-on:click="staffhome">员工登录/注册</a>
+        <a href="#" class="zcdl_btn" style="background-color:#51b3f0;" v-on:click="staffhome">员工注册/登录</a>
     </div>
 </div>
 
@@ -72,15 +72,109 @@
     </script>
     <script type="text/javascript">
         var mch = $.getUrlParam('mch');
+
+        function sendSMSAction(mobilephoneno) {
+            if ($(".zcdl_text").hasClass('waitsendvc'))
+                return;
+            if (mobilephoneno == null || mobilephoneno == '') {
+                $.alert('请先输入手机号码');
+                return;
+            }
+            if (mobilephoneno.toString().length != 11) {
+                $.alert('请输入11位手机号码');
+                return;
+            }
+            $.ajax({
+                url: '/AliyunSMS/Sms/SendSms/' + mobilephoneno + '/SMS_119520024',
+                type: 'GET',
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        $.alert('验证码发送成功,请查收');
+                        $(".zcdl_text").addClass('waitsendvc');
+                        var j = 120;
+                        var int = window.setInterval(function () {
+                            if (j <= 0) {
+                                $(".zcdl_text").removeClass('waitsendvc');
+                                $(".zcdl_text").html("发送验证码");
+                                stopInterval(int);
+                            } else {
+                                j--;
+                                $(".zcdl_text").html(j + " S");
+                            }
+                        }, 1000);
+
+                    }
+                    else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
+        function checkVerificationCode(mobilephoneno, verificationCode, callback) {
+            if (mobilephoneno == null || mobilephoneno == '') {
+                $.alert('请先输入手机号码');
+                return;
+            }
+            if (mobilephoneno.toString().length != 11) {
+                $.alert('请输入11位手机号码');
+                return;
+            }
+            if (verificationCode == null || verificationCode == '') {
+                $.alert('请先输入验证码');
+                return;
+            }
+            $.ajax({
+                url: '/AliyunSMS/Sms/CheckVerificationCode/' + mobilephoneno + '/' + verificationCode,
+                type: 'GET',
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data) {
+                            if (callback != null) {
+                                callback();
+                            }
+                        } else {
+                            $.alert('验证码不正确');
+                        }
+                    }
+                    else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
         _payBillViewModel = new Vue({
             el: '#msloginreg',
             data: {
-                UserInfo: {},
+                UserInfo: {
+                    MobilePhoneNo: '',
+                    VerificationCode: '',
+                },
             },
             methods: {
                 staffhome: function (event) {
-                    window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                    checkVerificationCode(this.UserInfo.MobilePhoneNo, this.UserInfo.VerificationCode, function () {
+                        window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                    });
                 },
+                sendSMS: function (event) {
+                    sendSMSAction(this.UserInfo.MobilePhoneNo);
+                }
             }
         });
     </script>

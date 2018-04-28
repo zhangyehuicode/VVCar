@@ -12,7 +12,7 @@ namespace VVCar.VIP.Domain.Entities
     /// <summary>
     /// 优惠券模板
     /// </summary>
-    public class CouponTemplate : NormalEntityBase
+    public class CouponTemplate : EntityBase
     {
         /// <summary>
         /// 优惠券模板
@@ -27,6 +27,18 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "优惠券模板编号")]
         public string TemplateCode { get; set; }
+
+        /// <summary>
+        /// 性质
+        /// </summary>
+        [Display(Name = "性质")]
+        public ENature Nature { get; set; }
+
+        /// <summary>
+        /// 是否推荐
+        /// </summary>
+        [Display(Name = "是否推荐")]
+        public bool IsRecommend { get; set; }
 
         /// <summary>
         ///  类型

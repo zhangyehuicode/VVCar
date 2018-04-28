@@ -6,6 +6,11 @@
     font-family: "思源黑体 CN Regular";
 }
 
+input {
+    -webkit-appearance: none;
+    border-radius: 0;
+}
+
 ul {
     list-style: none;
 }

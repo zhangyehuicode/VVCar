@@ -1,0 +1,133 @@
+﻿
+@{
+    ViewBag.Title = "使用卡券";
+    Layout = "~/Areas/Coupon/Views/Shared/_Layout.cshtml";
+}
+
+<div class="contentDiv" data-bind="style: {backgroundColor: CouponInfo().Color}">
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="nodata">@ViewBag.ErrorMessage</div>
+    }
+    else
+    {
+        <div class="usecoupon">
+            <div class="usecoupon-top">
+                <div class="couponTitle" data-bind="text: CouponInfo().Title"></div>
+            </div>
+            <div>
+                <span class="usecoupon-separate" style="margin-left: -8px;"
+                      data-bind="style: {color: CouponInfo().Color}"></span>
+                <span class="usecoupon-separate" style="float: right; margin-right: -8px;"
+                      data-bind="style: {color: CouponInfo().Color}"></span>
+            </div>
+            <div class="usecoupon-detail">
+                <div id="useVerifyCode">
+                    <input class="usecoupon-verifycode" type="number" id="verifycode" placeholder="请输入核销码" />
+                    <div class="usecoupon-confirm" data-bind="style: {backgroundColor: CouponInfo().Color}, click: verifyCoupon">确认使用</div>
+                </div>
+                <div class="usecoupon-scancode" id="verifyByScan">
+                    <div>
+                        <img id="barCode" />
+                        <span data-bind="text: CouponInfo().CouponCode"></span>
+                        <div class="usecoupon-qrcode" id="qrCode"></div>
+                    </div>
+                </div>
+                <div id="verfySuccess" style="display: none;" data-bind="style: {color: CouponInfo().Color}">
+                    <span class="usecoupon-successMark" data-bind="style: {borderColor: CouponInfo().Color}">✔</span>
+                    <span class="usecoupon-successHint">使用成功 !</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/qrcode")
+    @Scripts.Render("~/bundles/ko")
+    <script>
+        var PageViewModel = function () {
+            var self = this;
+            self.CouponInfo = ko.observable({});
+
+            self.verifyCoupon = function () {
+                var verifycode = $('#verifycode').val();
+                if (verifycode == null || verifycode == '') {
+                    $.alert("请填写核销码!");
+                    return;
+                }
+                $.showLoading();
+                $.ajax({
+                    type: "POST",
+                    headers: { 'CompanyCode': _mchCode },
+                    url: "/wxapi/Coupon/VerifyCoupon",
+                    data: { CouponCodes: [self.CouponInfo().CouponCode], VerificationMode: 0, VerifyCode: verifycode },
+                    dataType: "json",
+                    success: function (data) {
+                        $.hideLoading();
+                        if (data == null || data.IsSuccessful != true) {
+                            $.alert(data.ErrorMessage, "核销失败!");
+                            return;
+                        } else {
+                            $('#verfySuccess').show().siblings().hide();
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            };
+
+            self.loadData = function () {
+                $.ajax({
+                    type: 'GET',
+                    headers: { 'CompanyCode': _mchCode },
+                    url: "/api/Coupon/CouponInfoByID?userOpenID=" + openId + "&couponId=" + _couponId,
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res == null || res == '') {
+                            return;
+                        }
+                        if (res.IsSuccessful) {
+                            self.CouponInfo(res.Data);
+                            if (res.Data.VerificationMode == 0) {
+                                $('#verifyByScan').show().siblings().hide();
+                                $('#barCode').JsBarcode(res.Data.CouponCode, {
+                                    width: 2,
+                                    displayValue: false,
+                                    height: 50,
+                                });
+                                $('#qrCode').qrcode({
+                                    text: res.Data.CouponCode,
+                                    height: 200,
+                                    width: 200
+                                });
+                            }
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            self.loadData();
+        }
+    </script>
+    <script type="text/javascript">
+        var openId = '@ViewBag.openid';
+        var _mchCode = '';
+        var _couponId = '';
+
+        _mchCode = $.getUrlParam('mch');
+        if (_mchCode == null || _mchCode == '') {
+            _mchCode = sessionStorage.getItem('mch');
+        }
+        sessionStorage.setItem('mch', _mchCode);
+        _couponId = $.getUrlParam('couponid');
+        ko.applyBindings(new PageViewModel());
+    </script>
+}
+

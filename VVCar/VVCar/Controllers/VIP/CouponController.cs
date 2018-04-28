@@ -24,13 +24,17 @@ namespace VVCar.Controllers.VIP
         /// <summary>
         /// 卡券
         /// </summary>
-        /// <param name=""></param>
-        public CouponController(ICouponService couponService)
+        /// <param name="couponService"></param>
+        /// <param name="givenCouponRecordService"></param>
+        public CouponController(ICouponService couponService, IGivenCouponRecordService givenCouponRecordService)
         {
             CouponService = couponService;
+            GivenCouponRecordService = givenCouponRecordService;
         }
 
         ICouponService CouponService { get; set; }
+
+        IGivenCouponRecordService GivenCouponRecordService { get; set; }
 
         /// <summary>
         /// 新增优惠券(领取优惠券)
@@ -229,6 +233,96 @@ namespace VVCar.Controllers.VIP
                 var data = CouponService.GetCoupon(filter, ref totalCount);
                 result.Data = data;
                 result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        /// 领取优惠券
+        /// </summary>
+        /// <param name="receiveCouponDto"></param>
+        /// <returns></returns>
+        [HttpPost, Route("ReceiveCoupon"), AllowAnonymous]
+        public JsonActionResult<Guid> ReceiveCoupons(ReceiveCouponDto receiveCouponDto)
+        {
+            return SafeExecute(() =>
+            {
+                var couponids = CouponService.ReceiveCoupons(receiveCouponDto);
+                return couponids.FirstOrDefault();
+            });
+        }
+
+        /// <summary>
+        /// 获取卡券信息
+        /// </summary>
+        /// <param name="ctid"></param>
+        /// <param name="userOpenID"></param>
+        /// <returns></returns>
+        [HttpGet, Route("CouponInfo"), AllowAnonymous]
+        public JsonActionResult<CouponFullInfoDto> GetCouponInfo(Guid ctid, string userOpenID)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponService.GetCouponInfoByTemplateID(ctid, userOpenID);
+            });
+        }
+
+        /// <summary>
+        /// 获取卡券信息
+        /// </summary>
+        /// <param name="couponID"></param>
+        /// <returns></returns>
+        [HttpGet, Route("CouponInfoByID"), AllowAnonymous]
+        public JsonActionResult<CouponFullInfoDto> GetCouponInfoByID(Guid couponID, string userOpenID)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponService.GetCouponInfo(couponID);
+            });
+        }
+
+        /// <summary>
+        /// 获取赠送卡券记录
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetGivenCouponRecord")]
+        public PagedActionResult<GivenCouponRecord> GetGivenCouponRecord([FromUri]GivenCouponFilter filter)
+        {
+            return SafeGetPagedData<GivenCouponRecord>((result) =>
+            {
+                var totalCount = 0;
+                var data = GivenCouponRecordService.GetGivenCouponRecord(filter, ref totalCount);
+                result.TotalCount = totalCount;
+                result.Data = data;
+            });
+        }
+
+        /// <summary>
+        /// 获取卡券适用门店信息
+        /// </summary>
+        /// <param name="ctid"></param>
+        /// <returns></returns>
+        [HttpGet, Route("CouponStoreInfo"), AllowAnonymous]
+        public JsonActionResult<IEnumerable<CouponApplyStoreDto>> GetCouponApplyStoreInfo(Guid ctid)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponService.GetCouponApplyStoreInfo(ctid);
+            });
+        }
+
+        /// <summary>
+        /// 获取用户可用卡券
+        /// </summary>
+        /// <param name="userOpenID"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetAvailableCouponList"), AllowAnonymous]
+        public PagedActionResult<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID)
+        {
+            return SafeGetPagedData<CouponBaseInfoDto>((result) =>
+            {
+                var data = CouponService.GetAvailableCouponList(userOpenID);
+                result.Data = data;
             });
         }
     }

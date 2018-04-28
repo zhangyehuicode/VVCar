@@ -14,6 +14,7 @@ namespace VVCar.Controllers
     /// ApiController 基类
     /// </summary>
     [ApiAuthorize(NeedLogin = true)]
+    [ApiAuthorize(NeedCompanyCode = true)]
     public abstract class BaseApiController : ApiController
     {
         /// <summary>

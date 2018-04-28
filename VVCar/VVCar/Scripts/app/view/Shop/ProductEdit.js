@@ -9,7 +9,7 @@
     initComponent: function () {
         var me = this;
         var yesNoDictStore = Ext.create('WX.store.DataDict.YesNoTypeStore');
-        //var productTypeStore = Ext.create('WX.store.DataDict.ProductTypeStore');
+        var productTypeStore = Ext.create('WX.store.DataDict.ProductTypeStore');
         me.form = Ext.create('Ext.form.Panel', {
             border: false,
             trackResetOnLoad: true,
@@ -28,6 +28,12 @@
                 name: 'Name',
                 fieldLabel: '标题',
                 maxLength: 50,
+                allowBlank: false,
+            }, {
+                xtype: 'textfield',
+                name: 'Code',
+                fieldLabel: '编码',
+                maxLength: 20,
                 allowBlank: false,
             }, {
                 xtype: 'form',
@@ -60,15 +66,15 @@
                 name: 'ImgUrl',
                 fieldLabel: '图片路径',
                 hidden: true,
-                //}, {
-                //    xtype: 'combobox',
-                //    name: 'ProductType',
-                //    store: productTypeStore,
-                //    loadMode: 'local',
-                //    fieldLabel: '产品类型',
-                //    displayField: 'DictName',
-                //    valueField: 'DictValue',
-                //    editable: false,
+            }, {
+                xtype: 'combobox',
+                name: 'ProductType',
+                store: productTypeStore,
+                loadMode: 'local',
+                fieldLabel: '产品类型',
+                displayField: 'DictName',
+                valueField: 'DictValue',
+                editable: false,
             }, {
                 xtype: 'numberfield',
                 name: 'BasePrice',
@@ -103,7 +109,7 @@
                 store: yesNoDictStore,
                 displayField: 'DictName',
                 valueField: 'DictValue',
-                fieldLabel: '是否发布',
+                fieldLabel: '是否上架',
                 editable: false,
                 value: false,
             }, {

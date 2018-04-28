@@ -8,6 +8,8 @@ using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using VVCar.BaseData.Domain.Filters;
+using VVCar.BaseData.Domain.Services;
 using YEF.Core;
 
 namespace VVCar
@@ -23,6 +25,11 @@ namespace VVCar
         public bool NeedLogin { get; set; }
 
         /// <summary>
+        /// 是否需要商户号
+        /// </summary>
+        public bool NeedCompanyCode { get; set; }
+
+        /// <summary>
         /// 为操作授权时调用。
         /// </summary>
         /// <param name="actionContext">上下文。</param>
@@ -30,7 +37,15 @@ namespace VVCar
         {
             if (SkipAuthorization(actionContext))
             {
-                CheckCompanyCode(actionContext);
+                if (NeedCompanyCode)
+                {
+                    CheckCompanyCode(actionContext);
+                }
+                else
+                {
+                    var identity = GetSystemPrincipal("", "");
+                    actionContext.RequestContext.Principal = new ClaimsPrincipal(identity);
+                }
                 return;
             }
             if (NeedLogin)//如果需要登录验证，则判断UserID是否存在。
@@ -58,17 +73,29 @@ namespace VVCar
         private static void CheckCompanyCode(HttpActionContext actionContext)
         {
             string companyCode = string.Empty;
-            if (AppContext.Settings.IsDynamicCompany)
+            string merchantId = string.Empty;
+
+            //if (AppContext.Settings.IsDynamicCompany)
+            //{
+            var headerIds = actionContext.Request.Headers.FirstOrDefault(t => t.Key == Constants.HttpHeaderCompanyCode);
+            companyCode = headerIds.Value == null ? string.Empty : headerIds.Value.FirstOrDefault();
+            if (string.IsNullOrEmpty(companyCode))
             {
-                var headerIds = actionContext.Request.Headers.FirstOrDefault(t => t.Key == Constants.HttpHeaderCompanyCode);
-                companyCode = headerIds.Value == null ? string.Empty : headerIds.Value.FirstOrDefault();
-                if (string.IsNullOrEmpty(companyCode))
-                {
-                    actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, new { Message = "缺少商户信息。" });
-                    return;
-                }
+                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, new { Message = "缺少商户信息。" });
+                return;
             }
-            var identity = GetSystemPrincipal(companyCode);
+            //}
+            var merchantService = ServiceLocator.Instance.GetService<IMerchantService>();
+            var totalCount = 0;
+            var merchant = merchantService.Search(new MerchantFilter { Code = companyCode }, out totalCount).FirstOrDefault();
+            if (merchant == null)
+            {
+                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, new { Message = "商户不存在。" });
+                return;
+            }
+            merchantId = merchant.ID.ToString();
+
+            var identity = GetSystemPrincipal(merchantId, companyCode);
             actionContext.RequestContext.Principal = new ClaimsPrincipal(identity);
         }
 
@@ -78,7 +105,7 @@ namespace VVCar
                 || actionContext.ControllerContext.ControllerDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any();
         }
 
-        static ClaimsIdentity GetSystemPrincipal(string companyCode = "")
+        static ClaimsIdentity GetSystemPrincipal(string merchantId, string companyCode = "")
         {
             string departmentId = "00000000-0000-0000-0000-000000000001";
             var departmentName = "system";
@@ -97,6 +124,7 @@ namespace VVCar
                 departmentId = "00000000-0000-0000-0000-000000000001";
             if (departmentName == null)
                 departmentName = "system";
+
             var identity = new ClaimsIdentity();
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "00000000-0000-0000-0000-000000000000"));
             identity.AddClaim(new Claim(ClaimTypes.Name, "system"));
@@ -105,6 +133,8 @@ namespace VVCar
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentName, departmentName));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentCode, departmentCode));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
+            identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantID, merchantId));
+
             return identity;
         }
 

@@ -231,6 +231,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Coupon\Controllers\AdminController.cs" />
+    <Compile Include="Areas\Coupon\Controllers\CouponController.cs" />
     <Compile Include="Areas\Coupon\CouponAreaRegistration.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
@@ -265,6 +266,7 @@
     <Compile Include="Areas\Mobile\Controllers\MerchantController.cs" />
     <Compile Include="Areas\Mobile\MobileAreaRegistration.cs" />
     <Compile Include="Common\ExportHelper.cs" />
+    <Compile Include="Controllers\Api\BackgroundTaskController.cs" />
     <Compile Include="Controllers\Api\CommonController.cs" />
     <Compile Include="Controllers\Api\DataDictTypeController.cs" />
     <Compile Include="Controllers\Api\DataDictValueController.cs" />
@@ -297,8 +299,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ConfigInfoModel.cs" />
+    <Compile Include="Models\JsonResult.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\LoginResult.cs" />
+    <Compile Include="Models\PRResult.cs" />
     <Compile Include="Models\UploadFileResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApiAuthorizeAttribute.cs" />
@@ -397,6 +401,9 @@
     <Content Include="Areas\resource\img\mobile\cph.png" />
     <Content Include="Areas\resource\img\mobile\daodile.png" />
     <Content Include="Areas\resource\img\mobile\dd.png" />
+    <Content Include="Areas\resource\img\mobile\defaultimg1.png" />
+    <Content Include="Areas\resource\img\mobile\defaultimg2.png" />
+    <Content Include="Areas\resource\img\mobile\defaultimg3.png" />
     <Content Include="Areas\resource\img\mobile\dfk.png" />
     <Content Include="Areas\resource\img\mobile\dsh.png" />
     <Content Include="Areas\resource\img\mobile\erweima.png" />
@@ -414,6 +421,7 @@
     <Content Include="Areas\resource\img\mobile\jf.png" />
     <Content Include="Areas\resource\img\mobile\jia.png" />
     <Content Include="Areas\resource\img\mobile\jiajian.png" />
+    <Content Include="Areas\resource\img\mobile\jian.png" />
     <Content Include="Areas\resource\img\mobile\jingpin.png" />
     <Content Include="Areas\resource\img\mobile\jr.png" />
     <Content Include="Areas\resource\img\mobile\jr2.png" />
@@ -453,6 +461,7 @@
     <Content Include="Areas\resource\img\mobile\my.png" />
     <Content Include="Areas\resource\img\mobile\nj.png" />
     <Content Include="Areas\resource\img\mobile\pass.png" />
+    <Content Include="Areas\resource\img\mobile\plate.jpg" />
     <Content Include="Areas\resource\img\mobile\sc.png" />
     <Content Include="Areas\resource\img\mobile\scj.png" />
     <Content Include="Areas\resource\img\mobile\shop.png" />
@@ -536,7 +545,9 @@
     <Content Include="Content\icons\search.png" />
     <Content Include="Content\icons\search_r.png" />
     <Content Include="Content\icons\stop.png" />
-    <Content Include="Content\image\loginbgimg.jpg" />
+    <Content Include="Content\image\cheyinzi.jpg" />
+    <Content Include="Content\image\cheyinzilogo.png" />
+    <Content Include="Content\image\cheyinzi_qrcode.jpg" />
     <Content Include="Content\jquery-fileupload\css\jquery.fileupload-noscript.css" />
     <Content Include="Content\jquery-fileupload\css\jquery.fileupload-ui-noscript.css" />
     <Content Include="Content\jquery-fileupload\css\jquery.fileupload-ui.css" />
@@ -839,6 +850,14 @@
     <Content Include="Areas\Mobile\Views\Customer\PayResult.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\Order.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\PayType.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\QRCodePay.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\CashPay.cshtml" />
+    <Content Include="Areas\Coupon\Views\Coupon\CouponInfo.cshtml" />
+    <Content Include="Areas\Coupon\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Coupon\Views\Coupon\UseCoupon.cshtml" />
+    <Content Include="Areas\Coupon\Views\Coupon\CouponStore.cshtml" />
+    <Content Include="Areas\Coupon\Views\Coupon\IntroDetail.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\ShoppingCart.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

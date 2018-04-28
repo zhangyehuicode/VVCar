@@ -32,7 +32,8 @@ Ext.define("WX.view.Member.AdjustBalance", {
                         fieldLabel: "会员卡号",
                         margin: "10 20 0 5",
                         allowBlank: false,
-                        readOnly: true
+                        readOnly: true,
+                        hidden: true,
                     }, {
                         xtype: "combobox",
                         store: adjustTypeStore,

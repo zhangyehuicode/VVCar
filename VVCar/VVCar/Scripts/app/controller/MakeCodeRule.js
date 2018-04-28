@@ -96,7 +96,7 @@
             context.store.update({
                 callback: function (records, operation, success) {
                     if (!success) {
-                        Ext.MessageBox.alert("提示", operation.error);
+                        Ext.MessageBox.alert("提示", operation.error.statusText);
                         return;
                     } else {
                         Ext.MessageBox.alert("提示", "更新成功");

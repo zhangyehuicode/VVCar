@@ -114,8 +114,8 @@ Ext.define('WX.controller.Member', {
     },
     showAddMember: function () {
         var win = Ext.widget("EditMember");
-        win.down("form[name=formExtraInfo]").hidden = true;
-        win.down("tabpanel[name=tabpanelExtraInfo]").hidden = true;
+        //win.down("form[name=formExtraInfo]").hidden = true;
+        //win.down("tabpanel[name=tabpanelExtraInfo]").hidden = true;
         win.show();
     },
     resetPassword: function () {
@@ -214,7 +214,7 @@ Ext.define('WX.controller.Member', {
                 return;
             }
             store.reload();
-            me.refreshMemberGroupTree();
+            //me.refreshMemberGroupTree();
             btn.up("window").close();
         }
 
@@ -237,7 +237,7 @@ Ext.define('WX.controller.Member', {
                 Ext.Msg.alert("提示", response.ErrorMessage);
                 return;
             }
-            me.refreshMemberGroupTree();
+            //me.refreshMemberGroupTree();
             Ext.MessageBox.alert("提示", "更新成功", function () {
                 btn.up("window").close();
                 store.reload();
@@ -253,29 +253,29 @@ Ext.define('WX.controller.Member', {
         var memberStore = me.getStore();
         var formMemberInfo = win.down("form[name=MemberInfo]");
         formMemberInfo.Method = "PUT";
-        formMemberInfo.down("displayfield[name=CardNumber]").readOnly = true;
+        //formMemberInfo.down("displayfield[name=CardNumber]").readOnly = true;
         formMemberInfo.loadRecord(record);
-        var formExtraInfo = win.down("form[name=formExtraInfo]");
-        formExtraInfo.down('displayfield[name=Point]').setValue(record.data.Point);
-        function baseInfoCallback(response) {
-            response = JSON.parse(response.responseText);
-            if (!response.IsSuccessful)
-                return;
-            var baseInfoRecord = Ext.create("WX.model.BaseData.MemberBaseInfoModel", response.Data);
-            formExtraInfo.loadRecord(baseInfoRecord);
-            formMemberInfo.down("displayfield[name=EffectiveDate]").setValue(baseInfoRecord.data.EffectiveDate);
-            formMemberInfo.down("displayfield[name=ExpiredDate]").setValue(baseInfoRecord.data.ExpiredDate);
-        }
+        //var formExtraInfo = win.down("form[name=formExtraInfo]");
+        //formExtraInfo.down('displayfield[name=Point]').setValue(record.data.Point);
+        //function baseInfoCallback(response) {
+        //    response = JSON.parse(response.responseText);
+        //    if (!response.IsSuccessful)
+        //        return;
+        //    var baseInfoRecord = Ext.create("WX.model.BaseData.MemberBaseInfoModel", response.Data);
+        //formExtraInfo.loadRecord(baseInfoRecord);
+        //formMemberInfo.down("displayfield[name=EffectiveDate]").setValue(baseInfoRecord.data.EffectiveDate);
+        //formMemberInfo.down("displayfield[name=ExpiredDate]").setValue(baseInfoRecord.data.ExpiredDate);
+        //}
         //基本信息
-        memberStore.getBaseInfo(record.data.ID, baseInfoCallback);
+        //memberStore.getBaseInfo(record.data.ID, baseInfoCallback);
 
         //储值记录和消费记录
-        var rechargeStore = win.down("grid[name=gridRecharge]").store;
-        var consumeStore = win.down("grid[name=gridConsume]").store;
-        Ext.apply(rechargeStore.proxy.extraParams, { CardNumber: record.data.CardNumber, Limit: 1000 });
-        Ext.apply(consumeStore.proxy.extraParams, { CardNumber: record.data.CardNumber, Limit: 1000 });
-        rechargeStore.load();
-        consumeStore.load();
+        //var rechargeStore = win.down("grid[name=gridRecharge]").store;
+        //var consumeStore = win.down("grid[name=gridConsume]").store;
+        //Ext.apply(rechargeStore.proxy.extraParams, { CardNumber: record.data.CardNumber, Limit: 1000 });
+        //Ext.apply(consumeStore.proxy.extraParams, { CardNumber: record.data.CardNumber, Limit: 1000 });
+        //rechargeStore.load();
+        //consumeStore.load();
         win.show();
     },
     onMobilePhoneNoChange: function (txtField, newValue, oldValue, eOpts) {
@@ -330,7 +330,7 @@ Ext.define('WX.controller.Member', {
             return;
         }
         var win = Ext.widget("AdjustBalance");
-        win.down("textfield[name=CardNumber]").setValue(selectedItems[0].data.CardNumber);
+        //win.down("textfield[name=CardNumber]").setValue(selectedItems[0].data.CardNumber);
         win.show();
     },
     showAdjustMemberPoint: function (btn) {
@@ -340,7 +340,7 @@ Ext.define('WX.controller.Member', {
             return;
         }
         var win = Ext.widget("AdjustMemberPoint");
-        win.down("textfield[name=CardNumber]").setValue(selectedItems[0].data.CardNumber);
+        //win.down("textfield[name=CardNumber]").setValue(selectedItems[0].data.CardNumber);
         win.down("textfield[name=MemberID]").setValue(selectedItems[0].data.ID);
         win.down("textfield[name=Point]").setValue(selectedItems[0].data.Point);
         win.show();
@@ -445,11 +445,11 @@ Ext.define('WX.controller.Member', {
             disabled = true;
         }
         me.getMember().down('button[action=resetPassword]').setDisabled(disabled);
-        me.getMember().down('button[action=reportLoss]').setDisabled(disabled);
-        me.getMember().down('button[action=cancelLoss]').setDisabled(disabled);
-        me.getMember().down('button[action=changeCard]').setDisabled(disabled);
+        //me.getMember().down('button[action=reportLoss]').setDisabled(disabled);
+        //me.getMember().down('button[action=cancelLoss]').setDisabled(disabled);
+        //me.getMember().down('button[action=changeCard]').setDisabled(disabled);
         me.getMember().down('button[action=editMember]').setDisabled(disabled);
-        me.getMember().down('button[action=adjustBalance]').setDisabled(disabled);
+        //me.getMember().down('button[action=adjustBalance]').setDisabled(disabled);
     },
     exportMember: function (btn) {
         Ext.MessageBox.show({

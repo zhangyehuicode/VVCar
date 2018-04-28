@@ -94,6 +94,10 @@
       <Project>{2575eda0-b3ba-473a-8ceb-455404bcdf06}</Project>
       <Name>VVCar.BaseData.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VVCar.Shop.Domain\VVCar.Shop.Domain.csproj">
+      <Project>{3F12D42F-EFD2-4743-B79A-F8599D1E98F0}</Project>
+      <Name>VVCar.Shop.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VVCar.VIP.Domain\VVCar.VIP.Domain.csproj">
       <Project>{5e2b30a6-bd56-4e3f-9626-2f717340a7cc}</Project>
       <Name>VVCar.VIP.Domain</Name>

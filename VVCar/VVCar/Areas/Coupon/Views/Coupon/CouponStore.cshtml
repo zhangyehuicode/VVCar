@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "适用门店";
+    Layout = "~/Areas/Coupon/Views/Shared/_Layout.cshtml";
+}
+
+<div class="sl-body">
+    <div class="sl-list">
+        <!-- ko foreach: StoreList -->
+        <div class="sl-listitem">
+            <div class="sl-listitem-title" data-bind="text: Name"></div>
+            <div class="sl-listitem-address">
+                <div class="sl-store-address" data-bind="text: Address"></div>
+                @*<div class="sl-store-bus" data-bind="text: BusStation"></div>*@
+            </div>
+            <div class="sl-listitem-phone">
+                <div class="sl-store-phone"><a data-bind="text: TelPhone, attr: { href: 'tel:' + TelPhone }"></a></div>
+                <div class="sl-store-phoneicon" data-bind="click: $root.callStore"></div>
+            </div>
+        </div>
+        <!-- /ko -->
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/ko")
+    <script type="text/javascript">
+        var PageViewModel = function () {
+            var self = this;
+            self.StoreList = ko.observableArray([]);
+
+            self.callStore = function (store) {
+                window.location.href = 'tel:' + store.TelPhone;
+            };
+
+            self.loadData = function () {
+                $.ajax({
+                    type: 'GET',
+                    headers: { 'CompanyCode': _mchCode },
+                    url: "/api/Coupon/CouponStoreInfo?ctid=" + _couponTemplateId,
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res == null || res == '') {
+                            return;
+                        }
+                        if (res.IsSuccessful) {
+                            self.StoreList(res.Data);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            self.loadData();
+        };
+    </script>
+    <script type="text/javascript">
+        var openId = '@ViewBag.openid';
+        var _mchCode = '';
+        var _couponTemplateId = '';
+
+        _mchCode = $.getUrlParam('mch');
+        if (_mchCode == null || _mchCode == '') {
+            _mchCode = sessionStorage.getItem('mch');
+        }
+        sessionStorage.setItem('mch', _mchCode);
+        _couponTemplateId = $.getUrlParam('ctid');
+        ko.applyBindings(new PageViewModel());
+    </script>
+}
+

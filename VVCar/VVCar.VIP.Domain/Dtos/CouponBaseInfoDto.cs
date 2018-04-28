@@ -29,6 +29,16 @@ namespace VVCar.VIP.Domain.Dtos
         public Guid TemplateID { get; set; }
 
         /// <summary>
+        /// 性质
+        /// </summary>
+        public ENature Nature { get; set; }
+
+        /// <summary>
+        ///  封面图片
+        /// </summary>
+        public string CoverImage { get; set; }
+
+        /// <summary>
         ///  使用状态
         /// </summary>
         public ECouponStatus Status { get; set; }
@@ -219,6 +229,11 @@ namespace VVCar.VIP.Domain.Dtos
         /// 会员积分
         /// </summary>
         public int MemberPoint { get; set; }
+
+        /// <summary>
+        /// 消费总额
+        /// </summary>
+        public decimal TotalConsume { get; set; }
 
         /// <summary>
         /// 领券中心兑换设置ID

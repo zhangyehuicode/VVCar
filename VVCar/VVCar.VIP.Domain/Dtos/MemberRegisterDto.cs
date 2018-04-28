@@ -25,9 +25,13 @@ namespace VVCar.VIP.Domain.Dtos
         public string MobilePhoneNo { get; set; }
 
         /// <summary>
-        /// 登录密码
+        /// 姓名
         /// </summary>
-        [Required]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 核销密码
+        /// </summary>
         public string Password { get; set; }
 
         /// <summary>

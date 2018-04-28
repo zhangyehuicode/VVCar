@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "登录注册";
+    ViewBag.Title = "";
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
@@ -13,14 +13,14 @@
     <div class="logininfocon">
         <div class="zcdl_box3">
             <img src="~/Areas/resource/img/mobile/gr.png" style="width:16px; float:left; margin-top:19px;">
-            <input type="text" name="address" size="60" maxlength="11" style="color:#fff" value="请输入您的手机号" onFocus="if(this.value=='请输入您的手机号'){this.value=''};this.style.color='#fff';" onBlur="if(this.value==''||this.value=='请输入您的手机号'){this.value='请输入您的手机号';this.style.color='#fff';}" class="zcdl_box4">
-            <a href="#" class="zcdl_text">发送验证码</a>
+            <input v-model="UserInfo.MobilePhoneNo" type="number" placeholder="请输入您的手机号" name="address" size="11" maxlength="11" style="color:#fff" class="zcdl_box4" oninput="if(value.length>11)value=value.slice(0,11)">
+            <a class="zcdl_text" v-on:click="sendSMS">发送验证码</a>
         </div>
         <div class="zcdl_box3" style="margin-top:inherit;">
             <img src="~/Areas/resource/img/mobile/yzm2.png" style="width:16px; float:left; margin-top:18px;">
-            <input type="text" name="address" size="60" maxlength="60" style="color:#fff" value="请输入验证码" onFocus="if(this.value=='请输入验证码'){this.value=''};this.style.color='#fff';" onBlur="if(this.value==''||this.value=='请输入验证码'){this.value='请输入验证码';this.style.color='#fff';}" class="zcdl_box4">
+            <input v-model="UserInfo.VerificationCode" type="number" placeholder="请输入验证码" name="address" size="6" maxlength="6" style="color:#fff" class="zcdl_box4" oninput="if(value.length>6)value=value.slice(0,6)">
         </div>
-        <a href="#" class="zcdl_btn" v-on:click="register">手机微信绑定，注册提交</a>
+        <a class="zcdl_btn" v-on:click="register">注册/登录</a>
     </div>
 </div>
 
@@ -80,6 +80,9 @@
             font-size: 15px;
             color: #fdc816;
         }
+
+        .waitsendvc {
+        }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
@@ -128,20 +131,171 @@
         wxConfig();
     </script>
     <script type="text/javascript">
-        var mch = $.getUrlParam('mch');
+        $(function(){
+            var mch = $.getUrlParam('mch');
+            function init() {
+                $.ajax({
+                    url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                    type: 'GET',
+                    headers: { 'CompanyCode':mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('member', res.Data);
+                                window.location.href="/Mobile/Customer/Home?mch="+mch;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            init();
+        });
+    </script>
+    <script type="text/javascript">
         if ('@ViewBag.HeadImgUrl' != '' && '@ViewBag.HeadImgUrl' != null) {
             $('.headerimg').attr('src','@ViewBag.HeadImgUrl');
             $('.headerimg').addClass('headerimgchange');
         }
+
+        function sendSMSAction(mobilephoneno) {
+            if ($(".zcdl_text").hasClass('waitsendvc'))
+                return;
+            if (mobilephoneno == null || mobilephoneno == '') {
+                $.alert('请先输入手机号码');
+                return;
+            }
+            if (mobilephoneno.toString().length != 11) {
+                $.alert('请输入11位手机号码');
+                return;
+            }
+            $.ajax({
+                url: '/AliyunSMS/Sms/SendSms/' + mobilephoneno+'/SMS_119520024',
+                type: 'GET',
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        $.alert('验证码发送成功,请查收');
+                        $(".zcdl_text").addClass('waitsendvc');
+                        var j = 120;
+                        var int = window.setInterval(function () {
+                            if (j <= 0) {
+                                $(".zcdl_text").removeClass('waitsendvc');
+                                $(".zcdl_text").html("发送验证码");
+                                stopInterval(int);
+                            } else {
+                                j--;
+                                $(".zcdl_text").html(j + " S");
+                            }
+                        }, 1000);
+
+                    }
+                    else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
+        function checkVerificationCode(mobilephoneno, verificationCode,callback) {
+            if (mobilephoneno == null || mobilephoneno == '') {
+                $.alert('请先输入手机号码');
+                return;
+            }
+            if (mobilephoneno.toString().length!=11) {
+                $.alert('请输入11位手机号码');
+                return;
+            }
+            if (verificationCode == null || verificationCode == '') {
+                $.alert('请先输入验证码');
+                return;
+            }
+            $.ajax({
+                url: '/AliyunSMS/Sms/CheckVerificationCode/' + mobilephoneno + '/' + verificationCode,
+                type: 'GET',
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data) {
+                            if (callback != null) {
+                                callback(mobilephoneno.toString());
+                            }
+                        } else {
+                            $.alert('验证码不正确');
+                        }
+                    }
+                    else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
         _payBillViewModel = new Vue({
             el: '#loginreg',
             data: {
-                UserInfo: {},
-            },
+                UserInfo: {
+                    MobilePhoneNo: '',
+                    VerificationCode:'',
+                },
+              },
             methods: {
                 register: function (event) {
-                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                    checkVerificationCode(this.UserInfo.MobilePhoneNo, this.UserInfo.VerificationCode, function (mobilePhoneNo) {
+                        $.ajax({
+                            url: '/api/Member/Register',
+                            type: 'POST',
+                            headers: { "CompanyCode": mch },
+                            data: {
+                                WeChatOpenID: '@ViewBag.OpenId',
+                                MobilePhoneNo: mobilePhoneNo,
+                                Name:"@ViewBag.NickName",
+                                Password:'123456',
+                            },
+                            beforeSend: function () {
+                                //$.showLoading();
+                            },
+                            success: function (res) {
+                                //$.hideLoading();
+                                if (res.IsSuccessful) {
+                                    $.toast('注册/登录成功', function () {
+                                        window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                                    });
+                                }
+                                else {
+                                    $.alert(res.ErrorMessage);
+                                }
+                            },
+                            error: function () {
+                                //$.hideLoading();
+                                $.alert('注册失败');
+                            }
+                        });
+                    });
                 },
+                sendSMS: function (event) {
+                    sendSMSAction(this.UserInfo.MobilePhoneNo);
+                }
             }
         });
     </script>

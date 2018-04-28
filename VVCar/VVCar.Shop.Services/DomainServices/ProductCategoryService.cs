@@ -74,6 +74,7 @@ namespace VVCar.Shop.Services.DomainServices
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.CreatedDate = DateTime.Now;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 

@@ -6,9 +6,9 @@
 
 <div id="order">
     <div class="toubu">
-        <a><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
-        店长工作终端
-        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        <div class="title">工作终端</div>
+        <a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
     </div>
     <div class="hykhx">
         <span class="smewm">今日(2018-01-09)<span style="float:right;">核销：<span style="color:#ff0c4c;">10笔</span></span></span>
@@ -29,7 +29,7 @@
                 <td>10:15</td>
                 <td>闽AB1234</td>
                 <td style="color:#ff0c4c;">￥20</td>
-                <td><a href="#" style="color:#51b3f0;">付款</a>&nbsp;&nbsp;<a href="#" style="color:#999;">删除</a></td>
+                <td><a style="color:#51b3f0;" v-on:click="selectpaytype">付款</a>&nbsp;&nbsp;<a href="#" style="color:#999;">删除</a></td>
             </tr>
             <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:13px; color:#2d2d30; text-align:center; ">
                 <td>10:15</td>
@@ -137,6 +137,12 @@
         wxConfig();
     </script>
     <script type="text/javascript">
+        var _ismaster = sessionStorage.getItem('ismaster');
+        if (_ismaster == 'true') {
+            $('.title').text('店长工作终端');
+        } else {
+            $('.title').text('店员工作终端');
+        }
         var mch = $.getUrlParam('mch');
         _payBillViewModel = new Vue({
             el: '#order',
@@ -144,11 +150,18 @@
                 Data: {},
             },
             methods: {
-                home: function (event) {
-                    window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                back: function (event) {
+                    history.back(-1);
                 },
-                selectpaytypepage: function (event) {
-                    window.location.href = "/Mobile/Merchant/Home?mch=" + mch;
+                home: function (event) {
+                    if (_ismaster == 'true') {
+                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                    } else {
+                        window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                    }
+                },
+                selectpaytype: function (event) {
+                    window.location.href = "/Mobile/Merchant/PayType?mch=" + mch;
                 },
             }
         });

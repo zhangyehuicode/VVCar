@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "购物车";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div style="background-color:#f8f9fe;" id="shoppingcart">
+    <div class="top_box">
+        <div class="top_box_text">购物车</div>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a class="top_box2"></a>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
+    </div>
+    <div class="gwc_box">
+        <img src="~/Areas/resource/img/mobile/9.jpg" class="gwc_img">
+        <div class="gwc_box2">
+            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
+            <div style=" width:100%; color:#ff0c4b; line-height:44px; float:left;"><span style="float:left; font-size:18px;">￥500</span><img src="~/Areas/resource/img/mobile/jiajian.png" style="width:30%; float:left; margin-left:15px; margin-top:10px;"><img src="~/Areas/resource/img/mobile/sc.png" style="width:16px; float:right; margin-top:12px; margin-right:3%;"></div>
+        </div>
+    </div>
+    <div class="gwc_box">
+        <img src="~/Areas/resource/img/mobile/9.jpg" class="gwc_img">
+        <div class="gwc_box2">
+            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
+            <div style=" width:100%; color:#ff0c4b; line-height:44px; float:left;"><span style="float:left; font-size:18px;">￥500</span><img src="~/Areas/resource/img/mobile/jiajian.png" style="width:30%; float:left; margin-left:15px; margin-top:10px;"><img src="~/Areas/resource/img/mobile/sc.png" style="width:16px; float:right; margin-top:12px; margin-right:3%;"></div>
+        </div>
+    </div>
+    <div class="gwc_box">
+        <img src="~/Areas/resource/img/mobile/9.jpg" class="gwc_img">
+        <div class="gwc_box2">
+            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
+            <div style=" width:100%; color:#ff0c4b; line-height:44px; float:left;"><span style="float:left; font-size:18px;">￥500</span><img src="~/Areas/resource/img/mobile/jiajian.png" style="width:30%; float:left; margin-left:15px; margin-top:10px;"><img src="~/Areas/resource/img/mobile/sc.png" style="width:16px; float:right; margin-top:12px; margin-right:3%;"></div>
+        </div>
+    </div>
+    <div class="gwc_hj">合计：<span style="font-size:20px; color:#ff0c4b;"><span style="font-size:12px;">￥</span>1500</span></div>
+    <a class="gwc_btn">提交订单</a>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#shoppingcart',
+            data: {
+                ProductList: [],
+                TotalMoney: 0,
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+            }
+        });
+    </script>
+}

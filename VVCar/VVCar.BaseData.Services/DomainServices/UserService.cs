@@ -165,7 +165,8 @@ namespace VVCar.BaseData.Services.DomainServices
                 CanLoginAdminPortal = t.CanLoginAdminPortal,
                 DepartmentID = t.DepartmentID,
                 DepartmentCode = t.Department.Code,
-                DepartmentName = t.Department.Name
+                DepartmentName = t.Department.Name,
+                MerchantID = t.MerchantID,
             }).FirstOrDefault();
             if (user == null)
                 throw new DomainException("用户名或密码不正确");

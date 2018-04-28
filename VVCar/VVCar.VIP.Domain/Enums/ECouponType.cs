@@ -8,32 +8,32 @@ using System.Threading.Tasks;
 namespace VVCar.VIP.Domain.Enums
 {
     /// <summary>
-    /// 优惠券类型
+    /// 优惠类型
     /// </summary>
     public enum ECouponType
     {
         /// <summary>
-        /// 代金券, #e59e04
+        /// 代金
         /// </summary>
-        [Description("代金券")]
+        [Description("代金")]
         CashCoupon = 0,
 
         /// <summary>
-        /// 抵用券, #d0459d
+        /// 抵用
         /// </summary>
-        [Description("抵用券")]
+        [Description("抵用")]
         Voucher = 1,
 
         /// <summary>
-        /// 兑换券, #2a8bc2
+        /// 兑换
         /// </summary>
-        [Description("兑换券")]
+        [Description("兑换")]
         Exchange = 2,
 
         /// <summary>
-        /// 折扣券, #1cac2a
+        /// 折扣
         /// </summary>
-        [Description("折扣券")]
+        [Description("折扣")]
         Discount = 3,
     }
 }

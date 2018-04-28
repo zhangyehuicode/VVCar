@@ -44,6 +44,8 @@ namespace VVCar.BaseData.Services.DomainServices
         public IEnumerable<Merchant> Search(MerchantFilter filter, out int totalCount)
         {
             var queryable = Repository.GetQueryable(false);
+            if (filter.ID.HasValue)
+                queryable = queryable.Where(t => t.ID == filter.ID.Value);
             if (!string.IsNullOrEmpty(filter.Code))
                 queryable = queryable.Where(t => t.Code.Contains(filter.Code));
             if (!string.IsNullOrEmpty(filter.Name))

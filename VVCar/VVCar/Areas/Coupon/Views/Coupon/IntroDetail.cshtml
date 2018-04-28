@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "详情介绍";
+    Layout = "~/Areas/Coupon/Views/Shared/_Layout.cshtml";
+}
+
+<div class="form-group" style="padding-top:30px;">
+    <div>
+        <fieldset>
+            <legend>卡券详情</legend>
+            <table style="width: 100%;table-layout:fixed;">
+                <tbody>
+                    <!--ko if: CouponInfo().UseInstructions != null && CouponInfo().UseInstructions != '' -->
+                    <tr>
+                        <td class="field-label">使用须知</td>
+                        <td class="field-value" style="white-space: pre-line;" data-bind="text: CouponInfo().UseInstructions"></td>
+                    </tr>
+                    <!--/ko-->
+                    <tr>
+                        <td class="field-label">
+                            有效日期
+                        </td>
+                        <td class="field-value">
+                            <span data-bind="text: CouponInfo().EffectiveDateDesc"></span> - <span data-bind="text: CouponInfo().ExpiredDateDesc"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="field-label">可用时段</td>
+                        <td class="field-value" style="white-space: pre-line;" data-bind="text: CouponInfo().UseTimeDesc"></td>
+                    </tr>
+                    <!--ko if: CouponInfo().MerchantServiceDesc != null && CouponInfo().MerchantServiceDesc != '' -->
+                    <tr style="display:none;">
+                        <td class="field-label">商户服务</td>
+                        <td class="field-value" data-bind="text: CouponInfo().MerchantServiceDesc"></td>
+                    </tr>
+                    <!--/ko-->
+                </tbody>
+            </table>
+        </fieldset>
+        <fieldset>
+            <legend>图文介绍</legend>
+            <div class="col-md-12" id="introdetail" data-bind="html: CouponInfo().IntroDetail">
+            </div>
+        </fieldset>
+    </div>
+</div>
+@section scripts{
+    <style>
+        .field-label {
+            width: 100px;
+            text-align: center;
+            color: #9e9e9e;
+            font-weight: 300;
+        }
+
+        .field-value {
+            padding-right: 10px;
+        }
+    </style>
+    @Scripts.Render("~/bundles/ko")
+    <script>
+        var PageViewModel = function () {
+            var self = this;
+            self.CouponInfo = ko.observable({});
+
+            self.loadData = function () {
+                $.ajax({
+                    type: 'GET',
+                    headers: { 'CompanyCode': _mchCode },
+                    url: "/api/Coupon/CouponInfo?userOpenID=" + openId + "&ctid=" + _couponTemplateId,
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res == null || res == '') {
+                            return;
+                        }
+                        if (res.IsSuccessful) {
+                            res.Data.HasIntroDetail = (res.Data.IntroDetail != null && res.Data.IntroDetail != "")
+                                || (res.Data.MerchantPhoneNo != null && res.Data.MerchantPhoneNo != "")
+                                || res.Data.MerchantService != 0;
+                            self.CouponInfo(res.Data);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            self.loadData();
+        }
+    </script>
+    <script type="text/javascript">
+        var openId = '@ViewBag.openid';
+        var _mchCode = '';
+        var _couponTemplateId = '';
+
+        _mchCode = $.getUrlParam('mch');
+        if (_mchCode == null || _mchCode == '') {
+            _mchCode = sessionStorage.getItem('mch');
+        }
+        sessionStorage.setItem('mch', _mchCode);
+        _couponTemplateId = $.getUrlParam('ctid');
+        ko.applyBindings(new PageViewModel());
+    </script>
+}
+

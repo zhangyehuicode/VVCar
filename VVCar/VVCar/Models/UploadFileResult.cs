@@ -34,5 +34,10 @@ namespace VVCar.Models
         /// 错误消息
         /// </summary>
         public string errorMessage { get; set; }
+
+        /// <summary>
+        /// 车牌识别结果
+        /// </summary>
+        public string PRResult { get; set; }
     }
 }

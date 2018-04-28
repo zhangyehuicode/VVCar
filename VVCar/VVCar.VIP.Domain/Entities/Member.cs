@@ -14,7 +14,7 @@ namespace VVCar.VIP.Domain.Entities
     /// <summary>
     /// 会员
     /// </summary>
-    public class Member : NormalEntityBase
+    public class Member : EntityBase
     {
         /// <summary>
         /// 会员卡ID

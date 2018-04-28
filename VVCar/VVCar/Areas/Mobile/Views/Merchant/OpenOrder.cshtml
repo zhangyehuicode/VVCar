@@ -6,9 +6,9 @@
 
 <div id="openorder">
     <div class="toubu">
-        <a href="#"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
-        店长工作终端
-        <a href="#"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        <div class="title">工作终端</div>
+        <a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
     </div>
     <div class="kcd_box">
         <div class="kcd_bg">
@@ -65,7 +65,7 @@
             </tr>
         </table>
     </div>
-    <div class="kcd_btn2">确认开单</div>
+    <div class="kcd_btn2" v-on:click="openorder">确认开单</div>
 </div>
 
 @section scripts{
@@ -116,6 +116,12 @@
         wxConfig();
     </script>
     <script type="text/javascript">
+        var _ismaster = sessionStorage.getItem('ismaster');
+        if (_ismaster == 'true') {
+            $('.title').text('店长工作终端');
+        } else {
+            $('.title').text('店员工作终端');
+        }
         var mch = $.getUrlParam('mch');
         _payBillViewModel = new Vue({
             el: '#openorder',
@@ -123,8 +129,18 @@
                 Data: {},
             },
             methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    if (_ismaster == 'true') {
+                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                    } else {
+                        window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                    }
+                },
                 openorder: function (event) {
-                    window.location.href = "/Mobile/Merchant/ConfirmOrder?mch=" + mch;
+                    window.location.href = "/Mobile/Merchant/Order?mch=" + mch;
                 },
             }
         });

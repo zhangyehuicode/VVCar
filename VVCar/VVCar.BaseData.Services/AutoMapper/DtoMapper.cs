@@ -11,6 +11,8 @@ using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Services.DomainServices;
 using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
+using VVCar.VIP.Domain.Dtos;
+using VVCar.VIP.Domain.Entities;
 using YEF.Core;
 
 namespace VVCar.BaseData.Services
@@ -54,6 +56,62 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.text, opt => opt.MapFrom(src => src.Name));
 
                 cfg.CreateMap<ProductCategory, ProductCategoryTreeDto>();
+
+                //VIP Domain
+                cfg.CreateMap<Member, IDCodeNameDto>()
+                   .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.CardNumber));
+
+                cfg.CreateMap<Member, MemberDto>()
+                    //.ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType.Name))
+                    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))
+                    .ForMember(dest => dest.CardBalance, opt => opt.MapFrom(src => src.Card.CardBalance))
+                    .ForMember(dest => dest.EffectiveDate, opt => opt.MapFrom(src => src.Card.EffectiveDate))
+                    .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.Card.ExpiredDate))
+                    .ForMember(dest => dest.OwnerDepartment, opt => opt.MapFrom(src => src.OwnerDepartment.Name))
+                    //.ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))
+                    //.ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))
+                    .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType))
+                    .ForMember(dest => dest.Point, opt => opt.MapFrom(src => src.Point));
+
+                cfg.CreateMap<MemberCardType, MemberCardTypeDto>();
+
+                cfg.CreateMap<Member, MemberLiteInfoDto>()
+                    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))
+                    .ForMember(dest => dest.CardBalance, opt => opt.MapFrom(src => src.Card.CardBalance))
+                    //.ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))
+                    //.ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))
+                    .ForMember(dest => dest.CardTypeID, opt => opt.MapFrom(src => src.Card.CardTypeID));
+
+                cfg.CreateMap<MemberRegisterDto, Member>();
+
+                cfg.CreateMap<ProductCategory, ProductCategoryLiteDto>();
+                cfg.CreateMap<Product, ProductLiteDto>();
+
+                cfg.CreateMap<Department, DepartmentLiteDto>();
+
+                cfg.CreateMap<CouponTemplate, CouponFullInfoDto>()
+                    .ForMember(dest => dest.TemplateID, opt => opt.MapFrom(src => src.ID))
+                    .ForMember(dest => dest.EffectiveDate, opt => opt.Ignore())
+                    .ForMember(dest => dest.ExpiredDate, opt => opt.Ignore())
+                    .ForMember(dest => dest.CoverImage, opt => opt.MapFrom(src => src.CoverImage))
+                    .ForMember(dest => dest.IntroDetail, opt => opt.MapFrom(src => src.IntroDetail))
+                    .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Stock.Stock))
+                    .ForMember(dest => dest.UsedStock, opt => opt.MapFrom(src => src.Stock.UsedStock))
+                    .ForMember(dest => dest.CollarQuantityLimit, opt => opt.MapFrom(src => src.Stock.CollarQuantityLimit));
+
+                cfg.CreateMap<Coupon, CouponBaseInfoDto>()
+                .ForMember(dest => dest.CouponID, opt => opt.MapFrom(src => src.ID))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Template.Title))
+                .ForMember(dest => dest.CouponType, opt => opt.MapFrom(src => src.Template.CouponType))
+                .ForMember(dest => dest.CouponValue, opt => opt.MapFrom(src => src.Template.CouponValue))
+                .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.Template.Color))
+                .ForMember(dest => dest.IsMinConsumeLimit, opt => opt.MapFrom(src => src.Template.IsMinConsumeLimit))
+                .ForMember(dest => dest.MinConsume, opt => opt.MapFrom(src => src.Template.MinConsume))
+                .ForMember(dest => dest.IsExclusive, opt => opt.MapFrom(src => src.Template.IsExclusive))
+                .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Template.Stock.Stock))
+                .ForMember(dest => dest.UsedStock, opt => opt.MapFrom(src => src.Template.Stock.UsedStock))
+                .ForMember(dest => dest.CoverImage, opt => opt.MapFrom(src => src.Template.CoverImage))
+                .ForMember(dest => dest.Nature, opt => opt.MapFrom(src => src.Template.Nature));
             });
             //Mapper.CreateMap<Member, MemberDto>()
             //    //.ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType.Name))

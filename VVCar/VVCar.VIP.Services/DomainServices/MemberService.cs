@@ -81,6 +81,8 @@ namespace VVCar.VIP.Services.DomainServices
 
         IMemberGradeHistoryService MemberGradeHistoryService { get => ServiceLocator.Instance.GetService<IMemberGradeHistoryService>(); }
 
+        ICouponService CouponService { get => ServiceLocator.Instance.GetService<ICouponService>(); }
+
         #endregion
 
         #region propertiesTemp
@@ -185,6 +187,7 @@ namespace VVCar.VIP.Services.DomainServices
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             var member = base.Add(entity);
             //if (!member.MemberGradeID.HasValue)
             //{
@@ -282,12 +285,15 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (registerDto == null)
                 return string.Empty;
-            var exist = this.Repository.Exists(t => t.WeChatOpenID == registerDto.WeChatOpenID);
-            if (exist)
-                throw new DomainException("微信已绑定会员卡");
+            var exist = this.Repository.GetQueryable(false).FirstOrDefault(t => t.WeChatOpenID == registerDto.WeChatOpenID);
+            if (exist != null)
+            {
+                //throw new DomainException("微信已绑定会员");
+                return exist.CardNumber;
+            }
             var member = this.Repository.GetQueryable().Where(t => t.MobilePhoneNo == registerDto.MobilePhoneNo).FirstOrDefault();
             //if (exist)
-            //    throw new DomainException("手机号码已绑定会员卡");
+            //    throw new DomainException("手机号码已绑定会员");
             if (member != null)
             {
                 member.WeChatOpenID = registerDto.WeChatOpenID;
@@ -303,7 +309,7 @@ namespace VVCar.VIP.Services.DomainServices
                 {
                     var memberCard = MemberCardService.GenerateVirtualCard();
                     var newMember = registerDto.MapTo<Member>();
-                    newMember.Name = string.Empty;
+                    //newMember.Name = string.Empty;
                     newMember.CardID = memberCard.ID;
                     newMember.CardNumber = memberCard.Code;
                     newMember.Password = registerDto.Password;
@@ -556,6 +562,12 @@ namespace VVCar.VIP.Services.DomainServices
             //var consumeCountOfReachNextGrade = highGrade?.QualifyByConsumeTotalCount;
             //var consumeAmountOfCurrentGrade = TradeHistoryRepo.GetQueryable(false).Where(t => t.MemberID == member.ID && t.MemberGradeID == member.MemberGradeID).GroupBy(t => 1).Select(t => t.Sum(s => s.TradeAmount)).FirstOrDefault();
             //var consumeCountOfCurrentGrade = TradeHistoryRepo.Count(t => t.MemberID == member.ID && t.MemberGradeID == member.MemberGradeID && t.CreatedDate > limitDate);
+            var cardCount = 0;
+            var cards = CouponService.GetAvailableCouponList(member.WeChatOpenID);
+            if (cards != null && cards.Count() > 0)
+            {
+                cardCount = cards.Where(t => t.Nature == ENature.Card).Count();
+            }
             var cardInfo = new MemberCardDto
             {
                 MemberID = member.ID,
@@ -576,6 +588,8 @@ namespace VVCar.VIP.Services.DomainServices
                 CardBalance = member.Card.CardBalance,
                 MemberGrade = "",//member.MemberGrade != null ? member.MemberGrade.Name : string.Empty,
                 IsNotOpen = false,//member.MemberGrade != null ? member.MemberGrade.IsNotOpen : false,
+                Plate = "",
+                CardCount = cardCount,
                 //ConsumeAmountOfReachNextGrade = consumeAmountOfReachNextGrade,
                 //ConsumeCountOfReachNextGrade = consumeCountOfReachNextGrade,
                 //ConsumeAmountOfCurrentGrade = consumeAmountOfCurrentGrade,
@@ -606,53 +620,53 @@ namespace VVCar.VIP.Services.DomainServices
         {
             var result = false;
             var remark = string.Empty;
-            var memberPoint = MemberPointRepo.GetInclude(t => t.AdditionalRules, false).Where(t => t.Type == pointType).FirstOrDefault();
-            if (memberPoint != null)
-            {
-                if (!memberPoint.IsAvailable)
-                {
-                    AppContext.Logger.Debug($"设置会员积分失败，对应参数type为{pointType}类型的积分规则未启用");
-                    return result;
-                }
-                var historyQuery = MemberPointHistoryRepo.GetQueryable(false).Where(t => t.Source == pointType && t.MemberID == memberID);
-                var historyCount = historyQuery.Count();
-                var todayCount = historyQuery.Where(t => t.CreatedDate >= DateTime.Today).Count();
-                adjustPoints = memberPoint.Point;
-                var additionalPoints = 0;
-                var additionalRules = memberPoint.AdditionalRules.OrderBy(t => t.Count);
-                if (pointType == EMemberPointType.SignIn)
-                {
-                    foreach (var additional in additionalRules)
-                    {
-                        var oriNum = (historyCount + 1) / (decimal)additional.Count;
-                        if (Math.Ceiling(oriNum) == oriNum)
-                        {
-                            additionalPoints = additional.Point;
-                        }
-                    }
-                    adjustPoints += additionalPoints;
-                }
-                else if (pointType == EMemberPointType.Share || pointType == EMemberPointType.Appraise)
-                {
-                    if (todayCount >= memberPoint.Limit)
-                    {
-                        AppContext.Logger.Error("增加会员积分超过限制次数");
-                        return false;
-                    }
-                    foreach (var additional in additionalRules)
-                    {
-                        if (additional.Count > 0)
-                        {
-                            var oriNum = (historyCount + 1) / (decimal)additional.Count;
-                            if (Math.Ceiling(oriNum) == oriNum)
-                            {
-                                additionalPoints = additional.Point;
-                            }
-                        }
-                    }
-                    adjustPoints += additionalPoints;
-                }
-            }
+            //var memberPoint = MemberPointRepo.GetInclude(t => t.AdditionalRules, false).Where(t => t.Type == pointType).FirstOrDefault();
+            //if (memberPoint != null)
+            //{
+            //    if (!memberPoint.IsAvailable)
+            //    {
+            //        AppContext.Logger.Debug($"设置会员积分失败，对应参数type为{pointType}类型的积分规则未启用");
+            //        return result;
+            //    }
+            //    var historyQuery = MemberPointHistoryRepo.GetQueryable(false).Where(t => t.Source == pointType && t.MemberID == memberID);
+            //    var historyCount = historyQuery.Count();
+            //    var todayCount = historyQuery.Where(t => t.CreatedDate >= DateTime.Today).Count();
+            //    adjustPoints = memberPoint.Point;
+            //    var additionalPoints = 0;
+            //    var additionalRules = memberPoint.AdditionalRules.OrderBy(t => t.Count);
+            //    if (pointType == EMemberPointType.SignIn)
+            //    {
+            //        foreach (var additional in additionalRules)
+            //        {
+            //            var oriNum = (historyCount + 1) / (decimal)additional.Count;
+            //            if (Math.Ceiling(oriNum) == oriNum)
+            //            {
+            //                additionalPoints = additional.Point;
+            //            }
+            //        }
+            //        adjustPoints += additionalPoints;
+            //    }
+            //    else if (pointType == EMemberPointType.Share || pointType == EMemberPointType.Appraise)
+            //    {
+            //        if (todayCount >= memberPoint.Limit)
+            //        {
+            //            AppContext.Logger.Error("增加会员积分超过限制次数");
+            //            return false;
+            //        }
+            //        foreach (var additional in additionalRules)
+            //        {
+            //            if (additional.Count > 0)
+            //            {
+            //                var oriNum = (historyCount + 1) / (decimal)additional.Count;
+            //                if (Math.Ceiling(oriNum) == oriNum)
+            //                {
+            //                    additionalPoints = additional.Point;
+            //                }
+            //            }
+            //        }
+            //        adjustPoints += additionalPoints;
+            //    }
+            //}
             var member = Repository.GetByKey(memberID);
             if (member == null)
             {

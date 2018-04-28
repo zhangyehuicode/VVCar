@@ -41,7 +41,7 @@ namespace VVCar.Providers
         /// <summary>
         /// 商户号标识
         /// </summary>
-        const string COMPANY_CODE = "ym:companycode";
+        const string COMPANY_CODE = "companycode";
 
         /// <summary>
         /// 公钥
@@ -64,11 +64,11 @@ namespace VVCar.Providers
 
         static ApplicationOAuthProvider()
         {
-            _PublicKey = "zhangyehui2017";
+            _PublicKey = "cheyinzi";
             _ClientIdList = new List<string>();
             for (int i = 1; i <= 40; i++)
             {
-                _ClientIdList.Add(string.Concat("zhangyehui", i.PadLeft(10, '0')));
+                _ClientIdList.Add(string.Concat("cheyinzi", i.PadLeft(3, '0')));
             }
         }
         #endregion
@@ -91,15 +91,16 @@ namespace VVCar.Providers
         {
             var companyCode = context.OwinContext.Get<string>(COMPANY_CODE);
             BaseData.Domain.Dtos.UserInfoDto loginUser = null;
+            var mch = string.Empty;
             try
             {
                 //当前环境为动态指定数据库时需要将CompanyCode写入到令牌中
-                if (AppContext.Settings.IsDynamicCompany)
-                {
-                    var identity = new ClaimsIdentity();
-                    identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
-                    Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
-                }
+                //if (AppContext.Settings.IsDynamicCompany)
+                //{
+                //var identity = new ClaimsIdentity();
+                //identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
+                //Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
+                //}
                 var userService = ServiceLocator.Instance.GetService<IUserService>();
                 if (SsoClientId.Equals(context.ClientId))//如果是sso登录请求
                 {
@@ -116,6 +117,16 @@ namespace VVCar.Providers
                 if (AdminPortalClientId.Equals(context.ClientId) && !loginUser.CanLoginAdminPortal)
                 {
                     throw new DomainException("用户没有登录管理后台的权限。");
+                }
+                var merchantService = ServiceLocator.Instance.GetService<IMerchantService>();
+                var total = 0;
+                var merchant = merchantService.Search(new MerchantFilter { ID = loginUser.MerchantID }, out total).FirstOrDefault();
+                if (merchant != null)
+                {
+                    mch = merchant.Code;
+                    var identity = new ClaimsIdentity();
+                    identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, mch));
+                    Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
                 }
             }
             catch (DomainException domainEx)
@@ -135,7 +146,7 @@ namespace VVCar.Providers
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentId, loginUser.DepartmentID.ToString()));
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentName, loginUser.DepartmentName));
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentCode, loginUser.DepartmentCode));
-            oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
+            oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, mch));
             oAuthIdentity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantID, loginUser.MerchantID.ToString()));
             var props = new AuthenticationProperties(new Dictionary<string, string>
             {
@@ -207,16 +218,16 @@ namespace VVCar.Providers
         /// </returns>
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
-            string companyCode = AppContext.Settings.CompanyCode;
-            if (AppContext.Settings.IsDynamicCompany)
+            //string companyCode = AppContext.Settings.CompanyCode;
+            //if (AppContext.Settings.IsDynamicCompany)
+            //{
+            string companyCode = context.Parameters["companycode"];
+            if (string.IsNullOrEmpty(companyCode))
             {
-                companyCode = context.Parameters["companycode"];
-                if (string.IsNullOrEmpty(companyCode))
-                {
-                    context.SetError("invalid_params", "请输入商户号");
-                    return base.ValidateClientAuthentication(context);
-                }
+                context.SetError("invalid_params", "请输入商户号");
+                //return base.ValidateClientAuthentication(context);
             }
+            //}
             context.OwinContext.Set(COMPANY_CODE, companyCode);
             string clientId;
             string clientSecret;

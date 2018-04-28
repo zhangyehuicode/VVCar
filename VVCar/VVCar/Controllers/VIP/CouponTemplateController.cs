@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
+using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
@@ -246,6 +247,34 @@ namespace VVCar.Controllers.VIP
                 var data = this.CouponTemplateService.GetValidCouponTemplateInfo(filter, out totalCount);
                 result.Data = data;
                 result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        /// 获取推荐会员卡
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetRecommendCouponTemplate"), AllowAnonymous]
+        public PagedActionResult<Product> GetRecommendCouponTemplate()
+        {
+            return SafeGetPagedData<Product>((result) =>
+            {
+                var data = CouponTemplateService.GetRecommendCouponTemplate();
+                result.Data = data;
+            });
+        }
+
+        /// <summary>
+        /// 获取会员卡
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetCardOfCouponTemplate"), AllowAnonymous]
+        public PagedActionResult<Product> GetCardOfCouponTemplate()
+        {
+            return SafeGetPagedData<Product>((result) =>
+            {
+                var data = CouponTemplateService.GetCardOfCouponTemplate();
+                result.Data = data;
             });
         }
     }

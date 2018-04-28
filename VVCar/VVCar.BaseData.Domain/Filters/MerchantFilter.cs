@@ -13,6 +13,11 @@ namespace VVCar.BaseData.Domain.Filters
     public class MerchantFilter : BasePageFilter
     {
         /// <summary>
+        /// ID
+        /// </summary>
+        public Guid? ID { get; set; }
+
+        /// <summary>
         /// 商户号
         /// </summary>
         public string Code { get; set; }

@@ -7,96 +7,51 @@
 <div style="background-color:#f8f9fe;" id="shop">
     <div class="top_box">
         <div class="top_box_text">精品商城</div>
-        <a href="#"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="home"></a>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
         <a class="top_box2"></a>
-        <a href="#"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
     </div>
     <div class="nav_box" style="position:relative;">
         <div>
-            <a href="#"><img src="~/Areas/resource/img/mobile/erweima.png" v-on:click="scanQRCode"></a><br>
+            <a><img src="~/Areas/resource/img/mobile/erweima.png" v-on:click="scanQRCode"></a><br>
             扫码付款
         </div>
         <div>
-            <a href="#"><img src="~/Areas/resource/img/mobile/kabao.png" v-on:click="membercard"></a><br>
+            <a><img src="~/Areas/resource/img/mobile/kabao.png" v-on:click="membercard"></a><br>
             会员卡包
         </div>
         <div>
-            <a href="#"><img src="~/Areas/resource/img/mobile/jingpin.png"></a><br>
-            精品商城
+            <a><img src="~/Areas/resource/img/mobile/gwc2.png" v-on:click="shoppingcart"></a><br>
+            购物车
         </div>
         <div>
-            <a href="#"><img src="~/Areas/resource/img/mobile/my.png" v-on:click="percenter"></a><br>
+            <a><img src="~/Areas/resource/img/mobile/my.png" v-on:click="percenter"></a><br>
             个人中心
         </div>
     </div>
     <div class="shop_box2">
-        <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;精品商城
-        <a href="#"><span>更多</span></a>
+        <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;精品推荐
+        @*<a><span>更多</span></a>*@
     </div>
     <div class="slide-box">
-        <div class="shop_box4">
-            <a href="#"><img src="~/Areas/resource/img/mobile/5.jpg"></a>
-            <span>汽车空气净化器</span>
-            <span style=" float:right; margin-right:3%; color:#ff0c4b;">￥1000</span>
-        </div>
-        <div class="shop_box4">
-            <a href="#"><img src="~/Areas/resource/img/mobile/5.jpg"></a>
-            <span>汽车空气净化器</span>
-            <span style=" float:right; margin-right:3%; color:#ff0c4b;">￥1000</span>
+        <div class="shop_box4" v-for="Product in RecommendProductList" v-on:click="productdetails(Product)">
+            <a><img class="productimg" v-bind:src=Product.ImgUrl></a>
+            <span>{{Product.Name}}</span>
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;">￥{{Product.PriceSale}}</span>
         </div>
     </div>
     <div class="shop_box">
         <div class="shop_box2">
-            <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;商品推荐
-            <a href="#"><span>更多</span></a>
+            <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;商品列表
+            @*<a href="#"><span>更多</span></a>*@
         </div>
         <div class="shop_box3">
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+            <div class="shop_box3_div" v-for="Product in ProductList" v-on:click="productdetails(Product)">
+                <span class="shop_box3_span">{{Product.Name}}</span>
+                <a><img class="shop_box3_img cardimg" v-bind:src=Product.ImgUrl></a>
                 <div class="shop_box3_div2">
-                    ￥500
-                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
-                </div>
-            </div>
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
-                <div class="shop_box3_div2">
-                    ￥500
-                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
-                </div>
-            </div>
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
-                <div class="shop_box3_div2">
-                    ￥500
-                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
-                </div>
-            </div>
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
-                <div class="shop_box3_div2">
-                    ￥500
-                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
-                </div>
-            </div>
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
-                <div class="shop_box3_div2">
-                    ￥500
-                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
-                </div>
-            </div>
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a href="#"><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
-                <div class="shop_box3_div2">
-                    ￥500
-                    <a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>
+                    ￥{{Product.PriceSale}}
+                    @*<a><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>*@
                 </div>
             </div>
         </div>
@@ -105,6 +60,15 @@
 </div>
 
 @section scripts{
+    <style type="text/css">
+        .productimg {
+            height: 190px;
+        }
+
+        .cardimg {
+            height: 100px;
+        }
+    </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -157,8 +121,12 @@
             el: '#shop',
             data: {
                 ProductList: [],
+                RecommendProductList: [],
             },
             methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
                 home: function (event) {
                     window.location.href = "/Mobile/Customer?mch=" + mch;
                 },
@@ -167,6 +135,13 @@
                 },
                 membercard: function (event) {
                     window.location.href = "/Mobile/Customer/MemberCard?mch=" + mch;
+                },
+                shoppingcart: function (event) {
+                    window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
+                },
+                productdetails: function (data, event) {
+                    sessionStorage.setItem('product', JSON.stringify(data));
+                    window.location.href = "/Mobile/Customer/ProductDetails?mch=" + mch;
                 },
                 scanQRCode: function (event) {
                     wx.scanQRCode({
@@ -179,5 +154,82 @@
                 },
             }
         });
+
+        function getRecommendProduct() {
+            $.ajax({
+                url: '/api/Product/GetRecommendProduct',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforesend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null)
+                            _payBillViewModel.RecommendProductList = res.Data;
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+        getRecommendProduct();
+
+        function getCardOfCouponTemplate() {
+            $.ajax({
+                url: '/api/CouponTemplate/GetCardOfCouponTemplate',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforesend: function () {
+                    //$.showLoading();
+                },
+                success: function (res) {
+                    //$.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            for (var i = 0; i < res.Data.length; i++) {
+                                _payBillViewModel.ProductList.push(res.Data[i]);
+                            }
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    //$.hideLoading();
+                }
+            });
+        }
+
+        function getProduct() {
+            $.ajax({
+                url: '/api/Product/GetProduct',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforesend: function () {
+                    //$.showLoading();
+                },
+                success: function (res) {
+                    //$.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            _payBillViewModel.ProductList = res.Data;
+                            getCardOfCouponTemplate();
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    //$.hideLoading();
+                }
+            });
+        }
+        getProduct();
+
     </script>
 }

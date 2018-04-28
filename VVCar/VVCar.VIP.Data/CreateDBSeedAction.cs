@@ -64,10 +64,10 @@ namespace VVCar.VIP.Data
         void SeedCardThemeCategory(DbContext context)
         {
             var cardThemeCategorySet = context.Set<CardThemeCategory>();
-            cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000000"), Name = "全部", Grade = 0 });
-            cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "1类推荐", Grade = 1 });
-            cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "2类推荐", Grade = 2 });
-            cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "3类推荐", Grade = 3 });
+            //cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000000"), Name = "全部", Grade = 0 });
+            //cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "1类推荐", Grade = 1 });
+            //cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "2类推荐", Grade = 2 });
+            //cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "3类推荐", Grade = 3 });
         }
     }
 }

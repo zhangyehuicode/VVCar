@@ -4,6 +4,7 @@
     fields: [
         { name: "Index" },
         { name: "Name" },
+        { name: "Code" },
         { name: "ImgUrl" },
         { name: "Points" },
         { name: "UpperLimit" },
@@ -16,6 +17,6 @@
         { name: "CreatedDate" },
         { name: "BasePrice" },
         { name: "PriceSale" },
-        //{ name: "ProductType" },
+        { name: "ProductType" },
     ]
 });

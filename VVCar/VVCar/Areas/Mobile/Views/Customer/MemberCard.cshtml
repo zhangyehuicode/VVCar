@@ -17,8 +17,8 @@
             扫码付款
         </div>
         <div>
-            <a href="#"><img src="~/Areas/resource/img/mobile/kabao.png"></a><br>
-            会员卡包
+            <a><img src="~/Areas/resource/img/mobile/gwc2.png" v-on:click="shoppingcart"></a><br>
+            购物车
         </div>
         <div>
             <a href="#"><img src="~/Areas/resource/img/mobile/jingpin.png" v-on:click="shop"></a><br>
@@ -31,44 +31,55 @@
     </div>
     <div class="jifen">
         <div>
-            <span style="margin-top:4px;">1000</span>
+            <span style="margin-top:4px;">{{MyInfo.Points}}</span>
             <span style="padding-top:inherit; font-size:13px; color:#2d2d30;">我的积分</span>
         </div>
         <div>
-            <span style="margin-top:4px;">15000</span>
+            <span style="margin-top:4px;">{{MyInfo.TotalConsume}}</span>
             <span style="padding-top:inherit; font-size:13px; color:#2d2d30;">消费总额</span>
         </div>
         <div>
-            <span style="margin-top:4px;">3</span>
+            <span style="margin-top:4px;">{{MyInfo.CardCount}}</span>
             <span style="padding-top:inherit; font-size:13px; color:#2d2d30;">会员卡数量</span>
         </div>
     </div>
     <div class="bq_box">
-        <a href="#">我的会员卡</a>
-        <a href="#" style="color:#2d2d30; border:none;">我的会员卡</a>
-        <a href="#" style="color:#2d2d30; border:none;">我的会员卡</a>
+        <a v-on:click="mycard" style="width:50% !important;" id="cardtab">我的会员卡</a>
+        <a v-on:click="mycoupon" class="tabchange" style="width:50% !important;" id="coupontab">我的优惠券</a>
     </div>
-    <div class="hykb_box">
-        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;">
-            <a href="#"><img src="~/Areas/resource/img/mobile/6.png"></a>
-            <span class=" hykb_text">会员卡名</span>
-            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text">卡内余额：￥100</span>
+    <div class="hykb_box" id="card">
+        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;" v-for="Card in CardList" v-on:click="couponInfo(Card)">
+            <a><img class="cardimg" v-bind:src=Card.CoverImage></a>
+            <span class=" hykb_text">{{Card.Title}}</span>
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text">{{Card.CouponValue}}{{Card.CouponValueUnit}}</span>
         </div>
-        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;">
-            <a href="#"><img src="~/Areas/resource/img/mobile/7.png"></a>
-            <span class=" hykb_text">接收者名称（已/未激活）</span>
-            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class=" hykb_text">卡内余额：￥100</span>
-        </div>
-        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;">
-            <a href="#"><img src="~/Areas/resource/img/mobile/8.png"></a>
-            <span class=" hykb_text">好友微信昵称</span>
-            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class=" hykb_text">卡有效期：100天</span>
-        </div>
-        <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
     </div>
+    <div class="hykb_box" id="coupon" style="display:none;">
+        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;display:table;" v-for="Coupon in CouponList" v-on:click="couponInfo(Coupon)">
+            <div style="display:table-cell;width:120px;"><img class="couponimg" v-bind:src=Coupon.CoverImage></div>
+            <div class="hykb_text" style="display:table-cell;">{{Coupon.Title}}</div>
+            <div style="display:table-cell;float:right; margin-right:10%; color:#ff0c4b;" class="hykb_text">{{Coupon.CouponValue}}{{Coupon.CouponValueUnit}}</div>
+        </div>
+    </div>
+    <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
 </div>
 
 @section scripts{
+    <style type="text/css">
+        .cardimg {
+            height: 190px;
+        }
+
+        .couponimg {
+            width: 80px !important;
+            height: 50px;
+        }
+
+        .tabchange {
+            color: #2d2d30 !important;
+            border: none !important;
+        }
+    </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -117,10 +128,16 @@
     </script>
     <script type="text/javascript">
         var mch = $.getUrlParam('mch');
-        _payBillViewModel = new Vue({
+        _viewModel = new Vue({
             el: '#membercard',
             data: {
-                ProductList: [],
+                CardList: [],
+                CouponList: [],
+                MyInfo: {
+                    CardCount: 0,
+                    Points: 0,
+                    TotalConsume:0,
+                },
             },
             methods: {
                 home: function (event) {
@@ -132,6 +149,9 @@
                 percenter: function (event) {
                     window.location.href = "/Mobile/Customer/PerCenter?mch=" + mch;
                 },
+                shoppingcart: function (event) {
+                    window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
+                },
                 scanQRCode: function (event) {
                     wx.scanQRCode({
                         needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
@@ -141,7 +161,53 @@
                         }
                     });
                 },
+                mycard: function (event) {
+                    $('#coupon').hide();
+                    $('#card').show();
+                    $('#cardtab').removeClass('tabchange');
+                    $('#coupontab').addClass('tabchange');
+                },
+                mycoupon: function (event) {
+                    $('#card').hide();
+                    $('#coupon').show();
+                    $('#coupontab').removeClass('tabchange');
+                    $('#cardtab').addClass('tabchange');
+                },
+                couponInfo: function (data, event) {
+                    sessionStorage.setItem('couponId', data.CouponID);
+                    window.location.href = "/Coupon/CouponInfo?frommycoupon=true&ctid=" + data.TemplateID + '&mch=' + mch;
+                },
             }
         });
+
+        function getAvailableCouponList() {
+            $.ajax({
+                url: '/api/Coupon/GetAvailableCouponList?userOpenID=@ViewBag.OpenId',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                success: function (res) {
+                    if (res.IsSuccessful) {
+                        if (res.Data != null && res.Data.length > 0) {
+                            for (var i = 0; i < res.Data.length; i++) {
+                                if (res.Data[i].Nature == 0)
+                                    _viewModel.CouponList.push(res.Data[i]);
+                                else
+                                    _viewModel.CardList.push(res.Data[i]);
+                                _viewModel.MyInfo.CardCount = _viewModel.CardList.length;
+                            }
+                            _viewModel.MyInfo.Points = res.Data[0].MemberPoint;
+                            _viewModel.MyInfo.TotalConsume = res.Data[0].TotalConsume;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        }
+        getAvailableCouponList();
+
     </script>
 }

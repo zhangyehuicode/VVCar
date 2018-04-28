@@ -20,6 +20,17 @@ namespace VVCar.VIP.Domain.Dtos
         public Guid ID { get; set; }
 
         /// <summary>
+        /// 性质
+        /// </summary>
+        public ENature Nature { get; set; }
+
+        /// <summary>
+        /// 是否推荐
+        /// </summary>
+        [Display(Name = "是否推荐")]
+        public bool IsRecommend { get; set; }
+
+        /// <summary>
         /// 卡券类型
         /// </summary>
         public int CouponType { get; set; }

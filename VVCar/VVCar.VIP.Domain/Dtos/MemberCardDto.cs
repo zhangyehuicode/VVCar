@@ -112,6 +112,16 @@ namespace VVCar.VIP.Domain.Dtos
         public int MemberPoint { get; set; }
 
         /// <summary>
+        /// 会员卡数量
+        /// </summary>
+        public int CardCount { get; set; }
+
+        /// <summary>
+        /// 车牌号
+        /// </summary>
+        public string Plate { get; set; }
+
+        /// <summary>
         /// 是否支持积分支付
         /// </summary>
         public bool IsAllowPointPayment { get; set; }

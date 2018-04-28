@@ -18,9 +18,19 @@ namespace VVCar.Shop.Data.Mapping
                 .IsRequired()
                 .HasMaxLength(50);
 
+            Property(t => t.Code)
+                //.IsRequired()
+                .HasMaxLength(20);
+
             Property(t => t.ImgUrl)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            Property(t => t.DeliveryNotes)
+                .HasMaxLength(50);
+
+            Property(t => t.Introduction)
+                .HasMaxLength(100);
 
             Property(t => t.CreatedUser)
                 .IsRequired()

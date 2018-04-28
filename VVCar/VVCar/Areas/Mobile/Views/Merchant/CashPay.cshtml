@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="CashPay">
+    <div class="toubu">
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        <div class="title">工作终端</div>
+        <a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="xjsk_box">
+        <div class="xjsk_text">快捷开单-现金收款</div>
+        <a class="xjsk_btn">支付失败/确认，已收款</a>
+        <a class="xjsk_btn" style="border:1px solid #51b3f0; margin-top:15px; background:none; color:#51b3f0; box-sizing:border-box;" v-on:click="QRCodePay">改用微信二维码收款</a>
+        <div class="xjsk_text" style="line-height:44px; color:#999; font-size:14px;">状态：闽AB1234，<span style="color:#ff0c4c;">未支付</span>/<span style="color:#51b3f0;">已支付</span></div>
+    </div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var _ismaster = sessionStorage.getItem('ismaster');
+        if (_ismaster == 'true') {
+            $('.title').text('店长工作终端');
+        } else {
+            $('.title').text('店员工作终端');
+        }
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#CashPay',
+            data: {
+                Data: {},
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    if (_ismaster == 'true') {
+                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                    } else {
+                        window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                    }
+                },
+                QRCodePay: function (event) {
+                    window.location.href = "/Mobile/Merchant/QRCodePay?mch=" + mch;
+                },
+            }
+        });
+    </script>
+}
+

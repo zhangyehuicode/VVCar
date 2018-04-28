@@ -19,16 +19,26 @@ namespace VVCar.VIP.Services.DomainServices
         /// 发送微信通知
         /// </summary>
         /// <param name="message"></param>
-        public void SendWeChatNotify(WeChatTemplateMessageDto message)
+        public void SendWeChatNotify(WeChatTemplateMessageDto message, string companyCode = "")
         {
             if (string.IsNullOrEmpty(AppContext.Settings.WeChatIntegrationService))
             {
                 AppContext.Logger.Error("微信集成服务地址未配置，跳过微信通知");
                 return;
             }
-            var url = string.Format("{0}/Notify/SendTemplateMessage?companyCode={1}",
+            var url = string.Empty;
+            if (!string.IsNullOrEmpty(companyCode))
+            {
+                url = string.Format("{0}/Notify/SendTemplateMessage?companyCode={1}",
+                AppContext.Settings.WeChatIntegrationService,
+                companyCode);
+            }
+            else
+            {
+                url = string.Format("{0}/Notify/SendTemplateMessage?companyCode={1}",
                 AppContext.Settings.WeChatIntegrationService,
                 AppContext.CurrentSession.CompanyCode);
+            }
             try
             {
                 var client = new System.Net.Http.HttpClient();
@@ -48,12 +58,12 @@ namespace VVCar.VIP.Services.DomainServices
         /// 异步发送微信通知
         /// </summary>
         /// <param name="message"></param>
-        public void SendWeChatNotifyAsync(WeChatTemplateMessageDto message)
+        public void SendWeChatNotifyAsync(WeChatTemplateMessageDto message, string companyCode = "")
         {
             Task.Run(async () =>
             {
                 await Task.Delay(5000);
-                SendWeChatNotify(message);
+                SendWeChatNotify(message, companyCode);
             });
         }
     }

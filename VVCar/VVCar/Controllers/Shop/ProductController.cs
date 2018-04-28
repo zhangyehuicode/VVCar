@@ -76,7 +76,7 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        [HttpGet, AllowAnonymous]
+        [HttpGet]
         public PagedActionResult<Product> Search([FromUri]ProductFilter filter)
         {
             return SafeGetPagedData<Product>((result) =>
@@ -113,6 +113,47 @@ namespace VVCar.Controllers.Shop
             return SafeExecute(() =>
             {
                 return ProductService.ChangePublishStatus(id);
+            });
+        }
+
+        /// <summary>
+        /// 获取产品列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("ProductList")]
+        public JsonActionResult<IEnumerable<ProductCategoryLiteDto>> GetProductList()
+        {
+            return SafeExecute<IEnumerable<ProductCategoryLiteDto>>(() =>
+            {
+                return ProductService.GetProductLiteData();
+            });
+        }
+
+        /// <summary>
+        /// 获取推荐产品
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetRecommendProduct"), AllowAnonymous]
+        public PagedActionResult<Product> GetRecommendProduct()
+        {
+            return SafeGetPagedData<Product>((result) =>
+            {
+                var data = ProductService.GetRecommendProduct();
+                result.Data = data;
+            });
+        }
+
+        /// <summary>
+        /// 获取可上架产品
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetProduct"), AllowAnonymous]
+        public PagedActionResult<Product> GetProduct()
+        {
+            return SafeGetPagedData<Product>((result) =>
+            {
+                var data = ProductService.GetProduct();
+                result.Data = data;
             });
         }
     }

@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="QRCodePay">
+    <div class="toubu">
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        <div class="title">工作终端</div>
+        <a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="touxiang" style="margin-top:30px;">
+        <div class="kjkd_box">快捷开单-微信二维码付款</div>
+        <a class="kjkd_box2"><div id="qrcode"></div></a>@*<img src="~/Areas/resource/img/mobile/master/timg.png">*@
+        <div class="kjkd_text">状态：闽AB1234，<span style="color:#ff0c4c">未支付</span>/<span style="color:#51b3f0;">已支付</span></div>
+        <div class="kjkd_text" style=" color:#ccc; margin-bottom:30px; font-size:13px;">状态：闽AB1234，<span style="color:#ff0c4c">未</span>/<span style="color:#51b3f0;">已</span>购买会员卡直接抵用</div>
+    </div>
+    <a class="kjtd" style="margin-top:30px; margin-bottom:25px;" v-on:click="cashpay">改用现金收款</a>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var native_pay_url = $.getUrlParam('native_pay_url');
+            if (native_pay_url != '' && native_pay_url != null) {
+                $('#qrcode').qrcode(native_pay_url);
+            }
+            else {
+                $.ajax({
+                    url: '/Mobile/Merchant/GenerateOutTradeNo',
+                    type: 'GET',
+                    success: function (res) {
+                        var qrstrreq = "http://www.cheyinz.cn:8025/pay/NativePayPage.aspx?total_fee=1&out_trade_no=" + res + "&mch=" + mch + "&device_info=ZB001&body=汽车空气净化器&product_id=123456798&notify_url=http://www.cheyinz.cn/Mobile/Merchant/QRCodePay";
+                        window.location.href = qrstrreq;
+                    },
+                    error: function () {
+                        $.alert('生成订单号失败');
+                    }
+                });
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        var _ismaster = sessionStorage.getItem('ismaster');
+        if (_ismaster == 'true') {
+            $('.title').text('店长工作终端');
+        } else {
+            $('.title').text('店员工作终端');
+        }
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#QRCodePay',
+            data: {
+                Data: {},
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    if (_ismaster == 'true') {
+                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                    } else {
+                        window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                    }
+                },
+                cashpay: function (event) {
+                    window.location.href = "/Mobile/Merchant/CashPay?mch=" + mch;
+                },
+            }
+        });
+    </script>
+}
+

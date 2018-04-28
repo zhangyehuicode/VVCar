@@ -82,7 +82,8 @@
             }],
             columns: [
                 { header: '排序', dataIndex: 'Index', width: 60 },
-                { header: '标题', dataIndex: 'Name', width: 60 },
+                { header: '标题', dataIndex: 'Name', width: 120 },
+                { header: '编码', dataIndex: 'Code', width: 60 },
                 {
                     header: '商品图片', dataIndex: 'ImgUrl', width: 100,
                     renderer: function (value) {
@@ -91,21 +92,21 @@
                         }
                     }
                 },
-                //{
-                //    header: '类型', dataIndex: 'ProductType', width: 60,
-                //    renderer: function (value) {
-                //        if (value == 0)
-                //            return '服务';
-                //        else
-                //            return '商品';
-                //    }
-                //},
+                {
+                    header: '类型', dataIndex: 'ProductType', width: 60,
+                    renderer: function (value) {
+                        if (value == 0)
+                            return '服务';
+                        else
+                            return '商品';
+                    }
+                },
                 { header: '原单价', dataIndex: 'BasePrice', width: 80 },
                 { header: '销售单价', dataIndex: 'PriceSale', width: 80 },
                 { header: '兑换积分', dataIndex: 'Points', width: 80 },
                 { header: '兑换上限', dataIndex: 'UpperLimit', width: 80 },
                 {
-                    header: '是否发布', dataIndex: 'IsPublish', width: 80,
+                    header: '是否上架', dataIndex: 'IsPublish', width: 80,
                     renderer: function (value) {
                         if (value == 1)
                             return '<span style="color:green;">是</span>';
@@ -177,7 +178,7 @@
                         },
                     }, { scope: this }, {
                         iconCls: 'x-fa fa-stack-exchange',
-                        tooltip: '发布/下架',
+                        tooltip: '上架/下架',
                         scope: this,
                         margin: '10 10 10 10',
                         handler: function (grid, rowIndex, colIndex) {

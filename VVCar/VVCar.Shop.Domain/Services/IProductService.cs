@@ -25,6 +25,12 @@ namespace VVCar.Shop.Domain.Services
         IEnumerable<Product> Search(ProductFilter filter, out int totalCount);
 
         /// <summary>
+        /// 获取可上架产品
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Product> GetProduct();
+
+        /// <summary>
         /// 调整索引
         /// </summary>
         /// <param name="param">The parameter.</param>
@@ -37,5 +43,17 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         bool ChangePublishStatus(Guid id);
+
+        /// <summary>
+        /// 获取轻量型产品档案数据
+        /// </summary>
+        /// <returns></returns>
+        IList<ProductCategoryLiteDto> GetProductLiteData();
+
+        /// <summary>
+        /// 获取推荐产品
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Product> GetRecommendProduct();
     }
 }

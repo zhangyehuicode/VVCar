@@ -83,7 +83,7 @@
         var footerPanel = Ext.create('Ext.Component', {
             region: 'south',
             padding: 5,
-            html: '<div class="copyright">Copyright © VV车 2018</div>',
+            html: '<div class="copyright">Copyright © 车因子 2018</div>',
         });
 
         this.items = [headerPanel, {

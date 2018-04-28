@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Services;
 using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Enums;
@@ -22,6 +23,25 @@ namespace VVCar.Shop.Services.DomainServices
         public ProductServic()
         {
         }
+
+        #region properties
+
+        IRepository<ProductCategory> _productCategoryRepo;
+
+        /// <summary>
+        /// 产品类别 Repository
+        /// </summary>
+        IRepository<ProductCategory> ProductCategoryRepo
+        {
+            get
+            {
+                if (_productCategoryRepo == null)
+                    _productCategoryRepo = UnitOfWork.GetRepository<IRepository<ProductCategory>>();
+                return _productCategoryRepo;
+            }
+        }
+
+        #endregion
 
         private int GenerateIndex()
         {
@@ -43,6 +63,7 @@ namespace VVCar.Shop.Services.DomainServices
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 
@@ -54,9 +75,10 @@ namespace VVCar.Shop.Services.DomainServices
             if (product == null)
                 throw new DomainException("更新的产品不存在");
 
-            //pointGoods.ProductType = entity.ProductType;
+            product.ProductType = entity.ProductType;
             product.ProductCategoryID = entity.ProductCategoryID;
             product.Name = entity.Name;
+            product.Code = entity.Code;
             product.ImgUrl = entity.ImgUrl;
             product.BasePrice = entity.BasePrice;
             product.PriceSale = entity.PriceSale;
@@ -76,7 +98,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         public IEnumerable<Product> Search(ProductFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetQueryable(false);
+            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.Name))
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
             if (filter.ProductCategoryID.HasValue && filter.ProductCategoryID.Value != Guid.Parse("00000000-0000-0000-0000-000000000001"))
@@ -85,6 +107,11 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderBy(t => t.Index).Skip(filter.Start.Value).Take(filter.Limit.Value);
             return queryable.ToArray();
+        }
+
+        public IEnumerable<Product> GetProduct()
+        {
+            return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Goods && t.IsPublish && t.Stock > 0).ToList();
         }
 
         public bool AdjustIndex(AdjustIndexParam param)
@@ -128,6 +155,60 @@ namespace VVCar.Shop.Services.DomainServices
                 return false;
             entity.IsPublish = !entity.IsPublish;
             return Repository.Update(entity) > 0;
+        }
+
+        /// <summary>
+        /// 获取轻量型产品档案数据
+        /// </summary>
+        /// <returns></returns>
+        public IList<ProductCategoryLiteDto> GetProductLiteData()
+        {
+            var categories = ProductCategoryRepo.GetQueryable(false)
+                .OrderBy(t => t.ParentId).ThenBy(t => t.Index)
+                .MapTo<ProductCategory, ProductCategoryLiteDto>()
+                .ToList();
+            var products = Repository.GetQueryable(false)
+                .Where(t => t.IsPublish)
+                .MapTo<Product, ProductLiteDto>()
+                .ToList();
+            foreach (var category in categories)
+            {
+                category.Products = products.Where(t => t.ProductCategoryID == category.ID).ToList();
+            }
+            return categories;
+        }
+
+        /// <summary>
+        /// 获取推荐产品
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Product> GetRecommendProduct()
+        {
+            var result = new List<Product>();
+            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Goods && t.IsPublish && t.Stock > 0);
+            var recommend = queryable.Where(t => t.IsRecommend).ToList();
+            result = recommend;
+            if (result.Count < 4)
+            {
+                var additional = queryable.Where(t => !t.IsRecommend).OrderBy(t => t.Index).ToList();
+                foreach (var item in additional)
+                {
+                    result.Add(item);
+                    if (result.Count >= 4)
+                        break;
+                }
+            }
+            else if (result.Count > 4)
+            {
+                result = new List<Product>();
+                foreach (var item in recommend)
+                {
+                    result.Add(item);
+                    if (result.Count >= 4)
+                        break;
+                }
+            }
+            return result;
         }
     }
 }

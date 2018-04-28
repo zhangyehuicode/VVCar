@@ -33,14 +33,16 @@
                         allowBlank: false,
                         readOnly: true,
                         hidden: true,
-                    }, {
-                        xtype: "textfield",
-                        name: "CardNumber",
-                        fieldLabel: "会员卡号",
-                        margin: "10 20 0 5",
-                        allowBlank: false,
-                        readOnly: true
-                    }, {
+                    },
+                    //{
+                    //    xtype: "textfield",
+                    //    name: "CardNumber",
+                    //    fieldLabel: "会员卡号",
+                    //    margin: "10 20 0 5",
+                    //    allowBlank: false,
+                    //    readOnly: true
+                    //},
+                    {
                         xtype: "combobox",
                         store: adjustTypeStore,
                         displayField: "DictName",
