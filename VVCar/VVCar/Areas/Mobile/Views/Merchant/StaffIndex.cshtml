@@ -12,14 +12,14 @@
         </div>
         <div class="zcdl_box3">
             <img src="~/Areas/resource/img/mobile/master/gr.png" style="width:16px; float:left; margin-top:19px;">
-            <input v-model="UserInfo.MobilePhoneNo" type="number" placeholder="请输入您的手机号" name="address" size="11" maxlength="11" style="color:#343232" class="zcdl_box4" oninput="if(value.length>11)value=value.slice(0,11)">
-            <a class="zcdl_text" v-on:click="sendSMS">发送验证码</a>
+            <input v-model="UserInfo.UserName" type="text" placeholder="请输入用户名" style="color:#343232" class="zcdl_box4">@*oninput="if(value.length>11)value=value.slice(0,11)"*@
+            @*<a class="zcdl_text" v-on:click="sendSMS">发送验证码</a>*@
         </div>
         <div class="zcdl_box3" style="margin-top:inherit;">
             <img src="~/Areas/resource/img/mobile/master/yzm2.png" style="width:16px; float:left; margin-top:18px;">
-            <input v-model="UserInfo.VerificationCode" type="number" placeholder="请输入验证码" name="address" size="6" maxlength="6" style="color:#343232" class="zcdl_box4" oninput="if(value.length>6)value=value.slice(0,6)">
+            <input v-model="UserInfo.Password" type="password" placeholder="请输入密码" style="color:#343232" class="zcdl_box4">@*oninput="if(value.length>6)value=value.slice(0,6)"*@
         </div>
-        <a href="#" class="zcdl_btn" style="background-color:#51b3f0;" v-on:click="staffhome">员工注册/登录</a>
+        <a class="zcdl_btn" style="background-color:#51b3f0;" v-on:click="login">员工登录</a>
     </div>
 </div>
 
@@ -158,12 +158,43 @@
             });
         }
 
-        _payBillViewModel = new Vue({
+         function weChatLogin() {
+                $.ajax({
+                    url: '/api/User/WeChatLogin',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        UserName: _viewModel.UserInfo.UserName,
+                        Password: _viewModel.UserInfo.Password,
+                        OpenID: '@ViewBag.OpenId',
+                        IsManager: false,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                            } else {
+                                $.alert("用户不存在");
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+
+        _viewModel = new Vue({
             el: '#msloginreg',
             data: {
                 UserInfo: {
                     MobilePhoneNo: '',
                     VerificationCode: '',
+                    UserName: '',
+                    Password:'',
                 },
             },
             methods: {
@@ -174,9 +205,39 @@
                 },
                 sendSMS: function (event) {
                     sendSMSAction(this.UserInfo.MobilePhoneNo);
-                }
+                },
+                login: function (event) {
+                    weChatLogin();
+                },
             }
         });
+
+          function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: {'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsManager: false,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        getUserByOpenId();
+
     </script>
 }
 

@@ -99,5 +99,19 @@ namespace VVCar.BaseData.Domain.Services
         /// <param name="userDto"></param>
         /// <returns></returns>
         bool SetSuperAdmin(MchUserDto userDto);
+
+        /// <summary>
+        /// 微信登录
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        UserInfoDto WeChatLogin(WeChatLoginParams param);
+
+        /// <summary>
+        /// 获取用户信息通过OpenId
+        /// </summary>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        User GetUserByOpenID(WeChatLoginParams param);
     }
 }

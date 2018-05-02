@@ -151,6 +151,94 @@ namespace VVCar.BaseData.Services.DomainServices
             return user;
         }
 
+        public UserInfoDto WeChatLogin(WeChatLoginParams param)
+        {
+            var password = Util.EncryptPassword(param.UserName, param.Password);
+            var result = Login(param.UserName, password);
+
+            if (!string.IsNullOrEmpty(param.OpenID))
+            {
+                var user = Repository.GetInclude(t => t.UserRoles, false).Where(t => t.ID == result.ID).FirstOrDefault();
+                if (user != null && string.IsNullOrEmpty(user.OpenID))
+                {
+                    var userRoles = user.UserRoles;
+                    if (param.IsManager)
+                    {
+                        var ismanager = false;
+                        foreach (var role in userRoles)
+                        {
+                            if (role.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000002"))
+                            {
+                                ismanager = true;
+                                break;
+                            }
+                        }
+                        if (!ismanager)
+                            throw new DomainException("非店长登录");
+                    }
+                    else
+                    {
+                        var isstaff = false;
+                        foreach (var role in userRoles)
+                        {
+                            if (role.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000003"))
+                            {
+                                isstaff = true;
+                                break;
+                            }
+                        }
+                        if (!isstaff)
+                            throw new DomainException("非店员登录");
+                    }
+
+                    user.OpenID = param.OpenID;
+                    base.Update(user);
+                }
+            }
+
+            return result;
+        }
+
+        public User GetUserByOpenID(WeChatLoginParams param)
+        {
+            var user = Repository.GetInclude(t => t.UserRoles, false).FirstOrDefault(t => t.OpenID == param.OpenID);
+            if (user != null && !user.IsAvailable)
+                throw new DomainException("没有权限");
+            else
+            {
+                var userRoles = user.UserRoles;
+                if (param.IsManager)
+                {
+                    var ismanager = false;
+                    foreach (var role in userRoles)
+                    {
+                        if (role.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000002"))
+                        {
+                            ismanager = true;
+                            break;
+                        }
+                    }
+                    if (!ismanager)
+                        return null;
+                }
+                else
+                {
+                    var isstaff = false;
+                    foreach (var role in userRoles)
+                    {
+                        if (role.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000003"))
+                        {
+                            isstaff = true;
+                            break;
+                        }
+                    }
+                    if (!isstaff)
+                        return null;
+                }
+            }
+            return user;
+        }
+
         public UserInfoDto SsoLogin(string userCode, string password)
         {
             if (string.IsNullOrEmpty(userCode) || string.IsNullOrEmpty(password))

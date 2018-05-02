@@ -183,5 +183,37 @@ namespace VVCar.Controllers.Api
                 return UserService.ChangePassword(AppContext.CurrentSession.UserID, oldPassword, newPassword);
             });
         }
+
+        /// <summary>
+        /// 微信登录
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        [HttpGet, Route("WeChatLogin"), AllowAnonymous]
+        public JsonActionResult<UserInfoDto> WeChatLogin([FromUri]WeChatLoginParams param)
+        {
+            return SafeExecute(() =>
+            {
+                if (param == null)
+                    throw new DomainException("参数为空");
+                return UserService.WeChatLogin(param);
+            });
+        }
+
+        /// <summary>
+        /// 获取用户信息通过OpenId
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetUserByOpenID"), AllowAnonymous]
+        public JsonActionResult<User> GetUserByOpenID([FromUri]WeChatLoginParams param)
+        {
+            return SafeExecute(() =>
+            {
+                return UserService.GetUserByOpenID(param);
+            });
+        }
     }
 }

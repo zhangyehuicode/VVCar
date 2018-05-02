@@ -48,6 +48,9 @@ namespace VVCar.BaseData.Data.Mapping
             this.Property(t => t.LastUpdateUser)
                 .HasMaxLength(20);
 
+            this.Property(t => t.OpenID)
+                .HasMaxLength(36);
+
             this.HasMany(t => t.UserRoles)
                 .WithRequired(t => t.User)
                 .HasForeignKey(t => t.UserID);

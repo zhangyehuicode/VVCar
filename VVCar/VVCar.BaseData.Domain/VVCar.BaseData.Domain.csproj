@@ -52,6 +52,7 @@
     <Compile Include="Dtos\SysNavMenuDto.cs" />
     <Compile Include="Dtos\SystemInfoDto.cs" />
     <Compile Include="Dtos\UserInfoDto.cs" />
+    <Compile Include="Dtos\WeChatLoginParams.cs" />
     <Compile Include="Entities\DataDictType.cs" />
     <Compile Include="Entities\DataDictValue.cs" />
     <Compile Include="Entities\Department.cs" />

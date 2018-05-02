@@ -102,6 +102,12 @@ namespace VVCar.BaseData.Domain.Entities
         public string Remark { get; set; }
 
         /// <summary>
+        /// OpenID
+        /// </summary>
+        [Display(Name = "OpenID")]
+        public string OpenID { get; set; }
+
+        /// <summary>
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]

@@ -136,6 +136,32 @@ namespace VVCar.BaseData.Data
                 CreatedDate = DateTime.Now,
                 MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
             });
+
+            roleSet.Add(new Role
+            {
+                ID = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                Code = "manager",
+                Name = "店长",
+                RoleType = "Manager",
+                IsAdmin = false,
+                CreatedUserID = Guid.Empty,
+                CreatedUser = _systemUserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000000"),
+            });
+
+            roleSet.Add(new Role
+            {
+                ID = Guid.Parse("00000000-0000-0000-0000-000000000003"),
+                Code = "staff",
+                Name = "店员",
+                RoleType = "Staff",
+                IsAdmin = false,
+                CreatedUserID = Guid.Empty,
+                CreatedUser = _systemUserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000000"),
+            });
         }
 
         void SeedUserRole(DbContext context)
