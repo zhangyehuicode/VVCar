@@ -161,6 +161,8 @@
         });
     </script>
     <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+
         if ('@ViewBag.HeadImgUrl' != '' && '@ViewBag.HeadImgUrl' != null) {
             $('.headerimg').attr('src','@ViewBag.HeadImgUrl');
             $('.headerimg').addClass('headerimgchange');

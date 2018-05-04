@@ -11,7 +11,7 @@ namespace YEF.Core.Data
     /// 实体基类
     /// </summary>
     /// <typeparam name="TKey">主键类型</typeparam>
-    public abstract class EntityBase<TKey> : NormalEntityBase<TKey>
+    public abstract class EntityBase<TKey> : NormalEntityBase<TKey>//, IMerchantEntity<TKey>
     {
         /// <summary>
         /// 主键
@@ -72,5 +72,27 @@ namespace YEF.Core.Data
         /// 部门ID
         /// </summary>
         Guid DepartmentID { get; set; }
+    }
+
+    /// <summary>
+    /// 包含商户ID的实体接口
+    /// </summary>
+    public interface IMerchantEntity
+    {
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        Guid MerchantID { get; set; }
+    }
+
+    /// <summary>
+    /// 包含商户ID的实体泛型接口
+    /// </summary>
+    public interface IMerchantEntity<TKey>
+    {
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        TKey MerchantID { get; set; }
     }
 }

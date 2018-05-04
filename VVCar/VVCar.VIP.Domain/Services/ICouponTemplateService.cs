@@ -77,5 +77,11 @@ namespace VVCar.VIP.Domain.Services
         /// </summary>
         /// <returns></returns>
         IList<CouponTemplateDto> GetCanDeliveryCouponTemplateList();
+
+        /// <summary>
+        /// 获取领券中心优惠券
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<CouponTemplate> GetCenterCouponTemplate();
     }
 }

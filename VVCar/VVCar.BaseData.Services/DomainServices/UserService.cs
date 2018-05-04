@@ -54,6 +54,7 @@ namespace VVCar.BaseData.Services.DomainServices
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.CreatedDate = DateTime.Now;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 
@@ -156,55 +157,8 @@ namespace VVCar.BaseData.Services.DomainServices
             var password = Util.EncryptPassword(param.UserName, param.Password);
             var result = Login(param.UserName, password);
 
-            if (!string.IsNullOrEmpty(param.OpenID))
-            {
-                var user = Repository.GetInclude(t => t.UserRoles, false).Where(t => t.ID == result.ID).FirstOrDefault();
-                if (user != null && string.IsNullOrEmpty(user.OpenID))
-                {
-                    var userRoles = user.UserRoles;
-                    if (param.IsManager)
-                    {
-                        var ismanager = false;
-                        foreach (var role in userRoles)
-                        {
-                            if (role.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000002"))
-                            {
-                                ismanager = true;
-                                break;
-                            }
-                        }
-                        if (!ismanager)
-                            throw new DomainException("非店长登录");
-                    }
-                    else
-                    {
-                        var isstaff = false;
-                        foreach (var role in userRoles)
-                        {
-                            if (role.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000003"))
-                            {
-                                isstaff = true;
-                                break;
-                            }
-                        }
-                        if (!isstaff)
-                            throw new DomainException("非店员登录");
-                    }
-
-                    user.OpenID = param.OpenID;
-                    base.Update(user);
-                }
-            }
-
-            return result;
-        }
-
-        public User GetUserByOpenID(WeChatLoginParams param)
-        {
-            var user = Repository.GetInclude(t => t.UserRoles, false).FirstOrDefault(t => t.OpenID == param.OpenID);
-            if (user != null && !user.IsAvailable)
-                throw new DomainException("没有权限");
-            else
+            var user = Repository.GetInclude(t => t.UserRoles, false).Where(t => t.ID == result.ID).FirstOrDefault();
+            if (user != null)
             {
                 var userRoles = user.UserRoles;
                 if (param.IsManager)
@@ -219,7 +173,7 @@ namespace VVCar.BaseData.Services.DomainServices
                         }
                     }
                     if (!ismanager)
-                        return null;
+                        throw new DomainException("非店长登录");
                 }
                 else
                 {
@@ -233,8 +187,44 @@ namespace VVCar.BaseData.Services.DomainServices
                         }
                     }
                     if (!isstaff)
+                        throw new DomainException("非店员登录");
+                }
+                if (string.IsNullOrEmpty(user.OpenID) && !string.IsNullOrEmpty(param.OpenID))
+                {
+                    user.OpenID = param.OpenID;
+                    base.Update(user);
+                }
+            }
+
+            return result;
+        }
+
+        public User GetUserByOpenID(WeChatLoginParams param)
+        {
+            var users = Repository.GetInclude(t => t.UserRoles, false).Where(t => t.OpenID == param.OpenID && t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+            User user = null;
+            if (users != null && users.Count > 0)
+            {
+                var userRoles = new List<UserRole>();
+                users.ForEach(t =>
+                {
+                    userRoles.AddRange(t.UserRoles);
+                });
+                UserRole userrole = null;
+                if (param.IsManager)
+                    userrole = userRoles.Where(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000002")).FirstOrDefault();
+                else
+                    userrole = userRoles.Where(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000003")).FirstOrDefault();
+                if (userrole == null)
+                    return null;
+                else
+                {
+                    user = users.FirstOrDefault(t => t.ID == userrole.UserID);
+                    if (user == null)
                         return null;
                 }
+                if (user != null && !user.IsAvailable)
+                    throw new DomainException("没有权限");
             }
             return user;
         }
@@ -281,7 +271,7 @@ namespace VVCar.BaseData.Services.DomainServices
         public PagedResultDto<User> QueryUser(Domain.Filters.UserFilter filter)
         {
             var result = new PagedResultDto<User>();
-            var queryable = this.Repository.GetQueryable(false).Where(p => !p.IsDeleted);
+            var queryable = this.Repository.GetQueryable(false).Where(p => !p.IsDeleted).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter != null)
             {
                 if (!string.IsNullOrEmpty(filter.Code))
@@ -332,7 +322,6 @@ namespace VVCar.BaseData.Services.DomainServices
         /// <returns></returns>
         public bool ResetPwds(Guid[] ids)
         {
-
             UnitOfWork.BeginTransaction();
             try
             {

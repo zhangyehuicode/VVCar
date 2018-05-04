@@ -62,6 +62,10 @@ namespace YEF.Data
         {
             get
             {
+                //var _entities = _dbSet.Where(t => t.IsDeleted == false);
+                //if (typeof(TEntity).IsAssignableFrom(typeof(EntityBase)))
+                //{
+                //}
                 return _dbSet.Where(t => t.IsDeleted == false);
             }
         }

@@ -169,10 +169,14 @@
                         OpenID: '@ViewBag.OpenId',
                         IsManager: false,
                     },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
                     success: function (res) {
+                        $.hideLoading();
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
-                                window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                                window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
                             } else {
                                 $.alert("用户不存在");
                             }
@@ -182,7 +186,7 @@
                         }
                     },
                     error: function () {
-
+                        $.hideLoading();
                     }
                 });
             }

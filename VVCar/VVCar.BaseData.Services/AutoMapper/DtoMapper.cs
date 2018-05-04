@@ -22,7 +22,7 @@ namespace VVCar.BaseData.Services
         #region ctor.
         static DtoMapper()
         {
-            Initialize();
+            //Initialize();
         }
         #endregion
 

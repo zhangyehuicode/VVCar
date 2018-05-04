@@ -231,6 +231,7 @@
                         if (result.IsSuccessful && result.Data) {
                             Ext.Msg.alert('提示', '操作成功');
                             store.reload();
+                            me.getTreeProductCategory().getStore().load();
                         } else {
                             Ext.Msg.alert('提示', "操作失败" + result.ErrorMessage);
                         }

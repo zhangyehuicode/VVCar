@@ -858,6 +858,7 @@
     <Content Include="Areas\Coupon\Views\Coupon\CouponStore.cshtml" />
     <Content Include="Areas\Coupon\Views\Coupon\IntroDetail.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\ShoppingCart.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\CouponCenter.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />
@@ -1659,6 +1660,10 @@
     <ProjectReference Include="..\VVCar.BaseData.Domain\VVCar.BaseData.Domain.csproj">
       <Project>{2575eda0-b3ba-473a-8ceb-455404bcdf06}</Project>
       <Name>VVCar.BaseData.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VVCar.BaseData.Services\VVCar.BaseData.Services.csproj">
+      <Project>{153375cb-27fc-4a3d-97d2-5ded37821abb}</Project>
+      <Name>VVCar.BaseData.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\VVCar.Shop.Domain\VVCar.Shop.Domain.csproj">
       <Project>{3f12d42f-efd2-4743-b79a-f8599d1e98f0}</Project>

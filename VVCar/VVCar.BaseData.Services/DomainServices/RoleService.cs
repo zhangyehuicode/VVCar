@@ -30,11 +30,19 @@ namespace VVCar.BaseData.Services.DomainServices
 
         public override bool Delete(Guid key)
         {
-            var user = this.Repository.GetByKey(key);
-            if (user == null)
+            var role = this.Repository.GetByKey(key);
+            if (role == null)
                 throw new DomainException("删除失败，数据不存在");
-            user.IsDeleted = true;
-            return this.Repository.Update(user) > 0;
+
+            if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000001"))
+                throw new DomainException("不允许删除超级管理员角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000002"))
+                throw new DomainException("不允许删除店长角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000003"))
+                throw new DomainException("不允许删除店员角色");
+
+            role.IsDeleted = true;
+            return this.Repository.Update(role) > 0;
         }
 
         public override bool Update(Role entity)
@@ -44,6 +52,14 @@ namespace VVCar.BaseData.Services.DomainServices
             var role = this.Repository.GetByKey(entity.ID);
             if (role == null)
                 return false;
+
+            if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000001"))
+                throw new DomainException("不允许修改超级管理员角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000002"))
+                throw new DomainException("不允许修改店长角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000003"))
+                throw new DomainException("不允许修改店员角色");
+
             role.Code = entity.Code;
             role.Name = entity.Name;
             role.RoleType = entity.RoleType;
@@ -70,7 +86,8 @@ namespace VVCar.BaseData.Services.DomainServices
 
         public IEnumerable<Role> Query(Domain.Filters.RoleFilter filter)
         {
-            var queryable = this.Repository.GetQueryable(false).Where(t => !t.IsDeleted);
+            var commendid = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var queryable = this.Repository.GetQueryable(false).Where(t => !t.IsDeleted).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID || t.MerchantID == commendid);
             if (filter != null)
             {
                 if (!string.IsNullOrEmpty(filter.Code))

@@ -540,5 +540,15 @@ namespace VVCar.VIP.Services.DomainServices
                     DeliveryNotes = "购买后可到会员卡包中查看已有卡券",
                 });
         }
+
+        /// <summary>
+        /// 获取领券中心优惠券
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<CouponTemplate> GetCenterCouponTemplate()
+        {
+            var now = DateTime.Now;
+            return Repository.GetQueryable(false).Where(t => t.IsPutaway && t.PutawayTime < now && t.SoldOutTime > now && t.ApproveStatus == EApproveStatus.Delivered && (!t.IsFiexedEffectPeriod || (t.EffectiveDate < now && t.ExpiredDate > now)) && t.PutInStartDate < now && t.PutInEndDate > now && t.IsAvailable && t.Nature == ENature.Coupon).ToList();
+        }
     }
 }

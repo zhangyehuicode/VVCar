@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "领券中心";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="couponcenter">
+    <div class="hykb_box">
+        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;display:table;" v-for="Coupon in CouponList" v-on:click="couponInfo(Coupon)">
+            <div style="display:table-cell;width:120px;"><img class="couponimg" v-bind:src=Coupon.CoverImage></div>
+            <div class="hykb_text" style="display:table-cell;">{{Coupon.Title}}</div>
+            <div style="display:table-cell;float:right; margin-right:10%; color:#ff0c4b;" class="hykb_text">{{Coupon.CouponValue}}{{Coupon.CouponValueUnit}}</div>
+        </div>
+    </div>
+    <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .couponimg {
+            width: 80px !important;
+            height: 50px;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        //wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#couponcenter',
+            data: {
+                CouponList: [],
+            },
+            methods: {
+                couponInfo: function (data, event) {
+                    window.location.href = "/Coupon/CouponInfo?ctid=" + data.ID + '&mch=' + mch;
+                },
+            }
+        });
+
+        function getCenterCouponTemplate() {
+            $.ajax({
+                url: '/api/CouponTemplate/GetCenterCouponTemplate',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforesend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            for (var i = 0; i < res.Data.length; i++) {
+                                if (res.Data[i].CouponType == 3) {
+                                    res.Data[i].CouponValueUnit = '折';
+                                } else {
+                                    res.Data[i].CouponValueUnit = '元';
+                                }
+                            }
+                            _viewModel.CouponList = res.Data;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+        getCenterCouponTemplate();
+
+    </script>
+}
+

@@ -277,5 +277,19 @@ namespace VVCar.Controllers.VIP
                 result.Data = data;
             });
         }
+
+        /// <summary>
+        /// 获取领券中心优惠券
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetCenterCouponTemplate"), AllowAnonymous]
+        public PagedActionResult<CouponTemplate> GetCenterCouponTemplate()
+        {
+            return SafeGetPagedData<CouponTemplate>((result) =>
+            {
+                var data = CouponTemplateService.GetCenterCouponTemplate();
+                result.Data = data;
+            });
+        }
     }
 }

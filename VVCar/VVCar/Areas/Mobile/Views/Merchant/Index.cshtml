@@ -171,7 +171,11 @@
                         OpenID: '@ViewBag.OpenId',
                         IsManager: true,
                     },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
                     success: function (res) {
+                        $.hideLoading();
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
@@ -184,7 +188,7 @@
                         }
                     },
                     error: function () {
-
+                        $.hideLoading();
                     }
                 });
             }

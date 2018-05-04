@@ -120,6 +120,43 @@
         wxConfig();
     </script>
     <script type="text/javascript">
+        $(function () {
+            var member = sessionStorage.getItem('member');
+            if (member == null && member=='') {
+                var mch = $.getUrlParam('mch');
+                function init() {
+                   $.ajax({
+                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                        type: 'GET',
+                        headers: { 'CompanyCode':mch },
+                        beforeSend: function () {
+                            $.showLoading();
+                        },
+                        success: function (res) {
+                            $.hideLoading();
+                            if (res.IsSuccessful) {
+                                if (res.Data != null) {
+                                    sessionStorage.setItem('member', res.Data);
+                                    //window.location.href="/Mobile/Customer/Home?mch="+mch;
+                                } else {
+                                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                               }
+                            } else {
+                                $.alert(res.ErrorMessage);
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        },
+                        error: function () {
+                            $.hideLoading();
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                   });
+              }
+              init();
+            }
+        });
+    </script>
+    <script type="text/javascript">
         var mch = $.getUrlParam('mch');
         _payBillViewModel = new Vue({
             el: '#home',

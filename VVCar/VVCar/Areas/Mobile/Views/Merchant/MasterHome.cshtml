@@ -134,6 +134,41 @@
         wxConfig();
     </script>
     <script type="text/javascript">
+        $(function () {
+            var mch = $.getUrlParam('mch');
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsManager: true,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('user', res.Data);
+                                //window.location.href = "/Mobile/Merchant?mch=" + mch;
+                            }
+                            else {
+                                window.location.href = "/Mobile/Merchant?mch=" + mch;
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            window.location.href = "/Mobile/Merchant?mch=" + mch;
+                        }
+                    },
+                    error: function () {
+                        window.location.href = "/Mobile/Merchant?mch=" + mch;
+                    }
+                });
+            }
+            getUserByOpenId();
+        });
+    </script>
+    <script type="text/javascript">
         sessionStorage.setItem('ismaster', 'true');
         var mch = $.getUrlParam('mch');
         _payBillViewModel = new Vue({

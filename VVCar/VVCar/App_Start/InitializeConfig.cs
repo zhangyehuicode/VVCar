@@ -13,6 +13,7 @@ using Autofac.Integration.Owin;
 using Autofac.Integration.WebApi;
 using VVCar.Providers;
 using System.Net.Http;
+using VVCar.BaseData.Services;
 
 namespace VVCar.App_Start
 {
@@ -29,6 +30,7 @@ namespace VVCar.App_Start
             DatabaseInitializer.Initialize();
             InitConfigData();
             AppContext.Logger.Info("startup app success.");
+            DtoMapper.Initialize();
         }
 
         private static void InitConfigData()
