@@ -327,6 +327,214 @@ namespace VVCar.Areas.Mobile.Controllers
         }
 
         /// <summary>
+        /// 我的订单
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MyOrder()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            if (string.IsNullOrEmpty(openId))
+            {
+                return RedirectToAction("Auth", new { redirectTo = Server.UrlEncode(Request.Url.AbsoluteUri), mch = companyCode });
+            }
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
+
+        /// <summary>
+        /// 会员卡购买
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MemberCardBuy()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            if (string.IsNullOrEmpty(openId))
+            {
+                return RedirectToAction("Auth", new { redirectTo = Server.UrlEncode(Request.Url.AbsoluteUri), mch = companyCode });
+            }
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
+
+        /// <summary>
+        /// 会员服务
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MemberServices()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            if (string.IsNullOrEmpty(openId))
+            {
+                return RedirectToAction("Auth", new { redirectTo = Server.UrlEncode(Request.Url.AbsoluteUri), mch = companyCode });
+            }
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
+
+        /// <summary>
+        /// 我的积分
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MyPoints()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            if (string.IsNullOrEmpty(openId))
+            {
+                return RedirectToAction("Auth", new { redirectTo = Server.UrlEncode(Request.Url.AbsoluteUri), mch = companyCode });
+            }
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
+
+        /// <summary>
+        /// 我的车牌
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MyPlate()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            if (string.IsNullOrEmpty(openId))
+            {
+                return RedirectToAction("Auth", new { redirectTo = Server.UrlEncode(Request.Url.AbsoluteUri), mch = companyCode });
+            }
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
+
+        /// <summary>
+        /// 核销密码设置
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult VerificationCodeSet()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            if (string.IsNullOrEmpty(openId))
+            {
+                return RedirectToAction("Auth", new { redirectTo = Server.UrlEncode(Request.Url.AbsoluteUri), mch = companyCode });
+            }
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
+
+        /// <summary>
+        /// 手机绑定
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult BindingMobilePhone()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            if (string.IsNullOrEmpty(openId))
+            {
+                return RedirectToAction("Auth", new { redirectTo = Server.UrlEncode(Request.Url.AbsoluteUri), mch = companyCode });
+            }
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
+
+        /// <summary>
+        /// 游戏
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Game()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            if (string.IsNullOrEmpty(openId))
+            {
+                return RedirectToAction("Auth", new { redirectTo = Server.UrlEncode(Request.Url.AbsoluteUri), mch = companyCode });
+            }
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
+
+        /// <summary>
         /// 生成商户外部订单号
         /// </summary>
         /// <returns></returns>

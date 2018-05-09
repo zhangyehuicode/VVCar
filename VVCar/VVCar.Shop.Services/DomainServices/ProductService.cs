@@ -109,9 +109,10 @@ namespace VVCar.Shop.Services.DomainServices
             return queryable.ToArray();
         }
 
-        public IEnumerable<Product> GetProduct()
+        public IEnumerable<ProductDto> GetProduct()
         {
-            return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Goods && t.IsPublish && t.Stock > 0).ToList();
+            var result = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Goods && t.IsPublish && t.Stock > 0).ToList();
+            return result.MapTo<List<ProductDto>>();
         }
 
         public bool AdjustIndex(AdjustIndexParam param)

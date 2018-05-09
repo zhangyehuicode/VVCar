@@ -86,5 +86,18 @@ namespace VVCar.Controllers.Shop
                 result.TotalCount = totalCount;
             });
         }
+
+        /// <summary>
+        /// 生成订单号
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetTradeNo"), AllowAnonymous]
+        public JsonActionResult<string> GetTradeNo()
+        {
+            return SafeExecute(() =>
+            {
+                return OrderService.GetTradeNo();
+            });
+        }
     }
 }

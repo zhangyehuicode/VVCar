@@ -129,7 +129,7 @@
     <script type="text/javascript">
         $(function () {
             var member = sessionStorage.getItem('member');
-            if (member == null && member=='') {
+            if (member == null || member=='') {
                 var mch = $.getUrlParam('mch');
                 function init() {
                    $.ajax({
@@ -143,7 +143,7 @@
                             $.hideLoading();
                             if (res.IsSuccessful) {
                                 if (res.Data != null) {
-                                    sessionStorage.setItem('member', res.Data);
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
                                     //window.location.href="/Mobile/Customer/Home?mch="+mch;
                                 } else {
                                     window.location.href = "/Mobile/Customer?mch=" + mch;

@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Web.Http;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
@@ -255,9 +256,9 @@ namespace VVCar.Controllers.VIP
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("GetRecommendCouponTemplate"), AllowAnonymous]
-        public PagedActionResult<Product> GetRecommendCouponTemplate()
+        public PagedActionResult<ProductDto> GetRecommendCouponTemplate()
         {
-            return SafeGetPagedData<Product>((result) =>
+            return SafeGetPagedData<ProductDto>((result) =>
             {
                 var data = CouponTemplateService.GetRecommendCouponTemplate();
                 result.Data = data;
@@ -269,9 +270,9 @@ namespace VVCar.Controllers.VIP
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("GetCardOfCouponTemplate"), AllowAnonymous]
-        public PagedActionResult<Product> GetCardOfCouponTemplate()
+        public PagedActionResult<ProductDto> GetCardOfCouponTemplate()
         {
-            return SafeGetPagedData<Product>((result) =>
+            return SafeGetPagedData<ProductDto>((result) =>
             {
                 var data = CouponTemplateService.GetCardOfCouponTemplate();
                 result.Data = data;

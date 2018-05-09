@@ -13,10 +13,16 @@ namespace VVCar.Shop.Domain.Enums
     public enum EPointOrderStatus
     {
         /// <summary>
-        /// 未发货
+        /// 未付款
+        /// </summary>
+        [Description("未付款")]
+        UnPay = -1,
+
+        /// <summary>
+        /// 已付款未发货
         /// </summary>
         [Description("未发货")]
-        Unshipped = 0,
+        PayUnshipped = 0,
 
         /// <summary>
         /// 已发货

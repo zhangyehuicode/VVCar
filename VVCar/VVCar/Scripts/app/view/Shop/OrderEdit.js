@@ -11,8 +11,9 @@
         var statusStore = Ext.create('Ext.data.Store', {
             fields: ['Name', 'Value'],
             data: [
-                { 'Name': '已发货', 'Value': true },
-                { 'Name': '未发货', 'Value': false },
+                { 'Name': '未付款', 'Value': -1 },
+                { 'Name': '已发货', 'Value': 1 },
+                { 'Name': '未发货', 'Value': 0 },
             ]
         });
         me.form = Ext.create('Ext.form.Panel', {

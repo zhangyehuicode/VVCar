@@ -49,8 +49,10 @@
                 renderer: function (value) {
                     if (value == 1)
                         return "已发货";
-                    else
+                    else if (value == 0)
                         return "未发货";
+                    else if (value == -1)
+                        return "未付款";
                 }
             },
             { header: '快递单号', dataIndex: 'ExpressNumber', flex: 1 },

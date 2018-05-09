@@ -85,7 +85,7 @@ namespace VVCar.BaseData.Services.DomainServices
 
         public IEnumerable<SystemSetting> Search(SystemSettingFilter filter)
         {
-            var queryable = Repository.GetQueryable(false).Where(t => t.IsAvailable == true && t.IsVisible == true).Where(t => !t.IsDeleted);
+            var queryable = Repository.GetQueryable(false).Where(t => t.IsAvailable && t.IsVisible && t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter != null)
             {
                 if (!string.IsNullOrEmpty(filter.Name))

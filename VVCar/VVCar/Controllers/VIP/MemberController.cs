@@ -356,5 +356,35 @@ namespace VVCar.Controllers.VIP
                 return MemberService.AdjustMemberPoint(filter.MemberID, filter.PointType, filter.AdjustPoints);
             });
         }
+
+        /// <summary>
+        /// 核销密码设置
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        [HttpGet, Route("VerificationCodeSet"), AllowAnonymous]
+        public JsonActionResult<bool> VerificationCodeSet(string password, string openId)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.VerificationCodeSet(password, openId);
+            });
+        }
+
+        /// <summary>
+        /// 手机绑定
+        /// </summary>
+        /// <param name="mobilephoneno"></param>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        [HttpGet, Route("BindingMobilePhone"), AllowAnonymous]
+        public JsonActionResult<bool> BindingMobilePhone(string mobilephoneno, string openId)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.BindingMobilePhone(mobilephoneno, openId);
+            });
+        }
     }
 }

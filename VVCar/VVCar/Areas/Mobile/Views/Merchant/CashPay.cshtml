@@ -66,6 +66,8 @@
         wxConfig();
     </script>
     <script type="text/javascript">
+        $(function () {
+        var user = sessionStorage.getItem('user');
         var _ismaster = sessionStorage.getItem('ismaster');
         if (_ismaster == 'true') {
             $('.title').text('店长工作终端');
@@ -73,6 +75,7 @@
             $('.title').text('店员工作终端');
         }
         var mch = $.getUrlParam('mch');
+
         _payBillViewModel = new Vue({
             el: '#CashPay',
             data: {
@@ -93,6 +96,41 @@
                     window.location.href = "/Mobile/Merchant/QRCodePay?mch=" + mch;
                 },
             }
+        });
+            var ismaster = _ismaster == 'true';
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsManager: ismaster,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                                //window.location.href = "/Mobile/Merchant?mch=" + mch;
+                            }
+                            else {
+                                _payBillViewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _payBillViewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _payBillViewModel.home();
+                    }
+                });
+            }
+            if (user == null || user=='') {
+                getUserByOpenId();
+            }
+
         });
     </script>
 }

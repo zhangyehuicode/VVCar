@@ -6,57 +6,67 @@
 
 <div style="background-color:#f8f9fe;" id="home">
     <div class="toubu">品牌服务站</div>
-    <ul>
-        <li>
-            <img src="~/Areas/resource/img/mobile/defaultimg3.png" class="banner bannerbg">@*banner.jpg*@
-        </li>
-    </ul>
-    <div class="nav_box" style="position:relative;">
-        <div>
-            <a><img src="~/Areas/resource/img/mobile/erweima.png" v-on:click="scanQRCode"></a><br>
-            扫码付款
-        </div>
-        <div>
-            <a><img src="~/Areas/resource/img/mobile/kabao.png" v-on:click="membercard"></a><br>
-            会员卡包
-        </div>
-        <div>
-            <a><img src="~/Areas/resource/img/mobile/jingpin.png" v-on:click="shop"></a><br>
-            精品商城
-        </div>
-        <div>
-            <a><img src="~/Areas/resource/img/mobile/my.png" v-on:click="percenter"></a><br>
-            个人中心
-        </div>
+    <div class="x-slide" id="j-image-box">
+        <ul>
+            <li style="display:block;">
+                <a hidefocus="true" target="_blank" href="http://www.cheyinz.cn/"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg1.png" alt="车因子" title=""></a>
+            </li>
+            <li style="display:none;">
+                <a hidefocus="true" target="_blank" href="http://www.cheyinz.cn/"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg2.png" alt="车因子" title=""></a>
+            </li>
+            <li style="display:none;">
+                <a hidefocus="true" target="_blank" href="http://www.cheyinz.cn/"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg3.png" alt="车因子" title=""></a>
+            </li>
+        </ul>
     </div>
-    <div class="shop_box">
-        <div class="shop_box2">
-            <img src="~/Areas/resource/img/mobile/hot.png">&nbsp;会员卡
-            <a v-on:click="shop"><span>更多</span></a>
+    <div style="position:absolute;top:290px;">
+        <div class="nav_box" style="position:relative;">
+            <div>
+                <a><img src="~/Areas/resource/img/mobile/erweima.png" v-on:click="scanQRCode"></a><br>
+                扫码付款
+            </div>
+            <div>
+                <a><img src="~/Areas/resource/img/mobile/kabao.png" v-on:click="membercard"></a><br>
+                会员卡包
+            </div>
+            <div>
+                <a><img src="~/Areas/resource/img/mobile/jingpin.png" v-on:click="shop"></a><br>
+                精品商城
+            </div>
+            <div>
+                <a><img src="~/Areas/resource/img/mobile/my.png" v-on:click="percenter"></a><br>
+                个人中心
+            </div>
         </div>
-        <div class="shop_box3">
-            <div class="shop_box3_div" v-for="Template in CouponTemplateList" v-on:click="productdetails(Template)">
-                <span class="shop_box3_span">{{Template.Name}}</span>
-                <a><img class="shop_box3_img cardimg" v-bind:src=Template.ImgUrl></a>
-                <div class="shop_box3_div2">
-                    ￥{{Template.PriceSale}}
-                    @*<a><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>*@
+        <div class="shop_box">
+            <div class="shop_box2">
+                <img src="~/Areas/resource/img/mobile/hot.png">&nbsp;会员卡
+                <a v-on:click="shop"><span>更多</span></a>
+            </div>
+            <div class="shop_box3">
+                <div class="shop_box3_div" v-for="Template in CouponTemplateList" v-on:click="membercarddetails(Template)">
+                    <span class="shop_box3_span">{{Template.Name}}</span>
+                    <a><img class="shop_box3_img cardimg" v-bind:src=Template.ImgUrl></a>
+                    <div class="shop_box3_div2">
+                        ￥{{Template.PriceSale}}
+                        @*<a><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>*@
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="shop_box2">
-        <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;精品商城
-        <a v-on:click="shop"><span>更多</span></a>
-    </div>
-    <div class="slide-box">
-        <div class="shop_box4" v-for="Product in ProductList" v-on:click="productdetails(Product)">
-            <a><img class="productimg" v-bind:src=Product.ImgUrl></a>
-            <span>{{Product.Name}}</span>
-            <span style=" float:right; margin-right:3%; color:#ff0c4b;">￥{{Product.PriceSale}}</span>
+        <div class="shop_box2">
+            <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;精品商城
+            <a v-on:click="shop"><span>更多</span></a>
         </div>
+        <div class="slide-box">
+            <div class="shop_box4" v-for="Product in ProductList" v-on:click="productdetails(Product)">
+                <a><img class="productimg" v-bind:src=Product.ImgUrl></a>
+                <span>{{Product.Name}}</span>
+                <span style=" float:right; margin-right:3%; color:#ff0c4b;">￥{{Product.PriceSale}}</span>
+            </div>
+        </div>
+        <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
     </div>
-    <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
 </div>
 
 @section scripts{
@@ -72,6 +82,48 @@
         .cardimg {
             height: 100px;
         }
+
+        .x-slide {
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+            .x-slide li {
+                display: block;
+                width: 100%;
+                position: absolute;
+                top: 55px;
+                left: 0;
+            }
+
+            .x-slide .btn {
+                width: 100%;
+                position: absolute;
+                top: 258px;
+                left: 0;
+                text-align: center;
+            }
+
+                .x-slide .btn span {
+                    display: inline-block;
+                    vertical-align: middle;
+                    width: 10px;
+                    height: 10px;
+                    margin: 0 5px;
+                    border-radius: 50px;
+                    -webkit-border-radius: 50px;
+                    background: rgba(255,255,255,0.5);
+                    overflow: hidden;
+                    margin-right: 5px;
+                    cursor: pointer;
+                }
+
+                    .x-slide .btn span.current {
+                        background: #fff;
+                        width: 14px;
+                        height: 14px;
+                    }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
@@ -122,7 +174,7 @@
     <script type="text/javascript">
         $(function () {
             var member = sessionStorage.getItem('member');
-            if (member == null && member=='') {
+            if (member == null || member=='') {
                 var mch = $.getUrlParam('mch');
                 function init() {
                    $.ajax({
@@ -136,7 +188,7 @@
                             $.hideLoading();
                             if (res.IsSuccessful) {
                                 if (res.Data != null) {
-                                    sessionStorage.setItem('member', res.Data);
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
                                     //window.location.href="/Mobile/Customer/Home?mch="+mch;
                                 } else {
                                     window.location.href = "/Mobile/Customer?mch=" + mch;
@@ -154,6 +206,94 @@
               }
               init();
             }
+
+            var banner = {
+                init: function () {
+                    if ($("#j-image-box li").length >= 1) {
+                        banner.initDom();
+                        banner.initEvent();
+                        banner.startTimeTask();
+                        //banner.initResize();
+                    }
+                },
+                initResize: function () {
+                    //var imgHeight;
+                    //var proportion = $(window).width() * (520 / 2000);
+
+                    /*$("#j-image-box").find("li").each(function(index, element) {
+                        if($(this).css("display")!= "none"){
+                            imgHeight = $(this).find("img").height();
+                        }
+                    });*/
+                    //$("#j-image-box").css({ "height": proportion });
+                },
+                initDom: function () {
+
+                    //$(window).resize(function () {
+                    //    banner.initResize();
+                    //});
+                    banner.cont = $("#j-image-box");
+                    banner.eyes = banner.cont.find("li");
+                    var btnHtml = ["<div class='btn'>"];
+
+                    banner.eyes.each(function (k) {
+                        btnHtml.push("<span " + (k == 0 ? "class='current'" : "") + ">" + "</span>");
+                    });
+
+                    btnHtml.push("</div>");
+
+                    banner.cont.append(btnHtml.join(""));
+                    banner.btns = banner.cont.find(".btn span");
+                },
+                initEvent: function () {
+                    banner.cont.hover(banner.onEnter, banner.onLeave);
+                    banner.btns.bind("click", banner.onBtnEnter);
+                },
+                onEnter: function () {
+                    if (banner.timer) {
+                        window.clearTimeout(banner.timer);
+                    }
+                },
+                onLeave: function () {
+                    banner.startTimeTask();
+                },
+                onBtnEnter: function (e) {
+                    if (banner.timer) {
+                        window.clearTimeout(banner.timer);
+                    }
+                    var t = $(e.target);
+                    var index = banner.btns.index(t);
+                    banner.switchPic(index);
+                },
+                switchPicTask: function () {
+                    var n = banner.getCurrEye();
+                    n = (n == banner.eyes.length - 1) ? 0 : (n + 1);
+
+                    banner.switchPic(n);
+                },
+                startTimeTask: function () {
+                    if (banner.timer) {
+                        window.clearTimeout(banner.timer);
+                    }
+                    banner.timer = window.setTimeout(banner.switchPicTask, 3000)
+                },
+                switchPic: function (n) {
+                    if (banner.btns.index(banner.btns.filter(".current")) == n) {
+                        return;
+                    }
+                    banner.eyes.filter(":visible").stop(true, true).animate({ opacity: 'hide' }, 500);
+                    banner.btns.removeClass("current").eq(n).addClass("current");
+                    banner.eyes.eq(n).stop(true, true).animate({ opacity: 'show' }, 1000, function () {
+                        banner.startTimeTask();
+                    });
+                },
+                getCurrEye: function () {
+                    var i = parseInt(banner.eyes.filter(":visible").index());
+                    return i;
+                }
+            };
+            banner.init();
+
         });
     </script>
     <script type="text/javascript">
@@ -177,6 +317,10 @@
                 productdetails: function (data, event) {
                     sessionStorage.setItem('product', JSON.stringify(data));
                     window.location.href = "/Mobile/Customer/ProductDetails?mch=" + mch;
+                },
+                membercarddetails: function (data, event) {
+                    sessionStorage.setItem('membercard', JSON.stringify(data));
+                    window.location.href = "/Mobile/Customer/MemberCardBuy?mch=" + mch;
                 },
                 scanQRCode: function (event) {
                     wx.scanQRCode({

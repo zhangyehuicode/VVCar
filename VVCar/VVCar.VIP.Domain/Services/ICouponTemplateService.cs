@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
@@ -28,13 +29,13 @@ namespace VVCar.VIP.Domain.Services
         /// 获取推荐会员卡
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Product> GetRecommendCouponTemplate();
+        IEnumerable<ProductDto> GetRecommendCouponTemplate();
 
         /// <summary>
         /// 获取会员卡
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Product> GetCardOfCouponTemplate();
+        IEnumerable<ProductDto> GetCardOfCouponTemplate();
 
         /// <summary>
         /// 按id查询CouponTemplateDto

@@ -324,6 +324,7 @@
     <Content Include="Areas\resource\css\jquery.minicolors.css" />
     <Content Include="Areas\resource\css\jquery.minicolors.png" />
     <Content Include="Areas\resource\css\mobile\customer.css" />
+    <Content Include="Areas\resource\css\mobile\GB-css3-wheel.css" />
     <Content Include="Areas\resource\css\mobile\master.css" />
     <Content Include="Areas\resource\css\mobile\staff.css" />
     <Content Include="Areas\resource\img\850x350.jpg" />
@@ -491,6 +492,7 @@
     <Content Include="Areas\resource\img\mobile\ysh.png" />
     <Content Include="Areas\resource\img\mobile\yzm.png" />
     <Content Include="Areas\resource\img\mobile\yzm2.png" />
+    <Content Include="Areas\resource\img\mobile\icon_coupon.png" />
     <Content Include="Areas\resource\img\shouyelunbo1900x300.jpg" />
     <Content Include="Areas\resource\img\图层-4%402x.png" />
     <Content Include="Areas\resource\js\bootstrap-datetimepicker.min.js" />
@@ -859,6 +861,14 @@
     <Content Include="Areas\Coupon\Views\Coupon\IntroDetail.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\ShoppingCart.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\CouponCenter.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MyOrder.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MemberCardBuy.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MemberServices.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MyPoints.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MyPlate.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\VerificationCodeSet.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\BindingMobilePhone.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\Game.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

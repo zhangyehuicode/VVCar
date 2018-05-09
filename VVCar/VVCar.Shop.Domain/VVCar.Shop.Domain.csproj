@@ -45,12 +45,14 @@
     <Compile Include="Dtos\AdjustIndexParam.cs" />
     <Compile Include="Dtos\ProductCategoryLiteDto.cs" />
     <Compile Include="Dtos\ProductCategoryTreeDto.cs" />
+    <Compile Include="Dtos\ProductDto.cs" />
     <Compile Include="Dtos\ProductLiteDto.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderItem.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\ProductCategory.cs" />
     <Compile Include="Enums\EAdjustDirection.cs" />
+    <Compile Include="Enums\EOrderType.cs" />
     <Compile Include="Enums\EPointOrderStatus.cs" />
     <Compile Include="Enums\EProductType.cs" />
     <Compile Include="Filters\OrderFilter.cs" />

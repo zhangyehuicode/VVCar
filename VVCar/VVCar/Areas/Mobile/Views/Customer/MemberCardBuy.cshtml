@@ -4,75 +4,31 @@
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<div id="productdetails">
+<div id="membercardbuy">
     <div class="top_box">
-        <div class="top_box_text">{{Product.Name}}</div>
-        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="back"></a>
+        <div class="top_box_text">会员卡购买</div>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
         <a class="top_box2"></a>
-        <a><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;" v-on:click="shoppingcart"></a>
+        <a v-on:click="shoppingcart"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
     </div>
     <img class="sp_img" v-bind:src=Product.ImgUrl>
     <div class="sp_text">
         {{Product.Name}}
         <a><img src="~/Areas/resource/img/mobile/fx.png"></a>
     </div>
-    <div class="sp_text2" style="border:none;">
-        ￥{{TotalMoney}}@*Product.PriceSale*@
-        <div style="float:right;display:table;">
-            <div style="display:table-cell;height:25px;" v-on:click="subtract" v-if="Quantity>0">
-                <img class="addsubimg" style="display:table-cell;" src="~/Areas/resource/img/mobile/jian.png" />
-            </div>
-            <div class="quantity">{{Quantity}}</div>
-            <div style="display:table-cell;height:25px;" v-on:click="add">
-                <img class="addsubimg" src="~/Areas/resource/img/mobile/jia.png" />
-            </div>
-        </div>
-    </div>
-    <div class="kc_box"><span style="float:left;">原价：￥{{Product.BasePrice}}</span>库存：{{Product.Stock}}<span style="float:right; margin-bottom:10px;">月销：0</span></div>
-    <div class="kc_box2">配送说明：<span style="font-size:14px; color:#666;">{{Product.DeliveryNotes}}</span></div>
-    <div class="kc_box2">
-        产品介绍：<br>
-        @*<a><div>参数一</div></a>
-            <a><div style="background-color:#ddd; color:#666; margin-left:2%; margin-bottom:15px;">参数二</div></a>*@
-    </div>
-    <div class="kc_box3">
-        @*商品详情：<br>
-            <div>上市时间</div>
-            <div style="width:70%; color:#666;">2017年春夏</div>
-            <div>材质</div>
-            <div style="width:70%; color:#666;">钛钢</div>
-            <div>品牌</div>
-            <div style="width:70%; color:#666;">凝石轩</div>
-            <div>成色</div>
-            <div style="width:70%; color:#666;">全新</div>
-            <div>是否现货</div>
-            <div style="width:70%; color:#666;">现货</div>
-            <div>货号</div>
-            <div style="width:70%; color:#666;">R3-YOGJZ001</div>*@
-        {{Product.Introduction}}
-    </div>
-    <a class="btn1" style="margin-top:20px;" v-on:click="paynow">立即购买</a>
-    <a class="btn2" style="margin-bottom:20px;" v-on:click="addtoshoppingcart">加入购物车</a>
+    <div class="sp_text2">￥{{Product.PriceSale}}<span>￥{{Product.PriceSale}}</span></div>
+    @*<div class="sp_text3">
+            参数类型：<br>
+            <a href="#">礼品卡</a>
+            <a href="#" style="margin-left:3%; background-color:#ddd; color:#666;">自用卡</a>
+            <div>会员卡可自用也可赠送，并同样可参与<span>全员股东计划</span></div>
+        </div>*@
+    <div class="hykgm_box"><input type="checkbox" style=" width:13px; height:13px; background:none; float:left; margin-top:14px;">&nbsp;我已经阅读并同意会员卡使用协议</div>
+    <a class="btn1" v-on:click="buynow">立即购买</a>
+    <a class="btn2" v-on:click="addtoshoppingcart">加入购物车</a>
 </div>
 
 @section scripts{
-    <style type="text/css">
-        .addsubimg {
-            width: 25px;
-            height: 25px;
-        }
-
-        .quantity {
-            display: table-cell;
-            min-width: 25px;
-            color: black;
-            height: 25px;
-            line-height: 25px;
-            font-size: 20px;
-            text-align: center;
-            vertical-align: middle;
-        }
-    </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -158,49 +114,29 @@
     </script>
     <script type="text/javascript">
         var mch = $.getUrlParam('mch');
-        var product = sessionStorage.getItem('product');
-        if (product == null || product == '') {
-            $.alert('未获取到产品信息');
-        }
-        product = JSON.parse(product);
         _viewModel = new Vue({
-            el: '#productdetails',
+            el: '#membercardbuy',
             data: {
-                Product: product,
-                Quantity: 1,
-                TotalMoney: product.PriceSale,
+                Product: {},
             },
             methods: {
-                back: function (event) {
-                    history.back(-1);
+                buynow: function (event) {
+                    $.toast('购买成功');
                 },
-                home: function (event) {
-                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
-                },
-                paynow: function (event) {
-                    product.Money = _viewModel.TotalMoney;
-                    product.Quantity = _viewModel.Quantity;
-                    sessionStorage.setItem('productlist', JSON.stringify([product]));
-                    window.location.href = "/Mobile/Customer/ConfirmOrder?mch=" + mch;
+                addtoshoppingcart: function (event) {
+                    $.toast('加入成功');
                 },
                 shoppingcart: function (event) {
                     window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
                 },
-                add: function (event) {
-                    _viewModel.Quantity += 1;
-                    _viewModel.TotalMoney = _viewModel.Quantity * product.PriceSale;
-                },
-                subtract: function (event) {
-                    if (_viewModel.Quantity > 1) {
-                        _viewModel.Quantity -= 1;
-                        _viewModel.TotalMoney = _viewModel.Quantity * product.PriceSale;
-                    }
-                },
-                addtoshoppingcart: function (event) {
-                    $.toast('已添加');
-                }
             }
         });
+        var product = sessionStorage.getItem('membercard');
+        if (product != null && product != '') {
+            product = JSON.parse(product);
+            _viewModel.Product = product;
+        }
     </script>
 }
+
 

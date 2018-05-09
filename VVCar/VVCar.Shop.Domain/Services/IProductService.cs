@@ -28,7 +28,7 @@ namespace VVCar.Shop.Domain.Services
         /// 获取可上架产品
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Product> GetProduct();
+        IEnumerable<ProductDto> GetProduct();
 
         /// <summary>
         /// 调整索引

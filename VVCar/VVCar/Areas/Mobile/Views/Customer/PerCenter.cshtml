@@ -32,40 +32,40 @@
     <div class="user_box">
         <img class="headerimg" src="@ViewBag.HeadImgUrl">
         <div>
-            <span>@ViewBag.NickName</span>
-            <span style=" font-size:14px; color:#333;">绑定手机：15960248018<a href="#" style="font-size:13px; color:#ff0c4b; float:right; margin-right:4%;">[更换手机]</a></span>
+            <span>@ViewBag.NickName<a style="font-size:13px; color:#ff0c4b; float:right; margin-right:4%;" v-on:click="verificationcodeset">[设置核销密码]</a></span>
+            <span style=" font-size:14px; color:#333;">绑定手机：{{MyInfo.MobilePhoneNo}}<a style="font-size:13px; color:#ff0c4b; float:right; margin-right:4%;" v-on:click="bindingmobilephone">[更换手机]</a></span>
         </div>
     </div>
     <div class="user">
-        <a href="#" class="user2">
+        <a class="user2" v-on:click="myplate">
             <div class="user3">
                 <img src="~/Areas/resource/img/mobile/cph.png" style="width:100%;">
             </div>
             <span style="font-size:15px; color:#2d2d30;">我的车牌号</span><br>
-            <span style="font-size:13px; color:#999;">{{MyInfo.Plate}}</span><br><br>
+            <span style="font-size:13px; color:#999;">暂无</span><br><br>@*{{MyInfo.Plate}}*@
         </a>
-        <a href="#" class="user2">
+        <a class="user2" v-on:click="membercard">
             <div class="user3">
                 <img src="~/Areas/resource/img/mobile/hyk.png" style="width:100%;">
             </div>
             <span style="font-size:15px; color:#2d2d30;">我的会员卡</span><br>
             <span style="font-size:13px; color:#999;">{{MyInfo.CardCount}}张</span><br><br>
         </a>
-        <a href="#" class="user2" style="width:33.4%; border-right:none;">
+        <a class="user2" style="width:33.4%; border-right:none;" v-on:click="mypoints">
             <div class="user3">
                 <img src="~/Areas/resource/img/mobile/jf.png" style="width:100%;">
             </div>
             <span style="font-size:15px; color:#2d2d30;">我的积分</span><br>
-            <span style="font-size:13px; color:#999;">{{MyInfo.Points}}分</span><br><br>
+            <span style="font-size:13px; color:#999;">{{MyInfo.MemberPoint}}分</span><br><br>
         </a>
-        <a href="#" class="user2">
+        <a class="user2" v-on:click="myorder">
             <div class="user3">
                 <img src="~/Areas/resource/img/mobile/dd.png" style="width:100%;">
             </div>
             <span style="font-size:15px; color:#2d2d30;">我的订单</span><br>
             <span style="font-size:13px; color:#999;">商城订单查询</span><br><br>
         </a>
-        <a href="#" class="user2">
+        <a class="user2" v-on:click="memberservices">
             <div class="user3">
                 <img src="~/Areas/resource/img/mobile/hy.png" style="width:90%;">
             </div>
@@ -80,12 +80,20 @@
             <span style="font-size:13px; color:#999;">会员专属客服</span><br><br>
         </a>
     </div>
-    <ul>
-        <li>
-            <img src="~/Areas/resource/img/mobile/defaultimg3.png" class="banner bannerbg">
-        </li>
-    </ul>
-    <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+    <div class="x-slide" id="j-image-box">
+        <ul>
+            <li style="display:block;">
+                <a hidefocus="true" target="_blank" href="http://www.cheyinz.cn/"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg1.png" alt="车因子" title=""></a>
+            </li>
+            <li style="display:none;">
+                <a hidefocus="true" target="_blank" href="http://www.cheyinz.cn/"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg2.png" alt="车因子" title=""></a>
+            </li>
+            <li style="display:none;">
+                <a hidefocus="true" target="_blank" href="http://www.cheyinz.cn/"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg3.png" alt="车因子" title=""></a>
+            </li>
+        </ul>
+    </div>
+    <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6" style="position:relative;top:225px;padding-bottom:20px;">
 </div>
 
 @section scripts{
@@ -97,6 +105,57 @@
         .bannerbg {
             background: #101010;
         }
+
+        .productimg {
+            height: 190px;
+        }
+
+        .cardimg {
+            height: 100px;
+        }
+
+        .x-slide {
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            top: 456px;
+        }
+
+            .x-slide li {
+                display: block;
+                width: 100%;
+                position: absolute;
+                top: 55px;
+                left: 0;
+            }
+
+            .x-slide .btn {
+                width: 100%;
+                position: absolute;
+                top: 258px;
+                left: 0;
+                text-align: center;
+            }
+
+                .x-slide .btn span {
+                    display: inline-block;
+                    vertical-align: middle;
+                    width: 10px;
+                    height: 10px;
+                    margin: 0 5px;
+                    border-radius: 50px;
+                    -webkit-border-radius: 50px;
+                    background: rgba(255,255,255,0.5);
+                    overflow: hidden;
+                    margin-right: 5px;
+                    cursor: pointer;
+                }
+
+                    .x-slide .btn span.current {
+                        background: #fff;
+                        width: 14px;
+                        height: 14px;
+                    }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
@@ -146,14 +205,65 @@
     </script>
     <script type="text/javascript">
         $(function () {
+
+        var mch = $.getUrlParam('mch');
+            _viewModel = new Vue({
+                el: '#pcenter',
+                data: {
+                    MyInfo: {},
+                },
+                methods: {
+                    home: function (event) {
+                        window.location.href = "/Mobile/Customer?mch=" + mch;
+                    },
+                    shop: function (event) {
+                        window.location.href = "/Mobile/Customer/Shop?mch=" + mch;
+                    },
+                    membercard: function (event) {
+                        window.location.href = "/Mobile/Customer/MemberCard?mch=" + mch;
+                    },
+                    shoppingcart: function (event) {
+                        window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
+                    },
+                    scanQRCode: function (event) {
+                        wx.scanQRCode({
+                            needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                            scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                            success: function (res) {
+                                var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                            }
+                        });
+                    },
+                    callservicetel: function (event) {
+                        window.location.href = "tel:0592-1234567";
+                    },
+                    myorder: function (event) {
+                        window.location.href = "/Mobile/Customer/MyOrder?mch=" + mch;
+                    },
+                    memberservices: function (event) {
+                        window.location.href = "/Mobile/Customer/MemberServices?mch=" + mch;
+                    },
+                    mypoints: function (event) {
+                        window.location.href = "/Mobile/Customer/MyPoints?mch=" + mch;
+                    },
+                    myplate: function (event) {
+                        window.location.href = "/Mobile/Customer/MyPlate?mch=" + mch;
+                    },
+                    bindingmobilephone: function (event) {
+                        window.location.href = "/Mobile/Customer/BindingMobilePhone?mch=" + mch;
+                    },
+                    verificationcodeset: function (event) {
+                        window.location.href = "/Mobile/Customer/VerificationCodeSet?mch=" + mch;
+                    },
+            }
+        });
+
             var member = sessionStorage.getItem('member');
-            if (member == null && member=='') {
-                var mch = $.getUrlParam('mch');
-                function init() {
-                   $.ajax({
+             function init() {
+                    $.ajax({
                         url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
                         type: 'GET',
-                        headers: { 'CompanyCode':mch },
+                        headers: { 'CompanyCode': mch },
                         beforeSend: function () {
                             $.showLoading();
                         },
@@ -161,11 +271,11 @@
                             $.hideLoading();
                             if (res.IsSuccessful) {
                                 if (res.Data != null) {
-                                    sessionStorage.setItem('member', res.Data);
-                                    //window.location.href="/Mobile/Customer/Home?mch="+mch;
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                    _viewModel.MyInfo = res.Data;
                                 } else {
                                     window.location.href = "/Mobile/Customer?mch=" + mch;
-                               }
+                                }
                             } else {
                                 $.alert(res.ErrorMessage);
                                 window.location.href = "/Mobile/Customer?mch=" + mch;
@@ -175,80 +285,102 @@
                             $.hideLoading();
                             window.location.href = "/Mobile/Customer?mch=" + mch;
                         }
-                   });
-              }
-              init();
-            }
-        });
-    </script>
-    <script type="text/javascript">
-        var mch = $.getUrlParam('mch');
-        _viewModel = new Vue({
-            el: '#pcenter',
-            data: {
-                MyInfo: {
-                    Plate: '',
-                    CardCount: 0,
-                    Points: 0,
-                }
-            },
-            methods: {
-                home: function (event) {
-                    window.location.href = "/Mobile/Customer?mch=" + mch;
-                },
-                shop: function (event) {
-                    window.location.href = "/Mobile/Customer/Shop?mch=" + mch;
-                },
-                membercard: function (event) {
-                    window.location.href = "/Mobile/Customer/MemberCard?mch=" + mch;
-                },
-                shoppingcart: function (event) {
-                    window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
-                },
-                scanQRCode: function (event) {
-                    wx.scanQRCode({
-                        needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                        scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                        success: function (res) {
-                            var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                        }
                     });
-                },
-                callservicetel: function (event) {
-                    window.location.href = "tel:0592-1234567";
-                },
+                }
+            if (member == null || member == '') {
+                init();
+            } else {
+                _viewModel.MyInfo = JSON.parse(member);
             }
-        });
 
-        function init() {
-            $.ajax({
-                url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
-                type: 'GET',
-                headers: { 'CompanyCode':mch },
-                beforeSend: function () {
-                    $.showLoading();
-                },
-                success: function (res) {
-                    $.hideLoading();
-                    if (res.IsSuccessful) {
-                        if (res.Data != null) {
-                            _viewModel.MyInfo.Plate = res.Data.Plate;
-                            _viewModel.MyInfo.CardCount = res.Data.CardCount;
-                            _viewModel.MyInfo.Points = res.Data.MemberPoint;
-                        }
-                        else
-                            window.location.href = "/Mobile/Customer?mch=" + mch;
-                    } else {
-                        $.alert(res.ErrorMessage);
+            var banner = {
+                init: function () {
+                    if ($("#j-image-box li").length >= 1) {
+                        banner.initDom();
+                        banner.initEvent();
+                        banner.startTimeTask();
+                        //banner.initResize();
                     }
                 },
-                error: function () {
-                    $.hideLoading();
-                }
-            });
-        }
-        init();
+                initResize: function () {
+                    //var imgHeight;
+                    //var proportion = $(window).width() * (520 / 2000);
 
+                    /*$("#j-image-box").find("li").each(function(index, element) {
+                        if($(this).css("display")!= "none"){
+                            imgHeight = $(this).find("img").height();
+                        }
+                    });*/
+                    //$("#j-image-box").css({ "height": proportion });
+                },
+                initDom: function () {
+
+                    //$(window).resize(function () {
+                    //    banner.initResize();
+                    //});
+                    banner.cont = $("#j-image-box");
+                    banner.eyes = banner.cont.find("li");
+                    var btnHtml = ["<div class='btn'>"];
+
+                    banner.eyes.each(function (k) {
+                        btnHtml.push("<span " + (k == 0 ? "class='current'" : "") + ">" + "</span>");
+                    });
+
+                    btnHtml.push("</div>");
+
+                    banner.cont.append(btnHtml.join(""));
+                    banner.btns = banner.cont.find(".btn span");
+                },
+                initEvent: function () {
+                    banner.cont.hover(banner.onEnter, banner.onLeave);
+                    banner.btns.bind("click", banner.onBtnEnter);
+                },
+                onEnter: function () {
+                    if (banner.timer) {
+                        window.clearTimeout(banner.timer);
+                    }
+                },
+                onLeave: function () {
+                    banner.startTimeTask();
+                },
+                onBtnEnter: function (e) {
+                    if (banner.timer) {
+                        window.clearTimeout(banner.timer);
+                    }
+                    var t = $(e.target);
+                    var index = banner.btns.index(t);
+                    banner.switchPic(index);
+                },
+                switchPicTask: function () {
+                    var n = banner.getCurrEye();
+                    n = (n == banner.eyes.length - 1) ? 0 : (n + 1);
+
+                    banner.switchPic(n);
+                },
+                startTimeTask: function () {
+                    if (banner.timer) {
+                        window.clearTimeout(banner.timer);
+                    }
+                    banner.timer = window.setTimeout(banner.switchPicTask, 3000)
+                },
+                switchPic: function (n) {
+                    if (banner.btns.index(banner.btns.filter(".current")) == n) {
+                        return;
+                    }
+                    banner.eyes.filter(":visible").stop(true, true).animate({ opacity: 'hide' }, 500);
+                    banner.btns.removeClass("current").eq(n).addClass("current");
+                    banner.eyes.eq(n).stop(true, true).animate({ opacity: 'show' }, 1000, function () {
+                        banner.startTimeTask();
+                    });
+                },
+                getCurrEye: function () {
+                    var i = parseInt(banner.eyes.filter(":visible").index());
+                    return i;
+                }
+            };
+            banner.init();
+
+        });
     </script>
 }
 

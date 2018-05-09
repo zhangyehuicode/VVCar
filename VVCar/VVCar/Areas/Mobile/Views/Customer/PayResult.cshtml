@@ -4,76 +4,38 @@
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<div id="paysuccess" style="background-color:#f8f9fe;">
-    <div class="top_box">
-        <div class="top_box_text">支付成功</div>
-        <div v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" class="top_box_img" style="width:5%;"></div>
-        <a class="top_box2" style="width:83%;"></a>
-        <a><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
-    </div>
-    <div class="zfcg_box">
-        <div class="zfcg_text">您已成功支付<span style="font-size:22px; color:#ff0c4b; margin-left:30px;">￥95</span></div>
-        <div class="zfcg_text2">获得95个消费积分<a href="#" style=" width:25%; background-color:#efcb47; height:33px; line-height:33px; float:right; text-align:center; color:#2d2d30; border-radius:5px; margin-bottom:10px;">我的订单</a></span></div>
-        <div class="qr_text">收货人：张三丰（15960248018）</div>
-        <div class="qr_text" style="margin-top:5px; font-size:14px; color:#999;">收货地址：福建省厦门市湖里区</div>
-        <div class="zfcg_box2">
-            <div class="zfcg_text3">订单编号<span style="float:right;">321132131231</span></div>
-            <div class="zfcg_text3">交易流水号<span style="float:right;">321132131231</span></div>
-            <div class="zfcg_text3">创建时间<span style="float:right;">2017-11-11</span></div>
-            <div class="zfcg_text3" style=" margin-bottom:10px;">支付时间<span style="float:right;">2017-11-11</span></div>
+<div id="payresult" style="background-color:#f8f9fe;">
+    <div id="paysuccess" style="display:none">
+        <div class="top_box">
+            <div class="top_box_text">支付成功</div>
+            <div v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" class="top_box_img" style="width:5%;"></div>
+            <a class="top_box2" style="width:83%;"></a>
+            <a><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
+        </div>
+        <div class="zfcg_box">
+            <div class="zfcg_text">您已成功支付<span style="font-size:22px; color:#ff0c4b; margin-left:30px;">￥{{TotalFee}}</span></div>
+            <div class="zfcg_text2">获得{{TotalFee}}个消费积分<a style=" width:25%; background-color:#efcb47; height:33px; line-height:33px; float:right; text-align:center; color:#2d2d30; border-radius:5px; margin-bottom:10px;" v-on:click="myorder">我的订单</a></div>
+            <div class="qr_text">收货人：张三丰（15960248018）</div>
+            <div class="qr_text" style="margin-top:5px; font-size:14px; color:#999;">收货地址：福建省厦门市湖里区</div>
+            <div class="zfcg_box2">
+                <div class="zfcg_text3">订单编号<span style="float:right;">{{OutTradeNo}}</span></div>
+                @*<div class="zfcg_text3">微信订单号<span style="float:right;">{{OutTradeNo}}</span></div>*@
+                @*<div class="zfcg_text3">创建时间<span style="float:right;">@DateTime.Now.ToString("yyyy-MM-dd HH:hh:ss")</span></div>*@
+                @*<div class="zfcg_text3" style=" margin-bottom:10px;">支付时间<span style="float:right;">@DateTime.Now.ToString("yyyy-MM-dd HH:hh:ss")</span></div>*@
+            </div>
         </div>
     </div>
+    <div id="payfailure" style="display:none;">支付失败</div>
     <div class="shop_box">
         <div class="shop_box2" style="text-align:center; font-size:18px;">
             其它商品推荐
         </div>
         <div class="shop_box3">
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
+            <div class="shop_box3_div" v-for="Template in CouponTemplateList" v-on:click="productdetails(Template)">
+                <span class="shop_box3_span">{{Template.Name}}</span>
+                <a><img class="shop_box3_img" v-bind:src=Template.ImgUrl></a>
                 <div class="shop_box3_div2">
-                    ￥500
-                    @*<a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>*@
-                </div>
-            </div>
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
-                <div class="shop_box3_div2">
-                    ￥500
-                    @*<a><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>*@
-                </div>
-            </div>
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
-                <div class="shop_box3_div2">
-                    ￥500
-                    @*<a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>*@
-                </div>
-            </div>
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
-                <div class="shop_box3_div2">
-                    ￥500
-                    @*<a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>*@
-                </div>
-            </div>
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
-                <div class="shop_box3_div2">
-                    ￥500
-                    @*<a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>*@
-                </div>
-            </div>
-            <div class="shop_box3_div">
-                <span class="shop_box3_span">会员卡名</span>
-                <a><img src="~/Areas/resource/img/mobile/1.png" class="shop_box3_img"></a>
-                <div class="shop_box3_div2">
-                    ￥500
-                    @*<a href="#"><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>*@
+                    ￥{{Template.PriceSale}}
                 </div>
             </div>
         </div>
@@ -82,6 +44,11 @@
 </div>
 
 @section scripts{
+    <style type="text/css">
+        .cardimg {
+            height: 100px;
+        }
+    </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -129,19 +96,84 @@
         wxConfig();
     </script>
     <script type="text/javascript">
-        var mch = $.getUrlParam('mch');
-        _payBillViewModel = new Vue({
-            el: '#paysuccess',
-            data: {
-                ProductList: [],
-            },
-            methods: {
-                back: function (event) {
-                    history.back(-1);
+        $(function () {
+
+            var mch = $.getUrlParam('mch');
+
+            _payBillViewModel = new Vue({
+                el: '#payresult',
+                data: {
+                    ProductList: [],
+                    CouponTemplateList: [],
+                    PaySuccessMoney: 0,
+                    OutTradeNo: '',
+                    TotalFee: 0,
+                    OrderInfo: {
+                        LinkMan: '',
+                        Phone: '',
+                        Address: '',
+                        Status: 0,
+                        Money: 0,
+                        Points: 0,
+                        Remark: '',
+                        OrderItemList: [{
+                            ProductID: '',
+                            Quantity: 0,
+                            PriceSale: 0,
+                            Points: 0,
+                        }]
+                    },
                 },
-                home: function (event) {
-                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
-                },
+                methods: {
+                    back: function (event) {
+                        history.back(-1);
+                    },
+                    home: function (event) {
+                        window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                    },
+                    productdetails: function (data, event) {
+                        sessionStorage.setItem('product', JSON.stringify(data));
+                        window.location.href = "/Mobile/Customer/ProductDetails?mch=" + mch;
+                    },
+                    myorder: function (event) {
+                        window.location.href = "/Mobile/Customer/MyOrder?mch=" + mch;
+                    },
+                }
+            });
+
+            function getRecommendCouponTemplate() {
+                $.ajax({
+                    url: '/api/CouponTemplate/GetRecommendCouponTemplate',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforesend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null)
+                                _payBillViewModel.CouponTemplateList = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getRecommendCouponTemplate();
+
+            var tradeSate = $.getUrlParam('TradeSate');
+            var outTradeNo = $.getUrlParam('OutTradeNo');
+            var totalFee = $.getUrlParam('TotalFee');
+            if (tradeSate == 'true') {
+                $('#paysuccess').show();
+                _payBillViewModel.OutTradeNo = outTradeNo;
+                _payBillViewModel.TotalFee = totalFee;
+            } else {
+                $('#payfailure').show();
             }
         });
     </script>

@@ -239,5 +239,21 @@ namespace VVCar.VIP.Domain.Services
         ///// <param name="memberID">会员ID</param>
         ///// <returns></returns>
         //IEnumerable<MemberGradeIntroDto> GetMemberCanPurchaseGradeList(Guid? memberID);
+
+        /// <summary>
+        /// 手机绑定
+        /// </summary>
+        /// <param name="mobilephoneno"></param>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        bool BindingMobilePhone(string mobilephoneno, string openId);
+
+        /// <summary>
+        /// 核销密码设置
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="openId"></param>
+        /// <returns></returns>
+        bool VerificationCodeSet(string password, string openId);
     }
 }

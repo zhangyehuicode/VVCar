@@ -38,7 +38,7 @@ namespace VVCar.Shop.Services.DomainServices
             return index;
         }
 
-        private string GetTradeNo()
+        public string GetTradeNo()
         {
             var newTradeNo = string.Empty;
             var existNo = false;
@@ -46,7 +46,7 @@ namespace VVCar.Shop.Services.DomainServices
             var entity = Repository.GetQueryable(false).OrderByDescending(t => t.CreatedDate).FirstOrDefault();
             if (entity != null && entity.CreatedDate.Date != DateTime.Now.Date)
             {
-                var rule = MakeCodeRuleRepo.GetQueryable().Where(t => t.Code == "PointOrder" && t.IsAvailable).FirstOrDefault();
+                var rule = MakeCodeRuleRepo.GetQueryable().Where(t => t.Code == "Order" && t.IsAvailable).FirstOrDefault();
                 if (rule != null)
                 {
                     rule.CurrentValue = 0;
@@ -55,7 +55,7 @@ namespace VVCar.Shop.Services.DomainServices
             }
             do
             {
-                newTradeNo = makeCodeRuleService.GenerateCode("PointOrder", DateTime.Now);
+                newTradeNo = makeCodeRuleService.GenerateCode("Order", DateTime.Now);
                 existNo = Repository.Exists(t => t.Code == newTradeNo);
             } while (existNo);
             return newTradeNo;
@@ -67,7 +67,11 @@ namespace VVCar.Shop.Services.DomainServices
                 return null;
             entity.ID = Util.NewID();
             entity.Index = GetIndex();
-            entity.Code = GetTradeNo();
+            if (string.IsNullOrEmpty(entity.Code))
+                entity.Code = GetTradeNo();
+            var existNo = Repository.Exists(t => t.Code == entity.Code);
+            if (existNo)
+                throw new DomainException($"创建订单失败，订单号{entity.Code}已存在");
             entity.CreatedDate = DateTime.Now;
             entity.OrderItemList.ForEach(t =>
             {

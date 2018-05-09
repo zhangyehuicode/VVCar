@@ -12,7 +12,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 系统设置
     /// </summary>
-    public partial class SystemSetting : NormalEntityBase
+    public partial class SystemSetting : EntityBase
     {
         /// <summary>
         /// 序号

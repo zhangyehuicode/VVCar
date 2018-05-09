@@ -11,12 +11,12 @@
             <img style="border-radius:80px;" src="@ViewBag.HeadImgUrl" class="touxiang_img">
             <div class="touxiang_div">
                 <span>@ViewBag.NickName</span>
-                <span style=" font-size:14px; color:#999;">绑定手机：15960248018<a href="#" style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[我的信息]</a></span>
+                <span style=" font-size:14px; color:#999;">{{UserInfo.MobilePhoneNo}}<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[我的信息]</a></span>
             </div>
         </div>
-        <ul>
-            <li class="tongzhi">最新动态：XXX会员已到店，请立即迎接</li>
-        </ul>
+        @*<ul>
+                <li class="tongzhi">最新动态：XXX会员已到店，请立即迎接</li>
+            </ul>*@
     </div>
     <div class="touxiang">
         <a class="bq_box" v-on:click="quickorder">
@@ -136,7 +136,28 @@
     <script type="text/javascript">
         $(function () {
             var mch = $.getUrlParam('mch');
-            function getUserByOpenId() {
+
+            sessionStorage.setItem('ismaster', 'true');
+            var mch = $.getUrlParam('mch');
+            _viewModel = new Vue({
+                el: '#masterhome',
+                data: {
+                    UserInfo: {},
+                },
+                methods: {
+                    register: function (event) {
+                        window.location.href = "/Mobile/Merchant/Home?mch=" + mch;
+                    },
+                    quickorder: function (event) {
+                        window.location.href = "/Mobile/Merchant/QuickOrder?mch=" + mch;
+                    },
+                    order: function (event) {
+                        window.location.href = "/Mobile/Merchant/Order?mch=" + mch;
+                    },
+                }
+            });
+
+              function getUserByOpenId() {
                 $.ajax({
                     url: '/api/User/GetUserByOpenID',
                     type: 'GET',
@@ -148,7 +169,8 @@
                     success: function (res) {
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
-                                sessionStorage.setItem('user', res.Data);
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                                _viewModel.UserInfo = res.Data;
                                 //window.location.href = "/Mobile/Merchant?mch=" + mch;
                             }
                             else {
@@ -166,27 +188,6 @@
                 });
             }
             getUserByOpenId();
-        });
-    </script>
-    <script type="text/javascript">
-        sessionStorage.setItem('ismaster', 'true');
-        var mch = $.getUrlParam('mch');
-        _payBillViewModel = new Vue({
-            el: '#masterhome',
-            data: {
-                Data: {},
-            },
-            methods: {
-                register: function (event) {
-                    window.location.href = "/Mobile/Merchant/Home?mch=" + mch;
-                },
-                quickorder: function (event) {
-                    window.location.href = "/Mobile/Merchant/QuickOrder?mch=" + mch;
-                },
-                order: function (event) {
-                    window.location.href = "/Mobile/Merchant/Order?mch=" + mch;
-                },
-            }
         });
     </script>
 }

@@ -1,0 +1,246 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="myorder" style="background-color:#f8f9fe;">
+    <div class="top_box">
+        <div class="top_box_text">我的订单</div>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a class="top_box2"></a>
+        <a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+    </div>
+    <div class="nav_box" style="position:relative; box-shadow:none;">
+        <div>
+            <a><img src="~/Areas/resource/img/mobile/dfk.png"></a><br>
+            待付款
+        </div>
+        <div>
+            <a><img src="~/Areas/resource/img/mobile/dsh.png"></a><br>
+            待收货
+        </div>
+        <div>
+            <a href="#"><img src="~/Areas/resource/img/mobile/ysh.png"></a><br>
+            已收货
+        </div>
+        <div>
+            <a><img src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
+            现场订单
+        </div>
+    </div>
+    <div class="wddd_box">
+        <div class="wddd_input">
+            <input type="text" name="address" size="60" maxlength="60" style="color:#ddd" value="请输入新的核销密码" onfocus="if(this.value=='请输入新的核销密码'){this.value=''};this.style.color='#2d2d30';" onblur="if(this.value==''||this.value=='请输入新的核销密码'){this.value='请输入新的核销密码';this.style.color='#ddd';}" class="pass_box">
+            <a><img src="~/Areas/resource/img/mobile/ss.png" style="width:6%; margin-top:10px; float:right; margin-right:4%;"></a>
+        </div>
+    </div>
+    <div class="gwc_box">
+        <img src="~/Areas/resource/img/mobile/2.png" class="gwc_img">
+        <div class="gwc_box2">
+            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
+            <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left;">￥500<span style="float:right; color:#999; font-size:14px; padding-top:6px;">参数选择：参数一</span></div>
+        </div>
+        <div class="wddd_box2">
+            <span style="margin-left:3%;">
+                共计1件商品
+                <span style="margin-left:3%;">
+                    合计:<span style="color:#ff0c4b;">￥100</span>
+                </span>
+            </span>
+            <a class="wddd_btn">付款</a>
+            <a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;">详情</a>
+        </div>
+    </div>
+    <div class="gwc_box">
+        <img src="~/Areas/resource/img/mobile/2.png" class="gwc_img">
+        <div class="gwc_box2">
+            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
+            <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left;">￥500<span style="float:right; color:#999; font-size:14px; padding-top:6px;">现场订单</span></div>
+        </div>
+        <div class="wddd_box2">
+            <span style="margin-left:3%;">
+                共计1件商品
+                <span style="margin-left:3%;">
+                    合计:<span style="color:#ff0c4b;">￥100</span>
+                </span>
+            </span>
+            <a class="wddd_btn">确认收货</a>
+            <a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;">详情</a>
+        </div>
+    </div>
+    <div class="gwc_box">
+        <img src="~/Areas/resource/img/mobile/2.png" class="gwc_img">
+        <div class="gwc_box2">
+            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
+            <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left;">￥500<span style="float:right; color:#999; font-size:14px; padding-top:6px;">参数选择：参数一</span></div>
+        </div>
+        <div class="wddd_box2">
+            <span style="margin-left:3%;">
+                共计1件商品
+                <span style="margin-left:3%;">
+                    合计:<span style="color:#ff0c4b;">￥100</span>
+                </span>
+            </span>
+            <a class="wddd_btn">确认收货</a>
+            <a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;">详情</a>
+        </div>
+    </div>
+    <div class="gwc_box">
+        <img src="~/Areas/resource/img/mobile/2.png" class="gwc_img">
+        <div class="gwc_box2">
+            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
+            <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left;">￥500<span style="float:right; color:#999; font-size:14px; padding-top:6px;">参数选择：参数一</span></div>
+        </div>
+        <div class="wddd_box2">
+            <span style="margin-left:3%;">
+                共计1件商品
+                <span style="margin-left:3%;">
+                    合计:<span style="color:#ff0c4b;">￥100</span>
+                </span>
+            </span>
+            <a class="wddd_btn">详情</a>
+            <a class="wddd_btn" style=" background:none;  color:#2d2d30; ">已收货</a>
+        </div>
+    </div>
+    <div class="gwc_box">
+        <img src="~/Areas/resource/img/mobile/2.png" class="gwc_img">
+        <div class="gwc_box2">
+            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
+            <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left;">￥500<span style="float:right; color:#999; font-size:14px; padding-top:6px;">现场订单</span></div>
+        </div>
+        <div class="wddd_box2">
+            <span style="margin-left:3%;">
+                共计1件商品
+                <span style="margin-left:3%;">
+                    合计:<span style="color:#ff0c4b;">￥100</span>
+                </span>
+            </span>
+            <a class="wddd_btn">详情</a>
+            <a class="wddd_btn" style=" background:none;  color:#2d2d30; ">已收货</a>
+        </div>
+    </div>
+    <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+</div>
+
+@section scripts{
+    <style type="text/css">
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var member = sessionStorage.getItem('member');
+            if (member == null || member=='') {
+                var mch = $.getUrlParam('mch');
+                function init() {
+                   $.ajax({
+                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                        type: 'GET',
+                        headers: { 'CompanyCode':mch },
+                        beforeSend: function () {
+                            $.showLoading();
+                        },
+                        success: function (res) {
+                            $.hideLoading();
+                            if (res.IsSuccessful) {
+                                if (res.Data != null) {
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                    //window.location.href="/Mobile/Customer/Home?mch="+mch;
+                                } else {
+                                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                               }
+                            } else {
+                                $.alert(res.ErrorMessage);
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        },
+                        error: function () {
+                            $.hideLoading();
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                   });
+              }
+              init();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#myorder',
+            data: {
+                OrderList: [],
+            },
+            methods: {
+                shop: function (event) {
+                    window.location.href = "/Mobile/Customer/Shop?mch=" + mch;
+                },
+                percenter: function (event) {
+                    window.location.href = "/Mobile/Customer/PerCenter?mch=" + mch;
+                },
+                membercard: function (event) {
+                    window.location.href = "/Mobile/Customer/MemberCard?mch=" + mch;
+                },
+                productdetails: function (data, event) {
+                    sessionStorage.setItem('product', JSON.stringify(data));
+                    window.location.href = "/Mobile/Customer/ProductDetails?mch=" + mch;
+                },
+                scanQRCode: function (event) {
+                    wx.scanQRCode({
+                        needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                        scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                        success: function (res) {
+                            var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                        }
+                    });
+                },
+            }
+        });
+
+    </script>
+}

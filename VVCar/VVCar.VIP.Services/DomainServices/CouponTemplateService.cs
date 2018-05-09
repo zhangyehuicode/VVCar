@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain;
 using VVCar.VIP.Domain.Dtos;
@@ -475,9 +476,9 @@ namespace VVCar.VIP.Services.DomainServices
         /// 获取推荐会员卡
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Product> GetRecommendCouponTemplate()
+        public IEnumerable<ProductDto> GetRecommendCouponTemplate()
         {
-            var result = new List<Product>();
+            var result = new List<ProductDto>();
             var temp = new List<CouponTemplate>();
             var queryable = Repository.GetInclude(t => t.Stock, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Nature == ENature.Card && t.Stock.Stock > 0 && t.ApproveStatus == EApproveStatus.Delivered);
             var recommend = queryable.Where(t => t.IsRecommend).ToList();
@@ -504,7 +505,7 @@ namespace VVCar.VIP.Services.DomainServices
             }
             foreach (var item in temp)
             {
-                result.Add(new Product
+                result.Add(new ProductDto
                 {
                     ID = item.ID,
                     Code = item.TemplateCode,
@@ -515,6 +516,7 @@ namespace VVCar.VIP.Services.DomainServices
                     PriceSale = item.CouponValue,
                     Introduction = item.IntroDetail,
                     DeliveryNotes = "购买后可到会员卡包中查看已有卡券",
+                    IsMemberCard = true,
                 });
             }
             return result;
@@ -524,10 +526,10 @@ namespace VVCar.VIP.Services.DomainServices
         /// 获取会员卡
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Product> GetCardOfCouponTemplate()
+        public IEnumerable<ProductDto> GetCardOfCouponTemplate()
         {
             return Repository.GetInclude(t => t.Stock, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Nature == ENature.Card && t.ApproveStatus == EApproveStatus.Delivered && t.Stock.Stock > 0).ToList()
-                .Select(t => new Product
+                .Select(t => new ProductDto
                 {
                     ID = t.ID,
                     Code = t.TemplateCode,
@@ -538,6 +540,7 @@ namespace VVCar.VIP.Services.DomainServices
                     PriceSale = t.CouponValue,
                     Introduction = t.IntroDetail,
                     DeliveryNotes = "购买后可到会员卡包中查看已有卡券",
+                    IsMemberCard = true,
                 });
         }
 

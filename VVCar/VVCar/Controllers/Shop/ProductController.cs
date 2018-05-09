@@ -148,9 +148,9 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("GetProduct"), AllowAnonymous]
-        public PagedActionResult<Product> GetProduct()
+        public PagedActionResult<ProductDto> GetProduct()
         {
-            return SafeGetPagedData<Product>((result) =>
+            return SafeGetPagedData<ProductDto>((result) =>
             {
                 var data = ProductService.GetProduct();
                 result.Data = data;

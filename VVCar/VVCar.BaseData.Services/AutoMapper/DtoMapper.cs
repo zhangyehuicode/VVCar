@@ -112,6 +112,8 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.UsedStock, opt => opt.MapFrom(src => src.Template.Stock.UsedStock))
                 .ForMember(dest => dest.CoverImage, opt => opt.MapFrom(src => src.Template.CoverImage))
                 .ForMember(dest => dest.Nature, opt => opt.MapFrom(src => src.Template.Nature));
+
+                cfg.CreateMap<Product, ProductDto>();
             });
             //Mapper.CreateMap<Member, MemberDto>()
             //    //.ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType.Name))

@@ -22,5 +22,11 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="totalCount">The total count.</param>
         /// <returns></returns>
         IEnumerable<Order> Search(OrderFilter filter, out int totalCount);
+
+        /// <summary>
+        /// 生成订单号
+        /// </summary>
+        /// <returns></returns>
+        string GetTradeNo();
     }
 }

@@ -774,6 +774,24 @@ namespace VVCar.VIP.Services.DomainServices
             return true;
         }
 
+        public bool BindingMobilePhone(string mobilephoneno, string openId)
+        {
+            if (string.IsNullOrEmpty(mobilephoneno) || string.IsNullOrEmpty(openId) || mobilephoneno.Length != 11)
+                throw new DomainException("参数错误");
+            var member = Repository.GetQueryable().Where(t => t.WeChatOpenID == openId).FirstOrDefault();
+            member.MobilePhoneNo = mobilephoneno;
+            return base.Update(member);
+        }
+
+        public bool VerificationCodeSet(string password, string openId)
+        {
+            if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(openId))
+                throw new DomainException("参数错误");
+            var member = Repository.GetQueryable().Where(t => t.WeChatOpenID == openId).FirstOrDefault();
+            member.Password = Util.EncryptPassword(member.CardNumber, password);
+            return base.Update(member);
+        }
+
         #endregion
 
         #region methodsTemp

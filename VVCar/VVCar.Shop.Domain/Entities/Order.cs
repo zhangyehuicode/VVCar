@@ -20,6 +20,12 @@ namespace VVCar.Shop.Domain.Entities
         }
 
         /// <summary>
+        /// 订单类型
+        /// </summary>
+        [Display(Name = "订单类型")]
+        public EOrderType OrderType { get; set; }
+
+        /// <summary>
         /// 订单号
         /// </summary>
         [Display(Name = "订单号")]

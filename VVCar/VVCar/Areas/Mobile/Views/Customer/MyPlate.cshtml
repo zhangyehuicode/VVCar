@@ -1,39 +1,28 @@
 ﻿
 @{
-    ViewBag.Title = "购物车";
+    ViewBag.Title = "";
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<div style="background-color:#f8f9fe;" id="shoppingcart">
+<div style="background-color:#f8f9fe;" id="myplate">
     <div class="top_box">
-        <div class="top_box_text">购物车</div>
-        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <div class="top_box_text">我的车牌号</div>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
         <a class="top_box2"></a>
-        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
     </div>
-    <div class="gwc_box">
-        <img src="~/Areas/resource/img/mobile/9.jpg" class="gwc_img">
-        <div class="gwc_box2">
-            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
-            <div style=" width:100%; color:#ff0c4b; line-height:44px; float:left;"><span style="float:left; font-size:18px;">￥500</span><img src="~/Areas/resource/img/mobile/jiajian.png" style="width:30%; float:left; margin-left:15px; margin-top:10px;"><img src="~/Areas/resource/img/mobile/sc.png" style="width:16px; float:right; margin-top:12px; margin-right:3%;"></div>
+    <div class="wdcph">
+        <div class="wdcph_text" style=" border-bottom:1px solid #eee;">车牌号</div>
+        <div class="wdcph_text" style="color:#666; border-bottom:1px dashed #eee;">闽D12345<a>删除</a><a style="background-color:#efcb47; color:#2d2d30; margin-right:3%;">编辑</a></div>
+        <div class="wdcph_text" style="color:#666; border-bottom:1px dashed #eee;">闽D12346<a>删除</a><a style="background-color:#efcb47; color:#2d2d30; margin-right:3%;">编辑</a></div>
+        <div class="wdcph_text" style="color:#666; ">闽D12347<a>删除</a><a style="background-color:#efcb47; color:#2d2d30; margin-right:3%;">编辑</a></div>
+    </div>
+    <div class="wdcph_box">
+        <div class="wdcph_box2">
+            <input type="text">
+            <a>增加/更新</a>
         </div>
     </div>
-    <div class="gwc_box">
-        <img src="~/Areas/resource/img/mobile/9.jpg" class="gwc_img">
-        <div class="gwc_box2">
-            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
-            <div style=" width:100%; color:#ff0c4b; line-height:44px; float:left;"><span style="float:left; font-size:18px;">￥500</span><img src="~/Areas/resource/img/mobile/jiajian.png" style="width:30%; float:left; margin-left:15px; margin-top:10px;"><img src="~/Areas/resource/img/mobile/sc.png" style="width:16px; float:right; margin-top:12px; margin-right:3%;"></div>
-        </div>
-    </div>
-    <div class="gwc_box">
-        <img src="~/Areas/resource/img/mobile/9.jpg" class="gwc_img">
-        <div class="gwc_box2">
-            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
-            <div style=" width:100%; color:#ff0c4b; line-height:44px; float:left;"><span style="float:left; font-size:18px;">￥500</span><img src="~/Areas/resource/img/mobile/jiajian.png" style="width:30%; float:left; margin-left:15px; margin-top:10px;"><img src="~/Areas/resource/img/mobile/sc.png" style="width:16px; float:right; margin-top:12px; margin-right:3%;"></div>
-        </div>
-    </div>
-    <div class="gwc_hj">合计：<span style="font-size:20px; color:#ff0c4b;"><span style="font-size:12px;">￥</span>1500</span></div>
-    <a class="gwc_btn">提交订单</a>
 </div>
 
 @section scripts{
@@ -85,14 +74,26 @@
     </script>
     <script type="text/javascript">
         $(function () {
+
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#myplate',
+            data: {
+                MyInfo: {},
+            },
+            methods: {
+                home: function (event) {
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+            }
+        });
+
             var member = sessionStorage.getItem('member');
-            if (member == null || member=='') {
-                var mch = $.getUrlParam('mch');
-                function init() {
-                   $.ajax({
+             function init() {
+                    $.ajax({
                         url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
                         type: 'GET',
-                        headers: { 'CompanyCode':mch },
+                        headers: { 'CompanyCode': mch },
                         beforeSend: function () {
                             $.showLoading();
                         },
@@ -101,10 +102,10 @@
                             if (res.IsSuccessful) {
                                 if (res.Data != null) {
                                     sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                    //window.location.href="/Mobile/Customer/Home?mch="+mch;
+                                    _viewModel.MyInfo = res.Data;
                                 } else {
                                     window.location.href = "/Mobile/Customer?mch=" + mch;
-                               }
+                                }
                             } else {
                                 $.alert(res.ErrorMessage);
                                 window.location.href = "/Mobile/Customer?mch=" + mch;
@@ -114,28 +115,14 @@
                             $.hideLoading();
                             window.location.href = "/Mobile/Customer?mch=" + mch;
                         }
-                   });
-              }
-              init();
+                    });
+                }
+            if (member == null || member == '') {
+                init();
+            } else {
+                _viewModel.MyInfo = JSON.parse(member);
             }
-        });
-    </script>
-    <script type="text/javascript">
-        var mch = $.getUrlParam('mch');
-        _payBillViewModel = new Vue({
-            el: '#shoppingcart',
-            data: {
-                ProductList: [],
-                TotalMoney: 0,
-            },
-            methods: {
-                back: function (event) {
-                    history.back(-1);
-                },
-                home: function (event) {
-                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
-                },
-            }
+
         });
     </script>
 }

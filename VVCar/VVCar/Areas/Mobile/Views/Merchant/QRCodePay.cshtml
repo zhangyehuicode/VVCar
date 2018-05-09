@@ -69,17 +69,27 @@
     </script>
     <script type="text/javascript">
         $(function () {
+            var mch = $.getUrlParam('mch');
             var native_pay_url = $.getUrlParam('native_pay_url');
             if (native_pay_url != '' && native_pay_url != null) {
                 $('#qrcode').qrcode(native_pay_url);
             }
             else {
                 $.ajax({
-                    url: '/Mobile/Merchant/GenerateOutTradeNo',
+                    url: '/api/Order/GetTradeNo',
                     type: 'GET',
+                    headers: { 'CompanyCode': mch },
                     success: function (res) {
-                        var qrstrreq = "http://www.cheyinz.cn:8025/pay/NativePayPage.aspx?total_fee=1&out_trade_no=" + res + "&mch=" + mch + "&device_info=ZB001&body=汽车空气净化器&product_id=123456798&notify_url=http://www.cheyinz.cn/Mobile/Merchant/QRCodePay";
-                        window.location.href = qrstrreq;
+                        if (res.IsSuccessful) {
+                            if (res.Data == null || res.Data == '') {
+                                $.alert('生成订单号失败');
+                            } else {
+                                var qrstrreq = "http://www.cheyinz.cn:8025/pay/NativePayPage.aspx?total_fee=1&out_trade_no=" + res.Data + "&mch=" + mch + "&device_info=" + mch + "&body=汽车空气净化器&product_id=123456798&notify_url=http://www.cheyinz.cn/Mobile/Merchant/QRCodePay";
+                                window.location.href = qrstrreq;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
                     },
                     error: function () {
                         $.alert('生成订单号失败');
@@ -89,6 +99,8 @@
         });
     </script>
     <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        var user = sessionStorage.getItem('user');
         var _ismaster = sessionStorage.getItem('ismaster');
         if (_ismaster == 'true') {
             $('.title').text('店长工作终端');
@@ -96,7 +108,7 @@
             $('.title').text('店员工作终端');
         }
         var mch = $.getUrlParam('mch');
-        _payBillViewModel = new Vue({
+        _viewModel = new Vue({
             el: '#QRCodePay',
             data: {
                 Data: {},
@@ -117,6 +129,40 @@
                 },
             }
         });
+
+        var ismaster = _ismaster == 'true';
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsManager: ismaster,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                                //window.location.href = "/Mobile/Merchant?mch=" + mch;
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            if (user == null || user=='') {
+                getUserByOpenId();
+            }
     </script>
 }
 
