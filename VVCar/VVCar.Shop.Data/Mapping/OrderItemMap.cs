@@ -13,6 +13,9 @@ namespace VVCar.Shop.Data.Mapping
         public OrderItemMap()
         {
             HasKey(t => t.ID);
+
+            Property(t => t.ProductName)
+                .HasMaxLength(20);
         }
     }
 }

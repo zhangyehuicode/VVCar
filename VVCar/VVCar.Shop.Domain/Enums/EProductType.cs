@@ -23,5 +23,11 @@ namespace VVCar.Shop.Domain.Enums
         /// </summary>
         [Description("商品")]
         Goods = 1,
+
+        /// <summary>
+        /// 会员卡
+        /// </summary>
+        [Description("会员卡")]
+        MemberCard = 2,
     }
 }

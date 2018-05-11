@@ -67,6 +67,10 @@
       <Project>{3f12d42f-efd2-4743-b79a-f8599d1e98f0}</Project>
       <Name>VVCar.Shop.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VVCar.VIP.Domain\VVCar.VIP.Domain.csproj">
+      <Project>{5E2B30A6-BD56-4E3F-9626-2F717340A7CC}</Project>
+      <Name>VVCar.VIP.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\YEF.Core\YEF.Core.csproj">
       <Project>{3897ea87-56ff-459d-a321-9821c6269617}</Project>
       <Name>YEF.Core</Name>

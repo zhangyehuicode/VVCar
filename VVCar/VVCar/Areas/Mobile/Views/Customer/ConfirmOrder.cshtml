@@ -7,13 +7,28 @@
 <div id="confirmorder" style="background-color:#f8f9fe;">
     <div class="top_box">
         <div class="top_box_text">确认订单</div>
-        <a href="#"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
         <a class="top_box2"></a>
-        <a href="#"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
+        <a v-on:click="shoppingcart"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
     </div>
+    @*<div class="qr_box">
+            <div class="qr_text">收货人：{{Order.LinkMan}}（{{Order.Phone}}）<span style="color:#ff0c4b; float:right;">编辑</span></div>
+            <div class="qr_text" style="margin-top:5px; font-size:14px; color:#999;">收货地址：</div>
+            <img src="~/Areas/resource/img/mobile/fgx.png" style=" width:100%;">
+        </div>*@
     <div class="qr_box">
-        <div class="qr_text">收货人：{{MemberInfo.MemberName}}（{{MemberInfo.MobilePhoneNo}}）<span style="color:#ff0c4b; float:right;">编辑</span></div>
-        <div class="qr_text" style="margin-top:5px; font-size:14px; color:#999;">收货地址：</div>
+        <div class="gwc_text2">
+            <div class="labeltext">收件人：</div>
+            <input type="text" class="inputbox linkman listen" v-model="Order.LinkMan" />
+        </div>@*<span style="color:#ff0c4b; float:right;">完成</span>*@
+        <div class="gwc_text2">
+            <div class="labeltext"> 联系电话：</div>
+            <input type="text" class="inputbox phone listen" v-model="Order.Phone" />
+        </div>
+        <div class="gwc_text2">
+            <div class="labeltext">收货地址：</div>
+            <input type="text" class="inputbox address listen" v-model="Order.Address" />
+        </div>
         <img src="~/Areas/resource/img/mobile/fgx.png" style=" width:100%;">
     </div>
     <div class="gwc_box" v-for="Product in ProductList">
@@ -25,24 +40,41 @@
     </div>
     <div class="gwc_box3">
         <div class="gwc_text2">配送方式<span style="float:right;"></span></div>
-        <div class="gwc_text2">买家留言<input type="text" name="address" size="60" maxlength="60" style="color:#ddd" value="请对此次交易提出备注说明" onfocus="if(this.value=='请对此次交易提出备注说明'){this.value=''};this.style.color='#2d2d30';" onblur="if(this.value==''||this.value=='请对此次交易提出备注说明'){this.value='请对此次交易提出备注说明';this.style.color='#ddd';}" class="pass_box"></div>
-        <div class="gwc_text3" style="line-height:none;">
-            积分抵扣<br>
-            <span style="float:left; font-size:13px; color:#999; line-height:24px; margin-bottom:10px;">您目前共有{{MemberInfo.MemberPoint}}个积分</span>
-            <input type="checkbox" style="float:right; margin-top:4px; width:13px; height:13px;">
-        </div>
-        <div class="gwc_text3" style="line-height:none;">
-            会员卡支付<br>
-            <span style="float:left; font-size:13px; color:#999; line-height:24px; margin-bottom:10px;"></span>
-            <input type="checkbox" style="float:right; margin-top:4px; width:13px; height:13px;">
-        </div>
-        <div class="gwc_text2">微信支付<input type="checkbox" style="float:right;width:13px; height:13px; margin-top:15px;"></div>
+        <div class="gwc_text2">买家留言<input type="text" v-model="Order.Remark" class="inputbox" style="margin-left:10px;"></div>
+        @*<div class="gwc_text3" style="line-height:none;">
+                积分抵扣<br>
+                <span style="float:left; font-size:13px; color:#999; line-height:24px; margin-bottom:10px;">您目前共有{{MemberInfo.MemberPoint}}个积分</span>
+                <input type="checkbox" style="float:right; margin-top:4px; width:13px; height:13px;">
+            </div>
+            <div class="gwc_text3" style="line-height:none;">
+                会员卡支付<br>
+                <span style="float:left; font-size:13px; color:#999; line-height:24px; margin-bottom:10px;"></span>
+                <input type="checkbox" style="float:right; margin-top:4px; width:13px; height:13px;">
+            </div>*@
+        @*<div class="gwc_text2">微信支付<input type="checkbox" style="float:right;width:13px; height:13px; margin-top:15px;"></div>*@
         <div class="gwc_text2" style="border-bottom:none;">合计<span style="float:right; color:#ff0c4b; font-size:18px;">￥{{TotalMoney}}</span></div>
-        <div class="gwc_box4" v-on:click="pay">确认支付</div>
+        <div class="gwc_box4" v-on:click="pay" style="margin-top:15px;">确认支付</div>
     </div>
 </div>
 
 @section scripts{
+    <style type="text/css">
+        .inputbox {
+            border: none;
+            height: 30px;
+            width: 250px;
+            font-size: 15px;
+        }
+
+        .labeltext {
+            float: left;
+            width: 75px;
+        }
+
+        .inputerror {
+            border: 1px #ff0000 solid;
+        }
+    </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -100,21 +132,18 @@
                 MemberInfo: {},
                 TotalMoney: 0,
                 Body:'',
-                OrderInfo: {
-                    LinkMan: '',
-                    Phone: '',
-                    Address: '',
-                    Status:0,
-                    Money: 0,
-                    Points:0,
-                    Remark: '',
-                    OrderItemList: [{
-                        ProductID: '',
-                        Quantity: 0,
-                        PriceSale: 0,
-                        Points:0,
-                    }]
-                },
+                Order:{
+                        Code:'',
+                        OpenID:'@ViewBag.OpenId',
+                        LinkMan: '',
+                        Phone: '',
+                        Address: '',
+                        Status: 0,
+                        Money: 0,
+                        Points: 0,
+                        Remark: '',
+                        OrderItemList: [],
+                    },
             },
             methods: {
                 back: function (event) {
@@ -123,7 +152,31 @@
                 home: function (event) {
                     window.location.href = "/Mobile/Customer/Home?mch=" + mch;
                 },
+                shoppingcart: function (event) {
+                    window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
+                },
                 pay: function (event) {
+                    if (this.ProductList == null || this.ProductList.length < 1 || this.Order == null || this.Order=='') {
+                        $.alert('订单为空');
+                        return;
+                    }
+                    if (this.Order.OpenID == '' || this.Order.OrderItemList == null || this.Order.OrderItemList.length < 1) {
+                        $.alert('参数错误');
+                        return;
+                    }
+                    if (this.Order.LinkMan == '' || this.Order.Phone == '' || this.Order.Address == '') {
+                        $.alert('请填写完整收货信息');
+                        if (this.Order.LinkMan == '') {
+                            $('.linkman').addClass('inputerror');
+                        }
+                        if (this.Order.Phone == '') {
+                            $('.phone').addClass('inputerror');
+                        }
+                        if (this.Order.Address == '') {
+                            $('.address').addClass('inputerror');
+                        }
+                        return;
+                    }
                     $.ajax({
                         url: '/api/Order/GetTradeNo',
                         type: 'GET',
@@ -134,6 +187,8 @@
                                     $.alert('生成订单号失败');
                                 } else {
                                     //window.location.href = "http://www.cheyinz.cn:8025/Default.aspx";
+                                    sessionStorage.setItem('order', JSON.stringify(_payBillViewModel.Order));
+                                    //$.alert(JSON.stringify(_payBillViewModel.Order));
                                     window.location.href = "http://www.cheyinz.cn:8025/pay/JsApiPayPage.aspx?openid=@ViewBag.OpenId&total_fee=" + _payBillViewModel.TotalMoney * 100 + "&out_trade_no=" + res.Data + "&mch=" + mch + "&device_info=" + mch + "&body=" + _payBillViewModel.Body + "&notify_url=http://www.cheyinz.cn/Mobile/Customer/PayResult";
                                 }
                             } else {
@@ -148,6 +203,7 @@
             }
             });
             var productlist = sessionStorage.getItem('productlist');
+            var orderitemlist = [];
             if (productlist != null && productlist != '') {
                 _payBillViewModel.ProductList = JSON.parse(productlist);
                 var productList = _payBillViewModel.ProductList;
@@ -158,12 +214,25 @@
                     if(i==0)
                         body += productList[i].Name;
                     else
-                        body +='、'+productList[i].Name;
+                        body += '、' + productList[i].Name;
+
+                    orderitemlist.push({
+                        ProductID: productList[i].ID,
+                        ProductType: productList[i].IsMemberCard?2:1,
+                        Quantity: productList[i].Quantity,
+                        PriceSale: productList[i].PriceSale,
+                        Money: productList[i].Money,
+                        Points: 0,
+                        ProductName: productList[i].Name,
+                    });
+
                 }
                 _payBillViewModel.TotalMoney = totalMoney;
                 _payBillViewModel.Body = body;
+                _payBillViewModel.Order.Money = totalMoney;
+                _payBillViewModel.Order.OrderItemList = orderitemlist;
             }
-             var member = sessionStorage.getItem('member');
+            var member = sessionStorage.getItem('member');
             if (member == null || member == '') {
                 function init() {
                     $.ajax({
@@ -179,7 +248,6 @@
                                 if (res.Data != null) {
                                     sessionStorage.setItem('member', JSON.stringify(res.Data));
                                     _payBillViewModel.MemberInfo = res.Data;
-                                    //window.location.href="/Mobile/Customer/Home?mch="+mch;
                                 } else {
                                     window.location.href = "/Mobile/Customer?mch=" + mch;
                                 }
@@ -194,10 +262,12 @@
                         }
                     });
                 }
-                init();
+                //init();
             } else {
                 _payBillViewModel.MemberInfo = JSON.parse(member);
             }
+            _payBillViewModel.Order.Phone = _payBillViewModel.MemberInfo.MobilePhoneNo;
+            _payBillViewModel.Order.LinkMan = _payBillViewModel.MemberInfo.MemberName;
         });
     </script>
 }

@@ -15,17 +15,19 @@
         <div class="zfcg_box">
             <div class="zfcg_text">您已成功支付<span style="font-size:22px; color:#ff0c4b; margin-left:30px;">￥{{TotalFee}}</span></div>
             <div class="zfcg_text2">获得{{TotalFee}}个消费积分<a style=" width:25%; background-color:#efcb47; height:33px; line-height:33px; float:right; text-align:center; color:#2d2d30; border-radius:5px; margin-bottom:10px;" v-on:click="myorder">我的订单</a></div>
-            <div class="qr_text">收货人：张三丰（15960248018）</div>
-            <div class="qr_text" style="margin-top:5px; font-size:14px; color:#999;">收货地址：福建省厦门市湖里区</div>
+            <div class="qr_text">收货人：{{Order.LinkMan}}（{{Order.Phone}}）</div>
+            <div class="qr_text" style="margin-top:5px; font-size:14px; color:#999;">收货地址：{{Order.Address}}</div>
             <div class="zfcg_box2">
-                <div class="zfcg_text3">订单编号<span style="float:right;">{{OutTradeNo}}</span></div>
+                <div class="zfcg_text3">订单号<span style="float:right;">{{Order.Code}}</span></div>
                 @*<div class="zfcg_text3">微信订单号<span style="float:right;">{{OutTradeNo}}</span></div>*@
                 @*<div class="zfcg_text3">创建时间<span style="float:right;">@DateTime.Now.ToString("yyyy-MM-dd HH:hh:ss")</span></div>*@
                 @*<div class="zfcg_text3" style=" margin-bottom:10px;">支付时间<span style="float:right;">@DateTime.Now.ToString("yyyy-MM-dd HH:hh:ss")</span></div>*@
             </div>
         </div>
     </div>
+    <div id="generateorder" style="display:none;">支付成功，正在生成订单，请稍候...</div>
     <div id="payfailure" style="display:none;">支付失败</div>
+    <div id="tradefailure" style="display:none;">交易失败</div>
     <div class="shop_box">
         <div class="shop_box2" style="text-align:center; font-size:18px;">
             其它商品推荐
@@ -103,12 +105,13 @@
             _payBillViewModel = new Vue({
                 el: '#payresult',
                 data: {
-                    ProductList: [],
                     CouponTemplateList: [],
-                    PaySuccessMoney: 0,
                     OutTradeNo: '',
                     TotalFee: 0,
-                    OrderInfo: {
+                    Order: {},
+                        @*{
+                        Code:'',
+                        OpenID:'@ViewBag.OpenId',
                         LinkMan: '',
                         Phone: '',
                         Address: '',
@@ -118,11 +121,13 @@
                         Remark: '',
                         OrderItemList: [{
                             ProductID: '',
+                            ProductType:1,
                             Quantity: 0,
                             PriceSale: 0,
                             Points: 0,
+                            ProductName:'',
                         }]
-                    },
+                    },*@
                 },
                 methods: {
                     back: function (event) {
@@ -165,15 +170,89 @@
             }
             getRecommendCouponTemplate();
 
-            var tradeSate = $.getUrlParam('TradeSate');
-            var outTradeNo = $.getUrlParam('OutTradeNo');
-            var totalFee = $.getUrlParam('TotalFee');
-            if (tradeSate == 'true') {
-                $('#paysuccess').show();
-                _payBillViewModel.OutTradeNo = outTradeNo;
-                _payBillViewModel.TotalFee = totalFee;
+            var member = sessionStorage.getItem('member');
+             function init() {
+                    $.ajax({
+                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                        type: 'GET',
+                        headers: { 'CompanyCode': mch },
+                        success: function (res) {
+                            if (res.IsSuccessful) {
+                                if (res.Data != null) {
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                } else {
+                                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                                }
+                            } else {
+                                $.alert(res.ErrorMessage);
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        },
+                        error: function () {
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                    });
+                }
+            if (member == null || member == '') {
+                init();
+            }
+
+            function order() {
+                if (_payBillViewModel.Order == null || _payBillViewModel.Order == '' || _payBillViewModel.Order== {}) {
+                    $.alert('参数错误');
+                    $('#generateorder').hide();
+                    $('#tradefailure').show();
+                    return;
+                }
+                $.ajax({
+                    url: '/api/Order',
+                    type: 'POST',
+                    data: _payBillViewModel.Order,
+                    headers: { 'CompanyCode': mch },
+                    beforesend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        $('#generateorder').hide();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                $('#paysuccess').show();
+                            } else {
+                                $('#tradefailure').show();
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error:function () {
+                        $.hideLoading();
+                        $('#generateorder').hide();
+                        $('#tradefailure').show();
+                    }
+                });
+            }
+
+            var order = sessionStorage.getItem('order');
+            if (order == null || order == '') {
+                $.alert('订单不存在');
+                $('#tradefailure').show();
+                return;
             } else {
-                $('#payfailure').show();
+                var tradeSate = $.getUrlParam('TradeSate');
+                var outTradeNo = $.getUrlParam('OutTradeNo');
+                var totalFee = $.getUrlParam('TotalFee');
+                if (tradeSate == 'true') {
+                    $('#generateorder').show();
+                    _payBillViewModel.Order = JSON.parse(order);
+                    _payBillViewModel.OutTradeNo = outTradeNo;
+                    _payBillViewModel.TotalFee = parseInt(totalFee)/100;
+                    _payBillViewModel.Order.Code = outTradeNo;
+                    _payBillViewModel.Order.Money = parseInt(totalFee)/100;
+                    order();
+                } else {
+                    $('#payfailure').show();
+                }
             }
         });
     </script>

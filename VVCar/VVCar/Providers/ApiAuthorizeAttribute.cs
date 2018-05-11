@@ -78,7 +78,19 @@ namespace VVCar
             //if (AppContext.Settings.IsDynamicCompany)
             //{
             var headerIds = actionContext.Request.Headers.FirstOrDefault(t => t.Key == Constants.HttpHeaderCompanyCode);
-            companyCode = headerIds.Value == null ? string.Empty : headerIds.Value.FirstOrDefault();
+            if (headerIds.Value != null)
+            {
+                headerIds.Value.ForEach(t =>
+                {
+                    if (!string.IsNullOrEmpty(t))
+                        companyCode = t;
+                });
+            }
+            else
+            {
+                companyCode = string.Empty;
+            }
+            //companyCode = headerIds.Value == null ? string.Empty : headerIds.Value.FirstOrDefault();
             if (string.IsNullOrEmpty(companyCode))
             {
                 actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, new { Message = "缺少商户信息。" });

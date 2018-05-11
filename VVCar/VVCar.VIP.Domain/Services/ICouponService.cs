@@ -160,5 +160,13 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="sendNotify"></param>
         /// <returns></returns>
         bool CenterReceiveCoupon(ReceiveCouponDto receiveCouponDto, bool sendNotify = false);
+
+        /// <summary>
+        /// 执行领取卡券
+        /// </summary>
+        /// <param name="receiveCouponDto"></param>
+        /// <param name="sendNotify"></param>
+        /// <returns></returns>
+        IEnumerable<Coupon> ReceiveCouponsAtcion(ReceiveCouponDto receiveCouponDto, bool sendNotify = false);
     }
 }

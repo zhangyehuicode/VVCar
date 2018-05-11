@@ -184,15 +184,15 @@ namespace VVCar.VIP.Services.DomainServices
                 var originalcoupon = Repository.GetInclude(t => t.Template, false).Where(t => t.ID == receiveCouponDto.CouponID).FirstOrDefault();
                 if (originalcoupon == null)
                 {
-                    throw new DomainException("无法获取要赠送的优惠券");
+                    throw new DomainException("无法获取要赠送的卡券");
                 }
                 if (originalcoupon.Status != ECouponStatus.Default)
                 {
-                    throw new DomainException("优惠券已被使用或已过期");
+                    throw new DomainException("卡券已被使用或已过期");
                 }
                 if (!IsCouponOwner(originalcoupon.ID, receiveCouponDto.GivenOpenID))
                 {
-                    throw new DomainException("赠送的优惠券已经被领取啦！");
+                    throw new DomainException("赠送的卡券已经被领取啦！");
                 }
                 var receiverCoupons = Repository.GetQueryable(false).Where(t => t.OwnerOpenID == receiveCouponDto.ReceiveOpenID && t.TemplateID == originalcoupon.TemplateID).ToArray();
                 var coupontemplate = CouponTemplateRepo.GetInclude(t => t.Stock, false).Where(t => t.ID == originalcoupon.TemplateID).FirstOrDefault();
@@ -329,7 +329,7 @@ namespace VVCar.VIP.Services.DomainServices
                     .Where(t => receiveCouponDto.CouponTemplateIDs.Contains(t.ID) && t.IsAvailable && t.ApproveStatus == EApproveStatus.Delivered)
                     .ToList();
             if (templates.Count < 1)
-                throw new DomainException("没有可以领取的券");
+                throw new DomainException("没有可以领取的卡券");
             if (receiveCouponDto.ReceiveOpenID == "specialcoupon")
             {
                 var receivedSpecialCouponIds = Repository.GetQueryable(false)
@@ -449,12 +449,12 @@ namespace VVCar.VIP.Services.DomainServices
                         url = $"{AppContext.Settings.SiteDomain}/Coupon/MyCoupon?mch={AppContext.CurrentSession.CompanyCode}",
                         data = new System.Dynamic.ExpandoObject(),
                     };
-                    message.data.first = new WeChatTemplateMessageDto.MessageData("恭喜您获得新的优惠券");
+                    message.data.first = new WeChatTemplateMessageDto.MessageData("恭喜您获得新的卡券");
                     message.data.keyword1 = new WeChatTemplateMessageDto.MessageData("");
                     message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(template.Title);
                     message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(newCoupon.ExpiredDate.ToDateString());
                     message.data.keyword4 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyyMMddHHmmssfff"));
-                    message.data.remark = new WeChatTemplateMessageDto.MessageData("点击详情进行查看优惠券。");
+                    message.data.remark = new WeChatTemplateMessageDto.MessageData("点击详情进行查看卡券。");
                     WeChatService.SendWeChatNotifyAsync(message);
                 }
             }

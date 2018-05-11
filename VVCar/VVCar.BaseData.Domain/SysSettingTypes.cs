@@ -45,5 +45,15 @@ namespace VVCar.BaseData.Domain
         /// 会员升级通知消息模板
         /// </summary>
         public const string WXMsg_UpGrade = "WXMsg_UpGrade";
+
+        /// <summary>
+        /// 下单成功通知消息模板
+        /// </summary>
+        public const string WXMsg_OrderSuccess = "WXMsg_OrderSuccess";
+
+        /// <summary>
+        /// 礼品领取成功通知消息模板
+        /// </summary>
+        public const string WXMsg_ReceivedSuccess = "WXMsg_ReceivedSuccess";
     }
 }

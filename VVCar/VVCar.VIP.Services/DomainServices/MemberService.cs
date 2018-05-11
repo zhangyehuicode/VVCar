@@ -670,7 +670,7 @@ namespace VVCar.VIP.Services.DomainServices
             var member = Repository.GetByKey(memberID);
             if (member == null)
             {
-                AppContext.Logger.Debug($"调整会员积分失败，会员信息不存在");
+                AppContext.Logger.Debug($"会员信息不存在");
                 return result;
             }
             member.Point += adjustPoints;
@@ -690,7 +690,7 @@ namespace VVCar.VIP.Services.DomainServices
             }
             else
             {
-                AppContext.Logger.Error("更新会员失败导致设置会员积分失败");
+                AppContext.Logger.Error("调整会员积分失败");
             }
             return result;
         }

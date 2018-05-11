@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Enums;
 using YEF.Core.Data;
 
 namespace VVCar.Shop.Domain.Entities
@@ -32,6 +33,18 @@ namespace VVCar.Shop.Domain.Entities
         public Guid ProductID { get; set; }
 
         /// <summary>
+        /// 产品名称
+        /// </summary>
+        [Display(Name = "产品名称")]
+        public string ProductName { get; set; }
+
+        /// <summary>
+        /// 产品类型
+        /// </summary>
+        [Display(Name = "产品类型")]
+        public EProductType ProductType { get; set; }
+
+        /// <summary>
         /// 产品
         /// </summary>
         [Display(Name = "产品")]
@@ -48,6 +61,12 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "销售单价")]
         public decimal PriceSale { get; set; }
+
+        /// <summary>
+        /// 销售总价
+        /// </summary>
+        [Display(Name = "销售总价")]
+        public decimal Money { get; set; }
 
         /// <summary>
         /// 兑换积分

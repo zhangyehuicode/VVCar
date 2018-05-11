@@ -173,9 +173,11 @@
     </script>
     <script type="text/javascript">
         $(function () {
+            
             var member = sessionStorage.getItem('member');
             if (member == null || member=='') {
                 var mch = $.getUrlParam('mch');
+                //$.alert(mch);
                 function init() {
                    $.ajax({
                         url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
@@ -198,9 +200,12 @@
                                 window.location.href = "/Mobile/Customer?mch=" + mch;
                             }
                         },
-                        error: function () {
+                        error: function (res) {
                             $.hideLoading();
-                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                            $.alert(JSON.stringify(res), function () {
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            });
+                            //window.location.href = "/Mobile/Customer?mch=" + mch;
                         }
                    });
               }
@@ -341,6 +346,7 @@
                 headers: { 'CompanyCode': mch },
                 beforesend: function () {
                     $.showLoading();
+                    //request.setRequestHeader("CompanyCode", mch);
                 },
                 success: function (res) {
                     $.hideLoading();
@@ -351,7 +357,7 @@
                         $.alert(res.ErrorMessage);
                     }
                 },
-                error: function () {
+                error: function (res) {
                     $.hideLoading();
                 }
             });

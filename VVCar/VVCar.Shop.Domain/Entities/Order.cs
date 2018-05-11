@@ -20,12 +20,6 @@ namespace VVCar.Shop.Domain.Entities
         }
 
         /// <summary>
-        /// 订单类型
-        /// </summary>
-        [Display(Name = "订单类型")]
-        public EOrderType OrderType { get; set; }
-
-        /// <summary>
         /// 订单号
         /// </summary>
         [Display(Name = "订单号")]
@@ -36,6 +30,18 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "序号")]
         public int Index { get; set; }
+
+        /// <summary>
+        /// 会员ID
+        /// </summary>
+        [Display(Name = "会员ID")]
+        public Guid? MemberID { get; set; }
+
+        /// <summary>
+        /// OpenID
+        /// </summary>
+        [Display(Name = "OpenID")]
+        public string OpenID { get; set; }
 
         /// <summary>
         /// 联系人
@@ -65,7 +71,7 @@ namespace VVCar.Shop.Domain.Entities
         /// 状态
         /// </summary>
         [Display(Name = "状态")]
-        public EPointOrderStatus Status { get; set; }
+        public EOrderStatus Status { get; set; }
 
         /// <summary>
         /// 总金额

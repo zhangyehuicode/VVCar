@@ -52,8 +52,7 @@
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\ProductCategory.cs" />
     <Compile Include="Enums\EAdjustDirection.cs" />
-    <Compile Include="Enums\EOrderType.cs" />
-    <Compile Include="Enums\EPointOrderStatus.cs" />
+    <Compile Include="Enums\EOrderStatus.cs" />
     <Compile Include="Enums\EProductType.cs" />
     <Compile Include="Filters\OrderFilter.cs" />
     <Compile Include="Filters\ProductCategoryFilter.cs" />

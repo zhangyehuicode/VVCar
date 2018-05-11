@@ -288,9 +288,10 @@
                                     $.alert(res.ErrorMessage);
                                 }
                             },
-                            error: function () {
+                            error: function (res) {
                                 //$.hideLoading();
-                                $.alert('注册失败');
+                                //$.alert('注册失败');
+                                $.alert(JSON.stringify(res));
                             }
                         });
                     });

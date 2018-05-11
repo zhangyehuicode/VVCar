@@ -33,7 +33,7 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, AllowAnonymous]
         public JsonActionResult<Order> Add(Order entity)
         {
             return SafeExecute(() =>
