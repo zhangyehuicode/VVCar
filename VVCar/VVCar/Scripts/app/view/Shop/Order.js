@@ -37,13 +37,13 @@
         }];
         me.columns = [
             { header: '序号', dataIndex: 'Index', width: 60 },
-            { header: '订单号', dataIndex: 'TradeNo', flex: 1 },
+            { header: '订单号', dataIndex: 'Code', flex: 1 },
             { header: '订单日期', dataIndex: 'CreatedDate', xtype: 'datecolumn', format: 'Y-m-d H:i:s', flex: 1 },
-            { header: '数量', dataIndex: 'Quantity', width: 80 },
-            { header: '备注', dataIndex: 'Remark', flex: 1 },
             { header: '联系人', dataIndex: 'LinkMan', flex: 1 },
             { header: '联系电话', dataIndex: 'Phone', flex: 1 },
             { header: '详细地址', dataIndex: 'Address', width: 200, },
+            { header: '数量', dataIndex: 'Quantity', width: 80 },
+            { header: '备注', dataIndex: 'Remark', flex: 1 },
             {
                 header: '发货状态', dataIndex: 'Status', width: 80,
                 renderer: function (value) {

@@ -124,6 +124,24 @@
     <script type="text/javascript">
         $(function () {
 
+            //$('.listen').on('input', function () {
+            //    var value = $(this).val();
+            //    if (value != null && value.length > 0) {
+            //        $(this).removeClass('inputerror');
+            //    } else {
+            //        $(this).addClass('inputerror');
+            //    }
+            //});
+
+            //$('input').on('change', function () {
+            //    var value = $(this).val();
+            //    if (value != null && value.length > 0) {
+            //        $(this).removeClass('inputerror');
+            //    } else {
+            //        $(this).addClass('inputerror');
+            //    }
+            //});
+
         var mch = $.getUrlParam('mch');
         _payBillViewModel = new Vue({
             el: '#confirmorder',
@@ -165,7 +183,7 @@
                         return;
                     }
                     if (this.Order.LinkMan == '' || this.Order.Phone == '' || this.Order.Address == '') {
-                        $.alert('请填写完整收货信息');
+                        //$.alert('请填写完整收货信息');
                         if (this.Order.LinkMan == '') {
                             $('.linkman').addClass('inputerror');
                         }
@@ -190,6 +208,7 @@
                                     sessionStorage.setItem('order', JSON.stringify(_payBillViewModel.Order));
                                     //$.alert(JSON.stringify(_payBillViewModel.Order));
                                     window.location.href = "http://www.cheyinz.cn:8025/pay/JsApiPayPage.aspx?openid=@ViewBag.OpenId&total_fee=" + _payBillViewModel.TotalMoney * 100 + "&out_trade_no=" + res.Data + "&mch=" + mch + "&device_info=" + mch + "&body=" + _payBillViewModel.Body + "&notify_url=http://www.cheyinz.cn/Mobile/Customer/PayResult";
+                                    //window.location.href = "/Mobile/Customer/PayResult?TradeSate=true&OutTradeNo=DD2018051400001&TotalFee=1";
                                 }
                             } else {
                                 $.alert(res.ErrorMessage);
@@ -217,7 +236,7 @@
                         body += '、' + productList[i].Name;
 
                     orderitemlist.push({
-                        ProductID: productList[i].ID,
+                        GoodsID: productList[i].ID,
                         ProductType: productList[i].IsMemberCard?2:1,
                         Quantity: productList[i].Quantity,
                         PriceSale: productList[i].PriceSale,
@@ -262,7 +281,7 @@
                         }
                     });
                 }
-                //init();
+                init();
             } else {
                 _payBillViewModel.MemberInfo = JSON.parse(member);
             }

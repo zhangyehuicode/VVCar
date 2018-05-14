@@ -1,6 +1,6 @@
 ﻿Ext.define('WX.view.Shop.OrderEdit', {
     extend: 'Ext.window.Window',
-    alias: 'widget.WX.view.Shop.OrderEdit',
+    alias: 'widget.OrderEdit',
     title: '',
     layout: 'fit',
     width: 350,

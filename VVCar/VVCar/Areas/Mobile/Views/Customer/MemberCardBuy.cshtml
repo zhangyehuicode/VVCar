@@ -14,7 +14,7 @@
     <img class="sp_img" v-bind:src=Product.ImgUrl>
     <div class="sp_text">
         {{Product.Name}}
-        <a><img src="~/Areas/resource/img/mobile/fx.png"></a>
+        @*<a><img src="~/Areas/resource/img/mobile/fx.png"></a>*@
     </div>
     <div class="sp_text2">￥{{Product.PriceSale}}<span>￥{{Product.PriceSale}}</span></div>
     @*<div class="sp_text3">
@@ -23,7 +23,7 @@
             <a href="#" style="margin-left:3%; background-color:#ddd; color:#666;">自用卡</a>
             <div>会员卡可自用也可赠送，并同样可参与<span>全员股东计划</span></div>
         </div>*@
-    <div class="hykgm_box"><input type="checkbox" style=" width:13px; height:13px; background:none; float:left; margin-top:14px;">&nbsp;我已经阅读并同意会员卡使用协议</div>
+    @*<div class="hykgm_box"><input type="checkbox" style=" width:13px; height:13px; background:none; float:left; margin-top:14px;">&nbsp;我已经阅读并同意会员卡使用协议</div>*@
     <a class="btn1" v-on:click="buynow">立即购买</a>
     <a class="btn2" v-on:click="addtoshoppingcart">加入购物车</a>
 </div>
@@ -114,6 +114,7 @@
     </script>
     <script type="text/javascript">
         var mch = $.getUrlParam('mch');
+        var product = sessionStorage.getItem('membercard');
         _viewModel = new Vue({
             el: '#membercardbuy',
             data: {
@@ -121,7 +122,10 @@
             },
             methods: {
                 buynow: function (event) {
-                    $.toast('购买成功');
+                    product.Money = product.PriceSale;
+                    product.Quantity = 1;
+                    sessionStorage.setItem('productlist', JSON.stringify([product]));
+                    window.location.href = "/Mobile/Customer/ConfirmOrder?mch=" + mch;
                 },
                 addtoshoppingcart: function (event) {
                     $.toast('加入成功');
@@ -131,7 +135,6 @@
                 },
             }
         });
-        var product = sessionStorage.getItem('membercard');
         if (product != null && product != '') {
             product = JSON.parse(product);
             _viewModel.Product = product;

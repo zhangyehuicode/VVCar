@@ -48,7 +48,7 @@ namespace VVCar
                 }
                 return;
             }
-            if (NeedLogin)//如果需要登录验证，则判断UserID是否存在。
+            else if (NeedLogin)//如果需要登录验证，则判断UserID是否存在。
             {
                 if (AppContext.CurrentSession.UserID == Guid.Empty)
                 {
@@ -77,7 +77,7 @@ namespace VVCar
 
             //if (AppContext.Settings.IsDynamicCompany)
             //{
-            var headerIds = actionContext.Request.Headers.FirstOrDefault(t => t.Key == Constants.HttpHeaderCompanyCode);
+            var headerIds = actionContext.Request.Headers.FirstOrDefault(t => t.Key.ToLower() == Constants.HttpHeaderCompanyCode.ToLower());
             if (headerIds.Value != null)
             {
                 headerIds.Value.ForEach(t =>

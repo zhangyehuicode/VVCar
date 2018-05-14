@@ -56,10 +56,11 @@
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
         function wxConfig() {
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -163,8 +164,9 @@
                             $.alert(res.ErrorMessage);
                         }
                     },
-                    error: function () {
+                    error: function (res) {
                         $.hideLoading();
+                        $.alert(JSON.stringify(res));
                     }
                 });
             }
@@ -197,7 +199,7 @@
                 init();
             }
 
-            function order() {
+            function orderAction() {
                 if (_payBillViewModel.Order == null || _payBillViewModel.Order == '' || _payBillViewModel.Order== {}) {
                     $.alert('参数错误');
                     $('#generateorder').hide();
@@ -225,10 +227,11 @@
                             $.alert(res.ErrorMessage);
                         }
                     },
-                    error:function () {
+                    error:function (res) {
                         $.hideLoading();
                         $('#generateorder').hide();
                         $('#tradefailure').show();
+                        $.alert(JSON.stringify(res));
                     }
                 });
             }
@@ -249,7 +252,7 @@
                     _payBillViewModel.TotalFee = parseInt(totalFee)/100;
                     _payBillViewModel.Order.Code = outTradeNo;
                     _payBillViewModel.Order.Money = parseInt(totalFee)/100;
-                    order();
+                    orderAction();
                 } else {
                     $('#payfailure').show();
                 }

@@ -27,10 +27,10 @@ namespace VVCar.Shop.Domain.Entities
         public virtual Order Order { get; set; }
 
         /// <summary>
-        /// 产品ID
+        /// 商品ID
         /// </summary>
-        [Display(Name = "产品ID")]
-        public Guid ProductID { get; set; }
+        [Display(Name = "商品ID")]
+        public Guid GoodsID { get; set; }
 
         /// <summary>
         /// 产品名称
@@ -44,11 +44,11 @@ namespace VVCar.Shop.Domain.Entities
         [Display(Name = "产品类型")]
         public EProductType ProductType { get; set; }
 
-        /// <summary>
-        /// 产品
-        /// </summary>
-        [Display(Name = "产品")]
-        public virtual Product Product { get; set; }
+        ///// <summary>
+        ///// 产品
+        ///// </summary>
+        //[Display(Name = "产品")]
+        //public virtual Product Product { get; set; }
 
         /// <summary>
         /// 数量

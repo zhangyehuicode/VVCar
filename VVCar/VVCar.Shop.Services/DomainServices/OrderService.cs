@@ -98,7 +98,7 @@ namespace VVCar.Shop.Services.DomainServices
             try
             {
                 var cardItems = entity.OrderItemList.Where(t => t.ProductType == EProductType.MemberCard).ToList();
-                var couponTemplateIDs = cardItems.Select(t => t.ProductID).ToList();
+                var couponTemplateIDs = cardItems.Select(t => t.GoodsID).ToList();
                 if (couponTemplateIDs != null && couponTemplateIDs.Count > 0)
                     ReceiveCoupons(couponTemplateIDs, entity.OpenID);
                 if (cardItems.Count == entity.OrderItemList.Count)
