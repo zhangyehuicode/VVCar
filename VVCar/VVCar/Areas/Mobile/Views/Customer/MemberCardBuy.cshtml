@@ -76,49 +76,100 @@
         wxConfig();
     </script>
     <script type="text/javascript">
-        $(function () {
-            var member = sessionStorage.getItem('member');
-            if (member == null || member=='') {
-                var mch = $.getUrlParam('mch');
-                function init() {
-                   $.ajax({
-                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
-                        type: 'GET',
-                        headers: { 'CompanyCode':mch },
-                        beforeSend: function () {
-                            $.showLoading();
-                        },
-                        success: function (res) {
-                            $.hideLoading();
-                            if (res.IsSuccessful) {
-                                if (res.Data != null) {
-                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                    //window.location.href="/Mobile/Customer/Home?mch="+mch;
-                                } else {
-                                    window.location.href = "/Mobile/Customer?mch=" + mch;
-                               }
-                            } else {
-                                $.alert(res.ErrorMessage);
-                                window.location.href = "/Mobile/Customer?mch=" + mch;
-                            }
-                        },
-                        error: function () {
-                            $.hideLoading();
-                            window.location.href = "/Mobile/Customer?mch=" + mch;
-                        }
-                   });
+
+          $(function () {
+              var member = sessionStorage.getItem('member');
+              var mch = $.getUrlParam('mch');
+              if (member == null || member == '') {
+                  function init() {
+                      $.ajax({
+                          url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                          type: 'GET',
+                          headers: { 'CompanyCode': mch },
+                          beforeSend: function () {
+                              $.showLoading();
+                          },
+                          success: function (res) {
+                              $.hideLoading();
+                              if (res.IsSuccessful) {
+                                  if (res.Data != null) {
+                                      member = res.Data;
+                                      sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                  } else {
+                                      window.location.href = "/Mobile/Customer?mch=" + mch;
+                                  }
+                              } else {
+                                  $.alert(res.ErrorMessage);
+                                  window.location.href = "/Mobile/Customer?mch=" + mch;
+                              }
+                          },
+                          error: function () {
+                              $.hideLoading();
+                              window.location.href = "/Mobile/Customer?mch=" + mch;
+                          }
+                      });
+                  }
+                  init();
+              } else {
+                  member = JSON.parse(member);
               }
-              init();
-            }
-        });
-    </script>
-    <script type="text/javascript">
-        var mch = $.getUrlParam('mch');
-        var product = sessionStorage.getItem('membercard');
+
+              var product = sessionStorage.getItem('membercard');
+              if (product != null && product != '') {
+                  product = JSON.parse(product);
+              } else {
+                  $.alert('未获取到会员卡信息');
+              }
+
+              function addtoshoppingcart(data) {
+                  if (data == null) {
+                      $.alert('参数错误');
+                      return;
+                  }
+                  $.ajax({
+                      url: '/api/ShoppingCart/AddToShoppingCart',
+                      type: 'POST',
+                      data: data,
+                      headers: { 'CompanyCode': mch },
+                      beforeSend: function () {
+                          $.showLoading();
+                      },
+                      success: function (res) {
+                          $.hideLoading();
+                          if (res.IsSuccessful) {
+                              if (res.Data != null)
+                                  $.toast('已添加');
+                              else
+                                  $.alert('添加失败,请重试');
+                          } else {
+                              $.alert(res.ErrorMessage);
+                          }
+                      },
+                      error: function (res) {
+                          $.hideLoading();
+                      }
+                  });
+              }
+
         _viewModel = new Vue({
             el: '#membercardbuy',
             data: {
-                Product: {},
+                Product: product,
+                ShoppingCart: {
+                    MemberID: member.MemberID,
+                    OpenID: '@ViewBag.OpenId',
+                    Money: product.PriceSale,
+                    ShoppingCartItemList: [{
+                        GoodsID: product.ID,
+                        ProductName: product.Name,
+                        ProductType: 2,
+                        Quantity: 1,
+                        PriceSale: product.PriceSale,
+                        Money: product.PriceSale,
+                        Points: 0,
+                        ImgUrl: product.ImgUrl,
+                    }],
+                },
             },
             methods: {
                 buynow: function (event) {
@@ -128,17 +179,15 @@
                     window.location.href = "/Mobile/Customer/ConfirmOrder?mch=" + mch;
                 },
                 addtoshoppingcart: function (event) {
-                    $.toast('加入成功');
+                    addtoshoppingcart(_viewModel.ShoppingCart);
                 },
                 shoppingcart: function (event) {
                     window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
                 },
             }
         });
-        if (product != null && product != '') {
-            product = JSON.parse(product);
-            _viewModel.Product = product;
-        }
+
+    });
     </script>
 }
 

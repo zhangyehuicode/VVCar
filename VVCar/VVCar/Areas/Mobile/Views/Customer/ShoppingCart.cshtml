@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "购物车";
+    ViewBag.Title = "";
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,34 +9,47 @@
         <div class="top_box_text">购物车</div>
         <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
         <a class="top_box2"></a>
-        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
     </div>
-    <div class="gwc_box">
-        <img src="~/Areas/resource/img/mobile/9.jpg" class="gwc_img">
+    <div class="gwc_box" v-for="Product in ProductList">
+        <img class="gwc_img" v-bind:src=Product.ImgUrl>
         <div class="gwc_box2">
-            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
-            <div style=" width:100%; color:#ff0c4b; line-height:44px; float:left;"><span style="float:left; font-size:18px;">￥500</span><img src="~/Areas/resource/img/mobile/jiajian.png" style="width:30%; float:left; margin-left:15px; margin-top:10px;"><img src="~/Areas/resource/img/mobile/sc.png" style="width:16px; float:right; margin-top:12px; margin-right:3%;"></div>
+            <span class="gwc_text">{{Product.ProductName}}</span>
+            <div style=" width:100%; color:#ff0c4b; line-height:44px; float:left;">
+                <span style="float:left; font-size:18px;">￥{{Product.Money}}</span>
+                <img src="~/Areas/resource/img/mobile/sc.png" style="width:16px; float:right; margin-top:12px; margin-right:3%;" v-on:click="deleteitem(Product)">
+                <div style="float:right;display:table;margin-right:10px;">
+                    <div style="display:table-cell;height:25px;" v-on:click="subtract(Product)">
+                        <img class="addsubimg" style="display:table-cell;" src="~/Areas/resource/img/mobile/jian.png" />
+                    </div>
+                    <div class="quantity">{{Product.Quantity}}</div>
+                    <div style="display:table-cell;height:25px;" v-on:click="add(Product)">
+                        <img class="addsubimg" src="~/Areas/resource/img/mobile/jia.png" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="gwc_box">
-        <img src="~/Areas/resource/img/mobile/9.jpg" class="gwc_img">
-        <div class="gwc_box2">
-            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
-            <div style=" width:100%; color:#ff0c4b; line-height:44px; float:left;"><span style="float:left; font-size:18px;">￥500</span><img src="~/Areas/resource/img/mobile/jiajian.png" style="width:30%; float:left; margin-left:15px; margin-top:10px;"><img src="~/Areas/resource/img/mobile/sc.png" style="width:16px; float:right; margin-top:12px; margin-right:3%;"></div>
-        </div>
-    </div>
-    <div class="gwc_box">
-        <img src="~/Areas/resource/img/mobile/9.jpg" class="gwc_img">
-        <div class="gwc_box2">
-            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
-            <div style=" width:100%; color:#ff0c4b; line-height:44px; float:left;"><span style="float:left; font-size:18px;">￥500</span><img src="~/Areas/resource/img/mobile/jiajian.png" style="width:30%; float:left; margin-left:15px; margin-top:10px;"><img src="~/Areas/resource/img/mobile/sc.png" style="width:16px; float:right; margin-top:12px; margin-right:3%;"></div>
-        </div>
-    </div>
-    <div class="gwc_hj">合计：<span style="font-size:20px; color:#ff0c4b;"><span style="font-size:12px;">￥</span>1500</span></div>
-    <a class="gwc_btn">提交订单</a>
+    <div class="gwc_hj">合计：<span style="font-size:20px; color:#ff0c4b;"><span style="font-size:12px;">￥</span>{{TotalMoney}}</span></div>
+    <a class="gwc_btn" style="margin-bottom:10px;" v-on:click="submitorder">提交订单</a>
 </div>
 
 @section scripts{
+    <style type="text/css">
+        .addsubimg {
+            width: 25px;
+            height: 25px;
+        }
+
+        .quantity {
+            display: table-cell;
+            min-width: 25px;
+            text-align: center;
+            vertical-align: middle;
+            height: 25px;
+            line-height: 25px;
+        }
+    </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -101,7 +114,6 @@
                             if (res.IsSuccessful) {
                                 if (res.Data != null) {
                                     sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                    //window.location.href="/Mobile/Customer/Home?mch="+mch;
                                 } else {
                                     window.location.href = "/Mobile/Customer?mch=" + mch;
                                }
@@ -122,7 +134,7 @@
     </script>
     <script type="text/javascript">
         var mch = $.getUrlParam('mch');
-        _payBillViewModel = new Vue({
+        _viewModel = new Vue({
             el: '#shoppingcart',
             data: {
                 ProductList: [],
@@ -135,7 +147,116 @@
                 home: function (event) {
                     window.location.href = "/Mobile/Customer/Home?mch=" + mch;
                 },
+                deleteitem: function (data, event) {
+                    if (data != null && data.ID != null)
+                        deleteShoppingCartItem(data.ID);
+                    else
+                        $.alert('参数错误');
+                },
+                add: function (data, event) {
+                    data.Quantity += 1;
+                    data.Money = data.Quantity * data.PriceSale;
+                    updateShoppingCartItem(data);
+                },
+                subtract: function (data,event) {
+                    if (data.Quantity > 1) {
+                        data.Quantity -= 1;
+                        data.Money = data.Quantity * data.PriceSale;
+                        updateShoppingCartItem(data);
+                    }
+                },
+                submitorder: function (event) {
+                    sessionStorage.setItem('isfromshoppingcart', 'true');
+                    sessionStorage.setItem('productlist', JSON.stringify(this.ProductList));
+                    window.location.href = "/Mobile/Customer/ConfirmOrder?mch=" + mch;
+                }
             }
         });
+
+        function getShoppingCart() {
+            $.ajax({
+                url: '/api/ShoppingCart?OpenID=@ViewBag.OpenId',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null && res.Data.length > 0) {
+                            _viewModel.ProductList = res.Data[0].ShoppingCartItemList;
+                            _viewModel.TotalMoney = res.Data[0].Money;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+        getShoppingCart();
+
+        function deleteShoppingCartItem(id) {
+            if (id == null || id == '') {
+                $.alert('参数错误');
+                return;
+            }
+            $.ajax({
+                url: '/api/ShoppingCartItem/DeleteShoppingCartItem?id=' + id,
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data)
+                            getShoppingCart();
+                        else
+                            $.alert('删除失败，请重试');
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
+        function updateShoppingCartItem(data) {
+            if (data == null) {
+                $.alert('参数错误');
+                return;
+            }
+            $.ajax({
+                url: '/api/ShoppingCartItem/UpdateShoppingCartItem',
+                type: 'POST',
+                data: data,
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data)
+                            getShoppingCart();
+                        else
+                            $.alert('更新失败，请重试');
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
     </script>
 }

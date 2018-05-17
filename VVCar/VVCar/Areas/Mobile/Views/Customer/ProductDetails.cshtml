@@ -120,54 +120,102 @@
         wxConfig();
     </script>
     <script type="text/javascript">
-        $(function () {
+
+         $(function () {
             var member = sessionStorage.getItem('member');
-            if (member == null || member=='') {
-                var mch = $.getUrlParam('mch');
-                function init() {
-                   $.ajax({
-                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
-                        type: 'GET',
-                        headers: { 'CompanyCode':mch },
-                        beforeSend: function () {
-                            $.showLoading();
-                        },
-                        success: function (res) {
-                            $.hideLoading();
-                            if (res.IsSuccessful) {
-                                if (res.Data != null) {
-                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                } else {
-                                    window.location.href = "/Mobile/Customer?mch=" + mch;
-                               }
-                            } else {
-                                $.alert(res.ErrorMessage);
-                                window.location.href = "/Mobile/Customer?mch=" + mch;
-                            }
-                        },
-                        error: function () {
-                            $.hideLoading();
-                            window.location.href = "/Mobile/Customer?mch=" + mch;
-                        }
-                   });
-              }
-              init();
-            }
-        });
-    </script>
-    <script type="text/javascript">
+             if (member == null || member == '') {
+                 var mch = $.getUrlParam('mch');
+                 function init() {
+                     $.ajax({
+                         url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                         type: 'GET',
+                         headers: { 'CompanyCode': mch },
+                         beforeSend: function () {
+                             $.showLoading();
+                         },
+                         success: function (res) {
+                             $.hideLoading();
+                             if (res.IsSuccessful) {
+                                 if (res.Data != null) {
+                                     member = res.Data;
+                                     sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                 } else {
+                                     window.location.href = "/Mobile/Customer?mch=" + mch;
+                                 }
+                             } else {
+                                 $.alert(res.ErrorMessage);
+                                 window.location.href = "/Mobile/Customer?mch=" + mch;
+                             }
+                         },
+                         error: function () {
+                             $.hideLoading();
+                             window.location.href = "/Mobile/Customer?mch=" + mch;
+                         }
+                     });
+                 }
+                 init();
+             } else {
+                 member = JSON.parse(member);
+             }
+
         var mch = $.getUrlParam('mch');
         var product = sessionStorage.getItem('product');
         if (product == null || product == '') {
             $.alert('未获取到产品信息');
         }
         product = JSON.parse(product);
+
+        function addtoshoppingcart(data) {
+            if (data == null) {
+                $.alert('参数错误');
+                return;
+            }
+            $.ajax({
+                url: '/api/ShoppingCart/AddToShoppingCart',
+                type: 'POST',
+                data: data,
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null)
+                            $.toast('已添加');
+                        else
+                            $.alert('添加失败,请重试');
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function (res) {
+                    $.hideLoading();
+                }
+            });
+        }
+
         _viewModel = new Vue({
             el: '#productdetails',
             data: {
                 Product: product,
                 Quantity: 1,
                 TotalMoney: product.PriceSale,
+                ShoppingCart: {
+                    MemberID: '',//member.MemberID,
+                    OpenID: '@ViewBag.OpenId',
+                    Money: product.PriceSale,
+                    ShoppingCartItemList: [{
+                        GoodsID: product.ID,
+                        ProductName: product.Name,
+                        ProductType: 1,
+                        Quantity: 1,
+                        PriceSale: product.PriceSale,
+                        Money: product.PriceSale,
+                        Points: 0,
+                        ImgUrl: product.ImgUrl,
+                    }],
+                },
             },
             methods: {
                 back: function (event) {
@@ -188,18 +236,26 @@
                 add: function (event) {
                     _viewModel.Quantity += 1;
                     _viewModel.TotalMoney = _viewModel.Quantity * product.PriceSale;
+                    _viewModel.ShoppingCart.Money = _viewModel.Quantity * product.PriceSale;
+                    _viewModel.ShoppingCart.ShoppingCartItemList[0].Money = _viewModel.Quantity * product.PriceSale;
+                    _viewModel.ShoppingCart.ShoppingCartItemList[0].Quantity = _viewModel.Quantity;
                 },
                 subtract: function (event) {
                     if (_viewModel.Quantity > 1) {
                         _viewModel.Quantity -= 1;
                         _viewModel.TotalMoney = _viewModel.Quantity * product.PriceSale;
+                        _viewModel.ShoppingCart.Money = _viewModel.Quantity * product.PriceSale;
+                        _viewModel.ShoppingCart.ShoppingCartItemList[0].Money = _viewModel.Quantity * product.PriceSale;
+                        _viewModel.ShoppingCart.ShoppingCartItemList[0].Quantity = _viewModel.Quantity;
                     }
                 },
                 addtoshoppingcart: function (event) {
-                    $.toast('已添加');
+                    addtoshoppingcart(_viewModel.ShoppingCart);
                 }
             }
-        });
+            });
+
+         });
     </script>
 }
 

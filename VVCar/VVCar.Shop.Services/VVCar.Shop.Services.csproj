@@ -46,9 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoMapper\DtoMapper.cs" />
+    <Compile Include="DomainServices\AppointmentService.cs" />
     <Compile Include="DomainServices\OrderService.cs" />
     <Compile Include="DomainServices\ProductCategoryService.cs" />
     <Compile Include="DomainServices\ProductService.cs" />
+    <Compile Include="DomainServices\ShoppingCartItemService.cs" />
+    <Compile Include="DomainServices\ShoppingCartService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +77,10 @@
     <ProjectReference Include="..\YEF.Core\YEF.Core.csproj">
       <Project>{3897ea87-56ff-459d-a321-9821c6269617}</Project>
       <Name>YEF.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YEF.Utility\YEF.Utility.csproj">
+      <Project>{6BE6CA85-CBE2-4817-AE3F-D7F24A329B2D}</Project>
+      <Name>YEF.Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

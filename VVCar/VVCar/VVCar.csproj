@@ -287,6 +287,8 @@
     <Compile Include="Controllers\Shop\OrderController.cs" />
     <Compile Include="Controllers\Shop\ProductCategoryController.cs" />
     <Compile Include="Controllers\Shop\ProductController.cs" />
+    <Compile Include="Controllers\Shop\ShoppingCartController.cs" />
+    <Compile Include="Controllers\Shop\ShoppingCartItemController.cs" />
     <Compile Include="Controllers\VIP\CouponController.cs" />
     <Compile Include="Controllers\VIP\CouponTemplateController.cs" />
     <Compile Include="Controllers\VIP\MemberCardTypeController.cs" />

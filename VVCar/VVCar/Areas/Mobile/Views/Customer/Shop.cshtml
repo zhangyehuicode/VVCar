@@ -43,7 +43,6 @@
     <div class="shop_box">
         <div class="shop_box2">
             <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;商品列表
-            @*<a href="#"><span>更多</span></a>*@
         </div>
         <div class="shop_box3">
             <div class="shop_box3_div" v-for="Product in ProductList" v-on:click="productdetails(Product)">
@@ -51,7 +50,18 @@
                 <a><img class="shop_box3_img cardimg" v-bind:src=Product.ImgUrl></a>
                 <div class="shop_box3_div2">
                     ￥{{Product.PriceSale}}
-                    @*<a><img src="~/Areas/resource/img/mobile/jia.png" style="width:20px; float:right;  padding-top:10px;"></a>*@
+                </div>
+            </div>
+        </div>
+        <div class="shop_box2">
+            <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;会员卡
+        </div>
+        <div class="shop_box3">
+            <div class="shop_box3_div" v-for="Product in MemberCardList" v-on:click="productdetails(Product)">
+                <span class="shop_box3_span">{{Product.Name}}</span>
+                <a><img class="shop_box3_img cardimg" v-bind:src=Product.ImgUrl></a>
+                <div class="shop_box3_div2">
+                    ￥{{Product.PriceSale}}
                 </div>
             </div>
         </div>
@@ -113,7 +123,7 @@
                 }
             });
         };
-        //wxConfig();
+        wxConfig();
     </script>
     <script type="text/javascript">
        $(function () {
@@ -133,7 +143,6 @@
                             if (res.IsSuccessful) {
                                 if (res.Data != null) {
                                     sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                    //window.location.href="/Mobile/Customer/Home?mch="+mch;
                                 } else {
                                     window.location.href = "/Mobile/Customer?mch=" + mch;
                                }
@@ -157,6 +166,7 @@
         _payBillViewModel = new Vue({
             el: '#shop',
             data: {
+                MemberCardList: [],
                 ProductList: [],
                 RecommendProductList: [],
             },
@@ -233,9 +243,10 @@
                     //$.hideLoading();
                     if (res.IsSuccessful) {
                         if (res.Data != null) {
-                            for (var i = 0; i < res.Data.length; i++) {
-                                _payBillViewModel.ProductList.push(res.Data[i]);
-                            }
+                            //for (var i = 0; i < res.Data.length; i++) {
+                            //    _payBillViewModel.ProductList.push(res.Data[i]);
+                            //}
+                            _payBillViewModel.MemberCardList = res.Data;
                         }
                     } else {
                         $.alert(res.ErrorMessage);
@@ -260,7 +271,6 @@
                     if (res.IsSuccessful) {
                         if (res.Data != null) {
                             _payBillViewModel.ProductList = res.Data;
-                            getCardOfCouponTemplate();
                         }
                     } else {
                         $.alert(res.ErrorMessage);
@@ -272,6 +282,7 @@
             });
         }
         getProduct();
+        getCardOfCouponTemplate();
 
     </script>
 }

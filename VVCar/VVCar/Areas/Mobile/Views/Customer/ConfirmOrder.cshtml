@@ -204,6 +204,8 @@
                                 if (res.Data == null || res.Data=='') {
                                     $.alert('生成订单号失败');
                                 } else {
+                                    //$.alert(res.Data);
+                                    //return;
                                     //window.location.href = "http://www.cheyinz.cn:8025/Default.aspx";
                                     sessionStorage.setItem('order', JSON.stringify(_payBillViewModel.Order));
                                     //$.alert(JSON.stringify(_payBillViewModel.Order));
@@ -221,30 +223,61 @@
                 },
             }
             });
+            var isfromsc = sessionStorage.getItem('isfromshoppingcart');
+            if (isfromsc != null && isfromsc == 'true')
+                isfromsc = true;
+            else
+                isfromsc = false;
             var productlist = sessionStorage.getItem('productlist');
             var orderitemlist = [];
             if (productlist != null && productlist != '') {
                 _payBillViewModel.ProductList = JSON.parse(productlist);
+
+                if (isfromsc) {
+                    for (var i = 0; i < _payBillViewModel.ProductList.length; i++) {
+                        _payBillViewModel.ProductList[i].Name = _payBillViewModel.ProductList[i].ProductName;
+                    }
+                }
+
                 var productList = _payBillViewModel.ProductList;
                 var totalMoney = 0;
                 var body = '';
                 for (var i = 0; i < productList.length; i++) {
                     totalMoney += productList[i].Money;
+
+                    if (!isfromsc) {
+
                     if(i==0)
                         body += productList[i].Name;
                     else
-                        body += '、' + productList[i].Name;
+                            body += '、' + productList[i].Name;
 
-                    orderitemlist.push({
-                        GoodsID: productList[i].ID,
-                        ProductType: productList[i].IsMemberCard?2:1,
-                        Quantity: productList[i].Quantity,
-                        PriceSale: productList[i].PriceSale,
-                        Money: productList[i].Money,
-                        Points: 0,
-                        ProductName: productList[i].Name,
-                    });
+                        orderitemlist.push({
+                            GoodsID: productList[i].ID,
+                            ProductType: productList[i].IsMemberCard ? 2 : 1,
+                            Quantity: productList[i].Quantity,
+                            PriceSale: productList[i].PriceSale,
+                            Money: productList[i].Money,
+                            Points: 0,
+                            ProductName: productList[i].Name,
+                        });
+                    } else {
 
+                        if (i == 0)
+                            body += productList[i].ProductName;
+                        else
+                            body += '、' + productList[i].ProductName;
+
+                        orderitemlist.push({
+                            GoodsID: productList[i].GoodsID,
+                            ProductType: productList[i].ProductType,
+                            Quantity: productList[i].Quantity,
+                            PriceSale: productList[i].PriceSale,
+                            Money: productList[i].Money,
+                            Points: 0,
+                            ProductName: productList[i].ProductName,
+                        });
+                    }
                 }
                 _payBillViewModel.TotalMoney = totalMoney;
                 _payBillViewModel.Body = body;

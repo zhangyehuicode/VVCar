@@ -16,6 +16,7 @@ using VVCar.VIP.Domain.Services;
 using YEF.Core;
 using YEF.Core.Data;
 using YEF.Core.Domain;
+using YEF.Utility;
 
 namespace VVCar.Shop.Services.DomainServices
 {
@@ -30,7 +31,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         #region properties
 
-        IRepository<MakeCodeRule> MakeCodeRuleRepo { get; set; }
+        IRepository<MakeCodeRule> MakeCodeRuleRepo { get => UnitOfWork.GetRepository<IRepository<MakeCodeRule>>(); }
 
         ICouponService CouponService { get => ServiceLocator.Instance.GetService<ICouponService>(); }
 
@@ -195,6 +196,8 @@ namespace VVCar.Shop.Services.DomainServices
         public IEnumerable<Order> Search(OrderFilter filter, out int totalCount)
         {
             var queryable = Repository.GetQueryable(false);
+            if (!string.IsNullOrEmpty(filter.OpenID))
+                queryable = queryable.Where(t => t.OpenID == filter.OpenID);
             if (!string.IsNullOrEmpty(filter.TradeNo))
                 queryable = queryable.Where(t => t.Code.Contains(filter.TradeNo));
             if (!string.IsNullOrEmpty(filter.LinkMan))

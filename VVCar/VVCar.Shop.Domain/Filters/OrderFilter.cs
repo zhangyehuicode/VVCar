@@ -11,6 +11,11 @@ namespace VVCar.Shop.Domain.Filters
     public class OrderFilter : BasePageFilter
     {
         /// <summary>
+        /// OpenID
+        /// </summary>
+        public string OpenID { get; set; }
+
+        /// <summary>
         /// 订单号
         /// </summary>
         [Display(Name = "订单号")]
