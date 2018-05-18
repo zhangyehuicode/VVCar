@@ -133,6 +133,7 @@ namespace VVCar.Controllers
                     loginResult.IsSuccess = true;
                     loginResult.UserCode = tokenObj["userCode"];
                     loginResult.UserName = tokenObj["userName"];
+                    loginResult.CompanyCode = tokenObj["companyCode"];
                     loginResult.UserToken = string.Concat(tokenObj["token_type"], " ", tokenObj["access_token"]);
                 }
                 else

@@ -53,6 +53,8 @@
                         return "未发货";
                     else if (value == -1)
                         return "未付款";
+                    else if (value == 2)
+                        return "已完成";
                 }
             },
             { header: '快递单号', dataIndex: 'ExpressNumber', flex: 1 },

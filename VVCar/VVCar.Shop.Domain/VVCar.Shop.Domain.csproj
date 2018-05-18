@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\AdjustIndexParam.cs" />
+    <Compile Include="Dtos\OrderDto.cs" />
     <Compile Include="Dtos\ProductCategoryLiteDto.cs" />
     <Compile Include="Dtos\ProductCategoryTreeDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />

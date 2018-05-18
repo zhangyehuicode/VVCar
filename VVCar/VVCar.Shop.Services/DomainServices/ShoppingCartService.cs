@@ -23,6 +23,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IShoppingCartItemService ShoppingCartItemService { get => ServiceLocator.Instance.GetService<IShoppingCartItemService>(); }
 
+        IRepository<ShoppingCartItem> ShoppingCartItemRepo { get => UnitOfWork.GetRepository<IRepository<ShoppingCartItem>>(); }
+
         #endregion
 
         public override ShoppingCart Add(ShoppingCart entity)
@@ -152,6 +154,32 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
             return queryable.ToArray();
+        }
+
+        public bool ClearShoppingCart(string openid)
+        {
+            if (string.IsNullOrEmpty(openid))
+                return false;
+            var cart = Repository.GetInclude(t => t.ShoppingCartItemList).Where(t => t.OpenID == openid).FirstOrDefault();
+            if (cart == null)
+                return false;
+            if (cart.ShoppingCartItemList != null && cart.ShoppingCartItemList.Count > 0)
+            {
+                UnitOfWork.BeginTransaction();
+                try
+                {
+                    ShoppingCartItemRepo.Delete(cart.ShoppingCartItemList);
+                    cart.Money = 0;
+                    Repository.Update(cart);
+                    UnitOfWork.CommitTransaction();
+                }
+                catch (Exception e)
+                {
+                    UnitOfWork.RollbackTransaction();
+                    throw e;
+                }
+            }
+            return true;
         }
     }
 }

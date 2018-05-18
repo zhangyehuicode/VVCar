@@ -33,6 +33,12 @@ namespace VVCar.Shop.Domain.Entities
         public Guid GoodsID { get; set; }
 
         /// <summary>
+        /// 图片
+        /// </summary>
+        [Display(Name = "图片")]
+        public string ImgUrl { get; set; }
+
+        /// <summary>
         /// 产品名称
         /// </summary>
         [Display(Name = "产品名称")]

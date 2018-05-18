@@ -33,5 +33,12 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="entity"></param>
         /// <param name="saveChange"></param>
         void RecountShoppingCart(ShoppingCart entity, bool saveChange = false);
+
+        /// <summary>
+        /// 清除购物车
+        /// </summary>
+        /// <param name="openid"></param>
+        /// <returns></returns>
+        bool ClearShoppingCart(string openid);
     }
 }

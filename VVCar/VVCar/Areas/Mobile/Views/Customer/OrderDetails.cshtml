@@ -1,0 +1,129 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="confirmorder" style="background-color:#f8f9fe;">
+    <div class="top_box">
+        <div class="top_box_text">订单详情</div>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a class="top_box2"></a>
+        <a v-on:click="shoppingcart"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
+    </div>
+    <div class="qr_box">
+        <div class="gwc_text2">
+            <div class="labeltext">收件人：{{Order.LinkMan}}</div>
+        </div>
+        <div class="gwc_text2">
+            <div class="labeltext"> 联系电话：{{Order.Phone}}</div>
+        </div>
+        <div class="gwc_text2">
+            <div class="labeltext">收货地址：{{Order.Address}}</div>
+        </div>
+        <img src="~/Areas/resource/img/mobile/fgx.png" style=" width:100%;">
+    </div>
+    <div class="gwc_box" v-for="Product in Order.OrderItemList">
+        <img class="gwc_img" v-bind:src=Product.ImgUrl />
+        <div class="gwc_box2">
+            <span class="gwc_text">{{Product.ProductName}}</span>
+            <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left; margin-bottom:10px;">￥{{Product.Money}}<span style="float:right; color:#999; font-size:13px; padding-top:5px;">数量：{{Product.Quantity}}</span></div>
+        </div>
+    </div>
+    <div class="gwc_box3">
+        <div class="gwc_text2" style="border-bottom:none;">合计<span style="float:right; color:#ff0c4b; font-size:18px;">￥{{Order.Money}}</span></div>
+    </div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .inputbox {
+            border: none;
+            height: 30px;
+            width: 250px;
+            font-size: 15px;
+        }
+
+        .labeltext {
+            float: left;
+        }
+
+        .inputerror {
+            border: 1px #ff0000 solid;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var mch = $.getUrlParam('mch');
+            _viewModel = new Vue({
+                el: '#confirmorder',
+                data: {
+                    Order: {},
+                },
+                methods: {
+                    back: function (event) {
+                        history.back(-1);
+                    },
+                    home: function (event) {
+                        window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                    },
+                    shoppingcart: function (event) {
+                        window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
+                    },
+                }
+            });
+            var order = sessionStorage.getItem('order');
+            if (order != null && order != '') {
+                _viewModel.Order = JSON.parse(order);
+            }
+        });
+    </script>
+}
+

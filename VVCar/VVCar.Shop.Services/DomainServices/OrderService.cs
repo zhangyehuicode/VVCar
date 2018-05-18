@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using VVCar.BaseData.Domain;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
+using VVCar.BaseData.Services;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
@@ -40,6 +42,8 @@ namespace VVCar.Shop.Services.DomainServices
         ISystemSettingService SystemSettingService { get => ServiceLocator.Instance.GetService<ISystemSettingService>(); }
 
         IMemberService MemberService { get => ServiceLocator.Instance.GetService<IMemberService>(); }
+
+        IShoppingCartService ShoppingCartService { get => ServiceLocator.Instance.GetService<IShoppingCartService>(); }
 
         #endregion
 
@@ -113,6 +117,7 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                 }
                 SenWeChatNotify(result);
+                ShoppingCartService.ClearShoppingCart(result.OpenID);
                 UnitOfWork.CommitTransaction();
             }
             catch (Exception e)
@@ -195,7 +200,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         public IEnumerable<Order> Search(OrderFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetQueryable(false);
+            var queryable = Repository.GetInclude(t => t.OrderItemList, false);
             if (!string.IsNullOrEmpty(filter.OpenID))
                 queryable = queryable.Where(t => t.OpenID == filter.OpenID);
             if (!string.IsNullOrEmpty(filter.TradeNo))
@@ -212,8 +217,8 @@ namespace VVCar.Shop.Services.DomainServices
                 queryable = queryable.Where(t => t.Code.Contains(filter.TNoLMPAddEN) || t.LinkMan.Contains(filter.TNoLMPAddEN) || t.Address.Contains(filter.TNoLMPAddEN) || t.Phone.Contains(filter.TNoLMPAddEN) || t.ExpressNumber.Contains(filter.TNoLMPAddEN));
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
-                queryable = queryable.OrderBy(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.ToArray();
+                queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
+            return queryable.OrderByDescending(t => t.CreatedDate).ToArray();
         }
     }
 }

@@ -26,6 +26,11 @@ namespace VVCar.Models
         public string UserName { get; set; }
 
         /// <summary>
+        /// 商户号
+        /// </summary>
+        public string CompanyCode { get; set; }
+
+        /// <summary>
         /// token
         /// </summary>
         public string UserToken { get; set; }

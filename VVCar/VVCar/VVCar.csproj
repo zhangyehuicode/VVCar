@@ -871,6 +871,7 @@
     <Content Include="Areas\Mobile\Views\Customer\VerificationCodeSet.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\BindingMobilePhone.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\Game.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\OrderDetails.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

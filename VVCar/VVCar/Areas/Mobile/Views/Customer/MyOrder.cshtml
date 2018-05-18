@@ -22,7 +22,7 @@
         </div>
         <div>
             <a href="#"><img src="~/Areas/resource/img/mobile/ysh.png"></a><br>
-            已收货
+            已完成
         </div>
         <div>
             <a><img src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
@@ -31,25 +31,27 @@
     </div>
     <div class="wddd_box">
         <div class="wddd_input">
-            <input type="text" name="address" size="60" maxlength="60" style="color:#ddd" value="请输入新的核销密码" onfocus="if(this.value=='请输入新的核销密码'){this.value=''};this.style.color='#2d2d30';" onblur="if(this.value==''||this.value=='请输入新的核销密码'){this.value='请输入新的核销密码';this.style.color='#ddd';}" class="pass_box">
+            <input type="text" style="color:#ddd" placeholder="订单号" class="pass_box">
             <a><img src="~/Areas/resource/img/mobile/ss.png" style="width:6%; margin-top:10px; float:right; margin-right:4%;"></a>
         </div>
     </div>
-    <div class="gwc_box">
-        <img src="~/Areas/resource/img/mobile/2.png" class="gwc_img">
+    <div class="gwc_box" style="margin-top:15px;" v-for="Order in OrderList">
+        <img class="gwc_img" src="~/Areas/resource/img/mobile/defaultimg1.png">
         <div class="gwc_box2">
-            <span class="gwc_text">商品标题商品标题商品标题商品标题商品标题商品标题</span>
-            <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left;">￥500<span style="float:right; color:#999; font-size:14px; padding-top:6px;">参数选择：参数一</span></div>
+            <span class="gwc_text">订单号：{{Order.Code}}</span>
+            <span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==0">未发货</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==1">已发货</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==2">已完成</span>
         </div>
         <div class="wddd_box2">
             <span style="margin-left:3%;">
-                共计1件商品
+                共计{{Order.Quantity}}件商品
                 <span style="margin-left:3%;">
-                    合计:<span style="color:#ff0c4b;">￥100</span>
+                    合计:<span style="color:#ff0c4b;">{{Order.Money}}</span>
                 </span>
             </span>
-            <a class="wddd_btn">付款</a>
-            <a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;">详情</a>
+            <a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="orderdetails(Order)">详情</a>
         </div>
     </div>
     <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
@@ -122,7 +124,6 @@
                             if (res.IsSuccessful) {
                                 if (res.Data != null) {
                                     sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                    //window.location.href="/Mobile/Customer/Home?mch="+mch;
                                 } else {
                                     window.location.href = "/Mobile/Customer?mch=" + mch;
                                }
@@ -136,8 +137,8 @@
                             window.location.href = "/Mobile/Customer?mch=" + mch;
                         }
                    });
-              }
-              init();
+                }
+                init();
             }
         });
     </script>
@@ -171,8 +172,46 @@
                         }
                     });
                 },
+                orderdetails: function (data, event) {
+                    sessionStorage.setItem('order', JSON.stringify(data));
+                    window.location.href = "/Mobile/Customer/OrderDetails?mch=" + mch;
+                },
             }
         });
+
+        function getmyorder() {
+            $.ajax({
+                url: '/api/Order?OpenID=@ViewBag.OpenId',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            for (var i = 0; i < res.Data.length; i++) {
+                                var quantity = 0;
+                                if (res.Data[i].OrderItemList != null) {
+                                    for (var j = 0; j < res.Data[i].OrderItemList.length; j++) {
+                                        quantity += res.Data[i].OrderItemList[j].Quantity;
+                                    }
+                                }
+                                res.Data[i].Quantity = quantity;
+                            }
+                            _viewModel.OrderList = res.Data;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+        getmyorder();
 
     </script>
 }

@@ -75,7 +75,7 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public PagedActionResult<Order> Search([FromUri]OrderFilter filter)
         {
             return SafeGetPagedData<Order>((result) =>

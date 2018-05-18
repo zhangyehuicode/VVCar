@@ -152,6 +152,7 @@ namespace VVCar.Providers
             {
                 { "userCode", loginUser.Code },
                 { "userName", loginUser.Name },
+                { "companyCode", mch},
             });
             var ticket = new AuthenticationTicket(oAuthIdentity, props);
             context.Validated(ticket);

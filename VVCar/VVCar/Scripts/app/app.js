@@ -13,6 +13,7 @@ Ext.application({
         application = this;
         var me = this;
         var userToken = sessionStorage.getItem('userToken');
+        var companyCode = sessionStorage.getItem('companyCode');
         if (userToken === null || userToken === '') {
             window.location.href = "/login/Page";
         } else {
@@ -21,6 +22,7 @@ Ext.application({
             //Ext.GlobalConfig.ApiDomainUrl = '/';
             Ext.Ajax.setDefaultHeaders({
                 'Authorization': userToken,
+                'CompanyCode': companyCode,
             });
             Ext.Ajax.timeout = 600000;//Defaults to 30000
             //Ext.override(Ext.data.Connection, {
@@ -84,7 +86,7 @@ Ext.application({
             buttons: Ext.Msg.OK,
             closable: false,
             fn: function () {
-                window.location.href = "/login";
+                window.location.href = "/login/Page";
             }
         });
     },
