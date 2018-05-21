@@ -65,6 +65,18 @@
                 </div>
             </div>
         </div>
+        <div class="shop_box2">
+            <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;服务预约
+        </div>
+        <div class="shop_box3">
+            <div class="shop_box3_div" v-for="Product in AppointmentProduct" v-on:click="appointmentdetails(Product)">
+                <span class="shop_box3_span">{{Product.Name}}</span>
+                <a><img class="shop_box3_img cardimg" v-bind:src=Product.ImgUrl></a>
+                <div class="shop_box3_div2">
+                    ￥{{Product.PriceSale}}
+                </div>
+            </div>
+        </div>
         <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
     </div>
 </div>
@@ -169,6 +181,7 @@
                 MemberCardList: [],
                 ProductList: [],
                 RecommendProductList: [],
+                AppointmentProduct: [],
             },
             methods: {
                 back: function (event) {
@@ -194,6 +207,10 @@
                         sessionStorage.setItem('membercard', JSON.stringify(data));
                         window.location.href = "/Mobile/Customer/MemberCardBuy?mch=" + mch;
                     }
+                },
+                appointmentdetails: function (data, event) {
+                    sessionStorage.setItem('appointment', JSON.stringify(data));
+                    window.location.href = "/Mobile/Customer/ServiceDetails?mch=" + mch;
                 },
                 scanQRCode: function (event) {
                     wx.scanQRCode({
@@ -281,8 +298,34 @@
                 }
             });
         }
+
+        function getAppointmentProduct() {
+            $.ajax({
+                url: '/api/Product/GetAppointmentProduct',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforesend: function () {
+                    //$.showLoading();
+                },
+                success: function (res) {
+                    //$.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            _payBillViewModel.AppointmentProduct = res.Data;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    //$.hideLoading();
+                }
+            });
+        }
+
         getProduct();
         getCardOfCouponTemplate();
+        getAppointmentProduct();
 
     </script>
 }

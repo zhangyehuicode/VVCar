@@ -284,6 +284,7 @@
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\Shop\AppointmentController.cs" />
     <Compile Include="Controllers\Shop\OrderController.cs" />
     <Compile Include="Controllers\Shop\ProductCategoryController.cs" />
     <Compile Include="Controllers\Shop\ProductController.cs" />
@@ -872,6 +873,9 @@
     <Content Include="Areas\Mobile\Views\Customer\BindingMobilePhone.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\Game.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\OrderDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\ServiceDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MyAppointment.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\MyAppointment.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

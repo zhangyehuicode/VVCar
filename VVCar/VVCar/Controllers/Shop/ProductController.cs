@@ -156,5 +156,19 @@ namespace VVCar.Controllers.Shop
                 result.Data = data;
             });
         }
+
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetAppointmentProduct"), AllowAnonymous]
+        public PagedActionResult<Product> GetAppointmentProduct()
+        {
+            return SafeGetPagedData<Product>((result) =>
+            {
+                var data = ProductService.GetAppointmentProduct();
+                result.Data = data;
+            });
+        }
     }
 }

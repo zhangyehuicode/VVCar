@@ -19,5 +19,12 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<Appointment> Search(AppointmentFilter filter, ref int totalCount);
+
+        /// <summary>
+        /// 取消预约
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool CancelAppointment(Guid id);
     }
 }

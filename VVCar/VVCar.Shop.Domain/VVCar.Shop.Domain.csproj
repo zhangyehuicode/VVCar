@@ -56,6 +56,7 @@
     <Compile Include="Entities\ShoppingCart.cs" />
     <Compile Include="Entities\ShoppingCartItem.cs" />
     <Compile Include="Enums\EAdjustDirection.cs" />
+    <Compile Include="Enums\EAppointmentStatus.cs" />
     <Compile Include="Enums\EOrderStatus.cs" />
     <Compile Include="Enums\EProductType.cs" />
     <Compile Include="Filters\AppointmentFilter.cs" />

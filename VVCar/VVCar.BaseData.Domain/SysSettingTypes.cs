@@ -55,5 +55,15 @@ namespace VVCar.BaseData.Domain
         /// 礼品领取成功通知消息模板
         /// </summary>
         public const string WXMsg_ReceivedSuccess = "WXMsg_ReceivedSuccess";
+
+        /// <summary>
+        /// 预约提醒通知消息模板
+        /// </summary>
+        public const string WXMsg_AppointmentRemind = "WXMsg_AppointmentRemind";
+
+        /// <summary>
+        /// 预约成功通知消息模板
+        /// </summary>
+        public const string WXMsg_AppointmentSuccess = "WXMsg_AppointmentSuccess";
     }
 }

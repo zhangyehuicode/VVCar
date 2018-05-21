@@ -1,0 +1,200 @@
+﻿
+@{
+    ViewBag.Title = "服务预约";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="appointment">
+    <div class="top_box">
+        <div class="top_box_text">{{Product.Name}}</div>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="back"></a>
+        <a class="top_box2"></a>
+        <a><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;" v-on:click="shoppingcart"></a>
+    </div>
+    <img class="sp_img" v-bind:src=Product.ImgUrl>
+    <div class="sp_text">
+        {{Product.Name}}
+    </div>
+    <div class="sp_text2" style="border:none;">
+        ￥{{TotalMoney}}
+    </div>
+    <div class="kc_box"><span style="float:left;">原价：￥{{Product.BasePrice}}</span></div>
+    <div class="kc_box2">
+        服务介绍：<br>
+        {{Product.Introduction}}
+    </div>
+    <div class="kc_box2">预约日期：<input type="date" style="width:120px;height:20px;border:none;border-bottom:1px #ccc solid;font-size:15px;" v-model="AppointmentData.AppointmentDate" /></div>
+    <div class="kc_box2">预约时间：<input type="time" style="width:80px;height:20px;border:none;border-bottom:1px #ccc solid;font-size:15px;" v-model="AppointmentData.AppointmentTime" /></div>
+    <a class="btn1" style="margin-top:20px;margin-bottom:10px;" v-on:click="appointmentnow">立即预约</a>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .addsubimg {
+            width: 25px;
+            height: 25px;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+
+         $(function () {
+            var member = sessionStorage.getItem('member');
+             if (member == null || member == '') {
+                 var mch = $.getUrlParam('mch');
+                 function init() {
+                     $.ajax({
+                         url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                         type: 'GET',
+                         headers: { 'CompanyCode': mch },
+                         beforeSend: function () {
+                             $.showLoading();
+                         },
+                         success: function (res) {
+                             $.hideLoading();
+                             if (res.IsSuccessful) {
+                                 if (res.Data != null) {
+                                     member = res.Data;
+                                     sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                 } else {
+                                     window.location.href = "/Mobile/Customer?mch=" + mch;
+                                 }
+                             } else {
+                                 $.alert(res.ErrorMessage);
+                                 window.location.href = "/Mobile/Customer?mch=" + mch;
+                             }
+                         },
+                         error: function () {
+                             $.hideLoading();
+                             window.location.href = "/Mobile/Customer?mch=" + mch;
+                         }
+                     });
+                 }
+                 init();
+             } else {
+                 member = JSON.parse(member);
+             }
+
+        var mch = $.getUrlParam('mch');
+             var appointment = sessionStorage.getItem('appointment');
+             if (appointment == null || appointment == '') {
+                 $.alert('未获取到服务信息');
+                 return;
+                }
+             appointment = JSON.parse(appointment);
+
+             function appointmentaction() {
+                 $.ajax({
+                     url: '/api/Appointment',
+                     type: 'POST',
+                     data: _viewModel.AppointmentData,
+                     headers: { 'CompanyCode': mch },
+                     beforesend: function () {
+                         $.showLoading();
+                     },
+                     success: function (res) {
+                         $.hideLoading();
+                         if (res.IsSuccessful) {
+                             if (res.Data != null) {
+                                 $.toast('预约成功', function () {
+                                     window.location.href = "/Mobile/Customer/MyAppointment?mch=" + mch;
+                                 });
+                             }
+                         } else {
+                             $.alert(res.ErrorMessage);
+                         }
+                     },
+                     error: function () {
+                         $.hideLoading();
+                     }
+                 });
+             }
+
+        _viewModel = new Vue({
+            el: '#appointment',
+            data: {
+                Product: appointment,
+                TotalMoney: appointment.PriceSale,
+                AppointmentTime: '',
+                AppointmentData:{
+                         Name: member.MemberName,
+                         MobilePhoneNo: member.MobilePhoneNo,
+                         OpenID: '@ViewBag.OpenId',
+                         MemberID: member.MemberID,
+                         ServiceID: appointment.ID,
+                         ServiceName: appointment.Name,
+                         AppointmentDate:'',
+                         AppointmentTime:'',
+                     },
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+                appointmentnow: function (data, event) {
+                    if (_viewModel.AppointmentData.AppointmentDate == '' || _viewModel.AppointmentData.AppointmentTime == '') {
+                        $.alert('请选择预约时间');
+                        return;
+                    }
+                    //$.alert(JSON.stringify(_viewModel.AppointmentData));
+                    appointmentaction();
+                },
+                shoppingcart: function (event) {
+                    window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
+                },
+            }
+          });
+
+      });
+    </script>
+}
+

@@ -25,6 +25,12 @@ namespace VVCar.Shop.Data.Mapping
 
             Property(t => t.ServiceName)
                 .HasMaxLength(20);
+
+            Property(t => t.AppointmentDate)
+                .HasMaxLength(20);
+
+            Property(t => t.AppointmentTime)
+                .HasMaxLength(10);
         }
     }
 }

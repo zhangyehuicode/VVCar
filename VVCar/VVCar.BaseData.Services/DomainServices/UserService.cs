@@ -455,6 +455,12 @@ namespace VVCar.BaseData.Services.DomainServices
             }
             return true;
         }
+
+        public List<User> GetManagerUser()
+        {
+            return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+        }
+
         #endregion
     }
 }

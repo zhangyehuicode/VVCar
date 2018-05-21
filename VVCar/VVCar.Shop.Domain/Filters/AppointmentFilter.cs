@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Enums;
 using YEF.Core.Dtos;
 
 namespace VVCar.Shop.Domain.Filters
@@ -41,5 +42,10 @@ namespace VVCar.Shop.Domain.Filters
         /// 结束时间
         /// </summary>
         public DateTime? EndDate { get; set; }
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public EAppointmentStatus? Status { get; set; }
     }
 }

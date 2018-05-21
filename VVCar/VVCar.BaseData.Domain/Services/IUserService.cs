@@ -113,5 +113,11 @@ namespace VVCar.BaseData.Domain.Services
         /// <param name="openId"></param>
         /// <returns></returns>
         User GetUserByOpenID(WeChatLoginParams param);
+
+        /// <summary>
+        /// 获取商户店员信息
+        /// </summary>
+        /// <returns></returns>
+        List<User> GetManagerUser();
     }
 }

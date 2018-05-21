@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="myappointment" style="background-color:#f8f9fe;">
+    <div class="top_box">
+        <div class="top_box_text">我的预约</div>
+        <span v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></span>
+        <a class="top_box2"></a>
+        <span v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></span>
+    </div>
+    <div class="gwc_box" style="margin-top:15px;" v-for="Appointment in AppointmentList">
+        <img class="gwc_img" src="~/Areas/resource/img/mobile/defaultimg3.png">
+        <div class="gwc_box2">
+            <span class="gwc_text">预约服务：{{Appointment.ServiceName}}</span>
+            <span class="gwc_text" style="margin-top:2px;">预约时间：{{Appointment.Date}}</span>
+        </div>
+        @*<div class="wddd_box2">
+                <a class="wddd_btn" style="background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="orderdetails(Order)">取消</a>
+            </div>*@
+    </div>
+    <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+</div>
+
+@section scripts{
+    <style type="text/css">
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var member = sessionStorage.getItem('member');
+            if (member == null || member=='') {
+                var mch = $.getUrlParam('mch');
+                function init() {
+                   $.ajax({
+                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                        type: 'GET',
+                        headers: { 'CompanyCode':mch },
+                        beforeSend: function () {
+                            $.showLoading();
+                        },
+                        success: function (res) {
+                            $.hideLoading();
+                            if (res.IsSuccessful) {
+                                if (res.Data != null) {
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                } else {
+                                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                               }
+                            } else {
+                                $.alert(res.ErrorMessage);
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        },
+                        error: function () {
+                            $.hideLoading();
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                   });
+                }
+                init();
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#myappointment',
+            data: {
+                AppointmentList: [],
+            },
+            methods: {
+                shop: function (event) {
+                    window.location.href = "/Mobile/Customer/Shop?mch=" + mch;
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+                back: function (event) {
+                    history.back(-1);
+                },
+            }
+        });
+
+        function getAppointment() {
+            $.ajax({
+                url: '/api/Appointment?OpenID=@ViewBag.OpenId&Status=0',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            _viewModel.AppointmentList = res.Data;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+        getAppointment();
+
+    </script>
+}
+
+

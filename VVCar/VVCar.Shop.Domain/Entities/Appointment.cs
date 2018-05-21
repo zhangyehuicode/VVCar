@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YEF.Core.Data;
 using System.ComponentModel.DataAnnotations;
+using VVCar.Shop.Domain.Enums;
 
 namespace VVCar.Shop.Domain.Entities
 {
@@ -50,10 +51,28 @@ namespace VVCar.Shop.Domain.Entities
         public string ServiceName { get; set; }
 
         /// <summary>
+        /// 预约日期
+        /// </summary>
+        [Display(Name = "预约日期")]
+        public string AppointmentDate { get; set; }
+
+        /// <summary>
         /// 预约时间
         /// </summary>
         [Display(Name = "预约时间")]
-        public DateTime Time { get; set; }
+        public string AppointmentTime { get; set; }
+
+        /// <summary>
+        /// 预约时间
+        /// </summary>
+        [Display(Name = "预约时间")]
+        public DateTime Date { get; set; }
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        [Display(Name = "状态")]
+        public EAppointmentStatus Status { get; set; }
 
         /// <summary>
         /// 创建时间

@@ -211,5 +211,14 @@ namespace VVCar.Shop.Services.DomainServices
             }
             return result;
         }
+
+        /// <summary>
+        /// 获取服务
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Product> GetAppointmentProduct()
+        {
+            return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Service && t.IsPublish).ToList();
+        }
     }
 }
