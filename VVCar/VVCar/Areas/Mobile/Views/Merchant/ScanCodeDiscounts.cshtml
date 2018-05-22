@@ -1,0 +1,140 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<body id="scancodediscounts">
+    <div class="toubu">
+        <a v-on:click="back"><img src="img/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        <div class="title">工作终端</div>
+        <a v-on:click="home"><img src="img/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="touxiang" style="margin-top:50px;">
+        <input type="text" class="ggy" placeholder="你好，亲爱的会员">
+        <a class="erwm">
+            <div id="qrcode"></div>
+            @*<img src="img/timg.png">*@
+        </a>
+    </div>
+    <a class="kjtd" style="margin-bottom:25px; margin-top:50px" v-on:click="couponcenter">领券中心</a>
+</body>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var mch = $.getUrlParam('mch');
+            $('#qrcode').qrcode("http://www.cheyinz.cn/Mobile/Customer/CouponCenter?mch=" + mch);
+        var user = sessionStorage.getItem('user');
+        var _ismaster = sessionStorage.getItem('ismaster');
+        if (_ismaster == 'true') {
+            $('.title').text('店长工作终端');
+        } else {
+            $('.title').text('店员工作终端');
+        }
+        _viewModel = new Vue({
+            el: '#scancodediscounts',
+            data: {
+                Data: {},
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    if (_ismaster == 'true') {
+                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                    } else {
+                        window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                    }
+                },
+                couponcenter: function (event) {
+                    window.location.href = "/Mobile/Customer/CouponCenter?mch=" + mch;
+                },
+            }
+        });
+
+          var ismaster = _ismaster == 'true';
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsManager: ismaster,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            if (user == null || user=='') {
+                getUserByOpenId();
+            }
+
+        });
+    </script>
+}

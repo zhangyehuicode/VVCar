@@ -292,5 +292,18 @@ namespace VVCar.Controllers.VIP
                 result.Data = data;
             });
         }
+
+        /// <summary>
+        /// 获取游戏抽奖优惠券
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetGameCouponTemplate"), AllowAnonymous]
+        public PagedActionResult<CouponTemplate> GetGameCouponTemplate()
+        {
+            return SafeGetPagedData<CouponTemplate>((result) =>
+            {
+                result.Data = CouponTemplateService.GetGameCouponTemplate();
+            });
+        }
     }
 }

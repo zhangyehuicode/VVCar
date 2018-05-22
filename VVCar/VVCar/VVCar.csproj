@@ -876,6 +876,11 @@
     <Content Include="Areas\Mobile\Views\Customer\ServiceDetails.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\MyAppointment.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\MyAppointment.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\ScanCodeDiscounts.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\MemberShop.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\MyInfo.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\BindingMobilePhone.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\StaffManager.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

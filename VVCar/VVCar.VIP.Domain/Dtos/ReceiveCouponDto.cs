@@ -65,5 +65,10 @@ namespace VVCar.VIP.Domain.Dtos
         /// 领券中心兑换设置ID
         /// </summary>
         public Guid PointExchangeCouponID { get; set; }
+
+        /// <summary>
+        /// 是否发送微信通知
+        /// </summary>
+        public bool SendNotify { get; set; }
     }
 }

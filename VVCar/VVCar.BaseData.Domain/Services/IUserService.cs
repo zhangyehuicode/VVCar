@@ -119,5 +119,12 @@ namespace VVCar.BaseData.Domain.Services
         /// </summary>
         /// <returns></returns>
         List<User> GetManagerUser();
+
+        /// <summary>
+        /// 绑定手机号
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        bool BindingMobilePhone(BindingMobilePhoneParam param);
     }
 }

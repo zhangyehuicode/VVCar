@@ -84,5 +84,11 @@ namespace VVCar.VIP.Domain.Services
         /// </summary>
         /// <returns></returns>
         IEnumerable<CouponTemplate> GetCenterCouponTemplate();
+
+        /// <summary>
+        /// 获取游戏抽奖优惠券
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<CouponTemplate> GetGameCouponTemplate();
     }
 }

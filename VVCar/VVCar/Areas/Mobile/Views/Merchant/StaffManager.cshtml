@@ -1,0 +1,187 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="staffmanager">
+    <div class="toubu">
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        店长工作终端
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="touxiang">
+        <div style="width:100%; float:left; border-bottom:1px solid #eee;">
+            <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
+            <div class="touxiang_div">
+                <span>{{User.Name}}</span>
+                <span style=" font-size:14px; color:#999;">员工：0名<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[新增员工]</a></span>
+            </div>
+        </div>
+        <a class="cbgl_btn">
+            <span style="line-height:44px; color:#51b3f0; width:100%; float:left;">员工名单</span>
+            <div style="width:50%; margin-left:25%; border-bottom:2px solid #51b3f0; float:left;"></div>
+        </a>
+        <a class="cbgl_btn">
+            <span style="line-height:44px; ">业绩排名</span>
+        </a>
+    </div>
+    <div class="touxiang" style="margin-bottom:25px;">
+        <div class="ygxx_box">
+            <div class="ygxx">岗位编号</div>
+            <div class="ygxx2">
+                <span>01</span>
+                <a style="font-size:12px;">冻结</a>
+                <a style="background-color:#51b3f0; margin-right:3%; font-size:12px;">编辑</a>
+            </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">员工姓名</div>
+            <div class="ygxx2">
+                <span>张三丰</span>
+            </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">手机号码</div>
+            <div class="ygxx2">
+                <span>15960248018</span>
+            </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">到岗时间</div>
+            <div class="ygxx2">
+                <span>2018-05-22</span>
+            </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">本月业绩</div>
+            <div class="ygxx2">
+                <span style="color:#ff0c4c;">￥0<span style="color:#999; margin-left:0;">（排名第<span style="color:#51b3f0; margin-left:0;">1</span>位）</span></span>
+            </div>
+        </div>
+        @*<div class="ygxx_box">
+                <div class="ygxx">会员卡销量</div>
+                <div class="ygxx2">
+                    <span>￥0（0张）</span>
+                </div>
+            </div>*@
+        <div class="ygxx_box">
+            <div class="ygxx">客户服务量</div>
+            <div class="ygxx2">
+                <span>0位</span>
+            </div>
+        </div>
+        <div class="ygxx_box" style="border-bottom:none;">
+            <div class="ygxx">本月收入</div>
+            <div class="ygxx2">
+                <span>￥0</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+        var mch = $.getUrlParam('mch');
+        var user = sessionStorage.getItem('user');
+        _viewModel = new Vue({
+            el: '#staffmanager',
+            data: {
+                User: {},
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                },
+            }
+        });
+
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.User = res.Data;
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            if (user == null || user == '') {
+                getUserByOpenId();
+            } else {
+                _viewModel.User = JSON.parse(user);
+            }
+
+        });
+    </script>
+}

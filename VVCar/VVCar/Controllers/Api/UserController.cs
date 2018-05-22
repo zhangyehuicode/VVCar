@@ -215,5 +215,19 @@ namespace VVCar.Controllers.Api
                 return UserService.GetUserByOpenID(param);
             });
         }
+
+        /// <summary>
+        /// 绑定手机号
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpGet, Route("BindingMobilePhone"), AllowAnonymous]
+        public JsonActionResult<bool> BindingMobilePhone([FromUri]BindingMobilePhoneParam param)
+        {
+            return SafeExecute(() =>
+            {
+                return UserService.BindingMobilePhone(param);
+            });
+        }
     }
 }

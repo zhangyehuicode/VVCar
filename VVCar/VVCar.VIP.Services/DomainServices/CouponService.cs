@@ -440,21 +440,20 @@ namespace VVCar.VIP.Services.DomainServices
                 };
                 newCoupon.CouponCode = GenerateCouponCode(newCoupon.ID);
                 newCoupons.Add(newCoupon);
-                if (sendNotify)
+                if (sendNotify || receiveCouponDto.SendNotify)
                 {
                     var message = new WeChatTemplateMessageDto
                     {
                         touser = receiveCouponDto.ReceiveOpenID,
                         template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_CouponReceived),
-                        url = $"{AppContext.Settings.SiteDomain}/Coupon/MyCoupon?mch={AppContext.CurrentSession.CompanyCode}",
+                        url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={AppContext.CurrentSession.CompanyCode}",
                         data = new System.Dynamic.ExpandoObject(),
                     };
                     message.data.first = new WeChatTemplateMessageDto.MessageData("恭喜您获得新的卡券");
-                    message.data.keyword1 = new WeChatTemplateMessageDto.MessageData("");
+                    message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(receiveCouponDto.NickName);
                     message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(template.Title);
-                    message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(newCoupon.ExpiredDate.ToDateString());
-                    message.data.keyword4 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyyMMddHHmmssfff"));
-                    message.data.remark = new WeChatTemplateMessageDto.MessageData("点击详情进行查看卡券。");
+                    message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(newCoupon.CreatedDate.ToDateString());
+                    message.data.remark = new WeChatTemplateMessageDto.MessageData("点击查看我的卡包");
                     WeChatService.SendWeChatNotifyAsync(message);
                 }
             }

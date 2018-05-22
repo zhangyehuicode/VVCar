@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\AssignPermissionDto.cs" />
+    <Compile Include="Dtos\BindingMobilePhoneParam.cs" />
     <Compile Include="Dtos\DepartmentLiteDto.cs" />
     <Compile Include="Dtos\DepartmentTreeDto.cs" />
     <Compile Include="Dtos\MchCreateStoreDto.cs" />

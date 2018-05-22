@@ -461,6 +461,17 @@ namespace VVCar.BaseData.Services.DomainServices
             return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
         }
 
+        public bool BindingMobilePhone(BindingMobilePhoneParam param)
+        {
+            if (param == null || param.ID == null || string.IsNullOrEmpty(param.MobilePhoneNo))
+                throw new DomainException("参数错误");
+            var user = Repository.GetByKey(param.ID);
+            if (user == null)
+                return false;
+            user.MobilePhoneNo = param.MobilePhoneNo;
+            return Repository.Update(user) > 0;
+        }
+
         #endregion
     }
 }
