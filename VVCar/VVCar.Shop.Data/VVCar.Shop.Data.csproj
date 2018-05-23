@@ -52,6 +52,8 @@
     <Compile Include="Mapping\AppointmentMap.cs" />
     <Compile Include="Mapping\OrderItemMap.cs" />
     <Compile Include="Mapping\OrderMap.cs" />
+    <Compile Include="Mapping\PickUpOrderItemMap.cs" />
+    <Compile Include="Mapping\PickUpOrderMap.cs" />
     <Compile Include="Mapping\ProductCategoryMap.cs" />
     <Compile Include="Mapping\ProductMap.cs" />
     <Compile Include="Mapping\ShoppingCartItemMap.cs" />

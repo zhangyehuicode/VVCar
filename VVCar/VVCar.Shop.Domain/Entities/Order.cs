@@ -98,7 +98,7 @@ namespace VVCar.Shop.Domain.Entities
         public string Remark { get; set; }
 
         /// <summary>
-        /// 积分商城订单子项
+        /// 商城订单子项
         /// </summary>
         public ICollection<OrderItem> OrderItemList { get; set; }
     }

@@ -4,20 +4,70 @@
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<body id="scancodediscounts">
+<div id="membercardmanager">
     <div class="toubu">
-        <a v-on:click="back"><img src="img/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
-        <div class="title">工作终端</div>
-        <a v-on:click="home"><img src="img/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        店长工作终端
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
     </div>
-    <div class="touxiang" style="margin-top:50px;">
-        <div class="ggy">扫码到会员商城购买会员卡</div>
-        <a class="erwm">
-            <div id="qrcode"></div>
-        </a>
+    <div class="touxiang">
+        <div style="width:100%; float:left; ">
+            <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
+            <div class="touxiang_div">
+                <span>{{User.Name}}</span>
+                <span style=" font-size:14px; color:#999;">发行总量：0<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;"></a></span>
+            </div>
+        </div>
     </div>
-    @*<a class="kjtd" style="margin-bottom:25px; margin-top:50px" v-on:click="shop"></a>*@
-</body>
+
+    <div class="touxiang">
+        <div class="ygxx_box">
+            <div class="ygxx">会员卡名称</div>
+            <div class="ygxx2">
+                <span>卡名称</span>
+            </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">有效期</div>
+            <div class="ygxx2">
+                <span>1年</span>
+            </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">发行量</div>
+            <div class="ygxx2">
+                <span>0张</span>
+            </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">成交量</div>
+            <div class="ygxx2">
+                <span>0张</span>
+            </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">成交金额</div>
+            <div class="ygxx2">
+                <span style="color:#ff0c4c;">￥0</span>
+            </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">发行时间</div>
+            <div class="ygxx2">
+                <span style="color:#51b3f0;">2018-05-23</span>
+            </div>
+        </div>
+        <div class="ygxx_box" style=" border-bottom:none;">
+            <div class="ygxx">操作</div>
+            <div class="ygxx2">
+                <span>
+                    <a style="background-color:#51b3f0;float:left; margin-left:13%; width:70px; font-size:12px;">暂停发售</a>
+                    <a style="float:left;width:70px; font-size:12px;">暂停使用</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts{
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
@@ -70,38 +120,23 @@
     </script>
     <script type="text/javascript">
         $(function () {
-            var mch = $.getUrlParam('mch');
-            $('#qrcode').qrcode("http://www.cheyinz.cn/Mobile/Customer/Shop?mch=" + mch);
+        var mch = $.getUrlParam('mch');
         var user = sessionStorage.getItem('user');
-        var _ismaster = sessionStorage.getItem('ismaster');
-        if (_ismaster == 'true') {
-            $('.title').text('店长工作终端');
-        } else {
-            $('.title').text('店员工作终端');
-        }
         _viewModel = new Vue({
-            el: '#scancodediscounts',
+            el: '#membercardmanager',
             data: {
-                Data: {},
+                User: {},
             },
             methods: {
                 back: function (event) {
                     history.back(-1);
                 },
                 home: function (event) {
-                    if (_ismaster == 'true') {
                         window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
-                    } else {
-                        window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
-                    }
-                },
-                shop: function (event) {
-                    window.location.href = "/Mobile/Customer/Shop?mch=" + mch;
                 },
             }
         });
 
-          var ismaster = _ismaster == 'true';
             function getUserByOpenId() {
                 $.ajax({
                     url: '/api/User/GetUserByOpenID',
@@ -109,11 +144,11 @@
                     headers: { 'CompanyCode': mch },
                     data: {
                         OpenID: '@ViewBag.OpenId',
-                        IsManager: ismaster,
                     },
                     success: function (res) {
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
+                                _viewModel.User = res.Data;
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
                             }
                             else {
@@ -130,10 +165,13 @@
                     }
                 });
             }
-            if (user == null || user=='') {
+            if (user == null || user == '') {
                 getUserByOpenId();
+            } else {
+                _viewModel.User = JSON.parse(user);
             }
 
         });
     </script>
 }
+

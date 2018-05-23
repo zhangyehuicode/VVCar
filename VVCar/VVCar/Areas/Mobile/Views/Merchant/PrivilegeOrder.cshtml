@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="privilegeorder">
+    <div class="toubu">
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        店长工作终端
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="touxiang">
+        <div style="width:100%; float:left;">
+            <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
+            <div class="touxiang_div">
+                <span>{{User.Name}}</span>
+                <span style=" font-size:14px; color:#999;">本月特权订单：0<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[财务报表]</a></span>
+            </div>
+        </div>
+    </div>
+    <div class="touxiang" style="margin-bottom:25px;">
+        <div class="gzb_box" style=" width:94%; margin-left:3%;">
+            <span>05月特权订单</span>
+            <form action="#" method="get" style="float:right;">
+                <select name="" style="height:30px; border-radius:4px; border-color:#eee; outline-style:none;">
+                    <option value="0">月份选择</option>
+                    <option value="1">1月份</option>
+                    <option value="2">2月份</option>
+                    <option value="3">3月份</option>
+                    <option value="4">4月份</option>
+                    <option value="5">5月份</option>
+                    <option value="6">6月份</option>
+                    <option value="7">7月份</option>
+                    <option value="8">8月份</option>
+                    <option value="9">9月份</option>
+                    <option value="10">10月份</option>
+                    <option value="11">11月份</option>
+                    <option value="12">12月份</option>
+                </select>
+            </form>
+        </div>
+        <div class="tqdd_box">
+            <span>手机号</span>
+            <span style="text-align:right;">车牌号</span>
+            <span style="text-align:right;">交易额</span>
+            <span style=" text-align:right;">优惠额</span>
+        </div>
+        <div class="tqdd_box">
+            <span style="font-size:12px;">15960248018</span>
+            <span style="text-align:right;font-size:12px;">闽DB1234</span>
+            <span style="text-align:right;font-size:12px; color:#ff0c4c;">￥0</span>
+            <span style=" text-align:right;font-size:12px; color:#51b3f0;">￥0</span>
+        </div>
+        <div class="tqdd_box">
+            <span style="font-size:12px;">15960248018</span>
+            <span style="text-align:right;font-size:12px;">闽DB1234</span>
+            <span style="text-align:right;font-size:12px; color:#ff0c4c;">￥0</span>
+            <span style=" text-align:right;font-size:12px; color:#51b3f0;">￥0</span>
+        </div>
+        <div class="tqdd_box">
+            <span style="font-size:12px;">15960248018</span>
+            <span style="text-align:right;font-size:12px;">闽DB1234</span>
+            <span style="text-align:right;font-size:12px; color:#ff0c4c;">￥0</span>
+            <span style=" text-align:right;font-size:12px; color:#51b3f0;">￥0</span>
+        </div>
+        <div class="tqdd_box">
+            <span style="font-size:12px;">15960248018</span>
+            <span style="text-align:right;font-size:12px;">闽DB1234</span>
+            <span style="text-align:right;font-size:12px; color:#ff0c4c;">￥0</span>
+            <span style=" text-align:right;font-size:12px; color:#51b3f0;">￥0</span>
+        </div>
+        <div class="tqdd_box">
+            <span style="font-size:12px;">15960248018</span>
+            <span style="text-align:right;font-size:12px;">闽DB1234</span>
+            <span style="text-align:right;font-size:12px; color:#ff0c4c;">￥0</span>
+            <span style=" text-align:right;font-size:12px; color:#51b3f0;">￥0</span>
+        </div>
+        <div class="tqdd_box">
+            <span style="font-size:12px;">15960248018</span>
+            <span style="text-align:right;font-size:12px;">闽DB1234</span>
+            <span style="text-align:right;font-size:12px; color:#ff0c4c;">￥0</span>
+            <span style=" text-align:right;font-size:12px; color:#51b3f0;">￥0</span>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+        var mch = $.getUrlParam('mch');
+        var user = sessionStorage.getItem('user');
+        _viewModel = new Vue({
+            el: '#privilegeorder',
+            data: {
+                User: {},
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                },
+            }
+        });
+
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.User = res.Data;
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            if (user == null || user == '') {
+                getUserByOpenId();
+            } else {
+                _viewModel.User = JSON.parse(user);
+            }
+
+        });
+    </script>
+}
+
