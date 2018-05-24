@@ -280,7 +280,7 @@
         _payBillViewModel = new Vue({
             el: '#quickorder',
             data: {
-                Data: {},
+                User: {},
             },
             methods: {
                 back: function (event) {
@@ -294,6 +294,12 @@
                     }
                 },
                 openorder: function (event) {
+                    var platenum = '';
+                    var numinput = $('.platenum').find('input');
+                    for (var i = 0; i < numinput.length; i++) {
+                        platenum += $(numinput[i]).val();
+                    }
+                    sessionStorage.setItem('platenum', platenum);
                     window.location.href = "/Mobile/Merchant/OpenOrder?mch=" + mch;
                 },
                 chooseImage: function (event) {
@@ -327,7 +333,6 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
-                                //window.location.href = "/Mobile/Merchant?mch=" + mch;
                             }
                             else {
                                 _viewModel.home();

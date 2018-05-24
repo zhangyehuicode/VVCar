@@ -220,5 +220,31 @@ namespace VVCar.Shop.Services.DomainServices
         {
             return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Service && t.IsPublish).ToList();
         }
+
+        /// <summary>
+        /// 接车单历史数据分析
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<HistoryDataAnalysisDto> GetHistoryAnalysisData()
+        {
+            var result = new List<HistoryDataAnalysisDto>();
+
+            var servicelist = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Service && t.IsPublish).ToList();
+            if (servicelist != null)
+            {
+                servicelist.ForEach(t =>
+                {
+                    result.Add(new HistoryDataAnalysisDto
+                    {
+                        ServiceName = t.Name,
+                        MiningSpace = 5,
+                        ServiceTime = 0,
+                    });
+                });
+            }
+
+            return result.OrderByDescending(t => t.MiningSpace).ToList();
+        }
+
     }
 }

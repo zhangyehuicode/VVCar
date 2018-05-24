@@ -13,25 +13,23 @@
     <div class="kcd_box">
         <div class="kcd_bg">
             <div class="kcd_mc">车牌号</div>
-            <div class="kcd_cph">闽AB1234</div>
+            <div class="kcd_cph">{{PlateNumber}}</div>
         </div>
-        <div class="kcd_bg">
-            <div class="kcd_hyk">会员卡</div>
-            <div class="kcd_hykmc">会员卡名<span>￥100</span></div>
-            <div class="kcd_hykmc">会员卡名<span>￥100</span></div>
-            <div class="kcd_hykmc" style="border-bottom:none;">会员卡名<span>￥100</span></div>
-        </div>
+        @*<div class="kcd_bg">
+                <div class="kcd_hyk">会员卡</div>
+                <div class="kcd_hykmc">会员卡名<span>￥0</span></div>
+                <div class="kcd_hykmc">会员卡名<span>￥0</span></div>
+                <div class="kcd_hykmc" style="border-bottom:none;">会员卡名<span>￥0</span></div>
+            </div>*@
         <img src="~/Areas/resource/img/mobile/master/u35.png">
     </div>
     <div class="kcd_box2">
         <form action="#" method="get">
-            <select name="" class="kcd_input">
-                <option value="0">部位</option>
-
+            <select class="kcd_input" id="productcategoryselect">
+                <option v-for="ProductCategory in ProductCategoryList" v-bind:value="ProductCategory.ID">{{ProductCategory.Name}}</option>
             </select>
-            <select name="" class="kcd_input">
-                <option value="0">服务</option>
-
+            <select class="kcd_input" id="productselect">
+                <option v-for="Product in ProductList" v-bind:value="Product.ID">{{Product.Name}}</option>
             </select>
         </form>
         <div class="kcd_btn">增加</div>
@@ -42,26 +40,14 @@
             <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
                 <th scope="col" width="25%">项目</th>
                 <th scope="col" width="25%">挖掘空间</th>
-                <th scope="col" width="25%">历史数据</th>
+                <th scope="col" width="25%">服务次数</th>
                 <th scope="col" width="25%">操作</th>
             </tr>
-            <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; ">
-                <td>清洁</td>
-                <td>-</td>
-                <td>无</td>
-                <td>-</td>
-            </tr>
-            <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; ">
-                <td>后档</td>
-                <td>-</td>
-                <td>无</td>
-                <td>-</td>
-            </tr>
-            <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; ">
-                <td>前档</td>
-                <td>-</td>
-                <td>170101贴膜</td>
-                <td>-</td>
+            <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; " v-for="AnalysisData in HistoryAnalysisData">
+                <td>{{AnalysisData.ServiceName}}</td>
+                <td>{{AnalysisData.MiningSpace}}星</td>
+                <td>{{AnalysisData.ServiceTime}}次</td>
+                <td><div class="addbtn">增加</div></td>
             </tr>
         </table>
     </div>
@@ -69,15 +55,27 @@
 </div>
 
 @section scripts{
+    <style type="text/css">
+        .addbtn {
+            background: #51b3f0;
+            width: 50px;
+            height: 30px;
+            color: #fff;
+            margin: auto;
+            line-height: 30px;
+            text-align: center;
+        }
+    </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
     <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -117,6 +115,10 @@
     </script>
     <script type="text/javascript">
         $(function () {
+        var platenum = sessionStorage.getItem('platenum');
+        if (platenum == null || platenum == '') {
+            $.alert('车牌号为空');
+        }
         var user = sessionStorage.getItem('user');
         var _ismaster = sessionStorage.getItem('ismaster');
         if (_ismaster == 'true') {
@@ -128,7 +130,11 @@
         _viewModel = new Vue({
             el: '#openorder',
             data: {
-                Data: {},
+                PlateNumber: platenum,
+                ProductCategoryList: [],
+                ProductCategory: {},
+                ProductList: [],
+                HistoryAnalysisData:[],
             },
             methods: {
                 back: function (event) {
@@ -144,6 +150,12 @@
                 openorder: function (event) {
                     window.location.href = "/Mobile/Merchant/Order?mch=" + mch;
                 },
+                //productcategoryselectchange: function (data, event) {
+                //    $.alert(JSON.stringify(data));
+                //},
+                //productselect: function (data, event) {
+                //    $.alert(JSON.stringify(data));
+                //},
             }
         });
            var ismaster = _ismaster == 'true';
@@ -160,7 +172,6 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 sessionStorage.setItem('user',JSON.stringify(res.Data));
-                                //window.location.href = "/Mobile/Merchant?mch=" + mch;
                             }
                             else {
                                 _viewModel.home();
@@ -177,8 +188,65 @@
                 });
             }
             if (user == null || user=='') {
-                getUserByOpenId();
+                //getUserByOpenId();
             }
+
+            function getProductCategory() {
+                $.ajax({
+                    url: '/api/ProductCategory?IsFromPickUpOrder=true',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.ProductCategoryList = res.Data;
+                            if (res.Data != null && res.Data.length > 0)
+                                _viewModel.ProductList = res.Data[0].SubProducts;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getProductCategory();
+
+            $('#productcategoryselect').change(function () {
+                var value = $(this).val();
+                for (var i = 0; i < _viewModel.ProductCategoryList.length; i++) {
+                    if (_viewModel.ProductCategoryList[i].ID == value) {
+                        _viewModel.ProductList = _viewModel.ProductCategoryList[i].SubProducts;
+                        break;
+                    }
+                }
+            });
+
+            $('#productselect').change(function () {
+                var value = $(this).val();
+            });
+
+            function getHistoryAnalysisData() {
+                $.ajax({
+                    url: '/api/Product/GetHistoryAnalysisData',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            _viewModel.HistoryAnalysisData = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+            getHistoryAnalysisData();
 
         });
     </script>

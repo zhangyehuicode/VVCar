@@ -101,7 +101,7 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <param name="filter">keywords(分类名称，)</param>
         /// <returns>产品分类数据集</returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public PagedActionResult<ProductCategory> Search([FromUri]ProductCategoryFilter filter)
         {
             return SafeGetPagedData<ProductCategory>((result) =>

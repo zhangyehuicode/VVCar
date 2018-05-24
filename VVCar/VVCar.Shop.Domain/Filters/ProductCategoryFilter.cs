@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Enums;
 using YEF.Core.Dtos;
 
 namespace VVCar.Shop.Domain.Filters
@@ -30,5 +31,11 @@ namespace VVCar.Shop.Domain.Filters
         /// </summary>
         [Display(Name = "名称或编号")]
         public string NameOrCode { get; set; }
+
+        /// <summary>
+        /// 是否来自接车单
+        /// </summary>
+        [Display(Name = "是否来自接车单")]
+        public bool IsFromPickUpOrder { get; set; }
     }
 }

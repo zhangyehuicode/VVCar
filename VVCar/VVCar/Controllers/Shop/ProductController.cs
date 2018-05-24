@@ -170,5 +170,18 @@ namespace VVCar.Controllers.Shop
                 result.Data = data;
             });
         }
+
+        /// <summary>
+        /// 接车单历史数据分析
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetHistoryAnalysisData"), AllowAnonymous]
+        public PagedActionResult<HistoryDataAnalysisDto> GetHistoryAnalysisData()
+        {
+            return SafeGetPagedData<HistoryDataAnalysisDto>((result) =>
+            {
+                result.Data = ProductService.GetHistoryAnalysisData();
+            });
+        }
     }
 }

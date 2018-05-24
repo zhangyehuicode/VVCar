@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VVCar.BaseData.Services;
 using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
+using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
 using YEF.Core;
@@ -155,8 +156,8 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns>产品分类数据集</returns>
         public IEnumerable<ProductCategory> Search(ProductCategoryFilter filter, out int totalCount)
         {
-            IEnumerable<ProductCategory> result;
-            var queryable = Repository.GetQueryable(false);
+            var result = new List<ProductCategory>(); ;
+            var queryable = Repository.GetInclude(t => t.SubProducts, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter != null)
             {
                 if (!string.IsNullOrEmpty(filter.Code))
@@ -173,15 +174,27 @@ namespace VVCar.Shop.Services.DomainServices
                 }
             }
             queryable = queryable.OrderBy(t => t.ParentId).ThenBy(t => t.Index);
+            totalCount = queryable.Count();
             if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
+                queryable = queryable.Skip(filter.Start.Value).Take(filter.Limit.Value);
+            result = queryable.ToList();
+            if (filter.IsFromPickUpOrder)
             {
-                totalCount = queryable.Count();
-                result = queryable.Skip(filter.Start.Value).Take(filter.Limit.Value).ToArray();
-            }
-            else
-            {
-                result = queryable.ToArray();
-                totalCount = result.Count();
+                result.ForEach(t =>
+                {
+                    if (t.SubProducts != null && t.SubProducts.Count > 0)
+                    {
+                        t.SubProducts = t.SubProducts.Where(item => item.ProductType == EProductType.Service && item.IsPublish).ToList();
+                    }
+                });
+                var removeItem = result.Where(t => t.SubProducts == null || t.SubProducts.Count < 1).ToList();
+                if (removeItem != null && removeItem.Count > 0)
+                {
+                    removeItem.ForEach(t =>
+                    {
+                        result.Remove(t);
+                    });
+                }
             }
             return result;
         }

@@ -61,5 +61,11 @@ namespace VVCar.Shop.Domain.Services
         /// </summary>
         /// <returns></returns>
         IEnumerable<Product> GetAppointmentProduct();
+
+        /// <summary>
+        /// 接车单历史数据分析
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<HistoryDataAnalysisDto> GetHistoryAnalysisData();
     }
 }
