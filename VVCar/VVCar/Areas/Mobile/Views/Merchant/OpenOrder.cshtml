@@ -32,7 +32,13 @@
                 <option v-for="Product in ProductList" v-bind:value="Product.ID">{{Product.Name}}</option>
             </select>
         </form>
-        <div class="kcd_btn">增加</div>
+        <div class="kcd_btn" v-on:click="addproduct">增加</div>
+    </div>
+    <div class="kcd_box" style="padding:0 0 10px 3px;">
+        <div class="kcd_bt">当前服务</div>
+        <div>
+            <div class="currentproduct" v-for="Product in CurrentProductList" v-on:click="currentproductclick(Product)">{{Product.Name}}</div>
+        </div>
     </div>
     <div class="kcd_box">
         <div class="kcd_bt">实时体现历史数据信息</div>
@@ -44,14 +50,14 @@
                 <th scope="col" width="25%">操作</th>
             </tr>
             <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; " v-for="AnalysisData in HistoryAnalysisData">
-                <td>{{AnalysisData.ServiceName}}</td>
+                <td>{{AnalysisData.Name}}</td>
                 <td>{{AnalysisData.MiningSpace}}星</td>
                 <td>{{AnalysisData.ServiceTime}}次</td>
-                <td><div class="addbtn">增加</div></td>
+                <td><div class="addbtn" v-on:click="historyaddproduct(AnalysisData)">增加</div></td>
             </tr>
         </table>
     </div>
-    <div class="kcd_btn2" v-on:click="openorder">确认开单</div>
+    <div class="kcd_btn2" v-on:click="openorder">开单</div>
 </div>
 
 @section scripts{
@@ -64,6 +70,25 @@
             margin: auto;
             line-height: 30px;
             text-align: center;
+        }
+
+        .currentproduct {
+            background: #fff;
+            width: auto;
+            padding: 0 3px;
+            height: 30px;
+            color: #51b3f0;
+            margin: 3px;
+            line-height: 30px;
+            text-align: center;
+            float: left;
+            border: 1px #51b3f0 solid;
+            border-radius: 3px;
+        }
+
+        .currentproductcon {
+            width: 100%;
+            padding: 0 13px 13px 13px;
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
@@ -126,7 +151,45 @@
         } else {
             $('.title').text('店员工作终端');
         }
-        var mch = $.getUrlParam('mch');
+            var mch = $.getUrlParam('mch');
+
+            function addPickUpOrder(data) {
+                if (data == null || data.PlateNumber == null || data.PlateNumber == '' || data.StaffID == '' || data.StaffID == null) {
+                    $.alert('参数错误');
+                    return;
+                }
+                if (data.PickUpOrderItemList == null || data.PickUpOrderItemList.length < 1) {
+                    $.alert('请选择服务项目');
+                    return;
+                }
+                $.ajax({
+                    url: '/api/PickUpOrder',
+                    type: 'POST',
+                    data: data,
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                $.toast('开单成功', function () {
+                                    window.location.href = "/Mobile/Merchant/Order?mch=" + mch;
+                                });
+                            } else {
+                                $.alert('开单失败，请重试');
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
         _viewModel = new Vue({
             el: '#openorder',
             data: {
@@ -134,7 +197,15 @@
                 ProductCategoryList: [],
                 ProductCategory: {},
                 ProductList: [],
-                HistoryAnalysisData:[],
+                HistoryAnalysisData: [],
+                CurrentProductList: [],
+                CurrentProduct: {},
+                PickUpOrder: {
+                    PlateNumber: platenum,
+                    StaffID: '',
+                    StaffName: '',
+                    PickUpOrderItemList: [],
+                },
             },
             methods: {
                 back: function (event) {
@@ -148,14 +219,59 @@
                     }
                 },
                 openorder: function (event) {
-                    window.location.href = "/Mobile/Merchant/Order?mch=" + mch;
+                    var items = _viewModel.CurrentProductList;
+                    _viewModel.PickUpOrder.PickUpOrderItemList = [];
+                    for (var i = 0; i < items.length; i++) {
+                        _viewModel.PickUpOrder.PickUpOrderItemList.push({
+                            ProductID: items[i].ID,
+                            ProductName: items[i].Name,
+                            PriceSale: items[i].PriceSale,
+                            Quantity: 1,
+                        });
+                    }
+                    $.confirm("确认开单？", function () {
+                        addPickUpOrder(_viewModel.PickUpOrder);
+                    }, function () {
+                        //点击取消后的回调函数
+                    });
                 },
-                //productcategoryselectchange: function (data, event) {
-                //    $.alert(JSON.stringify(data));
-                //},
-                //productselect: function (data, event) {
-                //    $.alert(JSON.stringify(data));
-                //},
+                addproduct: function (event) {
+                    var addflag = true;
+                    for (var i = 0; i < _viewModel.CurrentProductList.length; i++) {
+                        if (_viewModel.CurrentProductList[i].ID == _viewModel.CurrentProduct.ID) {
+                            addflag = false;
+                        }
+                    }
+                    if (addflag) {
+                        _viewModel.CurrentProductList.push(_viewModel.CurrentProduct);
+                    }
+                },
+                historyaddproduct: function (data, event) {
+                    if (data == null)
+                        return;
+                    var addflag = true;
+                    for (var i = 0; i < _viewModel.CurrentProductList.length; i++) {
+                        if (_viewModel.CurrentProductList[i].ID == data.ID) {
+                            addflag = false;
+                        }
+                    }
+                    if (addflag) {
+                        _viewModel.CurrentProductList.push(data);
+                    }
+                },
+                currentproductclick: function (data, event) {
+                    if (data == null)
+                        return;
+                    var index = -1;
+                    for (var i = 0; i < _viewModel.CurrentProductList.length; i++) {
+                        if (_viewModel.CurrentProductList[i].ID == data.ID) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index!=-1)
+                    _viewModel.CurrentProductList.splice(index,1);
+                },
             }
         });
            var ismaster = _ismaster == 'true';
@@ -171,6 +287,8 @@
                     success: function (res) {
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
+                                _viewModel.PickUpOrder.StaffID = res.Data.ID;
+                                _viewModel.PickUpOrder.StaffName = res.Data.Name;
                                 sessionStorage.setItem('user',JSON.stringify(res.Data));
                             }
                             else {
@@ -187,8 +305,12 @@
                     }
                 });
             }
-            if (user == null || user=='') {
-                //getUserByOpenId();
+            if (user == null || user == '') {
+                getUserByOpenId();
+            } else {
+                user = JSON.parse(user);
+                _viewModel.PickUpOrder.StaffID = user.ID;
+                _viewModel.PickUpOrder.StaffName = user.Name;
             }
 
             function getProductCategory() {
@@ -203,8 +325,12 @@
                         $.hideLoading();
                         if (res.IsSuccessful) {
                             _viewModel.ProductCategoryList = res.Data;
-                            if (res.Data != null && res.Data.length > 0)
+                            if (res.Data != null && res.Data.length > 0) {
                                 _viewModel.ProductList = res.Data[0].SubProducts;
+                                if (_viewModel.ProductList != null && _viewModel.ProductList.length > 0) {
+                                    _viewModel.CurrentProduct = _viewModel.ProductList[0];
+                                }
+                            }
                         } else {
                             $.alert(res.ErrorMessage);
                         }
@@ -221,6 +347,9 @@
                 for (var i = 0; i < _viewModel.ProductCategoryList.length; i++) {
                     if (_viewModel.ProductCategoryList[i].ID == value) {
                         _viewModel.ProductList = _viewModel.ProductCategoryList[i].SubProducts;
+                        if (_viewModel.ProductList != null && _viewModel.ProductList.length > 0) {
+                            _viewModel.CurrentProduct = _viewModel.ProductList[0];
+                        }
                         break;
                     }
                 }
@@ -228,6 +357,12 @@
 
             $('#productselect').change(function () {
                 var value = $(this).val();
+                for (var i = 0; i < _viewModel.ProductList.length; i++) {
+                    if (_viewModel.ProductList[i].ID == value) {
+                        _viewModel.CurrentProduct = _viewModel.ProductList[i];
+                        break;
+                    }
+                }
             });
 
             function getHistoryAnalysisData() {

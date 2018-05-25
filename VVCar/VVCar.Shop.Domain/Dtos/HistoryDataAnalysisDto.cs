@@ -12,9 +12,19 @@ namespace VVCar.Shop.Domain.Dtos
     public class HistoryDataAnalysisDto
     {
         /// <summary>
+        /// ID
+        /// </summary>
+        public Guid ID { get; set; }
+
+        /// <summary>
         /// 服务名称
         /// </summary>
-        public string ServiceName { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 销售单价
+        /// </summary>
+        public decimal PriceSale { get; set; }
 
         /// <summary>
         /// 挖掘空间

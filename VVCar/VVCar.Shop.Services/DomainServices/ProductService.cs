@@ -236,7 +236,9 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     result.Add(new HistoryDataAnalysisDto
                     {
-                        ServiceName = t.Name,
+                        ID = t.ID,
+                        Name = t.Name,
+                        PriceSale = t.PriceSale,
                         MiningSpace = 5,
                         ServiceTime = 0,
                     });

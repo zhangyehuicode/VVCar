@@ -13,5 +13,10 @@ namespace VVCar.Shop.Domain.Filters
         /// 车牌号
         /// </summary>
         public string PlateNumber { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime? CreatedDate { get; set; }
     }
 }

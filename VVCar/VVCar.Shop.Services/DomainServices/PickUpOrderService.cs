@@ -24,10 +24,12 @@ namespace VVCar.Shop.Services.DomainServices
                 return null;
             entity.ID = Util.NewID();
             entity.CreatedDate = DateTime.Now;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             entity.PickUpOrderItemList.ForEach(t =>
             {
                 t.ID = Util.NewID();
                 t.PickUpOrderID = entity.ID;
+                t.MerchantID = entity.MerchantID;
             });
             RecountMoney(entity);
             return base.Add(entity);
@@ -42,20 +44,27 @@ namespace VVCar.Shop.Services.DomainServices
             decimal totalMoney = 0;
             entity.PickUpOrderItemList.ForEach(t =>
             {
-                totalMoney += t.Quantity * t.PriceSale;
+                t.Money = t.Quantity * t.PriceSale;
+                totalMoney += t.Money;
             });
             entity.Money = totalMoney;
         }
 
         public IEnumerable<PickUpOrder> Search(PickUpOrderFilter filter, ref int totalCount)
         {
-            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = Repository.GetInclude(t => t.PickUpOrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.PlateNumber))
                 queryable = queryable.Where(t => t.PlateNumber == filter.PlateNumber);
+            if (filter.CreatedDate.HasValue)
+            {
+                var date = filter.CreatedDate.Value.Date;
+                var nextdate = filter.CreatedDate.Value.Date.AddDays(1);
+                queryable = queryable.Where(t => t.CreatedDate >= date && t.CreatedDate < nextdate);
+            }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.ToArray();
+            return queryable.OrderByDescending(t => t.CreatedDate).ToArray();
         }
     }
 }

@@ -12,9 +12,9 @@
     </div>
     <div class="touxiang" style="margin-top:30px;">
         <div class="kjkd_box">快捷开单-微信二维码付款</div>
-        <a class="kjkd_box2"><div id="qrcode"></div></a>@*<img src="~/Areas/resource/img/mobile/master/timg.png">*@
-        <div class="kjkd_text">状态：闽AB1234，<span style="color:#ff0c4c">未支付</span>/<span style="color:#51b3f0;">已支付</span></div>
-        <div class="kjkd_text" style=" color:#ccc; margin-bottom:30px; font-size:13px;">状态：闽AB1234，<span style="color:#ff0c4c">未</span>/<span style="color:#51b3f0;">已</span>购买会员卡直接抵用</div>
+        <a class="kjkd_box2"><div id="qrcode"></div></a>
+        <div class="kjkd_text">状态：{{PickUpOrder.PlateNumber}}，<span style="color:#ff0c4c">未支付</span></div>
+        @*<div class="kjkd_text" style=" color:#ccc; margin-bottom:30px; font-size:13px;">状态：闽AB1234，<span style="color:#ff0c4c">未</span>/<span style="color:#51b3f0;">已</span>购买会员卡直接抵用</div>*@
     </div>
     <a class="kjtd" style="margin-top:30px; margin-bottom:25px;" v-on:click="cashpay">改用现金收款</a>
 </div>
@@ -27,9 +27,10 @@
     <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -68,38 +69,56 @@
         wxConfig();
     </script>
     <script type="text/javascript">
+
         $(function () {
             var mch = $.getUrlParam('mch');
-            var native_pay_url = $.getUrlParam('native_pay_url');
-            if (native_pay_url != '' && native_pay_url != null) {
-                $('#qrcode').qrcode(native_pay_url);
+
+            var pickuporder = sessionStorage.getItem('pickuporder');
+            if (pickuporder == null || pickuporder == '') {
+                $.alert('订单信息为空');
+                return;
             }
-            else {
-                $.ajax({
-                    url: '/api/Order/GetTradeNo',
-                    type: 'GET',
-                    headers: { 'CompanyCode': mch },
-                    success: function (res) {
-                        if (res.IsSuccessful) {
-                            if (res.Data == null || res.Data == '') {
-                                $.alert('生成订单号失败');
+            pickuporder = JSON.parse(pickuporder);
+            var serviceitems = '';
+            if (pickuporder.PickUpOrderItemList != null) {
+                for (var i = 0; i < pickuporder.PickUpOrderItemList.length; i++) {
+                    if(i==0)
+                        serviceitems += pickuporder.PickUpOrderItemList[i].ProductName;
+                    else
+                        serviceitems +="、"+pickuporder.PickUpOrderItemList[i].ProductName;
+                }
+            }
+
+            function generateQRCode() {
+                var native_pay_url = $.getUrlParam('native_pay_url');
+                if (native_pay_url != '' && native_pay_url != null) {
+                    $('#qrcode').qrcode(native_pay_url);
+                }
+                else {
+                    $.ajax({
+                        url: '/api/Order/GetTradeNo',
+                        type: 'GET',
+                        headers: { 'CompanyCode': mch },
+                        success: function (res) {
+                            if (res.IsSuccessful) {
+                                if (res.Data == null || res.Data == '') {
+                                    $.alert('生成订单号失败');
+                                } else {
+                                    var qrstrreq = "http://www.cheyinz.cn:8025/pay/NativePayPage.aspx?total_fee=" + parseInt(pickuporder.Money * 100) + "&out_trade_no=" + res.Data + "&mch=" + mch + "&device_info=" + mch + "&body=" + serviceitems + "&product_id=" + pickuporder.ID+"&notify_url=http://www.cheyinz.cn/Mobile/Merchant/QRCodePay";
+                                    window.location.href = qrstrreq;
+                                }
                             } else {
-                                var qrstrreq = "http://www.cheyinz.cn:8025/pay/NativePayPage.aspx?total_fee=1&out_trade_no=" + res.Data + "&mch=" + mch + "&device_info=" + mch + "&body=汽车空气净化器&product_id=123456798&notify_url=http://www.cheyinz.cn/Mobile/Merchant/QRCodePay";
-                                window.location.href = qrstrreq;
+                                $.alert(res.ErrorMessage);
                             }
-                        } else {
-                            $.alert(res.ErrorMessage);
+                        },
+                        error: function () {
+                            $.alert('生成订单号失败');
                         }
-                    },
-                    error: function () {
-                        $.alert('生成订单号失败');
-                    }
-                });
+                    });
+                }
             }
-        });
-    </script>
-    <script type="text/javascript">
-        var mch = $.getUrlParam('mch');
+            generateQRCode();
+
         var user = sessionStorage.getItem('user');
         var _ismaster = sessionStorage.getItem('ismaster');
         if (_ismaster == 'true') {
@@ -111,7 +130,7 @@
         _viewModel = new Vue({
             el: '#QRCodePay',
             data: {
-                Data: {},
+                PickUpOrder: pickuporder,
             },
             methods: {
                 back: function (event) {
@@ -144,7 +163,6 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
-                                //window.location.href = "/Mobile/Merchant?mch=" + mch;
                             }
                             else {
                                 _viewModel.home();
@@ -163,6 +181,7 @@
             if (user == null || user=='') {
                 getUserByOpenId();
             }
+        });
     </script>
 }
 

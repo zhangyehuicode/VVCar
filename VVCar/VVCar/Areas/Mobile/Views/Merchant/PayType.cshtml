@@ -113,7 +113,6 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
-                                //window.location.href = "/Mobile/Merchant?mch=" + mch;
                             }
                             else {
                                 _viewModel.home();
