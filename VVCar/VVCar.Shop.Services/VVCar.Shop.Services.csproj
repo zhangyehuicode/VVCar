@@ -48,6 +48,7 @@
     <Compile Include="AutoMapper\DtoMapper.cs" />
     <Compile Include="DomainServices\AppointmentService.cs" />
     <Compile Include="DomainServices\OrderService.cs" />
+    <Compile Include="DomainServices\PickUpOrderPaymentDetailsService.cs" />
     <Compile Include="DomainServices\PickUpOrderService.cs" />
     <Compile Include="DomainServices\ProductCategoryService.cs" />
     <Compile Include="DomainServices\ProductService.cs" />

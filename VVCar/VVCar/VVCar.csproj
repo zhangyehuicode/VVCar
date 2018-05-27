@@ -287,6 +287,7 @@
     <Compile Include="Controllers\Shop\AppointmentController.cs" />
     <Compile Include="Controllers\Shop\OrderController.cs" />
     <Compile Include="Controllers\Shop\PickUpOrderController.cs" />
+    <Compile Include="Controllers\Shop\PickUpOrderPaymentDetailsController.cs" />
     <Compile Include="Controllers\Shop\ProductCategoryController.cs" />
     <Compile Include="Controllers\Shop\ProductController.cs" />
     <Compile Include="Controllers\Shop\ShoppingCartController.cs" />
@@ -887,6 +888,8 @@
     <Content Include="Areas\Mobile\Views\Merchant\StockManager.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\OperatingStatement.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\PrivilegeOrder.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\OrderDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\CouponVerification.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

@@ -6,17 +6,17 @@
 
 <div id="QRCodePay">
     <div class="toubu">
-        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        <a v-on:click="back" id="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
         <div class="title">工作终端</div>
         <a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
     </div>
     <div class="touxiang" style="margin-top:30px;">
-        <div class="kjkd_box">快捷开单-微信二维码付款</div>
+        <div class="kjkd_box">快捷开单-微信二维码收款</div>
         <a class="kjkd_box2"><div id="qrcode"></div></a>
-        <div class="kjkd_text">状态：{{PickUpOrder.PlateNumber}}，<span style="color:#ff0c4c">未支付</span></div>
-        @*<div class="kjkd_text" style=" color:#ccc; margin-bottom:30px; font-size:13px;">状态：闽AB1234，<span style="color:#ff0c4c">未</span>/<span style="color:#51b3f0;">已</span>购买会员卡直接抵用</div>*@
+        <div class="kjkd_text"><span id="plate"></span>@*{{PickUpOrder.PlateNumber}}*@@*<span style="color:#ff0c4c">未支付</span>*@</div>
+        @*<div class="kjkd_text" style=" color:#ccc; margin-bottom:30px; font-size:13px;">状态：闽D12345，<span style="color:#ff0c4c">未</span>/<span style="color:#51b3f0;">已</span>购买会员卡直接抵用</div>*@
     </div>
-    <a class="kjtd" style="margin-top:30px; margin-bottom:25px;" v-on:click="cashpay">改用现金收款</a>
+    <a class="kjtd" style="margin-top:30px; margin-bottom:25px;" v-on:click="cashpay" id="cashpaybtn">改用现金收款</a>
 </div>
 
 @section scripts{
@@ -66,7 +66,7 @@
                 }
             });
         };
-        wxConfig();
+        //wxConfig();
     </script>
     <script type="text/javascript">
 
@@ -88,6 +88,7 @@
                         serviceitems +="、"+pickuporder.PickUpOrderItemList[i].ProductName;
                 }
             }
+            $('#plate').text(pickuporder.PlateNumber);
 
             function generateQRCode() {
                 var native_pay_url = $.getUrlParam('native_pay_url');
@@ -95,26 +96,30 @@
                     $('#qrcode').qrcode(native_pay_url);
                 }
                 else {
-                    $.ajax({
-                        url: '/api/Order/GetTradeNo',
-                        type: 'GET',
-                        headers: { 'CompanyCode': mch },
-                        success: function (res) {
-                            if (res.IsSuccessful) {
-                                if (res.Data == null || res.Data == '') {
-                                    $.alert('生成订单号失败');
-                                } else {
-                                    var qrstrreq = "http://www.cheyinz.cn:8025/pay/NativePayPage.aspx?total_fee=" + parseInt(pickuporder.Money * 100) + "&out_trade_no=" + res.Data + "&mch=" + mch + "&device_info=" + mch + "&body=" + serviceitems + "&product_id=" + pickuporder.ID+"&notify_url=http://www.cheyinz.cn/Mobile/Merchant/QRCodePay";
+                    //$.ajax({
+                    //    url: '/api/Order/GetTradeNo',
+                    //    type: 'GET',
+                    //    headers: { 'CompanyCode': mch },
+                    //    success: function (res) {
+                    //        if (res.IsSuccessful) {
+                    //            if (res.Data == null || res.Data == '') {
+                    //                $.alert('生成订单号失败');
+                    //            } else {
+                    if (pickuporder.Code == null || pickuporder.Code == '') {
+                        $.alert('订单号为空');
+                        return;
+                    }
+                    var qrstrreq = "http://www.cheyinz.cn:8025/pay/NativePayPage.aspx?total_fee=" + parseInt(pickuporder.Money * 100) + "&out_trade_no=" + pickuporder.Code + "&mch=" + mch + "&device_info=" + mch + "&body=" + serviceitems + "&product_id=" + pickuporder.ID+"&notify_url=http://www.cheyinz.cn/Mobile/Merchant/QRCodePay";
                                     window.location.href = qrstrreq;
-                                }
-                            } else {
-                                $.alert(res.ErrorMessage);
-                            }
-                        },
-                        error: function () {
-                            $.alert('生成订单号失败');
-                        }
-                    });
+                    //            }
+                    //        } else {
+                    //            $.alert(res.ErrorMessage);
+                    //        }
+                    //    },
+                    //    error: function () {
+                    //        $.alert('生成订单号失败');
+                    //    }
+                    //});
                 }
             }
             generateQRCode();
@@ -126,28 +131,41 @@
         } else {
             $('.title').text('店员工作终端');
         }
-        var mch = $.getUrlParam('mch');
-        _viewModel = new Vue({
-            el: '#QRCodePay',
-            data: {
-                PickUpOrder: pickuporder,
-            },
-            methods: {
-                back: function (event) {
-                    history.back(-1);
-                },
-                home: function (event) {
-                    if (_ismaster == 'true') {
+        //var mch = $.getUrlParam('mch');
+        //_viewModel = new Vue({
+        //    el: '#QRCodePay',
+        //    data: {
+        //        PickUpOrder: pickuporder,
+        //    },
+        //    methods: {
+        //        back: function (event) {
+        //            history.back(-1);
+        //        },
+        //        home: function (event) {
+        //            if (_ismaster == 'true') {
+        //                window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+        //            } else {
+        //                window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+        //            }
+        //        },
+        //        cashpay: function (event) {
+        //            window.location.href = "/Mobile/Merchant/CashPay?mch=" + mch;
+        //        },
+        //    }
+            //});
+            $('#cashpaybtn').click(function () {
+                window.location.href = "/Mobile/Merchant/CashPay?mch=" + mch;
+            });
+            $('.homeposition').click(function () {
+                if (_ismaster == 'true') {
                         window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
                     } else {
                         window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
                     }
-                },
-                cashpay: function (event) {
-                    window.location.href = "/Mobile/Merchant/CashPay?mch=" + mch;
-                },
-            }
-        });
+            });
+            $('#back').click(function () {
+                history.back(-1);
+            });
 
         var ismaster = _ismaster == 'true';
             function getUserByOpenId() {
@@ -181,6 +199,36 @@
             if (user == null || user=='') {
                 getUserByOpenId();
             }
+
+            var interval = 0;
+            var porder = {};
+            function getPickUpOrder() {
+                $.ajax({
+                    url: '/api/PickUpOrder/GetOrder?id=' + pickuporder.ID,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                porder = res.Data;
+                                if (porder.Status == 1) {
+                                    $.alert(porder.PlateNumber + '订单已支付', function () {
+                                        window.location.href = '/Mobile/Merchant/Order?mch=' + mch;
+                                    });
+                                    clearInterval(interval);
+                                }
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                    },
+                });
+            }
+            getPickUpOrder();
+            interval= setInterval(getPickUpOrder, 3000);
+
         });
     </script>
 }

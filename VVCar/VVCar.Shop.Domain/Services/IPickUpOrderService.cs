@@ -19,5 +19,19 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<PickUpOrder> Search(PickUpOrderFilter filter, ref int totalCount);
+
+        /// <summary>
+        /// 结账
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        bool CheckOut(string code);
+
+        /// <summary>
+        /// 获取接车单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        PickUpOrder GetOrder(Guid id);
     }
 }

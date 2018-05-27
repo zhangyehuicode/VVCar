@@ -20,6 +20,12 @@ namespace VVCar.Shop.Domain.Entities
         }
 
         /// <summary>
+        /// 订单号 
+        /// </summary>
+        [Display(Name = "订单号")]
+        public string Code { get; set; }
+
+        /// <summary>
         /// 车牌号
         /// </summary>
         [Display(Name = "车牌号")]
@@ -42,6 +48,18 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "订单总额")]
         public decimal Money { get; set; }
+
+        /// <summary>
+        /// 已收金额
+        /// </summary>
+        [Display(Name = "已收金额")]
+        public decimal ReceivedMoney { get; set; }
+
+        /// <summary>
+        /// 尚欠金额
+        /// </summary>
+        [Display(Name = "尚欠金额")]
+        public decimal StillOwedMoney { get; set; }
 
         /// <summary>
         /// 状态

@@ -23,5 +23,11 @@ namespace VVCar.Shop.Domain.Enums
         /// </summary>
         [Description("已付款")]
         Payed = 1,
+
+        /// <summary>
+        /// 收款不足
+        /// </summary>
+        [Description("收款不足")]
+        UnEnough = 2,
     }
 }

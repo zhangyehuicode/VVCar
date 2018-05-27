@@ -54,5 +54,33 @@ namespace VVCar.Controllers.Shop
                 result.TotalCount = totalCount;
             });
         }
+
+        /// <summary>
+        /// 结账
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        [HttpGet, Route("CheckOut"), AllowAnonymous]
+        public JsonActionResult<bool> CheckOut(string code)
+        {
+            return SafeExecute(() =>
+            {
+                return PickUpOrderService.CheckOut(code);
+            });
+        }
+
+        /// <summary>
+        /// 获取接车单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetOrder"), AllowAnonymous]
+        public JsonActionResult<PickUpOrder> GetOrder(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return PickUpOrderService.GetOrder(id);
+            });
+        }
     }
 }

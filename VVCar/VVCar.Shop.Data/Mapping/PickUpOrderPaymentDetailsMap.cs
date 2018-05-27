@@ -8,22 +8,21 @@ using VVCar.Shop.Domain.Entities;
 
 namespace VVCar.Shop.Data.Mapping
 {
-    public class PickUpOrderMap : EntityTypeConfiguration<PickUpOrder>
+    public class PickUpOrderPaymentDetailsMap : EntityTypeConfiguration<PickUpOrderPaymentDetails>
     {
-        public PickUpOrderMap()
+        public PickUpOrderPaymentDetailsMap()
         {
             HasKey(t => t.ID);
 
-            Property(t => t.PlateNumber)
-                .IsRequired()
-                .HasMaxLength(10);
-
-            Property(t => t.Code)
+            Property(t => t.PickUpOrderCode)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            Property(t => t.StaffName)
-                .HasMaxLength(20);
+            Property(t => t.PayInfo)
+                 .HasMaxLength(100);
+
+            Property(t => t.MemberInfo)
+                 .HasMaxLength(100);
         }
     }
 }

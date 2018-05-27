@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain.Entities;
+using VVCar.BaseData.Domain.Services;
 using VVCar.Shop.Domain.Entities;
+using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
 using YEF.Core;
@@ -18,6 +21,35 @@ namespace VVCar.Shop.Services.DomainServices
         {
         }
 
+        #region properties
+
+        IRepository<MakeCodeRule> MakeCodeRuleRepo { get => UnitOfWork.GetRepository<IRepository<MakeCodeRule>>(); }
+
+        #endregion
+
+        public string GetTradeNo()
+        {
+            var newTradeNo = string.Empty;
+            var existNo = false;
+            var makeCodeRuleService = ServiceLocator.Instance.GetService<IMakeCodeRuleService>();
+            var entity = Repository.GetQueryable(false).OrderByDescending(t => t.CreatedDate).FirstOrDefault();
+            if (entity != null && entity.CreatedDate.Date != DateTime.Now.Date)
+            {
+                var rule = MakeCodeRuleRepo.GetQueryable().Where(t => t.Code == "PickUpOrder" && t.IsAvailable).FirstOrDefault();
+                if (rule != null)
+                {
+                    rule.CurrentValue = 0;
+                    MakeCodeRuleRepo.Update(rule);
+                }
+            }
+            do
+            {
+                newTradeNo = makeCodeRuleService.GenerateCode("PickUpOrder", DateTime.Now);
+                existNo = Repository.Exists(t => t.Code == newTradeNo);
+            } while (existNo);
+            return newTradeNo;
+        }
+
         public override PickUpOrder Add(PickUpOrder entity)
         {
             if (entity == null || entity.PickUpOrderItemList == null || entity.PickUpOrderItemList.Count < 1)
@@ -25,6 +57,10 @@ namespace VVCar.Shop.Services.DomainServices
             entity.ID = Util.NewID();
             entity.CreatedDate = DateTime.Now;
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
+
+            if (string.IsNullOrEmpty(entity.Code))
+                entity.Code = GetTradeNo();
+
             entity.PickUpOrderItemList.ForEach(t =>
             {
                 t.ID = Util.NewID();
@@ -65,6 +101,32 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
             return queryable.OrderByDescending(t => t.CreatedDate).ToArray();
+        }
+
+        /// <summary>
+        /// 结账
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public bool CheckOut(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+                return false;
+            var order = Repository.GetQueryable().Where(t => t.Code == code && t.MerchantID == AppContext.CurrentSession.MerchantID).FirstOrDefault();
+            if (order == null)
+                return false;
+            order.Status = EPickUpOrderStatus.Payed;
+            return Repository.Update(order) > 0;
+        }
+
+        /// <summary>
+        /// 获取接车单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public PickUpOrder GetOrder(Guid id)
+        {
+            return Repository.GetByKey(id);
         }
     }
 }
