@@ -20,16 +20,16 @@ namespace VVCar.Shop.Domain.Entities
         [Display(Name = "接车单订单号")]
         public string PickUpOrderCode { get; set; }
 
-        ///// <summary>
-        ///// 接车单ID
-        ///// </summary>
-        //[Display(Name = "接车单ID")]
-        //public Guid PickUpOrderID { get; set; }
+        /// <summary>
+        /// 接车单ID
+        /// </summary>
+        [Display(Name = "接车单ID")]
+        public Guid PickUpOrderID { get; set; }
 
-        ///// <summary>
-        ///// 接车单
-        ///// </summary>
-        //public virtual PickUpOrder PickUpOrder { get; set; }
+        /// <summary>
+        /// 接车单
+        /// </summary>
+        public virtual PickUpOrder PickUpOrder { get; set; }
 
         /// <summary>
         /// 支付类型
@@ -55,17 +55,17 @@ namespace VVCar.Shop.Domain.Entities
         [Display(Name = "会员信息")]
         public string MemberInfo { get; set; }
 
-        ///// <summary>
-        ///// 收款店员ID
-        ///// </summary>
-        //[Display(Name = "收款店员ID")]
-        //public Guid? StaffID { get; set; }
+        /// <summary>
+        /// 收款店员ID
+        /// </summary>
+        [Display(Name = "收款店员ID")]
+        public Guid? StaffID { get; set; }
 
-        ///// <summary>
-        ///// 收款店员姓名
-        ///// </summary>
-        //[Display(Name = "收款店员姓名")]
-        //public string StaffName { get; set; }
+        /// <summary>
+        /// 收款店员姓名
+        /// </summary>
+        [Display(Name = "收款店员姓名")]
+        public string StaffName { get; set; }
 
         /// <summary>
         /// 创建时间

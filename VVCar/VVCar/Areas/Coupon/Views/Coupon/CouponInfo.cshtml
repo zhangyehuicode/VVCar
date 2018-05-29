@@ -14,20 +14,22 @@
         <div class="couponinfo">
             <div class="couponinfo-top">
                 <div class="couponTitle" data-bind="text: CouponInfo().Title"></div>
-                <div id="receiveCoupon" class="couponOperate"
-                     data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text:'立即领取', click: operateCoupon,visible:(!@ViewBag.FromMycoupon)&&ShowGetBtn()">
-                    @*(CouponInfo().CollarQuantityLimit-CouponInfo().UsedStock)>0&&*@
-                    @*&&CouponInfo().CouponID==null*@
-                </div>
-                <div id="useCoupon" class="couponOperate"
-                     data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text: '立即使用', click: useoperateCoupon,visible:!ShowGetBtn()">
-                    @*CouponInfo().CouponID!=null&&*@
-                    @*@ViewBag.FromMycoupon&&*@
-                </div>
-                <div id="giveCoupon" class="couponOperate"
-                     data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text: '赠予好友', click: giveoperateCoupon,visible:CouponInfo().CanGiveToPeople&&!ShowGetBtn()">
-                    @*CouponInfo().CouponID!=null&&*@
-                    @*@ViewBag.FromMycoupon&&*@
+                <div id="operationbtncon">
+                    <div id="receiveCoupon" class="couponOperate"
+                         data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text:'立即领取', click: operateCoupon,visible:(!@ViewBag.FromMycoupon)&&ShowGetBtn()">
+                        @*(CouponInfo().CollarQuantityLimit-CouponInfo().UsedStock)>0&&*@
+                        @*&&CouponInfo().CouponID==null*@
+                    </div>
+                    <div id="useCoupon" class="couponOperate"
+                         data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text: '立即使用', click: useoperateCoupon,visible:!ShowGetBtn()">
+                        @*CouponInfo().CouponID!=null&&*@
+                        @*@ViewBag.FromMycoupon&&*@
+                    </div>
+                    <div id="giveCoupon" class="couponOperate"
+                         data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text: '赠予好友', click: giveoperateCoupon,visible:CouponInfo().CanGiveToPeople&&!ShowGetBtn()">
+                        @*CouponInfo().CouponID!=null&&*@
+                        @*@ViewBag.FromMycoupon&&*@
+                    </div>
                 </div>
                 <div class="couponSubTitle" data-bind="text: CouponInfo().SubTitle"></div>
                 <table class="couponExplain">
@@ -298,6 +300,7 @@
                     }
                 });
             };
+            self.ShowBtn = ko.observable(true);
             self.ShowGetBtn=ko.observable(true);
             self.loadData = function () {
                 var ajaxUrl = "/api/Coupon/CouponInfo?userOpenID=" + openId + "&ctid=" + _couponTemplateId;
@@ -394,7 +397,11 @@
         sessionStorage.setItem('mch', _mchCode);
         _couponTemplateId = $.getUrlParam('ctid');
         ko.applyBindings(new PageViewModel());
-        sessionStorage.setItem('frommycoupon','@ViewBag.FromMycoupon');
+        sessionStorage.setItem('frommycoupon', '@ViewBag.FromMycoupon');
+        var showuse = $.getUrlParam('showuse');
+        if (showuse == 'false') {
+            $('#operationbtncon').hide();
+        }
     </script>
 }
 

@@ -33,5 +33,12 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="id"></param>
         /// <returns></returns>
         PickUpOrder GetOrder(Guid id);
+
+        /// <summary>
+        /// 重新计算订单金额并保存
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        bool RecountMoneySave(string code);
     }
 }

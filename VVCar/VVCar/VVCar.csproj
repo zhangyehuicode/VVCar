@@ -493,6 +493,9 @@
     <Content Include="Areas\resource\img\mobile\touxiang.png" />
     <Content Include="Areas\resource\img\mobile\ture.png" />
     <Content Include="Areas\resource\img\mobile\u337.png" />
+    <Content Include="Areas\resource\img\mobile\wcpaysuccess.jpg" />
+    <Content Include="Areas\resource\img\mobile\wechatpaysuccess.jpg" />
+    <Content Include="Areas\resource\img\mobile\wxps.jpg" />
     <Content Include="Areas\resource\img\mobile\xcdd.png" />
     <Content Include="Areas\resource\img\mobile\ysh.png" />
     <Content Include="Areas\resource\img\mobile\yzm.png" />
@@ -506,6 +509,7 @@
     <Content Include="Areas\resource\js\jquery.minicolors.min.js" />
     <Content Include="Areas\resource\js\jquery.qrcode.min.js" />
     <Content Include="Areas\resource\js\jquery.tmpl.js" />
+    <Content Include="Areas\resource\js\mobile\touchwipe.js" />
     <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />

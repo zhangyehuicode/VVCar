@@ -44,17 +44,17 @@
         </div>
     </div>
     <div class="bq_box">
-        <a v-on:click="mycard" style="width:50% !important;" id="cardtab">我的会员卡</a>
-        <a v-on:click="mycoupon" class="tabchange" style="width:50% !important;" id="coupontab">我的优惠券</a>
+        <a v-on:click="mycard" class="tabchange" style="width:50% !important;" id="cardtab">我的会员卡</a>
+        <a v-on:click="mycoupon" style="width:50% !important;" id="coupontab">我的优惠券</a>
     </div>
-    <div class="hykb_box" id="card">
+    <div class="hykb_box" id="card" style="display:none;">
         <div class="hykb_box2" style="margin-left:3%; margin-top:15px;" v-for="Card in CardList" v-on:click="couponInfo(Card)">
             <a><img class="cardimg" v-bind:src=Card.CoverImage></a>
             <span class=" hykb_text">{{Card.Title}}</span>
             <span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text">{{Card.CouponValue}}{{Card.CouponValueUnit}}</span>
         </div>
     </div>
-    <div class="hykb_box" id="coupon" style="display:none;">
+    <div class="hykb_box" id="coupon">
         <div class="hykb_box2" style="margin-left:3%; margin-top:15px;display:table;" v-for="Coupon in CouponList" v-on:click="couponInfo(Coupon)">
             <div style="display:table-cell;width:120px;"><img class="couponimg" v-bind:src=Coupon.CoverImage></div>
             <div class="hykb_text" style="display:table-cell;">{{Coupon.Title}}</div>

@@ -25,6 +25,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<MakeCodeRule> MakeCodeRuleRepo { get => UnitOfWork.GetRepository<IRepository<MakeCodeRule>>(); }
 
+        IRepository<PickUpOrderPaymentDetails> PickUpOrderPaymentDetailsRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrderPaymentDetails>>(); }
+
         #endregion
 
         public string GetTradeNo()
@@ -77,13 +79,46 @@ namespace VVCar.Shop.Services.DomainServices
                 return;
             if (entity.PickUpOrderItemList == null || entity.PickUpOrderItemList.Count < 1)
                 entity.Money = 0;
-            decimal totalMoney = 0;
-            entity.PickUpOrderItemList.ForEach(t =>
+            else
             {
-                t.Money = t.Quantity * t.PriceSale;
-                totalMoney += t.Money;
-            });
-            entity.Money = totalMoney;
+                decimal totalMoney = 0;
+                entity.PickUpOrderItemList.ForEach(t =>
+                {
+                    t.Money = t.Quantity * t.PriceSale;
+                    totalMoney += t.Money;
+                });
+                entity.Money = totalMoney;
+            }
+
+            decimal paymoney = 0;
+            var paymentdetails = PickUpOrderPaymentDetailsRepo.GetQueryable(false).Where(t => t.PickUpOrderCode == entity.Code).ToList();
+            if (paymentdetails != null && paymentdetails.Count > 0)
+            {
+                paymentdetails.ForEach(t =>
+                {
+                    paymoney += t.PayMoney;
+                });
+            }
+            entity.ReceivedMoney = paymoney;
+            entity.StillOwedMoney = entity.Money - entity.ReceivedMoney;
+            if (entity.StillOwedMoney < 0)
+                entity.StillOwedMoney = 0;
+
+            if (entity.ReceivedMoney > 0 && entity.ReceivedMoney < entity.Money)
+                entity.Status = EPickUpOrderStatus.UnEnough;
+            else if (entity.ReceivedMoney >= entity.Money)
+                entity.Status = EPickUpOrderStatus.Payed;
+        }
+
+        public bool RecountMoneySave(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+                return false;
+            var entity = Repository.GetInclude(t => t.PickUpOrderItemList).FirstOrDefault(t => t.Code == code);
+            if (entity == null)
+                return false;
+            RecountMoney(entity);
+            return Repository.Update(entity) > 0;
         }
 
         public IEnumerable<PickUpOrder> Search(PickUpOrderFilter filter, ref int totalCount)

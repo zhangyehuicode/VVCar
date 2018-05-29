@@ -29,7 +29,7 @@
                 <td>{{PickUpOrder.CreatedDate.substring(10,PickUpOrder.CreatedDate.length-1)}}</td>
                 <td>{{PickUpOrder.PlateNumber}}</td>
                 <td style="color:#ff0c4c;">￥{{PickUpOrder.Money}}</td>
-                <td><a style="color:#51b3f0;" v-on:click="selectpaytype(PickUpOrder)" v-if="PickUpOrder.Status==0">收款</a>&nbsp;&nbsp;<a style="color:#51b3f0;" v-on:click="orderdetails(PickUpOrder)">详情</a>&nbsp;&nbsp;@*<a style="color:#999;">删除</a>*@</td>@*style="color:#999;"*@
+                <td><a style="color:#51b3f0;" v-on:click="selectpaytype(PickUpOrder)" v-if="PickUpOrder.Status!=1">收款</a>&nbsp;&nbsp;<a style="color:#51b3f0;" v-on:click="orderdetails(PickUpOrder)">详情</a>&nbsp;&nbsp;@*<a style="color:#999;">删除</a>*@</td>@*style="color:#999;"*@
             </tr>
         </table>
     </div>

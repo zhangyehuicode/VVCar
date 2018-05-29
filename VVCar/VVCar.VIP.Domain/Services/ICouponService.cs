@@ -54,6 +54,13 @@ namespace VVCar.VIP.Domain.Services
         CouponFullInfoDto GetCouponInfo(Guid couponID);
 
         /// <summary>
+        /// 获取卡券信息
+        /// </summary>
+        /// <param name="couponCode"></param>
+        /// <returns></returns>
+        CouponFullInfoDto GetCouponInfo(string couponCode);
+
+        /// <summary>
         /// 获取卡券适用门店信息
         /// </summary>
         /// <param name="templateID"></param>

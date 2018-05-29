@@ -175,7 +175,8 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 $.toast('开单成功', function () {
-                                    window.location.href = "/Mobile/Merchant/Order?mch=" + mch;
+                                    sessionStorage.setItem('pickuporder', JSON.stringify(res.Data));
+                                    window.location.href = "/Mobile/Merchant/OrderDetails?mch=" + mch;
                                 });
                             } else {
                                 $.alert('开单失败，请重试');

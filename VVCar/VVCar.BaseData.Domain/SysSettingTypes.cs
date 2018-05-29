@@ -65,5 +65,10 @@ namespace VVCar.BaseData.Domain
         /// 预约成功通知消息模板
         /// </summary>
         public const string WXMsg_AppointmentSuccess = "WXMsg_AppointmentSuccess";
+
+        /// <summary>
+        /// 核销成功通知消息模板
+        /// </summary>
+        public const string WXMsg_VerificationSuccess = "WXMsg_VerificationSuccess";
     }
 }

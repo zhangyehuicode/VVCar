@@ -17,6 +17,14 @@ namespace VVCar.Shop.Services.DomainServices
         {
         }
 
+        #region properties
+
+        IPickUpOrderService PickUpOrderService { get => ServiceLocator.Instance.GetService<IPickUpOrderService>(); }
+
+        IRepository<PickUpOrder> PickUpOrderRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrder>>(); }
+
+        #endregion
+
         protected override bool DoValidate(PickUpOrderPaymentDetails entity)
         {
             if (entity == null)
@@ -30,11 +38,36 @@ namespace VVCar.Shop.Services.DomainServices
 
         public override PickUpOrderPaymentDetails Add(PickUpOrderPaymentDetails entity)
         {
-            if (entity == null)
-                return null;
-            entity.ID = Util.NewID();
-            entity.CreatedDate = DateTime.Now;
-            return base.Add(entity);
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                if (entity == null)
+                    return null;
+                if (string.IsNullOrEmpty(entity.PickUpOrderCode))
+                    throw new DomainException("订单号不能为空");
+                if (entity.PickUpOrderID == null || entity.PickUpOrderID == Guid.Parse("00000000-0000-0000-0000-000000000000"))
+                {
+                    var pickuporder = PickUpOrderRepo.GetQueryable(false).FirstOrDefault(t => t.Code == entity.PickUpOrderCode);
+                    if (pickuporder == null)
+                        throw new DomainException($"订单{entity.PickUpOrderCode}不存在");
+                    entity.PickUpOrderID = pickuporder.ID;
+                }
+                entity.ID = Util.NewID();
+                entity.CreatedDate = DateTime.Now;
+                entity.MerchantID = AppContext.CurrentSession.MerchantID;
+                var result = base.Add(entity);
+
+                PickUpOrderService.RecountMoneySave(entity.PickUpOrderCode);
+
+                UnitOfWork.CommitTransaction();
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw new DomainException(e.Message);
+            }
         }
 
         public IEnumerable<PickUpOrderPaymentDetails> GetPickUpOrderPaymentDetails(string pickUpOrderCode)

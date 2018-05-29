@@ -281,6 +281,20 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 获取卡券信息
+        /// </summary>
+        /// <param name="couponCode"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetCouponInfoByCode"), AllowAnonymous]
+        public JsonActionResult<CouponFullInfoDto> GetCouponInfoByCode(string couponCode)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponService.GetCouponInfo(couponCode);
+            });
+        }
+
+        /// <summary>
         /// 获取赠送卡券记录
         /// </summary>
         /// <param name="filter"></param>

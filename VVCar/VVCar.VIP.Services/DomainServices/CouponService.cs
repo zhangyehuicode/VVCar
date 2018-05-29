@@ -629,6 +629,33 @@ namespace VVCar.VIP.Services.DomainServices
             return couponInfo;
         }
 
+        public CouponFullInfoDto GetCouponInfo(string couponCode)
+        {
+            var coupon = Repository.GetInclude(t => t.Template, false)
+                .FirstOrDefault(t => t.CouponCode == couponCode);
+            if (coupon == null)
+            {
+                throw new DomainException("优惠券不存在");
+            }
+            var couponInfo = coupon.Template.MapTo<CouponFullInfoDto>();
+            if (!string.IsNullOrEmpty(couponInfo.CoverImage))
+            {
+                couponInfo.CoverImage = string.Concat(AppContext.Settings.SiteDomain, couponInfo.CoverImage);
+            }
+            couponInfo.CouponID = coupon.ID;
+            couponInfo.CouponCode = coupon.CouponCode;
+            couponInfo.TemplateID = coupon.TemplateID;
+            couponInfo.EffectiveDate = coupon.EffectiveDate;
+            couponInfo.ExpiredDate = coupon.ExpiredDate;
+            couponInfo.Status = coupon.Status;
+            couponInfo.OwnerOpenID = coupon.OwnerOpenID;
+            couponInfo.OwnerNickName = coupon.OwnerNickName;
+            couponInfo.OwnerPhoneNo = coupon.OwnerPhoneNo;
+            couponInfo.CanGiveToPeople = coupon.Template.CanGiveToPeople;
+            couponInfo.CanShareByPeople = coupon.Template.CanShareByPeople;
+            return couponInfo;
+        }
+
         /// <summary>
         /// 获取卡券适用门店信息
         /// </summary>
@@ -695,8 +722,8 @@ namespace VVCar.VIP.Services.DomainServices
                 throw new DomainException("券不存在");
             if (coupon.Status != ECouponStatus.Default)
                 throw new DomainException("券不可用，状态为: " + coupon.Status.GetDescription());
-            if (coupon.Template.VerificationMode != verifyMode && !coupon.Template.IsSpecialCoupon)
-                throw new DomainException("不允许通过当前核销方式核销该券");
+            //if (coupon.Template.VerificationMode != verifyMode && !coupon.Template.IsSpecialCoupon)
+            //    throw new DomainException("不允许通过当前核销方式核销该券");
             if (!coupon.Template.IsApplyAllStore)
             {
                 if (string.IsNullOrEmpty(coupon.Template.ApplyStores))
@@ -799,26 +826,26 @@ namespace VVCar.VIP.Services.DomainServices
         }
 
         /// <summary>
-        /// 发送券使用通知
+        /// 发送卡券使用通知
         /// </summary>
         /// <param name="coupon"></param>
         void SendCouponUsedNotify(Coupon coupon)
         {
             if (string.IsNullOrEmpty(coupon.OwnerOpenID) || "specialcoupon".Equals(coupon.OwnerOpenID))
                 return;
-            var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_CouponUsed);
+            var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_VerificationSuccess);
             var message = new WeChatTemplateMessageDto
             {
                 touser = coupon.OwnerOpenID,
                 template_id = templateId,
-                url = $"{AppContext.Settings.SiteDomain}/Coupon/MyCoupon?mch={AppContext.CurrentSession.CompanyCode}",
+                url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={AppContext.CurrentSession.CompanyCode}",
                 data = new System.Dynamic.ExpandoObject(),
             };
-            message.data.first = new WeChatTemplateMessageDto.MessageData(string.Format("您好，您已成功使用{0}券！", coupon.Template.Title));
-            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(coupon.CouponCode);
+            message.data.first = new WeChatTemplateMessageDto.MessageData(string.Format("您好，您已成功使用{0}！", coupon.Template.Title));
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));//coupon.CouponCode
             var couponValueUnit = coupon.Template.CouponType == ECouponType.Discount ? "折" : "元";
-            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(coupon.Template.CouponValue.ToString("0.##") + couponValueUnit);
-            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateTimeString());
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(coupon.Template.Title);
+            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(coupon.Template.CouponValue.ToString("0.##") + couponValueUnit);
             message.data.remark = new WeChatTemplateMessageDto.MessageData("感谢您的使用，欢迎下次光临");
             WeChatService.SendWeChatNotifyAsync(message);
         }

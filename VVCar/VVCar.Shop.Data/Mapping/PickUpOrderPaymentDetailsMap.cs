@@ -23,6 +23,9 @@ namespace VVCar.Shop.Data.Mapping
 
             Property(t => t.MemberInfo)
                  .HasMaxLength(100);
+
+            Property(t => t.StaffName)
+                 .HasMaxLength(20);
         }
     }
 }

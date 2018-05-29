@@ -7,25 +7,79 @@
 <div id="couponverification">
     <div class="toubu">
         <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
-        <div class="title">工作终端</div>
+        <div class="title">卡券核销</div>
         <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
     </div>
-    <div class="xjsk_box">
-        <div class="hxmm">卡券核销 - 本次消费<span style="color:#ff0c4c;">￥0</span></div>
+    <div class="xjsk_box" style="margin-top:15px;">
+        @*<div class="hxmm">卡券核销 - 尚欠金额<span style="color:#ff0c4c;">￥0</span></div>*@
+        <div style="text-align:center;">
+            <a><img style="width:80px;" src="~/Areas/resource/img/mobile/erweima.png" v-on:click="scanQRCode"></a><br>
+            <div style="font-size:15px;">扫描卡券二维码</div>
+        </div>
+        @*<div class="hykb_box" style="padding:10px 0" v-for="Coupon in CouponList">
+                <div class="hykb_box2" style="width:100%;display:table;" v-on:click="couponInfo(Coupon)">
+                    <div style="display:table-cell;width:120px;"><img class="couponimg" v-bind:src=Coupon.CoverImage></div>
+                    <div class="hykb_text" style="display:table-cell;vertical-align:middle;">{{Coupon.Title}}</div>
+                    <div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text">{{Coupon.CouponValue}}{{Coupon.CouponValueUnit}}</div>
+                </div>
+                <div class="deletebtn">删除</div>
+            </div>*@
+        <div class="slide-box hykb_box" style="padding:10px 0" v-for="Coupon in CouponList">
+            <div class="shop_box4 hykb_box2" style="width:100%;display:table;" v-on:click="couponInfo(Coupon)">
+                <div style="display:table-cell;width:120px;"><img class="couponimg" v-bind:src=Coupon.CoverImage></div>
+                <div class="hykb_text" style="display:table-cell;vertical-align:middle;">{{Coupon.Title}}</div>
+                <div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text">{{Coupon.CouponValue}}{{Coupon.CouponValueUnit}}</div>
+            </div>
+            <div class="shop_box4">
+                <div class="deletebtn" v-on:click="deletecoupon">删除</div>
+            </div>
+        </div>
         @*<input type="password" style="color:#ddd" placeholder="店员核销密码输入" class="hxmm_box">*@
-        <input type="password" style="color:#ddd" placeholder="会员核销码" class="hxmm_box">
+        @*<input type="password" style="color:#ddd" placeholder="会员核销码" class="hxmm_box">*@
         @*<input type="password" style="color:#ddd" placeholder="店长特权密码" class="hxmm_box">*@
-        <a class="xjsk_btn" style="margin-top:5px;">确认核销</a>
-        <a class="xjsk_btn" style="border:1px solid #51b3f0; margin-top:15px; background:none; color:#51b3f0; box-sizing:border-box;">取消</a>
-        <div class="xjsk_text" style="line-height:44px; color:#999; font-size:13px;">核销成功，会员卡余额<span style="color:#ff0c4c;">￥0</span></div>
+        <a class="xjsk_btn" style="margin:10px 0;" v-on:click="confirmverification">确认核销</a>
+        @*<a class="xjsk_btn" style="border:1px solid #51b3f0; margin:15px 0; background:none; color:#51b3f0; box-sizing:border-box;">取消</a>*@
+        @*<div class="xjsk_text" style="line-height:44px; color:#999; font-size:13px;">核销成功，会员卡余额<span style="color:#ff0c4c;">￥0</span></div>*@
     </div>
 </div>
 
 @section scripts{
+    <style type="text/css">
+        .cardimg {
+            height: 190px;
+        }
+
+        .couponimg {
+            width: 80px !important;
+            height: 50px;
+        }
+
+        .touchwipecon {
+            /*line-height: 60px;*/
+            /*border-bottom: 1px solid #fcfcfc;*/
+            position: relative;
+            /*padding: 0 12px;*/
+            /*color: #666;
+            background: #f2f2f2;*/
+            -webkit-transform: translateX(0px);
+        }
+
+        .deletebtn {
+            text-align: center;
+            background: #ffcb20;
+            color: #fff;
+            width: 80px;
+            height: 50px;
+            line-height: 50px;
+        }
+    </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
     <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    @*<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+        <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />*@
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    @*<script src="~/Areas/resource/js/mobile/touchwipe.js"></script>*@
     <script type="text/javascript">
         function wxConfig() {
             var mch = $.getUrlParam('mch');
@@ -71,36 +125,87 @@
     </script>
     <script type="text/javascript">
         $(function () {
+
+            //$('.hykb_box').touchWipe({ itemDelete: '.deletebtn' });
+
         var user = sessionStorage.getItem('user');
         var _ismaster = sessionStorage.getItem('ismaster');
-        if (_ismaster == 'true') {
-            $('.title').text('店长工作终端');
-        } else {
-            $('.title').text('店员工作终端');
-        }
+        //if (_ismaster == 'true') {
+        //    $('.title').text('店长工作终端');
+        //} else {
+        //    $('.title').text('店员工作终端');
+        //}
+
+            //{
+            //    Title: '洗车券',
+            //        CouponValue: '100',
+            //            CouponValueUnit: '元',
+            //        }
+
         var mch = $.getUrlParam('mch');
-        _viewModel = new Vue({
-            el: '#couponverification',
-            data: {
-                Coupon:{},
-            },
-            methods: {
-                back: function (event) {
-                    history.back(-1);
+            _viewModel = new Vue({
+                el: '#couponverification',
+                data: {
+                    CouponList: [],
                 },
-                home: function (event) {
-                    if (_ismaster == 'true') {
-                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
-                    } else {
-                        window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
-                    }
-                },
-                selectpaytype: function (event) {
-                    window.location.href = "/Mobile/Merchant/PayType?mch=" + mch;
-                },
-                orderdetails: function (event) {
-                    window.location.href = "/Mobile/Merchant/OrderDetails?mch=" + mch;
-                },
+                methods: {
+                    back: function (event) {
+                        history.back(-1);
+                    },
+                    home: function (event) {
+                        if (_ismaster == 'true') {
+                            window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                        } else {
+                            window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                        }
+                    },
+                    selectpaytype: function (event) {
+                        window.location.href = "/Mobile/Merchant/PayType?mch=" + mch;
+                    },
+                    orderdetails: function (event) {
+                        window.location.href = "/Mobile/Merchant/OrderDetails?mch=" + mch;
+                    },
+                    scanQRCode: function (event) {
+                        wx.scanQRCode({
+                            needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                            scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                            success: function (res) {
+                                var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                                getCouponInfo(result);
+                            }
+                        });
+                    },
+                    couponInfo: function (data, event) {
+                        if (data == null || data == '')
+                            return;
+                        sessionStorage.setItem('couponId', data.CouponID);
+                        window.location.href = "/Coupon/CouponInfo?frommycoupon=true&ctid=" + data.TemplateID + '&mch=' + mch + '&showuse=false';
+                    },
+                    confirmverification: function (event) {
+                        if (_viewModel.CouponList.length < 1) {
+                            $.alert('请先扫描卡券二维码');
+                            return;
+                        }
+                        $.confirm('确认核销？', function () {
+                            $.toast('成功核销' + _viewModel.CouponList.length + '张', function () {
+                                window.location.href = "/Mobile/Merchant/PayType?mch=" + mch;
+                            });
+                        }, function () {
+                        });
+                    },
+                    deletecoupon: function (data, event) {
+                        if (data == null)
+                            return;
+                        var index = -1;
+                        for (var i = 0; i < _viewModel.CouponList.length; i++) {
+                            if (_viewModel.CouponList[i].ID == data.ID) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        if (index != -1)
+                            _viewModel.CouponList.splice(index, 1);
+                    },
             }
         });
 
@@ -135,6 +240,34 @@
             }
             if (user == null || user=='') {
                 getUserByOpenId();
+            }
+
+            function getCouponInfo(couponCode) {
+                if (couponCode == null || couponCode == '') {
+                    $.alert('参数错误');
+                    return;
+                }
+                $.ajax({
+                    url: '/api/Coupon/GetCouponInfoByCode?couponCode=' + couponCode,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.CouponList.push(res.Data);
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
             }
 
         });

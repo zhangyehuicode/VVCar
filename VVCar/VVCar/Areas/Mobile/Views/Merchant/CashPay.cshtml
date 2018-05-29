@@ -12,9 +12,18 @@
     </div>
     <div class="xjsk_box">
         <div class="xjsk_text">快捷开单-现金收款</div>
-        <a class="xjsk_btn">支付失败/确认，已收款</a>
+        <div style="text-align:center;padding-top:20px;">
+            <div style="padding:5px;font-size:20px;color:#51b3f0">{{PickUpOrder.PlateNumber}}</div>
+            <div style="padding:5px;">订单总额：<span style="font-size:18px;">{{PickUpOrder.Money}}</span>元</div>
+            <div style="padding:5px;">已收金额：<span style="font-size:18px;">{{PickUpOrder.ReceivedMoney}}</span>元</div>
+            <div style="padding:5px;">尚欠金额：<span style="color:#ff0000;font-size:18px;">{{PickUpOrder.StillOwedMoney}}</span>元</div>
+            <div style="padding:5px;">
+                收款金额：<input style="border:none;width:80px;height:30px;margin:10px 13px;border-radius:3px;border:1px #51b3f0 solid;text-align:center;font-size:18px;" type="number" min="0" v-model="PickUpOrderPaymentDetails.PayMoney" /> 元
+            </div>
+        </div>
+        <a class="xjsk_btn" style="margin-top:30px;" v-on:click="confirm">确认已收款</a>
         <a class="xjsk_btn" style="border:1px solid #51b3f0; margin-top:15px; background:none; color:#51b3f0; box-sizing:border-box;" v-on:click="QRCodePay">改用微信二维码收款</a>
-        <div class="xjsk_text" style="line-height:44px; color:#999; font-size:14px;">状态：闽AB1234，<span style="color:#ff0c4c;">未支付</span>/<span style="color:#51b3f0;">已支付</span></div>
+        @*<div class="xjsk_text" style="line-height:44px; color:#999; font-size:14px;">闽D12345，<span style="color:#ff0c4c;">未支付</span>/<span style="color:#51b3f0;">已支付</span></div>*@
     </div>
 </div>
 
@@ -25,9 +34,10 @@
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -76,10 +86,27 @@
         }
         var mch = $.getUrlParam('mch');
 
+            var pickuporder = sessionStorage.getItem('pickuporder');
+            if (pickuporder == null || pickuporder == '') {
+                $.alert('订单信息为空');
+                return;
+            }
+            pickuporder=JSON.parse(pickuporder);
+
         _payBillViewModel = new Vue({
             el: '#CashPay',
             data: {
-                Data: {},
+                PickUpOrder: pickuporder,
+                PickUpOrderPaymentDetails: {
+                    PickUpOrderID: pickuporder.ID,
+                    PickUpOrderCode: pickuporder.Code,
+                    PayType: 2,
+                    PayMoney: 0,
+                    PayInfo: '',
+                    MemberInfo: '',
+                    StaffID: '',
+                    StaffName:'',
+                },
             },
             methods: {
                 back: function (event) {
@@ -95,6 +122,15 @@
                 QRCodePay: function (event) {
                     window.location.href = "/Mobile/Merchant/QRCodePay?mch=" + mch;
                 },
+                confirm: function (event) {
+                    if (this.PickUpOrderPaymentDetails.PayMoney > 0) {
+                        $.confirm('确认收款现金' + this.PickUpOrderPaymentDetails.PayMoney + '元？', function () {
+                            addpaymentdetails(_payBillViewModel.PickUpOrderPaymentDetails);
+                        });
+                    } else {
+                        $.alert('收款金额输入有误');
+                    }
+                }
             }
         });
             var ismaster = _ismaster == 'true';
@@ -110,8 +146,9 @@
                     success: function (res) {
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
+                                _payBillViewModel.PickUpOrderPaymentDetails.StaffID = res.Data.ID;
+                                _payBillViewModel.PickUpOrderPaymentDetails.StaffName = res.Data.Name;
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
-                                //window.location.href = "/Mobile/Merchant?mch=" + mch;
                             }
                             else {
                                 _payBillViewModel.home();
@@ -127,8 +164,39 @@
                     }
                 });
             }
-            if (user == null || user=='') {
+            if (user == null || user == '') {
                 getUserByOpenId();
+            } else {
+                user = JSON.parse(user);
+                _payBillViewModel.PickUpOrderPaymentDetails.StaffID = user.ID;
+                _payBillViewModel.PickUpOrderPaymentDetails.StaffName = user.Name;
+            }
+
+            function addpaymentdetails(data) {
+                if (data == null) {
+                    $.alert('参数错误');
+                    return;
+                }
+                data.PayInfo = "现金：" + data.PayMoney+"元";
+                $.ajax({
+                    url: '/api/PickUpOrderPaymentDetails',
+                    type: 'POST',
+                    data: data,
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.Data != null)
+                            $.toast('操作成功', function () {
+                                window.location.href = "/Mobile/Merchant/Order?mch=" + mch;
+                            });
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
             }
 
         });

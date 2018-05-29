@@ -12,9 +12,11 @@
     </div>
     <div class="hykhx">
         <div><span class="smewm">订单号：{{PickUpOrder.Code}}</span></div>
-        <div><span class="smewm">状态：<span style="color:#ff0000" v-if="PickUpOrder.Status==0">未收款</span>&nbsp;&nbsp;<span style="color:#51b3f0" v-if="PickUpOrder.Status==1">已收款</span><a style="color:#fff;background:#51b3f0;" v-on:click="selectpaytype(PickUpOrder)" v-if="PickUpOrder.Status==0">收款</a></span></div>
+        <div><span class="smewm">状态：<span style="color:#ff0000" v-if="PickUpOrder.Status==0">未收款</span><span style="color:#ff0000" v-if="PickUpOrder.Status==2">收款不足</span>&nbsp;&nbsp;<span style="color:#51b3f0" v-if="PickUpOrder.Status==1">已收款</span><a style="color:#fff;background:#51b3f0;" v-on:click="selectpaytype(PickUpOrder)" v-if="PickUpOrder.Status!=1">收款</a></span></div>
         <div><span class="smewm">车牌号：{{PickUpOrder.PlateNumber}}</span></div>
         <div><span class="smewm">订单总额：{{PickUpOrder.Money}}</span></div>
+        <div><span class="smewm">已收金额：{{PickUpOrder.ReceivedMoney}}</span></div>
+        <div><span class="smewm">尚欠金额：{{PickUpOrder.StillOwedMoney}}</span></div>
         <div><span class="smewm">开单店员：{{PickUpOrder.StaffName}}</span></div>
         <div><span class="smewm">创建日期：{{PickUpOrder.CreatedDate}}</span></div>
         <div><span class="smewm">服务项目：{{ServiceItems}}</span></div>
@@ -107,7 +109,10 @@
                 pickuporder = JSON.parse(pickuporder);
                 _viewModel.PickUpOrder = pickuporder;
                 for (var i = 0; i < pickuporder.PickUpOrderItemList.length; i++) {
-                    _viewModel.ServiceItems += pickuporder.PickUpOrderItemList[i].ProductName;
+                    if(i==0)
+                        _viewModel.ServiceItems += pickuporder.PickUpOrderItemList[i].ProductName;
+                    else
+                        _viewModel.ServiceItems +="、"+pickuporder.PickUpOrderItemList[i].ProductName;
                 }
             }
 
