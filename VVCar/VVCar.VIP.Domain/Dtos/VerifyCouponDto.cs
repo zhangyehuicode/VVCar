@@ -33,5 +33,10 @@ namespace VVCar.VIP.Domain.Dtos
         /// 门店编号
         /// </summary>
         public string DepartmentCode { get; set; }
+
+        /// <summary>
+        /// 门店ID
+        /// </summary>
+        public Guid? DepartmentID { get; set; }
     }
 }
