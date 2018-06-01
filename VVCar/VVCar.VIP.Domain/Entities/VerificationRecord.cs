@@ -54,5 +54,17 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "核销时间")]
         public DateTime VerificationDate { get; set; }
+
+        /// <summary>
+        /// 性质
+        /// </summary>
+        [Display(Name = "性质")]
+        public ENature Nature { get; set; }
+
+        /// <summary>
+        /// 抵用金额
+        /// </summary>
+        [Display(Name = "抵用金额")]
+        public decimal VoucherAmount { get; set; }
     }
 }

@@ -142,11 +142,25 @@
             //            CouponValueUnit: '元',
             //        }
 
+            var pickuporder = sessionStorage.getItem('pickuporder');
+            if (pickuporder == null || pickuporder == '') {
+                $.alert('订单为空');
+                return;
+            }
+            pickuporder = JSON.parse(pickuporder);
+
         var mch = $.getUrlParam('mch');
             _viewModel = new Vue({
                 el: '#couponverification',
                 data: {
                     CouponList: [],
+                    VerificationParam: {
+                        PickUpOrderID: pickuporder.ID,
+                        CouponCodes: [],
+                        DepartmentID: '',
+                        StaffID: '',
+                        StaffName:'',
+                    },
                 },
                 methods: {
                     back: function (event) {
@@ -187,9 +201,18 @@
                             return;
                         }
                         $.confirm('确认核销？', function () {
-                            $.toast('成功核销' + _viewModel.CouponList.length + '张', function () {
-                                window.location.href = "/Mobile/Merchant/PayType?mch=" + mch;
-                            });
+                            if (_viewModel.CouponList == null || _viewModel.CouponList.length < 1 || _viewModel.VerificationParam.PickUpOrderID == null || _viewModel.VerificationParam.PickUpOrderID == '') {
+                                $.alert("参数错误");
+                                return;
+                            }
+                            for (var i = 0; i < _viewModel.CouponList.length; i++) {
+                                _viewModel.VerificationParam.CouponCodes.push(_viewModel.CouponList[i].CouponCode);
+                            }
+                            if (_viewModel.VerificationParam.CouponCodes == null || _viewModel.VerificationParam.CouponCodes.length < 1) {
+                                $.alert('参数错误');
+                                return;
+                            }
+                            verification(_viewModel.VerificationParam);
                         }, function () {
                         });
                     },
@@ -222,6 +245,9 @@
                     success: function (res) {
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
+                                _viewModel.VerificationParam.StaffID = res.Data.ID;
+                                _viewModel.VerificationParam.StaffName = res.Data.Name;
+                                _viewModel.VerificationParam.DepartmentID = res.Data.DepartmentID;
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
                             }
                             else {
@@ -238,8 +264,13 @@
                     }
                 });
             }
-            if (user == null || user=='') {
+            if (user == null || user == '') {
                 getUserByOpenId();
+            } else {
+                user = JSON.parse(user);
+                _viewModel.VerificationParam.StaffID = user.ID;
+                _viewModel.VerificationParam.StaffName = user.Name;
+                _viewModel.VerificationParam.DepartmentID = user.DepartmentID;
             }
 
             function getCouponInfo(couponCode) {
@@ -258,7 +289,43 @@
                         $.hideLoading();
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
+                                if (res.Data.Status != 0) {
+                                    $.alert('卡券已失效');
+                                    return;
+                                }
                                 _viewModel.CouponList.push(res.Data);
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
+
+            function verification(data) {
+                if (data == null || data == '')
+                    return;
+                $.ajax({
+                    url: '/api/PickUpOrder/Verification',
+                    type: 'POST',
+                    data: data,
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data) {
+                                $.toast('核销成功', function () {
+                                    window.location.href = "/Mobile/Merchant/OrderDetails?mch=" + mch;
+                                });
+                            } else {
+                                $.alert("核销失败，请重试");
                             }
                         } else {
                             $.alert(res.ErrorMessage);

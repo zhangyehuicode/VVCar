@@ -44,6 +44,12 @@ namespace VVCar.Shop.Domain.Entities
         public decimal PayMoney { get; set; }
 
         /// <summary>
+        /// 抵用额度
+        /// </summary>
+        [Display(Name = "抵用额度")]
+        public decimal VoucherAmount { get; set; }
+
+        /// <summary>
         /// 支付信息
         /// </summary>
         [Display(Name = "支付信息")]

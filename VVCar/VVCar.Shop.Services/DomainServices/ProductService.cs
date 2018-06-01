@@ -238,6 +238,7 @@ namespace VVCar.Shop.Services.DomainServices
                     {
                         ID = t.ID,
                         Name = t.Name,
+                        Code = t.Code,
                         PriceSale = t.PriceSale,
                         MiningSpace = 5,
                         ServiceTime = 0,

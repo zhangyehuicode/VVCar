@@ -27,29 +27,36 @@
         <a class="bq_box" style="width:33.4%" v-on:click="order">
             <div><img src="~/Areas/resource/img/mobile/master/hykhx.png" style="width:25px;"></div>
             <span>今日订单</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">今日已核0笔</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共0笔</span>
         </a>
         <a class="bq_box" style=" border-right:none;" v-on:click="scancodediscounts">
             <div><img src="~/Areas/resource/img/mobile/master/hykk.png" style="width:25px; margin-top:2px;"></div>
             <span>扫码优惠</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">领券中心</span>
         </a>
-        <a class="bq_box" style=" border-bottom:none;" v-on:click="membershop">
-            <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:25px;"></div>
-            <span>会员开卡</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">会员商城</span>
-        </a>
-        <a class="bq_box" style="width:33.4%;border-bottom:none;">
+        @*style="width:33.4%;border-bottom:none;"*@
+        <a class="bq_box">
             <div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
             <span>我的业绩</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥0</span>
         </a>
+        <a class="bq_box" style="width:33.4%;border-bottom:none;">
+            <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:23px;"></div>
+            <span>我的抽成</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥0</span>
+        </a>
+        @*<a class="bq_box" style=" border-bottom:none;" v-on:click="membershop">
+                <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:25px;"></div>
+                <span>会员开卡</span>
+                <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">会员商城</span>
+            </a>*@
         @*<a href="#" class="bq_box" style=" border-right:none;border-bottom:none;">
                 <div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:25px;"></div>
                 <span>会员动态</span>
                 <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">100位</span>
             </a>*@
-        <a class="bq_box" style=" border-right:none;border-bottom:none;" v-on:click="myappointment">
+        <a class="bq_box" style=" border-right:none;" v-on:click="myappointment">
+            @*border-bottom:none;*@
             <div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:25px;"></div>
             <span>会员预约</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">3</span>

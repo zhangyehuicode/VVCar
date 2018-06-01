@@ -90,6 +90,7 @@
     <Compile Include="Entities\CouponTemplate.cs" />
     <Compile Include="Entities\CouponTemplateStock.cs" />
     <Compile Include="Entities\CouponTemplateUseTime.cs" />
+    <Compile Include="Entities\GameCoupon.cs" />
     <Compile Include="Entities\GivenCouponRecord.cs" />
     <Compile Include="Entities\Member.cs" />
     <Compile Include="Entities\MemberCard.cs" />

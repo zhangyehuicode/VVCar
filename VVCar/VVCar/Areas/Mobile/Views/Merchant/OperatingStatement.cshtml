@@ -15,28 +15,29 @@
             <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
             <div class="touxiang_div">
                 <span>{{User.Name}}</span>
-                <span style=" font-size:14px; color:#999;">05月营业额：￥0<a href="#" style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[服务项目管理]</a></span>
+                <span style=" font-size:14px; color:#999;">@DateTime.Now.Month 月营业额：￥0@*<a href="#" style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[服务项目管理]</a>*@</span>
             </div>
         </div>
-        <a class="bq_box" style="border-bottom:none;">
+        <a class="bq_box" style="border-bottom:none;width:50%;" v-on:click="yybb">
             <div><img src="~/Areas/resource/img/mobile/master/yybb.png" style="width:22px;"></div>
             <span>营业报表</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">单店报表</span>
+            @*<span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">单店报表</span>*@
         </a>
-        <a class="bq_box" style="width:33.4%;border-bottom:none;">
+        <a class="bq_box" style="border-bottom:none;width:50%;" v-on:click="bbfx">
+            @*width:33.4%;*@
             <div><img src="~/Areas/resource/img/mobile/master/cbgl.png" style="width:25px;"></div>
-            <span>成本管理</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">单店成本管理</span>
+            <span>报表分析</span>
+            @*<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">单店成本管理</span>*@
         </a>
-        <a class="bq_box" style=" border-right:none; border-bottom:none;">
-            <div><img src="~/Areas/resource/img/mobile/master/fwxmgl.png" style="width:25px; margin-top:2px;"></div>
-            <span>服务项目管理</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">项目价格设定</span>
-        </a>
+        @*<a class="bq_box" style=" border-right:none; border-bottom:none;">
+                <div><img src="~/Areas/resource/img/mobile/master/fwxmgl.png" style="width:25px; margin-top:2px;"></div>
+                <span>服务项目管理</span>
+                <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">项目价格设定</span>
+            </a>*@
     </div>
-    <div class="touxiang" style="margin-bottom:25px;">
+    <div class="touxiang" style="margin-bottom:25px;" id="yybb">
         <div class="gzb_box">
-            <span style="margin-left:3%;">11月报表</span>
+            <span style="margin-left:3%;">@DateTime.Now.Month 月报表</span>
             <form action="#" method="get" style="float:right; margin-right:3%;">
                 <select name="" style="height:30px; border-radius:4px; border-color:#eee; outline-style:none; font-size:12px;">
                     <option value="0">历史报表&nbsp;</option>
@@ -55,29 +56,59 @@
                 </select>
             </form>
         </div>
-        <div class="yybb_box">
-            <div style="width:35%;"><span style="float:right; margin-right:20%;">报表名称</span></div>
-            <div style="border-right:none;width:65%;"><span style="margin-left:10%;color:#666;">05月营业总额报表</span></div>
+        <div class="yybb_box" style="text-align:center;">
+            <div style="width:35%;"><span>报表名称</span></div>
+            <div style="border-right:none;width:65%;"><span style="color:#666;">@DateTime.Now.Month 月营业报表</span></div>
         </div>
-        <div class="yybb_box">
-            <div style="width:35%;"><span style="float:right; margin-right:20%;">会员卡收入</span></div>
-            <div style="border-right:none; width:65%;"><span style="margin-left:10%; color:#ff0c4c;">￥0</span></div>
+        <div class="yybb_box" style="text-align:center;">
+            <div style="width:35%;"><span style="text-align:center;">营业总额</span></div>
+            <div style="border-right:none; width:65%;"><span style="color:#ff0c4c;">￥0</span></div>
         </div>
-        <div class="yybb_box">
-            <div style="width:35%;"><span style="float:right; margin-right:20%;">普客收入</span></div>
-            <div style="border-right:none;width:65%;"><span style="margin-left:10%;color:#ff0c4c;">￥0</span></div>
+        <div class="yybb_box" style="text-align:center;">
+            <div style="width:35%;"><span style="text-align:center;">接车单</span></div>
+            <div style="border-right:none; width:65%;"><span style="color:#ff0c4c;">￥0</span></div>
         </div>
-        <div class="yybb_box">
-            <div style="width:35%;"><span style="float:right; margin-right:20%;">积分兑换量</span></div>
-            <div style="border-right:none;width:65%;"><span style="margin-left:10%;color:#666;">0</span></div>
+        <div class="yybb_box" style="text-align:center;">
+            <div style="width:35%;"><span style="text-align:center;">会员卡</span></div>
+            <div style="border-right:none; width:65%;"><span style="color:#ff0c4c;">￥0</span></div>
         </div>
-        <div class="yybb_box">
-            <div style="width:35%;"><span style="float:right; margin-right:20%;">成本支出</span></div>
-            <div style="border-right:none;width:65%;"><span style="margin-left:10%;color:#51b3f0;">￥0</span></div>
+        <div class="yybb_box" style="text-align:center;">
+            <div style="width:35%;"><span style="text-align:center;">商城订单</span></div>
+            <div style="border-right:none;width:65%;"><span style="color:#ff0c4c;">￥0</span></div>
         </div>
-        <div class="yybb_box" style=" margin-bottom:25px;">
-            <div style="width:35%;"><span style="float:right; margin-right:20%;">结算时间</span></div>
-            <div style="border-right:none;color:#ff0c4c;width:65%;"><span style="margin-left:10%;color:#666;">2018-05-23</span></div>
+        @*<div class="yybb_box">
+                <div style="width:35%;"><span style="float:right; margin-right:20%;">积分兑换量</span></div>
+                <div style="border-right:none;width:65%;"><span style="margin-left:10%;color:#666;">0</span></div>
+            </div>*@
+        @*<div class="yybb_box">
+                <div style="width:35%;"><span style="float:right; margin-right:20%;">成本支出</span></div>
+                <div style="border-right:none;width:65%;"><span style="margin-left:10%;color:#51b3f0;">￥0</span></div>
+            </div>*@
+        @*<div class="yybb_box" style="margin-bottom:25px;text-align:center;">
+                <div style="width:35%;"><span>结算时间</span></div>
+                <div style="border-right:none;color:#ff0c4c;width:65%;"><span style="color:#666;">@DateTime.Now.Date.ToString("yyyy-MM-dd")</span></div>
+            </div>*@
+    </div>
+    <div style="display:none;" id="bbfx">
+        <div class="touxiang">
+            <div class="gzb_box" style="border-bottom:none;">
+                <span style="margin-left:3%; font-size:16px;">11月营业总额：<span style=" color:#ff0c4c;">￥10000</span></span>
+                @*<a href="#" class="bbfx_box">查看报表</a>*@
+            </div>
+            <div id="yyze" style="width:100%;height:200px;"></div>
+            @*<img src="~/Areas/resource/img/mobile/master/5000.png" class="bbfx_img">*@
+        </div>
+        <div class="touxiang">
+            <div class="gzb_box" style="border-bottom:none;">
+                <span style="margin-left:3%; font-size:15px;">11月会员卡交易额：<span style=" color:#ff0c4c;">￥10000</span></span>
+            </div>
+            <img src="~/Areas/resource/img/mobile/master/5000.png" class="bbfx_img">
+        </div>
+        <div class="touxiang" style="margin-bottom:20px;">
+            <div class="gzb_box" style="border-bottom:none;">
+                <span style="margin-left:3%; font-size:16px;">11月普客收益值：<span style=" color:#ff0c4c;">￥10000</span></span>
+            </div>
+            <img src="~/Areas/resource/img/mobile/master/5000.png" class="bbfx_img">
         </div>
     </div>
 </div>
@@ -88,6 +119,8 @@
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+    <script src="~/Content/js/echarts.js"></script>
+    <script src="~/Content/js/dark.js"></script>
     <script type="text/javascript">
         function wxConfig() {
             var mch = $.getUrlParam('mch');
@@ -133,6 +166,25 @@
     </script>
     <script type="text/javascript">
         $(function () {
+
+            var option = {
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'line'
+                }]
+            };
+
+            var chart = echarts.init(document.getElementById('yyze'));
+            chart.setOption(option);
+            chart.resize();
+
         var mch = $.getUrlParam('mch');
         var user = sessionStorage.getItem('user');
         _viewModel = new Vue({
@@ -145,7 +197,15 @@
                     history.back(-1);
                 },
                 home: function (event) {
-                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                    window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                },
+                bbfx: function (event) {
+                    $('#yybb').hide();
+                    $('#bbfx').show();
+                },
+                yybb: function (event) {
+                    $('#bbfx').hide();
+                    $('#yybb').show();
                 },
             }
         });
@@ -179,7 +239,7 @@
                 });
             }
             if (user == null || user == '') {
-                getUserByOpenId();
+                //getUserByOpenId();
             } else {
                 _viewModel.User = JSON.parse(user);
             }

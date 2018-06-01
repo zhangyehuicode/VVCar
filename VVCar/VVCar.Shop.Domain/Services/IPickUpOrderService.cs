@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using YEF.Core.Data;
@@ -40,5 +41,12 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="code"></param>
         /// <returns></returns>
         bool RecountMoneySave(string code);
+
+        /// <summary>
+        /// 核销
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        bool Verification(VerificationParam param);
     }
 }

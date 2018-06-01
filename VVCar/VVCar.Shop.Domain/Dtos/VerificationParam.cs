@@ -1,23 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VVCar.VIP.Domain.Enums;
 
-namespace VVCar.VIP.Domain.Dtos
+namespace VVCar.Shop.Domain.Dtos
 {
     /// <summary>
-    /// 核销优惠券DTO
+    /// 核销参数
     /// </summary>
-    public class VerifyCouponDto
+    public class VerificationParam
     {
+        /// <summary>
+        /// 接车单ID
+        /// </summary>
+        public Guid PickUpOrderID { get; set; }
+
         /// <summary>
         /// 优惠券号
         /// </summary>
-        [Required]
-        public IEnumerable<string> CouponCodes { get; set; }
+        public List<string> CouponCodes { get; set; }
 
         /// <summary>
         ///  核销方式
@@ -40,21 +44,31 @@ namespace VVCar.VIP.Domain.Dtos
         public Guid? DepartmentID { get; set; }
 
         /// <summary>
-        /// 会员卡抵用信息
+        /// 收款店员ID
         /// </summary>
-        public List<MemberCardVoucherInfo> MemberCardVoucherInfoList { get; set; }
+        public Guid? StaffID { get; set; }
+
+        /// <summary>
+        /// 收款店员姓名
+        /// </summary>
+        public string StaffName { get; set; }
     }
 
-    public class MemberCardVoucherInfo
+    /// <summary>
+    /// 核销方式
+    /// </summary>
+    public enum EVerificationMode
     {
         /// <summary>
-        /// 卡券号
+        /// 扫码核销
         /// </summary>
-        public string Code { get; set; }
+        [Description("扫码核销")]
+        ScanCode = 0,
 
         /// <summary>
-        /// 抵用额度
+        /// 验证码 
         /// </summary>
-        public decimal VoucherAmount { get; set; }
+        [Description("验证码")]
+        VerifyCode = 1,
     }
 }

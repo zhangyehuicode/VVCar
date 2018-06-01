@@ -22,6 +22,11 @@ namespace VVCar.Shop.Domain.Dtos
         public string Name { get; set; }
 
         /// <summary>
+        /// 服务编码
+        /// </summary>
+        public string Code { get; set; }
+
+        /// <summary>
         /// 销售单价
         /// </summary>
         public decimal PriceSale { get; set; }

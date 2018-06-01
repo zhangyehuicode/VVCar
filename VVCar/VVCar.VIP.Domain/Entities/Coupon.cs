@@ -33,6 +33,12 @@ namespace VVCar.VIP.Domain.Entities
         public virtual CouponTemplate Template { get; set; }
 
         /// <summary>
+        ///  券面值，抵用券时为抵用金额，代金券时为减免金额，折扣券时为折扣比例
+        /// </summary>
+        [Display(Name = "抵用金额")]
+        public decimal CouponValue { get; set; }
+
+        /// <summary>
         /// 生效时间，会精确到 00:00:00
         /// </summary>
         [Display(Name = "生效时间")]

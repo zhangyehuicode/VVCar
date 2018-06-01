@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
@@ -80,6 +81,20 @@ namespace VVCar.Controllers.Shop
             return SafeExecute(() =>
             {
                 return PickUpOrderService.GetOrder(id);
+            });
+        }
+
+        /// <summary>
+        /// 核销
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost, Route("Verification"), AllowAnonymous]
+        public JsonActionResult<bool> Verification(VerificationParam param)
+        {
+            return SafeExecute(() =>
+            {
+                return PickUpOrderService.Verification(param);
             });
         }
     }

@@ -85,7 +85,7 @@ namespace VVCar.VIP.Services.DomainServices
             }
             if (entity.IsSpecialCoupon)
             {
-                entity.VerificationMode = EVerificationMode.ScanCode;
+                entity.VerificationMode = Domain.Enums.EVerificationMode.ScanCode;
             }
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);

@@ -133,6 +133,13 @@ namespace VVCar.VIP.Services.DomainServices
             entity.ID = Util.NewID();
             entity.CreatedDate = DateTime.Now;
             entity.CouponCode = GenerateCouponCode(entity.ID);
+
+            var template = CouponTemplateRepo.GetByKey(entity.TemplateID, false);
+            if (template != null)
+            {
+                entity.CouponValue = template.CouponValue;
+            }
+
             return base.Add(entity);
         }
 
@@ -427,6 +434,7 @@ namespace VVCar.VIP.Services.DomainServices
                 {
                     ID = Util.NewID(),
                     TemplateID = template.ID,
+                    CouponValue = template.CouponValue,
                     EffectiveDate = template.GetEffectiveDate(),
                     ExpiredDate = template.GetExpiredDate(),
                     OwnerOpenID = receiveCouponDto.ReceiveOpenID,
@@ -632,7 +640,7 @@ namespace VVCar.VIP.Services.DomainServices
         public CouponFullInfoDto GetCouponInfo(string couponCode)
         {
             var coupon = Repository.GetInclude(t => t.Template, false)
-                .FirstOrDefault(t => t.CouponCode == couponCode);
+                .FirstOrDefault(t => t.CouponCode == couponCode && t.Status == ECouponStatus.Default);
             if (coupon == null)
             {
                 throw new DomainException("优惠券不存在");
@@ -720,25 +728,26 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (coupon == null)
                 throw new DomainException("券不存在");
+            var title = coupon.Template.Title;
             if (coupon.Status != ECouponStatus.Default)
-                throw new DomainException("券不可用，状态为: " + coupon.Status.GetDescription());
-            //if (coupon.Template.VerificationMode != verifyMode && !coupon.Template.IsSpecialCoupon)
-            //    throw new DomainException("不允许通过当前核销方式核销该券");
-            if (!coupon.Template.IsApplyAllStore)
-            {
-                if (string.IsNullOrEmpty(coupon.Template.ApplyStores))
-                    throw new DomainException("该券不允许在当前门店使用");
-                var applyStores = coupon.Template.ApplyStores.Split(',');
-                if (!applyStores.Contains(departmentCode))
-                    throw new DomainException("该券不允许在当前门店使用");
-            }
+                throw new DomainException($"{title}不可用，状态为: " + coupon.Status.GetDescription());
+            if (coupon.Template.VerificationMode != verifyMode && !coupon.Template.IsSpecialCoupon)
+                throw new DomainException($"不允许通过当前核销方式核销{title}");
+            //if (!coupon.Template.IsApplyAllStore)
+            //{
+            //    if (string.IsNullOrEmpty(coupon.Template.ApplyStores))
+            //        throw new DomainException($"{title}不允许在当前门店使用");
+            //    var applyStores = coupon.Template.ApplyStores.Split(',');
+            //    if (!applyStores.Contains(departmentCode))
+            //        throw new DomainException($"{title}不允许在当前门店使用");
+            //}
             if (coupon.EffectiveDate > DateTime.Now || coupon.ExpiredDate < DateTime.Now)
-                throw new DomainException(string.Format("券不可用，有效日期: {0} - {1}", coupon.EffectiveDate.ToDateString(), coupon.ExpiredDate.ToDateString()));
+                throw new DomainException(string.Format($"{title}不可用，有效日期: {0} - {1}", coupon.EffectiveDate.ToDateString(), coupon.ExpiredDate.ToDateString()));
             if (!coupon.Template.IsUseAllTime)
             {
                 var dayOfWeek = ((int)DateTime.Now.DayOfWeek).ToString();
                 if (coupon.Template.UseDaysOfWeek != null && !coupon.Template.UseDaysOfWeek.Contains(dayOfWeek))
-                    throw new DomainException("券不可用，非允许使用日期");
+                    throw new DomainException($"{title}不可用，非允许使用日期");
 
                 if (coupon.Template.UseTimeList != null && coupon.Template.UseTimeList.Count > 0)
                 {
@@ -759,7 +768,7 @@ namespace VVCar.VIP.Services.DomainServices
                         if (allow) break;
                     }
                     if (!allow)
-                        throw new DomainException("券不可用，非允许使用时段");
+                        throw new DomainException($"{title}不可用，非允许使用时段");
                 }
             }
         }
@@ -792,6 +801,7 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 foreach (var coupon in coupons)
                 {
+                    decimal voucherAmount = 0;
                     var record = new VerificationRecord
                     {
                         CouponCode = coupon.CouponCode,
@@ -800,20 +810,50 @@ namespace VVCar.VIP.Services.DomainServices
                         VerificationCode = verifyCode,
                         DepartmentCode = departmentCode
                     };
-                    coupon.Status = ECouponStatus.Used;
-                    if (coupon.IsCanReuse)
+                    if (coupon.Template.Nature == ENature.Coupon)
                     {
-                        coupon.Status = ECouponStatus.Default;
-                        var couponTempStock = CouponTemplateStockRepo.GetQueryable(false).Where(s => s.ID == coupon.TemplateID).FirstOrDefault();
-                        if (couponTempStock != null)
+                        coupon.Status = ECouponStatus.Used;
+                        if (coupon.IsCanReuse)
                         {
-                            couponTempStock.UsedStock += 1;
-                            CouponTemplateStockService.Update(couponTempStock);
+                            coupon.Status = ECouponStatus.Default;
+                            var couponTempStock = CouponTemplateStockRepo.GetQueryable(false).Where(s => s.ID == coupon.TemplateID).FirstOrDefault();
+                            if (couponTempStock != null)
+                            {
+                                couponTempStock.UsedStock += 1;
+                                CouponTemplateStockService.Update(couponTempStock);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        record.Nature = ENature.Card;
+                        if (coupon.Template.CouponType != ECouponType.Discount)
+                        {
+                            if (verifyDto.MemberCardVoucherInfoList != null && verifyDto.MemberCardVoucherInfoList.Count > 0)
+                            {
+                                var info = verifyDto.MemberCardVoucherInfoList.Where(t => t.Code == coupon.CouponCode).FirstOrDefault();
+                                if (info != null)
+                                {
+                                    if (coupon.CouponValue < info.VoucherAmount)
+                                        throw new DomainException($"{coupon.Template.Title}抵用金额不足");
+                                    coupon.CouponValue -= info.VoucherAmount;
+                                    voucherAmount = info.VoucherAmount;
+                                    record.VoucherAmount = info.VoucherAmount;
+                                }
+                                else
+                                {
+                                    throw new DomainException($"{coupon.Template.Title}信息缺失");
+                                }
+                            }
+                            else
+                            {
+                                throw new DomainException($"{coupon.Template.Title}信息缺失");
+                            }
                         }
                     }
                     Repository.Update(coupon);
                     VerificationRecordService.Add(record);
-                    SendCouponUsedNotify(coupon);
+                    SendCouponUsedNotify(coupon, voucherAmount);
                 }
                 UnitOfWork.CommitTransaction();
             }
@@ -829,7 +869,7 @@ namespace VVCar.VIP.Services.DomainServices
         /// 发送卡券使用通知
         /// </summary>
         /// <param name="coupon"></param>
-        void SendCouponUsedNotify(Coupon coupon)
+        void SendCouponUsedNotify(Coupon coupon, decimal voucherAmount = 0)
         {
             if (string.IsNullOrEmpty(coupon.OwnerOpenID) || "specialcoupon".Equals(coupon.OwnerOpenID))
                 return;
@@ -845,7 +885,10 @@ namespace VVCar.VIP.Services.DomainServices
             message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));//coupon.CouponCode
             var couponValueUnit = coupon.Template.CouponType == ECouponType.Discount ? "折" : "元";
             message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(coupon.Template.Title);
-            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(coupon.Template.CouponValue.ToString("0.##") + couponValueUnit);
+            if (coupon.Template.CouponType == ECouponType.Discount)
+                message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(coupon.Template.CouponValue.ToString("0.##") + couponValueUnit);
+            else if (voucherAmount != 0)
+                message.data.keyword3 = new WeChatTemplateMessageDto.MessageData($"{voucherAmount.ToString("0.##")}{couponValueUnit}");
             message.data.remark = new WeChatTemplateMessageDto.MessageData("感谢您的使用，欢迎下次光临");
             WeChatService.SendWeChatNotifyAsync(message);
         }

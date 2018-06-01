@@ -42,6 +42,12 @@ namespace VVCar.Shop.Domain.Entities
         public string ProductName { get; set; }
 
         /// <summary>
+        /// 服务编码
+        /// </summary>
+        [Display(Name = "服务编码")]
+        public string ProductCode { get; set; }
+
+        /// <summary>
         /// 服务总额
         /// </summary>
         [Display(Name = "服务总额")]
@@ -52,6 +58,12 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "服务单价")]
         public decimal PriceSale { get; set; }
+
+        /// <summary>
+        /// 折扣系数
+        /// </summary>
+        [Display(Name = "折扣系数")]
+        public decimal Discount { get; set; }
 
         /// <summary>
         /// 服务次数

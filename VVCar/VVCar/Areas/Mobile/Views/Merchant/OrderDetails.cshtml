@@ -102,18 +102,54 @@
                     window.location.href = "/Mobile/Merchant/PayType?mch=" + mch;
                 },
             }
-        });
+            });
+
+            function getPickUpOrder(id) {
+                if (id == null || id == '')
+                    return;
+                $.ajax({
+                    url: '/api/PickUpOrder?ID=' + id,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                if (res.Data.length > 0) {
+                                    _viewModel.PickUpOrder = res.Data[0];
+                                    for (var i = 0; i < _viewModel.PickUpOrder.PickUpOrderItemList.length; i++) {
+                                        if (i == 0)
+                                            _viewModel.ServiceItems += _viewModel.PickUpOrder.PickUpOrderItemList[i].ProductName;
+                                        else
+                                            _viewModel.ServiceItems += "、" + _viewModel.PickUpOrder.PickUpOrderItemList[i].ProductName;
+                                    }
+                                    sessionStorage.setItem('pickuporder', JSON.stringify(res.Data[0]));
+                                }
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
 
             var pickuporder = sessionStorage.getItem('pickuporder');
             if (pickuporder != null && pickuporder != '') {
                 pickuporder = JSON.parse(pickuporder);
-                _viewModel.PickUpOrder = pickuporder;
-                for (var i = 0; i < pickuporder.PickUpOrderItemList.length; i++) {
-                    if(i==0)
-                        _viewModel.ServiceItems += pickuporder.PickUpOrderItemList[i].ProductName;
-                    else
-                        _viewModel.ServiceItems +="、"+pickuporder.PickUpOrderItemList[i].ProductName;
-                }
+                //_viewModel.PickUpOrder = pickuporder;
+                //for (var i = 0; i < pickuporder.PickUpOrderItemList.length; i++) {
+                //    if(i==0)
+                //        _viewModel.ServiceItems += pickuporder.PickUpOrderItemList[i].ProductName;
+                //    else
+                //        _viewModel.ServiceItems +="、"+pickuporder.PickUpOrderItemList[i].ProductName;
+                //}
+                getPickUpOrder(pickuporder.ID);
             }
 
           var ismaster = _ismaster == 'true';

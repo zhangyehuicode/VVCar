@@ -34,14 +34,20 @@
             <span>扫码优惠</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">领券中心</span>
         </a>
-        <a class="bq_box" style=" border-bottom:none;" v-on:click="membershop">
-            <div><img src="~/Areas/resource/img/mobile/staff/kjkd.png" style="width:25px;"></div>
-            <span>会员开卡</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">会员商城</span>
-        </a>
-        <a href="#" class="bq_box" style="width:33.4%;border-bottom:none;">
+        @*<a class="bq_box" style=" border-bottom:none;" v-on:click="membershop">
+                <div><img src="~/Areas/resource/img/mobile/staff/kjkd.png" style="width:25px;"></div>
+                <span>会员开卡</span>
+                <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">会员商城</span>
+            </a>*@
+        <a class="bq_box">
+            @*style="width:33.4%;border-bottom:none;"*@
             <div><img src="~/Areas/resource/img/mobile/staff/wdyj.png" style="width:23px; margin-top:2px;"></div>
             <span>我的业绩</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥0</span>
+        </a>
+        <a class="bq_box" style="width:33.4%;border-bottom:none;">
+            <div><img src="~/Areas/resource/img/mobile/staff/kjkd.png" style="width:23px; margin-top:2px;"></div>
+            <span>我的抽成</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥0</span>
         </a>
         @*<a href="#" class="bq_box" style=" border-right:none;border-bottom:none;">
@@ -49,7 +55,8 @@
                 <span>会员动态</span>
                 <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">100位</span>
             </a>*@
-        <a class="bq_box" style=" border-right:none;border-bottom:none;" v-on:click="myappointment">
+        <a class="bq_box" style=" border-right:none;" v-on:click="myappointment">
+            @*border-bottom:none;*@
             <div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:25px;"></div>
             <span>会员预约</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">3</span>

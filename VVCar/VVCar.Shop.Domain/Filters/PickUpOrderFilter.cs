@@ -10,6 +10,11 @@ namespace VVCar.Shop.Domain.Filters
     public class PickUpOrderFilter : BasePageFilter
     {
         /// <summary>
+        /// ID
+        /// </summary>
+        public Guid? ID { get; set; }
+
+        /// <summary>
         /// 车牌号
         /// </summary>
         public string PlateNumber { get; set; }

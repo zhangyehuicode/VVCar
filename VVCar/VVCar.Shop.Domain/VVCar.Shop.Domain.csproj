@@ -49,6 +49,7 @@
     <Compile Include="Dtos\ProductCategoryTreeDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
     <Compile Include="Dtos\ProductLiteDto.cs" />
+    <Compile Include="Dtos\VerificationParam.cs" />
     <Compile Include="Entities\Appointment.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderItem.cs" />

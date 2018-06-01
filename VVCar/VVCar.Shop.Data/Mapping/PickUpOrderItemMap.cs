@@ -16,6 +16,10 @@ namespace VVCar.Shop.Data.Mapping
 
             Property(t => t.ProductName)
                 .HasMaxLength(20);
+
+            Property(t => t.ProductCode)
+                .IsRequired()
+                .HasMaxLength(20);
         }
     }
 }

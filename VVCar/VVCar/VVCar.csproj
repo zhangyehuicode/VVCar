@@ -567,6 +567,9 @@
     <Content Include="Content\jquery-fileupload\img\progressbar.gif" />
     <Content Include="Content\jquery-weui.css" />
     <Content Include="Content\jquery-weui.min.css" />
+    <Content Include="Content\js\dark.js" />
+    <Content Include="Content\js\echarts.js" />
+    <Content Include="Content\js\macarons.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
