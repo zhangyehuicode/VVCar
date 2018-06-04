@@ -15,7 +15,7 @@
             <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
             <div class="touxiang_div">
                 <span>{{User.Name}}</span>
-                <span style=" font-size:14px; color:#999;">@DateTime.Now.Month 月营业额：￥0@*<a href="#" style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[服务项目管理]</a>*@</span>
+                <span style=" font-size:14px; color:#999;">{{DisplayDate}}营业额：￥{{MonthTurnover.TotalTurnover}}@*<a href="#" style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[服务项目管理]</a>*@</span>
             </div>
         </div>
         <a class="bq_box" style="border-bottom:none;width:50%;" v-on:click="yybb">
@@ -37,44 +37,45 @@
     </div>
     <div class="touxiang" style="margin-bottom:25px;" id="yybb">
         <div class="gzb_box">
-            <span style="margin-left:3%;">@DateTime.Now.Month 月报表</span>
+            <span style="margin-left:3%;">{{DisplayDate}}报表</span>
             <form action="#" method="get" style="float:right; margin-right:3%;">
-                <select name="" style="height:30px; border-radius:4px; border-color:#eee; outline-style:none; font-size:12px;">
-                    <option value="0">历史报表&nbsp;</option>
-                    <option value="1">1月份</option>
-                    <option value="2">2月份</option>
-                    <option value="3">3月份</option>
-                    <option value="4">4月份</option>
-                    <option value="5">5月份</option>
-                    <option value="6">6月份</option>
-                    <option value="7">7月份</option>
-                    <option value="8">8月份</option>
-                    <option value="9">9月份</option>
-                    <option value="10">10月份</option>
-                    <option value="11">11月份</option>
-                    <option value="12">12月份</option>
-                </select>
+                <input type="date" v-bind:value="Date" class="dateinput" />
+                @*<select name="" style="height:30px; border-radius:4px; border-color:#eee; outline-style:none; font-size:12px;">
+                        <option value="0">历史报表&nbsp;</option>
+                        <option value="1">1月份</option>
+                        <option value="2">2月份</option>
+                        <option value="3">3月份</option>
+                        <option value="4">4月份</option>
+                        <option value="5">5月份</option>
+                        <option value="6">6月份</option>
+                        <option value="7">7月份</option>
+                        <option value="8">8月份</option>
+                        <option value="9">9月份</option>
+                        <option value="10">10月份</option>
+                        <option value="11">11月份</option>
+                        <option value="12">12月份</option>
+                    </select>*@
             </form>
         </div>
         <div class="yybb_box" style="text-align:center;">
             <div style="width:35%;"><span>报表名称</span></div>
-            <div style="border-right:none;width:65%;"><span style="color:#666;">@DateTime.Now.Month 月营业报表</span></div>
+            <div style="border-right:none;width:65%;"><span style="color:#666;">{{DisplayDate}}营业报表</span></div>
         </div>
         <div class="yybb_box" style="text-align:center;">
             <div style="width:35%;"><span style="text-align:center;">营业总额</span></div>
-            <div style="border-right:none; width:65%;"><span style="color:#ff0c4c;">￥0</span></div>
+            <div style="border-right:none; width:65%;"><span style="color:#ff0c4c;">￥{{MonthTurnover.TotalTurnover}}</span></div>
         </div>
         <div class="yybb_box" style="text-align:center;">
             <div style="width:35%;"><span style="text-align:center;">接车单</span></div>
-            <div style="border-right:none; width:65%;"><span style="color:#ff0c4c;">￥0</span></div>
+            <div style="border-right:none; width:65%;"><span style="color:#ff0c4c;">￥{{MonthTurnover.PickUpOrderTurnover}}</span></div>
         </div>
-        <div class="yybb_box" style="text-align:center;">
-            <div style="width:35%;"><span style="text-align:center;">会员卡</span></div>
-            <div style="border-right:none; width:65%;"><span style="color:#ff0c4c;">￥0</span></div>
-        </div>
+        @*<div class="yybb_box" style="text-align:center;">
+                <div style="width:35%;"><span style="text-align:center;">会员卡</span></div>
+                <div style="border-right:none; width:65%;"><span style="color:#ff0c4c;">￥0</span></div>
+            </div>*@
         <div class="yybb_box" style="text-align:center;">
             <div style="width:35%;"><span style="text-align:center;">商城订单</span></div>
-            <div style="border-right:none;width:65%;"><span style="color:#ff0c4c;">￥0</span></div>
+            <div style="border-right:none;width:65%;"><span style="color:#ff0c4c;">￥{{MonthTurnover.ShopTurnover}}</span></div>
         </div>
         @*<div class="yybb_box">
                 <div style="width:35%;"><span style="float:right; margin-right:20%;">积分兑换量</span></div>
@@ -92,28 +93,43 @@
     <div style="display:none;" id="bbfx">
         <div class="touxiang">
             <div class="gzb_box" style="border-bottom:none;">
-                <span style="margin-left:3%; font-size:16px;">11月营业总额：<span style=" color:#ff0c4c;">￥10000</span></span>
+                <span style="margin-left:3%; font-size:16px;">{{CurrentDate}}营业总额：<span style=" color:#ff0c4c;">￥{{CurrentMonthTurnover.TotalTurnover}}</span></span>
                 @*<a href="#" class="bbfx_box">查看报表</a>*@
             </div>
-            <div id="yyze" style="width:100%;height:200px;"></div>
-            @*<img src="~/Areas/resource/img/mobile/master/5000.png" class="bbfx_img">*@
-        </div>
-        <div class="touxiang">
-            <div class="gzb_box" style="border-bottom:none;">
-                <span style="margin-left:3%; font-size:15px;">11月会员卡交易额：<span style=" color:#ff0c4c;">￥10000</span></span>
-            </div>
-            <img src="~/Areas/resource/img/mobile/master/5000.png" class="bbfx_img">
+            <div id="yyze" style="width:350px;height:250px;overflow:auto!important;margin:0 10px;"></div>
         </div>
         <div class="touxiang" style="margin-bottom:20px;">
             <div class="gzb_box" style="border-bottom:none;">
-                <span style="margin-left:3%; font-size:16px;">11月普客收益值：<span style=" color:#ff0c4c;">￥10000</span></span>
+                <span style="margin-left:3%; font-size:16px;">{{CurrentDate}}接车单营业额：<span style=" color:#ff0c4c;">￥{{CurrentMonthTurnover.PickUpOrderTurnover}}</span></span>
             </div>
-            <img src="~/Areas/resource/img/mobile/master/5000.png" class="bbfx_img">
+            <div id="jcdyye" style="width:350px;height:250px;overflow:auto!important;margin:0 10px;"></div>
+        </div>
+        @*<div class="touxiang">
+                <div class="gzb_box" style="border-bottom:none;">
+                    <span style="margin-left:3%; font-size:15px;">@DateTime.Now.Month 月会员卡营业额：<span style=" color:#ff0c4c;">￥10000</span></span>
+                </div>
+                <div id="hykyye" style="width:350px;height:250px;overflow:auto!important;margin:0 10px;"></div>
+            </div>*@
+        <div class="touxiang" style="margin-bottom:20px;">
+            <div class="gzb_box" style="border-bottom:none;">
+                <span style="margin-left:3%; font-size:16px;">{{CurrentDate}}商城营业额：<span style=" color:#ff0c4c;">￥{{CurrentMonthTurnover.ShopTurnover}}</span></span>
+            </div>
+            <div id="scyye" style="width:350px;height:250px;overflow:auto!important;margin:0 10px;"></div>
         </div>
     </div>
 </div>
 
 @section scripts{
+    <style type="text/css">
+        .dateinput {
+            height: 30px;
+            width: 90px;
+            border-radius: 4px;
+            border-color: #eee;
+            outline-style: none;
+            font-size: 12px;
+        }
+    </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
     <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -167,30 +183,17 @@
     <script type="text/javascript">
         $(function () {
 
-            var option = {
-                xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    type: 'line'
-                }]
-            };
-
-            var chart = echarts.init(document.getElementById('yyze'));
-            chart.setOption(option);
-            chart.resize();
-
         var mch = $.getUrlParam('mch');
         var user = sessionStorage.getItem('user');
         _viewModel = new Vue({
             el: '#operatingstatement',
             data: {
                 User: {},
+                MonthTurnover: {},
+                CurrentMonthTurnover: {},
+                CurrentDate: '@DateTime.Now.Date.ToString("yyyy-MM")',
+                Date: '@DateTime.Now.Date.ToString("yyyy-MM-dd")',
+                DisplayDate:'@DateTime.Now.Date.ToString("yyyy-MM")',
             },
             methods: {
                 back: function (event) {
@@ -244,6 +247,132 @@
                 _viewModel.User = JSON.parse(user);
             }
 
+            function getLineChartOption(data) {
+                if (data == null || data == '')
+                    return;
+                var option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999'
+                            }
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: data.xAxisdata
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '营业额/元',
+                        min: 0,
+                        //max: 250,
+                        //interval: 50,
+                        axisLabel: {
+                            formatter: '{value}'
+                        }
+                    },
+                    series: [{
+                        data: data.seriesdata,
+                        type: 'line'
+                    }]
+                };
+                return option;
+            }
+
+            function getChartTurnoverData(data) {
+                if (data == null || data == '' || data.length < 1)
+                    return null;
+                var result = { xAxisdata: [], seriesdata:[]};
+                for (var i = 0; i < data.length; i++) {
+                    result.xAxisdata.push(data[i].Unit+'号');
+                    result.seriesdata.push(data[i].Turnover);
+                }
+                return result;
+            }
+
+            function getTurnoverReporting() {
+                $.ajax({
+                    url: '/api/Reporting/GetTurnoverReporting',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                if (res.Data.TotalTurnover != null) {
+                                    var totalturnoverdata = getChartTurnoverData(res.Data.TotalTurnover);
+                                    if (totalturnoverdata != null) {
+                                        var yyzeoption = getLineChartOption(totalturnoverdata);
+                                        var yyzechart = echarts.init(document.getElementById('yyze'));
+                                        yyzechart.setOption(yyzeoption);
+                                    }
+                                }
+                                if (res.Data.PickUpOrderTurnover != null) {
+                                    var pickuporderturnoverdata = getChartTurnoverData(res.Data.PickUpOrderTurnover);
+                                    if (pickuporderturnoverdata != null) {
+                                        var jcdyyeoption = getLineChartOption(pickuporderturnoverdata);
+                                        var jcdyyechart = echarts.init(document.getElementById('jcdyye'));
+                                        jcdyyechart.setOption(jcdyyeoption);
+                                    }
+                                }
+                                if (res.Data.ShopTurnover != null) {
+                                    var shopturnoverdata = getChartTurnoverData(res.Data.ShopTurnover);
+                                    if (shopturnoverdata != null) {
+                                        var scyyeoption = getLineChartOption(shopturnoverdata);
+                                        var scyyechart = echarts.init(document.getElementById('scyye'));
+                                        scyyechart.setOption(scyyeoption);
+                                    }
+                                }
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getTurnoverReporting();
+
+            var isfirstload = true;
+            function getMonthTurnover(date) {
+                if (date == null || date == '')
+                    return;
+                $.ajax({
+                    url: '/api/Reporting/GetMonthTurnover?date=' + date,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                if (isfirstload)
+                                    _viewModel.CurrentMonthTurnover = res.Data;
+                                isfirstload = false;
+                                _viewModel.MonthTurnover = res.Data;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+            getMonthTurnover(_viewModel.Date);
+
+            $('.dateinput').change(function () {
+                var date = $(this).val();
+                _viewModel.Date = date;
+                _viewModel.DisplayDate = date.substring(0,7);
+                getMonthTurnover(_viewModel.Date);
+            });
         });
     </script>
 }

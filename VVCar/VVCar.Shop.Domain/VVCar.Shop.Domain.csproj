@@ -49,6 +49,7 @@
     <Compile Include="Dtos\ProductCategoryTreeDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
     <Compile Include="Dtos\ProductLiteDto.cs" />
+    <Compile Include="Dtos\TurnoverReportingDto.cs" />
     <Compile Include="Dtos\VerificationParam.cs" />
     <Compile Include="Entities\Appointment.cs" />
     <Compile Include="Entities\Order.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Services\IPickUpOrderService.cs" />
     <Compile Include="Services\IProductCategoryService.cs" />
     <Compile Include="Services\IProductService.cs" />
+    <Compile Include="Services\IReportingService.cs" />
     <Compile Include="Services\IShoppingCartItemService.cs" />
     <Compile Include="Services\IShoppingCartService.cs" />
   </ItemGroup>
