@@ -18,7 +18,7 @@ namespace VVCar.Controllers.Api
     [RoutePrefix("api/UploadFile"), AllowAnonymous]
     public class UploadFileController : ApiController
     {
-        static int _maxSizeLength = 1024 * 1024 * 3;
+        static int _maxSizeLength = 1024 * 1024 * 10;
 
         /// <summary>
         /// 上传卡券图片
@@ -38,7 +38,7 @@ namespace VVCar.Controllers.Api
                 HttpPostedFile file = HttpContext.Current.Request.Files[0];
                 if (file.ContentLength > _maxSizeLength)
                 {
-                    result.errorMessage = "不允许上传超过 3M 的文件";
+                    result.errorMessage = "不允许上传超过 10M 的文件";
                     return result;
                 }
                 var fileName = string.Concat("TEMP_", DateTime.Now.ToString("yyyyMMddHHmmssfff"), Path.GetExtension(file.FileName));
@@ -141,7 +141,7 @@ namespace VVCar.Controllers.Api
                 }
                 if (file.ContentLength > _maxSizeLength)
                 {
-                    result.errorMessage = "不允许上传超过 3M 的文件";
+                    result.errorMessage = "不允许上传超过 10M 的文件";
                     return result;
                 }
                 var fileName = string.Concat(DateTime.Now.ToString("yyyyMMddHHmmssfff"), Path.GetExtension(file.FileName));

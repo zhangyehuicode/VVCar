@@ -80,9 +80,9 @@ namespace VVCar.Shop.Domain.Entities
         public int UpperLimit { get; set; }
 
         /// <summary>
-        /// 是否发布
+        /// 是否上架
         /// </summary>
-        [Display(Name = "是否发布")]
+        [Display(Name = "是否上架")]
         public bool IsPublish { get; set; }
 
         /// <summary>

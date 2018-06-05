@@ -15,49 +15,55 @@
             <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
             <div class="touxiang_div">
                 <span>{{User.Name}}</span>
-                <span style=" font-size:14px; color:#999;">库存商品：0<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[新增库存商品]</a></span>
+                <span style=" font-size:14px; color:#999;">库存商品：{{ProductCount}}@*<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[新增库存商品]</a>*@</span>
             </div>
         </div>
     </div>
     <div class="kcd_box2">
-        <form action="#" method="get">
-            <select name="" class="kcd_input" style="width:25%;">
-                <option value="0">清洁类</option>
+        <form>
+            <select class="kcd_input" style="width:25%;" id="productcategoryselect">
+                <option v-for="ProductCategory in ProductCategoryList" v-bind:value="ProductCategory.ID">{{ProductCategory.Name}}</option>
             </select>
-            <input type="text" name="address" class="kcgl_input" maxlength="60" style="color:#999" placeholder="请输入库存商品名称">
+            <input type="text" class="kcgl_input" style="color:#999" placeholder="请输入库存商品名称/编号" id="namecode">
         </form>
-        <div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;"></div>
+        <div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="searchProduct"></div>
     </div>
-    <div class="touxiang">
+    <div class="touxiang" v-for="Product in ProductList">
         <div class="kcgl_box">
-            <div class="kcgl">库存商品编号</div>
+            <div class="kcgl">商品编号</div>
             <div class="kcgl2">
-                <span>A00001</span>
-
+                <span>{{Product.Code}}</span>
+            </div>
+        </div>
+        @*<div class="kcgl_box">
+                <div class="kcgl">分类</div>
+                <div class="kcgl2">
+                    <span>清洁类</span>
+                </div>
+            </div>*@
+        <div class="kcgl_box">
+            <div class="kcgl">商品名称</div>
+            <div class="kcgl2">
+                <span>{{Product.Name}}</span>
+            </div>
+        </div>
+        @*<div class="kcgl_box">
+                <div class="kcgl">单位</div>
+                <div class="kcgl2">
+                    <span>块</span>
+                </div>
+            </div>*@
+        <div class="kcgl_box">
+            <div class="kcgl">库存</div>
+            <div class="kcgl2">
+                <span style="color:#ff0c4c;">{{Product.Stock}}</span>
             </div>
         </div>
         <div class="kcgl_box">
-            <div class="kcgl">库存分类</div>
+            <div class="kcgl">是否上架</div>
             <div class="kcgl2">
-                <span>清洁类</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存商品名称</div>
-            <div class="kcgl2">
-                <span>洗车布</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存单位</div>
-            <div class="kcgl2">
-                <span>块</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存余量</div>
-            <div class="kcgl2">
-                <span style="color:#ff0c4c;">￥0</span>
+                <span style="color:#ff0c4c;" v-if="Product.IsPublish==false">否</span>
+                <span v-if="Product.IsPublish==true">是</span>
             </div>
         </div>
         <div class="kcgl_box">
@@ -75,171 +81,11 @@
             <div class="kcgl2">
                 <span>
                     <a style="background-color:#ff0c4c;float:left; margin-left:10%; width:16%;">入库</a>
-                    <a style="float:left; width:16%;">删除</a>
+                    @*<a style="float:left; width:16%;">删除</a>*@
                     <a style="background-color:#51b3f0;float:left; width:16%;">出库</a>
-                    <a style="background-color:#51b3f0;float:left; width:16%;">编辑</a>
-                </span>
-            </div>
-        </div>
-    </div>
-    <div class="touxiang">
-        <div class="kcgl_box">
-            <div class="kcgl">库存商品编号</div>
-            <div class="kcgl2">
-                <span>A00001</span>
-
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存分类</div>
-            <div class="kcgl2">
-                <span>清洁类</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存商品名称</div>
-            <div class="kcgl2">
-                <span>洗车布</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存单位</div>
-            <div class="kcgl2">
-                <span>块</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存余量</div>
-            <div class="kcgl2">
-                <span style="color:#ff0c4c;">￥1000</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">记录查询</div>
-            <div class="kcgl2">
-                <span>
-                    <a style="background-color:#51b3f0;float:left; margin-left:10%; font-size:12px; width:70px;">入库记录</a>
-                    <a style="float:left; font-size:12px; width:70px;background-color:#51b3f0;">出库记录</a>
-                </span>
-            </div>
-        </div>
-
-        <div class="kcgl_box" style="border:none;">
-            <div class="kcgl">操作</div>
-            <div class="kcgl2">
-                <span>
-                    <a style="background-color:#ff0c4c;float:left; margin-left:10%; width:16%;">入库</a>
-                    <a style="float:left; width:16%;">删除</a>
-                    <a style="background-color:#51b3f0;float:left; width:16%;">出库</a>
-                    <a style="background-color:#51b3f0;float:left; width:16%;">编辑</a>
-                </span>
-            </div>
-        </div>
-    </div>
-    <div class="touxiang">
-        <div class="kcgl_box">
-            <div class="kcgl">库存商品编号</div>
-            <div class="kcgl2">
-                <span>A00001</span>
-
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存分类</div>
-            <div class="kcgl2">
-                <span>清洁类</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存商品名称</div>
-            <div class="kcgl2">
-                <span>洗车布</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存单位</div>
-            <div class="kcgl2">
-                <span>块</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存余量</div>
-            <div class="kcgl2">
-                <span style="color:#ff0c4c;">￥1000</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">记录查询</div>
-            <div class="kcgl2">
-                <span>
-                    <a style="background-color:#51b3f0;float:left; margin-left:10%; font-size:12px; width:70px;">入库记录</a>
-                    <a style="float:left; font-size:12px; width:70px;background-color:#51b3f0;">出库记录</a>
-                </span>
-            </div>
-        </div>
-
-        <div class="kcgl_box" style="border:none;">
-            <div class="kcgl">操作</div>
-            <div class="kcgl2">
-                <span>
-                    <a href="#" style="background-color:#ff0c4c;float:left; margin-left:10%; width:16%;">入库</a>
-                    <a href="#" style="float:left; width:16%;">删除</a>
-                    <a href="#" style="background-color:#51b3f0;float:left; width:16%;">出库</a>
-                    <a href="#" style="background-color:#51b3f0;float:left; width:16%;">编辑</a>
-                </span>
-            </div>
-        </div>
-    </div>
-    <div class="touxiang">
-        <div class="kcgl_box">
-            <div class="kcgl">库存商品编号</div>
-            <div class="kcgl2">
-                <span>A00001</span>
-
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存分类</div>
-            <div class="kcgl2">
-                <span>清洁类</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存商品名称</div>
-            <div class="kcgl2">
-                <span>洗车布</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存单位</div>
-            <div class="kcgl2">
-                <span>块</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">库存余量</div>
-            <div class="kcgl2">
-                <span style="color:#ff0c4c;">￥1000</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">记录查询</div>
-            <div class="kcgl2">
-                <span>
-                    <a href="#" style="background-color:#51b3f0;float:left; margin-left:10%; font-size:12px; width:70px;">入库记录</a>
-                    <a href="#" style="float:left; font-size:12px; width:70px;background-color:#51b3f0;">出库记录</a>
-                </span>
-            </div>
-        </div>
-
-        <div class="kcgl_box" style="border:none;">
-            <div class="kcgl">操作</div>
-            <div class="kcgl2">
-                <span>
-                    <a href="#" style="background-color:#ff0c4c;float:left; margin-left:10%; width:16%;">入库</a>
-                    <a href="#" style="float:left; width:16%;">删除</a>
-                    <a href="#" style="background-color:#51b3f0;float:left; width:16%;">出库</a>
-                    <a href="#" style="background-color:#51b3f0;float:left; width:16%;">编辑</a>
+                    <a style="background-color:#51b3f0;float:left; width:16%;" v-if="Product.IsPublish==false" v-on:click="changePublishStatus(Product)">上架</a>
+                    <a style="background-color:#51b3f0;float:left; width:16%;" v-if="Product.IsPublish==true" v-on:click="changePublishStatus(Product)">下架</a>
+                    @*<a style="background-color:#51b3f0;float:left; width:16%;">编辑</a>*@
                 </span>
             </div>
         </div>
@@ -304,6 +150,9 @@
             el: '#stockmanager',
             data: {
                 User: {},
+                ProductCategoryList: [],
+                ProductList: [],
+                ProductCount:0,
             },
             methods: {
                 back: function (event) {
@@ -311,6 +160,19 @@
                 },
                 home: function (event) {
                         window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                },
+                changePublishStatus: function (data, event) {
+                    var tips = '确定';
+                    if (data.IsPublish)
+                        tips += '下架？';
+                    else
+                        tips += '上架？';
+                    $.confirm(tips, function () {
+                        changePublishStatus(data.ID);
+                    });
+                },
+                searchProduct: function (event) {
+                    searchProduct();
                 },
             }
         });
@@ -322,6 +184,7 @@
                     headers: { 'CompanyCode': mch },
                     data: {
                         OpenID: '@ViewBag.OpenId',
+                        IsManager: true,
                     },
                     success: function (res) {
                         if (res.IsSuccessful) {
@@ -348,6 +211,115 @@
             } else {
                 _viewModel.User = JSON.parse(user);
             }
+
+            function getProductCategory() {
+                $.ajax({
+                    url: '/api/ProductCategory?IsFromStockManager=true',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.ProductCategoryList = res.Data;
+                            if (res.Data != null && res.Data.length > 0) {
+                                _viewModel.ProductList = res.Data[0].SubProducts;
+                                for (var i = 0; i < res.Data.length; i++) {
+                                    if (res.Data[i].SubProducts != null)
+                                        _viewModel.ProductCount += res.Data[i].SubProducts.length;
+                                }
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getProductCategory();
+
+            $('#productcategoryselect').change(function () {
+                var value = $(this).val();
+                for (var i = 0; i < _viewModel.ProductCategoryList.length; i++) {
+                    if (_viewModel.ProductCategoryList[i].ID == value) {
+                        _viewModel.ProductList = _viewModel.ProductCategoryList[i].SubProducts;
+                        break;
+                    }
+                }
+            });
+
+            function changePublishStatus(id) {
+                if (id == null || id == '') {
+                    $.alert('参数错误');
+                    return;
+                }
+                $.ajax({
+                    url: '/api/Product/ChangePublishStatus?id=' + id,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data) {
+                                $.toast('操作成功');
+                                for (var i = 0; i < _viewModel.ProductList.length; i++) {
+                                    if (_viewModel.ProductList[i].ID == id) {
+                                        _viewModel.ProductList[i].IsPublish = !_viewModel.ProductList[i].IsPublish;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                $.alert('操作失败，请重试');
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
+            function searchProduct() {
+                var productCategoryID = $('#productcategoryselect').val();
+                if (productCategoryID == null || productCategoryID == '') {
+                    $.alert('参数错误，类别信息不存在');
+                    return;
+                }
+                var namecode = $('#namecode').val();
+                //if (namecode == null || namecode == '') {
+                //    $.toast('请输入商品名称或编号','cancel');
+                //    return;
+                //}
+                $.ajax({
+                    url: '/api/Product?IsFromStockManager=true&ProductCategoryID=' + productCategoryID + '&NameCode=' + namecode,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.ProductList = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
         });
     </script>
 }

@@ -57,6 +57,7 @@
     <Compile Include="Dtos\CouponInfoDto.cs" />
     <Compile Include="Dtos\CouponReportDto.cs" />
     <Compile Include="Dtos\CouponTemplateDto.cs" />
+    <Compile Include="Dtos\GameCouponDto.cs" />
     <Compile Include="Dtos\GiftCardDtoOfOW.cs" />
     <Compile Include="Dtos\GiftCardReceiveDto.cs" />
     <Compile Include="Dtos\MemberBaseInfoDto.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Filters\CouponFilter.cs" />
     <Compile Include="Filters\CouponReportFilter.cs" />
     <Compile Include="Filters\CouponTemplateFilter.cs" />
+    <Compile Include="Filters\GameCouponFilter.cs" />
     <Compile Include="Filters\GivenCouponFilter.cs" />
     <Compile Include="Filters\HistoryFilter.cs" />
     <Compile Include="Filters\MemberCardThemeFilter.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="Services\ICouponTemplateService.cs" />
     <Compile Include="Services\ICouponTemplateStockService.cs" />
     <Compile Include="Services\ICouponTemplateUseTimeService.cs" />
+    <Compile Include="Services\IGameCouponService.cs" />
     <Compile Include="Services\IGivenCouponRecordService.cs" />
     <Compile Include="Services\IMemberCardService.cs" />
     <Compile Include="Services\IMemberCardThemeService.cs" />

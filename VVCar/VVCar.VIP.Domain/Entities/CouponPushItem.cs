@@ -12,24 +12,30 @@ namespace VVCar.VIP.Domain.Entities
     /// <summary>
     /// 卡券推送子表
     /// </summary>
-    public class CouponPushItem : NormalEntityBase
+    public class CouponPushItem : EntityBase
     {
         /// <summary>
-        /// 卡券推送ID
+        /// 卡券模板ID
         /// </summary>
-        [Display(Name = "卡券推送ID")]
-        public Guid CouponPushID { get; set; }
+        [Display(Name = "卡券模板ID")]
+        public Guid CouponTemplateID { get; set; }
 
         /// <summary>
-        /// 被推送ID(人员ID/分组ID)
+        /// 优惠券模板标题
         /// </summary>
-        [Display(Name = "被推送ID(人员ID/分组ID)")]
-        public Guid? PushedID { get; set; }
+        [Display(Name = "优惠券模板标题")]
+        public string CouponTemplateTitle { get; set; }
 
-        /// <summary>
-        /// 类型(0:人员,1:分组)
-        /// </summary>
-        [Display(Name = "类型")]
-        public ECouponPushItemType Type { get; set; }
+        ///// <summary>
+        ///// 被推送ID(人员ID/分组ID)
+        ///// </summary>
+        //[Display(Name = "被推送ID(人员ID/分组ID)")]
+        //public Guid? PushedID { get; set; }
+
+        ///// <summary>
+        ///// 类型(0:人员,1:分组)
+        ///// </summary>
+        //[Display(Name = "类型")]
+        //public ECouponPushItemType Type { get; set; }
     }
 }

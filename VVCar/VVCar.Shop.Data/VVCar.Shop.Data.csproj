@@ -59,6 +59,7 @@
     <Compile Include="Mapping\ProductMap.cs" />
     <Compile Include="Mapping\ShoppingCartItemMap.cs" />
     <Compile Include="Mapping\ShoppingCartMap.cs" />
+    <Compile Include="Mapping\StockRecordMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

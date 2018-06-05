@@ -114,7 +114,14 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.Nature, opt => opt.MapFrom(src => src.Template.Nature));
 
                 cfg.CreateMap<Product, ProductDto>();
+
+                cfg.CreateMap<GameCoupon, GameCouponDto>()
+                .ForMember(dest => dest.Nature, opt => opt.MapFrom(src => src.CouponTemplate.Nature))
+                .ForMember(dest => dest.CouponType, opt => opt.MapFrom(src => src.CouponTemplate.CouponType))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.CouponTemplate.Title))
+                .ForMember(dest => dest.TemplateCode, opt => opt.MapFrom(src => src.CouponTemplate.TemplateCode));
             });
+
             //Mapper.CreateMap<Member, MemberDto>()
             //    //.ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType.Name))
             //    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))

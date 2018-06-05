@@ -101,8 +101,14 @@ namespace VVCar.Shop.Services.DomainServices
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.Name))
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
+            if (!string.IsNullOrEmpty(filter.Code))
+                queryable = queryable.Where(t => t.Code.Contains(filter.Code));
+            if (!string.IsNullOrEmpty(filter.NameCode))
+                queryable = queryable.Where(t => t.Name.Contains(filter.NameCode) || t.Code.Contains(filter.NameCode));
             if (filter.ProductCategoryID.HasValue && filter.ProductCategoryID.Value != Guid.Parse("00000000-0000-0000-0000-000000000001"))
                 queryable = queryable.Where(t => t.ProductCategoryID == filter.ProductCategoryID.Value);
+            if (filter.IsFromStockManager)
+                queryable = queryable.Where(t => t.ProductType == EProductType.Goods);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderBy(t => t.Index).Skip(filter.Start.Value).Take(filter.Limit.Value);

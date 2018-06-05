@@ -187,6 +187,19 @@ namespace VVCar.Shop.Services.DomainServices
                         t.SubProducts = t.SubProducts.Where(item => item.ProductType == EProductType.Service && item.IsPublish).ToList();
                     }
                 });
+            }
+            if (filter.IsFromStockManager)
+            {
+                result.ForEach(t =>
+                {
+                    if (t.SubProducts != null && t.SubProducts.Count > 0)
+                    {
+                        t.SubProducts = t.SubProducts.Where(item => item.ProductType == EProductType.Goods).ToList();
+                    }
+                });
+            }
+            if (filter.IsFromPickUpOrder || filter.IsFromStockManager)
+            {
                 var removeItem = result.Where(t => t.SubProducts == null || t.SubProducts.Count < 1).ToList();
                 if (removeItem != null && removeItem.Count > 0)
                 {

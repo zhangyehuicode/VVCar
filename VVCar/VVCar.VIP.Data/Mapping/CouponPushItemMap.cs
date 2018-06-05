@@ -13,6 +13,10 @@ namespace VVCar.VIP.Data.Mapping
         public CouponPushItemMap()
         {
             HasKey(t => t.ID);
+
+            Property(t => t.CouponTemplateTitle)
+             .IsRequired()
+             .HasMaxLength(18);
         }
     }
 }

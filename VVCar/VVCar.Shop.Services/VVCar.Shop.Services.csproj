@@ -55,6 +55,7 @@
     <Compile Include="DomainServices\ReportingService.cs" />
     <Compile Include="DomainServices\ShoppingCartItemService.cs" />
     <Compile Include="DomainServices\ShoppingCartService.cs" />
+    <Compile Include="DomainServices\StockRecordService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -295,6 +295,7 @@
     <Compile Include="Controllers\Shop\ShoppingCartItemController.cs" />
     <Compile Include="Controllers\VIP\CouponController.cs" />
     <Compile Include="Controllers\VIP\CouponTemplateController.cs" />
+    <Compile Include="Controllers\VIP\GameCouponController.cs" />
     <Compile Include="Controllers\VIP\MemberCardTypeController.cs" />
     <Compile Include="Controllers\VIP\MemberController.cs" />
     <Compile Include="Controllers\VIP\MemberGradeController.cs" />
@@ -580,6 +581,7 @@
     <Content Include="Scripts\app\controller\Coupon.js" />
     <Content Include="Scripts\app\controller\DataDict.js" />
     <Content Include="Scripts\app\controller\Department.js" />
+    <Content Include="Scripts\app\controller\GameCoupon.js" />
     <Content Include="Scripts\app\controller\Login.js" />
     <Content Include="Scripts\app\controller\Main.js" />
     <Content Include="Scripts\app\controller\MakeCodeRule.js" />
@@ -610,6 +612,7 @@
     <Content Include="Scripts\app\model\BaseData\CardThemeCategoryModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponTemplateInfoModel.js" />
     <Content Include="Scripts\app\model\BaseData\DepartmentModel.js" />
+    <Content Include="Scripts\app\model\BaseData\GameCouponModel.js" />
     <Content Include="Scripts\app\model\BaseData\IDCodeNameModel.js" />
     <Content Include="Scripts\app\model\BaseData\MakeCodeRuleModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberBaseInfoModel.js" />
@@ -648,6 +651,7 @@
     <Content Include="Scripts\app\store\BaseData\CouponTemplateInfoStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentTreeStore.js" />
+    <Content Include="Scripts\app\store\BaseData\GameCouponStore.js" />
     <Content Include="Scripts\app\store\BaseData\MakeCodeRuleStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberCardStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberCardThemeGroupStore.js" />
@@ -710,6 +714,8 @@
     <Content Include="Scripts\app\view\DataDict\DataDictList.js" />
     <Content Include="Scripts\app\view\Department\DepartmentEdit.js" />
     <Content Include="Scripts\app\view\Department\DepartmentList.js" />
+    <Content Include="Scripts\app\view\GameCoupon\GameCouponEdit.js" />
+    <Content Include="Scripts\app\view\GameCoupon\GameCouponList.js" />
     <Content Include="Scripts\app\view\Index.js" />
     <Content Include="Scripts\app\view\Login.js" />
     <Content Include="Scripts\app\view\Main.js" />

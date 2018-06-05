@@ -76,7 +76,7 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public PagedActionResult<Product> Search([FromUri]ProductFilter filter)
         {
             return SafeGetPagedData<Product>((result) =>
@@ -107,7 +107,7 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        [HttpGet, Route("ChangePublishStatus")]
+        [HttpGet, Route("ChangePublishStatus"), AllowAnonymous]
         public JsonActionResult<bool> ChangePublishStatus(Guid id)
         {
             return SafeExecute(() =>
