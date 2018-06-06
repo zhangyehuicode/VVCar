@@ -14,6 +14,11 @@ namespace VVCar.Shop.Domain.Filters
     public class StockRecordFilter : BasePageFilter
     {
         /// <summary>
+        /// 产品ID
+        /// </summary>
+        public Guid? ProductID { get; set; }
+
+        /// <summary>
         /// 编码
         /// </summary>
         public string ProductCode { get; set; }
@@ -37,5 +42,10 @@ namespace VVCar.Shop.Domain.Filters
         /// 订单号
         /// </summary>
         public string OrderCode { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime? CreatedDate { get; set; }
     }
 }

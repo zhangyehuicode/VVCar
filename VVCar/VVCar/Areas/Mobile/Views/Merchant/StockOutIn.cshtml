@@ -1,0 +1,241 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="stockoutin">
+    <div class="toubu">
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        店长工作终端
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="touxiang">
+        <div class="xzkc">
+            <span style="float:left;">商品编号:</span>
+            <span style="float:left; margin-left:5%; color:#666;">{{Product.Code}}</span>
+        </div>
+        @*<div class="xzkc_xian"></div>
+            <div class="xzkc">
+                <span style="float:left;">库存分类选择:</span>
+                <span style="float:left; margin-left:5%; color:#666;">清洁类</span>
+            </div>*@
+        <div class="xzkc_xian"></div>
+        <div class="xzkc">
+            <span style="float:left;">商品名称:</span>
+            <span style="float:left; margin-left:5%; color:#666;">{{Product.Name}}</span>
+        </div>
+        @*<div class="xzkc_xian"></div>
+            <div class="xzkc">
+                <span style="float:left;">库存商品单位:</span>
+                <span style="float:left; margin-left:5%; color:#666;">块</span>
+            </div>*@
+        <div class="xzkc_xian"></div>
+        <div class="xzkc">
+            <span style="float:left;">商品单价:</span>
+            <span style="float:left; margin-left:5%; color:#666;">￥{{Product.PriceSale}}</span>
+        </div>
+        <div class="xzkc_xian"></div>
+        <div class="xzkc">
+            <span style="float:left;">库存:</span>
+            <span style="float:left; margin-left:5%; color:#666;">{{Product.Stock}}</span>
+        </div>
+        <div class="xzkc_xian"></div>
+        <div class="xzkc">
+            <span style="float:left;" v-if="IsStockOut">本次出库数量:</span>
+            <span style="float:left;" v-if="!IsStockOut">本次入库数量:</span>
+            <input type="number" class="xzkc_input" v-model="Quantity">
+        </div>
+        <div class="xzkc_xian"></div>
+        <div class="xzkc">
+            <span style="float:left;" v-if="IsStockOut">手工出库原因:</span>
+            <span style="float:left;" v-if="!IsStockOut">手工入库原因:</span>
+            <input type="text" class="xzkc_input" v-model="StockRecord.Reason">
+        </div>
+    </div>
+    <div class="xz_btn2" v-on:click="stockOutIn" v-if="!IsStockOut">提交入库</div>
+    <div class="xz_btn2" v-on:click="stockOutIn" v-if="IsStockOut">提交出库</div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+        var mch = $.getUrlParam('mch');
+            var user = sessionStorage.getItem('user');
+            var product = sessionStorage.getItem('product');
+            if (product == null || product == '') {
+                $.alert('产品信息为空');
+                return;
+            }
+            product = JSON.parse(product);
+
+            var stockout = sessionStorage.getItem('stockout');
+            if (stockout == null || stockout == '') {
+                $.alert('出入库信息缺失');
+                return;
+            }
+            var isstockout = stockout == 'true';
+
+        _viewModel = new Vue({
+            el: '#stockoutin',
+            data: {
+                User: {},
+                Product: product,
+                IsStockOut: isstockout,
+                Quantity:0,
+                StockRecord: {
+                    ProductID: product.ID,
+                    Quantity: 0,
+                    Reason: '',
+                    StaffID: '',
+                    StaffName:'',
+                }
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                },
+                stockOutIn: function (event) {
+                    if (_viewModel.Quantity == 0) {
+                        $.alert('请输入数量');
+                        return;
+                    }
+                    if (_viewModel.IsStockOut) {
+                        _viewModel.StockRecord.Quantity = -_viewModel.Quantity;
+                    } else {
+                        _viewModel.StockRecord.Quantity = _viewModel.Quantity;
+                    }
+                    $.confirm('确定提交？', function () {
+                        stockOutIn(_viewModel.StockRecord);
+                    });
+                },
+            }
+        });
+
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsManager: true,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.User = res.Data;
+                                _viewModel.StockRecord.StaffID = res.Data.ID;
+                                _viewModel.StockRecord.StaffName = res.Data.Name;
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            if (user == null || user == '') {
+                getUserByOpenId();
+            } else {
+                user = JSON.parse(user);
+                _viewModel.User = user;
+                _viewModel.StockRecord.StaffID = user.ID;
+                _viewModel.StockRecord.StaffName = user.Name;
+            }
+
+            function stockOutIn(data) {
+                if (data == null || data == '') {
+                    $.alert('参数错误');
+                    return;
+                }
+                $.ajax({
+                    url: '/api/Product/StockOutIn',
+                    type: 'POST',
+                    data: data,
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data) {
+                                $.toast('操作成功', function () {
+                                    window.location.href = "/Mobile/Merchant/StockManager?mch=" + mch;
+                                });
+                            } else {
+                                $.alert('操作失败，请重试');
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
+        });
+    </script>
+}

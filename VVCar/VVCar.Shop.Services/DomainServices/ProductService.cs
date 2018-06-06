@@ -41,6 +41,8 @@ namespace VVCar.Shop.Services.DomainServices
             }
         }
 
+        IStockRecordService StockRecordService { get => ServiceLocator.Instance.GetService<IStockRecordService>(); }
+
         #endregion
 
         private int GenerateIndex()
@@ -255,5 +257,33 @@ namespace VVCar.Shop.Services.DomainServices
             return result.OrderByDescending(t => t.MiningSpace).ToList();
         }
 
+        /// <summary>
+        /// 出/入库
+        /// </summary>
+        /// <returns></returns>
+        public bool StockOutIn(StockRecord stockRecord)
+        {
+            if (stockRecord == null || stockRecord.ProductID == null || stockRecord.Quantity == 0)
+                throw new DomainException("参数错误");
+            var product = Repository.GetByKey(stockRecord.ProductID);
+            if (product == null)
+                throw new DomainException("产品不存在");
+            product.Stock += stockRecord.Quantity;
+            if (product.Stock < 0)
+                throw new DomainException("库存不足");
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                Repository.Update(product);
+                StockRecordService.Add(stockRecord);
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
+            }
+        }
     }
 }

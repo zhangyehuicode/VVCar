@@ -183,5 +183,19 @@ namespace VVCar.Controllers.Shop
                 result.Data = ProductService.GetHistoryAnalysisData();
             });
         }
+
+        /// <summary>
+        /// 出/入库
+        /// </summary>
+        /// <param name="stockRecord"></param>
+        /// <returns></returns>
+        [HttpPost, Route("StockOutIn"), AllowAnonymous]
+        public JsonActionResult<bool> StockOutIn(StockRecord stockRecord)
+        {
+            return SafeExecute(() =>
+            {
+                return ProductService.StockOutIn(stockRecord);
+            });
+        }
     }
 }

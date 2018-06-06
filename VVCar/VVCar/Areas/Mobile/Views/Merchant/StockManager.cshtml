@@ -70,8 +70,8 @@
             <div class="kcgl">记录查询</div>
             <div class="kcgl2">
                 <span>
-                    <a style="background-color:#51b3f0;float:left; margin-left:10%; font-size:12px; width:70px;">入库记录</a>
-                    <a style="float:left; font-size:12px; width:70px;background-color:#51b3f0;">出库记录</a>
+                    <a style="background-color:#51b3f0;float:left; margin-left:10%; font-size:12px; width:70px;" v-on:click="stockinrecord(Product)">入库记录</a>
+                    <a style="float:left; font-size:12px; width:70px;background-color:#51b3f0;" v-on:click="stockoutrecord(Product)">出库记录</a>
                 </span>
             </div>
         </div>
@@ -80,9 +80,9 @@
             <div class="kcgl">操作</div>
             <div class="kcgl2">
                 <span>
-                    <a style="background-color:#ff0c4c;float:left; margin-left:10%; width:16%;">入库</a>
+                    <a style="background-color:#ff0c4c;float:left; margin-left:10%; width:16%;" v-on:click="stockin(Product)">入库</a>
                     @*<a style="float:left; width:16%;">删除</a>*@
-                    <a style="background-color:#51b3f0;float:left; width:16%;">出库</a>
+                    <a style="background-color:#51b3f0;float:left; width:16%;" v-on:click="stockout(Product)">出库</a>
                     <a style="background-color:#51b3f0;float:left; width:16%;" v-if="Product.IsPublish==false" v-on:click="changePublishStatus(Product)">上架</a>
                     <a style="background-color:#51b3f0;float:left; width:16%;" v-if="Product.IsPublish==true" v-on:click="changePublishStatus(Product)">下架</a>
                     @*<a style="background-color:#51b3f0;float:left; width:16%;">编辑</a>*@
@@ -159,7 +159,7 @@
                     history.back(-1);
                 },
                 home: function (event) {
-                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                    window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
                 },
                 changePublishStatus: function (data, event) {
                     var tips = '确定';
@@ -173,6 +173,26 @@
                 },
                 searchProduct: function (event) {
                     searchProduct();
+                },
+                stockout: function (data, event) {
+                    sessionStorage.setItem('stockout','true');
+                    sessionStorage.setItem('product', JSON.stringify(data));
+                    window.location.href = "/Mobile/Merchant/StockOutIn?mch=" + mch;
+                },
+                stockin: function (data, event) {
+                    sessionStorage.setItem('stockout', 'false');
+                    sessionStorage.setItem('product', JSON.stringify(data));
+                    window.location.href = "/Mobile/Merchant/StockOutIn?mch=" + mch;
+                },
+                stockinrecord: function (data, event) {
+                    sessionStorage.setItem('stockout', 'false');
+                    sessionStorage.setItem('product', JSON.stringify(data));
+                    window.location.href = "/Mobile/Merchant/StockRecord?mch=" + mch;
+                },
+                stockoutrecord: function (data, event) {
+                    sessionStorage.setItem('stockout', 'true');
+                    sessionStorage.setItem('product', JSON.stringify(data));
+                    window.location.href = "/Mobile/Merchant/StockRecord?mch=" + mch;
                 },
             }
         });

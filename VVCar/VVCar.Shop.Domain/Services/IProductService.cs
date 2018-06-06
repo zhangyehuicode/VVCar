@@ -67,5 +67,12 @@ namespace VVCar.Shop.Domain.Services
         /// </summary>
         /// <returns></returns>
         IEnumerable<HistoryDataAnalysisDto> GetHistoryAnalysisData();
+
+        /// <summary>
+        /// 出/入库
+        /// </summary>
+        /// <param name="stockRecord"></param>
+        /// <returns></returns>
+        bool StockOutIn(StockRecord stockRecord);
     }
 }

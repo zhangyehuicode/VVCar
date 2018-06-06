@@ -1,0 +1,217 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="stockrecord">
+    <div class="toubu">
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        店长工作终端
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="hykhx">
+        <div class="spck" style="margin-bottom:15px;">
+            <input type="date" style="color:#ccc" id="search">
+            <a v-on:click="search"><img src="~/Areas/resource/img/mobile/master/ss.png"></a>
+        </div>
+    </div>
+    <div class="touxiang" v-for="StockRecord in StockRecordList">
+        <table width="94%" border="1" class="spck_bg">
+            <tr>
+                <th scope="row" class="spck_bg2" v-if="IsStockOut">出库时间</th>
+                <th scope="row" class="spck_bg2" v-if="!IsStockOut">入库时间</th>
+                <td class="spck_bg3">{{StockRecord.CreatedDate}}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="spck_bg2">商品分类</th>
+                <td class="spck_bg3">{{StockRecord.ProductCategoryName}}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="spck_bg2">商品编号</th>
+                <td class="spck_bg3">{{StockRecord.ProductCode}}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="spck_bg2">商品名称</th>
+                <td class="spck_bg3">{{StockRecord.ProductName}}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="spck_bg2" v-if="IsStockOut">出库数量</th>
+                <th scope="row" class="spck_bg2" v-if="!IsStockOut">入库数量</th>
+                <td class="spck_bg3">{{StockRecord.Quantity}}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="spck_bg2" v-if="IsStockOut">出库原因</th>
+                <th scope="row" class="spck_bg2" v-if="!IsStockOut">入库原因</th>
+                <td class="spck_bg3">{{StockRecord.Reason}}</td>
+            </tr>
+            @*<tr>
+                    <th scope="row" class="spck_bg2">出库用途</th>
+                    <td class="spck_bg3"></td>
+                </tr>*@
+            @*<tr>
+                    <th scope="row" class="spck_bg2">库存余量</th>
+                    <td class="spck_bg3">{{StockRecord.Stock}}</td>
+                </tr>*@
+            <tr>
+                <th scope="row" class="spck_bg2" v-if="IsStockOut">出库员工姓名</th>
+                <th scope="row" class="spck_bg2" v-if="!IsStockOut">入库员工姓名</th>
+                <td class="spck_bg3">{{StockRecord.StaffName}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="kcgl_box2"></div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var mch = $.getUrlParam('mch');
+            var user = sessionStorage.getItem('user');
+
+            var stockout = sessionStorage.getItem('stockout');
+            var product = sessionStorage.getItem('product');
+            if (product == null || product == '' || stockout == null || stockout == '') {
+                $.alert('参数错误');
+                return;
+            }
+            product = JSON.parse(product);
+            var isstockout = stockout == 'true';
+            var stockRecordType = isstockout ? 0 : 1;
+
+            _viewModel = new Vue({
+                el: '#stockrecord',
+                data: {
+                    User: {},
+                    IsStockOut: isstockout,
+                    StockRecordList: [],
+                },
+                methods: {
+                    back: function (event) {
+                        history.back(-1);
+                    },
+                    home: function (event) {
+                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                    },
+                    search: function (event) {
+                        getStockRecord($('#search').val());
+                    },
+                }
+            });
+
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsManager: true,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.User = res.Data;
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            if (user == null || user == '') {
+                getUserByOpenId();
+            } else {
+                _viewModel.User = JSON.parse(user);
+            }
+
+            function getStockRecord(date) {
+                var url = '/api/StockRecord?ProductID=' + product.ID + '&StockRecordType=' + stockRecordType;
+                if (date != null && date != '')
+                    url = '/api/StockRecord?ProductID=' + product.ID + '&StockRecordType=' + stockRecordType + '&CreatedDate=' + date;
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.StockRecordList = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getStockRecord(null);
+
+            $('#search').change(function () {
+                var date = $(this).val();
+                getStockRecord(date);
+            });
+        });
+    </script>
+}

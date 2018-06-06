@@ -22,7 +22,7 @@ namespace VVCar.VIP.Mapping
 
             this.Property(t => t.Name)
                 .IsRequired()
-                .HasMaxLength(20);
+                .HasMaxLength(50);
 
             this.Property(t => t.MobilePhoneNo)
                 .IsRequired()

@@ -120,6 +120,11 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.CouponType, opt => opt.MapFrom(src => src.CouponTemplate.CouponType))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.CouponTemplate.Title))
                 .ForMember(dest => dest.TemplateCode, opt => opt.MapFrom(src => src.CouponTemplate.TemplateCode));
+
+                cfg.CreateMap<StockRecord, StockRecordDto>()
+                .ForMember(dest => dest.ProductCode, opt => opt.MapFrom(src => src.Product.Code))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(dest => dest.ProductCategoryName, opt => opt.MapFrom(src => src.Product.ProductCategory.Name));
             });
 
             //Mapper.CreateMap<Member, MemberDto>()

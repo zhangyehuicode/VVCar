@@ -293,6 +293,7 @@
     <Compile Include="Controllers\Shop\ReportingController.cs" />
     <Compile Include="Controllers\Shop\ShoppingCartController.cs" />
     <Compile Include="Controllers\Shop\ShoppingCartItemController.cs" />
+    <Compile Include="Controllers\Shop\StockRecordController.cs" />
     <Compile Include="Controllers\VIP\CouponController.cs" />
     <Compile Include="Controllers\VIP\CouponTemplateController.cs" />
     <Compile Include="Controllers\VIP\GameCouponController.cs" />
@@ -904,6 +905,9 @@
     <Content Include="Areas\Mobile\Views\Merchant\PrivilegeOrder.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\OrderDetails.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\CouponVerification.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\StockOutIn.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\StockRecord.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\MemberDetails.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />
