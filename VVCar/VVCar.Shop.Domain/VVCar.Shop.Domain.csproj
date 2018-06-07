@@ -60,6 +60,8 @@
     <Compile Include="Entities\PickUpOrderPaymentDetails.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\ProductCategory.cs" />
+    <Compile Include="Entities\ServicePeriodCoupon.cs" />
+    <Compile Include="Entities\ServicePeriodSetting.cs" />
     <Compile Include="Entities\ShoppingCart.cs" />
     <Compile Include="Entities\ShoppingCartItem.cs" />
     <Compile Include="Entities\StockRecord.cs" />

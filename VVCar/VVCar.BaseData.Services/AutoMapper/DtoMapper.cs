@@ -125,6 +125,8 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.ProductCode, opt => opt.MapFrom(src => src.Product.Code))
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
                 .ForMember(dest => dest.ProductCategoryName, opt => opt.MapFrom(src => src.Product.ProductCategory.Name));
+
+                cfg.CreateMap<User, UserInfoDto>();
             });
 
             //Mapper.CreateMap<Member, MemberDto>()

@@ -21,6 +21,11 @@ namespace VVCar.VIP.Domain.Dtos
         public Guid ID { get; set; }
 
         /// <summary>
+        /// 微信OpenID
+        /// </summary>
+        public string WeChatOpenID { get; set; }
+
+        /// <summary>
         /// 会员卡ID
         /// </summary>
         public Guid CardID { get; set; }
@@ -82,11 +87,6 @@ namespace VVCar.VIP.Domain.Dtos
         public DateTime? Birthday { get; set; }
 
         /// <summary>
-        /// 微信OpenID
-        /// </summary>
-        public string WeChatOpenID { get; set; }
-
-        /// <summary>
         /// 注册时间
         /// </summary>
         public DateTime CreatedDate { get; set; }
@@ -135,5 +135,25 @@ namespace VVCar.VIP.Domain.Dtos
         /// 获取或设置 截止日期
         /// </summary>
         public DateTime? ExpiredDate { get; set; }
+
+        /// <summary>
+        /// 车牌号
+        /// </summary>
+        public string PlateNumber { get; set; }
+
+        /// <summary>
+        /// 会员卡数量
+        /// </summary>
+        public int MemberCardCount { get; set; }
+
+        /// <summary>
+        /// 总消费次数
+        /// </summary>
+        public int TotalConsumeTime { get; set; }
+
+        /// <summary>
+        /// 总消费
+        /// </summary>
+        public decimal TotalConsume { get; set; }
     }
 }

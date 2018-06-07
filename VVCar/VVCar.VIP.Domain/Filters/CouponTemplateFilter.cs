@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.VIP.Domain.Enums;
 using YEF.Core.Dtos;
 
 namespace VVCar.VIP.Domain.Filters
@@ -45,5 +46,10 @@ namespace VVCar.VIP.Domain.Filters
         /// 是否为非特殊券
         /// </summary>
         public bool IsNotSpecialCoupon { get; set; }
+
+        /// <summary>
+        /// 性质
+        /// </summary>
+        public ENature? Nature { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
+using VVCar.VIP.Domain.Enums;
 using VVCar.VIP.Domain.Filters;
 using YEF.Core.Data;
 using YEF.Core.Domain;
@@ -90,5 +91,13 @@ namespace VVCar.VIP.Domain.Services
         /// </summary>
         /// <returns></returns>
         IEnumerable<CouponTemplate> GetGameCouponTemplate();
+
+        /// <summary>
+        /// 更改卡券状态
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        bool ChangeApproveStatus(Guid templateId, EApproveStatus status);
     }
 }

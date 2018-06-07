@@ -13,6 +13,7 @@ using VVCar.VIP.Domain.Dtos;
 using YEF.Utility;
 using YEF.Core.Dtos;
 using VVCar.VIP.Domain.Filters;
+using VVCar.Shop.Domain.Entities;
 
 namespace VVCar.VIP.Services.DomainServices
 {
@@ -82,6 +83,10 @@ namespace VVCar.VIP.Services.DomainServices
         IMemberGradeHistoryService MemberGradeHistoryService { get => ServiceLocator.Instance.GetService<IMemberGradeHistoryService>(); }
 
         ICouponService CouponService { get => ServiceLocator.Instance.GetService<ICouponService>(); }
+
+        IRepository<Order> OrderRepo { get => UnitOfWork.GetRepository<IRepository<Order>>(); }
+
+        IRepository<Coupon> CouponRepo { get => UnitOfWork.GetRepository<IRepository<Coupon>>(); }
 
         #endregion
 
@@ -234,7 +239,7 @@ namespace VVCar.VIP.Services.DomainServices
         public PagedResultDto<MemberDto> Search(MemberFilter filter)
         {
             var result = new PagedResultDto<MemberDto>();
-            var queryable = Repository.GetQueryable(false);
+            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter != null)
             {
                 if (!string.IsNullOrEmpty(filter.MobilePhoneNo))
@@ -269,9 +274,15 @@ namespace VVCar.VIP.Services.DomainServices
                 result.Items = queryable.MapTo<MemberDto>().ToArray();
                 result.TotalCount = result.Items.Count();
             }
+            var couponQueryable = CouponRepo.GetQueryable(false).Where(c => c.Status == ECouponStatus.Default && c.Template.Nature == ENature.Card);
+            var orderQueryable = OrderRepo.GetQueryable(false);
             result.Items.ForEach(t =>
             {
                 t.CardTypeDesc = t.CardType != null ? t.CardType.Name : string.Empty;
+                t.MemberCardCount = couponQueryable.Where(c => c.OwnerOpenID == t.WeChatOpenID).Count();
+                var consumeOrder = orderQueryable.Where(o => o.OpenID == t.WeChatOpenID || o.MemberID == t.ID);
+                t.TotalConsumeTime = consumeOrder.Count();
+                t.TotalConsume = consumeOrder.GroupBy(g => 1).Select(s => s.Sum(su => su.Money)).FirstOrDefault();
             });
             return result;
         }

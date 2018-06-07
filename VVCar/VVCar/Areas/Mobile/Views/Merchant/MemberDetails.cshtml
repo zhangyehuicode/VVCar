@@ -15,7 +15,7 @@
             <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
             <div class="touxiang_div">
                 <span>{{User.Name}}</span>
-                <span style=" font-size:14px; color:#999;">会员：0名</span>
+                <span style=" font-size:14px; color:#999;">会员：{{MemberCount}}名</span>
             </div>
         </div>
     </div>
@@ -23,56 +23,62 @@
     <div class="touxiang" style="margin-bottom:25px;">
         <div class="hyxq"><span style="margin-left:3%;">会员详情</span></div>
         <div class="ygxx_box">
-            <div class="ygxx">会员手机号</div>
+            <div class="ygxx">会员姓名</div>
             <div class="ygxx2">
-                <span>13700000000</span>
+                <span>{{Member.Name}}</span>
             </div>
         </div>
         <div class="ygxx_box">
-            <div class="ygxx">会员车牌号</div>
+            <div class="ygxx">手机号</div>
             <div class="ygxx2">
-                <span>闽D11234</span>
+                <span>{{Member.MobilePhoneNo}}</span>
             </div>
         </div>
+        @*<div class="ygxx_box">
+                <div class="ygxx">会员车牌号</div>
+                <div class="ygxx2">
+                    <span>{{Member.PlateNumber}}</span>
+                </div>
+            </div>*@
         <div class="ygxx_box">
             <div class="ygxx">会员卡数量</div>
             <div class="ygxx2">
-                <span>1张</span>
+                <span>{{Member.MemberCardCount}}张</span>
             </div>
         </div>
         <div class="ygxx_box">
             <div class="ygxx">消费总次数</div>
             <div class="ygxx2">
-                <span>20次</span>
+                <span>{{Member.TotalConsumeTime}}次</span>
             </div>
         </div>
         <div class="ygxx_box">
             <div class="ygxx">消费总金额</div>
             <div class="ygxx2">
-                <span style="color:#ff0c4c;">￥1000</span>
+                <span style="color:#ff0c4c;">￥{{Member.TotalConsume}}</span>
             </div>
         </div>
-        <div class="ygxx_box">
-            <div class="ygxx">客服人员</div>
-            <div class="ygxx2">
-                <span>张三（01）</span>
+        @*<div class="ygxx_box">
+                <div class="ygxx">客服人员</div>
+                <div class="ygxx2">
+                    <span>张三丰（001）</span>
+                </div>
             </div>
-        </div>
-        <div class="ygxx_box">
-            <div class="ygxx">保险时间</div>
-            <div class="ygxx2">
-                <span>2017-10-10</span>
-            </div>
-        </div>
-        <div class="ygxx_box" style=" margin-bottom:20px;">
-            <div class="ygxx">操作</div>
-            <div class="ygxx2">
-                <span>
-                    <a style="background-color:#51b3f0;float:left; margin-left:13%; font-size:12px;">详情</a>
-                    <a style="float:left; font-size:12px;">冻结</a>
-                </span>
-            </div>
-        </div>
+            <div class="ygxx_box">
+                <div class="ygxx">保险时间</div>
+                <div class="ygxx2">
+                    <span>2018-06-07</span>
+                </div>
+            </div>*@
+        @*<div class="ygxx_box" style=" margin-bottom:20px;">
+                <div class="ygxx">操作</div>
+                <div class="ygxx2">
+                    <span>
+                        <a style="background-color:#51b3f0;float:left; margin-left:13%;font-size:12px;">冻结</a>
+                        <a style="background-color:#51b3f0;float:left; margin-left:13%;font-size:12px;">恢复</a>
+                    </span>
+                </div>
+            </div>*@
     </div>
 </div>
 
@@ -128,11 +134,22 @@
     <script type="text/javascript">
         $(function () {
         var mch = $.getUrlParam('mch');
-        var user = sessionStorage.getItem('user');
+            var user = sessionStorage.getItem('user');
+
+            var member = sessionStorage.getItem('member');
+            if (member == null || member == '') {
+                $.alert('会员信息为空');
+                return;
+            }
+            member = JSON.parse(member);
+            var memberlist = sessionStorage.getItem('memberlist');
+
         _viewModel = new Vue({
             el: '#memberdetails',
             data: {
                 User: {},
+                Member: member,
+                MemberCount:0,
             },
             methods: {
                 back: function (event) {
@@ -142,7 +159,11 @@
                         window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
                 },
             }
-        });
+            });
+            if (memberlist != null && memberlist != '') {
+                memberlist = JSON.parse(memberlist);
+                _viewModel.MemberCount = memberlist.length;
+            }
 
             function getUserByOpenId() {
                 $.ajax({

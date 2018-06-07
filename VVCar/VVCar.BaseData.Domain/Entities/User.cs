@@ -108,6 +108,12 @@ namespace VVCar.BaseData.Domain.Entities
         public string OpenID { get; set; }
 
         /// <summary>
+        /// 到岗时间
+        /// </summary>
+        [Display(Name = "到岗时间")]
+        public DateTime? DutyTime { get; set; }
+
+        /// <summary>
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]

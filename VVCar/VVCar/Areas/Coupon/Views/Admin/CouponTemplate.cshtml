@@ -216,6 +216,7 @@
     <script type="text/javascript">
 
         var userToken = sessionStorage.getItem('userToken');
+        var mch = sessionStorage.getItem('companyCode');
 
         var PageViewModel = function () {
             var me = this;
@@ -274,7 +275,7 @@
                                                 //刷新优惠券列表
                                                 $.ajax({
                                                     url: '/api/CouponTemplate/GetCouponTemplateInfo',
-                                                    headers: { 'Authorization': userToken },
+                                                    headers: { 'Authorization': userToken, 'CompanyCode': mch },
                                                     type: 'GET',
                                                     data: window._rootModel.coupontemplatedata(),
                                                     beforeSend: function () {
@@ -449,7 +450,7 @@
                                                                     //刷新优惠券列表
                                                                     $.ajax({
                                                                         url: '/api/CouponTemplate/GetCouponTemplateInfo',
-                                                                        headers: { 'Authorization': userToken },
+                                                                        headers: { 'Authorization': userToken, 'CompanyCode': mch },
                                                                         type: 'GET',
                                                                         data: window._rootModel.coupontemplatedata(),
                                                                         beforeSend: function () {
@@ -685,7 +686,7 @@
                 }
                 $.ajax({
                     url: '/api/CouponTemplate/GetCouponTemplateInfo',
-                    headers: { 'Authorization': userToken },
+                    headers: { 'Authorization': userToken, 'CompanyCode': mch },
                     type: 'GET',
                     data: me.coupontemplatedata(),
                     beforeSend: function () {
@@ -908,7 +909,7 @@
                                         //刷新优惠券列表
                                         $.ajax({
                                             url: '/api/CouponTemplate/GetCouponTemplateInfo',
-                                            headers: { 'Authorization': userToken },
+                                            headers: { 'Authorization': userToken, 'CompanyCode': mch },
                                             type: 'GET',
                                             data: window._rootModel.coupontemplatedata(),
                                             beforeSend: function () {

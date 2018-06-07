@@ -126,5 +126,13 @@ namespace VVCar.BaseData.Domain.Services
         /// <param name="param"></param>
         /// <returns></returns>
         bool BindingMobilePhone(BindingMobilePhoneParam param);
+
+        /// <summary>   
+        /// 获取员工信息
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        IEnumerable<UserInfoDto> GetUsers(UserFilter filter, ref int totalCount);
     }
 }

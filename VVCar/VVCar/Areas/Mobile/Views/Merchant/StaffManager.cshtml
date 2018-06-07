@@ -34,54 +34,56 @@
         </a>
     </div>
     <div class="touxiang" style="margin-bottom:25px;" v-if="ShowYGMD">
-        <div class="ygxx_box">
-            <div class="ygxx">岗位编号</div>
-            <div class="ygxx2">
-                <span>01</span>
-                <a style="background-color:#51b3f0; margin-right:3%; font-size:12px;width:70px;">启用账号</a>
-                <a style="background-color:#51b3f0; margin-right:3%; font-size:12px;width:70px;">禁用账号</a>
-            </div>
-        </div>
-        <div class="ygxx_box">
-            <div class="ygxx">员工姓名</div>
-            <div class="ygxx2">
-                <span>张三丰</span>
-            </div>
-        </div>
-        <div class="ygxx_box">
-            <div class="ygxx">手机号码</div>
-            <div class="ygxx2">
-                <span>15960248018</span>
-            </div>
-        </div>
-        <div class="ygxx_box">
-            <div class="ygxx">到岗时间</div>
-            <div class="ygxx2">
-                <span>2018-05-22</span>
-            </div>
-        </div>
-        <div class="ygxx_box">
-            <div class="ygxx">本月业绩</div>
-            <div class="ygxx2">
-                <span style="color:#ff0c4c;">￥0<span style="color:#999; margin-left:0;">（排名第<span style="color:#51b3f0; margin-left:0;">1</span>位）</span></span>
-            </div>
-        </div>
-        @*<div class="ygxx_box">
-                <div class="ygxx">会员卡销量</div>
+        <div v-for="User in UserList">
+            <div class="ygxx_box">
+                <div class="ygxx">岗位编号</div>
                 <div class="ygxx2">
-                    <span>￥0（0张）</span>
+                    <span>{{User.Code}}</span>
+                    <a style="background-color:#51b3f0; margin-right:3%; font-size:12px;width:70px;">启用账号</a>
+                    <a style="background-color:#51b3f0; margin-right:3%; font-size:12px;width:70px;">禁用账号</a>
                 </div>
-            </div>*@
-        <div class="ygxx_box">
-            <div class="ygxx">客户服务量</div>
-            <div class="ygxx2">
-                <span>0位</span>
             </div>
-        </div>
-        <div class="ygxx_box" style="border-bottom:none;">
-            <div class="ygxx">本月收入</div>
-            <div class="ygxx2">
-                <span>￥0</span>
+            <div class="ygxx_box">
+                <div class="ygxx">员工姓名</div>
+                <div class="ygxx2">
+                    <span>{{User.Name}}</span>
+                </div>
+            </div>
+            <div class="ygxx_box">
+                <div class="ygxx">手机号码</div>
+                <div class="ygxx2">
+                    <span>{{User.MobilePhoneNo}}</span>
+                </div>
+            </div>
+            <div class="ygxx_box">
+                <div class="ygxx">到岗时间</div>
+                <div class="ygxx2">
+                    <span>{{User.DutyTime}}</span>
+                </div>
+            </div>
+            <div class="ygxx_box">
+                <div class="ygxx">本月业绩</div>
+                <div class="ygxx2">
+                    <span style="color:#ff0c4c;">￥{{User.MonthPerformance}}<span style="color:#999; margin-left:0;">（排名第<span style="color:#51b3f0; margin-left:0;">{{User.PerformanceRanking}}</span>位）</span></span>
+                </div>
+            </div>
+            @*<div class="ygxx_box">
+                    <div class="ygxx">会员卡销量</div>
+                    <div class="ygxx2">
+                        <span>￥0（0张）</span>
+                    </div>
+                </div>*@
+            <div class="ygxx_box">
+                <div class="ygxx">客户服务量</div>
+                <div class="ygxx2">
+                    <span>{{User.CustomerServiceCount}}位</span>
+                </div>
+            </div>
+            <div class="ygxx_box" style="border-bottom:none;">
+                <div class="ygxx">本月收入</div>
+                <div class="ygxx2">
+                    <span>￥{{User.MonthIncome}}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -169,6 +171,7 @@
             el: '#staffmanager',
             data: {
                 User: {},
+                UserList:[],
                 ShowYGMD: true,
             },
             methods: {
@@ -221,6 +224,29 @@
             } else {
                 _viewModel.User = JSON.parse(user);
             }
+
+            function getUsers() {
+                $.ajax({
+                    url: '/api/User/GetUsers',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.UserList = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getUsers();
 
         });
     </script>

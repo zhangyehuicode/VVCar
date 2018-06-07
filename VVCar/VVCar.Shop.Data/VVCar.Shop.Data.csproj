@@ -57,6 +57,8 @@
     <Compile Include="Mapping\PickUpOrderPaymentDetailsMap.cs" />
     <Compile Include="Mapping\ProductCategoryMap.cs" />
     <Compile Include="Mapping\ProductMap.cs" />
+    <Compile Include="Mapping\ServicePeriodCouponMap.cs" />
+    <Compile Include="Mapping\ServicePeriodSettingMap.cs" />
     <Compile Include="Mapping\ShoppingCartItemMap.cs" />
     <Compile Include="Mapping\ShoppingCartMap.cs" />
     <Compile Include="Mapping\StockRecordMap.cs" />

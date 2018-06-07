@@ -229,5 +229,22 @@ namespace VVCar.Controllers.Api
                 return UserService.BindingMobilePhone(param);
             });
         }
+
+        /// <summary>
+        /// 获取员工信息
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetUsers"), AllowAnonymous]
+        public PagedActionResult<UserInfoDto> GetUsers([FromUri]UserFilter filter)
+        {
+            return SafeGetPagedData<UserInfoDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = UserService.GetUsers(filter, ref totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
     }
 }

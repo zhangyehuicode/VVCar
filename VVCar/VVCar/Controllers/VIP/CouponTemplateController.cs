@@ -11,6 +11,7 @@ using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
+using VVCar.VIP.Domain.Enums;
 using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
 using YEF.Core;
@@ -221,7 +222,7 @@ namespace VVCar.Controllers.VIP
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetCouponTemplateInfo")]
+        [Route("GetCouponTemplateInfo"), AllowAnonymous]
         public PagedActionResult<CouponTemplateDto> GetCouponTemplateInfo([FromUri]CouponTemplateFilter filter)
         {
             return SafeGetPagedData<CouponTemplateDto>((result) =>
@@ -303,6 +304,21 @@ namespace VVCar.Controllers.VIP
             return SafeGetPagedData<CouponTemplate>((result) =>
             {
                 result.Data = CouponTemplateService.GetGameCouponTemplate();
+            });
+        }
+
+        /// <summary>
+        /// 更改卡券状态
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ChangeApproveStatus"), AllowAnonymous]
+        public JsonActionResult<bool> ChangeApproveStatus(Guid templateId, EApproveStatus status)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponTemplateService.ChangeApproveStatus(templateId, status);
             });
         }
     }

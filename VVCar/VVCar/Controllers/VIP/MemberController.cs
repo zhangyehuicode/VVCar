@@ -107,7 +107,7 @@ namespace VVCar.Controllers.VIP
         /// </summary>
         /// <param name="filter">部门过滤条件</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public PagedActionResult<MemberDto> Search([FromUri]MemberFilter filter)
         {
             return SafeGetPagedData<MemberDto>((result) =>

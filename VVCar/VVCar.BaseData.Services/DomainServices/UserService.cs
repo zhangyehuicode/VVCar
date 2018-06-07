@@ -8,6 +8,8 @@ using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
 using YEF.Core.Dtos;
 using VVCar.BaseData.Domain.Dtos;
+using VVCar.BaseData.Domain.Filters;
+using VVCar.Shop.Domain.Services;
 
 namespace VVCar.BaseData.Services.DomainServices
 {
@@ -28,6 +30,7 @@ namespace VVCar.BaseData.Services.DomainServices
         }
 
         IUserRoleService _UserRoleService;
+
         /// <summary>
         /// UserRole 领域服务
         /// </summary>
@@ -40,6 +43,8 @@ namespace VVCar.BaseData.Services.DomainServices
                 return _UserRoleService;
             }
         }
+
+        IReportingService ReportingService { get => ServiceLocator.Instance.GetService<IReportingService>(); }
 
         #endregion
 
@@ -288,6 +293,44 @@ namespace VVCar.BaseData.Services.DomainServices
                 queryable = queryable.Skip(filter.Start.Value).Take(filter.Limit.Value);
             }
             result.Items = queryable.ToArray();
+            return result;
+        }
+
+        /// <summary>
+        /// 获取员工信息
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<UserInfoDto> GetUsers(UserFilter filter, ref int totalCount)
+        {
+            var queryable = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (!string.IsNullOrEmpty(filter.Code))
+                queryable = queryable.Where(t => t.Code.Contains(filter.Code));
+            if (!string.IsNullOrEmpty(filter.Name))
+                queryable = queryable.Where(t => t.Name.Contains(filter.Name));
+            if (filter.Department.HasValue)
+                queryable = queryable.Where(t => t.DepartmentID == filter.Department);
+            totalCount = queryable.Count();
+            if (filter.Start.HasValue && filter.Limit.HasValue)
+            {
+                queryable = queryable.OrderBy(t => t.Code).Skip(filter.Start.Value).Take(filter.Limit.Value);
+            }
+            var result = queryable.OrderBy(t => t.Code).ToArray().MapTo<List<UserInfoDto>>();
+            result.ForEach(t =>
+            {
+                var staffPerformance = ReportingService.GetStaffPerformance(t.ID, null);
+                t.MonthPerformance = staffPerformance.MonthPerformance;
+                t.TotalPerformance = staffPerformance.TotalPerformance;
+                t.CustomerServiceCount = staffPerformance.CustomerServiceCount;
+            });
+            result = result.OrderByDescending(t => t.MonthPerformance).ToList();
+            var ranking = 1;
+            result.ForEach(t =>
+            {
+                t.PerformanceRanking = ranking;
+                ranking++;
+            });
             return result;
         }
 

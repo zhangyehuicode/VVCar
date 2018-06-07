@@ -15,54 +15,60 @@
             <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
             <div class="touxiang_div">
                 <span>{{User.Name}}</span>
-                <span style=" font-size:14px; color:#999;">发行总量：0<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;"></a></span>
+                <span style=" font-size:14px; color:#999;">发行总量：{{TotalStock}}<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;"></a></span>
             </div>
         </div>
     </div>
-
-    <div class="touxiang">
+    <div class="touxiang" v-for="MemberCard in MemberCardList">
         <div class="ygxx_box">
             <div class="ygxx">会员卡名称</div>
             <div class="ygxx2">
-                <span>卡名称</span>
+                <span>{{MemberCard.Title}}</span>
             </div>
         </div>
         <div class="ygxx_box">
             <div class="ygxx">有效期</div>
             <div class="ygxx2">
-                <span>1年</span>
+                <span>{{MemberCard.Validity}}</span>
             </div>
         </div>
         <div class="ygxx_box">
             <div class="ygxx">发行量</div>
             <div class="ygxx2">
-                <span>0张</span>
+                <span>{{MemberCard.Stock}}张</span>
             </div>
         </div>
         <div class="ygxx_box">
             <div class="ygxx">成交量</div>
             <div class="ygxx2">
-                <span>0张</span>
+                <span>{{MemberCard.Stock-MemberCard.FreeStock}}张</span>
             </div>
         </div>
         <div class="ygxx_box">
-            <div class="ygxx">成交金额</div>
+            <div class="ygxx">状态</div>
             <div class="ygxx2">
-                <span style="color:#ff0c4c;">￥0</span>
+                <span v-if="MemberCard.AproveStatus==2">已投放</span>
+                <span v-if="MemberCard.AproveStatus!=2">待投放</span>
             </div>
         </div>
+        @*<div class="ygxx_box">
+                <div class="ygxx">成交金额</div>
+                <div class="ygxx2">
+                    <span style="color:#ff0c4c;">￥0</span>
+                </div>
+            </div>*@
         <div class="ygxx_box">
             <div class="ygxx">发行时间</div>
             <div class="ygxx2">
-                <span style="color:#51b3f0;">2018-05-23</span>
+                <span style="color:#51b3f0;">{{MemberCard.CreatedDate}}</span>
             </div>
         </div>
         <div class="ygxx_box" style=" border-bottom:none;">
             <div class="ygxx">操作</div>
             <div class="ygxx2">
                 <span>
-                    <a style="background-color:#51b3f0;float:left; margin-left:13%; width:70px; font-size:12px;">暂停发售</a>
-                    <a style="float:left;width:70px; font-size:12px;">暂停使用</a>
+                    <a style="background-color:#51b3f0;float:left; margin-left:13%; width:70px; font-size:12px;" v-if="MemberCard.AproveStatus!=2" v-on:click="changeApproveStatusDelivered(MemberCard)">投放</a>
+                    <a style="background-color:#51b3f0;float:left; margin-left:13%; width:70px; font-size:12px;" v-if="MemberCard.AproveStatus==2" v-on:click="changeApproveStatusApproved(MemberCard)">暂停投放</a>
                 </span>
             </div>
         </div>
@@ -126,6 +132,8 @@
             el: '#membercardmanager',
             data: {
                 User: {},
+                MemberCardList: [],
+                TotalStock:0,
             },
             methods: {
                 back: function (event) {
@@ -133,6 +141,16 @@
                 },
                 home: function (event) {
                         window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                },
+                changeApproveStatusApproved: function (data, event) {
+                    $.confirm('确认暂停投放？', function () {
+                        changeApproveStatus(data.ID, 1);
+                    });
+                },
+                changeApproveStatusDelivered: function (data, event) {
+                    $.confirm('确认投放？', function () {
+                        changeApproveStatus(data.ID, 2);
+                    });
                 },
             }
         });
@@ -144,6 +162,7 @@
                     headers: { 'CompanyCode': mch },
                     data: {
                         OpenID: '@ViewBag.OpenId',
+                        IsManager: true,
                     },
                     success: function (res) {
                         if (res.IsSuccessful) {
@@ -169,6 +188,68 @@
                 getUserByOpenId();
             } else {
                 _viewModel.User = JSON.parse(user);
+            }
+
+            function getCouponTemplateInfo() {
+                $.ajax({
+                    url: '/api/CouponTemplate/GetCouponTemplateInfo?All=false&CouponType=-1&AproveStatus=-2&Nature=1',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null && res.Data.length>0) {
+                                _viewModel.MemberCardList = res.Data;
+                                for (var i = 0; i < res.Data.length; i++) {
+                                    _viewModel.TotalStock += res.Data[i].Stock;
+                                }
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getCouponTemplateInfo();
+
+            function changeApproveStatus(templateId, status) {
+                if (templateId == null || templateId == '' || status == null || status=='') {
+                    $.alert('参数错误');
+                    return;
+                }
+                $.ajax({
+                    url: '/api/CouponTemplate/ChangeApproveStatus?templateId=' + templateId + '&status=' + status,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data) {
+                                $.toast('操作成功');
+                                for (var i = 0; i < _viewModel.MemberCardList.length; i++) {
+                                    if (_viewModel.MemberCardList[i].ID == templateId) {
+                                        _viewModel.MemberCardList[i].AproveStatus = status;
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
             }
 
         });

@@ -206,7 +206,7 @@ namespace VVCar.VIP.Services.DomainServices
 
         public IEnumerable<CouponTemplateDto> CouponTemplateInfo(CouponTemplateFilter filter, out int totalCount)
         {
-            var queryable = this.Repository.GetIncludes(false, "Stock", "UseTimeList");
+            var queryable = this.Repository.GetIncludes(false, "Stock", "UseTimeList").Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter.CouponType != -1)
             {
                 queryable = queryable.Where(c => c.CouponType == (ECouponType)filter.CouponType);
@@ -227,6 +227,10 @@ namespace VVCar.VIP.Services.DomainServices
             if (filter.IsNotSpecialCoupon)
             {
                 queryable = queryable.Where(t => !t.IsSpecialCoupon);
+            }
+            if (filter.Nature.HasValue)
+            {
+                queryable = queryable.Where(t => t.Nature == filter.Nature.Value);
             }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
@@ -562,6 +566,21 @@ namespace VVCar.VIP.Services.DomainServices
         {
             var now = DateTime.Now;
             return Repository.GetQueryable(false).Where(t => t.IsPutaway && t.PutawayTime < now && t.SoldOutTime > now && t.ApproveStatus == EApproveStatus.Delivered && (!t.IsFiexedEffectPeriod || (t.EffectiveDate < now && t.ExpiredDate > now)) && t.PutInStartDate < now && t.PutInEndDate > now && t.IsAvailable && t.Nature == ENature.Coupon).ToList();
+        }
+
+        /// <summary>
+        /// 更改卡券状态
+        /// </summary>
+        /// <param name="templateId"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public bool ChangeApproveStatus(Guid templateId, EApproveStatus status)
+        {
+            var entity = Repository.GetByKey(templateId);
+            if (entity == null)
+                throw new DomainException("卡券不存在");
+            entity.ApproveStatus = status;
+            return Repository.Update(entity) > 0;
         }
     }
 }
