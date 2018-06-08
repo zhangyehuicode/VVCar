@@ -78,12 +78,20 @@
                     scope: this,
                     permissionCode: 'Portal.BaseDataEdit',
                     margin: '0 0 0 5'
+                }, {
+                    action: 'stockOutIn',
+                    xtype: 'button',
+                    text: '出/入库',
+                    scope: this,
+                    permissionCode: 'Portal.BaseDataEdit',
+                    margin: '0 0 0 5'
                 }]
             }],
             columns: [
                 { header: '排序', dataIndex: 'Index', width: 60 },
-                { header: '标题', dataIndex: 'Name', width: 120 },
-                { header: '编码', dataIndex: 'Code', width: 60 },
+                { header: '标题', dataIndex: 'Name', flex: 1 },
+                { header: '编码', dataIndex: 'Code', flex: 1 },
+                { header: '单位', dataIndex: 'Unit', width: 60 },
                 {
                     header: '商品图片', dataIndex: 'ImgUrl', width: 100,
                     renderer: function (value) {
@@ -101,10 +109,19 @@
                             return '商品';
                     }
                 },
-                { header: '原单价', dataIndex: 'BasePrice', width: 80 },
-                { header: '销售单价', dataIndex: 'PriceSale', width: 80 },
-                { header: '兑换积分', dataIndex: 'Points', width: 80 },
-                { header: '兑换上限', dataIndex: 'UpperLimit', width: 80 },
+                { header: '原单价', dataIndex: 'BasePrice', width: 100 },
+                { header: '销售单价', dataIndex: 'PriceSale', width: 100 },
+                {
+                    header: '积分兑换', dataIndex: 'IsCanPointExchange', width: 80,
+                    renderer: function (value) {
+                        if (value)
+                            return '<span style="color:green;">允许</span>';
+                        else
+                            return '<span style="color:red;">关闭</span>';
+                    }
+                },
+                { header: '兑换积分', dataIndex: 'Points', width: 100 },
+                { header: '兑换上限', dataIndex: 'UpperLimit', width: 100 },
                 {
                     header: '是否上架', dataIndex: 'IsPublish', width: 80,
                     renderer: function (value) {
@@ -123,15 +140,21 @@
                             return '<span style="color:red;">否</span>';
                     }
                 },
-                { header: '库存', dataIndex: 'Stock', width: 60, },
-                { header: '生效时间', dataIndex: 'EffectiveDate', xtype: 'datecolumn', format: 'Y-m-d H:i:s', flex: 1 },
-                { header: '失效时间', dataIndex: 'ExpiredDate', xtype: 'datecolumn', format: 'Y-m-d H:i:s', flex: 1 },
+                { header: '库存', dataIndex: 'Stock', width: 100, },
+                {
+                    header: '抽成比例', dataIndex: 'CommissionRate', width: 80,
+                    renderer: function (value) {
+                        return value + '%';
+                    }
+                },
+                //{ header: '生效时间', dataIndex: 'EffectiveDate', xtype: 'datecolumn', format: 'Y-m-d H:i:s', flex: 1 },
+                //{ header: '失效时间', dataIndex: 'ExpiredDate', xtype: 'datecolumn', format: 'Y-m-d H:i:s', flex: 1 },
                 //{ header: '创建人', dataIndex: 'CreatedUser', flex: 1 },
                 //{ header: '创建时间', dataIndex: 'CreatedDate', xtype: 'datecolumn', format: 'Y-m-d H:i:s', flex: 1 },
                 {
                     text: '操作',
                     xtype: 'actioncolumn',
-                    width: 180,
+                    width: 200,
                     sortable: false,
                     menuDisabled: true,
                     height: 30,

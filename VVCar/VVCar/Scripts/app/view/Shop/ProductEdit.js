@@ -26,7 +26,7 @@
             }, {
                 xtype: 'textfield',
                 name: 'Name',
-                fieldLabel: '标题',
+                fieldLabel: '名称',
                 maxLength: 50,
                 allowBlank: false,
             }, {
@@ -35,6 +35,12 @@
                 fieldLabel: '编码',
                 maxLength: 20,
                 allowBlank: false,
+            }, {
+                xtype: 'textfield',
+                name: 'Unit',
+                fieldLabel: '单位',
+                maxLength: 10,
+                allowBlank: true,
             }, {
                 xtype: 'form',
                 border: false,
@@ -90,12 +96,37 @@
                 allowBlank: false,
                 value: 0,
             }, {
+                xtype: 'form',
+                border: false,
+                layout: 'hbox',
+                margin: '0 0 10 0',
+                items: [{
+                    xtype: 'numberfield',
+                    name: 'CommissionRate',
+                    fieldLabel: '抽成比例',
+                    minValue: 0,
+                    maxValue: 100,
+                    allowBlank: false,
+                    value: 0,
+                }, {
+                    xtype: 'label',
+                    text: '%（0~100）',
+                    margin: '8 0 0 5',
+                }]
+            }, {
+                xtype: 'checkboxfield',
+                name: 'IsCanPointExchange',
+                fieldLabel: '积分兑换',
+                checked: false,
+                inputValue: true,
+            }, {
                 xtype: 'numberfield',
                 name: 'Points',
                 fieldLabel: '兑换积分',
                 minValue: 0,
                 allowBlank: false,
                 value: 0,
+                disabled: true,
             }, {
                 xtype: 'numberfield',
                 name: 'UpperLimit',
@@ -103,6 +134,7 @@
                 minValue: 0,
                 allowBlank: false,
                 value: 0,
+                disabled: true,
             }, {
                 xtype: 'combobox',
                 name: 'IsPublish',
@@ -128,24 +160,26 @@
                 minValue: 0,
                 allowBlank: false,
                 value: 0,
-            }, {
-                xtype: 'datefield',
-                name: 'EffectiveDate',
-                fieldLabel: '生效时间',
-                allowBlank: true,
-                minValue: new Date(),
-                format: 'Y-m-d H:i:s',
-                width: 250,
-                value: new Date(),
-            }, {
-                xtype: 'datefield',
-                name: 'ExpiredDate',
-                fieldLabel: '失效时间',
-                allowBlank: true,
-                minValue: new Date(),
-                format: 'Y-m-d H:i:s',
-                width: 250,
-            }]
+            },
+                //{
+                //    xtype: 'datefield',
+                //    name: 'EffectiveDate',
+                //    fieldLabel: '生效时间',
+                //    allowBlank: true,
+                //    minValue: new Date(),
+                //    format: 'Y-m-d H:i:s',
+                //    width: 250,
+                //    value: new Date(),
+                //}, {
+                //    xtype: 'datefield',
+                //    name: 'ExpiredDate',
+                //    fieldLabel: '失效时间',
+                //    allowBlank: true,
+                //    minValue: new Date(),
+                //    format: 'Y-m-d H:i:s',
+                //    width: 250,
+                //}
+            ]
         });
         me.items = [me.form];
         me.buttons = [{

@@ -62,9 +62,59 @@ namespace VVCar.BaseData.Domain.Dtos
         public int CustomerServiceCount { get; set; }
 
         /// <summary>
+        /// 月客户服务量
+        /// </summary>
+        public int MonthCustomerServiceCount { get; set; }
+
+        /// <summary>
+        /// 总抽成
+        /// </summary>
+        public decimal TotalCommission { get; set; }
+
+        /// <summary>
+        /// 当月抽成
+        /// </summary>
+        public decimal MonthCommission { get; set; }
+
+        /// <summary>
+        /// 底薪
+        /// </summary>
+        public decimal BasicSalary { get; set; }
+
+        /// <summary>
+        /// 奖励/补贴
+        /// </summary>
+        public decimal Subsidy { get; set; }
+
+        /// <summary>
         /// 本月收入
         /// </summary>
         public decimal MonthIncome { get; set; }
+
+        /// <summary>
+        /// 今日订单数（接车单）
+        /// </summary>
+        public int DailyPickUpOrderCount { get; set; }
+
+        /// <summary>
+        /// 客户预约数
+        /// </summary>
+        public int CustomerAppointmentCount { get; set; }
+
+        /// <summary>
+        /// 员工数
+        /// </summary>
+        public int StaffCount { get; set; }
+
+        /// <summary>
+        /// 会员数
+        /// </summary>
+        public int MemberCount { get; set; }
+
+        /// <summary>
+        /// 会员卡发行量
+        /// </summary>
+        public int MemberCardStockCount { get; set; }
 
         /// <summary>
         /// 所属门店ID

@@ -1,0 +1,247 @@
+﻿Ext.define('WX.controller.CouponPush', {
+	extend: 'Ext.app.Controller',
+	requires: ['WX.store.BaseData.CouponPushStore'],
+	models: ['BaseData.CouponPushModel'],
+	views: ['CouponPush.CouponPushList', 'CouponPush.CouponPushEdit', 'CouponPush.CouponPushItemEdit'],
+	refs: [{
+		ref: 'couponPushList',
+		selector: 'CouponPushList'
+	}, {
+		ref: 'gridCouponPush',
+		selector: 'CouponPushList grid[name=gridCouponPush]'
+	}, {
+		ref: 'gridCouponPushItem',
+		selector: 'CouponPushList grid[name=gridCouponPushItem]'
+	}, {
+		ref: 'gridCouponPushItemEdit',
+		selector: 'CouponPushItemEdit grid[name=couponTemplate]'
+	}, {
+		ref: 'couponPushEdit',
+		selector: 'CouponPushEdit'
+	}, {
+		ref: 'couponPushItemEdit',
+		selector: 'CouponPushItemEdit'
+	}],
+	init: function () {
+		var me = this;
+		me.control({
+			'CouponPushList button[action=addCouponPush]': {
+				click: me.addCouponPush
+			},
+			'CouponPushList button[action=deleteCouponPush]': {
+				click: me.deleteCouponPush
+			},
+			'CouponPushList button[action=addCouponPushItem]': {
+				click: me.addCouponPushItem
+			},
+			'CouponPushList button[action=deleteCouponPush]': {
+				click: me.deleteCouponPush
+			},
+			'CouponPushList button[action=deleteCouponPushItem]': {
+				click: me.deleteCouponPushItem
+			},
+			'CouponPushList button[action=batchHandCouponPush]': {
+				click: me.batchHandCouponPush
+			},
+			'CouponPushList button[action=search]': {
+				click: me.searchData
+			},
+			'CouponPushList grid[name=gridCouponPush]': {
+				select: me.gridCouponPushSelect
+			},
+			'CouponPushEdit button[action=save]': {
+				click: me.saveCouponPush
+			},
+			'CouponPushItemEdit button[action=save]': {
+				click: me.saveCouponPushItem
+			}
+		});
+	},
+	gridCouponPushSelect: function (grid, record, index, eOpts) {
+		var store = this.getGridCouponPushItem().getStore();
+		Ext.apply(store.proxy.extraParams, {
+			All: false,
+			CouponPushID: record.data.ID
+		});
+		store.reload();
+	},
+	addCouponPush: function () {
+		var win = Ext.widget('CouponPushEdit');
+		win.form.getForm().actionMethod = 'POST';
+		win.setTitle('添加任务');
+		win.show();
+	},
+	addCouponPushItem: function () {
+		var me = this;
+		var couponPushGrid = me.getGridCouponPush();
+		var selectedItems = couponPushGrid.getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '请先选择要添加的任务!');
+			return;
+		} else {
+			me.tasks = selectedItems;
+		}
+		var win = Ext.widget('CouponPushItemEdit');
+		win.setTitle('添加卡券推送子项');
+		win.show();
+	},
+	deleteCouponPush: function (btn) {
+		var me = this;
+		Ext.Msg.confirm('提示', '确定要删除任务吗', function (optional) {
+			if (optional === 'yes') {
+				var selectedItems = btn.up('grid').getSelectionModel().getSelection();
+				if (selectedItems.length < 1) {
+					Ext.Msg.alert('提示', '请先选择要删除的任务!');
+					return;
+				}
+				var store = btn.up('grid').getStore();
+				var ids = [];
+				selectedItems.forEach(function (item) {
+					ids.push(item.data.ID);
+				});
+				store.batchDelete(ids,
+					function success(response, request, c) {
+						var ajaxResult = JSON.parse(c.responseText);
+						if (ajaxResult.IsSuccessful) {
+							store.reload();
+							me.getGridCouponPushItem().getStore().reload();
+							Ext.Msg.alert('提示', '删除成功');
+						} else {
+							Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+					}
+				);
+			}
+		})
+	},
+	deleteCouponPushItem: function (btn) {
+		Ext.Msg.confirm('提示', '确定要删除卡券吗?', function (optional) {
+			if (optional === 'yes') {
+				var selectedItems = btn.up('grid').getSelectionModel().getSelection();
+				if (selectedItems.length < 1) {
+					Ext.Msg.alert('提示', '请先选择要删除的卡券!');
+					return;
+				}
+				var store = btn.up('grid').getStore();
+				var ids = [];
+				selectedItems.forEach(function (item) {
+					ids.push(item.data.ID);
+				});
+				store.batchDelete(ids,
+					function success(response, request, c) {
+						var ajaxResult = JSON.parse(c.responseText);
+						if (ajaxResult.IsSuccessful) {
+							store.reload();
+							Ext.Msg.alert('提示', '删除成功');
+						} else {
+							Ext.Msg.alert('提示', result.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+					}
+				);
+			}
+		});
+	},
+	saveCouponPush: function () {
+		var me = this;
+		var win = me.getCouponPushEdit();
+		var form = win.form.getForm();
+		formValues = form.getValues();
+		if (form.isValid()) {
+			var couponPushStore = this.getGridCouponPush().getStore();
+			if (form.actionMethod == 'POST') {
+				couponPushStore.create(formValues, {
+					callback: function (records, operation, success) {
+						if (!success) {
+							Ext.MessageBox.alert('提示', operation.error);
+							return;
+						} else {
+							couponPushStore.add(records[0].data);
+							couponPushStore.commitChanges();
+							Ext.MessageBox.alert('提示', '新增成功');
+							win.close();
+						}
+					}
+				});
+			}
+		}
+	},
+	saveCouponPushItem: function () {
+		var me = this;
+		var win = me.getCouponPushItemEdit();
+		var store = me.getGridCouponPushItem().getStore();
+		var selectedItems = me.getGridCouponPushItemEdit().getSelectionModel().getSelection();
+		if (selectedItems.length === 0) {
+			Ext.Msg.alert('提示', '未选择操作数据');
+			return;
+		};
+		me.tasks.forEach(function (item) {
+			var couponPushItem = [];
+			selectedItems.forEach(function (index) {
+				couponPushItem.push({ CouponPushID: item.data.ID, CouponTemplateID: index.data.ID, CouponTemplateTitle: index.data.Title });
+			});
+			store.batchAdd(couponPushItem, function (response, opts) {
+				var ajaxResult = JSON.parse(response.responseText);
+				if (ajaxResult.Data == false) {
+					Ext.Msg.alert("提示", ajaxResult.ErrorMessage);
+					return;
+				}
+			}, function (response, opts) {
+				var ajaxResult = JSON.parse(response.responseText);
+				Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+			});
+		});
+		store.reload();
+		win.close();
+	},
+	searchData: function (btn) {
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			var store = this.getGridCouponPush().getStore();
+			store.proxy.extraParams = queryValues;
+			store.load();
+			var itemStore = this.getGridCouponPushItem().getStore();
+			var params = itemStore.getProxy().extraParams;
+			Ext.apply(params, { CouponPushID: null });
+			itemStore.proxy.extraParams = params;
+			itemStore.load();
+		} else {
+			Ext.MessageBox.alert('系统提示', '请输入过滤条件!');
+		}
+	},
+	batchHandCouponPush: function (btn) {
+		Ext.Msg.confirm('提示', '确定要手动推送数据吗?', function (optional) {
+			if (optional === 'yes') {
+				var selectedItems = btn.up('grid').getSelectionModel().getSelection();
+				if (selectedItems.length < 1) {
+					Ext.Msg.alert('提示', '请先选择要推送的数据!');
+					return;
+				}
+				var store = btn.up('grid').getStore();
+				var ids = [];
+				selectedItems.forEach(function (item) {
+					ids.push(item.data.ID);
+				});
+				store.batchHandCouponPush(ids,
+					function success(response, request, c) {
+						var ajaxResult = JSON.parse(c.responseText);
+						if (ajaxResult.IsSuccessful) {
+							store.reload();
+							Ext.Msg.alert('提示', '手动推送成功');
+						} else {
+							Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+					}
+				);
+			}
+		})
+	}
+});

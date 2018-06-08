@@ -20,24 +20,24 @@
         </div>
         <ul>
             <li class="tongzhi">
-                本月业绩（<span>@DateTime.Now.Month</span>月，提成排名第<span>1</span>）
-                <form action="#" method="get" style="float:right;">
-                    <select name="" style="height:30px; border-radius:4px; border-color:#eee; outline-style:none; font-size:12px;">
-                        <option value="0">月份选择&nbsp;</option>
-                        <option value="1">1月份</option>
-                        <option value="2">2月份</option>
-                        <option value="3">3月份</option>
-                        <option value="4">4月份</option>
-                        <option value="5">5月份</option>
-                        <option value="6">6月份</option>
-                        <option value="7">7月份</option>
-                        <option value="8">8月份</option>
-                        <option value="9">9月份</option>
-                        <option value="10">10月份</option>
-                        <option value="11">11月份</option>
-                        <option value="12">12月份</option>
-                    </select>
-                </form>
+                本月业绩（<span>@DateTime.Now.Month</span>月，提成排名第<span>{{User.PerformanceRanking}}</span>）
+                @*<form action="#" method="get" style="float:right;">
+                        <select name="" style="height:30px; border-radius:4px; border-color:#eee; outline-style:none; font-size:12px;">
+                            <option value="0">月份选择&nbsp;</option>
+                            <option value="1">1月份</option>
+                            <option value="2">2月份</option>
+                            <option value="3">3月份</option>
+                            <option value="4">4月份</option>
+                            <option value="5">5月份</option>
+                            <option value="6">6月份</option>
+                            <option value="7">7月份</option>
+                            <option value="8">8月份</option>
+                            <option value="9">9月份</option>
+                            <option value="10">10月份</option>
+                            <option value="11">11月份</option>
+                            <option value="12">12月份</option>
+                        </select>
+                    </form>*@
             </li>
         </ul>
     </div>
@@ -47,11 +47,11 @@
                 <span style="font-size:14px; color:#666;">开卡数量</span>
             </ul>*@
         <ul class="yj_box" style="width:50%;">
-            <li style="color:#ff0c4c;"><span style="font-size:13px;">￥</span>0</li>
+            <li style="color:#ff0c4c;"><span style="font-size:13px;">￥</span>{{User.MonthPerformance}}</li>
             <span style="font-size:14px; color:#666;">业绩总额</span>
         </ul>
         <ul class="yj_box" style="width:50%;">
-            <li style="color:#000;">0</li>
+            <li style="color:#000;">{{User.MonthCustomerServiceCount}}</li>
             <span style="font-size:14px; color:#666;">客户服务量</span>
         </ul>
     </div>

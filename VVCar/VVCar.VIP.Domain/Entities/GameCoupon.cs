@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using YEF.Core.Data;
 using System.ComponentModel.DataAnnotations;
 
@@ -27,6 +23,7 @@ namespace VVCar.VIP.Domain.Entities
         /// <summary>
         /// 创建时间
         /// </summary>
+        [Display(Name = "创建时间")]
         public DateTime CreatedDate { get; set; }
     }
 }

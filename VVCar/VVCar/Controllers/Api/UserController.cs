@@ -208,7 +208,7 @@ namespace VVCar.Controllers.Api
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpGet, Route("GetUserByOpenID"), AllowAnonymous]
-        public JsonActionResult<User> GetUserByOpenID([FromUri]WeChatLoginParams param)
+        public JsonActionResult<UserInfoDto> GetUserByOpenID([FromUri]WeChatLoginParams param)
         {
             return SafeExecute(() =>
             {
@@ -244,6 +244,20 @@ namespace VVCar.Controllers.Api
                 var data = UserService.GetUsers(filter, ref totalCount);
                 result.Data = data;
                 result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        /// 更改用户状态
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ChangeAvailable"), AllowAnonymous]
+        public JsonActionResult<bool> ChangeAvailable(Guid userId)
+        {
+            return SafeExecute(() =>
+            {
+                return UserService.ChangeAvailable(userId);
             });
         }
     }

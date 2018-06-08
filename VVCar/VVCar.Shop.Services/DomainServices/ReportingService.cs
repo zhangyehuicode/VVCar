@@ -157,6 +157,7 @@ namespace VVCar.Shop.Services.DomainServices
             staffPerformance.MonthPerformance = monthpickuporderlist.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
             staffPerformance.TotalPerformance = pickuporderqueryable.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
             staffPerformance.CustomerServiceCount = pickuporderqueryable.Count();
+            staffPerformance.MonthCustomerServiceCount = monthpickuporderlist.Count();
 
             return staffPerformance;
         }

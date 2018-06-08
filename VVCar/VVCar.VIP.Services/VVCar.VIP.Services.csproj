@@ -64,6 +64,8 @@
     <Compile Include="DomainServices\CardThemeCategoryService.cs" />
     <Compile Include="DomainServices\CardThemeGroupService.cs" />
     <Compile Include="DomainServices\CardThemeGroupUseTimeService.cs" />
+    <Compile Include="DomainServices\CouponPushItemService.cs" />
+    <Compile Include="DomainServices\CouponPushService.cs" />
     <Compile Include="DomainServices\CouponService.cs" />
     <Compile Include="DomainServices\CouponTemplateService.cs" />
     <Compile Include="DomainServices\CouponTemplateStockService.cs" />

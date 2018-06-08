@@ -5,7 +5,6 @@ using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
-using YEF.Core;
 using YEF.Core.Dtos;
 
 namespace VVCar.Controllers.VIP

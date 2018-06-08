@@ -119,5 +119,10 @@ namespace VVCar.Shop.Domain.Dtos
         /// 客户服务量
         /// </summary>
         public int CustomerServiceCount { get; set; }
+
+        /// <summary>
+        /// 月客户服务量
+        /// </summary>
+        public int MonthCustomerServiceCount { get; set; }
     }
 }

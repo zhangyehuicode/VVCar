@@ -92,7 +92,7 @@ namespace VVCar.VIP.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<GameCouponDto> Search(GameCouponFilter filter, out int totalCount)
         {
-            var queryable = this.Repository.GetQueryable(false);
+            var queryable = this.Repository.GetQueryable(false).Where(t=>t.MerchantID==AppContext.CurrentSession.MerchantID);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.ID).Skip(filter.Start.Value).Take(filter.Limit.Value);

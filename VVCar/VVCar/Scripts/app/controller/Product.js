@@ -2,7 +2,7 @@
     extend: 'Ext.app.Controller',
     requires: ['WX.store.BaseData.ProductStore', 'WX.store.BaseData.ProductCategoryTreeStore'],
     models: ['BaseData.ProductModel', 'BaseData.ProductCategoryModel', 'BaseData.ProductCategoryTreeModel'],
-    views: ['Shop.Product', 'Shop.ProductEdit', 'Shop.ProductCategoryList', 'Shop.ProductCategoryEdit', 'Shop.ChangeCategory'],
+    views: ['Shop.Product', 'Shop.ProductEdit', 'Shop.ProductCategoryList', 'Shop.ProductCategoryEdit', 'Shop.ChangeCategory', 'Shop.StockOutInEdit'],
     refs: [{
         ref: 'product',
         selector: 'Product grid'
@@ -15,6 +15,9 @@
     }, {
         ref: 'treeProductCategory',
         selector: 'Product treepanel[name=treeProductCategory]',
+    }, {
+        ref: 'stockOutInEdit',
+        selector: 'StockOutInEdit',
     }],
     init: function () {
         var me = this;
@@ -47,6 +50,9 @@
             'ProductEdit button[action=uploadpic]': {
                 click: me.uploadProductPic
             },
+            'ProductEdit checkboxfield[name=IsCanPointExchange]': {
+                change: me.pointExchangeChange
+            },
             'ProductCategoryList button[action=addProductCategory]': {
                 click: me.addProductCategory
             },
@@ -65,7 +71,47 @@
             'Product button[action=changeCategory]': {
                 click: me.changeProductCategory
             },
+            'Product button[action=stockIn]': {
+                click: me.stockIn
+            },
+            'Product button[action=stockOutIn]': {
+                click: me.stockOutIn
+            },
+            'StockOutInEdit button[action=save]': {
+                click: me.stockSave
+            },
         });
+    },
+    stockSave: function (btn) {
+        var me = this;
+        Ext.MessageBox.confirm('询问', '确定？', function (opt) {
+            if (opt == 'yes') {
+
+            }
+        });
+    },
+    stockOutIn: function (btn) {
+        var me = this;
+        var selectedItems = me.getProduct().getSelectionModel().getSelection();
+        if (selectedItems == null || selectedItems.length < 1) {
+            Ext.MessageBox.alert('提示', '请先选中一个产品');
+            return;
+        }
+        var win = Ext.widget("StockOutInEdit");
+        win.setTitle(selectedItems[0].data.Name + " 出/入库");
+        win.show();
+    },
+    pointExchangeChange: function (checkbox, newValue, oldValue, eOpts) {
+        var me = this;
+        if (newValue) {
+            me.getProductEdit().down('numberfield[name=Points]').setDisabled(false);
+            me.getProductEdit().down('numberfield[name=UpperLimit]').setDisabled(false);
+        } else {
+            me.getProductEdit().down('numberfield[name=Points]').setDisabled(true);
+            me.getProductEdit().down('numberfield[name=UpperLimit]').setDisabled(true);
+            me.getProductEdit().down('numberfield[name=Points]').setValue(0);
+            me.getProductEdit().down('numberfield[name=UpperLimit]').setValue(0);
+        }
     },
     ontreeProductCategoryItemClick: function (tree, record, item) {
         var myStore = this.getProduct().getStore();
@@ -286,6 +332,7 @@
         var win = Ext.widget("ProductEdit");
         win.form.loadRecord(record);
         win.down('box[name=ImgShow]').autoEl.src = record.data.ImgUrl;
+        win.down('numberfield[name=Stock]').setDisabled(true);
         win.form.getForm().actionMethod = 'PUT';
         win.setTitle('编辑商品');
         win.show();

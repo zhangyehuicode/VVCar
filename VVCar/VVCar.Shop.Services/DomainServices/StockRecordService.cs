@@ -29,6 +29,11 @@ namespace VVCar.Shop.Services.DomainServices
             entity.CreatedDate = DateTime.Now;
             entity.StockRecordType = entity.Quantity < 0 ? EStockRecordType.Out : EStockRecordType.In;
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
+            if (entity.Source == EStockRecordSource.Background)
+            {
+                entity.StaffID = AppContext.CurrentSession.UserID;
+                entity.StaffName = AppContext.CurrentSession.UserName;
+            }
             return base.Add(entity);
         }
 

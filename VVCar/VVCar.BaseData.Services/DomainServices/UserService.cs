@@ -10,6 +10,8 @@ using YEF.Core.Dtos;
 using VVCar.BaseData.Domain.Dtos;
 using VVCar.BaseData.Domain.Filters;
 using VVCar.Shop.Domain.Services;
+using VVCar.Shop.Domain.Entities;
+using VVCar.VIP.Domain.Entities;
 
 namespace VVCar.BaseData.Services.DomainServices
 {
@@ -45,6 +47,16 @@ namespace VVCar.BaseData.Services.DomainServices
         }
 
         IReportingService ReportingService { get => ServiceLocator.Instance.GetService<IReportingService>(); }
+
+        IRepository<PickUpOrder> PickUpOrderRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrder>>(); }
+
+        IRepository<Appointment> AppointmentRepo { get => UnitOfWork.GetRepository<IRepository<Appointment>>(); }
+
+        IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
+
+        IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
+
+        IRepository<CouponTemplate> CouponTemplateRepo { get => UnitOfWork.GetRepository<IRepository<CouponTemplate>>(); }
 
         #endregion
 
@@ -204,7 +216,7 @@ namespace VVCar.BaseData.Services.DomainServices
             return result;
         }
 
-        public User GetUserByOpenID(WeChatLoginParams param)
+        public UserInfoDto GetUserByOpenID(WeChatLoginParams param)
         {
             var users = Repository.GetInclude(t => t.UserRoles, false).Where(t => t.OpenID == param.OpenID && t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
             User user = null;
@@ -231,7 +243,41 @@ namespace VVCar.BaseData.Services.DomainServices
                 if (user != null && !user.IsAvailable)
                     throw new DomainException("没有权限");
             }
-            return user;
+
+            if (user != null)
+            {
+                var result = user.MapTo<UserInfoDto>();
+
+                //var staffPerformance = ReportingService.GetStaffPerformance(user.ID, null);
+
+                var totalCount = 0;
+                var usersPerformance = GetUsers(new UserFilter { All = false }, ref totalCount).ToList();
+                var userPerformance = usersPerformance.FirstOrDefault(t => t.ID == user.ID);
+
+                result.TotalPerformance = userPerformance.TotalPerformance;
+                result.MonthPerformance = userPerformance.MonthPerformance;
+                result.TotalCommission = userPerformance.TotalCommission;
+                result.MonthCommission = userPerformance.MonthCommission;
+                result.Subsidy = userPerformance.Subsidy;
+                result.BasicSalary = userPerformance.BasicSalary;
+                result.CustomerServiceCount = userPerformance.CustomerServiceCount;
+                result.MonthCustomerServiceCount = userPerformance.MonthCustomerServiceCount;
+                result.PerformanceRanking = userPerformance.PerformanceRanking;
+
+                var starttime = DateTime.Now.Date;
+                var endtime = starttime.AddDays(1);
+                result.DailyPickUpOrderCount = PickUpOrderRepo.GetQueryable(false).Count(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedDate >= starttime && t.CreatedDate < endtime);
+                result.CustomerAppointmentCount = AppointmentRepo.GetQueryable(false).Count(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+                result.StaffCount = UserRepo.GetQueryable(false).Count(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+                result.MemberCount = MemberRepo.GetQueryable(false).Count(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+
+                var couponTemplateStock = CouponTemplateRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Nature == VIP.Domain.Enums.ENature.Card).Select(t => t.Stock).GroupBy(g => 1).Select(t => t.Sum(s => s.Stock)).FirstOrDefault();
+                result.MemberCardStockCount = couponTemplateStock;
+
+                return result;
+            }
+
+            return null;
         }
 
         public UserInfoDto SsoLogin(string userCode, string password)
@@ -320,9 +366,15 @@ namespace VVCar.BaseData.Services.DomainServices
             result.ForEach(t =>
             {
                 var staffPerformance = ReportingService.GetStaffPerformance(t.ID, null);
-                t.MonthPerformance = staffPerformance.MonthPerformance;
+
                 t.TotalPerformance = staffPerformance.TotalPerformance;
+                t.MonthPerformance = staffPerformance.MonthPerformance;
+                t.TotalCommission = staffPerformance.TotalCommission;
+                t.MonthCommission = staffPerformance.MonthCommission;
+                t.Subsidy = staffPerformance.Subsidy;
+                t.BasicSalary = staffPerformance.BasicSalary;
                 t.CustomerServiceCount = staffPerformance.CustomerServiceCount;
+                t.MonthCustomerServiceCount = staffPerformance.MonthCustomerServiceCount;
             });
             result = result.OrderByDescending(t => t.MonthPerformance).ToList();
             var ranking = 1;
@@ -332,6 +384,20 @@ namespace VVCar.BaseData.Services.DomainServices
                 ranking++;
             });
             return result;
+        }
+
+        /// <summary>
+        /// 更改是否可用
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public bool ChangeAvailable(Guid userId)
+        {
+            var user = Repository.GetByKey(userId);
+            if (user == null)
+                throw new DomainException("用户不存在");
+            user.IsAvailable = !user.IsAvailable;
+            return Repository.Update(user) > 0;
         }
 
         /// <summary>

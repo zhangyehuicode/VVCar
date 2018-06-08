@@ -18,5 +18,8 @@
         { name: "BasePrice" },
         { name: "PriceSale" },
         { name: "ProductType" },
+        { name: "CommissionRate" },
+        { name: "IsCanPointExchange" },
+        { name: "Unit" },
     ]
 });

@@ -71,6 +71,7 @@
     <Compile Include="Enums\EPayType.cs" />
     <Compile Include="Enums\EPickUpOrderStatus.cs" />
     <Compile Include="Enums\EProductType.cs" />
+    <Compile Include="Enums\EStockRecordSource.cs" />
     <Compile Include="Enums\EStockRecordType.cs" />
     <Compile Include="Filters\AppointmentFilter.cs" />
     <Compile Include="Filters\OrderFilter.cs" />

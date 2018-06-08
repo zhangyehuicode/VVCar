@@ -68,6 +68,12 @@ namespace VVCar.Shop.Domain.Entities
         public decimal PriceSale { get; set; }
 
         /// <summary>
+        /// 抽成比例(0~100)
+        /// </summary>
+        [Display(Name = "抽成比例(0~100)")]
+        public decimal CommissionRate { get; set; }
+
+        /// <summary>
         /// 兑换积分
         /// </summary>
         [Display(Name = "兑换积分")]
@@ -98,16 +104,28 @@ namespace VVCar.Shop.Domain.Entities
         public int Stock { get; set; }
 
         /// <summary>
-        /// 生效时间
+        /// 是否可以积分兑换
         /// </summary>
-        [Display(Name = "生效时间")]
-        public DateTime? EffectiveDate { get; set; }
+        [Display(Name = "是否可以积分兑换")]
+        public bool IsCanPointExchange { get; set; }
 
         /// <summary>
-        /// 失效时间
+        /// 单位
         /// </summary>
-        [Display(Name = "失效时间")]
-        public DateTime? ExpiredDate { get; set; }
+        [Display(Name = "单位")]
+        public string Unit { get; set; }
+
+        ///// <summary>
+        ///// 生效时间
+        ///// </summary>
+        //[Display(Name = "生效时间")]
+        //public DateTime? EffectiveDate { get; set; }
+
+        ///// <summary>
+        ///// 失效时间
+        ///// </summary>
+        //[Display(Name = "失效时间")]
+        //public DateTime? ExpiredDate { get; set; }
 
         /// <summary>
         /// 产品介绍

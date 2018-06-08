@@ -112,7 +112,7 @@ namespace VVCar.BaseData.Domain.Services
         /// </summary>
         /// <param name="openId"></param>
         /// <returns></returns>
-        User GetUserByOpenID(WeChatLoginParams param);
+        UserInfoDto GetUserByOpenID(WeChatLoginParams param);
 
         /// <summary>
         /// 获取商户店员信息
@@ -134,5 +134,12 @@ namespace VVCar.BaseData.Domain.Services
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<UserInfoDto> GetUsers(UserFilter filter, ref int totalCount);
+
+        /// <summary>
+        /// 更改用户状态
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        bool ChangeAvailable(Guid userId);
     }
 }

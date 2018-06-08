@@ -34,7 +34,7 @@ namespace VVCar
             config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             var timeConverter = new IsoDateTimeConverter()
             {
-                DateTimeFormat = "yyyy-MM-dd HH:mm:ss"
+                DateTimeFormat = "yyyy-MM-dd"// HH:mm:ss
             };
             config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(timeConverter);
         }

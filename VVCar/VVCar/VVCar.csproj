@@ -295,6 +295,8 @@
     <Compile Include="Controllers\Shop\ShoppingCartItemController.cs" />
     <Compile Include="Controllers\Shop\StockRecordController.cs" />
     <Compile Include="Controllers\VIP\CouponController.cs" />
+    <Compile Include="Controllers\VIP\CouponPushController.cs" />
+    <Compile Include="Controllers\VIP\CouponPushItemController.cs" />
     <Compile Include="Controllers\VIP\CouponTemplateController.cs" />
     <Compile Include="Controllers\VIP\GameCouponController.cs" />
     <Compile Include="Controllers\VIP\MemberCardTypeController.cs" />
@@ -580,6 +582,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ConsumeReport.js" />
     <Content Include="Scripts\app\controller\Coupon.js" />
+    <Content Include="Scripts\app\controller\CouponPush.js" />
     <Content Include="Scripts\app\controller\DataDict.js" />
     <Content Include="Scripts\app\controller\Department.js" />
     <Content Include="Scripts\app\controller\GameCoupon.js" />
@@ -611,6 +614,8 @@
     <Content Include="Scripts\app\model\BaseData\CardInfoModel.js" />
     <Content Include="Scripts\app\model\BaseData\CardThemeCategoryMenuModel.js" />
     <Content Include="Scripts\app\model\BaseData\CardThemeCategoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CouponPushItemModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CouponPushModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponTemplateInfoModel.js" />
     <Content Include="Scripts\app\model\BaseData\DepartmentModel.js" />
     <Content Include="Scripts\app\model\BaseData\GameCouponModel.js" />
@@ -649,6 +654,8 @@
     <Content Include="Scripts\app\model\DataDict\DataDictTypeModel.js" />
     <Content Include="Scripts\app\store\BaseData\CardThemeCategoryMenuStore.js" />
     <Content Include="Scripts\app\store\BaseData\CardThemeCategoryStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CouponPushItemStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CouponPushStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponTemplateInfoStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentTreeStore.js" />
@@ -711,6 +718,9 @@
     <Content Include="Scripts\app\store\Reporting\ConsumeReportStore.js" />
     <Content Include="Scripts\app\store\Reporting\RechargeReportStore.js" />
     <Content Include="Scripts\app\view\ConsumeReport\ConsumeReport.js" />
+    <Content Include="Scripts\app\view\CouponPush\CouponPushEdit.js" />
+    <Content Include="Scripts\app\view\CouponPush\CouponPushItemEdit.js" />
+    <Content Include="Scripts\app\view\CouponPush\CouponPushList.js" />
     <Content Include="Scripts\app\view\Coupon\Coupon.js" />
     <Content Include="Scripts\app\view\DataDict\DataDictList.js" />
     <Content Include="Scripts\app\view\Department\DepartmentEdit.js" />
@@ -775,6 +785,7 @@
     <Content Include="Scripts\app\view\Shop\ProductCategoryEdit.js" />
     <Content Include="Scripts\app\view\Shop\ProductCategoryList.js" />
     <Content Include="Scripts\app\view\Shop\ProductEdit.js" />
+    <Content Include="Scripts\app\view\Shop\StockOutInEdit.js" />
     <Content Include="Scripts\app\view\SysMenu\AddSysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenuTreeComboBox.js" />

@@ -46,5 +46,11 @@ namespace VVCar.Shop.Domain.Filters
         /// </summary>
         [Display(Name = "是否来自库存管理")]
         public bool IsFromStockManager { get; set; }
+
+        /// <summary>
+        /// 是否上架
+        /// </summary>
+        [Display(Name = "是否上架")]
+        public bool IsPublish { get; set; }
     }
 }

@@ -15,7 +15,7 @@
             <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
             <div class="touxiang_div">
                 <span>{{User.Name}}</span>
-                <span style=" font-size:14px; color:#999;">员工：0名@*<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[新增员工]</a>*@</span>
+                <span style=" font-size:14px; color:#999;">员工：{{UserList.length}}名@*<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;">[新增员工]</a>*@</span>
             </div>
         </div>
         <a class="cbgl_btn" v-if="!ShowYGMD" v-on:click="showYGMD">
@@ -33,59 +33,64 @@
             <div style="width:50%; margin-left:25%; border-bottom:2px solid #51b3f0; float:left;"></div>
         </a>
     </div>
-    <div class="touxiang" style="margin-bottom:25px;" v-if="ShowYGMD">
-        <div v-for="User in UserList">
-            <div class="ygxx_box">
-                <div class="ygxx">岗位编号</div>
-                <div class="ygxx2">
-                    <span>{{User.Code}}</span>
-                    <a style="background-color:#51b3f0; margin-right:3%; font-size:12px;width:70px;">启用账号</a>
-                    <a style="background-color:#51b3f0; margin-right:3%; font-size:12px;width:70px;">禁用账号</a>
-                </div>
+    <div class="touxiang" style="margin-bottom:25px;" v-if="ShowYGMD" v-for="User in UserList">
+        <div class="ygxx_box">
+            <div class="ygxx">岗位编号</div>
+            <div class="ygxx2">
+                <span>{{User.Code}}</span>
             </div>
-            <div class="ygxx_box">
-                <div class="ygxx">员工姓名</div>
-                <div class="ygxx2">
-                    <span>{{User.Name}}</span>
-                </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">员工姓名</div>
+            <div class="ygxx2">
+                <span>{{User.Name}}</span>
             </div>
-            <div class="ygxx_box">
-                <div class="ygxx">手机号码</div>
-                <div class="ygxx2">
-                    <span>{{User.MobilePhoneNo}}</span>
-                </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">手机号码</div>
+            <div class="ygxx2">
+                <span>{{User.MobilePhoneNo}}</span>
             </div>
-            <div class="ygxx_box">
-                <div class="ygxx">到岗时间</div>
-                <div class="ygxx2">
-                    <span>{{User.DutyTime}}</span>
-                </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">到岗时间</div>
+            <div class="ygxx2">
+                <span>{{User.DutyTime}}</span>
             </div>
-            <div class="ygxx_box">
-                <div class="ygxx">本月业绩</div>
-                <div class="ygxx2">
-                    <span style="color:#ff0c4c;">￥{{User.MonthPerformance}}<span style="color:#999; margin-left:0;">（排名第<span style="color:#51b3f0; margin-left:0;">{{User.PerformanceRanking}}</span>位）</span></span>
-                </div>
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">本月业绩</div>
+            <div class="ygxx2">
+                <span style="color:#ff0c4c;">￥{{User.MonthPerformance}}<span style="color:#999; margin-left:0;">（排名第<span style="color:#51b3f0; margin-left:0;">{{User.PerformanceRanking}}</span>位）</span></span>
             </div>
-            @*<div class="ygxx_box">
-                    <div class="ygxx">会员卡销量</div>
-                    <div class="ygxx2">
-                        <span>￥0（0张）</span>
-                    </div>
-                </div>*@
-            <div class="ygxx_box">
-                <div class="ygxx">客户服务量</div>
+        </div>
+        @*<div class="ygxx_box">
+                <div class="ygxx">会员卡销量</div>
                 <div class="ygxx2">
-                    <span>{{User.CustomerServiceCount}}位</span>
+                    <span>￥0（0张）</span>
                 </div>
+            </div>*@
+        <div class="ygxx_box">
+            <div class="ygxx">客户服务量</div>
+            <div class="ygxx2">
+                <span>{{User.CustomerServiceCount}}位</span>
             </div>
-            <div class="ygxx_box" style="border-bottom:none;">
+        </div>
+        <div class="ygxx_box">
+            <div class="ygxx">账号状态</div>
+            <div class="ygxx2">
+                <span v-if="User.IsAvailable">已启用</span>
+                <span v-if="!User.IsAvailable">已禁用</span>
+                <a style="background-color:#51b3f0; margin-right:3%; font-size:12px;width:70px;" v-if="!User.IsAvailable" v-on:click="changeAvailable(User)">启用账号</a>
+                <a style="background-color:#51b3f0; margin-right:3%; font-size:12px;width:70px;" v-if="User.IsAvailable" v-on:click="changeAvailable(User)">禁用账号</a>
+            </div>
+        </div>
+        @*<div class="ygxx_box" style="border-bottom:none;">
                 <div class="ygxx">本月收入</div>
                 <div class="ygxx2">
                     <span>￥{{User.MonthIncome}}</span>
                 </div>
-            </div>
-        </div>
+            </div>*@
     </div>
     <div class="touxiang" style="margin-bottom:25px;" v-if="!ShowYGMD">
         <div class="pm_box">
@@ -95,20 +100,10 @@
                 <div class="pm_box2" style="width:33.4%; text-align:center;">编号</div>
                 <div class="pm_box2" style="text-align:right;">本月业绩</div>
             </div>
-            <div class="pm_box1">
-                <div class="pm_box2" style=" color:#666;">1<span style="margin-left:5px;">张三</span></div>
-                <div class="pm_box2" style="width:33.4%; text-align:center;color:#666;">001</div>
-                <div class="pm_box2" style=" text-align:right;color:#ff0c4c;">￥10000</div>
-            </div>
-            <div class="pm_box1">
-                <div class="pm_box2" style=" color:#666;">6<span style="margin-left:5px;">张三</span></div>
-                <div class="pm_box2" style="width:33.4%; text-align:center;color:#666;">002</div>
-                <div class="pm_box2" style=" text-align:right;color:#ff0c4c;">￥10000</div>
-            </div>
-            <div class="pm_box1" style="border-bottom:none;">
-                <div class="pm_box2" style=" color:#666;">7<span style="margin-left:5px;">张三</span></div>
-                <div class="pm_box2" style="width:33.4%; text-align:center;color:#666;">003</div>
-                <div class="pm_box2" style=" text-align:right;color:#ff0c4c;">￥10000</div>
+            <div class="pm_box1" v-for="User in UserList">
+                <div class="pm_box2" style=" color:#666;">{{User.PerformanceRanking}}<span style="margin-left:5px;">{{User.Name}}</span></div>
+                <div class="pm_box2" style="width:33.4%; text-align:center;color:#666;">{{User.Code}}</div>
+                <div class="pm_box2" style=" text-align:right;color:#ff0c4c;">￥{{User.MonthPerformance}}</div>
             </div>
         </div>
     </div>
@@ -171,7 +166,7 @@
             el: '#staffmanager',
             data: {
                 User: {},
-                UserList:[],
+                UserList: [],
                 ShowYGMD: true,
             },
             methods: {
@@ -186,6 +181,18 @@
                 },
                 showYJPM: function (event) {
                     _viewModel.ShowYGMD = false;
+                },
+                changeAvailable: function (data, event) {
+                    if (data != null) {
+                        var tips = '确定';
+                        if (data.IsAvailable)
+                            tips += '禁用';
+                        else
+                            tips += '启用';
+                        $.confirm(tips + '账号？', function () {
+                            changeAvailable(data.ID);
+                        });
+                    }
                 },
             }
         });
@@ -227,7 +234,7 @@
 
             function getUsers() {
                 $.ajax({
-                    url: '/api/User/GetUsers',
+                    url: '/api/User/GetUsers?All=false',
                     type: 'GET',
                     headers: { 'CompanyCode': mch },
                     beforeSend: function () {
@@ -247,6 +254,40 @@
                 });
             }
             getUsers();
+
+            function changeAvailable(userId) {
+                if (userId == null || userId == '') {
+                    $.alert('参数错误');
+                    return;
+                }
+                $.ajax({
+                    url: '/api/User/ChangeAvailable?userId=' + userId,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data) {
+                                $.alert('操作成功');
+                                for (var i = 0; i < _viewModel.UserList.length; i++) {
+                                    if (_viewModel.UserList[i].ID == userId) {
+                                        _viewModel.UserList[i].IsAvailable = !_viewModel.UserList[i].IsAvailable;
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
 
         });
     </script>

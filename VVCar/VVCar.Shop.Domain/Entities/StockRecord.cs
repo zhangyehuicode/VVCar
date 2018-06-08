@@ -67,6 +67,12 @@ namespace VVCar.Shop.Domain.Entities
         public virtual Order Order { get; set; }
 
         /// <summary>
+        /// 数据来源
+        /// </summary>
+        [Display(Name = "数据来源")]
+        public EStockRecordSource Source { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         [Display(Name = "创建时间")]

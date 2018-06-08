@@ -59,8 +59,8 @@ namespace VVCar.Shop.Services.DomainServices
             if (entity == null)
                 return null;
             entity.ID = Util.NewID();
-            if (!entity.EffectiveDate.HasValue)
-                entity.EffectiveDate = DateTime.Now;
+            //if (!entity.EffectiveDate.HasValue)
+            //    entity.EffectiveDate = DateTime.Now;
             entity.Index = GenerateIndex();
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
@@ -89,8 +89,11 @@ namespace VVCar.Shop.Services.DomainServices
             product.IsPublish = entity.IsPublish;
             product.IsRecommend = entity.IsRecommend;
             product.Stock = entity.Stock;
-            product.EffectiveDate = entity.EffectiveDate;
-            product.ExpiredDate = entity.ExpiredDate;
+            //product.EffectiveDate = entity.EffectiveDate;
+            //product.ExpiredDate = entity.ExpiredDate;
+            product.CommissionRate = entity.CommissionRate;
+            product.IsCanPointExchange = entity.IsCanPointExchange;
+            product.Unit = entity.Unit;
             product.LastUpdateDate = DateTime.Now;
             product.LastUpdateUser = AppContext.CurrentSession.UserName;
             product.LastUpdateUserID = AppContext.CurrentSession.UserID;
@@ -111,6 +114,8 @@ namespace VVCar.Shop.Services.DomainServices
                 queryable = queryable.Where(t => t.ProductCategoryID == filter.ProductCategoryID.Value);
             if (filter.IsFromStockManager)
                 queryable = queryable.Where(t => t.ProductType == EProductType.Goods);
+            if (filter.ProductType.HasValue)
+                queryable = queryable.Where(t => t.ProductType == filter.ProductType.Value);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderBy(t => t.Index).Skip(filter.Start.Value).Take(filter.Limit.Value);
