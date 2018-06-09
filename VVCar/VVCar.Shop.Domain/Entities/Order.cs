@@ -92,6 +92,24 @@ namespace VVCar.Shop.Domain.Entities
         public DateTime CreatedDate { get; set; }
 
         /// <summary>
+        /// 最后修改时间
+        /// </summary>
+        [Display(Name = "最后修时间")]
+        public DateTime? LastUpdatedDate { get; set; }
+
+        /// <summary>
+        /// 最后修改人ID
+        /// </summary>
+        [Display(Name = "最后修改人ID")]
+        public Guid? LastUpdatedUserID { get; set; }
+
+        /// <summary>
+        /// 最后修改人
+        /// </summary>
+        [Display(Name = "最后修改人")]
+        public string LastUpdatedUser { get; set; }
+
+        /// <summary>
         /// 备注
         /// </summary>
         [Display(Name = "备注")]

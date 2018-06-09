@@ -77,16 +77,73 @@
             'Product button[action=stockOutIn]': {
                 click: me.stockOutIn
             },
+            'ProductEdit combobox[name=ProductType]': {
+                change: me.producttypechange
+            },
+            'Product combobox[name=ProductType]': {
+                change: me.productproducttypechange
+            },
             'StockOutInEdit button[action=save]': {
                 click: me.stockSave
             },
         });
     },
+    productproducttypechange: function (com, newValue, oldValue, eOpts) {
+        this.search(com);
+    },
+    producttypechange: function (com, newValue, oldValue, eOpts) {
+        var me = this;
+        var win = com.up('window');
+        if (win.form.getForm().actionMethod == 'PUT') {
+            if (newValue == 0) {
+                com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(true);
+                com.up('window').down('checkboxfield[name=IsCanPointExchange]').setValue(false);
+            } else {
+                com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(false);
+            }
+        } else {
+            if (newValue == 0) {
+                com.up('window').down('numberfield[name=Stock]').setDisabled(true);
+                com.up('window').down('numberfield[name=Stock]').setValue(0);
+                com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(true);
+                com.up('window').down('checkboxfield[name=IsCanPointExchange]').setValue(false);
+            } else {
+                com.up('window').down('numberfield[name=Stock]').setDisabled(false);
+                com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(false);
+            }
+        }
+    },
     stockSave: function (btn) {
         var me = this;
-        Ext.MessageBox.confirm('询问', '确定？', function (opt) {
+        var win = btn.up('window');
+        var form = win.form.getForm();
+        if (!form.isValid) {
+            return;
+        }
+        var values = form.getValues();
+        var data = {
+            ProductID: values.ID,
+            Quantity: values.StockType ? -values.Stock : values.Stock,
+            Reason: values.Reason,
+            Source: 1,
+        };
+        var tips = win.down('textfield[name=Name]').getValue();
+        tips += values.StockType ? ' 出库' : ' 入库';
+        tips += '数量:' + values.Stock + values.Unit;
+        Ext.MessageBox.confirm('询问', '确定 ' + tips + ' ？', function (opt) {
             if (opt == 'yes') {
-
+                var store = me.getProduct().getStore();
+                store.stockOutIn(data, function (response) {
+                    response = JSON.parse(response.responseText);
+                    if (!response.IsSuccessful) {
+                        Ext.Msg.alert('提示', response.ErrorMessage);
+                        return;
+                    }
+                    store.load();
+                    win.close();
+                }, function (response) {
+                    Ext.Msg.alert('提示', response.responseText);
+                });
             }
         });
     },
@@ -94,11 +151,15 @@
         var me = this;
         var selectedItems = me.getProduct().getSelectionModel().getSelection();
         if (selectedItems == null || selectedItems.length < 1) {
-            Ext.MessageBox.alert('提示', '请先选中一个产品');
+            Ext.MessageBox.alert('提示', '请先选中一个商品');
+            return;
+        }
+        if (selectedItems[0].data.ProductType != 1) {
+            Ext.Msg.alert('提示', '不能为服务进行库存操作，请选择一个商品');
             return;
         }
         var win = Ext.widget("StockOutInEdit");
-        win.setTitle(selectedItems[0].data.Name + " 出/入库");
+        win.form.loadRecord(selectedItems[0]);
         win.show();
     },
     pointExchangeChange: function (checkbox, newValue, oldValue, eOpts) {
@@ -318,9 +379,8 @@
         var selectedItems = tree[0].getView().getSelectionModel().getSelection();
         if (selectedItems.length > 0 && selectedItems[0].data.ID != '' && selectedItems[0].data.ID != null && selectedItems[0].data.ID != '00000000-0000-0000-0000-000000000001') {
             var win = Ext.widget("ProductEdit");
-
             win.down('textfield[name=ProductCategoryID]').setValue(selectedItems[0].data.ID);
-
+            win.down('numberfield[name=Stock]').hide();
             win.form.getForm().actionMethod = 'POST';
             win.setTitle('添加商品');
             win.show();
@@ -333,6 +393,7 @@
         win.form.loadRecord(record);
         win.down('box[name=ImgShow]').autoEl.src = record.data.ImgUrl;
         win.down('numberfield[name=Stock]').setDisabled(true);
+        win.down('numberfield[name=Stock]').hide();
         win.form.getForm().actionMethod = 'PUT';
         win.setTitle('编辑商品');
         win.show();

@@ -57,7 +57,7 @@ namespace VVCar.Controllers.VIP
         [HttpDelete, Route("deleteCouponPushItems")]
         public JsonActionResult<bool> DeleteCouponPushItems(BatchOperationDto parameter)
         {
-            return SafeExecute(() => 
+            return SafeExecute(() =>
             {
                 return CouponPushItemService.DeleteCouponPushItems(parameter.IdList.ToArray());
             });

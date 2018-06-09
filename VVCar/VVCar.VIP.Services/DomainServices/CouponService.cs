@@ -472,11 +472,10 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID)
         {
             var now = DateTime.Now.Date;
-            var coupons = Repository.GetInclude(t => t.Template, false)
+            var datasource = Repository.GetInclude(t => t.Template, false)
                 .Where(t => t.Status == ECouponStatus.Default && t.OwnerOpenID == userOpenID && t.ExpiredDate >= now)
-                .OrderBy(t => t.ExpiredDate)
-                .MapTo<CouponBaseInfoDto>()
-                .ToList();
+                .OrderBy(t => t.ExpiredDate).ToList();
+            var coupons = datasource.MapTo<List<CouponBaseInfoDto>>();
             var member = MemberRepo.GetInclude(t => t.Card, false).Where(t => t.WeChatOpenID == userOpenID).FirstOrDefault();
             if (member != null)
             {
@@ -486,6 +485,15 @@ namespace VVCar.VIP.Services.DomainServices
                     t.TotalConsume = member.Card.TotalConsume;
                 });
             }
+            coupons.ForEach(t =>
+            {
+                if (t.Nature == ENature.Card)
+                {
+                    var source = datasource.FirstOrDefault(s => s.ID == t.CouponID);
+                    if (source != null)
+                        t.CouponValue = source.CouponValue;
+                }
+            });
             return coupons;
         }
 

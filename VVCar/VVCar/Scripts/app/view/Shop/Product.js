@@ -11,6 +11,7 @@
         var productStore = Ext.create('WX.store.BaseData.ProductStore');
         productStore.load();
         var treeProductCategoryStore = Ext.create('WX.store.BaseData.ProductCategoryTreeStore');
+        var productTypeStore = Ext.create('WX.store.DataDict.ProductTypeStore');
         me.items = [{
             name: 'treeProductCategory',
             xtype: 'treepanel',
@@ -65,6 +66,18 @@
                     labelWidth: 30,
                     margin: '0 0 0 15'
                 }, {
+                    xtype: 'combobox',
+                    name: 'ProductType',
+                    store: productTypeStore,
+                    loadMode: 'local',
+                    fieldLabel: '产品类型',
+                    displayField: 'DictName',
+                    valueField: 'DictValue',
+                    editable: true,
+                    margin: '0 0 0 15',
+                    width: 170,
+                    labelWidth: 60,
+                }, {
                     action: 'search',
                     xtype: 'button',
                     text: '搜索',
@@ -90,8 +103,7 @@
             columns: [
                 { header: '排序', dataIndex: 'Index', width: 60 },
                 { header: '标题', dataIndex: 'Name', flex: 1 },
-                { header: '编码', dataIndex: 'Code', flex: 1 },
-                { header: '单位', dataIndex: 'Unit', width: 60 },
+                { header: '编码', dataIndex: 'Code', width: 80 },
                 {
                     header: '商品图片', dataIndex: 'ImgUrl', width: 100,
                     renderer: function (value) {
@@ -112,6 +124,13 @@
                 { header: '原单价', dataIndex: 'BasePrice', width: 100 },
                 { header: '销售单价', dataIndex: 'PriceSale', width: 100 },
                 {
+                    header: '库存', dataIndex: 'Stock', width: 100,
+                    renderer: function (value) {
+                        return '<span style="color:green;">' + value + '</span>';
+                    }
+                },
+                { header: '单位', dataIndex: 'Unit', width: 60 },
+                {
                     header: '积分兑换', dataIndex: 'IsCanPointExchange', width: 80,
                     renderer: function (value) {
                         if (value)
@@ -120,8 +139,8 @@
                             return '<span style="color:red;">关闭</span>';
                     }
                 },
-                { header: '兑换积分', dataIndex: 'Points', width: 100 },
-                { header: '兑换上限', dataIndex: 'UpperLimit', width: 100 },
+                { header: '兑换积分', dataIndex: 'Points', width: 80 },
+                { header: '兑换上限', dataIndex: 'UpperLimit', width: 80 },
                 {
                     header: '是否上架', dataIndex: 'IsPublish', width: 80,
                     renderer: function (value) {
@@ -140,7 +159,6 @@
                             return '<span style="color:red;">否</span>';
                     }
                 },
-                { header: '库存', dataIndex: 'Stock', width: 100, },
                 {
                     header: '抽成比例', dataIndex: 'CommissionRate', width: 80,
                     renderer: function (value) {

@@ -57,6 +57,8 @@ namespace VVCar.Shop.Services.DomainServices
                 var nextday = filter.CreatedDate.Value.Date.AddDays(1);
                 queryable = queryable.Where(t => t.CreatedDate >= filter.CreatedDate.Value && t.CreatedDate < nextday);
             }
+            if (!string.IsNullOrEmpty(filter.NameCodeStaff))
+                queryable = queryable.Where(t => t.Product.Name.Contains(filter.NameCodeStaff) || t.Product.Code.Contains(filter.NameCodeStaff) || t.StaffName.Contains(filter.NameCodeStaff));
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);

@@ -114,6 +114,12 @@ namespace VVCar.BaseData.Domain.Entities
         public DateTime? DutyTime { get; set; }
 
         /// <summary>
+        /// 年龄
+        /// </summary>
+        [Display(Name = "年龄")]
+        public int Age { get; set; }
+
+        /// <summary>
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]

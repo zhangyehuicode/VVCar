@@ -38,6 +38,9 @@ namespace VVCar.Shop.Data.Mapping
 
             Property(t => t.OpenID)
                 .HasMaxLength(36);
+
+            Property(t => t.LastUpdatedUser)
+                .HasMaxLength(20);
         }
     }
 }

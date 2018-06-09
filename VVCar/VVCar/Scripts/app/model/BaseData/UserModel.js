@@ -5,8 +5,10 @@ Ext.define('WX.model.BaseData.UserModel', {
     fields: ['ID', 'Code', 'Name', 'DepartmentID', 'Sex', 'Birthday', 'IDNumber', 'PhoneNo', 'MobilePhoneNo',
         'EmailAddress', 'ContactPerson', 'ContactPhone', 'Remark', 'Password',
         'WeChatOpenID', 'AuthorityCard', 'CreatedUser', 'CreatedDate',
-        { name: 'IsAvailable', type: 'boolean'},
+        { name: 'IsAvailable', type: 'boolean' },
         { name: 'CanLoginPos', type: 'boolean' },
-        { name: 'CanLoginAdminPortal', type: 'boolean' }
+        { name: 'CanLoginAdminPortal', type: 'boolean' },
+        { name: 'DutyTime' },
+        { name: 'Age' },
     ],
 });

@@ -46,7 +46,10 @@ namespace VVCar.Controllers.VIP
         [HttpPost, Route("AddGameCoupon")]
         public JsonActionResult<bool> AddGameCoupon(BatchOperationDto parameter)
         {
-            return SafeExecute(() => GameCouponService.AddGameCoupon(parameter.IdList.ToArray()));
+            return SafeExecute(() =>
+            {
+                return GameCouponService.AddGameCoupon(parameter.IdList.ToArray());
+            });
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Enums;
 
 namespace VVCar.Shop.Domain.Dtos
 {
@@ -32,7 +33,7 @@ namespace VVCar.Shop.Domain.Dtos
         public int Quantity { get; set; }
 
         /// <summary>
-        /// 原因
+        /// 备注
         /// </summary>
         public string Reason { get; set; }
 
@@ -45,5 +46,15 @@ namespace VVCar.Shop.Domain.Dtos
         /// 创建时间
         /// </summary>
         public DateTime CreatedDate { get; set; }
+
+        /// <summary>
+        /// 类型
+        /// </summary>
+        public EStockRecordType StockRecordType { get; set; }
+
+        /// <summary>
+        /// 数据来源
+        /// </summary>
+        public EStockRecordSource Source { get; set; }
     }
 }

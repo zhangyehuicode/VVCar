@@ -87,13 +87,13 @@
 	},
 	deleteCouponPush: function (btn) {
 		var me = this;
+		var selectedItems = btn.up('grid').getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '请先选择要删除的任务!');
+			return;
+		}
 		Ext.Msg.confirm('提示', '确定要删除任务吗', function (optional) {
 			if (optional === 'yes') {
-				var selectedItems = btn.up('grid').getSelectionModel().getSelection();
-				if (selectedItems.length < 1) {
-					Ext.Msg.alert('提示', '请先选择要删除的任务!');
-					return;
-				}
 				var store = btn.up('grid').getStore();
 				var ids = [];
 				selectedItems.forEach(function (item) {
@@ -118,13 +118,13 @@
 		})
 	},
 	deleteCouponPushItem: function (btn) {
+		var selectedItems = btn.up('grid').getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '请先选择要删除的卡券!');
+			return;
+		}
 		Ext.Msg.confirm('提示', '确定要删除卡券吗?', function (optional) {
 			if (optional === 'yes') {
-				var selectedItems = btn.up('grid').getSelectionModel().getSelection();
-				if (selectedItems.length < 1) {
-					Ext.Msg.alert('提示', '请先选择要删除的卡券!');
-					return;
-				}
 				var store = btn.up('grid').getStore();
 				var ids = [];
 				selectedItems.forEach(function (item) {
@@ -151,7 +151,7 @@
 		var me = this;
 		var win = me.getCouponPushEdit();
 		var form = win.form.getForm();
-		formValues = form.getValues();
+		var formValues = form.getValues();
 		if (form.isValid()) {
 			var couponPushStore = this.getGridCouponPush().getStore();
 			if (form.actionMethod == 'POST') {
@@ -176,6 +176,7 @@
 		var win = me.getCouponPushItemEdit();
 		var store = me.getGridCouponPushItem().getStore();
 		var selectedItems = me.getGridCouponPushItemEdit().getSelectionModel().getSelection();
+
 		if (selectedItems.length === 0) {
 			Ext.Msg.alert('提示', '未选择操作数据');
 			return;
@@ -200,16 +201,14 @@
 		win.close();
 	},
 	searchData: function (btn) {
+		var me = this;
 		var queryValues = btn.up('form').getValues();
 		if (queryValues != null) {
-			var store = this.getGridCouponPush().getStore();
+			var store = me.getGridCouponPush().getStore();
+			me.getGridCouponPush().getSelectionModel().clearSelections();
 			store.proxy.extraParams = queryValues;
 			store.load();
-			var itemStore = this.getGridCouponPushItem().getStore();
-			var params = itemStore.getProxy().extraParams;
-			Ext.apply(params, { CouponPushID: null });
-			itemStore.proxy.extraParams = params;
-			itemStore.load();
+			me.getGridCouponPushItem().getStore().removeAll();
 		} else {
 			Ext.MessageBox.alert('系统提示', '请输入过滤条件!');
 		}

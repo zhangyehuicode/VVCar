@@ -3,7 +3,7 @@
     alias: 'widget.StockOutInEdit',
     title: '出/入库',
     layout: 'fit',
-    width: 250,
+    width: 280,
     modal: true,
     bodyPadding: 5,
     initComponent: function () {
@@ -24,6 +24,26 @@
                 anchor: '100%'
             },
             items: [{
+                xtype: 'textfield',
+                name: 'ID',
+                fieldLabel: '产品ID',
+                hidden: true,
+            }, {
+                xtype: 'textfield',
+                name: 'Name',
+                fieldLabel: '产品名称',
+                disabled: true,
+            }, {
+                xtype: 'textfield',
+                name: 'Stock',
+                fieldLabel: '库存',
+                disabled: true,
+            }, {
+                xtype: 'textfield',
+                name: 'Unit',
+                fieldLabel: '产品单位',
+                hidden: true,
+            }, {
                 xtype: 'combobox',
                 name: 'StockType',
                 fieldLabel: '类型',
@@ -34,6 +54,7 @@
                 anchor: '',
                 editable: false,
                 value: true,
+                width: '100%',
             }, {
                 xtype: 'numberfield',
                 name: 'Stock',

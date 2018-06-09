@@ -54,18 +54,18 @@
                     </label>
                 </div>
                 <p class="help-block">可为用户提供抵扣现金服务。可设置为“消费X商品，抵用商品金额X元”</p>
-                <div class="radio">
+                <div class="radio" style="display:none;">
                     <label>
                         <input type="radio" name="coupontype" value="0" id="cash" data-bind="checked:CouponType">代金
                     </label>
                 </div>
-                <p class="help-block">可为用户提供抵扣现金服务。可设置为“满X元，减X元”</p>
-                <div class="radio">
+                <p class="help-block" style="display:none;">可为用户提供抵扣现金服务。可设置为“满X元，减X元”</p>
+                <div class="radio" style="display:none;">
                     <label>
                         <input type="radio" name="coupontype" value="2" id="exchange" data-bind="checked:CouponType">兑换
                     </label>
                 </div>
-                <p class="help-block">可为用户提供消费赠送服务</p>
+                <p class="help-block" style="display:none;">可为用户提供消费赠送服务</p>
                 <div class="radio">
                     <label>
                         <input type="radio" name="coupontype" value="3" id="discount" data-bind="checked:CouponType">折扣
@@ -751,6 +751,17 @@
                         </label>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">消费返积分比例</label>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" data-bind="value:BaseInfo().ConsumePointRate" name="consumepointrate"
+                                   data-val="true" data-val-number="请输入数字" data-val-required="不能为空" data-val-range-min="0" data-val-range-max="100" data-val-range="请填写0~100的数字" />
+                            <span class="input-group-addon">%</span>
+                        </div>
+                        <span class="field-validation-valid" data-valmsg-for="consumepointrate" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
                 <label class="col-md-6 control-label" style="display:none;">核销方式</label>
                 <div class="form-group" style="padding-left:50px;display:none;">
                     <div class="col-md-10">
@@ -1206,6 +1217,7 @@
                 IsPutaway: ko.observable('0'),//是否在微信领取中心显示(是否上架)
                 PutawayTime: ko.observable(null),//上架时间
                 SoldOutTime: ko.observable(null),//下架时间
+                ConsumePointRate: ko.observable(0),
             }
             me.BaseInfo(baseInfo);
 
@@ -1266,7 +1278,7 @@
                     } else {
                         $('#DiscountFirst').attr("checked", true);
                     }
-
+                    me.BaseInfo().ConsumePointRate(me.ModifyCouponTemplate().ConsumePointRate);
                     me.BaseInfo().CouponColor(me.ModifyCouponTemplate().Color);
                     me.BaseInfo().CouponValue(me.ModifyCouponTemplate().CouponValue);
                     me.BaseInfo().Title(me.ModifyCouponTemplate().Title);
@@ -2106,6 +2118,7 @@
                         PutawayTime: window._rootModel.BaseInfo().PutawayTime(),
                         SoldOutTime: window._rootModel.BaseInfo().SoldOutTime(),
                         IsDeductionFirst: $('#DeductionFirst')[0].checked,
+                        ConsumePointRate: window._rootModel.BaseInfo().ConsumePointRate(),
                     };
                     var url = '/api/CouponTemplate/';
                     var confirmcallback = function () {

@@ -83,10 +83,24 @@
                     maxLength: 30,
                 },
                 {
+                    xtype: 'datefield',
+                    name: 'DutyTime',
+                    fieldLabel: '入职时间',
+                    format: 'Y-m-d',
+                    allowBlank: true,
+                },
+                {
+                    xtype: 'numberfield',
+                    name: 'Age',
+                    fieldLabel: '年龄',
+                    minValue: 1,
+                },
+                {
                     xtype: 'textfield',
                     name: 'AuthorityCard',
                     fieldLabel: '权限卡',
                     maxLength: 50,
+                    hidden: true,
                 },
                 {
                     xtype: 'fieldcontainer',

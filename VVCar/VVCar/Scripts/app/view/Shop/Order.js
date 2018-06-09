@@ -23,7 +23,9 @@
             items: [{
                 xtype: 'textfield',
                 name: 'TNoLMPAddEN',
+                fieldLabel: '关键字',
                 width: 275,
+                labelWidth: 60,
                 margin: '0 0 0 10',
                 emptyText: '订单号/联系人/联系电话/收货地址/快递单号',
             }, {
@@ -37,12 +39,12 @@
         }];
         me.columns = [
             { header: '序号', dataIndex: 'Index', width: 60 },
-            { header: '订单号', dataIndex: 'Code', flex: 1 },
-            { header: '订单日期', dataIndex: 'CreatedDate', xtype: 'datecolumn', format: 'Y-m-d H:i:s', flex: 1 },
-            { header: '联系人', dataIndex: 'LinkMan', flex: 1 },
-            { header: '联系电话', dataIndex: 'Phone', flex: 1 },
-            { header: '详细地址', dataIndex: 'Address', width: 200, },
-            { header: '数量', dataIndex: 'Quantity', width: 80 },
+            { header: '订单号', dataIndex: 'Code', width: 150 },
+            { header: '订单金额', dataIndex: 'Money', width: 80 },
+            { header: '订单日期', dataIndex: 'CreatedDate', xtype: 'datecolumn', format: 'Y-m-d H:i:s', width: 150 },
+            { header: '联系人', dataIndex: 'LinkMan', width: 100 },
+            { header: '联系电话', dataIndex: 'Phone', width: 120 },
+            { header: '详细地址', dataIndex: 'Address', flex: 1 },
             { header: '备注', dataIndex: 'Remark', flex: 1 },
             {
                 header: '发货状态', dataIndex: 'Status', width: 80,
@@ -57,16 +59,26 @@
                         return "已完成";
                 }
             },
-            { header: '快递单号', dataIndex: 'ExpressNumber', flex: 1 },
+            { header: '快递单号', dataIndex: 'ExpressNumber', width: 180 },
             {
                 text: '操作',
                 xtype: 'actioncolumn',
-                width: 180,
+                width: 150,
                 sortable: false,
                 menuDisabled: true,
                 height: 30,
                 align: 'center',
                 items: [{
+                    action: 'orderdetails',
+                    iconCls: 'x-fa fa-reorder',
+                    tooltip: '详情',
+                    scope: this,
+                    margin: '10 10 10 10',
+                    handler: function (grid, rowIndex, colIndex) {
+                        var record = grid.getStore().getAt(rowIndex);
+                        this.fireEvent('orderdetailsClick', grid, record);
+                    },
+                }, { scope: this }, {
                     action: 'editItem',
                     iconCls: 'x-fa fa-pencil',
                     tooltip: '编辑',

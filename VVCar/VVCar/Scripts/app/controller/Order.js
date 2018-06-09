@@ -2,7 +2,7 @@
     extend: 'Ext.app.Controller',
     requires: ['WX.store.BaseData.OrderStore'],
     models: ['BaseData.OrderModel'],
-    views: ['Shop.Order', 'Shop.OrderEdit'],
+    views: ['Shop.Order', 'Shop.OrderEdit', 'Shop.OrderDetails'],
     refs: [{
         ref: 'Order',
         selector: 'Order'
@@ -20,17 +20,44 @@
                 itemdblclick: me.edit,
                 editActionClick: me.edit,
                 deleteActionClick: me.deleteOrder,
+                orderdetailsClick: me.orderdetails,
             },
             'OrderEdit button[action=save]': {
                 click: me.save
             },
         });
     },
+    orderdetails: function (grid, record) {
+        var win = Ext.widget("OrderDetails");
+        win.form.loadRecord(record);
+        var orderItemStore = win.down('grid[name=orderitemgrid]').getStore();
+
+        var statusdesc = "";
+        switch (record.data.Status) {
+            case -1:
+                statusdesc = "未付款";
+                break;
+            case 0:
+                statusdesc = "未发货";
+                break;
+            case 1:
+                statusdesc = "已发货";
+                break;
+            case 2:
+                statusdesc = "已完成";
+                break;
+        }
+        win.down('textfield[name=Status]').setValue(statusdesc);
+
+        orderItemStore.proxy.extraparam = { OrderID: record.data.ID };
+        orderItemStore.load();
+        win.show();
+    },
     edit: function (grid, record) {
         var win = Ext.widget("OrderEdit");
         win.form.loadRecord(record);
         win.form.getForm().actionMethod = 'PUT';
-        win.setTitle('编辑积分订单');
+        win.setTitle('编辑订单');
         win.show();
     },
     save: function (btn) {

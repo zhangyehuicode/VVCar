@@ -47,6 +47,18 @@ namespace VVCar.Shop.Services.DomainServices
 
         #endregion
 
+        public override bool Delete(Guid key)
+        {
+            var entity = Repository.GetByKey(key);
+            if (entity == null)
+                throw new DomainException("数据不存在");
+            entity.IsDeleted = true;
+            entity.LastUpdatedDate = DateTime.Now;
+            entity.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+            entity.LastUpdatedUser = AppContext.CurrentSession.UserName;
+            return Repository.Update(entity) > 0;
+        }
+
         private int GetIndex()
         {
             var index = 1;
@@ -195,7 +207,10 @@ namespace VVCar.Shop.Services.DomainServices
                 return false;
             order.ExpressNumber = entity.ExpressNumber;
             order.Status = entity.Status;
-            return base.Update(entity);
+            order.LastUpdatedDate = DateTime.Now;
+            order.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+            order.LastUpdatedUser = AppContext.CurrentSession.UserName;
+            return Repository.Update(order) > 0;
         }
 
         public IEnumerable<Order> Search(OrderFilter filter, out int totalCount)

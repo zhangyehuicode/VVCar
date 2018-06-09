@@ -1,6 +1,7 @@
 ﻿Ext.define('WX.store.BaseData.CouponPushStore', {
 	extend: 'Ext.data.Store',
 	model: 'WX.model.BaseData.CouponPushModel',
+	pageSize: 20,
 	proxy: {
 		type: 'rest',
 		url: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponPush',

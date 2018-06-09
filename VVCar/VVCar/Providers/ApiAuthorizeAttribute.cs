@@ -138,9 +138,18 @@ namespace VVCar
                 departmentName = "system";
 
             var identity = new ClaimsIdentity();
-            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "00000000-0000-0000-0000-000000000000"));
-            identity.AddClaim(new Claim(ClaimTypes.Name, "system"));
-            identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.UserCode, "system"));
+            //identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "00000000-0000-0000-0000-000000000000"));
+            //identity.AddClaim(new Claim(ClaimTypes.Name, "system"));
+            //identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.UserCode, "system"));
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, AppContext.CurrentSession.UserID.ToString()));
+            if (!string.IsNullOrEmpty(AppContext.CurrentSession.UserName))
+                identity.AddClaim(new Claim(ClaimTypes.Name, AppContext.CurrentSession.UserName));
+            else
+                identity.AddClaim(new Claim(ClaimTypes.Name, "system"));
+            if (!string.IsNullOrEmpty(AppContext.CurrentSession.UserCode))
+                identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.UserCode, AppContext.CurrentSession.UserCode));
+            else
+                identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.UserCode, "system"));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentId, departmentId));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentName, departmentName));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentCode, departmentCode));

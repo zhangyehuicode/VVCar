@@ -31,5 +31,11 @@ namespace VVCar.VIP.Domain.Dtos
         /// </summary>
         [Display(Name = "优惠券模板标题")]
         public string CouponTemplateTitle { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        [Display(Name = "创建时间")]
+        public DateTime CreatedDate { get; set; }
     }
 }

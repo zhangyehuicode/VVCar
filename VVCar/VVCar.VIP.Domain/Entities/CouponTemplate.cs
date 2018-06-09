@@ -338,6 +338,12 @@ namespace VVCar.VIP.Domain.Entities
         public bool IsDeductionFirst { get; set; }
 
         /// <summary>
+        /// 消费返积分比例(返回积分=消费总额*比例)
+        /// </summary>
+        [Display(Name = "消费返积分比例(返回积分=消费总额*比例)")]
+        public decimal ConsumePointRate { get; set; }
+
+        /// <summary>
         /// 优惠券库存
         /// </summary>
         public virtual CouponTemplateStock Stock { get; set; }

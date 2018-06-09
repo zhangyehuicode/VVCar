@@ -47,5 +47,10 @@ namespace VVCar.Shop.Domain.Filters
         /// 创建时间
         /// </summary>
         public DateTime? CreatedDate { get; set; }
+
+        /// <summary>
+        /// 产品名称/编码/员工
+        /// </summary>
+        public string NameCodeStaff { get; set; }
     }
 }
