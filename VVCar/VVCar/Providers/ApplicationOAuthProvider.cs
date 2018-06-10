@@ -104,11 +104,11 @@ namespace VVCar.Providers
                 var userService = ServiceLocator.Instance.GetService<IUserService>();
                 if (SsoClientId.Equals(context.ClientId))//如果是sso登录请求
                 {
-                    loginUser = userService.SsoLogin(context.UserName, context.Password);
+                    loginUser = userService.SsoLogin(context.UserName, context.Password, companyCode);
                 }
                 else
                 {
-                    loginUser = userService.Login(context.UserName, context.Password);
+                    loginUser = userService.Login(context.UserName, context.Password, companyCode);
                 }
                 if (loginUser == null)
                 {

@@ -50,6 +50,6 @@ namespace VVCar.VIP.Domain.Filters
         /// <summary>
         /// 性质
         /// </summary>
-        public ENature? Nature { get; set; }
+        public int Nature { get; set; }
     }
 }

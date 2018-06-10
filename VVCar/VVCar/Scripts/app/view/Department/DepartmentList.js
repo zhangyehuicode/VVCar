@@ -1,7 +1,7 @@
 ﻿Ext.define('WX.view.Department.DepartmentList', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.DepartmentList',
-    title: '基地管理',
+    title: '门店管理',
     store: Ext.create('WX.store.BaseData.DepartmentStore'),
     stripeRows: true,
     loadMask: true,
@@ -45,14 +45,14 @@
             items: [{
                 xtype: 'textfield',
                 name: 'Code',
-                fieldLabel: '基地代码',
+                fieldLabel: '门店代码',
                 width: 170,
                 labelWidth: 60,
                 margin: '0 0 0 5',
             }, {
                 xtype: 'textfield',
                 name: 'Name',
-                fieldLabel: '基地名称',
+                fieldLabel: '门店名称',
                 width: 190,
                 labelWidth: 60,
                 margin: '0 0 0 5',
@@ -90,8 +90,8 @@
             }]
         }];
         me.columns = [
-            { header: '基地代码', dataIndex: 'Code', flex: 1, },
-            { header: '基地名称', dataIndex: 'Name', flex: 1, },
+            { header: '门店代码', dataIndex: 'Code', flex: 1, },
+            { header: '门店名称', dataIndex: 'Name', flex: 1, },
             {
                 header: '地区分区', dataIndex: 'DistrictRegion', flex: 1,
                 renderer: function (value, cellmeta, record) {

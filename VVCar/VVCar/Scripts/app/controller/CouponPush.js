@@ -214,13 +214,13 @@
 		}
 	},
 	batchHandCouponPush: function (btn) {
+		var selectedItems = btn.up('grid').getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '请先选择要推送的数据!');
+			return;
+		}
 		Ext.Msg.confirm('提示', '确定要手动推送数据吗?', function (optional) {
 			if (optional === 'yes') {
-				var selectedItems = btn.up('grid').getSelectionModel().getSelection();
-				if (selectedItems.length < 1) {
-					Ext.Msg.alert('提示', '请先选择要推送的数据!');
-					return;
-				}
 				var store = btn.up('grid').getStore();
 				var ids = [];
 				selectedItems.forEach(function (item) {

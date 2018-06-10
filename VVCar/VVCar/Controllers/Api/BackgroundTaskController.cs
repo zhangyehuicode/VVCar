@@ -34,6 +34,17 @@ namespace VVCar.Controllers.Api
             get { return ServiceLocator.Instance.GetService<ICouponService>(); }
         }
 
+        /// <summary>
+        /// 卡券推送 领域服务
+        /// </summary>
+        ICouponPushService CouponPushService
+        {
+            get
+            {
+                return ServiceLocator.Instance.GetService<ICouponPushService>();
+            }
+        }
+
         ///// <summary>
         ///// 微信粉丝 领域服务
         ///// </summary>
@@ -62,6 +73,19 @@ namespace VVCar.Controllers.Api
             {
                 CouponService.SendCouponExpiredNotify();
                 return true;
+            });
+        }
+
+        /// <summary>
+        /// 卡券推送
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("PushCoupon"), AllowAnonymous]
+        public JsonActionResult<bool> CouponPush()
+        {
+            return SafeExecute(() =>
+            {
+                return CouponPushService.CouponPushTask();
             });
         }
 

@@ -16,6 +16,7 @@
     <div id="vuecon" class="main">
         <img class="logo" src="~/Content/image/cheyinzilogo.png" />
         <div class="systemtitle">@ViewBag.Title</div>
+        <input class="merchantcode" placeholder="商户号" type="text" v-model="MerchantCode" />
         <input class="username" placeholder="用户名" type="text" v-model="UserName" />
         <input class="password" placeholder="密码" type="text" onfocus="this.type='password'" v-model="Password" />
         <div class="loginbtn" v-on:click="login">
@@ -94,6 +95,7 @@
         var _viewModel = new Vue({
             el: '#vuecon',
             data: {
+                MerchantCode: '',
                 UserName: '',
                 Password: '',
             },
@@ -118,7 +120,9 @@
             //    validater.showErrors();
             //    return;
             //}
-            if (_viewModel.UserName == '' || _viewModel.Password == '') {
+            if (_viewModel.MerchantCode == '' || _viewModel.UserName == '' || _viewModel.Password == '') {
+                if (_viewModel.MerchantCode == '')
+                    $('.merchantcode').addClass('errorinput');
                 if (_viewModel.UserName == '')
                     $('.username').addClass('errorinput');
                 if (_viewModel.Password == '')
@@ -131,6 +135,7 @@
             $.ajax({
                 url: "/Login",
                 data: {
+                    CompanyCode: _viewModel.MerchantCode,
                     UserName: _viewModel.UserName,
                     Password: _viewModel.Password,
                 },

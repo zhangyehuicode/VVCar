@@ -377,5 +377,11 @@ namespace VVCar.VIP.Domain.Dtos
         /// </summary>
         [Display(Name = "是否优先抵扣")]
         public bool IsDeductionFirst { get; set; }
+
+        /// <summary>
+        /// 消费返积分比例(返回积分=抵用总额*比例)
+        /// </summary>
+        [Display(Name = "消费返积分比例(返回积分=抵用总额*比例)")]
+        public decimal ConsumePointRate { get; set; }
     }
 }

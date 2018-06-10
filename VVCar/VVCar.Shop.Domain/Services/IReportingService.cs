@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.Shop.Domain.Dtos;
+using VVCar.Shop.Domain.Filters;
 using YEF.Core;
 
 namespace VVCar.Shop.Domain.Services
@@ -33,5 +34,13 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="date"></param>
         /// <returns></returns>
         StaffPerformance GetStaffPerformance(Guid userId, DateTime? date);
+
+        /// <summary>
+        /// 零售产品汇总统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        IEnumerable<ProductRetailStatisticsDto> ProductRetailStatistics(ProductRetailStatisticsFilter filter, ref int totalCount);
     }
 }

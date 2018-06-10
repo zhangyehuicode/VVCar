@@ -104,6 +104,25 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 上传营业执照图片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadLicense")]
+        public UploadFileResult UploadLicense()
+        {
+            return UploadAction("Pictures/License");
+        }
+
+        /// <summary>
+        /// 上传身份证照片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadIDCard")]
+        public UploadFileResult UploadIDCard() {
+            return UploadAction("Pictures/IDCard");
+        }
+
+        /// <summary>
         /// 上传车牌
         /// </summary>
         /// <returns></returns>

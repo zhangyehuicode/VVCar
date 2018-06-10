@@ -55,7 +55,7 @@
             }, {
                 xtype: 'textfield',
                 name: 'Address',
-                fieldLabel: '餐厅地址'
+                fieldLabel: '门店地址'
             }, {
                 xtype: 'combobox',
                 name: 'DistrictRegion',

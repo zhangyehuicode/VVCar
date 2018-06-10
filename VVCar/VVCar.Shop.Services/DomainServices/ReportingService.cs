@@ -9,6 +9,7 @@ using YEF.Core.Data;
 using VVCar.Shop.Domain.Entities;
 using YEF.Core;
 using VVCar.BaseData.Domain.Entities;
+using VVCar.Shop.Domain.Filters;
 
 namespace VVCar.Shop.Services.DomainServices
 {
@@ -28,7 +29,13 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<PickUpOrder> PickUpOrderRepo { get => ServiceLocator.Instance.GetService<IRepository<PickUpOrder>>(); }
 
+        IRepository<PickUpOrderItem> PickUpOrderItemRepo { get => ServiceLocator.Instance.GetService<IRepository<PickUpOrderItem>>(); }
+
         IRepository<Order> OrderRepo { get => ServiceLocator.Instance.GetService<IRepository<Order>>(); }
+
+        IRepository<OrderItem> OrderItemRepo { get => ServiceLocator.Instance.GetService<IRepository<OrderItem>>(); }
+
+        IRepository<Product> ProductRepo { get => ServiceLocator.Instance.GetService<IRepository<Product>>(); }
 
         IRepository<User> UserRepo { get => ServiceLocator.Instance.GetService<IRepository<User>>(); }
 
@@ -160,6 +167,87 @@ namespace VVCar.Shop.Services.DomainServices
             staffPerformance.MonthCustomerServiceCount = monthpickuporderlist.Count();
 
             return staffPerformance;
+        }
+
+        public IEnumerable<ProductRetailStatisticsDto> ProductRetailStatistics(ProductRetailStatisticsFilter filter, ref int totalCount)
+        {
+            var result = new List<ProductRetailStatisticsDto>();
+
+            var orderItemQueryable = OrderItemRepo.GetQueryable(false);
+            var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetQueryable(false);
+
+            if (filter != null)
+            {
+                if (filter.StartDate.HasValue)
+                {
+                    orderItemQueryable = orderItemQueryable.Where(t => t.Order.CreatedDate >= filter.StartDate.Value);
+                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.CreatedDate >= filter.StartDate.Value);
+                }
+                if (filter.EndDate.HasValue)
+                {
+                    orderItemQueryable = orderItemQueryable.Where(t => t.Order.CreatedDate < filter.EndDate.Value);
+                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.CreatedDate < filter.EndDate.Value);
+                }
+            }
+
+            var orderItemList = orderItemQueryable.Where(t => t.Order.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType != Domain.Enums.EProductType.MemberCard).ToList();
+            var orderItemGroup = orderItemList.GroupBy(g => g.GoodsID).Select(t => new
+            {
+                ProductID = t.Key,
+                Quantity = t.Sum(s => s.Quantity),
+                ProductName = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductName : "",
+                ProductCode = "",
+                Money = t.Sum(s => s.Money),
+            }).ToList();
+
+            var pickUpOrderList = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+            var pickUpOrderGroup = pickUpOrderList.GroupBy(g => g.ProductID).Select(t => new
+            {
+                ProductID = t.Key,
+                Quantity = t.Sum(s => s.Quantity),
+                ProductName = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductName : "",
+                ProductCode = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductCode : "",
+                Money = t.Sum(s => s.Money),
+            }).ToList();
+
+            orderItemGroup.AddRange(pickUpOrderGroup);
+
+            var productQueryable = ProductRepo.GetInclude(p => p.ProductCategory, false);
+            orderItemGroup.ForEach(t =>
+            {
+                var item = new ProductRetailStatisticsDto();
+                item.ProductID = t.ProductID;
+                item.Quantity = t.Quantity;
+                item.ProductName = t.ProductName;
+                item.Money = t.Money;
+                var product = productQueryable.Where(p => p.ID == t.ProductID).FirstOrDefault();
+                if (product != null)
+                {
+                    item.ProductName = product.Name;
+                    item.ProductCategoryName = product.ProductCategory.Name;
+                    item.ProductCode = product.Code;
+                    item.Unit = product.Unit;
+                }
+                result.Add(item);
+            });
+
+            result = result.OrderBy(t => t.ProductCode).ToList();
+            totalCount = result.Count();
+
+            if (filter != null)
+            {
+                if (!string.IsNullOrEmpty(filter.ProductName))
+                    result = result.Where(t => t.ProductName.Contains(filter.ProductName)).ToList();
+                if (!string.IsNullOrEmpty(filter.ProductCode))
+                    result = result.Where(t => t.ProductCode.Contains(filter.ProductCode)).ToList();
+                if (!string.IsNullOrEmpty(filter.ProductCodeName))
+                    result = result.Where(t => t.ProductCode.Contains(filter.ProductCodeName) || t.ProductName.Contains(filter.ProductCodeName)).ToList();
+                totalCount = result.Count();
+                if (filter.Start.HasValue && filter.Limit.HasValue)
+                    result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
+            }
+
+            return result;
         }
     }
 }

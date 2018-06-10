@@ -104,7 +104,7 @@ namespace VVCar.Controllers
             var loginResult = new LoginResult();
             try
             {
-                if (AppContext.Settings.IsDynamicCompany && string.IsNullOrEmpty(companyCode))
+                if (string.IsNullOrEmpty(companyCode))//AppContext.Settings.IsDynamicCompany &&
                 {
                     throw new Exception("商户号不能为空");
                 }

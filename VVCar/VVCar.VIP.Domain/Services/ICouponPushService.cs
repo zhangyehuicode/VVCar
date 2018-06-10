@@ -26,7 +26,7 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="ids"></param>
         /// <returns></returns>
         bool BatchHandCouponPush(Guid[] ids);
-        
+
         /// <summary>
         /// 查询卡券推送任务
         /// </summary>
@@ -34,5 +34,11 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<CouponPushDto> Search(CouponPushFilter filter, out int totalCount);
+
+        /// <summary>
+        /// 卡券推送任务
+        /// </summary>
+        /// <returns></returns>
+        bool CouponPushTask();
     }
 }

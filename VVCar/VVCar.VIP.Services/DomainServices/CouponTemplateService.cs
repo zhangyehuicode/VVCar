@@ -87,6 +87,13 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 entity.VerificationMode = Domain.Enums.EVerificationMode.ScanCode;
             }
+            if (string.IsNullOrEmpty(entity.CoverImage))
+            {
+                if (entity.Nature == ENature.Coupon)
+                    entity.CoverImage = "/Areas/resource/img/mobile/defaultimg1.png";
+                else
+                    entity.CoverImage = "/Areas/resource/img/mobile/defaultimg3.png";
+            }
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
@@ -222,15 +229,15 @@ namespace VVCar.VIP.Services.DomainServices
             if (filter.HiddenExpirePutInDate)
             {
                 var nowDate = DateTime.Now;
-                queryable = queryable.Where(c => c.PutInEndDate >= nowDate);
+                queryable = queryable.Where(c => !c.PutInEndDate.HasValue || (c.PutInEndDate.HasValue && c.PutInEndDate >= nowDate));
             }
             if (filter.IsNotSpecialCoupon)
             {
                 queryable = queryable.Where(t => !t.IsSpecialCoupon);
             }
-            if (filter.Nature.HasValue)
+            if (filter.Nature != -1)
             {
-                queryable = queryable.Where(t => t.Nature == filter.Nature.Value);
+                queryable = queryable.Where(t => t.Nature == (ENature)filter.Nature);
             }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
@@ -253,8 +260,8 @@ namespace VVCar.VIP.Services.DomainServices
                     : $"领取后{c.EffectiveDaysAfterReceived.GetValueOrDefault()}天生效,{c.EffectiveDays.GetValueOrDefault()}天有效",
                 EffectiveDate = c.GetEffectiveDate().ToDateString(),
                 ExpiredDate = c.GetExpiredDate().ToDateString(),
-                PutInStartDate = c.PutInStartDate.GetValueOrDefault().ToDateString(),
-                PutInEndDate = c.PutInEndDate.GetValueOrDefault().ToDateString(),
+                PutInStartDate = c.PutInStartDate.HasValue ? c.PutInStartDate.GetValueOrDefault().ToDateString() : "",
+                PutInEndDate = c.PutInEndDate.HasValue ? c.PutInEndDate.GetValueOrDefault().ToDateString() : "",
                 AproveStatus = c.ApproveStatus,
                 AproveStatusText = this.GetEnumDescription(c.ApproveStatus),
                 Stock = c.Stock.Stock,
@@ -301,6 +308,7 @@ namespace VVCar.VIP.Services.DomainServices
                 Remark = c.Remark,
                 PutInIsUseAllTime = c.PutInIsUseAllTime,
                 IsDeductionFirst = c.IsDeductionFirst,
+                ConsumePointRate = c.ConsumePointRate,
             }).ToArray();
             return result.OrderByDescending(t => t.CreatedDate);
         }

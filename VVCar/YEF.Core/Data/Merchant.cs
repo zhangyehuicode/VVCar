@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
 namespace YEF.Core.Data
@@ -37,6 +33,18 @@ namespace YEF.Core.Data
         public string LegalPerson { get; set; }
 
         /// <summary>
+        /// 法人身份证编号
+        /// </summary>
+        [Display(Name = "法人身份证编号")]
+        public string IDNumber { get; set; }
+
+        /// <summary>
+        /// 注册邮箱
+        /// </summary>
+        [Display(Name = "注册邮箱")]
+        public string Email { get; set; }
+
+        /// <summary>
         /// 联系电话
         /// </summary>
         [Display(Name = "联系电话")]
@@ -48,6 +56,17 @@ namespace YEF.Core.Data
         [Display(Name = "营业执照 图片地址")]
         public string BusinessLicenseImgUrl { get; set; }
 
+        /// <summary>
+        /// 法人身份证正面 图片地址
+        /// </summary>
+        [Display(Name = "法人身份证正面 图片地址")]
+        public string LegalPersonIDCardFrontImgUrl { get; set; }
+
+        /// <summary>
+        /// 法人身份证反面 图片地址
+        /// </summary>
+        [Display(Name = "法人身份证反面 图片地址")]
+        public string LegalPersonIDCardBehindImgUrl { get; set; }
         /// <summary>
         /// 公司地址
         /// </summary>
@@ -77,6 +96,18 @@ namespace YEF.Core.Data
         /// </summary>
         [Display(Name = "微信商户Key（微信商户平台 支付密钥）")]
         public string WeChatMchKey { get; set; }
+
+        /// <summary>
+        /// 开户行
+        /// </summary>
+        [Display(Name = "开户行")]
+        public string Bank { get; set; }
+
+        /// <summary>
+        /// 开户行账号
+        /// </summary>
+        [Display(Name = "开户行账号")]
+        public string BankCard { get; set; }
 
         /// <summary>
         /// 创建人ID

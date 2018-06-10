@@ -71,10 +71,10 @@ namespace VVCar.BaseData.Services.DomainServices
 
         protected override bool DoValidate(Role entity)
         {
-            bool exists = this.Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID);
+            bool exists = this.Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (exists)
                 throw new DomainException(String.Format("代码 {0} 已使用，不能重复添加。", entity.Code));
-            exists = this.Repository.Exists(t => t.Name == entity.Name && t.ID != entity.ID);
+            exists = this.Repository.Exists(t => t.Name == entity.Name && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (exists)
                 throw new DomainException(String.Format("名称 {0} 已使用，不能重复添加。", entity.Name));
             return true;

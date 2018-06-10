@@ -45,6 +45,14 @@ namespace VVCar.Shop.Services.DomainServices
 
         #endregion
 
+        protected override bool DoValidate(Product entity)
+        {
+            bool exists = this.Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (exists)
+                throw new DomainException(String.Format("代码 {0} 已使用，不能重复添加。", entity.Code));
+            return true;
+        }
+
         private int GenerateIndex()
         {
             var index = 1;

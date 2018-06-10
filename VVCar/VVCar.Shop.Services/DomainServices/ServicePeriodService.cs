@@ -28,6 +28,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<ServicePeriodCoupon> ServicePeriodCouponRepo { get => UnitOfWork.GetRepository<IRepository<ServicePeriodCoupon>>(); }
 
+        IRepository<PickUpOrderItem> PickUpOrderItemRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrderItem>>(); }
+
         #endregion
 
         /// <summary>
@@ -91,7 +93,7 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<ServicePeriodSettingDto> Search(ServicePeriodFilter filter, out int totalCount)
         {
-            var queryable = this.Repository.GetInclude(t=>t.Product, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = this.Repository.GetInclude(t => t.Product, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.ProductName))
                 queryable = queryable.Where(t => filter.ProductName.Contains(t.Product.Name));
             totalCount = queryable.Count();

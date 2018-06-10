@@ -49,6 +49,7 @@
     <Compile Include="Dtos\ProductCategoryTreeDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
     <Compile Include="Dtos\ProductLiteDto.cs" />
+    <Compile Include="Dtos\ProductRetailStatisticsDto.cs" />
     <Compile Include="Dtos\ServicePeriodCouponDto.cs" />
     <Compile Include="Dtos\ServicePeriodDto.cs" />
     <Compile Include="Dtos\StockRecordDto.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Filters\PickUpOrderFilter.cs" />
     <Compile Include="Filters\ProductCategoryFilter.cs" />
     <Compile Include="Filters\ProductFilter.cs" />
+    <Compile Include="Filters\ProductRetailStatisticsFilter.cs" />
     <Compile Include="Filters\ServicePeriodCouponFilter.cs" />
     <Compile Include="Filters\ServicePeriodFilter.cs" />
     <Compile Include="Filters\ShoppingCartFilter.cs" />

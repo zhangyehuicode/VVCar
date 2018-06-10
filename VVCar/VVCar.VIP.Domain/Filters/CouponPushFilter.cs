@@ -19,12 +19,6 @@ namespace VVCar.VIP.Domain.Filters
         /// 推送状态
         /// </summary>
         [Display(Name = "推送状态")]
-        public ECouponPushStatus Status { get; set; }
-
-        /// <summary>
-        /// 是否显示全部数据
-        /// </summary>
-        [Display(Name = "是否显示全部数据")]
-        public bool ShowAll { get; set; }
+        public ECouponPushStatus? Status { get; set; }
     }
 }

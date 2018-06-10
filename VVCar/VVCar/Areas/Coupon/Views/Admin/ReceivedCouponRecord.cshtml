@@ -5,13 +5,20 @@
 }
 
 <div class="form-group row" style="padding:20px 0px 0px 20px;">
-    <div class="col-md-2" style="width:150px;">
+    <div class="col-md-2" style="width:200px;">
         <select class="form-control" id="selectcoupontype">
-            <option value="-1" selected="selected">全部类型</option>
+            <option value="-1" selected="selected">全部优惠类型</option>
             <option value="1">抵用</option>
-            <option value="0">代金</option>
-            <option value="2">兑换</option>
+            @*<option value="0">代金</option>
+                <option value="2">兑换</option>*@
             <option value="3">折扣</option>
+        </select>
+    </div>
+    <div class="col-md-2" style="width:150px;">
+        <select class="form-control" id="couponnature">
+            <option value="-1" selected="selected">全部类型</option>
+            <option value="0">优惠券</option>
+            <option value="1">会员卡</option>
         </select>
     </div>
     <div class="col-md-2" style="width:150px;">
@@ -25,7 +32,7 @@
     <div class="col-md-2" style="width:220px;">
         <input class="form-control" id="receivedcouponrecorddaterangepicker" />
     </div>
-    <div class="col-md-2" style="width:200px;">
+    <div class="col-md-2" style="width:150px;">
         <select class="form-control" id="departmentselect" data-bind="options:DepartmentList,optionsText:'Name',optionsValue:'Code',value:'allstore',optionsCaption:'全部门店'"></select>
     </div>
     <div class="col-md-2">
@@ -44,9 +51,9 @@
         <tr>
             <td class="cell_title">卡券模板编号</td>
             <td class="cell_title">卡券编号</td>
-            <td class="cell_title">时间</td>
+            <td class="cell_title">获取时间</td>
             <td class="cell_title">名称</td>
-            <td class="cell_title">OpenId</td>
+            @*<td class="cell_title">OpenId</td>*@
             <td class="cell_title">昵称</td>
             <td class="cell_title">操作</td>
         </tr>
@@ -56,7 +63,7 @@
             <td class="cell_content"><span data-bind="text:CouponCode"></span></td>
             <td class="cell_content"><span data-bind="text:CreatedDate"></span> </td>
             <td class="cell_content"><span data-bind="text:Title"></span> </td>
-            <td class="cell_content"><span data-bind="text:OwnerOpenID"></span> </td>
+            @*<td class="cell_content"><span data-bind="text:OwnerOpenID"></span> </td>*@
             <td class="cell_content"><span data-bind="text:OwnerNickName"></span></td>
             <td class="cell_content"><span data-bind="visible:CanGiveToPeople,click:$root.givenrecord"><a>赠送记录</a></span></td>
         </tr>
@@ -201,6 +208,7 @@
             me.TemplateCode = ko.observable('');
             me.TemplateTitle = ko.observable('');
             me.CouponType = ko.observable(-1);
+            me.Nature = ko.observable(-1);
             me.IsFirstTimeEntry = ko.observable(true);
             //me.PagingParams = ko.observable({
             //    Start: ko.observable(0),
@@ -273,6 +281,7 @@
                 StartTime: new Date(new Date().setDate(new Date().getDate() - 6)).Format('yyyy-MM-dd'),
                 EndTime: new Date(new Date().setDate(new Date().getDate())).Format('yyyy-MM-dd'),
                 CouponType: me.CouponType(),
+                Nature: me.Nature(),
                 CouponCode: me.CouponCode(),
                 TemplateCode: me.TemplateCode(),
                 TemplateTitle: me.TemplateTitle(),
@@ -366,6 +375,13 @@
             $('#selectcoupontype').change(function () {
                 if ((templateCode == null || couponType == null) && !me.IsFirstTimeEntry()) {
                     me.params.CouponType = $(this).val();
+                    me.refresh(true);
+                }
+            });
+
+            $('#couponnature').change(function () {
+                if ((templateCode == null || couponType == null) && !me.IsFirstTimeEntry()) {
+                    me.params.Nature = $(this).val();
                     me.refresh(true);
                 }
             });

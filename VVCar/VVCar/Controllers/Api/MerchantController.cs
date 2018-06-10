@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using VVCar.BaseData.Domain.Filters;
 using VVCar.BaseData.Domain.Services;
@@ -35,6 +31,32 @@ namespace VVCar.Controllers.Api
             return SafeExecute(() =>
             {
                 return MerchantService.Add(entity);
+            });
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public JsonActionResult<bool> Delete(Guid id) {
+            return SafeExecute(() =>
+            {
+                return MerchantService.Delete(id);
+            });
+        }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public JsonActionResult<bool> Update(Merchant entity) {
+            return SafeExecute(() =>
+            {
+                return MerchantService.Update(entity);
             });
         }
 

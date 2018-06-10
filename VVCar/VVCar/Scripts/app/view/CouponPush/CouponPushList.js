@@ -9,7 +9,7 @@
 	initComponent: function () {
 		var me = this;
 		var couponPushStore = Ext.create('WX.store.BaseData.CouponPushStore');
-		couponPushStore.load({ params: { Status: -2, ShowAll: true } });
+		couponPushStore.load();
 		var couponPushItemStore = Ext.create('WX.store.BaseData.CouponPushItemStore');
 		me.items = [{
 			xtype: 'grid',
@@ -68,7 +68,6 @@
 						labelWidth: 60,
 						margin: '0 0 0 5',
 						store: [
-							[-2, '全部'],
 							[0, '未推送'],
 							[1, '已推送'],
 							[-1, '终止推送'],
@@ -76,7 +75,6 @@
 						queryMode: 'local',
 						displayField: 'DictName',
 						valueField: 'DictValue',
-						emptyText: '请选择...'
 					}, {
 						action: 'search',
 						xtype: 'button',

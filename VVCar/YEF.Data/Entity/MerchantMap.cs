@@ -26,11 +26,25 @@ namespace YEF.Data
                 .IsRequired()
                 .HasMaxLength(20);
 
+            Property(t => t.IDNumber)
+                .IsRequired()
+                .HasMaxLength(18);
+
+            Property(t => t.Email)
+                .IsRequired()
+                .HasMaxLength(20);
+
             Property(t => t.MobilePhoneNo)
                 .IsRequired()
                 .HasMaxLength(11);
 
             Property(t => t.BusinessLicenseImgUrl)
+                .HasMaxLength(50);
+
+            Property(t => t.LegalPersonIDCardFrontImgUrl)
+                .HasMaxLength(50);
+
+            Property(t => t.LegalPersonIDCardBehindImgUrl)
                 .HasMaxLength(50);
 
             Property(t => t.CompanyAddress)
@@ -54,6 +68,14 @@ namespace YEF.Data
 
             Property(t => t.WeChatMchKey)
                 .HasMaxLength(50);
+
+            Property(t => t.Bank)
+                .IsRequired()
+                .HasMaxLength(20);
+
+            Property(t => t.BankCard)
+                .IsRequired()
+                .HasMaxLength(32);
         }
     }
 }

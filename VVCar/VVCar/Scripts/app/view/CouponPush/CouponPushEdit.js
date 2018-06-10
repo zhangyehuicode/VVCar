@@ -20,7 +20,7 @@
 					xtype: 'textfield',
 					name: 'Title',
 					fieldLabel: '标题',
-					maxLength: 20,
+					maxLength: 18,
 					allowBlank: false
 				}, {
 					xtype: 'datefield',

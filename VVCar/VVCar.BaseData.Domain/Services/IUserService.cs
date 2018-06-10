@@ -18,7 +18,7 @@ namespace VVCar.BaseData.Domain.Services
         /// <param name="account">账号: code</param>
         /// <param name="password">密码</param>
         /// <returns></returns>
-        UserInfoDto Login(string account, string password);
+        UserInfoDto Login(string account, string password, string companycode);
 
         /// <summary>
         /// Sso登录
@@ -26,7 +26,7 @@ namespace VVCar.BaseData.Domain.Services
         /// <param name="userCode">用户编号</param>
         /// <param name="password">密码</param>
         /// <returns></returns>
-        UserInfoDto SsoLogin(string userCode, string password);
+        UserInfoDto SsoLogin(string userCode, string password, string companycode);
 
         /// <summary>
         /// 修改密码

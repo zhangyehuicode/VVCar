@@ -453,7 +453,7 @@ namespace VVCar.VIP.Services.DomainServices
                     var message = new WeChatTemplateMessageDto
                     {
                         touser = receiveCouponDto.ReceiveOpenID,
-                        template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_CouponReceived),
+                        template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ReceivedSuccess),//WXMsg_CouponReceived
                         url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={AppContext.CurrentSession.CompanyCode}",
                         data = new System.Dynamic.ExpandoObject(),
                     };
@@ -462,7 +462,7 @@ namespace VVCar.VIP.Services.DomainServices
                     message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(template.Title);
                     message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(newCoupon.CreatedDate.ToDateString());
                     message.data.remark = new WeChatTemplateMessageDto.MessageData("点击查看我的卡包");
-                    WeChatService.SendWeChatNotifyAsync(message);
+                    WeChatService.SendWeChatNotifyAsync(message, receiveCouponDto.CompanyCode);
                 }
             }
             Repository.Add(newCoupons);
@@ -1465,6 +1465,10 @@ namespace VVCar.VIP.Services.DomainServices
             if (filter.CouponType != -1)
             {
                 result = result.Where(t => t.Template.CouponType == (ECouponType)filter.CouponType);
+            }
+            if (filter.Nature != -1)
+            {
+                result = result.Where(t => t.Template.Nature == (ENature)filter.Nature);
             }
             if (!string.IsNullOrEmpty(filter.CouponCode))
             {

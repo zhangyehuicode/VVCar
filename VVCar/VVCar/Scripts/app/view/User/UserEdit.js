@@ -86,7 +86,8 @@
                     xtype: 'datefield',
                     name: 'DutyTime',
                     fieldLabel: '入职时间',
-                    format: 'Y-m-d',
+                    format: 'Y-m-d H:i:s',
+                    editable: false,
                     allowBlank: true,
                 },
                 {

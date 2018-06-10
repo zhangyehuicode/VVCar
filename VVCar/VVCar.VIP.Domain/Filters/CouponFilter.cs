@@ -65,5 +65,11 @@ namespace VVCar.VIP.Domain.Filters
         /// </summary>
         [Display(Name = "分页限制")]
         public int? Limit { get; set; }
+
+        /// <summary>
+        /// 性质
+        /// </summary>
+        [Display(Name = "性质")]
+        public int Nature { get; set; }
     }
 }

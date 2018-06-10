@@ -28,6 +28,12 @@ namespace VVCar.VIP.Services.DomainServices
 
         IRepository<CouponPushItem> CouponPushItemRepo { get => UnitOfWork.GetRepository<IRepository<CouponPushItem>>(); }
 
+        ICouponService CouponService { get => ServiceLocator.Instance.GetService<ICouponService>(); }
+
+        IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
+
+        IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
+
         #endregion
 
         /// <summary>
@@ -89,17 +95,11 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (ids == null || ids.Length < 1)
                 throw new DomainException("参数不正确");
-            var notPushData = this.Repository.GetQueryable().Where(t => ids.Contains(t.ID) && ECouponPushStatus.NotPush == t.Status).ToList();
+            var notPushData = this.Repository.GetInclude(t => t.CouponPushItems).Where(t => ids.Contains(t.ID) && ECouponPushStatus.NotPush == t.Status).ToList();
             if (notPushData.Count < 1)
                 throw new DomainException("请选择未推送的数据");
-            notPushData.ForEach(t =>
-                t.Status = ECouponPushStatus.Pushed
-            );
-            this.Repository.UpdateRange(notPushData);
-            return true;
+            return CouponPushAction(notPushData);
         }
-
-
 
         /// <summary>
         /// 查询卡券推送任务
@@ -112,12 +112,81 @@ namespace VVCar.VIP.Services.DomainServices
             var queryable = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.Title))
                 queryable = queryable.Where(t => t.Title.Contains(filter.Title));
-            if (!filter.ShowAll)
+            if (filter.Status.HasValue)
                 queryable = queryable.Where(t => t.Status == filter.Status);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
             return queryable.MapTo<CouponPushDto>().ToArray();
+        }
+
+        /// <summary>
+        /// 卡券推送任务
+        /// </summary>
+        /// <returns></returns>
+        public bool CouponPushTask()
+        {
+            var starttime = DateTime.Now.Date;
+            var endtime = starttime.AddDays(1);
+            var couponPushList = Repository.GetInclude(t => t.CouponPushItems).Where(t => t.PushDate >= starttime && t.PushDate < endtime && t.Status == ECouponPushStatus.NotPush).ToList();
+            return CouponPushAction(couponPushList);
+        }
+
+        /// <summary>
+        /// 卡券推送动作
+        /// </summary>
+        /// <param name="couponPushList"></param>
+        /// <returns></returns>
+        public bool CouponPushAction(List<CouponPush> couponPushList)
+        {
+            if (couponPushList != null && couponPushList.Count() > 0)
+            {
+                UnitOfWork.BeginTransaction();
+                try
+                {
+                    var memberQueryable = MemberRepo.GetQueryable(false).Where(t => t.Card.Status == ECardStatus.Activated);
+                    couponPushList.ForEach(t =>
+                    {
+                        if (t.CouponPushItems != null && t.CouponPushItems.Count() > 0)
+                        {
+                            var members = memberQueryable.Where(m => m.MerchantID == t.MerchantID).ToList();
+                            var merchant = MerchantRepo.GetQueryable(false).Where(m => m.ID == t.MerchantID).FirstOrDefault();
+                            if (members != null && members.Count() > 0 && merchant != null)
+                            {
+                                members.ForEach(m =>
+                                {
+                                    if (!string.IsNullOrEmpty(m.WeChatOpenID))
+                                    {
+                                        try
+                                        {
+                                            CouponService.ReceiveCouponsAtcion(new ReceiveCouponDto
+                                            {
+                                                ReceiveOpenID = m.WeChatOpenID,
+                                                CouponTemplateIDs = t.CouponPushItems.Select(item => item.CouponTemplateID).ToList(),
+                                                ReceiveChannel = "卡券推送",
+                                                CompanyCode = merchant.Code,
+                                            }, true);
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            AppContext.Logger.Error($"卡券推送自动领取卡券出现异常，{e.Message}");
+                                        }
+                                    }
+                                });
+                                t.Status = ECouponPushStatus.Pushed;
+                            }
+                        }
+                    });
+                    Repository.Update(couponPushList);
+                    UnitOfWork.CommitTransaction();
+                }
+                catch (Exception e)
+                {
+                    UnitOfWork.RollbackTransaction();
+                    throw e;
+                }
+            }
+            return true;
         }
     }
 }

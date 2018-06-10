@@ -601,6 +601,7 @@
     <Content Include="Scripts\app\controller\MemberPoint.js" />
     <Content Include="Scripts\app\controller\MemberRecharge.js" />
     <Content Include="Scripts\app\controller\MemberTrade.js" />
+    <Content Include="Scripts\app\controller\Merchant.js" />
     <Content Include="Scripts\app\controller\Order.js" />
     <Content Include="Scripts\app\controller\Permission.js" />
     <Content Include="Scripts\app\controller\PointExchangeCoupon.js" />
@@ -635,6 +636,7 @@
     <Content Include="Scripts\app\model\BaseData\MemberGroupModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberPointModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MerchantModel.js" />
     <Content Include="Scripts\app\model\BaseData\OrderItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\OrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\PermissionFuncModel.js" />
@@ -677,6 +679,7 @@
     <Content Include="Scripts\app\store\BaseData\MemberGroupTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberPointStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MerchantStore.js" />
     <Content Include="Scripts\app\store\BaseData\OrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\PermissionStore.js" />
     <Content Include="Scripts\app\store\BaseData\PointExchangeCouponStore.js" />
@@ -771,6 +774,8 @@
     <Content Include="Scripts\app\view\Member\ChangeMemberGroup.js" />
     <Content Include="Scripts\app\view\Member\EditMember.js" />
     <Content Include="Scripts\app\view\Member\Member.js" />
+    <Content Include="Scripts\app\view\Merchant\MerchantEdit.js" />
+    <Content Include="Scripts\app\view\Merchant\MerchantList.js" />
     <Content Include="Scripts\app\view\Permission\PermissionEdit.js" />
     <Content Include="Scripts\app\view\Permission\PermissionList.js" />
     <Content Include="Scripts\app\view\Permission\RolePermission.js" />

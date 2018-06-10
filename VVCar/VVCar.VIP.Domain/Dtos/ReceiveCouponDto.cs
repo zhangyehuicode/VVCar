@@ -70,5 +70,10 @@ namespace VVCar.VIP.Domain.Dtos
         /// 是否发送微信通知
         /// </summary>
         public bool SendNotify { get; set; }
+
+        /// <summary>
+        /// 商户号
+        /// </summary>
+        public string CompanyCode { get; set; }
     }
 }

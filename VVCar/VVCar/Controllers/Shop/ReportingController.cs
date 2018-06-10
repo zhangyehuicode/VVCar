@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using VVCar.Shop.Domain.Dtos;
+using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
 using YEF.Core.Dtos;
 
@@ -66,6 +67,23 @@ namespace VVCar.Controllers.Shop
             return SafeExecute(() =>
             {
                 return ReportingService.GetStaffPerformance(userId, date);
+            });
+        }
+
+        /// <summary>
+        /// 零售产品汇总统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ProductRetailStatistics")]
+        public PagedActionResult<ProductRetailStatisticsDto> ProductRetailStatistics([FromUri]ProductRetailStatisticsFilter filter)
+        {
+            return SafeGetPagedData<ProductRetailStatisticsDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = ReportingService.ProductRetailStatistics(filter, ref totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
             });
         }
     }

@@ -192,7 +192,7 @@ namespace VVCar.BaseData.Data
             sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "会员", Component = "MemberManage", SysMenuUrl = "MemberManage", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 2 });
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "卡片制作", Component = "MemberCard", SysMenuUrl = "MemberCard", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000001"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
             sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000101"), Name = "会员信息", Component = "Member", SysMenuUrl = "Member", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000001"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
-           
+
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000102"), Name = "卡片类型", Component = "MemberCardType", SysMenuUrl = "MemberCardTypeList", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000001"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 2 });
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000005"), Name = "会员激活", Component = "MemberCardActivate", SysMenuUrl = "MemberCardActivate", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000001"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 4 });
 
@@ -240,6 +240,8 @@ namespace VVCar.BaseData.Data
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000800"), Name = "人员管理", Component = "UserManager", SysMenuUrl = "UserManager", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 6 });
             //sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000801"), Name = "微信粉丝管理", Component = "WeChatFans", SysMenuUrl = "WeChatFans", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000800"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
 
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000700"), Name = "商户管理", Component = "MerchantManage", SysMenuUrl = "MerchantManage", ParentID = null, IsLeaf = false, Type = ESysMenuType.Component, IsAvailable = true, Index = 7 });
+            sysMenuSet.Add(new SysMenu { ID = Guid.Parse("00000000-0000-0000-0000-000000000701"), Name = "商户信息", Component = "MerchantManage", SysMenuUrl = "MerchantManageList", ParentID = Guid.Parse("00000000-0000-0000-0000-000000000700"), IsLeaf = true, Type = ESysMenuType.Component, IsAvailable = true, Index = 1 });
         }
 
         void SeedSystemSetting(DbContext context)

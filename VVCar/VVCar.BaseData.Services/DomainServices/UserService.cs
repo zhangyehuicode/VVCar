@@ -58,6 +58,8 @@ namespace VVCar.BaseData.Services.DomainServices
 
         IRepository<CouponTemplate> CouponTemplateRepo { get => UnitOfWork.GetRepository<IRepository<CouponTemplate>>(); }
 
+        IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
+
         #endregion
 
         #region methods
@@ -107,6 +109,7 @@ namespace VVCar.BaseData.Services.DomainServices
             user.EmailAddress = entity.EmailAddress;
             user.IsAvailable = entity.IsAvailable;
             user.CanLoginAdminPortal = entity.CanLoginAdminPortal;
+            user.DutyTime = entity.DutyTime;
             if (user.AuthorityCard != entity.AuthorityCard)
             {
                 if (string.IsNullOrEmpty(entity.AuthorityCard))
@@ -127,7 +130,7 @@ namespace VVCar.BaseData.Services.DomainServices
 
         protected override bool DoValidate(User entity)
         {
-            bool exists = this.Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID);
+            bool exists = this.Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (exists)
                 throw new DomainException(String.Format("代码 {0} 已使用，不能重复添加。", entity.Code));
             return true;
@@ -137,19 +140,26 @@ namespace VVCar.BaseData.Services.DomainServices
 
         #region IUserService 成员
 
-        public UserInfoDto Login(string account, string password)
+        public UserInfoDto Login(string account, string password, string companycode)
         {
+            if (string.IsNullOrEmpty(companycode))
+                throw new DomainException("商户号不能为空");
             if (string.IsNullOrEmpty(account) || string.IsNullOrEmpty(password))
                 throw new DomainException("用户名或密码不能为空");
-            var queryable = Repository.GetQueryable(false);
-            if (AppContext.SuperScanCardAccount.Equals(account))
-            {
-                queryable = queryable.Where(t => t.AuthorityCard == password);
-            }
-            else
-            {
-                queryable = queryable.Where(t => t.Code == account && t.Password == password);
-            }
+
+            var merchant = MerchantRepo.GetQueryable(false).FirstOrDefault(t => t.Code == companycode);
+            if (merchant == null)
+                throw new DomainException("商户不存在");
+
+            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == merchant.ID);
+            //if (AppContext.SuperScanCardAccount.Equals(account))
+            //{
+            //    queryable = queryable.Where(t => t.AuthorityCard == password);
+            //}
+            //else
+            //{
+            queryable = queryable.Where(t => t.Code == account && t.Password == password);
+            //}
             var user = queryable.Select(t => new UserInfoDto
             {
                 ID = t.ID,
@@ -172,7 +182,7 @@ namespace VVCar.BaseData.Services.DomainServices
         public UserInfoDto WeChatLogin(WeChatLoginParams param)
         {
             var password = Util.EncryptPassword(param.UserName, param.Password);
-            var result = Login(param.UserName, password);
+            var result = Login(param.UserName, password, param.MerchantCode);
 
             var user = Repository.GetInclude(t => t.UserRoles, false).Where(t => t.ID == result.ID).FirstOrDefault();
             if (user != null)
@@ -280,11 +290,16 @@ namespace VVCar.BaseData.Services.DomainServices
             return null;
         }
 
-        public UserInfoDto SsoLogin(string userCode, string password)
+        public UserInfoDto SsoLogin(string userCode, string password, string companycode)
         {
+            if (string.IsNullOrEmpty(companycode))
+                throw new DomainException("商户号不能为空");
             if (string.IsNullOrEmpty(userCode) || string.IsNullOrEmpty(password))
                 throw new DomainException("用户名或密码不能为空");
-            var queryable = Repository.GetQueryable(false).Where(t => t.Code == userCode);
+            var merchant = MerchantRepo.GetQueryable(false).FirstOrDefault(t => t.Code == companycode);
+            if (merchant == null)
+                throw new DomainException("商户不存在");
+            var queryable = Repository.GetQueryable(false).Where(t => t.Code == userCode && t.MerchantID == merchant.ID);
             var user = queryable.Select(t => new UserInfoDto
             {
                 ID = t.ID,
