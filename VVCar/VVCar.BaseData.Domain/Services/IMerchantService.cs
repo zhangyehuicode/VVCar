@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using VVCar.BaseData.Domain.Filters;
 using YEF.Core.Data;
 using YEF.Core.Domain;
-using VVCar.BaseData.Domain.Entities;
-using YEF.Core.Dtos;
-using VVCar.BaseData.Domain.Filters;
-using VVCar.BaseData.Domain.Dtos;
 
 namespace VVCar.BaseData.Domain.Services
 {
@@ -14,6 +11,20 @@ namespace VVCar.BaseData.Domain.Services
     /// </summary>
     public interface IMerchantService : IDomainService<IRepository<Merchant>, Merchant, Guid>
     {
+        /// <summary>
+        /// 激活商户
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool ActivateMerchant(Guid[] ids);
+
+        /// <summary>
+        /// 冻结商户
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool FreezeMerchant(Guid[] ids);
+
         /// <summary>
         /// 查询
         /// </summary>

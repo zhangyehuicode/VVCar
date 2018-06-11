@@ -126,6 +126,7 @@
                         },
                         { header: '手机号码', dataIndex: 'MobilePhoneNo', flex: 1 },
                         { header: '入职时间', dataIndex: 'DutyTime', xtype: 'datecolumn', format: 'Y-m-d', flex: 1 },
+                        { header: '底薪', dataIndex: 'BasicSalary', width: 100 },
                         { header: '年龄', dataIndex: 'Age', flex: 1 },
                         {
                             header: '是否可用', dataIndex: 'IsAvailable', width: 80, renderer: function (value) {

@@ -6,6 +6,8 @@ using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
+using VVCar.VIP.Domain.Dtos;
+using VVCar.VIP.Domain.Services;
 using YEF.Core;
 using YEF.Core.Data;
 using YEF.Core.Domain;
@@ -29,6 +31,8 @@ namespace VVCar.Shop.Services.DomainServices
         IRepository<ServicePeriodCoupon> ServicePeriodCouponRepo { get => UnitOfWork.GetRepository<IRepository<ServicePeriodCoupon>>(); }
 
         IRepository<PickUpOrderItem> PickUpOrderItemRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrderItem>>(); }
+
+        IWeChatService WeChatService { get => ServiceLocator.Instance.GetService<IWeChatService>(); }
 
         #endregion
 
@@ -100,6 +104,43 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
             return queryable.MapTo<ServicePeriodSettingDto>().ToArray();
+        }
+
+        public bool ServicePeriodReminder()
+        {
+            var now = DateTime.Now.Date;
+            var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetInclude(t => t.PickUpOrder, false);
+            var servicePeriodQueryable = Repository.GetInclude(t => t.ServicePeriodCouponList, false).ToList();
+            servicePeriodQueryable.ForEach(t =>
+            {
+                var dueservices = new List<PickUpOrderItem>();
+                var pickuporderservices = pickUpOrderItemQueryable.Where(p => p.ProductID == t.ProductID).ToList();
+                pickuporderservices.ForEach(p =>
+                {
+                    var perioddays = (now - p.PickUpOrder.CreatedDate.Date).Days;
+                    if (perioddays == t.PeriodDays)
+                        dueservices.Add(p);
+                });
+            });
+            return true;
+        }
+
+        public bool SendServiceDueNotice(List<PickUpOrderItem> pickUpOrderItemList, ServicePeriodSetting servicePeriodSetting)
+        {
+            //var message = new WeChatTemplateMessageDto
+            //{
+            //    touser = receiveCouponDto.ReceiveOpenID,
+            //    template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ReceivedSuccess),//WXMsg_CouponReceived
+            //    url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={companyCode}",
+            //    data = new System.Dynamic.ExpandoObject(),
+            //};
+            //message.data.first = new WeChatTemplateMessageDto.MessageData($"尊敬的会员，您的服务即将到期");
+            //message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(receiveCouponDto.NickName);
+            //message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(template.Title);
+            //message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(newCoupon.CreatedDate.ToDateString());
+            //message.data.remark = new WeChatTemplateMessageDto.MessageData("点击查看我的卡包");
+            //WeChatService.SendWeChatNotifyAsync(message, receiveCouponDto.CompanyCode);
+            return true;
         }
     }
 }

@@ -105,6 +105,7 @@
     <Compile Include="Entities\MemberGradeRight.cs" />
     <Compile Include="Entities\MemberGroup.cs" />
     <Compile Include="Entities\MemberHistoryEntity.cs" />
+    <Compile Include="Entities\MemberPlate.cs" />
     <Compile Include="Entities\MemberPoint.cs" />
     <Compile Include="Entities\MemberPointAdditionalRule.cs" />
     <Compile Include="Entities\MemberPointHistory.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Filters\MemberFilter.cs" />
     <Compile Include="Filters\MemberGradeFilter.cs" />
     <Compile Include="Filters\MemberGroupFilter.cs" />
+    <Compile Include="Filters\MemberPlateFilter.cs" />
     <Compile Include="Filters\RechargeHistoryFilter.cs" />
     <Compile Include="Filters\RechargePlanFilter.cs" />
     <Compile Include="Filters\SearchCardThemeGroupFilter.cs" />
@@ -182,6 +184,7 @@
     <Compile Include="Services\IMemberGradeHistoryService.cs" />
     <Compile Include="Services\IMemberGradeService.cs" />
     <Compile Include="Services\IMemberGroupService.cs" />
+    <Compile Include="Services\IMemberPlateService.cs" />
     <Compile Include="Services\IMemberService.cs" />
     <Compile Include="Services\IRechargeHistoryService.cs" />
     <Compile Include="Services\IRechargePlanService.cs" />

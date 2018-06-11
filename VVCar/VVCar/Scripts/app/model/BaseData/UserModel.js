@@ -10,5 +10,6 @@ Ext.define('WX.model.BaseData.UserModel', {
         { name: 'CanLoginAdminPortal', type: 'boolean' },
         { name: 'DutyTime' },
         { name: 'Age' },
+        { name: "BasicSalary" },
     ],
 });

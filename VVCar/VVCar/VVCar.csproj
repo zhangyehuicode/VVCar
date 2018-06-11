@@ -306,6 +306,7 @@
     <Compile Include="Controllers\VIP\MemberController.cs" />
     <Compile Include="Controllers\VIP\MemberGradeController.cs" />
     <Compile Include="Controllers\VIP\MemberGroupController.cs" />
+    <Compile Include="Controllers\VIP\MemberPlateController.cs" />
     <Compile Include="Controllers\VIP\RechargeHistoryController.cs" />
     <Compile Include="Controllers\VIP\RechargePlanController.cs" />
     <Compile Include="Global.asax.cs">

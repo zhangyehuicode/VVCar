@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using YEF.Core.Enums;
 
 namespace YEF.Core.Data
 {
@@ -108,6 +109,12 @@ namespace YEF.Core.Data
         /// </summary>
         [Display(Name = "开户行账号")]
         public string BankCard { get; set; }
+
+        /// <summary>
+        /// 商户状态
+        /// </summary>
+        [Display(Name = "商户状态")]
+        public EMerchantStatus Status { get; set; }
 
         /// <summary>
         /// 创建人ID

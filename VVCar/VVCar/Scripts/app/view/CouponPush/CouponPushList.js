@@ -103,6 +103,26 @@
 					}
 				},
 				{ header: '创建日期', dataIndex: 'CreatedDate', flex: 1 },
+				{
+					text: '操作功能',
+					xtype: 'actioncolumn',
+					width: 80,
+					sortable: false,
+					menuDisabled: true,
+					height: 30,
+					align: 'center',
+					items: [{
+						action: 'updateItem',
+						iconCls: 'x-fa fa-pencil',
+						tooltip: '编辑',
+						scope: this,
+						margin: '10 10 10 10',
+						handler: function (grid, rowIndex, colIndex) {
+							var record = grid.getStore().getAt(rowIndex);
+							this.fireEvent('updateActionClick', grid, record);
+						}
+					}]
+				}
 			],
 			bbar: {
 				xtype: 'pagingtoolbar',

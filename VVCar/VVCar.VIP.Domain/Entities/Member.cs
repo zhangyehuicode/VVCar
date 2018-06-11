@@ -16,6 +16,11 @@ namespace VVCar.VIP.Domain.Entities
     /// </summary>
     public class Member : EntityBase
     {
+        public Member()
+        {
+            MemberPlateList = new List<MemberPlate>();
+        }
+
         /// <summary>
         /// 会员卡ID
         /// </summary>
@@ -156,6 +161,11 @@ namespace VVCar.VIP.Domain.Entities
         /// 会员等级
         /// </summary>
         public virtual MemberGrade MemberGrade { get; set; }
+
+        /// <summary>
+        /// 车牌号
+        /// </summary>
+        public virtual ICollection<MemberPlate> MemberPlateList { get; set; }
 
         ///// <summary>
         ///// 会员签到

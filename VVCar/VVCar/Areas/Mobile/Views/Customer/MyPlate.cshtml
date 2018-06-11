@@ -13,14 +13,12 @@
     </div>
     <div class="wdcph">
         <div class="wdcph_text" style=" border-bottom:1px solid #eee;">车牌号</div>
-        <div class="wdcph_text" style="color:#666; border-bottom:1px dashed #eee;">闽D12345<a>删除</a><a style="background-color:#efcb47; color:#2d2d30; margin-right:3%;">编辑</a></div>
-        <div class="wdcph_text" style="color:#666; border-bottom:1px dashed #eee;">闽D12346<a>删除</a><a style="background-color:#efcb47; color:#2d2d30; margin-right:3%;">编辑</a></div>
-        <div class="wdcph_text" style="color:#666; ">闽D12347<a>删除</a><a style="background-color:#efcb47; color:#2d2d30; margin-right:3%;">编辑</a></div>
+        <div class="wdcph_text" style="color:#666; border-bottom:1px dashed #eee;" v-for="Plate in PlateNumberList">{{Plate.PlateNumber}}<a v-on:click="deletePlateNumber(Plate)">删除</a></div>
     </div>
     <div class="wdcph_box">
         <div class="wdcph_box2">
-            <input type="text">
-            <a>增加/更新</a>
+            <input type="text" style="font-size:13px;" v-model="AddData.PlateNumber">
+            <a v-on:click="addPlateNumber">增加</a>
         </div>
     </div>
 </div>
@@ -32,9 +30,10 @@
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -80,10 +79,39 @@
             el: '#myplate',
             data: {
                 MyInfo: {},
+                PlateNumberList: [],
+                AddData: {
+                    MemberID:'',
+                    OpenID:'@ViewBag.OpenId',
+                    PlateNumber:'',
+                }
             },
             methods: {
                 home: function (event) {
                     window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+                addPlateNumber: function (event) {
+                    var data = _viewModel.AddData;
+                    if (data == null || data == '' || data.MemberID == null || data.MemberID == '') {
+                        $.alert('参数错误');
+                        return;
+                    }
+                    if (data.PlateNumber == null || data.PlateNumber == '') {
+                        $.alert('请输入车牌号');
+                        return;
+                    }
+                    if (data.PlateNumber.length != 7 && data.PlateNumber.length != 8) {
+                        $.alert('车牌号不正确，请重新输入');
+                        return;
+                    }
+                    $.confirm('确认增加车牌号 ' + _viewModel.AddData.PlateNumber + ' ？', function () {
+                        addPlateNumber(_viewModel.AddData);
+                    });
+                },
+                deletePlateNumber: function (data, event) {
+                    $.confirm('确认删除车牌号 ' + data.PlateNumber + ' ？', function () {
+                        deletePlateNumber(data.ID);
+                    });
                 },
             }
         });
@@ -103,6 +131,7 @@
                                 if (res.Data != null) {
                                     sessionStorage.setItem('member', JSON.stringify(res.Data));
                                     _viewModel.MyInfo = res.Data;
+                                    _viewModel.AddData.MemberID = res.Data.MemberID;
                                 } else {
                                     window.location.href = "/Mobile/Customer?mch=" + mch;
                                 }
@@ -120,7 +149,88 @@
             if (member == null || member == '') {
                 init();
             } else {
-                _viewModel.MyInfo = JSON.parse(member);
+                member = JSON.parse(member)
+                _viewModel.MyInfo = member;
+                _viewModel.AddData.MemberID = member.MemberID;
+            }
+
+            function getPlateNumber(showloading) {
+                $.ajax({
+                    url: '/api/MemberPlate?OpenID=@ViewBag.OpenId',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        if (showloading)
+                           $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.PlateNumberList = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getPlateNumber(true);
+
+            function addPlateNumber(data) {
+                 $.ajax({
+                    url: '/api/MemberPlate',
+                    type: 'POST',
+                    data: data,
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                $.toast('添加成功');
+                                _viewModel.PlateNumberList.push(res.Data);
+                                _viewModel.AddData.PlateNumber = '';
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                 });
+            }
+
+            function deletePlateNumber(id) {
+                if (id == null || id == '') {
+                    $.alert('参数错误');
+                    return;
+                }
+                $.ajax({
+                    url: '/api/MemberPlate/Delete?id='+id,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            $.toast('删除成功');
+                            getPlateNumber(false);
+                            _viewModel.AddData.PlateNumber = '';
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
             }
 
         });

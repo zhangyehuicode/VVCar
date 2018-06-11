@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Http;
 using VVCar.BaseData.Domain.Filters;
 using VVCar.BaseData.Domain.Services;
@@ -40,7 +41,8 @@ namespace VVCar.Controllers.Api
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete]
-        public JsonActionResult<bool> Delete(Guid id) {
+        public JsonActionResult<bool> Delete(Guid id)
+        {
             return SafeExecute(() =>
             {
                 return MerchantService.Delete(id);
@@ -53,10 +55,39 @@ namespace VVCar.Controllers.Api
         /// <param name="entity"></param>
         /// <returns></returns>
         [HttpPut]
-        public JsonActionResult<bool> Update(Merchant entity) {
+        public JsonActionResult<bool> Update(Merchant entity)
+        {
             return SafeExecute(() =>
             {
                 return MerchantService.Update(entity);
+            });
+        }
+
+        /// <summary>
+        /// 激活商户
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpPost, Route("activateMerchant")]
+        public JsonActionResult<bool> ActivateMerchant(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return MerchantService.ActivateMerchant(parameter.IdList.ToArray());
+            });
+        }
+
+        /// <summary>
+        /// 冻结商户
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpPost, Route("freezeMerchant")]
+        public JsonActionResult<bool> FreezeMerchant(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return MerchantService.FreezeMerchant(parameter.IdList.ToArray());
             });
         }
 

@@ -44,6 +44,19 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public JsonActionResult<bool> Update(CouponPush entity) {
+            return SafeExecute(() =>
+            {
+                return CouponPushService.Update(entity);
+            });
+        }
+
+        /// <summary>
         /// 手动批量推送卡券
         /// </summary>
         /// <param name="parameter"></param>

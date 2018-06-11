@@ -66,7 +66,7 @@ namespace VVCar.Shop.Domain.Services
         /// 接车单历史数据分析
         /// </summary>
         /// <returns></returns>
-        IEnumerable<HistoryDataAnalysisDto> GetHistoryAnalysisData();
+        IEnumerable<HistoryDataAnalysisDto> GetHistoryAnalysisData(HistoryDataAnalysisParam param);
 
         /// <summary>
         /// 出/入库

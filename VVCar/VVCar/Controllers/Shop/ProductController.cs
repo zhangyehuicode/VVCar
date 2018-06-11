@@ -176,11 +176,11 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("GetHistoryAnalysisData"), AllowAnonymous]
-        public PagedActionResult<HistoryDataAnalysisDto> GetHistoryAnalysisData()
+        public PagedActionResult<HistoryDataAnalysisDto> GetHistoryAnalysisData([FromUri]HistoryDataAnalysisParam param)
         {
             return SafeGetPagedData<HistoryDataAnalysisDto>((result) =>
             {
-                result.Data = ProductService.GetHistoryAnalysisData();
+                result.Data = ProductService.GetHistoryAnalysisData(param);
             });
         }
 

@@ -86,5 +86,22 @@ namespace VVCar.Controllers.Shop
                 result.TotalCount = totalCount;
             });
         }
+
+        /// <summary>
+        /// 员工业绩统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("StaffPerformanceStatistics")]
+        public PagedActionResult<StaffPerformance> StaffPerformanceStatistics([FromUri]StaffPerformanceFilter filter)
+        {
+            return SafeGetPagedData<StaffPerformance>((result) =>
+            {
+                var totalCount = 0;
+                var data = ReportingService.StaffPerformanceStatistics(filter, ref totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
     }
 }

@@ -79,6 +79,7 @@
     <Compile Include="DomainServices\MemberGradeHistoryService.cs" />
     <Compile Include="DomainServices\MemberGradeService.cs" />
     <Compile Include="DomainServices\MemberGroupService.cs" />
+    <Compile Include="DomainServices\MemberPlateService.cs" />
     <Compile Include="DomainServices\MemberService.cs" />
     <Compile Include="DomainServices\RechargeHistoryService.cs" />
     <Compile Include="DomainServices\RechargePlanService.cs" />

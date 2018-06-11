@@ -70,5 +70,10 @@ namespace VVCar.BaseData.Domain
         /// 核销成功通知消息模板
         /// </summary>
         public const string WXMsg_VerificationSuccess = "WXMsg_VerificationSuccess";
+
+        /// <summary>
+        /// 服务到期提醒消息模板
+        /// </summary>
+        public const string WXMsg_ServiceExpiredRemind = "WXMsg_ServiceExpiredRemind";
     }
 }

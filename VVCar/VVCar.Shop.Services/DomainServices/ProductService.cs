@@ -9,6 +9,7 @@ using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
+using VVCar.VIP.Domain.Entities;
 using YEF.Core;
 using YEF.Core.Data;
 using YEF.Core.Domain;
@@ -42,6 +43,10 @@ namespace VVCar.Shop.Services.DomainServices
         }
 
         IStockRecordService StockRecordService { get => ServiceLocator.Instance.GetService<IStockRecordService>(); }
+
+        IRepository<PickUpOrder> PickUpOrderRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrder>>(); }
+
+        IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
 
         #endregion
 
@@ -246,15 +251,38 @@ namespace VVCar.Shop.Services.DomainServices
         /// 接车单历史数据分析
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<HistoryDataAnalysisDto> GetHistoryAnalysisData()
+        public IEnumerable<HistoryDataAnalysisDto> GetHistoryAnalysisData(HistoryDataAnalysisParam param)
         {
             var result = new List<HistoryDataAnalysisDto>();
 
             var servicelist = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Service && t.IsPublish).ToList();
-            if (servicelist != null)
+            if (servicelist != null && servicelist.Count() > 0)
             {
+                var pickuporderQueryable = PickUpOrderRepo.GetInclude(t => t.PickUpOrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+
+                if (param != null)
+                {
+                    Member member = null;
+                    if (!string.IsNullOrEmpty(param.OpenID))
+                    {
+                        member = MemberRepo.GetInclude(t => t.MemberPlateList, false).FirstOrDefault(t => t.WeChatOpenID == param.OpenID);
+                    }
+                    else if (param.MemberID.HasValue)
+                    {
+                        member = MemberRepo.GetInclude(t => t.MemberPlateList, false).FirstOrDefault(t => t.ID == param.MemberID.Value);
+                    }
+                    if (member != null)
+                    {
+                        var memberPlateNumberList = member.MemberPlateList.Select(t => t.PlateNumber).ToList();
+                        pickuporderQueryable = pickuporderQueryable.Where(t => memberPlateNumberList.Contains(t.PlateNumber));
+                    }
+                }
+
+                var pickuporderList = pickuporderQueryable.ToList();
+
                 servicelist.ForEach(t =>
                 {
+                    var serviceTime = pickuporderList.GroupBy(g => 1).Select(p => p.Sum(s => s.PickUpOrderItemList.Count(item => item.ProductID == t.ID))).FirstOrDefault();
                     result.Add(new HistoryDataAnalysisDto
                     {
                         ID = t.ID,
@@ -262,12 +290,27 @@ namespace VVCar.Shop.Services.DomainServices
                         Code = t.Code,
                         PriceSale = t.PriceSale,
                         MiningSpace = 5,
-                        ServiceTime = 0,
+                        ServiceTime = serviceTime,
                     });
                 });
+
+                result.ForEach(t =>
+                {
+                    if (t.ServiceTime > 100)
+                        t.MiningSpace = 1;
+                    else if (t.ServiceTime > 80)
+                        t.MiningSpace = 2;
+                    else if (t.ServiceTime > 60)
+                        t.MiningSpace = 3;
+                    else if (t.ServiceTime > 10)
+                        t.MiningSpace = 4;
+                    else
+                        t.MiningSpace = 5;
+                });
+
             }
 
-            return result.OrderByDescending(t => t.MiningSpace).ToList();
+            return result.OrderBy(t => t.ServiceTime).ToList();
         }
 
         /// <summary>

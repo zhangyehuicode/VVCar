@@ -27,7 +27,6 @@ namespace YEF.Data
                 .HasMaxLength(20);
 
             Property(t => t.IDNumber)
-                .IsRequired()
                 .HasMaxLength(18);
 
             Property(t => t.Email)
@@ -35,7 +34,6 @@ namespace YEF.Data
                 .HasMaxLength(20);
 
             Property(t => t.MobilePhoneNo)
-                .IsRequired()
                 .HasMaxLength(11);
 
             Property(t => t.BusinessLicenseImgUrl)

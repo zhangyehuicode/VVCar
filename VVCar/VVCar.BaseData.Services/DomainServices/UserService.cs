@@ -110,6 +110,8 @@ namespace VVCar.BaseData.Services.DomainServices
             user.IsAvailable = entity.IsAvailable;
             user.CanLoginAdminPortal = entity.CanLoginAdminPortal;
             user.DutyTime = entity.DutyTime;
+            user.Age = entity.Age;
+            user.BasicSalary = entity.BasicSalary;
             if (user.AuthorityCard != entity.AuthorityCard)
             {
                 if (string.IsNullOrEmpty(entity.AuthorityCard))
@@ -273,6 +275,7 @@ namespace VVCar.BaseData.Services.DomainServices
                 result.CustomerServiceCount = userPerformance.CustomerServiceCount;
                 result.MonthCustomerServiceCount = userPerformance.MonthCustomerServiceCount;
                 result.PerformanceRanking = userPerformance.PerformanceRanking;
+                result.MonthIncome = userPerformance.MonthIncome;
 
                 var starttime = DateTime.Now.Date;
                 var endtime = starttime.AddDays(1);
@@ -390,6 +393,7 @@ namespace VVCar.BaseData.Services.DomainServices
                 t.BasicSalary = staffPerformance.BasicSalary;
                 t.CustomerServiceCount = staffPerformance.CustomerServiceCount;
                 t.MonthCustomerServiceCount = staffPerformance.MonthCustomerServiceCount;
+                t.MonthIncome = staffPerformance.MonthIncome;
             });
             result = result.OrderByDescending(t => t.MonthPerformance).ToList();
             var ranking = 1;

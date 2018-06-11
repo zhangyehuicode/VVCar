@@ -10,6 +10,7 @@
 		var me = this;
 		me.form = Ext.create('Ext.form.Panel', {
 			border: false,
+			trackResetOnLoad: true,
 			fieldDefaults: {
 				labelAlign: 'left',
 				labelWidth: 60,
@@ -28,7 +29,7 @@
 					fieldLabel: '推送时间',
 					allowBlank: true,
 					minValue: new Date(),
-					format: 'Y-m-d 17:25:00',
+					format: 'Y-m-d',
 					editable: false,
 					allowBlank: false,
 					value: new Date()

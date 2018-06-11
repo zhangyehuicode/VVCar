@@ -158,7 +158,7 @@ namespace VVCar.Shop.Services.DomainServices
                 endtime = starttime.AddMonths(1);
             }
 
-            var pickuporderqueryable = PickUpOrderRepo.GetQueryable(false).Where(t => t.StaffID == user.ID && t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+            var pickuporderqueryable = PickUpOrderRepo.GetIncludes(false, "PickUpOrderItemList", "PickUpOrderItemList.Product").Where(t => t.StaffID == user.ID && t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
             var monthpickuporderlist = pickuporderqueryable.Where(t => t.CreatedDate >= starttime && t.CreatedDate < endtime).ToList();
 
             staffPerformance.MonthPerformance = monthpickuporderlist.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
@@ -166,7 +166,90 @@ namespace VVCar.Shop.Services.DomainServices
             staffPerformance.CustomerServiceCount = pickuporderqueryable.Count();
             staffPerformance.MonthCustomerServiceCount = monthpickuporderlist.Count();
 
+            pickuporderqueryable.Select(t => t.PickUpOrderItemList).ForEach(t =>
+            {
+                staffPerformance.TotalCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
+            });
+            monthpickuporderlist.Select(t => t.PickUpOrderItemList).ForEach(t =>
+            {
+                staffPerformance.MonthCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
+            });
+            staffPerformance.BasicSalary = user.BasicSalary;
+
             return staffPerformance;
+        }
+
+        /// <summary>
+        /// 员工业绩统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<StaffPerformance> StaffPerformanceStatistics(StaffPerformanceFilter filter, ref int totalCount)
+        {
+            var result = new List<StaffPerformance>();
+            var userQueryable = UserRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (filter != null && !string.IsNullOrEmpty(filter.StaffName))
+                userQueryable = userQueryable.Where(t => t.Name.Contains(filter.StaffName));
+            var users = userQueryable.ToList();
+            if (users != null && users.Count > 0)
+            {
+                var now = DateTime.Now;
+                var monthStartTime = new DateTime(now.Year, now.Month, 1);
+                var nextMonthStartTime = monthStartTime.AddMonths(1);
+                var pickuporderQueryable = PickUpOrderRepo.GetIncludes(false, "PickUpOrderItemList", "PickUpOrderItemList.Product").Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+                var currentpickuporderlist = pickuporderQueryable;
+                var monthpickuporderlist = pickuporderQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
+                if (filter != null)
+                {
+                    if (filter.StartDate.HasValue)
+                        currentpickuporderlist = currentpickuporderlist.Where(t => t.CreatedDate >= filter.StartDate.Value);
+                    if (filter.EndDate.HasValue)
+                        currentpickuporderlist = currentpickuporderlist.Where(t => t.CreatedDate < filter.EndDate.Value);
+                }
+                users.ForEach(user =>
+                {
+                    var userpickuporder = pickuporderQueryable.Where(t => t.StaffID == user.ID).ToList();
+                    var monthuserpickuporder = monthpickuporderlist.Where(t => t.StaffID == user.ID).ToList();
+                    var currentuserpickuporder = currentpickuporderlist.Where(t => t.StaffID == user.ID).ToList();
+
+                    var staffPerformance = new StaffPerformance();
+
+                    staffPerformance.TotalPerformance = userpickuporder.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+                    staffPerformance.MonthPerformance = monthuserpickuporder.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault(); ;
+                    staffPerformance.CurrentPerformance = currentuserpickuporder.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+
+                    staffPerformance.CustomerServiceCount = userpickuporder.Count();
+                    staffPerformance.MonthCustomerServiceCount = monthuserpickuporder.Count();
+                    staffPerformance.CurrentCustomerServiceCount = currentuserpickuporder.Count();
+
+                    userpickuporder.Select(t => t.PickUpOrderItemList).ForEach(t =>
+                    {
+                        staffPerformance.TotalCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
+                    });
+                    monthuserpickuporder.Select(t => t.PickUpOrderItemList).ForEach(t =>
+                    {
+                        staffPerformance.MonthCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
+                    });
+                    currentuserpickuporder.Select(t => t.PickUpOrderItemList).ForEach(t =>
+                    {
+                        staffPerformance.CurrentCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
+                    });
+
+                    staffPerformance.BasicSalary = user.BasicSalary;
+                    staffPerformance.Subsidy = 0;
+
+                    staffPerformance.StaffID = user.ID;
+                    staffPerformance.StaffName = user.Name;
+                    staffPerformance.StaffCode = user.Code;
+
+                    result.Add(staffPerformance);
+                });
+            }
+            totalCount = result.Count();
+            if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
+                result = result.OrderByDescending(t => t.CurrentPerformance).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
+            return result.OrderByDescending(t => t.CurrentPerformance).ToList();
         }
 
         public IEnumerable<ProductRetailStatisticsDto> ProductRetailStatistics(ProductRetailStatisticsFilter filter, ref int totalCount)

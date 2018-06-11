@@ -97,6 +97,13 @@
                     minValue: 1,
                 },
                 {
+                    xtype: 'numberfield',
+                    name: 'BasicSalary',
+                    fieldLabel: '底薪',
+                    minValue: 0,
+                    value: 0,
+                },
+                {
                     xtype: 'textfield',
                     name: 'AuthorityCard',
                     fieldLabel: '权限卡',

@@ -87,6 +87,24 @@ namespace VVCar.VIP.Services.DomainServices
         }
 
         /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public override bool Update(CouponPush entity)
+        {
+            if (entity == null)
+                return false;
+            var couponPush = Repository.GetByKey(entity.ID);
+            if (couponPush == null)
+                return false;
+            couponPush.Title = entity.Title;
+            couponPush.PushDate = entity.PushDate;
+            couponPush.Status = entity.Status;
+            return Repository.Update(couponPush) > 0;
+        }
+
+        /// <summary>
         /// 手动批量推送卡券
         /// </summary>
         /// <param name="ids"></param>
@@ -98,6 +116,17 @@ namespace VVCar.VIP.Services.DomainServices
             var notPushData = this.Repository.GetInclude(t => t.CouponPushItems).Where(t => ids.Contains(t.ID) && ECouponPushStatus.NotPush == t.Status).ToList();
             if (notPushData.Count < 1)
                 throw new DomainException("请选择未推送的数据");
+            var notExistItem = false;
+            notPushData.ForEach(t =>
+            {
+                if (t.CouponPushItems.Count() < 1)
+                    notExistItem = true;
+            });
+            if (notExistItem)
+                throw new DomainException("请先添加卡券");
+            var memberCount = MemberRepo.GetQueryable(false).Where(t => t.Card.Status == ECardStatus.Activated && t.MerchantID == AppContext.CurrentSession.MerchantID).Count();
+            if (memberCount < 1)
+                throw new DomainException("还没有会员!");
             return CouponPushAction(notPushData);
         }
 
@@ -165,6 +194,7 @@ namespace VVCar.VIP.Services.DomainServices
                                                 CouponTemplateIDs = t.CouponPushItems.Select(item => item.CouponTemplateID).ToList(),
                                                 ReceiveChannel = "卡券推送",
                                                 CompanyCode = merchant.Code,
+                                                NickName = m.Name,
                                             }, true);
                                         }
                                         catch (Exception e)

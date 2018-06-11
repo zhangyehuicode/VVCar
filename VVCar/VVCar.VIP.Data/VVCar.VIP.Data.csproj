@@ -71,6 +71,7 @@
     <Compile Include="Mapping\MemberGradeRightMap.cs" />
     <Compile Include="Mapping\MemberGroupMap.cs" />
     <Compile Include="Mapping\MemberMap.cs" />
+    <Compile Include="Mapping\MemberPlateMap.cs" />
     <Compile Include="Mapping\MemberPointHistoryMap.cs" />
     <Compile Include="Mapping\PointExchangeCouponMap.cs" />
     <Compile Include="Mapping\RechargeHistoryMap.cs" />

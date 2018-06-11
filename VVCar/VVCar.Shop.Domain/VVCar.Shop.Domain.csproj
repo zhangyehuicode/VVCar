@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Dtos\AdjustIndexParam.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisDto.cs" />
+    <Compile Include="Dtos\HistoryDataAnalysisParam.cs" />
     <Compile Include="Dtos\OrderDto.cs" />
     <Compile Include="Dtos\ProductCategoryLiteDto.cs" />
     <Compile Include="Dtos\ProductCategoryTreeDto.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Filters\ServicePeriodCouponFilter.cs" />
     <Compile Include="Filters\ServicePeriodFilter.cs" />
     <Compile Include="Filters\ShoppingCartFilter.cs" />
+    <Compile Include="Filters\StaffPerformanceFilter.cs" />
     <Compile Include="Filters\StockRecordFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IAppointmentService.cs" />

@@ -49,6 +49,9 @@
 			'CouponPushList grid[name=gridCouponPush]': {
 				select: me.gridCouponPushSelect
 			},
+			'CouponPushList': {
+				updateActionClick: me.editCouponPush
+			},
 			'CouponPushEdit button[action=save]': {
 				click: me.saveCouponPush
 			},
@@ -71,6 +74,13 @@
 		win.setTitle('添加任务');
 		win.show();
 	},
+	editCouponPush: function (grid, record) {
+		var win = Ext.widget('CouponPushEdit');
+		win.form.loadRecord(record);
+		win.form.getForm().actionMethod = 'PUT';
+		win.setTitle('编辑任务');
+		win.show();
+	},
 	addCouponPushItem: function () {
 		var me = this;
 		var couponPushGrid = me.getGridCouponPush();
@@ -91,6 +101,13 @@
 		if (selectedItems.length < 1) {
 			Ext.Msg.alert('提示', '请先选择要删除的任务!');
 			return;
+		} else {
+			selectedItems.forEach(function (item) {
+				if (item.data.Status != 0) {
+					Ext.Msg.alert('提示', '请选择未推送的任务');
+					return;
+				}
+			})
 		}
 		Ext.Msg.confirm('提示', '确定要删除任务吗', function (optional) {
 			if (optional === 'yes') {
@@ -166,6 +183,24 @@
 							Ext.MessageBox.alert('提示', '新增成功');
 							win.close();
 						}
+					}
+				});
+			} else {
+				if (!form.isDirty()) {
+					win.close();
+					return;
+				}
+				form.updateRecord();
+				couponPushStore.update({
+					callback: function (records, operation, success) {
+						if (!success) {
+							Ext.Msg.alert('提示', operation.error);
+							return;
+						} else {
+							Ext.Msg.alert('提示', '更新成功');
+							win.close();
+						}
+
 					}
 				});
 			}

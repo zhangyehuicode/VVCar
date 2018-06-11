@@ -86,6 +86,21 @@ namespace VVCar.Shop.Domain.Dtos
     public class StaffPerformance
     {
         /// <summary>
+        /// 员工ID
+        /// </summary>
+        public Guid StaffID { get; set; }
+
+        /// <summary>
+        /// 员工姓名
+        /// </summary>
+        public string StaffName { get; set; }
+
+        /// <summary>
+        /// 员工编码
+        /// </summary>
+        public string StaffCode { get; set; }
+
+        /// <summary>
         /// 总业绩
         /// </summary>
         public decimal TotalPerformance { get; set; }
@@ -124,5 +139,31 @@ namespace VVCar.Shop.Domain.Dtos
         /// 月客户服务量
         /// </summary>
         public int MonthCustomerServiceCount { get; set; }
+
+        /// <summary>
+        /// 当前业绩
+        /// </summary>
+        public decimal CurrentPerformance { get; set; }
+
+        /// <summary>
+        /// 当前抽成
+        /// </summary>
+        public decimal CurrentCommission { get; set; }
+
+        /// <summary>
+        /// 当前客户服务量
+        /// </summary>
+        public int CurrentCustomerServiceCount { get; set; }
+
+        /// <summary>
+        /// 月总收入
+        /// </summary>
+        public decimal MonthIncome
+        {
+            get
+            {
+                return BasicSalary + Subsidy + MonthCommission;
+            }
+        }
     }
 }

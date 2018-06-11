@@ -450,11 +450,14 @@ namespace VVCar.VIP.Services.DomainServices
                 newCoupons.Add(newCoupon);
                 if (sendNotify || receiveCouponDto.SendNotify)
                 {
+                    var companyCode = AppContext.CurrentSession.CompanyCode;
+                    if (string.IsNullOrEmpty(companyCode))
+                        companyCode = receiveCouponDto.CompanyCode;
                     var message = new WeChatTemplateMessageDto
                     {
                         touser = receiveCouponDto.ReceiveOpenID,
                         template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ReceivedSuccess),//WXMsg_CouponReceived
-                        url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={AppContext.CurrentSession.CompanyCode}",
+                        url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={companyCode}",
                         data = new System.Dynamic.ExpandoObject(),
                     };
                     message.data.first = new WeChatTemplateMessageDto.MessageData("恭喜您获得新的卡券");

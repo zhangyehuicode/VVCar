@@ -16,6 +16,12 @@
 			'MerchantList button[action=addMerchant]': {
 				click: me.addMerchant
 			},
+			'MerchantList button[action=activateMerchant]': {
+				click: me.activateMerchant
+			},
+			'MerchantList button[action=freezeMerchant]': {
+				click: me.freezeMerchant
+			},
 			'MerchantList': {
 				editActionClick: me.editMerchant,
 				deleteActionClick: me.deleteMerchant,
@@ -43,6 +49,88 @@
 		win.form.getForm().actionMethod = 'POST';
 		win.setTitle('添加商户');
 		win.show();
+	},
+	activateMerchant: function () {
+		var me = this;
+		var store = me.getMerchantList().getStore();
+		var selectedItems = me.getMerchantList().getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '未选择数据');
+		} else {
+			var ids = [];
+			var noActivationData = false;
+			selectedItems.forEach(function (item) {
+				if (item.data.Status != 0 && item.data.Status != -1) {
+					noActivationData = true;
+					return;
+				} else {
+					ids.push(item.data.ID);
+				}
+			});
+			if (noActivationData) {
+				Ext.Msg.alert('提示', '请选择未激活或者冻结的数据!');
+				return;
+			}
+			Ext.Msg.confirm('询问', '确定要激活所选商户号吗?', function (operational) {
+				if (operational == 'yes') {
+					store.activateMerchant(ids,
+						function success(response, request, c) {
+							var result = Ext.decode(c.responseText);
+							if (result.IsSuccessful) {
+								store.reload();
+								Ext.Msg.alert('提示', '激活成功!');
+							} else {
+								Ext.Msg.alert('提示', result.ErrorMessage);
+							}
+						},
+						function failure(a, b, c) {
+							Ext.Msg.alert('提示', '激活失败!');
+						}
+					);
+				}
+			});
+		}
+	},
+	freezeMerchant: function () {
+		var me = this;
+		var store = me.getMerchantList().getStore();
+		var selectedItems = me.getMerchantList().getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '未选择数据');
+		} else {
+			var ids = [];
+			var activationData = false;
+			selectedItems.forEach(function (item) {
+				if (item.data.Status != 1) {
+					activationData = true;
+					return;
+				} else {
+					ids.push(item.data.ID);
+				}
+			});
+			if (activationData) {
+				Ext.Msg.alert('提示', '请选择已激活的数据!');
+				return;
+			}
+			Ext.Msg.confirm('询问', '确定要冻结所选商户号吗?', function (operational) {
+				if (operational == 'yes') {
+					store.freezeMerchant(ids,
+						function success(response, request, c) {
+							var result = Ext.decode(c.responseText);
+							if (result.IsSuccessful) {
+								store.reload();
+								Ext.Msg.alert('提示', '冻结成功!');
+							} else {
+								Ext.Msg.alert('提示', result.ErrorMessage);
+							}
+						},
+						function failure(a, b, c) {
+							Ext.Msg.alert('提示', '冻结失败!');
+						}
+					);
+				}
+			});
+		}
 	},
 	uploadLicensePic: function (btn) {
 		var form = btn.up('form').getForm();
@@ -110,24 +198,11 @@
 			});
 		}
 	},
-
 	save: function () {
 		var me = this;
 		var win = me.getMerchantEdit();
 		var form = win.form.getForm();
 		var formValues = form.getValues();
-		if (formValues.BusinessLicenseImgUrl == '') {
-			Ext.Msg.alert('提示', '请先上传营业执照');
-			return;
-		}
-		if (formValues.LegalPersonIDCardFrontImgUrl == '') {
-			Ext.Msg.alert('提示', '请先上传法人身份证正面照');
-			return;
-		}
-		if (formValues.LegalPersonIDCardBehindImgUrl == '') {
-			Ext.Msg.alert('提示', '请先上传法人身份证背面照');
-			return;
-		}
 		if (form.isValid()) {
 			var store = me.getMerchantList().getStore();
 			if (form.actionMethod == 'POST') {

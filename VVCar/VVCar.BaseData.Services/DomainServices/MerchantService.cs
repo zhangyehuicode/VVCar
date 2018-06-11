@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VVCar.BaseData.Domain.Filters;
+using VVCar.BaseData.Domain.Services;
 using YEF.Core;
 using YEF.Core.Data;
 using YEF.Core.Domain;
-using VVCar.BaseData.Domain.Entities;
-using VVCar.BaseData.Domain.Services;
-using YEF.Core.Dtos;
-using VVCar.BaseData.Domain.Filters;
-using VVCar.BaseData.Domain.Dtos;
+using YEF.Core.Enums;
 
 namespace VVCar.BaseData.Services.DomainServices
 {
@@ -121,6 +119,44 @@ namespace VVCar.BaseData.Services.DomainServices
             merchant.LastUpdatedUserID = AppContext.CurrentSession.UserID;
             merchant.LastUpdatedUser = AppContext.CurrentSession.UserName;
             return Repository.Update(merchant) > 0;
+        }
+
+        /// <summary>
+        /// 激活商户
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public bool ActivateMerchant(Guid[] ids)
+        {
+            if (ids == null || ids.Length < 1)
+                throw new DomainException("参数不正确");
+            var merchantList = this.Repository.GetQueryable(true).Where(t => ids.Contains(t.ID)).ToList();
+            if (merchantList.Count() < 1)
+                throw new DomainException("数据不存在");
+            merchantList.ForEach(t =>
+            {
+                t.Status = EMerchantStatus.Activated;
+            });
+            return this.Repository.UpdateRange(merchantList) > 0;
+        }
+
+        /// <summary>
+        /// 冻结商户
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public bool FreezeMerchant(Guid[] ids)
+        {
+            if (ids == null || ids.Length < 1)
+                throw new DomainException("参数不正确");
+            var merchantList = this.Repository.GetQueryable(true).Where(t => ids.Contains(t.ID)).ToList();
+            if (merchantList.Count() < 1)
+                throw new DomainException("数据不存在");
+            merchantList.ForEach(t =>
+            {
+                t.Status = EMerchantStatus.Freeze;
+            });
+            return this.Repository.UpdateRange(merchantList) > 0;
         }
 
         public IEnumerable<Merchant> Search(MerchantFilter filter, out int totalCount)

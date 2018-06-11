@@ -120,6 +120,12 @@ namespace VVCar.BaseData.Domain.Entities
         public int Age { get; set; }
 
         /// <summary>
+        /// 底薪
+        /// </summary>
+        [Display(Name = "底薪")]
+        public decimal BasicSalary { get; set; }
+
+        /// <summary>
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]

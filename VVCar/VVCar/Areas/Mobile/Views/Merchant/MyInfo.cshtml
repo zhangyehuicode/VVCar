@@ -66,15 +66,15 @@
         </div>
         <div class="gzb_box2">
             <div>底薪</div>
-            <div style="border-right:none; color:#51b3f0;">￥0</div>
+            <div style="border-right:none; color:#51b3f0;">￥{{User.BasicSalary}}</div>
         </div>
-        <div class="gzb_box2">
-            <div>奖励/补贴</div>
-            <div style="border-right:none;color:#51b3f0;">￥0</div>
-        </div>
+        @*<div class="gzb_box2">
+                <div>奖励/补贴</div>
+                <div style="border-right:none;color:#51b3f0;">￥{{User.Subsidy}}</div>
+            </div>*@
         <div class="gzb_box2">
             <div>销售提成</div>
-            <div style="border-right:none;color:#51b3f0;">￥0</div>
+            <div style="border-right:none;color:#51b3f0;">￥{{User.MonthCommission}}</div>
         </div>
         @*<div class="gzb_box2">
                 <div>施工提成</div>
@@ -86,7 +86,7 @@
             </div>*@
         <div class="gzb_box2" style=" margin-bottom:20px;">
             <div>本月总收入</div>
-            <div style="border-right:none;color:#ff0c4c;">￥0</div>
+            <div style="border-right:none;color:#ff0c4c;">￥{{User.MonthIncome}}</div>
         </div>
     </div>
     <footer>
