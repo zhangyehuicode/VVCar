@@ -52,7 +52,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         protected override bool DoValidate(ProductCategory entity)
         {
-            var exists = Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID);
+            var exists = Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (exists)
                 throw new DomainException(string.Format("代码 {0} 已使用", entity.Code));
             if (entity.ID == entity.ParentId)
@@ -128,7 +128,7 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<ProductCategoryTreeDto> GetTreeData(Guid? parentID)
         {
-            var deptRegions = this.Repository.GetQueryable(false)
+            var deptRegions = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 .MapTo<ProductCategory, ProductCategoryTreeDto>()
                 .OrderBy(t => t.ParentId).ThenBy(t => t.Index)
                 .ToList();
@@ -218,7 +218,7 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns></returns>
         public IList<IDCodeNameDto> GetLiteData()
         {
-            var categories = Repository.GetQueryable(false)
+            var categories = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 .OrderBy(t => t.Index)
                 .Select(t => new IDCodeNameDto
                 {

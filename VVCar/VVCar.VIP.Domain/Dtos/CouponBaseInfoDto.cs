@@ -228,7 +228,7 @@ namespace VVCar.VIP.Domain.Dtos
         /// <summary>
         /// 会员积分
         /// </summary>
-        public int MemberPoint { get; set; }
+        public double MemberPoint { get; set; }
 
         /// <summary>
         /// 消费总额

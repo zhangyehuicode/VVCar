@@ -29,6 +29,11 @@ namespace VVCar.VIP.Domain.Dtos
         public Guid TemplateID { get; set; }
 
         /// <summary>
+        /// 性质
+        /// </summary>
+        public ENature Nature { get; set; }
+
+        /// <summary>
         /// 生效日期
         /// </summary>
         public DateTime EffectiveDate { get; set; }

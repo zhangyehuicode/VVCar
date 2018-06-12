@@ -29,12 +29,22 @@
 					action: 'addServicePeriod',
 					xtype: 'button',
 					text: '添加配置',
-					iconCls: 'x-fa fa-plus-circle'
+					iconCls: 'x-fa fa-plus-circle',
 				}, {
 					action: 'deleteServicePeriod',
 					xtype: 'button',
 					text: '删除配置',
-					iconCls: 'x-fa fa-close'
+					iconCls: 'x-fa fa-close',
+				}, {
+					action: 'enableServicePeriod',
+					xtype: 'button',
+					text: '启用',
+					iconCls: 'x-fa fa-key',
+				}, {
+					action: 'disableServicePeriod',
+					xtype: 'button',
+					text: '禁用',
+					iconCls: 'x-fa fa-lock',
 				}, {
 					xtype: 'form',
 					layout: 'column',
@@ -73,9 +83,9 @@
 					header: '是否启用', dataIndex: 'IsAvailable', flex: 1,
 					renderer: function (value) {
 						if (value == true)
-							return '启用';
+							return '<span><font color="green">启用</font></span>';
 						else
-							return '禁用';
+							return '<span><font color="red">禁用</font></span>';
 					}
 				},
 				{ header: '创建日期', dataIndex: 'CreatedDate', flex: 1 },

@@ -16,7 +16,12 @@
                 <div class="couponTitle" data-bind="text: CouponInfo().Title"></div>
                 <div id="operationbtncon">
                     <div id="receiveCoupon" class="couponOperate"
-                         data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text:'立即领取', click: operateCoupon,visible:(!@ViewBag.FromMycoupon)&&ShowGetBtn()">
+                         data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text:'立即领取', click: operateCoupon,visible:(!@ViewBag.FromMycoupon)&&ShowGetBtn()&&(CouponInfo().Nature==0)">
+                        @*(CouponInfo().CollarQuantityLimit-CouponInfo().UsedStock)>0&&*@
+                        @*&&CouponInfo().CouponID==null*@
+                    </div>
+                    <div id="buycard" class="couponOperate"
+                         data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text:'购买', click: buycard,visible:(!@ViewBag.FromMycoupon)&&ShowGetBtn()&&(CouponInfo().Nature==1)">
                         @*(CouponInfo().CollarQuantityLimit-CouponInfo().UsedStock)>0&&*@
                         @*&&CouponInfo().CouponID==null*@
                     </div>
@@ -87,6 +92,10 @@
         var PageViewModel = function () {
             var self = this;
             self.CouponInfo = ko.observable({});
+
+            self.buycard = function () {
+                window.location.href = "/Mobile/Customer/Shop?mch=" + _mchCode;
+            };
 
             self.operateCoupon = function () {
                 //if ((self.CouponInfo().CollarQuantityLimit - self.CouponInfo().UsedStock) > 0) {

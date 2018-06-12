@@ -257,7 +257,7 @@ namespace VVCar.Shop.Services.DomainServices
             var result = new List<ProductRetailStatisticsDto>();
 
             var orderItemQueryable = OrderItemRepo.GetQueryable(false);
-            var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetQueryable(false);
+            var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetInclude(t => t.Product, false);
 
             if (filter != null)
             {
@@ -271,6 +271,11 @@ namespace VVCar.Shop.Services.DomainServices
                     orderItemQueryable = orderItemQueryable.Where(t => t.Order.CreatedDate < filter.EndDate.Value);
                     pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.CreatedDate < filter.EndDate.Value);
                 }
+                if (filter.ProductType.HasValue)
+                {
+                    orderItemQueryable = orderItemQueryable.Where(t => t.ProductType == filter.ProductType.Value);
+                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.Product.ProductType == filter.ProductType.Value);
+                }
             }
 
             var orderItemList = orderItemQueryable.Where(t => t.Order.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType != Domain.Enums.EProductType.MemberCard).ToList();
@@ -280,6 +285,7 @@ namespace VVCar.Shop.Services.DomainServices
                 Quantity = t.Sum(s => s.Quantity),
                 ProductName = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductName : "",
                 ProductCode = "",
+                ProductType = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductType : Domain.Enums.EProductType.Goods,
                 Money = t.Sum(s => s.Money),
             }).ToList();
 
@@ -290,6 +296,7 @@ namespace VVCar.Shop.Services.DomainServices
                 Quantity = t.Sum(s => s.Quantity),
                 ProductName = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductName : "",
                 ProductCode = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductCode : "",
+                ProductType = t.FirstOrDefault() != null ? t.FirstOrDefault().Product.ProductType : Domain.Enums.EProductType.Goods,
                 Money = t.Sum(s => s.Money),
             }).ToList();
 
@@ -302,6 +309,7 @@ namespace VVCar.Shop.Services.DomainServices
                 item.ProductID = t.ProductID;
                 item.Quantity = t.Quantity;
                 item.ProductName = t.ProductName;
+                item.ProductType = t.ProductType.GetDescription();
                 item.Money = t.Money;
                 var product = productQueryable.Where(p => p.ID == t.ProductID).FirstOrDefault();
                 if (product != null)
@@ -310,11 +318,12 @@ namespace VVCar.Shop.Services.DomainServices
                     item.ProductCategoryName = product.ProductCategory.Name;
                     item.ProductCode = product.Code;
                     item.Unit = product.Unit;
+                    item.ProductType = product.ProductType.GetDescription();
                 }
                 result.Add(item);
             });
 
-            result = result.OrderBy(t => t.ProductCode).ToList();
+            result = result.OrderBy(t => t.ProductType).OrderByDescending(t => t.Quantity).ToList();
             totalCount = result.Count();
 
             if (filter != null)

@@ -11,6 +11,7 @@
 		var me = this;
 		me.form = Ext.create('Ext.form.Panel', {
 			border: false,
+			trackResetOnLoad: true,
 			fieldDefaults: {
 				labelAlign: 'left',
 				labelWidth: 80,
@@ -29,11 +30,18 @@
 						readOnly: true,
 						allowBlank: false,
 					}, {
+						xtype: 'textfield',
+						name: 'ProductCode',
+						fieldLabel: '产品编号',
+						readOnly: true,
+						allowBlank: false,
+						hidden: true,
+					}, {
 						action: 'selectService',
 						xtype: 'button',
 						text: '查找',
 						cls: 'submitBtn',
-						margin: '0 0 5 0',
+						margin: '0 0 0 5',
 					}]
 				}, {
 					xtype: 'textfield',

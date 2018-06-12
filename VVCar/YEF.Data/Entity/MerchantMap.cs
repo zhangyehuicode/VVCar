@@ -33,6 +33,9 @@ namespace YEF.Data
                 .IsRequired()
                 .HasMaxLength(20);
 
+            Property(t => t.WeChatOAPassword)
+                .HasMaxLength(20);
+
             Property(t => t.MobilePhoneNo)
                 .HasMaxLength(11);
 

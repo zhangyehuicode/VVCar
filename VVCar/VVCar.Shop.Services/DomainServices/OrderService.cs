@@ -45,6 +45,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IShoppingCartService ShoppingCartService { get => ServiceLocator.Instance.GetService<IShoppingCartService>(); }
 
+        IProductService ProductService { get => ServiceLocator.Instance.GetService<IProductService>(); }
+
         #endregion
 
         public override bool Delete(Guid key)
@@ -123,13 +125,14 @@ namespace VVCar.Shop.Services.DomainServices
                 result = base.Add(entity);
                 try
                 {
-                    MemberService.AdjustMemberPoint(result.OpenID, EMemberPointType.MemberConsume, (int)result.Money);
+                    MemberService.AdjustMemberPoint(result.OpenID, EMemberPointType.MemberConsume, (double)result.Money);
                 }
                 catch
                 {
                 }
                 SenWeChatNotify(result);
                 ShoppingCartService.ClearShoppingCart(result.OpenID);
+                StockOut(entity.OrderItemList.Where(t => t.ProductType == EProductType.Goods).ToList());
                 UnitOfWork.CommitTransaction();
             }
             catch (Exception e)
@@ -139,6 +142,27 @@ namespace VVCar.Shop.Services.DomainServices
             }
 
             return result;
+        }
+
+        private bool StockOut(List<OrderItem> orderItemList)
+        {
+            if (orderItemList == null || orderItemList.Count < 1)
+                return false;
+            orderItemList.ForEach(t =>
+            {
+                ProductService.StockOutIn(new StockRecord
+                {
+                    ProductID = t.GoodsID,
+                    Quantity = -t.Quantity,
+                    StockRecordType = EStockRecordType.Out,
+                    Reason = "商城下单",
+                    StaffID = AppContext.CurrentSession.UserID,
+                    StaffName = AppContext.CurrentSession.UserName,
+                    OrderID = t.OrderID,
+                    Source = EStockRecordSource.WeChat,
+                });
+            });
+            return true;
         }
 
         private void ReceiveCoupons(List<Guid> couponTemplateIDs, string openId)
@@ -215,7 +239,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         public IEnumerable<Order> Search(OrderFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetInclude(t => t.OrderItemList, false);
+            var queryable = Repository.GetInclude(t => t.OrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.OpenID))
                 queryable = queryable.Where(t => t.OpenID == filter.OpenID);
             if (!string.IsNullOrEmpty(filter.TradeNo))

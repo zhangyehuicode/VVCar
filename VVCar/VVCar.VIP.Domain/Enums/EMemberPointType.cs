@@ -61,6 +61,12 @@ namespace VVCar.VIP.Domain.Enums
         MemberAdjust = 7,
 
         /// <summary>
+        /// 会员卡消费返积分
+        /// </summary>
+        [Description("会员卡消费返积分")]
+        MemberCardConsumeReturn = 8,
+
+        /// <summary>
         /// 会员积分抵扣
         /// </summary>
         [Description("会员积分抵扣")]

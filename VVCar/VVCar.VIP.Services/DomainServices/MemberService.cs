@@ -611,7 +611,7 @@ namespace VVCar.VIP.Services.DomainServices
             return cardInfo;
         }
 
-        public bool AdjustMemberPoint(string openId, EMemberPointType pointType, int adjustPoints = 0)
+        public bool AdjustMemberPoint(string openId, EMemberPointType pointType, double adjustPoints = 0)
         {
             var member = Repository.GetQueryable(false)
                 .Where(t => t.WeChatOpenID == openId)
@@ -627,7 +627,7 @@ namespace VVCar.VIP.Services.DomainServices
             return AdjustMemberPoint(member.ID, pointType, adjustPoints);
         }
 
-        public bool AdjustMemberPoint(Guid memberID, EMemberPointType pointType, int adjustPoints, string outTradeNo = "")
+        public bool AdjustMemberPoint(Guid memberID, EMemberPointType pointType, double adjustPoints, string outTradeNo = "")
         {
             var result = false;
             var remark = string.Empty;

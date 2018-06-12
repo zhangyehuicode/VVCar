@@ -44,8 +44,10 @@ namespace VVCar.Common
         /// <summary>
         /// 生成导会员卡信息的excel文件，并返回导出的url地址
         /// </summary>
-        /// <param name="entities">会员卡信息集合</param>
-        /// <returns>导出excel的url</returns>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
         public string Export<T>(IList<T> entities, string sheetName = "导出数据")
         {
             SetPropertyInfo(typeof(T));

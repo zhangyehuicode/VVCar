@@ -79,7 +79,7 @@ namespace VVCar.VIP.Domain.Entities
         /// 会员积分
         /// </summary>
         [Display(Name = "会员积分")]
-        public int Point { get; set; }
+        public double Point { get; set; }
 
         /// <summary>
         /// 手机号码归属地

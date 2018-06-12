@@ -26,6 +26,7 @@ namespace VVCar.BaseData.Services.DomainServices
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.CreatedDate = DateTime.Now;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
         #endregion
@@ -54,6 +55,7 @@ namespace VVCar.BaseData.Services.DomainServices
                 userRole.CreatedUserID = AppContext.CurrentSession.UserID;
                 userRole.CreatedUser = AppContext.CurrentSession.UserName;
                 userRole.CreatedDate = DateTime.Now;
+                userRole.MerchantID = AppContext.CurrentSession.MerchantID;
             }
             this.Repository.Add(userRoleList);
             return true;
@@ -77,7 +79,12 @@ namespace VVCar.BaseData.Services.DomainServices
             if (filter == null || !filter.RoleID.HasValue)
                 throw new DomainException("查询参数错误");
             var result = new PagedResultDto<UserRole>();
-            var queryable = this.Repository.GetInclude(t => t.User).Where(t => t.RoleID == filter.RoleID);
+            var queryable = this.Repository.GetInclude(t => t.User).Where(t => t.RoleID == filter.RoleID).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (AppContext.CurrentSession.UserID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
+            {
+                var adminId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+                queryable = queryable.Where(t => t.ID != adminId);
+            }
             if (filter.Start.HasValue && filter.Limit.HasValue)
             {
                 result.TotalCount = queryable.Count();

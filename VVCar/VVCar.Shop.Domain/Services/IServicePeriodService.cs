@@ -21,11 +21,31 @@ namespace VVCar.Shop.Domain.Services
         bool DeleteServicePeriods(Guid[] ids);
 
         /// <summary>
+        /// 启用服务
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool EnableServicePeriod(Guid[] ids);
+
+        /// <summary>
+        /// 禁用服务
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool DisableServicePeriod(Guid[] ids);
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<ServicePeriodSettingDto> Search(ServicePeriodFilter filter, out int totalCount);
+
+        /// <summary>
+        /// 服务周期提醒
+        /// </summary>
+        /// <returns></returns>
+        bool ServicePeriodReminder();
     }
 }

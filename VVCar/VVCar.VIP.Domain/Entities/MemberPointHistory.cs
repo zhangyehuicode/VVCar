@@ -24,7 +24,7 @@ namespace VVCar.VIP.Domain.Entities
         /// 更改的积分
         /// </summary>
         [Display(Name = "更改的积分")]
-        public int Point { get; set; }
+        public double Point { get; set; }
 
         /// <summary>
         /// 会员积分类型

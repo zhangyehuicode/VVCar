@@ -152,6 +152,10 @@ namespace VVCar.BaseData.Services.DomainServices
             var merchant = MerchantRepo.GetQueryable(false).FirstOrDefault(t => t.Code == companycode);
             if (merchant == null)
                 throw new DomainException("商户不存在");
+            if (merchant.Status == YEF.Core.Enums.EMerchantStatus.UnActivate)
+                throw new ExecutionEngineException("商户未激活");
+            if (merchant.Status == YEF.Core.Enums.EMerchantStatus.Freeze)
+                throw new ExecutionEngineException("商户已冻结");
 
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == merchant.ID);
             //if (AppContext.SuperScanCardAccount.Equals(account))
@@ -302,6 +306,10 @@ namespace VVCar.BaseData.Services.DomainServices
             var merchant = MerchantRepo.GetQueryable(false).FirstOrDefault(t => t.Code == companycode);
             if (merchant == null)
                 throw new DomainException("商户不存在");
+            if (merchant.Status == YEF.Core.Enums.EMerchantStatus.UnActivate)
+                throw new ExecutionEngineException("商户未激活");
+            if (merchant.Status == YEF.Core.Enums.EMerchantStatus.Freeze)
+                throw new ExecutionEngineException("商户已冻结");
             var queryable = Repository.GetQueryable(false).Where(t => t.Code == userCode && t.MerchantID == merchant.ID);
             var user = queryable.Select(t => new UserInfoDto
             {
@@ -341,6 +349,11 @@ namespace VVCar.BaseData.Services.DomainServices
         {
             var result = new PagedResultDto<User>();
             var queryable = this.Repository.GetQueryable(false).Where(p => !p.IsDeleted).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (AppContext.CurrentSession.UserID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
+            {
+                var adminId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+                queryable = queryable.Where(t => t.ID != adminId);
+            }
             if (filter != null)
             {
                 if (!string.IsNullOrEmpty(filter.Code))

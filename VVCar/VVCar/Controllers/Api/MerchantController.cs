@@ -3,8 +3,11 @@ using System.Linq;
 using System.Web.Http;
 using VVCar.BaseData.Domain.Filters;
 using VVCar.BaseData.Domain.Services;
+using VVCar.Common;
+using YEF.Core;
 using YEF.Core.Data;
 using YEF.Core.Dtos;
+using YEF.Core.Export;
 
 namespace VVCar.Controllers.Api
 {
@@ -105,6 +108,38 @@ namespace VVCar.Controllers.Api
                 var data = MerchantService.Search(filter, out totalCount);
                 result.Data = data;
                 result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        /// 导出商户
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ExportMerchant")]
+        public JsonActionResult<string> ExportMerchant([FromUri]MerchantFilter filter)
+        {
+            return SafeExecute(() =>
+            {
+                filter.Start = null;
+                filter.Limit = null;
+                var totalCount = 0;
+                var data = this.MerchantService.Search(filter, out totalCount);
+                var exporter = new ExportHelper(new[]
+                {
+                    new ExportInfo("Code", "商户号"),
+                    new ExportInfo("Name","名称"),
+                    new ExportInfo("Status","商户状态"),
+                    new ExportInfo("Email","注册邮箱"),
+                    new ExportInfo("LegalPerson","法人(负责人)"),
+                    new ExportInfo("IDNumber","法人身份证编号"),
+                    new ExportInfo("MobilePhoneNo","联系电话"),
+                    new ExportInfo("Bank","开户行"),
+                    new ExportInfo("BankCard","账号"),
+                    new ExportInfo("CompanyAddress","公司地址"),
+                });
+
+                return exporter.Export(data.ToList(), "商户信息统计"); ;
             });
         }
     }

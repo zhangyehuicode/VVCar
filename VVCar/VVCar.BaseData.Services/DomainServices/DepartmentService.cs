@@ -46,6 +46,7 @@ namespace VVCar.BaseData.Services.DomainServices
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.CreatedDate = DateTime.Now;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 
@@ -87,10 +88,10 @@ namespace VVCar.BaseData.Services.DomainServices
 
         protected override bool DoValidate(Department entity)
         {
-            bool exists = this.Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID);
+            bool exists = this.Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (exists)
                 throw new DomainException(String.Format("代码 {0} 已使用，不能重复添加。", entity.Code));
-            exists = this.Repository.Exists(t => t.Name == entity.Name && t.ID != entity.ID);
+            exists = this.Repository.Exists(t => t.Name == entity.Name && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (exists)
                 throw new DomainException(String.Format("名称 {0} 已使用，不能重复添加。", entity.Name));
             return true;
@@ -103,7 +104,7 @@ namespace VVCar.BaseData.Services.DomainServices
         public PagedResultDto<Department> QueryData(DepartmentFilter filter)
         {
             var result = new PagedResultDto<Department>();
-            var queryable = this.Repository.GetQueryable(false);
+            var queryable = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter != null)
             {
                 if (!string.IsNullOrEmpty(filter.Keyword))
@@ -145,7 +146,7 @@ namespace VVCar.BaseData.Services.DomainServices
         public PagedResultDto<Department> QueryCodeData(DepartmentFilter filter)
         {
             var result = new PagedResultDto<Department>();
-            var queryable = this.Repository.GetQueryable(false);
+            var queryable = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter != null)
             {
                 if (!string.IsNullOrEmpty(filter.Keyword))
@@ -184,7 +185,7 @@ namespace VVCar.BaseData.Services.DomainServices
 
         public IEnumerable<DepartmentTreeDto> GetTreeData(Guid? parentID)
         {
-            var departments = this.Repository.GetQueryable(false)
+            var departments = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Select(t => new DepartmentTreeDto()
                 {
                     ID = t.ID,
@@ -197,7 +198,7 @@ namespace VVCar.BaseData.Services.DomainServices
 
         public IEnumerable<Department> GetDepartmentInfo()
         {
-            return this.Repository.GetQueryable(false).Where(t => t.IsDeleted == false);
+            return this.Repository.GetQueryable(false).Where(t => t.IsDeleted == false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
         }
 
         /// <summary>
@@ -225,10 +226,11 @@ namespace VVCar.BaseData.Services.DomainServices
                     CreatedUserID = AppContext.CurrentSession.UserID,
                     CreatedUser = AppContext.CurrentSession.UserName,
                     CreatedDate = DateTime.Now,
-                    DataSource = YEF.Core.Enums.EDataSource.External
+                    DataSource = YEF.Core.Enums.EDataSource.External,
+                    MerchantID = AppContext.CurrentSession.MerchantID,
                 };
                 var dept = this.Repository.Add(newDepartment);
-                var existUser = UserService.Exists(t => t.Code == newStoreData.StoreAdminPhoneNumber);
+                var existUser = UserService.Exists(t => t.Code == newStoreData.StoreAdminPhoneNumber && t.MerchantID == AppContext.CurrentSession.MerchantID);
                 if (!existUser)
                 {
                     var newUser = new User
@@ -244,7 +246,8 @@ namespace VVCar.BaseData.Services.DomainServices
                         CreatedUserID = Guid.Empty,
                         CreatedUser = string.Empty,
                         CreatedDate = DateTime.Now,
-                        DataSource = YEF.Core.Enums.EDataSource.External
+                        DataSource = YEF.Core.Enums.EDataSource.External,
+                        MerchantID = AppContext.CurrentSession.MerchantID,
                     };
                     UserService.AddMchUser(newUser);
                 }
@@ -265,7 +268,7 @@ namespace VVCar.BaseData.Services.DomainServices
         public IEnumerable<StoreInfoDto> GetStoreList()
         {
             var defaultDeptId = Guid.Parse("00000000-0000-0000-0000-000000000001");
-            var deptQueryable = Repository.GetQueryable(false).Where(d => d.ID != defaultDeptId);
+            var deptQueryable = Repository.GetQueryable(false).Where(d => d.ID != defaultDeptId).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             return deptQueryable.Select(d => new StoreInfoDto
             {
                 Name = d.Name,
@@ -277,7 +280,7 @@ namespace VVCar.BaseData.Services.DomainServices
         public IList<DepartmentLiteDto> GetDepartmentLiteData()
         {
             //var defaultDeptId = Guid.Parse("00000000-0000-0000-0000-000000000001");
-            return Repository.GetQueryable(false)
+            return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 //.Where(d => d.ID != defaultDeptId)
                 .MapTo<DepartmentLiteDto>()
                 .ToArray();
@@ -285,7 +288,7 @@ namespace VVCar.BaseData.Services.DomainServices
 
         public DepartmentLiteDto GetDepartmentLiteData(string deptCode)
         {
-            return Repository.GetQueryable(false)
+            return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Where(d => d.Code == deptCode)
                 .MapTo<DepartmentLiteDto>()
                 .FirstOrDefault();

@@ -46,6 +46,12 @@ namespace YEF.Core.Data
         public string Email { get; set; }
 
         /// <summary>
+        /// 微信公众号登录密码
+        /// </summary>
+        [Display(Name = "微信公众号登录密码")]
+        public string WeChatOAPassword { get; set; }
+
+        /// <summary>
         /// 联系电话
         /// </summary>
         [Display(Name = "联系电话")]

@@ -52,7 +52,7 @@
 					padding: 5,
 					autoWidth: true,
 					autoScroll: true,
-					columWidth: 1,
+					columnWidth: 1,
 					items: [{
 						xtype: 'textfield',
 						name: 'Title',
@@ -95,11 +95,11 @@
 					header: '推送状态', dataIndex: 'Status', flex: 1,
 					renderer: function (value) {
 						if (value == 0)
-							return '未推送';
+							return '<span><font>未推送</font></span>';
 						if (value == 1)
-							return '已推送';
+							return '<span><font color="green">已推送</font></span>';
 						if (value == -1)
-							return '终止推送';
+							return '<span><font color="red">终止推送</font></span>';
 					}
 				},
 				{ header: '创建日期', dataIndex: 'CreatedDate', flex: 1 },

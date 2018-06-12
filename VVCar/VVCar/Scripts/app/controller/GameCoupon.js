@@ -46,7 +46,7 @@
 				var result = Ext.decode(c.responseText);
 				if (result.IsSuccessful) {
 					store.reload();
-					Ext.Msg.alert("提示", "新增功");
+					Ext.Msg.alert("提示", "新增成功");
 					win.close();
 				} else {
 					Ext.Msg.alert("提示", result.ErrorMessage);

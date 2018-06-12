@@ -25,6 +25,7 @@ namespace VVCar.BaseData.Services.DomainServices
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.CreatedDate = DateTime.Now;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 
@@ -88,6 +89,11 @@ namespace VVCar.BaseData.Services.DomainServices
         {
             var commendid = Guid.Parse("00000000-0000-0000-0000-000000000000");
             var queryable = this.Repository.GetQueryable(false).Where(t => !t.IsDeleted).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID || t.MerchantID == commendid);
+            if (AppContext.CurrentSession.UserID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
+            {
+                var adminId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+                queryable = queryable.Where(t => t.ID != adminId);
+            }
             if (filter != null)
             {
                 if (!string.IsNullOrEmpty(filter.Code))

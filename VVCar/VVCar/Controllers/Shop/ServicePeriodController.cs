@@ -55,6 +55,48 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public JsonActionResult<bool> Update(ServicePeriodSetting entity)
+        {
+            return SafeExecute(() =>
+            {
+                return ServicePeriodService.Update(entity);
+            });
+        }
+
+        /// <summary>
+        /// 启用服务配置
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpPost, Route("EnableServicePeriod")]
+        public JsonActionResult<bool> EnableServicePeriod(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return ServicePeriodService.EnableServicePeriod(parameter.IdList.ToArray());
+            });
+        }
+
+        /// <summary>
+        /// 禁用服务配置
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpPost, Route("DisableServicePeriod")]
+        public JsonActionResult<bool> DisableServicePeriod(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return ServicePeriodService.DisableServicePeriod(parameter.IdList.ToArray());
+            });
+        }
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <returns></returns>

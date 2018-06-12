@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Enums;
 using YEF.Core.Dtos;
 
 namespace VVCar.Shop.Domain.Filters
@@ -36,5 +37,10 @@ namespace VVCar.Shop.Domain.Filters
         /// 产品名称/编码
         /// </summary>
         public string ProductCodeName { get; set; }
+
+        /// <summary>
+        /// 产品类别
+        /// </summary>
+        public EProductType? ProductType { get; set; }
     }
 }

@@ -61,7 +61,7 @@ namespace VVCar.Shop.Services.DomainServices
         private int GenerateIndex()
         {
             var index = 1;
-            var indexList = Repository.GetQueryable(false).Select(t => t.Index);
+            var indexList = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).Select(t => t.Index);
             if (indexList.Count() > 0)
                 index = indexList.Max() + 1;
             return index;
@@ -114,6 +114,15 @@ namespace VVCar.Shop.Services.DomainServices
             return base.Update(product);
         }
 
+        public override bool Delete(Guid key)
+        {
+            var entity = Repository.GetByKey(key);
+            if (entity == null)
+                throw new DomainException("数据不存在");
+            entity.IsDeleted = true;
+            return Repository.Update(entity) > 0;
+        }
+
         public IEnumerable<Product> Search(ProductFilter filter, out int totalCount)
         {
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
@@ -148,10 +157,11 @@ namespace VVCar.Shop.Services.DomainServices
             var pointGoods = Repository.GetByKey(param.ID);
             if (pointGoods == null)
                 return false;
+            var productQueryable = Repository.GetQueryable().Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             Product exchangeEntity = null;
             if (param.Direction == EAdjustDirection.Up)
             {
-                var pre = Repository.GetQueryable().Where(t => t.Index == (pointGoods.Index - 1)).FirstOrDefault();
+                var pre = productQueryable.Where(t => t.Index == (pointGoods.Index - 1)).FirstOrDefault();
                 if (pre == null)
                     return true;
                 else
@@ -159,7 +169,7 @@ namespace VVCar.Shop.Services.DomainServices
             }
             else if (param.Direction == EAdjustDirection.Down)
             {
-                var next = Repository.GetQueryable().Where(t => t.Index == (pointGoods.Index + 1)).FirstOrDefault();
+                var next = productQueryable.Where(t => t.Index == (pointGoods.Index + 1)).FirstOrDefault();
                 if (next == null)
                     return true;
                 else
@@ -190,11 +200,11 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns></returns>
         public IList<ProductCategoryLiteDto> GetProductLiteData()
         {
-            var categories = ProductCategoryRepo.GetQueryable(false)
+            var categories = ProductCategoryRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 .OrderBy(t => t.ParentId).ThenBy(t => t.Index)
                 .MapTo<ProductCategory, ProductCategoryLiteDto>()
                 .ToList();
-            var products = Repository.GetQueryable(false)
+            var products = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Where(t => t.IsPublish)
                 .MapTo<Product, ProductLiteDto>()
                 .ToList();

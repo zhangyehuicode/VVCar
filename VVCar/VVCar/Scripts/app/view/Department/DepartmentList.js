@@ -17,7 +17,8 @@
             xtype: 'button',
             text: '添加',
             scope: me,
-            iconCls: 'fa fa-plus-circle'
+            iconCls: 'fa fa-plus-circle',
+            hidden: true,
         }, {
             action: 'EditDepartment',
             xtype: 'button',
@@ -29,7 +30,8 @@
             xtype: 'button',
             text: '删除',
             scope: me,
-            iconCls: 'x-fa fa-close'
+            iconCls: 'x-fa fa-close',
+            hidden: true,
         }, {
             xtype: 'form',
             layout: 'column',

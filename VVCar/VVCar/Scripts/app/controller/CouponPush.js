@@ -47,7 +47,8 @@
 				click: me.searchData
 			},
 			'CouponPushList grid[name=gridCouponPush]': {
-				select: me.gridCouponPushSelect
+				select: me.gridCouponPushSelect,
+				itemdblclick: me.editCouponPush,
 			},
 			'CouponPushList': {
 				updateActionClick: me.editCouponPush

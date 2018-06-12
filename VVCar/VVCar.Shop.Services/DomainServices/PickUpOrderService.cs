@@ -40,6 +40,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<PickUpOrderItem> PickUpOrderItemRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrderItem>>(); }
 
+        IMemberService MemberService { get => ServiceLocator.Instance.GetService<IMemberService>(); }
+
         #endregion
 
         public string GetTradeNo()
@@ -347,7 +349,14 @@ namespace VVCar.Shop.Services.DomainServices
                 });
             }
             if (discountMoney > 0)
+            {
+                if (coupon.Template.ConsumePointRate > 0)
+                {
+                    var sendpoint = discountMoney * coupon.Template.ConsumePointRate / 100;
+                    MemberService.AdjustMemberPoint(coupon.OwnerOpenID, EMemberPointType.MemberCardConsumeReturn, (double)sendpoint);
+                }
                 return coupon;
+            }
             else
                 return null;
         }
@@ -411,7 +420,14 @@ namespace VVCar.Shop.Services.DomainServices
                 });
             }
             if (voucherMoney > 0)
+            {
+                if (coupon.Template.ConsumePointRate > 0)
+                {
+                    var sendpoint = voucherMoney * coupon.Template.ConsumePointRate / 100;
+                    MemberService.AdjustMemberPoint(coupon.OwnerOpenID, EMemberPointType.MemberCardConsumeReturn, (double)sendpoint);
+                }
                 return coupon;
+            }
             else
                 return null;
         }

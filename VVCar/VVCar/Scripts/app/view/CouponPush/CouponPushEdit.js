@@ -29,7 +29,7 @@
 					fieldLabel: '推送时间',
 					allowBlank: true,
 					minValue: new Date(),
-					format: 'Y-m-d',
+					format: 'Y-m-d 17:25:00',
 					editable: false,
 					allowBlank: false,
 					value: new Date()

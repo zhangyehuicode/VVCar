@@ -34,6 +34,7 @@ namespace VVCar.BaseData.Services.DomainServices
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.CreatedDate = DateTime.Now;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 
@@ -72,7 +73,7 @@ namespace VVCar.BaseData.Services.DomainServices
 
         public string GetSettingValue(string name)
         {
-            var setting = Repository.GetQueryable(false)
+            var setting = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Where(t => t.Name == name).Select(t => new
                 {
                     t.SettingValue,

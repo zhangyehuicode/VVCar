@@ -9,6 +9,7 @@
 		{ name: 'LegalPerson' },
 		{ name: 'IDNumber' },
 		{ name: 'Email' },
+		{ name: 'WeChatOAPassword' },
 		{ name: 'MobilePhoneNo' },
 		{ name: 'BusinessLicenseImgUrl' },
 		{ name: 'LegalPersonIDCardFrontImgUrl' },

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VVCar.BaseData.Domain;
+using VVCar.BaseData.Domain.Entities;
+using VVCar.BaseData.Domain.Enums;
 using VVCar.BaseData.Domain.Filters;
 using VVCar.BaseData.Domain.Services;
 using YEF.Core;
@@ -18,6 +21,18 @@ namespace VVCar.BaseData.Services.DomainServices
         public MerchantService()
         {
         }
+
+        #region properties
+
+        IRepository<Department> DepartmentRepo { get => UnitOfWork.GetRepository<IRepository<Department>>(); }
+
+        IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
+
+        IRepository<UserRole> UserRoleRepo { get => UnitOfWork.GetRepository<IRepository<UserRole>>(); }
+
+        IRepository<SystemSetting> SystemSettingRepo { get => UnitOfWork.GetRepository<IRepository<SystemSetting>>(); }
+
+        #endregion
 
         protected override bool DoValidate(Merchant entity)
         {
@@ -104,6 +119,7 @@ namespace VVCar.BaseData.Services.DomainServices
             merchant.LegalPerson = entity.LegalPerson;
             merchant.IDNumber = entity.IDNumber;
             merchant.Email = entity.Email;
+            merchant.WeChatOAPassword = entity.WeChatOAPassword;
             merchant.MobilePhoneNo = entity.MobilePhoneNo;
             merchant.BusinessLicenseImgUrl = entity.BusinessLicenseImgUrl;
             merchant.LegalPersonIDCardFrontImgUrl = entity.LegalPersonIDCardFrontImgUrl;
@@ -131,13 +147,187 @@ namespace VVCar.BaseData.Services.DomainServices
             if (ids == null || ids.Length < 1)
                 throw new DomainException("参数不正确");
             var merchantList = this.Repository.GetQueryable(true).Where(t => ids.Contains(t.ID)).ToList();
-            if (merchantList.Count() < 1)
+            if (merchantList == null || merchantList.Count() < 1)
                 throw new DomainException("数据不存在");
-            merchantList.ForEach(t =>
+            UnitOfWork.BeginTransaction();
+            try
             {
-                t.Status = EMerchantStatus.Activated;
+                merchantList.ForEach(t =>
+                {
+                    var existsDept = DepartmentRepo.Exists(d => d.MerchantID == t.ID);
+                    if (!existsDept)
+                    {
+                        var dept = DepartmentRepo.Add(new Department
+                        {
+                            ID = Util.NewID(),
+                            Code = "001",
+                            Name = t.Name,
+                            DistrictRegion = "",
+                            AdministrationRegion = "",
+                            CreatedUserID = AppContext.CurrentSession.UserID,
+                            CreatedUser = AppContext.CurrentSession.UserName,
+                            CreatedDate = DateTime.Now,
+                            MerchantID = t.ID,
+                        });
+
+                        var user = UserRepo.Add(new User
+                        {
+                            ID = Util.NewID(),
+                            Code = "admin",
+                            Name = "管理员",
+                            DepartmentID = dept.ID,
+                            IsAvailable = true,
+                            CanLoginAdminPortal = true,
+                            Password = "AD0A291E6FCB621F836866D99F62D2C0",
+                            CreatedUserID = AppContext.CurrentSession.UserID,
+                            CreatedUser = AppContext.CurrentSession.UserName,
+                            CreatedDate = DateTime.Now,
+                            MerchantID = t.ID,
+                        });
+
+                        UserRoleRepo.Add(new UserRole
+                        {
+                            ID = Util.NewID(),
+                            UserID = user.ID,
+                            RoleID = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                            CreatedUserID = AppContext.CurrentSession.UserID,
+                            CreatedUser = AppContext.CurrentSession.UserName,
+                            CreatedDate = DateTime.Now,
+                            MerchantID = t.ID,
+                        });
+
+                        ActivateMerchantDataOperation(t.ID);
+                    }
+                    t.Status = EMerchantStatus.Activated;
+                });
+                this.Repository.UpdateRange(merchantList);
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
+            }
+        }
+
+        private bool ActivateMerchantDataOperation(Guid merchantId)
+        {
+            if (merchantId == null)
+                return false;
+            SystemSettingRepo.Add(new SystemSetting
+            {
+                ID = Util.NewID(),
+                Index = 1,
+                Name = SysSettingTypes.WXMsg_CouponWillExpire,
+                Caption = "优惠券即将过期微信通知消息模板",
+                DefaultValue = string.Empty,
+                SettingValue = string.Empty,
+                IsVisible = true,
+                IsAvailable = true,
+                Type = ESystemSettingType.Parameter,
+                CreatedUserID = AppContext.CurrentSession.UserID,
+                CreatedUser = AppContext.CurrentSession.UserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = merchantId,
             });
-            return this.Repository.UpdateRange(merchantList) > 0;
+            SystemSettingRepo.Add(new SystemSetting
+            {
+                ID = Util.NewID(),
+                Index = 2,
+                Name = SysSettingTypes.WXMsg_OrderSuccess,
+                Caption = "下单成功通知消息模板",
+                DefaultValue = string.Empty,
+                SettingValue = string.Empty,
+                IsVisible = true,
+                IsAvailable = true,
+                Type = ESystemSettingType.Parameter,
+                CreatedUserID = AppContext.CurrentSession.UserID,
+                CreatedUser = AppContext.CurrentSession.UserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = merchantId,
+            });
+            SystemSettingRepo.Add(new SystemSetting
+            {
+                ID = Util.NewID(),
+                Index = 3,
+                Name = SysSettingTypes.WXMsg_ReceivedSuccess,
+                Caption = "礼品领取成功通知消息模板",
+                DefaultValue = string.Empty,
+                SettingValue = string.Empty,
+                IsVisible = true,
+                IsAvailable = true,
+                Type = ESystemSettingType.Parameter,
+                CreatedUserID = AppContext.CurrentSession.UserID,
+                CreatedUser = AppContext.CurrentSession.UserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = merchantId,
+            });
+            SystemSettingRepo.Add(new SystemSetting
+            {
+                ID = Util.NewID(),
+                Index = 4,
+                Name = SysSettingTypes.WXMsg_AppointmentRemind,
+                Caption = "预约提醒通知消息模板",
+                DefaultValue = string.Empty,
+                SettingValue = string.Empty,
+                IsVisible = true,
+                IsAvailable = true,
+                Type = ESystemSettingType.Parameter,
+                CreatedUserID = AppContext.CurrentSession.UserID,
+                CreatedUser = AppContext.CurrentSession.UserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = merchantId,
+            });
+            SystemSettingRepo.Add(new SystemSetting
+            {
+                ID = Util.NewID(),
+                Index = 5,
+                Name = SysSettingTypes.WXMsg_AppointmentSuccess,
+                Caption = "预约成功通知消息模板",
+                DefaultValue = string.Empty,
+                SettingValue = string.Empty,
+                IsVisible = true,
+                IsAvailable = true,
+                Type = ESystemSettingType.Parameter,
+                CreatedUserID = AppContext.CurrentSession.UserID,
+                CreatedUser = AppContext.CurrentSession.UserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = merchantId,
+            });
+            SystemSettingRepo.Add(new SystemSetting
+            {
+                ID = Util.NewID(),
+                Index = 6,
+                Name = SysSettingTypes.WXMsg_VerificationSuccess,
+                Caption = "核销成功通知消息模板",
+                DefaultValue = string.Empty,
+                SettingValue = string.Empty,
+                IsVisible = true,
+                IsAvailable = true,
+                Type = ESystemSettingType.Parameter,
+                CreatedUserID = AppContext.CurrentSession.UserID,
+                CreatedUser = AppContext.CurrentSession.UserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = merchantId,
+            });
+            SystemSettingRepo.Add(new SystemSetting
+            {
+                ID = Util.NewID(),
+                Index = 7,
+                Name = SysSettingTypes.WXMsg_ServiceExpiredRemind,
+                Caption = "服务到期提醒消息模板",
+                DefaultValue = string.Empty,
+                SettingValue = string.Empty,
+                IsVisible = true,
+                IsAvailable = true,
+                Type = ESystemSettingType.Parameter,
+                CreatedUserID = AppContext.CurrentSession.UserID,
+                CreatedUser = AppContext.CurrentSession.UserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = merchantId,
+            });
+            return true;
         }
 
         /// <summary>
@@ -159,9 +349,17 @@ namespace VVCar.BaseData.Services.DomainServices
             return this.Repository.UpdateRange(merchantList) > 0;
         }
 
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
         public IEnumerable<Merchant> Search(MerchantFilter filter, out int totalCount)
         {
             var queryable = Repository.GetQueryable(false);
+            if (filter.Status.HasValue)
+                queryable = queryable.Where(t => t.Status == filter.Status.Value);
             if (filter.ID.HasValue)
                 queryable = queryable.Where(t => t.ID == filter.ID.Value);
             if (!string.IsNullOrEmpty(filter.Code))

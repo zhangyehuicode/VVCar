@@ -9,6 +9,7 @@
 			read: Ext.GlobalConfig.ApiDomainUrl + 'api/Merchant?All=false',
 			activateMerchant: Ext.GlobalConfig.ApiDomainUrl + 'api/Merchant/activateMerchant',
 			freezeMerchant: Ext.GlobalConfig.ApiDomainUrl + 'api/Merchant/freezeMerchant',
+			export: Ext.GlobalConfig.ApiDomainUrl + 'api/Merchant/ExportMerchant',
 		}
 	},
 	activateMerchant: function (ids, cb) {
@@ -28,5 +29,13 @@
 			jsonData: { IdList: ids },
 			callback: cb,
 		})
+	},
+	export: function (p, cb) {
+		Ext.Ajax.request({
+			method: "GET",
+			url: this.proxy.api.export,
+			params: p,
+			callback: cb
+		});
 	}
 });

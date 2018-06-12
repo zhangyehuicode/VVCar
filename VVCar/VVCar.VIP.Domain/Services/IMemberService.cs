@@ -176,7 +176,7 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="pointType"></param>
         /// <param name="adjustPoints"></param>
         /// <returns></returns>
-        bool AdjustMemberPoint(string openId, EMemberPointType pointType, int adjustPoints = 0);
+        bool AdjustMemberPoint(string openId, EMemberPointType pointType, double adjustPoints = 0);
 
         /// <summary>
         /// 调整会员积分
@@ -186,7 +186,7 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="adjustPoints">调整积分值</param>
         /// <param name="outTradeNo">外部交易流水号</param>
         /// <returns></returns>
-        bool AdjustMemberPoint(Guid memberID, EMemberPointType pointType, int adjustPoints, string outTradeNo = "");
+        bool AdjustMemberPoint(Guid memberID, EMemberPointType pointType, double adjustPoints, string outTradeNo = "");
 
         /// <summary>
         /// 设置会员等级

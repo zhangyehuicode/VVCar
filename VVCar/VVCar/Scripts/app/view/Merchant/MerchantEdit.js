@@ -30,13 +30,22 @@
 						maxLength: 100,
 						allowBlank: false,
 					}, {
-						xtype: 'textfield',
-						margin: '5 5 5 10',
-						name: 'Email',
-						fieldLabel: '注册邮箱',
-						maxLength: 20,
-						allowBlank: false,
-
+						xtype: 'form',
+						layout: 'hbox',
+						items: [{
+							xtype: 'textfield',
+							margin: '5 5 5 10',
+							name: 'Email',
+							fieldLabel: '注册邮箱',
+							maxLength: 20,
+							allowBlank: false,
+						}, {
+							xtype: 'textfield',
+							margin: '5 5 5 10',
+							name: 'WeChatOAPassword',
+							fieldLabel: '公众号密码',
+							maxLength: 20,
+						}]
 					}]
 				}, {
 					xtype: 'form',

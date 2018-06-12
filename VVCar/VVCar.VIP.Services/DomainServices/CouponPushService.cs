@@ -63,7 +63,7 @@ namespace VVCar.VIP.Services.DomainServices
                 throw new DomainException("参数错误");
             var couponPushList = this.Repository.GetInclude(t => t.CouponPushItems, false).Where(t => ids.Contains(t.ID)).ToList();
             if (couponPushList == null || couponPushList.Count() < 1)
-                throw new DomainException("未选择数据");
+                throw new DomainException("数据不存在");
             UnitOfWork.BeginTransaction();
             try
             {

@@ -49,7 +49,7 @@
         }
         win.down('textfield[name=Status]').setValue(statusdesc);
 
-        orderItemStore.proxy.extraparam = { OrderID: record.data.ID };
+        orderItemStore.proxy.extraParams = { OrderID: record.data.ID };
         orderItemStore.load();
         win.show();
     },

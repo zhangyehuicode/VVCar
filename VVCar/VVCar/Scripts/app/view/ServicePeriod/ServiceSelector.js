@@ -47,7 +47,7 @@
 				}]
 			},
 			columns: [
-				{ header: '服务代码', dataIndex: 'Code', flex: 1 },
+				{ header: '服务编号', dataIndex: 'Code', flex: 1 },
 				{ header: '服务名称', dataIndex: 'Name', flex: 1 },
 			],
 			bbar: {

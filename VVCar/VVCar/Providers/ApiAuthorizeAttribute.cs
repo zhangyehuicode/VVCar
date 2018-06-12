@@ -136,6 +136,8 @@ namespace VVCar
                 departmentId = "00000000-0000-0000-0000-000000000001";
             if (departmentName == null)
                 departmentName = "system";
+            if (departmentCode == null)
+                departmentCode = "";
 
             var identity = new ClaimsIdentity();
             //identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, "00000000-0000-0000-0000-000000000000"));

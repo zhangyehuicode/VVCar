@@ -475,7 +475,7 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID)
         {
             var now = DateTime.Now.Date;
-            var datasource = Repository.GetInclude(t => t.Template, false)
+            var datasource = Repository.GetInclude(t => t.Template, false).Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Where(t => t.Status == ECouponStatus.Default && t.OwnerOpenID == userOpenID && t.ExpiredDate >= now)
                 .OrderBy(t => t.ExpiredDate).ToList();
             var coupons = datasource.MapTo<List<CouponBaseInfoDto>>();
@@ -504,7 +504,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             var nowtime = System.DateTime.Now.Date;
             var pushtemplates =
-                CouponTemplateRepo.GetInclude(t => t.Stock)
+                CouponTemplateRepo.GetInclude(t => t.Stock).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                     .Where(t => t.IsAvailable && t.ApproveStatus == EApproveStatus.Delivered && (!t.IsFiexedEffectPeriod | t.ExpiredDate > nowtime | t.ExpiredDate == null))
                     .Where(t => (t.PutInStartDate == null || t.PutInStartDate <= nowtime) && (t.PutInEndDate == null || t.PutInEndDate >= nowtime))
                     .MapTo<CouponBaseInfoDto>().ToList();
@@ -970,7 +970,7 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<CouponReportDto> CouponReportData(CouponReportFilter filter)
         {
             filter.EndTime = filter.EndTime.AddDays(1);
-            var couponqueryable = this.Repository.GetQueryable(false);
+            var couponqueryable = this.Repository.GetQueryable(false).Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID);
             var verificationqueryable = VerificationRecordRepo.GetInclude(v => v.Coupon);
             var visitdata = this.VisitRecordRepo.GetQueryable(false);
 
@@ -1171,7 +1171,7 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<CouponTotalReportDto> CouponTotalReportData(CouponReportFilter filter, ref int totalCount)
         {
             filter.EndTime = filter.EndTime.AddDays(1);
-            var couponQueryable = this.Repository.GetQueryable(false);
+            var couponQueryable = this.Repository.GetQueryable(false).Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID);
             var verificationQueryable = VerificationRecordRepo.GetQueryable(false);
             var visitQueryable = this.VisitRecordRepo.GetQueryable(false);
             var templateQueryable = this.CouponTemplateRepo.GetQueryable(false);
@@ -1310,7 +1310,7 @@ namespace VVCar.VIP.Services.DomainServices
             var specialCoupons = new List<CouponInfoDto>();
             var now = DateTime.Now;
             var today = DateTime.Today;
-            var coupons = Repository.GetIncludes(false, "Template", "Template.UseTimeList")
+            var coupons = Repository.GetIncludes(false, "Template", "Template.UseTimeList").Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Where(t => t.Template.ApproveStatus == EApproveStatus.Delivered && t.Template.IsSpecialCoupon && t.Template.PutInStartDate <= now && t.Template.PutInEndDate >= today
                     && t.EffectiveDate <= now && t.ExpiredDate >= now && t.Status == ECouponStatus.Default)
                 .ToList();
@@ -1454,7 +1454,7 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<CouponDto> GetCoupon(CouponFilter filter, ref int totalCount)
         {
             var nextDdate = filter.EndTime.AddDays(1);
-            var result = Repository.GetInclude(t => t.Template)
+            var result = Repository.GetInclude(t => t.Template).Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Where(t => t.CreatedDate >= filter.StartTime)
                .Where(t => t.CreatedDate < nextDdate);
             if (!string.IsNullOrEmpty(filter.TemplateCode))

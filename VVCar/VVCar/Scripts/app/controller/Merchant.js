@@ -22,6 +22,12 @@
 			'MerchantList button[action=freezeMerchant]': {
 				click: me.freezeMerchant
 			},
+			'MerchantList button[action=search]': {
+				click: me.search
+			},
+			'MerchantList button[action=export]': {
+				click: me.export
+			},
 			'MerchantList': {
 				editActionClick: me.editMerchant,
 				deleteActionClick: me.deleteMerchant,
@@ -41,7 +47,7 @@
 			},
 			'MerchantEdit image[name=download]': {
 				link: me.downloadLicenseImg
-			}
+			},
 		});
 	},
 	addMerchant: function () {
@@ -71,7 +77,7 @@
 				Ext.Msg.alert('提示', '请选择未激活或者冻结的数据!');
 				return;
 			}
-			Ext.Msg.confirm('询问', '确定要激活所选商户号吗?', function (operational) {
+			Ext.Msg.confirm('询问', '确定要激活所选商户吗?', function (operational) {
 				if (operational == 'yes') {
 					store.activateMerchant(ids,
 						function success(response, request, c) {
@@ -112,7 +118,7 @@
 				Ext.Msg.alert('提示', '请选择已激活的数据!');
 				return;
 			}
-			Ext.Msg.confirm('询问', '确定要冻结所选商户号吗?', function (operational) {
+			Ext.Msg.confirm('询问', '确定要冻结所选商户吗?', function (operational) {
 				if (operational == 'yes') {
 					store.freezeMerchant(ids,
 						function success(response, request, c) {
@@ -272,5 +278,40 @@
 	},
 	downloadLicenseImg: function () {
 		Ext.Msg.alert('提示', 'hello');
+	},
+	search: function (btn) {
+		var me = this;
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			var store = me.getMerchantList().getStore();
+			store.proxy.extraParams = queryValues;
+			store.load();
+		} else {
+			Ext.Msg.alert('提示', '请输入过滤条件');
+		}
+	},
+	export: function (btn) {
+		var me = this;
+		Ext.Msg.show({
+			msg: '正在生成数据...,请稍候',
+			progressText: '正在生成数据...',
+			width: 300,
+			wait: true,
+		});
+		var queryValues = btn.up('form').getValues();
+		var store = me.getMerchantList().getStore();
+		store.export(queryValues, function (req, success, res) {
+			Ext.Msg.hide();
+			if (res.status === 200) {
+				var response = JSON.parse(res.responseText);
+				if (response.IsSuccessful) {
+					window.location.href = response.Data;
+				} else {
+					Ext.Msg.alert('提示', response.ErrorMessage);
+				}
+			} else {
+				Ext.Msg.alert('提示', '网络请求异常:' + res.status);
+			}
+		});
 	}
 });

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using VVCar.Shop.Domain.Services;
 using VVCar.VIP.Domain.Services;
 using YEF.Core;
 using YEF.Core.Dtos;
@@ -42,6 +43,14 @@ namespace VVCar.Controllers.Api
             get
             {
                 return ServiceLocator.Instance.GetService<ICouponPushService>();
+            }
+        }
+
+        IServicePeriodService ServicePeriodService
+        {
+            get
+            {
+                return ServiceLocator.Instance.GetService<IServicePeriodService>();
             }
         }
 
@@ -86,6 +95,19 @@ namespace VVCar.Controllers.Api
             return SafeExecute(() =>
             {
                 return CouponPushService.CouponPushTask();
+            });
+        }
+
+        /// <summary>
+        /// 服务周期提醒
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("ServicePeriodReminder"), AllowAnonymous]
+        public JsonActionResult<bool> ServicePeriodReminder()
+        {
+            return SafeExecute(() =>
+            {
+                return ServicePeriodService.ServicePeriodReminder();
             });
         }
 

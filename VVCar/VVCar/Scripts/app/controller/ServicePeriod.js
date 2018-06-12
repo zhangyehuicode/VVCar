@@ -22,6 +22,12 @@
 	}, {
 		ref: 'gridServicePeriodCouponEdit',
 		selector: 'ServicePeriodCouponEdit grid[name=couponTemplate]'
+	}, {
+		ref: 'serviceSelector',
+		selector: 'ServiceSelector'
+	}, {
+		ref: 'gridServiceSelector',
+		selector: 'ServiceSelector grid[name=serviceList]'
 	}],
 	init: function () {
 		var me = this;
@@ -32,8 +38,15 @@
 			'ServicePeriodList button[action=addServicePeriodCoupon]': {
 				click: me.addServicePeriodCoupon
 			},
+			'ServicePeriodList button[action=enableServicePeriod]': {
+				click: me.enableServicePeriod
+			},
+			'ServicePeriodList button[action=disableServicePeriod]': {
+				click: me.disableServicePeriod
+			},
 			'ServicePeriodList grid[name=gridServicePeriod]': {
-				select: me.gridServicePeriodSelect
+				select: me.gridServicePeriodSelect,
+				itemdblclick: me.editServicePeriod,
 			},
 			'ServicePeriodList button[action=deleteServicePeriod]': {
 				click: me.deleteServicePeriod
@@ -55,6 +68,9 @@
 			},
 			'ServiceSelector grid[name=serviceList]': {
 				itemdblclick: me.chooseService
+			},
+			'ServiceSelector button[action=search]': {
+				click: me.searchProduct
 			}
 		});
 	},
@@ -69,6 +85,93 @@
 		var win = Ext.widget('ServicePeriodEdit');
 		win.form.getForm().actionMethod = 'POST';
 		win.setTitle('添加服务周期配置');
+		win.show();
+	},
+	enableServicePeriod: function () {
+		var me = this;
+		var store = me.getGridServicePeriod().getStore();
+		var selectedItems = me.getGridServicePeriod().getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '未选择数据');
+			return;
+		}
+		var ids = [];
+		var existEnableData = false;
+		selectedItems.forEach(function (item) {
+			if (item.data.IsAvailable == true) {
+				existEnableData = true;
+			} else {
+				ids.push(item.data.ID);
+			}
+		})
+		if (existEnableData) {
+			Ext.Msg.alert('提示', '请选择未启用的数据');
+			return;
+		}
+		Ext.Msg.confirm('询问', '您确定要启用所选服务配置吗?', function (operational) {
+			if (operational == 'yes') {
+				store.enableServicePeriod(ids,
+					function success(response, request, c) {
+						var result = Ext.decode(c.responseText);
+						if (result.IsSuccessful) {
+							store.reload();
+							Ext.Msg.alert('提示', '启用成功');
+						} else {
+							Ext.Msg.alert('提示', result.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', '启用失败!');
+					})
+				Ext.Msg.alert('提示', '启用成功');
+			}
+		})
+	},
+	disableServicePeriod: function () {
+		var me = this;
+		var store = me.getGridServicePeriod().getStore();
+		var selectedItems = me.getGridServicePeriod().getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '未选择数据');
+			return;
+		}
+		var ids = [];
+		var existDisableData = false;
+		selectedItems.forEach(function (item) {
+			if (item.data.IsAvailable == false) {
+				existDisableData = true;
+			} else {
+				ids.push(item.data.ID);
+			}
+		})
+		if (existDisableData) {
+			Ext.Msg.alert('提示', '请选择已启用的数据');
+			return;
+		}
+		Ext.Msg.confirm('询问', '您确定要启用所选服务配置吗?', function (operational) {
+			if (operational == 'yes') {
+				store.disableServicePeriod(ids,
+					function success(response, request, c) {
+						var result = Ext.decode(c.responseText);
+						if (result.IsSuccessful) {
+							store.reload();
+							Ext.Msg.alert('提示', '禁用成功');
+						} else {
+							Ext.Msg.alert('提示', result.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', '禁用失败!');
+					})
+				Ext.Msg.alert('提示', '禁用成功');
+			}
+		})
+	},
+	editServicePeriod: function (gird, record) {
+		var win = Ext.widget('ServicePeriodEdit');
+		win.form.loadRecord(record);
+		win.form.getForm().actionMethod = 'PUT';
+		win.setTitle('编辑服务周期配置');
 		win.show();
 	},
 	addServicePeriodCoupon: function () {
@@ -97,6 +200,7 @@
 		var win = Ext.ComponentQuery.query('window[name=ServicePeriodEdit]')[0];
 		win.down('textfield[name=ProductName]').setValue(record.data.Name);
 		win.down('textfield[name=ProductID]').setValue(record.data.ID);
+		win.down('textfield[name=ProductCode]').setValue(record.data.Code);
 		grid.up('window').close();
 	},
 	saveServicePeriod: function () {
@@ -120,6 +224,23 @@
 						}
 					}
 				})
+			} else {
+				if (!form.isDirty()) {
+					win.close();
+					return;
+				}
+				form.updateRecord();
+				store.update({
+					callback: function (records, operation, success) {
+						if (!success) {
+							Ext.Msg.alert('提示', operation.error);
+							return;
+						} else {
+							Ext.Msg.alert('提示', '更新成功');
+							win.close();
+						}
+					}
+				});
 			}
 		}
 	},
@@ -225,5 +346,21 @@
 		} else {
 			Ext.MessageBox.alert('提示', '请输入过滤条件!');
 		}
+	},
+	searchProduct: function (btn) {
+		var me = this;
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			var store = me.getGridServiceSelector().getStore();
+			Ext.apply(store.proxy.extraParams, {
+				ProductType: 0,
+				CouponPushID: record.data.ID
+			});
+
+			store.load();
+		} else {
+			Ext.Msg.alert('提示', '请输入过滤条件');
+		}
+
 	}
 });
