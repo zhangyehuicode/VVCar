@@ -124,7 +124,7 @@ namespace VVCar.VIP.Domain.Dtos
         /// <summary>
         /// 会员积分
         /// </summary>
-        public int Point { get; set; }
+        public double Point { get; set; }
 
         /// <summary>
         /// 获取或设置 生效日期, 激活时间

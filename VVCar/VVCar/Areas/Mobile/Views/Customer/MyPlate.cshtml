@@ -17,7 +17,7 @@
     </div>
     <div class="wdcph_box">
         <div class="wdcph_box2">
-            <input type="text" style="font-size:13px;" v-model="AddData.PlateNumber">
+            <input type="text" style="font-size:13px;" v-model="AddData.PlateNumber" oninput="if(value.length>8)value=value.slice(0,8)">
             <a v-on:click="addPlateNumber">增加</a>
         </div>
     </div>

@@ -43,5 +43,10 @@ namespace VVCar.VIP.Domain.Dtos
         /// 会员等级ID
         /// </summary>
         public Guid? MemberGradeID { get; set; }
+
+        /// <summary>
+        /// 车牌号
+        /// </summary>
+        public string PlateNumber { get; set; }
     }
 }

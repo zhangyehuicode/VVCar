@@ -88,6 +88,8 @@ namespace VVCar.VIP.Services.DomainServices
 
         IRepository<Coupon> CouponRepo { get => UnitOfWork.GetRepository<IRepository<Coupon>>(); }
 
+        IRepository<MemberPlate> MemberPlateRepo { get => UnitOfWork.GetRepository<IRepository<MemberPlate>>(); }
+
         #endregion
 
         #region propertiesTemp
@@ -160,13 +162,13 @@ namespace VVCar.VIP.Services.DomainServices
             bool exists = true;
             if (!string.IsNullOrEmpty(entity.CardNumber))
             {
-                exists = this.Repository.Exists(t => t.CardNumber == entity.CardNumber && t.ID != entity.ID);
+                exists = this.Repository.Exists(t => t.CardNumber == entity.CardNumber && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
                 if (exists)
                     throw new DomainException(String.Format("卡号 {0} 已绑定。", entity.CardNumber));
             }
             if (!string.IsNullOrEmpty(entity.MobilePhoneNo))
             {
-                exists = this.Repository.Exists(t => t.MobilePhoneNo == entity.MobilePhoneNo && t.ID != entity.ID);
+                exists = this.Repository.Exists(t => t.MobilePhoneNo == entity.MobilePhoneNo && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
                 if (exists)
                     throw new DomainException(String.Format("手机号码 {0} 已绑定。", entity.MobilePhoneNo));
             }
@@ -296,13 +298,13 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (registerDto == null)
                 return string.Empty;
-            var exist = this.Repository.GetQueryable(false).FirstOrDefault(t => t.WeChatOpenID == registerDto.WeChatOpenID);
+            var exist = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).FirstOrDefault(t => t.WeChatOpenID == registerDto.WeChatOpenID);
             if (exist != null)
             {
                 //throw new DomainException("微信已绑定会员");
                 return exist.CardNumber;
             }
-            var member = this.Repository.GetQueryable().Where(t => t.MobilePhoneNo == registerDto.MobilePhoneNo).FirstOrDefault();
+            var member = this.Repository.GetQueryable().Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).Where(t => t.MobilePhoneNo == registerDto.MobilePhoneNo).FirstOrDefault();
             //if (exist)
             //    throw new DomainException("手机号码已绑定会员");
             if (member != null)
@@ -326,7 +328,20 @@ namespace VVCar.VIP.Services.DomainServices
                     newMember.Password = registerDto.Password;
                     newMember.Source = EMemberSource.WeChat;
                     //newMember.MemberGradeID = registerDto.MemberGradeID;
-                    Add(newMember);
+                    var addedmember = Add(newMember);
+
+                    if (!string.IsNullOrEmpty(registerDto.PlateNumber))
+                    {
+                        MemberPlateRepo.Add(new MemberPlate
+                        {
+                            ID = Util.NewID(),
+                            MemberID = addedmember.ID,
+                            OpenID = registerDto.WeChatOpenID,
+                            PlateNumber = registerDto.PlateNumber.ToUpper(),
+                            MerchantID = AppContext.CurrentSession.MerchantID,
+                        });
+                    }
+
                     this.UnitOfWork.CommitTransaction();
 
                     //try

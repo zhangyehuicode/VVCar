@@ -75,5 +75,10 @@ namespace VVCar.VIP.Domain.Dtos
         /// 商户号
         /// </summary>
         public string CompanyCode { get; set; }
+
+        /// <summary>
+        /// 商户ID
+        /// </summary>
+        public Guid? MerchantID { get; set; }
     }
 }

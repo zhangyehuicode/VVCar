@@ -20,7 +20,11 @@
             <img src="~/Areas/resource/img/mobile/yzm2.png" style="width:16px; float:left; margin-top:18px;">
             <input v-model="UserInfo.VerificationCode" type="number" placeholder="请输入验证码" name="address" size="6" maxlength="6" style="color:#fff" class="zcdl_box4" oninput="if(value.length>6)value=value.slice(0,6)">
         </div>
-        <a class="zcdl_btn" v-on:click="register">注册/登录</a>
+        <div class="zcdl_box3" style="margin-top:inherit;">
+            <img src="~/Areas/resource/img/mobile/car.png" style="width:16px; float:left; margin-top:18px;">
+            <input v-model="UserInfo.PlateNumber" type="text" placeholder="请输入车牌号" maxlength="8" style="color:#fff" class="zcdl_box4" oninput="if(value.length>8)value=value.slice(0,8)">
+        </div>
+        <a class="zcdl_btn" v-on:click="register">注册</a>
     </div>
 </div>
 
@@ -66,7 +70,7 @@
 
         .logininfocon {
             position: absolute;
-            top: 200px;
+            top: 165px;
             width: 100%;
         }
 
@@ -90,9 +94,10 @@
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -226,6 +231,15 @@
                 $.alert('请先输入验证码');
                 return;
             }
+            if (_viewModel.UserInfo.PlateNumber == null || _viewModel.UserInfo.PlateNumber=='') {
+                $.alert('请先输入车牌号');
+                return;
+            }
+            if (_viewModel.UserInfo.PlateNumber.length != 7 && _viewModel.UserInfo.PlateNumber.length!=8) {
+                $.alert('请输入正确的车牌号');
+                return;
+            }
+            $.confirm('确认车牌号为 ' + _viewModel.UserInfo.PlateNumber + ' 吗？（注册后可在个人中心修改）', function () {
             $.ajax({
                 url: '/AliyunSMS/Sms/CheckVerificationCode/' + mobilephoneno + '/' + verificationCode,
                 type: 'GET',
@@ -250,21 +264,23 @@
                 error: function () {
                     $.hideLoading();
                 }
+                });
             });
         }
 
-        _payBillViewModel = new Vue({
+        _viewModel = new Vue({
             el: '#loginreg',
             data: {
                 UserInfo: {
                     MobilePhoneNo: '',
-                    VerificationCode:'',
+                    VerificationCode: '',
+                    PlateNumber:'',
                 },
               },
             methods: {
                 register: function (event) {
                     checkVerificationCode(this.UserInfo.MobilePhoneNo, this.UserInfo.VerificationCode, function (mobilePhoneNo) {
-                        $.ajax({
+                            $.ajax({
                             url: '/api/Member/Register',
                             type: 'POST',
                             headers: { "CompanyCode": mch },
@@ -272,7 +288,8 @@
                                 WeChatOpenID: '@ViewBag.OpenId',
                                 MobilePhoneNo: mobilePhoneNo,
                                 Name:"@ViewBag.NickName",
-                                Password:'123456',
+                                Password: '123456',
+                                PlateNumber: _viewModel.UserInfo.PlateNumber,
                             },
                             beforeSend: function () {
                                 //$.showLoading();
@@ -280,7 +297,7 @@
                             success: function (res) {
                                 //$.hideLoading();
                                 if (res.IsSuccessful) {
-                                    $.toast('注册/登录成功', function () {
+                                    $.toast('注册成功', function () {
                                         window.location.href = "/Mobile/Customer/Home?mch=" + mch;
                                     });
                                 }

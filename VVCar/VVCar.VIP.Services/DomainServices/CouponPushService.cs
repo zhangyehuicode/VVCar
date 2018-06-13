@@ -98,6 +98,8 @@ namespace VVCar.VIP.Services.DomainServices
             var couponPush = Repository.GetByKey(entity.ID);
             if (couponPush == null)
                 return false;
+            if (couponPush.Status == ECouponPushStatus.Pushed)
+                throw new DomainException("已推送不能修改");
             couponPush.Title = entity.Title;
             couponPush.PushDate = entity.PushDate;
             couponPush.Status = entity.Status;
@@ -195,6 +197,7 @@ namespace VVCar.VIP.Services.DomainServices
                                                 ReceiveChannel = "卡券推送",
                                                 CompanyCode = merchant.Code,
                                                 NickName = m.Name,
+                                                MerchantID = merchant.ID,
                                             }, true);
                                         }
                                         catch (Exception e)

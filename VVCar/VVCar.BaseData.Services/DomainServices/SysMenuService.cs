@@ -99,6 +99,10 @@ namespace VVCar.BaseData.Services.DomainServices
             var sysNavMenus = sysMenus.MapTo<IList<SysNavMenuDto>>();
             var navMenus = BuildTree(sysNavMenus, null);
             navMenus = navMenus.Where(nav => nav.Children.Count() > 0).ToList();
+            navMenus.ForEach(t =>
+            {
+                t.expanded = false;
+            });
             return navMenus;
         }
 

@@ -71,9 +71,11 @@ namespace VVCar.BaseData.Services.DomainServices
             return true;
         }
 
-        public string GetSettingValue(string name)
+        public string GetSettingValue(string name, Guid? merchantId = null)
         {
-            var setting = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
+            if (merchantId == null)
+                merchantId = AppContext.CurrentSession.MerchantID;
+            var setting = Repository.GetQueryable(false).Where(t => t.MerchantID == merchantId)
                 .Where(t => t.Name == name).Select(t => new
                 {
                     t.SettingValue,

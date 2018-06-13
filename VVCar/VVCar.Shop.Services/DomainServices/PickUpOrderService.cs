@@ -71,6 +71,8 @@ namespace VVCar.Shop.Services.DomainServices
         {
             if (entity == null || entity.PickUpOrderItemList == null || entity.PickUpOrderItemList.Count < 1)
                 return null;
+            if (string.IsNullOrEmpty(entity.PlateNumber))
+                throw new DomainException("车牌号不能为空");
             entity.ID = Util.NewID();
             entity.CreatedDate = DateTime.Now;
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
@@ -87,6 +89,7 @@ namespace VVCar.Shop.Services.DomainServices
                 t.Discount = 1;
             });
             RecountMoney(entity);
+            entity.PlateNumber = entity.PlateNumber.ToUpper();
             return base.Add(entity);
         }
 

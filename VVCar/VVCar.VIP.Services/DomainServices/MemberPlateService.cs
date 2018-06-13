@@ -22,7 +22,10 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (entity == null)
                 return null;
+            if (string.IsNullOrEmpty(entity.PlateNumber))
+                throw new DomainException("车牌号不能为空");
             entity.ID = Util.NewID();
+            entity.PlateNumber = entity.PlateNumber.ToUpper();
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }

@@ -456,7 +456,7 @@ namespace VVCar.VIP.Services.DomainServices
                     var message = new WeChatTemplateMessageDto
                     {
                         touser = receiveCouponDto.ReceiveOpenID,
-                        template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ReceivedSuccess),//WXMsg_CouponReceived
+                        template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ReceivedSuccess, receiveCouponDto.MerchantID),//WXMsg_CouponReceived
                         url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={companyCode}",
                         data = new System.Dynamic.ExpandoObject(),
                     };

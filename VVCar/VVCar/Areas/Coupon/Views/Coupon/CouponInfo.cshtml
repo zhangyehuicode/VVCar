@@ -62,7 +62,7 @@
                     <a href="javascript:;" data-bind="click: gotoIntroDetail">
                         <img data-bind="attr: {src: CouponInfo().CoverImage}" />
                         <span class="couponCover-intro">
-                            <span data-bind="text: CouponInfo().CoverIntro"></span>
+                            <span data-bind="text: CouponInfo().CoverIntro,visible:CouponInfo().CoverIntro!='null'"></span>
                             @*<span class="glyphicon glyphicon-menu-right" data-bind="visible: CouponInfo().HasIntroDetail"></span>*@
                         </span>
                     </a>

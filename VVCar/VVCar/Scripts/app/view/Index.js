@@ -5,6 +5,21 @@
     layout: 'hbox',
     initComponent: function () {
         var me = this;
+        var url = window.location.origin;
+        me.items = [{
+            xtype: 'fieldset',
+            title: '报表',
+            layout: 'hbox',
+            margin: '10px',
+            width: '100%',
+            height: '100%',
+            items: [{
+                border: false,
+                width: '100%',
+                height: '100%',
+                html: '<iframe width="100%" height="100%" frameborder="0" src="' + url + '/Reporting"></iframe>'
+            }]
+        }];
         //me.items = [{
         //    xtype: 'panel',
         //    title: '会员数',

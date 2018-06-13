@@ -59,8 +59,8 @@ namespace VVCar.Shop.Services.DomainServices
         {
             if (entity == null)
                 return null;
-            var queryable = this.Repository.GetQueryable(false).Where(t => t.ProductID == entity.ProductID);
-            if (queryable.Count() > 0)
+            var count = this.Repository.Count(t => t.ProductID == entity.ProductID && t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (count > 0)
                 throw new DomainException("该服务已经配置过");
             entity.ID = Util.NewID();
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
@@ -118,9 +118,6 @@ namespace VVCar.Shop.Services.DomainServices
             var servicePeriodSetting = Repository.GetByKey(entity.ID);
             if (servicePeriodSetting == null)
                 return false;
-            var queryable = this.Repository.GetQueryable(false).Where(t => t.ProductID == entity.ProductID);
-            if (queryable.Count() > 0)
-                throw new DomainException("该服务已经配置过");
             servicePeriodSetting.ProductID = entity.ProductID;
             servicePeriodSetting.PeriodDays = entity.PeriodDays;
             servicePeriodSetting.ExpirationNotice = entity.ExpirationNotice;
@@ -236,10 +233,9 @@ namespace VVCar.Shop.Services.DomainServices
                 return false;
 
             var memberQueryable = MemberRepo.GetInclude(t => t.MemberPlateList, false);
-            var pickuporderQueryable = PickUpOrderRepo.GetQueryable(false);
             pickUpOrderItemList.ForEach(t =>
             {
-                var memberlist = memberQueryable.Where(m => m.MemberPlateList.Count(p => p.PlateNumber == t.PickUpOrder.PlateNumber) > 0).ToList();
+                var memberlist = memberQueryable.Where(m => m.MemberPlateList.Count(p => p.PlateNumber == t.PickUpOrder.PlateNumber) > 0 && m.MerchantID == t.PickUpOrder.MerchantID).ToList();
                 if (memberlist != null && memberlist.Count > 0)
                 {
                     memberlist.ForEach(m =>
@@ -257,7 +253,7 @@ namespace VVCar.Shop.Services.DomainServices
                                 var message = new WeChatTemplateMessageDto
                                 {
                                     touser = m.WeChatOpenID,
-                                    template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ServiceExpiredRemind),
+                                    template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ServiceExpiredRemind, merchant.ID),
                                     url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/Shop?mch={merchant.Code}",
                                     data = new System.Dynamic.ExpandoObject(),
                                 };
@@ -306,6 +302,7 @@ namespace VVCar.Shop.Services.DomainServices
                             ReceiveChannel = "服务到期推送卡券",
                             CompanyCode = companyCode,
                             NickName = member.Name,
+                            MerchantID = member.MerchantID,
                         }, true);
                     }
                     catch (Exception e)

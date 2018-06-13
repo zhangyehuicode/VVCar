@@ -26,8 +26,9 @@ namespace VVCar.BaseData.Domain.Services
         /// 获取设置值
         /// </summary>
         /// <param name="name">设置项名称</param>
+        /// <param name="merchantId">商户Id</param>
         /// <returns></returns>
-        string GetSettingValue(string name);
+        string GetSettingValue(string name, Guid? merchantId = null);
 
         /// <summary>
         /// 查询系统参数
