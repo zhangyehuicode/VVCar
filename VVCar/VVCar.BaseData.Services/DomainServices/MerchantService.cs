@@ -160,7 +160,7 @@ namespace VVCar.BaseData.Services.DomainServices
                         var dept = DepartmentRepo.Add(new Department
                         {
                             ID = Util.NewID(),
-                            Code = "001",
+                            Code = $"{t.Code}001",
                             Name = t.Name,
                             DistrictRegion = "",
                             AdministrationRegion = "",

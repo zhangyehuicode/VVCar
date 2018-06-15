@@ -255,5 +255,19 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="openId"></param>
         /// <returns></returns>
         bool VerificationCodeSet(string password, string openId);
+
+        /// <summary>
+        /// 手动新增会员
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        Member ManualAddMember(AddMemberParam param);
+
+        /// <summary>
+        /// 批量手动新增会员
+        /// </summary>
+        /// <param name="addparam"></param>
+        /// <returns></returns>
+        bool BatchManualAddMember(List<AddMemberParam> addparam);
     }
 }

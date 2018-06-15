@@ -27,6 +27,17 @@ namespace VVCar.VIP.Services.DomainServices
 
         #endregion
 
+        IRepository<CouponPush> CouponPushRepo
+        {
+            get { return UnitOfWork.GetRepository<IRepository<CouponPush>>(); }
+        }
+
+
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override CouponPushItem Add(CouponPushItem entity)
         {
             if (entity == null)
@@ -58,9 +69,14 @@ namespace VVCar.VIP.Services.DomainServices
         public bool BatchAdd(IEnumerable<CouponPushItem> couponPushItems)
         {
             if (couponPushItems == null || couponPushItems.Count() < 1)
-                throw new DomainException("新增失败,没有数据");
+                throw new DomainException("没有数据");
             var couponPushItemList = couponPushItems.ToList();
             var couponPushID = couponPushItemList.FirstOrDefault().CouponPushID;
+            var couponPush = CouponPushRepo.GetByKey(couponPushID);
+            if (couponPush.Status != Domain.Enums.ECouponPushStatus.NotPush)
+            {
+                throw new DomainException("请选择未推送的数据!");
+            }
             var couponTemplateIDs = couponPushItemList.Select(t => t.CouponTemplateID).Distinct();
             var existData = this.Repository.GetQueryable(false)
                 .Where(t => t.CouponPushID == couponPushID && couponTemplateIDs.Contains(t.CouponTemplateID))
@@ -89,9 +105,17 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (ids == null || ids.Length < 1)
                 throw new DomainException("参数错误");
+
             var couponPushItems = this.Repository.GetQueryable(false).Where(t => ids.Contains(t.ID)).ToList();
             if (couponPushItems == null || couponPushItems.Count() < 1)
                 throw new DomainException("数据不存在");
+            var couponPushIDs = this.Repository.GetQueryable(false).Where(t => ids.Contains(t.ID)).Select(t => t.CouponPushID).Distinct();
+            foreach (var couponPushID in couponPushIDs)
+            {
+                var couponPush = CouponPushRepo.GetByKey(couponPushID);
+                if (couponPush.Status != Domain.Enums.ECouponPushStatus.NotPush)
+                    throw new DomainException("请选择未推送的数据!");
+            }
             return this.Repository.DeleteRange(couponPushItems) > 0;
         }
 

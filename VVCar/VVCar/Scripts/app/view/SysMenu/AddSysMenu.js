@@ -75,7 +75,13 @@
                             allowBlank: false,
                             blankText: '请输入菜单标题'
                         },
-
+                        {
+                            xtype: 'textfield',
+                            name: 'SysMenuIcon',
+                            fieldLabel: '标题图标',
+                            allowBlank: true,
+                            blankText: ''
+                        },
                         {
                             xtype: 'textfield',
                             name: 'Component',

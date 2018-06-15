@@ -551,6 +551,7 @@
     <Content Include="Content\icons.css" />
     <Content Include="Content\icons\accept.png" />
     <Content Include="Content\icons\add.png" />
+    <Content Include="Content\icons\addmember.png" />
     <Content Include="Content\icons\adjust.png" />
     <Content Include="Content\icons\arrow_switch.png" />
     <Content Include="Content\icons\cancelLoss.png" />
@@ -566,6 +567,7 @@
     <Content Include="Content\icons\restore.png" />
     <Content Include="Content\icons\search.png" />
     <Content Include="Content\icons\search_r.png" />
+    <Content Include="Content\icons\stock.png" />
     <Content Include="Content\icons\stop.png" />
     <Content Include="Content\image\cheyinzi.jpg" />
     <Content Include="Content\image\cheyinzilogo.png" />
@@ -586,6 +588,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\ConsumeHistory.js" />
     <Content Include="Scripts\app\controller\ConsumeReport.js" />
     <Content Include="Scripts\app\controller\Coupon.js" />
     <Content Include="Scripts\app\controller\CouponPush.js" />
@@ -624,6 +627,7 @@
     <Content Include="Scripts\app\model\BaseData\CardInfoModel.js" />
     <Content Include="Scripts\app\model\BaseData\CardThemeCategoryMenuModel.js" />
     <Content Include="Scripts\app\model\BaseData\CardThemeCategoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\ConsumeHistoryModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponPushItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponPushModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponTemplateInfoModel.js" />
@@ -670,6 +674,7 @@
     <Content Include="Scripts\app\model\DataDict\DataDictTypeModel.js" />
     <Content Include="Scripts\app\store\BaseData\CardThemeCategoryMenuStore.js" />
     <Content Include="Scripts\app\store\BaseData\CardThemeCategoryStore.js" />
+    <Content Include="Scripts\app\store\BaseData\ConsumeHistoryStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponPushItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponPushStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponTemplateInfoStore.js" />
@@ -797,6 +802,7 @@
     <Content Include="Scripts\app\view\RechargeReport\RHDepartmentReport.js" />
     <Content Include="Scripts\app\view\RechargeReport\RHMemberReport.js" />
     <Content Include="Scripts\app\view\RechargeReport\RHPayTypeReport.js" />
+    <Content Include="Scripts\app\view\Report\ConsumeHistoryList.js" />
     <Content Include="Scripts\app\view\Report\ProductRetailStatisticsList.js" />
     <Content Include="Scripts\app\view\Report\StaffPerfromanceStatisticsList.js" />
     <Content Include="Scripts\app\view\Role\RoleEdit.js" />

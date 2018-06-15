@@ -167,6 +167,12 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         public virtual ICollection<MemberPlate> MemberPlateList { get; set; }
 
+        /// <summary>
+        /// 保险到期时间
+        /// </summary>
+        [Display(Name = "保险到期时间")]
+        public DateTime? InsuranceExpirationDate { get; set; }
+
         ///// <summary>
         ///// 会员签到
         ///// </summary>

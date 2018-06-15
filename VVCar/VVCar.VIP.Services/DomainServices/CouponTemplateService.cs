@@ -590,5 +590,22 @@ namespace VVCar.VIP.Services.DomainServices
             entity.ApproveStatus = status;
             return Repository.Update(entity) > 0;
         }
+
+        /// <summary>
+        /// 设置消费返积分比例
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="rate"></param>
+        /// <returns></returns>
+        public bool SetConsumePointRate(Guid id, decimal rate)
+        {
+            if (id == null || rate < 0 || rate > 100)
+                throw new DomainException("参数错误");
+            var entity = Repository.GetByKey(id);
+            if (entity == null)
+                throw new DomainException("数据不存在");
+            entity.ConsumePointRate = rate;
+            return Repository.Update(entity) > 0;
+        }
     }
 }

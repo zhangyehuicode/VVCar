@@ -239,5 +239,68 @@ namespace VVCar.Controllers.Shop
                 return exporter.Export(data.ToList(), "员工业绩汇总统计");
             });
         }
+
+        /// <summary>
+        /// 获取消费记录
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetConsumeHistory")]
+        public PagedActionResult<ConsumeHistoryDto> GetConsumeHistory([FromUri]ConsumeHistoryFilter filter)
+        {
+            return SafeGetPagedData<ConsumeHistoryDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = ReportingService.GetConsumeHistory(filter, ref totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+
+
+        /// <summary>
+        /// 员工业绩汇总统计导出
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ExportConsumeHistory")]
+        public JsonActionResult<string> ExportConsumeHistory([FromUri]ConsumeHistoryFilter filter)
+        {
+            return SafeExecute(() =>
+            {
+                if (!ModelState.IsValid)
+                {
+                    throw new DomainException("查询参数错误");
+                }
+                var totalCount = 0;
+                filter.Start = null;
+                filter.Limit = null;
+                var data = ReportingService.GetConsumeHistory(filter, ref totalCount);
+                var consumeHistoryList = data.ToList();
+                ConsumeHistoryDto consumeHistoryDto = new ConsumeHistoryDto();
+                consumeHistoryList.ForEach(t =>
+                {
+                    consumeHistoryDto.TradeMoney += t.TradeMoney;
+                });
+                consumeHistoryDto.Name = "合计:";
+                consumeHistoryDto.MobilePhoneNo = "";
+                consumeHistoryDto.PlateNumber = "";
+                consumeHistoryDto.Source = null;
+                consumeHistoryDto.TradeNo = "";
+                consumeHistoryDto.CreatedDate = null;
+                var exporter = new ExportHelper(new[]
+                {
+                    new ExportInfo("Name", "姓名"),
+                    new ExportInfo("MobilePhoneNo","手机号"),
+                    new ExportInfo("PlateNumber","车牌号"),
+                    new ExportInfo("TradeNo","交易单号"),
+                    new ExportInfo("TradeMoney","交易金额"),
+                    new ExportInfo("Source","交易类型"),
+                    new ExportInfo("CreatedDate","交易时间"),
+                });
+                (data as List<ConsumeHistoryDto>).Add(consumeHistoryDto);
+                return exporter.Export(data.ToList(), "员工业绩汇总统计");
+            });
+        }
     }
 }

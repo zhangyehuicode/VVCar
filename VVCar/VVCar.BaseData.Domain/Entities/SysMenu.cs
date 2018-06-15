@@ -26,6 +26,12 @@ namespace VVCar.BaseData.Domain.Entities
         public string Name { get; set; }
 
         /// <summary>
+        /// 菜单图标
+        /// </summary>
+        [Display(Name = "菜单图标")]
+        public string SysMenuIcon { get; set; }
+
+        /// <summary>
         /// 组件名称
         /// </summary>
         [Display(Name = "组件名称")]

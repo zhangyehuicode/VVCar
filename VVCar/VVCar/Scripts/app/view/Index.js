@@ -1,14 +1,14 @@
 ﻿Ext.define('WX.view.Index', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.Index',
-    title: '平台首页',
-    layout: 'hbox',
+    title: '首页',
+    layout: 'fit',
     initComponent: function () {
         var me = this;
         var url = window.location.origin;
         me.items = [{
-            xtype: 'fieldset',
-            title: '报表',
+            xtype: 'panel',//fieldset
+            //title: '数据展示',
             layout: 'hbox',
             margin: '10px',
             width: '100%',
@@ -17,7 +17,7 @@
                 border: false,
                 width: '100%',
                 height: '100%',
-                html: '<iframe width="100%" height="100%" frameborder="0" src="' + url + '/Reporting"></iframe>'
+                html: '<iframe id="homeiframe" width="100%" height="100%" frameborder="0" scrolling="no" src="' + url + '/Reporting"></iframe>'
             }]
         }];
         //me.items = [{

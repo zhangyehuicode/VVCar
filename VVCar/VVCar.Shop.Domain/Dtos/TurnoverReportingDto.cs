@@ -20,7 +20,28 @@ namespace VVCar.Shop.Domain.Dtos
             PickUpOrderTurnover = new List<TurnoverDto>();
             MemberCardTurnover = new List<TurnoverDto>();
             ShopTurnover = new List<TurnoverDto>();
+            MemberCount = new List<TurnoverDto>();
         }
+
+        /// <summary>
+        /// 市场营业总额
+        /// </summary>
+        public decimal TotalMarketTurnover { get; set; }
+
+        /// <summary>
+        /// 今日营业额
+        /// </summary>
+        public decimal TodayTurnover { get; set; }
+
+        /// <summary>
+        /// 总会员数
+        /// </summary>
+        public int TotalMember { get; set; }
+
+        /// <summary>
+        /// 今日会员
+        /// </summary>
+        public int TodayMember { get; set; }
 
         /// <summary>
         /// 总营业额
@@ -41,6 +62,11 @@ namespace VVCar.Shop.Domain.Dtos
         /// 商城营业额
         /// </summary>
         public List<TurnoverDto> ShopTurnover { get; set; }
+
+        /// <summary>
+        /// 会员数量
+        /// </summary>
+        public List<TurnoverDto> MemberCount { get; set; }
     }
 
     /// <summary>
@@ -57,6 +83,11 @@ namespace VVCar.Shop.Domain.Dtos
         /// 营业额
         /// </summary>
         public decimal Turnover { get; set; }
+
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int Count { get; set; }
     }
 
     /// <summary>

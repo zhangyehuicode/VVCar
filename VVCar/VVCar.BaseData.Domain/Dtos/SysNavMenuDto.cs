@@ -29,6 +29,11 @@ namespace VVCar.BaseData.Domain.Dtos
         public string text { get; set; }
 
         /// <summary>
+        /// 菜单图标
+        /// </summary>
+        public string iconCls { get; set; }
+
+        /// <summary>
         /// 表示是否是终极节点
         /// </summary>
         public bool leaf { get; set; }

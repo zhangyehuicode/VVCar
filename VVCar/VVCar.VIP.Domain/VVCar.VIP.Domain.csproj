@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dtos\AddMemberParam.cs" />
     <Compile Include="Dtos\BulkReceiveCouponDto.cs" />
     <Compile Include="Dtos\BuyGiftCardByPosDto.cs" />
     <Compile Include="Dtos\CardThemeCategoryMenu.cs" />

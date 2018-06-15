@@ -99,5 +99,13 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="status"></param>
         /// <returns></returns>
         bool ChangeApproveStatus(Guid templateId, EApproveStatus status);
+
+        /// <summary>
+        /// 设置消费返积分比例
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="rate"></param>
+        /// <returns></returns>
+        bool SetConsumePointRate(Guid id, decimal rate);
     }
 }

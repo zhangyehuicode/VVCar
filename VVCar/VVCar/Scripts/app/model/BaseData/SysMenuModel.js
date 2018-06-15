@@ -3,18 +3,18 @@
     idProperty: "ID",
     fields: [
         { name: 'ID' },
-        {name:"Children"},
+        { name: "Children" },
         { name: 'ParentID' },
         { name: 'Name' },
+        { name: 'SysMenuIcon' },
         { name: "SysMenuUrl" },
         { name: "Component" },
         { name: "IsLeaf" },
-        {name:"leaf",mapping:"IsLeaf"},
+        { name: "leaf", mapping: "IsLeaf" },
         { name: "Type", type: "number" },
         { name: "IsAvailable", type: "boolean" },
         { name: "Index", type: "number" },
     ]
-
 },
 function () {
     Ext.data.NodeInterface.decorate(this);

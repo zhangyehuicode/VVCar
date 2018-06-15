@@ -21,6 +21,9 @@
         <div class="gwc_text2">
             <div class="labeltext">收货地址：{{Order.Address}}</div>
         </div>
+        <div class="gwc_text2">
+            <div class="labeltext">下单时间：{{Order.CreatedDate}}</div>
+        </div>
         <img src="~/Areas/resource/img/mobile/fgx.png" style=" width:100%;">
     </div>
     <div class="gwc_box" v-for="Product in Order.OrderItemList">

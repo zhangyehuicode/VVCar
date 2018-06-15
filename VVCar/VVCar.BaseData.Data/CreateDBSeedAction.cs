@@ -58,6 +58,14 @@ namespace VVCar.BaseData.Data
                 Code = "VVCar",
                 Name = "VVCar",
                 IsHQ = true,
+                LegalPerson = "林强",
+                Status = YEF.Core.Enums.EMerchantStatus.Activated,
+                Email = "15705927520@163.com",
+                CompanyAddress = "厦门市湖里区安岭二路93号9楼D区",
+                Bank = "厦门银行股份有限公司开元支行",
+                BankCard = "87020120030005479",
+                CreatedUser = "admin",
+                CreatedUserID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
                 CreatedDate = DateTime.Now,
             });
         }

@@ -219,6 +219,7 @@ namespace VVCar.VIP.Services.DomainServices
             member.Name = entity.Name;
             member.Sex = entity.Sex;
             member.Birthday = entity.Birthday;
+            member.InsuranceExpirationDate = entity.InsuranceExpirationDate;
             if (member.MobilePhoneNo != entity.MobilePhoneNo)
             {
                 member.MobilePhoneNo = entity.MobilePhoneNo;
@@ -238,6 +239,11 @@ namespace VVCar.VIP.Services.DomainServices
             return base.Update(member);
         }
 
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public PagedResultDto<MemberDto> Search(MemberFilter filter)
         {
             var result = new PagedResultDto<MemberDto>();
@@ -278,6 +284,7 @@ namespace VVCar.VIP.Services.DomainServices
             }
             var couponQueryable = CouponRepo.GetQueryable(false).Where(c => c.Status == ECouponStatus.Default && c.Template.Nature == ENature.Card);
             var orderQueryable = OrderRepo.GetQueryable(false);
+            var memberPlateQueryable = MemberPlateRepo.GetQueryable(false);
             result.Items.ForEach(t =>
             {
                 t.CardTypeDesc = t.CardType != null ? t.CardType.Name : string.Empty;
@@ -285,6 +292,15 @@ namespace VVCar.VIP.Services.DomainServices
                 var consumeOrder = orderQueryable.Where(o => o.OpenID == t.WeChatOpenID || o.MemberID == t.ID);
                 t.TotalConsumeTime = consumeOrder.Count();
                 t.TotalConsume = consumeOrder.GroupBy(g => 1).Select(s => s.Sum(su => su.Money)).FirstOrDefault();
+                var memberPlateList = memberPlateQueryable.Where(p => p.MemberID == t.ID);
+                if (memberPlateList.Count() > 0)
+                {
+                    foreach (var memberPlate in memberPlateList)
+                    {
+                        t.PlateList += memberPlate.PlateNumber + "、";
+                    }
+                    t.PlateList = t.PlateList.Substring(0, t.PlateList.Length - 1);
+                }
             });
             return result;
         }
@@ -364,6 +380,88 @@ namespace VVCar.VIP.Services.DomainServices
                     throw ex;
                 }
             }
+        }
+
+        /// <summary>
+        /// 批量手动新增会员
+        /// </summary>
+        /// <param name="addparam"></param>
+        /// <returns></returns>
+        public bool BatchManualAddMember(List<AddMemberParam> addparam)
+        {
+            if (addparam == null || addparam.Count() < 1)
+                return false;
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                addparam.ForEach(t =>
+                {
+                    ManualAddMember(t);
+                });
+                UnitOfWork.CommitTransaction();
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 手动新增会员
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public Member ManualAddMember(AddMemberParam param)
+        {
+            if (param == null || string.IsNullOrEmpty(param.Name) || string.IsNullOrEmpty(param.MobilePhoneNo))
+                throw new DomainException("参数错误");
+
+            var exists = this.Repository.Exists(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.MobilePhoneNo == param.MobilePhoneNo);
+            if (exists)
+                throw new DomainException("手机号码已绑定会员");
+
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                var memberCard = MemberCardService.GenerateVirtualCard();
+                var newMember = new Member
+                {
+                    Name = param.Name,
+                    Sex = param.Sex,
+                    Birthday = param.Birthday,
+                    MobilePhoneNo = param.MobilePhoneNo,
+                    Point = param.Point,
+                    InsuranceExpirationDate = param.InsuranceExpirationDate,
+                };
+                newMember.CardID = memberCard.ID;
+                newMember.CardNumber = memberCard.Code;
+                newMember.Password = "123456";
+                newMember.Source = EMemberSource.AdminPort;
+                var addedmember = Add(newMember);
+
+                if (!string.IsNullOrEmpty(param.PlateNumber))
+                {
+                    MemberPlateRepo.Add(new MemberPlate
+                    {
+                        ID = Util.NewID(),
+                        MemberID = addedmember.ID,
+                        PlateNumber = param.PlateNumber.ToUpper(),
+                        MerchantID = addedmember.MerchantID,
+                    });
+                }
+
+                UnitOfWork.CommitTransaction();
+                return addedmember;
+            }
+            catch (Exception ex)
+            {
+                AppContext.Logger.Error("手动新增会员失败", ex);
+                UnitOfWork.RollbackTransaction();
+                throw ex;
+            }
+
         }
 
         /// <summary>

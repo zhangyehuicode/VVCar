@@ -10,6 +10,7 @@ using VVCar.Shop.Domain.Entities;
 using YEF.Core;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
+using VVCar.VIP.Domain.Entities;
 
 namespace VVCar.Shop.Services.DomainServices
 {
@@ -39,6 +40,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<User> UserRepo { get => ServiceLocator.Instance.GetService<IRepository<User>>(); }
 
+        IRepository<Member> MemberRepo { get => ServiceLocator.Instance.GetService<IRepository<Member>>(); }
+
         #endregion
 
         /// <summary>
@@ -50,16 +53,41 @@ namespace VVCar.Shop.Services.DomainServices
             var result = new TurnoverReportingDto();
             result.PickUpOrderTurnover = PickUpOrderTurnover();
             result.ShopTurnover = ShopTurnover();
+            result.MemberCount = MemberCount();
 
             var totalturnover = result.PickUpOrderTurnover;
-            totalturnover.ForEach(t =>
+            //totalturnover.ForEach(t =>
+            //{
+            //    var sameday = result.ShopTurnover.Where(s => s.Unit == t.Unit).FirstOrDefault();
+            //    if (sameday != null)
+            //        t.Turnover += sameday.Turnover;
+            //});
+
+            totalturnover.AddRange(result.ShopTurnover);
+            totalturnover = totalturnover.GroupBy(t => t.Unit).Select(t => new TurnoverDto
             {
-                var sameday = result.ShopTurnover.Where(s => s.Unit == t.Unit).FirstOrDefault();
-                if (sameday != null)
-                    t.Turnover += sameday.Turnover;
-            });
+                Unit = t.Key,
+                Turnover = t.Sum(s => s.Turnover),
+            }).ToList();
 
             result.TotalTurnover = totalturnover;
+
+            var today = DateTime.Now.Date;
+            var nextDay = today.AddDays(1);
+
+            var pickUpOrderTotalTurnover = PickUpOrderRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            var orderTotalTurnover = OrderRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            var todayPickUpOrderTotalTurnover = PickUpOrderRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedDate >= today && t.CreatedDate < nextDay).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            var todayOrderTotalTurnover = OrderRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedDate >= today && t.CreatedDate < nextDay).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+
+            var memberTotalCount = MemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).Count();
+            var todayMemberCount = MemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedDate >= today && t.CreatedDate < nextDay).Count();
+
+            result.TotalMarketTurnover = pickUpOrderTotalTurnover + orderTotalTurnover;
+            result.TodayTurnover = todayPickUpOrderTotalTurnover + todayOrderTotalTurnover;
+            result.TotalMember = memberTotalCount;
+            result.TodayMember = todayMemberCount;
+
             return result;
         }
 
@@ -108,6 +136,27 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     Unit = starttime.Date.Day,
                     Turnover = orders.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault(),
+                });
+                starttime = starttime.AddDays(1);
+            }
+
+            return result;
+        }
+
+        public List<TurnoverDto> MemberCount()
+        {
+            var result = new List<TurnoverDto>();
+
+            var starttime = DateTime.Now.AddDays(-6).Date;
+            var now = DateTime.Now.Date;
+            var memberlist = MemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedDate > starttime).ToList();
+
+            while (starttime <= now)
+            {
+                result.Add(new TurnoverDto
+                {
+                    Unit = starttime.Date.Day,
+                    Count = memberlist.Where(t => t.CreatedDate.Date == starttime.Date).Count(),
                 });
                 starttime = starttime.AddDays(1);
             }
@@ -340,6 +389,69 @@ namespace VVCar.Shop.Services.DomainServices
             }
 
             return result;
+        }
+
+        public IEnumerable<ConsumeHistoryDto> GetConsumeHistory(ConsumeHistoryFilter filter, ref int totalCount)
+        {
+            var result = new List<ConsumeHistoryDto>();
+
+            var pickUpOrderQueryable = PickUpOrderRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var orderQueryable = OrderRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+
+            var memberQueryable = MemberRepo.GetInclude(t => t.MemberPlateList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+
+            pickUpOrderQueryable.ToList().ForEach(t =>
+            {
+                result.Add(new ConsumeHistoryDto
+                {
+                    Name = "",
+                    PlateNumber = t.PlateNumber,
+                    TradeNo = t.Code,
+                    TradeMoney = t.Money,
+                    Source = EHistorySource.PickUpOrder,
+                    CreatedDate = t.CreatedDate,
+                });
+            });
+
+            orderQueryable.ToList().ForEach(t =>
+            {
+                var member = memberQueryable.FirstOrDefault(m => m.ID == t.MemberID || m.WeChatOpenID == t.OpenID);
+                result.Add(new ConsumeHistoryDto
+                {
+                    Name = member != null ? member.Name : "",
+                    MobilePhoneNo = member != null ? member.MobilePhoneNo : "",
+                    PlateNumber = "",
+                    TradeNo = t.Code,
+                    TradeMoney = t.Money,
+                    Source = EHistorySource.ShopOrder,
+                    CreatedDate = t.CreatedDate,
+                });
+            });
+
+            totalCount = result.Count();
+            if (filter != null)
+            {
+                result = result.OrderBy(t => t.CreatedDate).ToList();
+                if (!string.IsNullOrEmpty(filter.Name))
+                    result = result.Where(t => t.Name.Contains(filter.Name)).ToList();
+                if (!string.IsNullOrEmpty(filter.MobilePhoneNo))
+                    result = result.Where(t => t.MobilePhoneNo.Contains(filter.MobilePhoneNo)).ToList();
+                if (!string.IsNullOrEmpty(filter.PlateNumber))
+                    result = result.Where(t => t.PlateNumber.Contains(filter.PlateNumber)).ToList();
+                if (!string.IsNullOrEmpty(filter.TradeNo))
+                    result = result.Where(t => t.TradeNo.Contains(filter.TradeNo)).ToList();
+                if (filter.StartTime.HasValue)
+                    result = result.Where(t => t.CreatedDate >= filter.StartTime.Value).ToList();
+                if (filter.EndTime.HasValue)
+                    result = result.Where(t => t.CreatedDate < filter.EndTime.Value).ToList();
+                if (filter.Source.HasValue)
+                    result = result.Where(t => t.Source == filter.Source.Value).ToList();
+                totalCount = result.Count();
+                if (filter.Start.HasValue && filter.Limit.HasValue)
+                    result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
+            }
+
+            return result.OrderByDescending(t => t.CreatedDate).ToList();
         }
     }
 }

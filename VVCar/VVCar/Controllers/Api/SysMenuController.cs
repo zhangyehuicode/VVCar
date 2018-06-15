@@ -28,7 +28,7 @@ namespace VVCar.Controllers.Api
         [System.Web.Http.HttpGet]
         public JsonActionResult<SysMenu> Get(Guid id)
         {
-            return SafeExecute(() => { return MenuService.Get(id); }); ;
+            return SafeExecute(() => { return MenuService.Get(id); });
         }
 
         /// <summary>
@@ -39,11 +39,11 @@ namespace VVCar.Controllers.Api
         [System.Web.Http.HttpPost]
         public JsonActionResult<SysMenu> Add(SysMenu entity)
         {
-            return SafeExecute(() => { return MenuService.Add(entity); }); ;
+            return SafeExecute(() => { return MenuService.Add(entity); });
         }
 
         /// <summary>
-        /// 删除
+        /// 查询
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
@@ -83,7 +83,9 @@ namespace VVCar.Controllers.Api
             {
                 if (parentID.HasValue && parentID != Guid.Empty)
                     return null;
-                return MenuService.GetNavMenu();
+                var navMenus = MenuService.GetNavMenu();
+                navMenus = navMenus.Where(nav => nav.Children.Count() > 0).ToList();
+                return navMenus;
             });
         }
 

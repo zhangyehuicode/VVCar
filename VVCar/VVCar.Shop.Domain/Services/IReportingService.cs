@@ -50,5 +50,13 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<StaffPerformance> StaffPerformanceStatistics(StaffPerformanceFilter filter, ref int totalCount);
+
+        /// <summary>
+        /// 消费记录
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        IEnumerable<ConsumeHistoryDto> GetConsumeHistory(ConsumeHistoryFilter filter, ref int totalCount);
     }
 }

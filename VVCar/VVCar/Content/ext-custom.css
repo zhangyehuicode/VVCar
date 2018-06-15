@@ -251,3 +251,7 @@ body > .x-mask {
     background-color: #fc8999;
     color: #fff;
 }*/
+
+.menu_space .x-treelist-item-icon {
+    margin-left: -20px;
+}

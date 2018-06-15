@@ -451,12 +451,15 @@ namespace VVCar.VIP.Services.DomainServices
                 if (sendNotify || receiveCouponDto.SendNotify)
                 {
                     var companyCode = AppContext.CurrentSession.CompanyCode;
+                    var merchantId = receiveCouponDto.MerchantID.Value;
                     if (string.IsNullOrEmpty(companyCode))
                         companyCode = receiveCouponDto.CompanyCode;
+                    if (!receiveCouponDto.MerchantID.HasValue)
+                        merchantId = AppContext.CurrentSession.MerchantID;
                     var message = new WeChatTemplateMessageDto
                     {
                         touser = receiveCouponDto.ReceiveOpenID,
-                        template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ReceivedSuccess, receiveCouponDto.MerchantID),//WXMsg_CouponReceived
+                        template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ReceivedSuccess, merchantId),//WXMsg_CouponReceived
                         url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={companyCode}",
                         data = new System.Dynamic.ExpandoObject(),
                     };

@@ -4,12 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using VVCar.Common;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
 using YEF.Core;
 using YEF.Core.Dtos;
+using YEF.Core.Export;
 
 namespace VVCar.Controllers.VIP
 {
@@ -261,51 +263,55 @@ namespace VVCar.Controllers.VIP
         //    });
         //}
 
-        ///// <summary>
-        ///// 导出会员
-        ///// </summary>
-        ///// <param name="filter">会员过滤条件</param>
-        ///// <returns></returns>
-        //[HttpGet]
-        //[Route("ExportMember")]
-        //public JsonActionResult<string> ExportMember([FromUri] MMS.Domain.Filters.MemberFilter filter)
-        //{
-        //    return SafeExecute(() =>
-        //    {
-        //        if (!ModelState.IsValid)//表示没有过滤参数成功匹配，判定为错误请求。
-        //        {
-        //            throw new DomainException("查询参数错误。");
-        //        }
-        //        filter.Start = 0;
-        //        filter.Limit = 1000000;
-        //        var pagedData = this.MemberService.Search(filter);
-        //        //{ header: "会员卡号",  dataIndex: "CardNumber"       , flex: 1 },
-        //        //{ header: "卡片类型",  dataIndex: "CardType"         , flex: 1 },
-        //        //{ header: "姓名"    ,  dataIndex: "Name"             , flex: 1 },
-        //        //{ header: "手机号码",  dataIndex: "MobilePhoneNo"    , flex: 1 },
-        //        //{ header: "会员状态",  dataIndex: "Status"           , flex: 1 },
-        //        //{ header: "注册时间",  dataIndex: "CreatedDate"      , xtype: "datecolumn", format: "Y-m-d H:i:s", flex: 1 },
-        //        ////{ header"注册门店",  dataIndex: "CreatedDepartment", flex: 1 },
-        //        //{ header: "余额（元）", dataIndex:"CardBalance"      , flex: 1, xtype: "numbercolumn" }
-        //        var exporter = new ExportHelper(new[]
-        //        {
-        //            new ExportInfo("CardNumber","会员卡号"),
-        //            new ExportInfo("CardTypeDesc","卡片类型"),
-        //            new ExportInfo("MemberGroup","分组"),
-        //            new ExportInfo("Point","剩余积分"),
-        //            new ExportInfo("Name","姓名"    ),
-        //            new ExportInfo("MobilePhoneNo","手机号码"),
-        //            new ExportInfo("PhoneLocation","归属地"),
-        //            new ExportInfo("Status","会员状态"),
-        //            new ExportInfo("MemberGradeName","会员等级"),
-        //            new ExportInfo("OwnerDepartment","所属门店"),
-        //            new ExportInfo("CreatedDate","注册时间"),
-        //            new ExportInfo("CardBalance","余额（元）"),
-        //            new ExportInfo("WeChatOpenID","OpenId"),
-        //        });
-        //        return exporter.Export(pagedData.Items.ToList(), "会员信息");
-        //    });
-        //}
+        /// <summary>
+        /// 导出会员
+        /// </summary>
+        /// <param name="filter">会员过滤条件</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("ExportMember")]
+        public JsonActionResult<string> ExportMember([FromUri] MemberFilter filter)
+        {
+            return SafeExecute(() =>
+            {
+                if (!ModelState.IsValid)//表示没有过滤参数成功匹配，判定为错误请求。
+                {
+                    throw new DomainException("查询参数错误。");
+                }
+                filter.Start = null;
+                filter.Limit = null;
+                var pagedData = this.MemberService.Search(filter);
+                //{ header: "会员卡号",  dataIndex: "CardNumber"       , flex: 1 },
+                //{ header: "卡片类型",  dataIndex: "CardType"         , flex: 1 },
+                //{ header: "姓名"    ,  dataIndex: "Name"             , flex: 1 },
+                //{ header: "手机号码",  dataIndex: "MobilePhoneNo"    , flex: 1 },
+                //{ header: "会员状态",  dataIndex: "Status"           , flex: 1 },
+                //{ header: "注册时间",  dataIndex: "CreatedDate"      , xtype: "datecolumn", format: "Y-m-d H:i:s", flex: 1 },
+                ////{ header"注册门店",  dataIndex: "CreatedDepartment", flex: 1 },
+                //{ header: "余额（元）", dataIndex:"CardBalance"      , flex: 1, xtype: "numbercolumn" }
+                var exporter = new ExportHelper(new[]
+                {
+                    new ExportInfo("Name", "姓名"),
+                    new ExportInfo("Sex", "性别"),
+                    new ExportInfo("MobilePhoneNo", "手机号码"),
+                    new ExportInfo("PhoneLocation", "归属地"),
+                    new ExportInfo("PlateList", "车牌号"),
+                    new ExportInfo("Point","剩余积分"),
+                    new ExportInfo("Status","会员状态"),
+                    new ExportInfo("InsuranceExpirationDate", "保险到期时间"),
+                    new ExportInfo("CreatedDate","注册时间"),
+                    //new ExportInfo("CardNumber","会员卡号"),
+                    //new ExportInfo("CardTypeDesc","卡片类型"),
+                    //new ExportInfo("MemberGroup","分组"),
+                    //new ExportInfo("PhoneLocation","归属地"),
+                    //new ExportInfo("MemberGradeName","会员等级"),
+                    //new ExportInfo("OwnerDepartment","所属门店"),
+                    //new ExportInfo("CardBalance","余额（元）"),
+                    //new ExportInfo("WeChatOpenID","OpenId"),
+                });
+                return exporter.Export(pagedData.Items.ToList(), "会员信息");
+            });
+        }
 
         /// <summary>
         /// 获取号码归属地
@@ -384,6 +390,34 @@ namespace VVCar.Controllers.VIP
             return SafeExecute(() =>
             {
                 return MemberService.BindingMobilePhone(mobilephoneno, openId);
+            });
+        }
+
+        /// <summary>
+        /// 手动新增会员
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost, Route("ManualAddMember")]
+        public JsonActionResult<Member> ManualAddMember(AddMemberParam param)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.ManualAddMember(param);
+            });
+        }
+
+        /// <summary>
+        /// 批量手动新增会员
+        /// </summary>
+        /// <param name="addparam"></param>
+        /// <returns></returns>
+        [HttpPost, Route("BatchManualAddMember")]
+        public JsonActionResult<bool> BatchManualAddMember(List<AddMemberParam> addparam)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.BatchManualAddMember(addparam);
             });
         }
     }

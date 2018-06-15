@@ -87,6 +87,16 @@ namespace VVCar.VIP.Domain.Dtos
         public DateTime? Birthday { get; set; }
 
         /// <summary>
+        /// 车牌号列表
+        /// </summary>
+        public string PlateList { get; set; }
+
+        /// <summary>
+        /// 保险到期时间
+        /// </summary>
+        public DateTime? InsuranceExpirationDate { get; set; }
+
+        /// <summary>
         /// 注册时间
         /// </summary>
         public DateTime CreatedDate { get; set; }

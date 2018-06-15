@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\AdjustIndexParam.cs" />
+    <Compile Include="Dtos\ConsumeHistoryDto.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisDto.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisParam.cs" />
     <Compile Include="Dtos\OrderDto.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Enums\EStockRecordSource.cs" />
     <Compile Include="Enums\EStockRecordType.cs" />
     <Compile Include="Filters\AppointmentFilter.cs" />
+    <Compile Include="Filters\ConsumeHistoryFilter.cs" />
     <Compile Include="Filters\OrderFilter.cs" />
     <Compile Include="Filters\OrderItemFilter.cs" />
     <Compile Include="Filters\PickUpOrderFilter.cs" />

@@ -321,5 +321,20 @@ namespace VVCar.Controllers.VIP
                 return CouponTemplateService.ChangeApproveStatus(templateId, status);
             });
         }
+
+        /// <summary>
+        /// 设置消费返积分比例
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="rate"></param>
+        /// <returns></returns>
+        [HttpGet, Route("SetConsumePointRate")]
+        public JsonActionResult<bool> SetConsumePointRate(Guid id, decimal rate)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponTemplateService.SetConsumePointRate(id, rate);
+            });
+        }
     }
 }

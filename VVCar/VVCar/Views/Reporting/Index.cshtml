@@ -10,11 +10,11 @@
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
 </head>
-<body>
+<body style="background:#f3f3f5;">
     <style type="text/css">
         .headcon {
             width: 1000px;
-            margin: 50px auto;
+            margin: 50px auto 45px auto;
         }
 
         .widthfill {
@@ -30,260 +30,334 @@
         }
 
         .reportbox {
-            height: 150px;
+            height: 100px;
             width: 180px;
-            border-radius: 10px;
+            background: #fff;
+            /*border-radius: 10px;*/
             text-align: center;
             font-size: 20px;
-            color: #fff;
+            color: #59595b;
             margin: auto;
-            line-height: 75px;
+            /*line-height: 50px;*/
+            /*box-shadow: 0px -2px 2px #59595b;*/
         }
 
         .valuefont {
             font-size: 26px;
-            margin-top: -15px;
+            margin-top: 8px;
+        }
+
+        .titlefont {
+            font-size: 15px;
+        }
+
+        .icontips {
+            height: 16px;
+            width: 22px;
+            text-align: center;
+            font-size: 10px;
+            border-radius: 2px;
+            line-height: 15px;
+        }
+
+        .quickoperation {
+            width: 220px;
+            height: 70px;
+            border-radius: 3px;
+            font-size: 20px;
+            text-align: right;
+        }
+
+        .iconimg {
+            width: 57px;
+            height: 50px;
         }
     </style>
-
     <div>
         <div class="headcon">
             <div class="reporttable widthfill">
                 <div class="reporttablecell">
-                    <div class="reportbox" style="background:#32404e;">
-                        <div>营业总额</div>
-                        <div class="valuefont">￥165468</div>
+                    <div class="reportbox">
+                        <div class="reporttable" style="height:45px;width:100%;border-bottom:1px #f3f3f5 solid;">
+                            <div class="titlefont reporttablecell" style="vertical-align:middle;text-align:left;padding-left:10px;">营业总额</div>
+                            <div class="reporttablecell" style="vertical-align:middle;text-align:right;width:20px;">
+                                <div class="icontips" style="background:#1c83c6;color:#fff;margin-right:10px;">总</div>
+                            </div>
+                        </div>
+                        <div class="valuefont totalMarketTurnover">￥0</div>
                     </div>
                 </div>
                 <div class="reporttablecell">
-                    <div class="reportbox" style="background:#32404e;">
-                        <div>今日营业额</div>
-                        <div class="valuefont">￥4468</div>
+                    <div class="reportbox">
+                        <div class="reporttable" style="height:45px;width:100%;border-bottom:1px #f3f3f5 solid;">
+                            <div class="titlefont reporttablecell" style="vertical-align:middle;text-align:left;padding-left:10px;">今日营业额</div>
+                            <div class="reporttablecell" style="vertical-align:middle;text-align:right;width:20px;">
+                                <div class="icontips" style="background:#23c7c9;color:#fff;margin-right:10px;width:38px;">今日</div>
+                            </div>
+                        </div>
+                        <div class="valuefont todayTurnover">￥0</div>
                     </div>
                 </div>
                 <div class="reporttablecell">
-                    <div class="reportbox" style="background:#32404e;">
-                        <div>会员总数</div>
-                        <div class="valuefont">165468</div>
+                    <div class="reportbox">
+                        <div class="reporttable" style="height:45px;width:100%;border-bottom:1px #f3f3f5 solid;">
+                            <div class="titlefont reporttablecell" style="vertical-align:middle;text-align:left;padding-left:10px;">会员总数</div>
+                            <div class="reporttablecell" style="vertical-align:middle;text-align:right;width:20px;">
+                                <div class="icontips" style="background:#f8ab59;color:#fff;margin-right:10px;">总</div>
+                            </div>
+                        </div>
+                        <div class="valuefont totalMember">0</div>
                     </div>
                 </div>
                 <div class="reporttablecell">
-                    <div class="reportbox" style="background:#32404e;">
-                        <div>今日会员</div>
-                        <div class="valuefont">5458</div>
+                    <div class="reportbox">
+                        <div class="reporttable" style="height:45px;width:100%;border-bottom:1px #f3f3f5 solid;">
+                            <div class="titlefont reporttablecell" style="vertical-align:middle;text-align:left;padding-left:10px;">今日会员</div>
+                            <div class="reporttablecell" style="vertical-align:middle;text-align:right;width:20px;">
+                                <div class="icontips" style="background:#1cb394;color:#fff;margin-right:10px;width:38px;">今日</div>
+                            </div>
+                        </div>
+                        <div class="valuefont todayMember">0</div>
                     </div>
                 </div>
             </div>
         </div>
-        <div style="padding-top:50px;">
-            <div class="reporttable widthfill">
-                <div class="reporttablecell" style="height:500px;width:50%;" id="turnover"></div>
-                <div class="reporttablecell" style="height:500px;width:50%;" id="member"></div>
+        <div style="width:100%">
+            <div class="reporttable" style="width:100%;">
+                <div class="reporttablecell">
+                    <div class="quickoperation" style="background:#1ab394;color:#fff;float:right;margin-right:120px;cursor:pointer;" id="addmember">
+                        <div class="reporttable" style="float:left;margin-top:10px;margin-left:15px;">
+                            <img class="iconimg" src="~/Content/icons/addmember.png" />
+                        </div>
+                        <div class="reporttable" style="float:right;margin-top:10px;margin-right:15px;">
+                            <div style="font-size:8px;">新增会员</div>
+                            <div style="margin-top:5px;">新增会员</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reporttablecell">
+                    <div class="quickoperation" style="background:#23c7c9;color:#fff;float:left;margin-left:120px;cursor:pointer;" id="stockoutin">
+                        <div class="reporttable" style="float:left;margin-top:10px;margin-left:15px;">
+                            <img class="iconimg" src="~/Content/icons/stock.png" />
+                        </div>
+                        <div class="reporttable" style="float:right;margin-top:10px;margin-right:15px;">
+                            <div style="font-size:8px;">出/入库</div>
+                            <div style="margin-top:5px;">出/入库</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="productstatistics" style="width:800px;height:600px;"></div>
+        </div>
+        <div style="padding-top:30px;">
+            <div class="reporttable widthfill">
+                <div class="reporttablecell" style="height:480px;width:50%;padding:5px;" id="turnover"></div>
+                <div class="reporttablecell" style="height:480px;width:50%;padding:5px;" id="member"></div>
+            </div>
         </div>
     </div>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Content/js/echarts.js"></script>
     <script src="~/Content/js/dark.js"></script>
     <script src="~/Content/js/macarons.js"></script>
+    <script src="~/Scripts/ext/ext-all.js"></script>
     <script type="text/javascript">
-        var option = {
-            //backgroundColor: '#2c343c',
-            title: {
-                text: '营业额',
-                left: 'center',
-                top: 20,
-                textStyle: {
-                    color: '#ccc'
+        function generateEcharts(data) {
+            if (data == null || data == '')
+                return;
+            $('.totalMarketTurnover').text('￥' + data.TotalMarketTurnover);
+            $('.todayTurnover').text('￥' + data.TodayTurnover);
+            $('.totalMember').text(data.TotalMember);
+            $('.todayMember').text(data.TodayMember);
+            var xAxisData = [];
+            var totalTurnover = [];
+            var pickUpOrderTurnover = [];
+            var shopTurnover = [];
+            var memberCount = [];
+            if (data.TotalTurnover != null) {
+                for (var i = 0; i < data.TotalTurnover.length; i++) {
+                    xAxisData.push(data.TotalTurnover[i].Unit + '号');
+                    totalTurnover.push(data.TotalTurnover[i].Turnover);
                 }
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    crossStyle: {
-                        color: '#999'
+            }
+            if (data.PickUpOrderTurnover != null) {
+                for (var i = 0; i < data.PickUpOrderTurnover.length; i++) {
+                    pickUpOrderTurnover.push(data.PickUpOrderTurnover[i].Turnover);
+                }
+            }
+            if (data.ShopTurnover != null) {
+                for (var i = 0; i < data.ShopTurnover.length; i++) {
+                    shopTurnover.push(data.ShopTurnover[i].Turnover);
+                }
+            }
+            if (data.MemberCount != null) {
+                for (var i = 0; i < data.MemberCount.length; i++) {
+                    memberCount.push(data.MemberCount[i].Count);
+                }
+            }
+
+            var option = {
+                backgroundColor: '#fff',
+                title: {
+                    text: '营业额',
+                    left: 'center',
+                    top: 20,
+                    textStyle: {
+                        color: '#ccc'
                     }
-                }
-            },
-            toolbox: {
-                feature: {
-                    dataView: { show: true, readOnly: false },
-                    magicType: { show: true, type: ['line', 'bar'] },
-                    restore: { show: true },
-                    saveAsImage: { show: true }
-                }
-            },
-            legend: {
-                data: ['蒸发量', '降水量', '平均温度']
-            },
-            xAxis: [
-                {
-                    type: 'category',
-                    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                },
+                tooltip: {
+                    trigger: 'axis',
                     axisPointer: {
-                        type: 'shadow'
+                        type: 'cross',
+                        crossStyle: {
+                            color: '#999'
+                        }
                     }
-                }
-            ],
-            yAxis: [
-                {
+                },
+                toolbox: {
+                    feature: {
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                legend: {
+                    data: ['商城营业额', '接车单营业额', '总营业额']
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: xAxisData,
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '商城',
+                        min: 0,
+                        axisLabel: {
+                            formatter: '￥{value}'
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: '接车单',
+                        min: 0,
+                        axisLabel: {
+                            formatter: '￥{value}'
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '商城营业额',
+                        type: 'bar',
+                        data: shopTurnover
+                    },
+                    {
+                        name: '接车单营业额',
+                        type: 'bar',
+                        data: pickUpOrderTurnover
+                    },
+                    {
+                        name: '总营业额',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        data: totalTurnover
+                    }
+                ]
+            };
+            var turnoverEcharts = echarts.init(document.getElementById('turnover'));
+            turnoverEcharts.setOption(option);
+
+            var memberoption = {
+                backgroundColor: '#fff',
+                title: {
+                    text: '会员数量',
+                    left: 'center',
+                    top: 20,
+                    textStyle: {
+                        color: '#ccc'
+                    }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        crossStyle: {
+                            color: '#999'
+                        }
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: xAxisData
+                },
+                yAxis: {
                     type: 'value',
-                    name: '水量',
+                    name: '个',
                     min: 0,
-                    max: 250,
-                    interval: 50,
                     axisLabel: {
-                        formatter: '{value} ml'
+                        formatter: '{value}'
                     }
                 },
-                {
-                    type: 'value',
-                    name: '温度',
-                    min: 0,
-                    max: 25,
-                    interval: 5,
-                    axisLabel: {
-                        formatter: '{value} °C'
-                    }
-                }
-            ],
-            series: [
-                {
-                    name: '蒸发量',
-                    type: 'bar',
-                    data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
-                },
-                {
-                    name: '降水量',
-                    type: 'bar',
-                    data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
-                },
-                {
-                    name: '平均温度',
+                series: [{
+                    data: memberCount,
                     type: 'line',
-                    yAxisIndex: 1,
-                    data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
+                }]
+            };
+            var memberEcharts = echarts.init(document.getElementById('member'));
+            memberEcharts.setOption(memberoption);
+        }
+
+        var mch = sessionStorage.getItem('companyCode');
+
+        function getTurnoverReporting() {
+            $.ajax({
+                url: '/api/Reporting/GetTurnoverReporting',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                success: function (res) {
+                    if (res.IsSuccessful) {
+                        generateEcharts(res.Data);
+                    } else {
+                    }
+                },
+                error: function () {
                 }
-            ]
-        };
+            });
+        }
+        getTurnoverReporting();
 
-        var memberoption = {
-            title: {
-                text: '会员数量',
-                left: 'center',
-                top: 20,
-                textStyle: {
-                    color: '#ccc'
-                }
-            },
-            xAxis: {
-                type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
-                type: 'line'
-            }]
-        };
+        $('#addmember').click(function () {
+            navigate('Member', '会员信息');
+        });
 
-        //myChart.showLoading();
+        $('#stockoutin').click(function () {
+            navigate('Product', '产品');
+        });
 
-        //$.get('data/asset/data/disk.tree.json', function (diskData) {
-        //    myChart.hideLoading();
-
-        //    function colorMappingChange(value) {
-        //        var levelOption = getLevelOption(value);
-        //        chart.setOption({
-        //            series: [{
-        //                levels: levelOption
-        //            }]
-        //        });
-        //    }
-
-        //    var formatUtil = echarts.format;
-
-        //    function getLevelOption() {
-        //        return [
-        //            {
-        //                itemStyle: {
-        //                    normal: {
-        //                        borderWidth: 0,
-        //                        gapWidth: 5
-        //                    }
-        //                }
-        //            },
-        //            {
-        //                itemStyle: {
-        //                    normal: {
-        //                        gapWidth: 1
-        //                    }
-        //                }
-        //            },
-        //            {
-        //                colorSaturation: [0.35, 0.5],
-        //                itemStyle: {
-        //                    normal: {
-        //                        gapWidth: 1,
-        //                        borderColorSaturation: 0.6
-        //                    }
-        //                }
-        //            }
-        //        ];
-        //    }
-
-        //    myChart.setOption(option = {
-
-        //        title: {
-        //            text: 'Disk Usage',
-        //            left: 'center'
-        //        },
-
-        //        tooltip: {
-        //            formatter: function (info) {
-        //                var value = info.value;
-        //                var treePathInfo = info.treePathInfo;
-        //                var treePath = [];
-
-        //                for (var i = 1; i < treePathInfo.length; i++) {
-        //                    treePath.push(treePathInfo[i].name);
-        //                }
-
-        //                return [
-        //                    '<div class="tooltip-title">' + formatUtil.encodeHTML(treePath.join('/')) + '</div>',
-        //                    'Disk Usage: ' + formatUtil.addCommas(value) + ' KB',
-        //                ].join('');
-        //            }
-        //        },
-
-        //        series: [
-        //            {
-        //                name: 'Disk Usage',
-        //                type: 'treemap',
-        //                visibleMin: 300,
-        //                label: {
-        //                    show: true,
-        //                    formatter: '{b}'
-        //                },
-        //                itemStyle: {
-        //                    normal: {
-        //                        borderColor: '#fff'
-        //                    }
-        //                },
-        //                levels: getLevelOption(),
-        //                data: diskData
-        //            }
-        //        ]
-        //    });
-        //});
-
-        var turnoverEcharts = echarts.init(document.getElementById('turnover'));
-        turnoverEcharts.setOption(option);
-        var memberEcharts = echarts.init(document.getElementById('member'));
-        memberEcharts.setOption(memberoption);
+        function navigate(name, text) {
+            var mainPanel = parent.Ext.getCmp("tabPanelMain");
+            parent.Ext.require('WX.controller.' + name, function () {
+                parent.Ext.onReady(function () {
+                    parent.Ext.getApplication().loadModule(name);
+                    var panel = mainPanel.down(name);
+                    if (!panel) {
+                        var panel = parent.Ext.widget(name, { title: text, minWidth: 1100 });
+                        parent.Ext.checkActionPermission(panel);
+                        mainPanel.add(panel);
+                        mainPanel.setActiveTab(panel);
+                    } else {
+                        mainPanel.setActiveTab(panel);
+                    }
+                });
+            });
+        }
 
     </script>
 </body>

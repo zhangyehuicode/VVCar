@@ -49,7 +49,8 @@ namespace VVCar.Controllers.VIP
         /// <param name="entity"></param>
         /// <returns></returns>
         [HttpPut]
-        public JsonActionResult<bool> Update(CouponPush entity) {
+        public JsonActionResult<bool> Update(CouponPush entity)
+        {
             return SafeExecute(() =>
             {
                 return CouponPushService.Update(entity);

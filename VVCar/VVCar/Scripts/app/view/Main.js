@@ -64,6 +64,7 @@
             expanderOnly: false,
             singleExpand: false,
             ui: 'navigation',
+            cls: 'menu_space .x-treelist-item-icon',
             store: Ext.create("WX.store.BaseData.SysNavMenuStore"),
             micro: false,
         });

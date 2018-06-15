@@ -15,6 +15,9 @@ namespace VVCar.BaseData.Data.Mapping
             this.Property(p => p.Name)
                 .HasMaxLength(250);
 
+            this.Property(p => p.SysMenuIcon)
+                .HasMaxLength(30);
+
             this.Property(t => t.Component)
                 .HasMaxLength(250);
 

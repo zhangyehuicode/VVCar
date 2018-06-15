@@ -5,7 +5,6 @@
         autoCancel: false,
         saveBtnText: '保存',
         cancelBtnText: "取消",
-        autoCancel: false,
         clicksToEdit: 2
     });
 
@@ -78,6 +77,14 @@
                         editor: {
                             xtype: "textfield",
                             allowBlank: false
+                        }
+                    }, {
+                        text: "导航图标",
+                        flex: 1,
+                        dataIndex: "SysMenuIcon",
+                        editor: {
+                            xtype: "textfield",
+                            allowBlank: true
                         }
                     },
                     {

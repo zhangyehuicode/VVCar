@@ -53,7 +53,8 @@ namespace VVCar.BaseData.Services
             {
                 cfg.CreateMap<SysMenu, SysNavMenuDto>()
                 .ForMember(dest => dest.leaf, opt => opt.MapFrom(src => src.IsLeaf))
-                .ForMember(dest => dest.text, opt => opt.MapFrom(src => src.Name));
+                .ForMember(dest => dest.text, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.iconCls, opt => opt.MapFrom(src => src.SysMenuIcon));
 
                 cfg.CreateMap<ProductCategory, ProductCategoryTreeDto>();
 
