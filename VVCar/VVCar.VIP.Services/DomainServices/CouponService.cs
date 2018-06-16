@@ -367,49 +367,52 @@ namespace VVCar.VIP.Services.DomainServices
 
                 foreach (var template in templates)
                 {
-                    if (template.GetExpiredDate() < DateTime.Now)
+                    if (template.Nature == ENature.Coupon)
                     {
-                        throw new DomainException($"券 {template.Title} 已过期");
-                    }
-                    if ((template.PutInStartDate.HasValue && template.PutInStartDate.Value > DateTime.Today)
-                        || (template.PutInEndDate.HasValue && template.PutInEndDate.Value < DateTime.Today))
-                    {
-                        throw new DomainException($"券 {template.Title} 当前时间不能领取");
-                    }
-                    if (!template.PutInIsUseAllTime)
-                    {
-                        var dayOfWeek = ((int)DateTime.Now.DayOfWeek).ToString();
-                        if (template.PutInUseDaysOfWeek != null && !template.PutInUseDaysOfWeek.Contains(dayOfWeek))
-                            throw new DomainException($"券 {template.Title} 当前时间不能领取");
-
-                        if (template.UseTimeList != null && template.UseTimeList.Count > 0)
+                        if (template.GetExpiredDate() < DateTime.Now)
                         {
-                            bool allow = true;
-                            var now = DateTime.Now;
-                            var today = DateTime.Today.ToString("yyyy-MM-dd");
-                            DateTime beginTime;
-                            DateTime endTime;
-                            foreach (var putInTime in template.UseTimeList)
-                            {
-                                if (putInTime.Type != EUseTimeType.PutIn)
-                                    continue;
-                                if (!DateTime.TryParse($"{today} {putInTime.BeginTime}:00", out beginTime))
-                                    continue;
-                                if (!DateTime.TryParse($"{today} {putInTime.EndTime}:00", out endTime))
-                                    continue;
-                                allow = beginTime <= now && now < endTime;
-                                if (allow) break;
-                            }
-                            if (!allow)
-                                throw new DomainException($"券 {template.Title} 当前时间不能领取");
+                            throw new DomainException($"券 {template.Title} 已过期");
                         }
-                    }
-                    if (template.Stock == null || template.Stock.FreeStock < 1)
-                        throw new DomainException(string.Format("券 {0} 已被领完", template.Title));
-                    if (!template.Stock.IsNoCollarQuantityLimit && template.Stock.CollarQuantityLimit > 0
-                       && receivedCoupons.ContainsKey(template.ID) && template.Stock.CollarQuantityLimit <= receivedCoupons[template.ID] && receiveCouponDto.ReceiveOpenID != "specialcoupon")
-                    {
-                        throw new DomainException(string.Format("券 {0} 超过最大领用上限", template.Title));
+                        if ((template.PutInStartDate.HasValue && template.PutInStartDate.Value > DateTime.Today)
+                            || (template.PutInEndDate.HasValue && template.PutInEndDate.Value < DateTime.Today))
+                        {
+                            throw new DomainException($"券 {template.Title} 当前时间不能领取");
+                        }
+                        if (!template.PutInIsUseAllTime)
+                        {
+                            var dayOfWeek = ((int)DateTime.Now.DayOfWeek).ToString();
+                            if (template.PutInUseDaysOfWeek != null && !template.PutInUseDaysOfWeek.Contains(dayOfWeek))
+                                throw new DomainException($"券 {template.Title} 当前时间不能领取");
+
+                            if (template.UseTimeList != null && template.UseTimeList.Count > 0)
+                            {
+                                bool allow = true;
+                                var now = DateTime.Now;
+                                var today = DateTime.Today.ToString("yyyy-MM-dd");
+                                DateTime beginTime;
+                                DateTime endTime;
+                                foreach (var putInTime in template.UseTimeList)
+                                {
+                                    if (putInTime.Type != EUseTimeType.PutIn)
+                                        continue;
+                                    if (!DateTime.TryParse($"{today} {putInTime.BeginTime}:00", out beginTime))
+                                        continue;
+                                    if (!DateTime.TryParse($"{today} {putInTime.EndTime}:00", out endTime))
+                                        continue;
+                                    allow = beginTime <= now && now < endTime;
+                                    if (allow) break;
+                                }
+                                if (!allow)
+                                    throw new DomainException($"券 {template.Title} 当前时间不能领取");
+                            }
+                        }
+                        if (template.Stock == null || template.Stock.FreeStock < 1)
+                            throw new DomainException(string.Format("券 {0} 已被领完", template.Title));
+                        if (!template.Stock.IsNoCollarQuantityLimit && template.Stock.CollarQuantityLimit > 0
+                           && receivedCoupons.ContainsKey(template.ID) && template.Stock.CollarQuantityLimit <= receivedCoupons[template.ID] && receiveCouponDto.ReceiveOpenID != "specialcoupon")
+                        {
+                            throw new DomainException(string.Format("券 {0} 超过最大领用上限", template.Title));
+                        }
                     }
                     template.Stock.UsedStock++;
                     if (template.IsSpecialCoupon)

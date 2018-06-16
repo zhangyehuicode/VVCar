@@ -81,9 +81,10 @@
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -223,6 +224,48 @@
                 },
             }
             });
+
+            //支付下单
+
+            function orderAction() {
+                if (_payBillViewModel.Order == null || _payBillViewModel.Order == '' || _payBillViewModel.Order == {}) {
+                    $.alert('参数错误');
+                    $('#generateorder').hide();
+                    $('#tradefailure').show();
+                    return;
+                }
+                $.ajax({
+                    url: '/api/Order',
+                    type: 'POST',
+                    data: _payBillViewModel.Order,
+                    headers: { 'CompanyCode': mch },
+                    beforesend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        $('#generateorder').hide();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                $('#paysuccess').show();
+                            } else {
+                                $('#tradefailure').show();
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function (res) {
+                        $.hideLoading();
+                        $('#generateorder').hide();
+                        $('#tradefailure').show();
+                        $.alert(JSON.stringify(res));
+                    }
+                });
+            }
+
+            //end
+
             var isfromsc = sessionStorage.getItem('isfromshoppingcart');
             if (isfromsc != null && isfromsc == 'true')
                 isfromsc = true;

@@ -21,7 +21,7 @@ namespace VVCar.Shop.Domain.Enums
         /// <summary>
         /// 已付款未发货
         /// </summary>
-        [Description("未发货")]
+        [Description("已付款未发货")]
         PayUnshipped = 0,
 
         /// <summary>

@@ -13,6 +13,7 @@
             data: [
                 { 'Name': '未付款', 'Value': -1 },
                 { 'Name': '已发货', 'Value': 1 },
+                { 'Name': '已完成', 'Value': 2 },
                 { 'Name': '未发货', 'Value': 0 },
             ]
         });
