@@ -14,9 +14,9 @@
         </div>
         <div class="zfcg_box">
             <div class="zfcg_text">您已成功支付<span style="font-size:22px; color:#ff0c4b; margin-left:30px;">￥{{TotalFee}}</span></div>
-            <div class="zfcg_text2">获得{{TotalFee}}个消费积分<a style=" width:25%; background-color:#efcb47; height:33px; line-height:33px; float:right; text-align:center; color:#2d2d30; border-radius:5px; margin-bottom:10px;" v-on:click="myorder">我的订单</a></div>
-            <div class="qr_text">收货人：{{Order.LinkMan}}（{{Order.Phone}}）</div>
-            <div class="qr_text" style="margin-top:5px; font-size:14px; color:#999;">收货地址：{{Order.Address}}</div>
+            <div class="zfcg_text2">@*获得{{TotalFee}}个消费积分*@<a style=" width:25%; background-color:#efcb47; height:33px; line-height:33px; float:right; text-align:center; color:#2d2d30; border-radius:5px; margin-bottom:10px;" v-on:click="myorder">我的订单</a></div>
+            <div class="qr_text">购买人：{{Order.LinkMan}}（{{Order.Phone}}）</div>
+            <div class="qr_text" style="margin-top:5px; font-size:14px; color:#999;" v-if="!IsAllMemberCard">收货地址：{{Order.Address}}</div>
             <div class="zfcg_box2">
                 <div class="zfcg_text3">订单号<span style="float:right;">{{Order.Code}}</span></div>
                 @*<div class="zfcg_text3">微信订单号<span style="float:right;">{{OutTradeNo}}</span></div>*@
@@ -129,6 +129,7 @@
                             ProductName:'',
                         }]
                     },*@
+                    IsAllMemberCard: false,
                 },
                 methods: {
                     back: function (event) {
@@ -199,41 +200,46 @@
                 init();
             }
 
-            function orderAction() {
-                if (_payBillViewModel.Order == null || _payBillViewModel.Order == '' || _payBillViewModel.Order== {}) {
-                    $.alert('参数错误');
-                    $('#generateorder').hide();
-                    $('#tradefailure').show();
-                    return;
-                }
-                $.ajax({
-                    url: '/api/Order',
-                    type: 'POST',
-                    data: _payBillViewModel.Order,
-                    headers: { 'CompanyCode': mch },
-                    beforesend: function () {
-                        $.showLoading();
-                    },
-                    success: function (res) {
-                        $.hideLoading();
-                        $('#generateorder').hide();
-                        if (res.IsSuccessful) {
-                            if (res.Data != null) {
-                                $('#paysuccess').show();
-                            } else {
-                                $('#tradefailure').show();
-                            }
-                        } else {
-                            $.alert(res.ErrorMessage);
-                        }
-                    },
-                    error:function (res) {
-                        $.hideLoading();
-                        $('#generateorder').hide();
-                        $('#tradefailure').show();
-                        $.alert(JSON.stringify(res));
-                    }
-                });
+            //function orderAction() {
+            //    if (_payBillViewModel.Order == null || _payBillViewModel.Order == '' || _payBillViewModel.Order== {}) {
+            //        $.alert('参数错误');
+            //        $('#generateorder').hide();
+            //        $('#tradefailure').show();
+            //        return;
+            //    }
+            //    $.ajax({
+            //        url: '/api/Order',
+            //        type: 'POST',
+            //        data: _payBillViewModel.Order,
+            //        headers: { 'CompanyCode': mch },
+            //        beforesend: function () {
+            //            $.showLoading();
+            //        },
+            //        success: function (res) {
+            //            $.hideLoading();
+            //            $('#generateorder').hide();
+            //            if (res.IsSuccessful) {
+            //                if (res.Data != null) {
+            //                    $('#paysuccess').show();
+            //                } else {
+            //                    $('#tradefailure').show();
+            //                }
+            //            } else {
+            //                $.alert(res.ErrorMessage);
+            //            }
+            //        },
+            //        error:function (res) {
+            //            $.hideLoading();
+            //            $('#generateorder').hide();
+            //            $('#tradefailure').show();
+            //            $.alert(JSON.stringify(res));
+            //        }
+            //    });
+            //}
+
+            var isallmembercard = sessionStorage.getItem('isallmembercard');
+            if (isallmembercard != null) {
+                _payBillViewModel.IsAllMemberCard = isallmembercard == 'true';
             }
 
             var order = sessionStorage.getItem('order');
@@ -246,13 +252,14 @@
                 var outTradeNo = $.getUrlParam('OutTradeNo');
                 var totalFee = $.getUrlParam('TotalFee');
                 if (tradeSate == 'true') {
-                    $('#generateorder').show();
+                    //$('#generateorder').show();
+                    $('#paysuccess').show();
                     _payBillViewModel.Order = JSON.parse(order);
                     _payBillViewModel.OutTradeNo = outTradeNo;
                     _payBillViewModel.TotalFee = parseInt(totalFee)/100;
                     _payBillViewModel.Order.Code = outTradeNo;
                     _payBillViewModel.Order.Money = parseInt(totalFee)/100;
-                    orderAction();
+                    //orderAction();
                 } else {
                     $('#payfailure').show();
                 }

@@ -60,6 +60,7 @@
     <Compile Include="Entities\Appointment.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderItem.cs" />
+    <Compile Include="Entities\OrderPaymentDetails.cs" />
     <Compile Include="Entities\PickUpOrder.cs" />
     <Compile Include="Entities\PickUpOrderItem.cs" />
     <Compile Include="Entities\PickUpOrderPaymentDetails.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IAppointmentService.cs" />
     <Compile Include="Services\IOrderItemService.cs" />
+    <Compile Include="Services\IOrderPaymentDetailsService.cs" />
     <Compile Include="Services\IOrderService.cs" />
     <Compile Include="Services\IPickUpOrderPaymentDetailsService.cs" />
     <Compile Include="Services\IPickUpOrderService.cs" />

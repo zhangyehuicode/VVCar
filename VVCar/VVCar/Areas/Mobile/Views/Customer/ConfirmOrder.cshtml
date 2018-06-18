@@ -16,7 +16,7 @@
             <div class="qr_text" style="margin-top:5px; font-size:14px; color:#999;">收货地址：</div>
             <img src="~/Areas/resource/img/mobile/fgx.png" style=" width:100%;">
         </div>*@
-    <div class="qr_box">
+    <div class="qr_box" v-if="!IsAllMemberCard">
         <div class="gwc_text2">
             <div class="labeltext">收件人：</div>
             <input type="text" class="inputbox linkman listen" v-model="Order.LinkMan" />
@@ -39,7 +39,7 @@
         </div>
     </div>
     <div class="gwc_box3">
-        <div class="gwc_text2">配送方式<span style="float:right;"></span></div>
+        <div class="gwc_text2" v-if="!IsAllMemberCard">配送方式<span style="float:right;"></span></div>
         <div class="gwc_text2">买家留言<input type="text" v-model="Order.Remark" class="inputbox" style="margin-left:10px;"></div>
         @*<div class="gwc_text3" style="line-height:none;">
                 积分抵扣<br>
@@ -162,7 +162,8 @@
                         Points: 0,
                         Remark: '',
                         OrderItemList: [],
-                    },
+                },
+                IsAllMemberCard: false,
             },
             methods: {
                 back: function (event) {
@@ -183,7 +184,7 @@
                         $.alert('参数错误');
                         return;
                     }
-                    if (this.Order.LinkMan == '' || this.Order.Phone == '' || this.Order.Address == '') {
+                    if (!this.IsAllMemberCard&&(this.Order.LinkMan == '' || this.Order.Phone == '' || this.Order.Address == '')) {
                         //$.alert('请填写完整收货信息');
                         if (this.Order.LinkMan == '') {
                             $('.linkman').addClass('inputerror');
@@ -196,7 +197,8 @@
                         }
                         return;
                     }
-                    $.ajax({
+                    orderAction();
+                    @*$.ajax({
                         url: '/api/Order/GetTradeNo',
                         type: 'GET',
                         headers: { 'CompanyCode': mch },
@@ -220,7 +222,7 @@
                         error: function () {
                             $.alert('生成订单号失败');
                         }
-                    });
+                    });*@
                 },
             }
             });
@@ -230,8 +232,6 @@
             function orderAction() {
                 if (_payBillViewModel.Order == null || _payBillViewModel.Order == '' || _payBillViewModel.Order == {}) {
                     $.alert('参数错误');
-                    $('#generateorder').hide();
-                    $('#tradefailure').show();
                     return;
                 }
                 $.ajax({
@@ -244,12 +244,13 @@
                     },
                     success: function (res) {
                         $.hideLoading();
-                        $('#generateorder').hide();
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
-                                $('#paysuccess').show();
+                                sessionStorage.setItem('isallmembercard', _payBillViewModel.IsAllMemberCard);
+                                sessionStorage.setItem('order', JSON.stringify(_payBillViewModel.Order));
+                                window.location.href = "http://www.cheyinz.cn:8025/pay/JsApiPayPage.aspx?openid=@ViewBag.OpenId&total_fee=" + _payBillViewModel.TotalMoney * 100 + "&out_trade_no=" + res.Data.Code + "&mch=" + mch + "&device_info=" + mch + "&body=" + _payBillViewModel.Body + "&notify_url=http://www.cheyinz.cn/Mobile/Customer/PayResult";
                             } else {
-                                $('#tradefailure').show();
+                                $.alert('下单失败，请重试');
                             }
                         } else {
                             $.alert(res.ErrorMessage);
@@ -257,8 +258,6 @@
                     },
                     error: function (res) {
                         $.hideLoading();
-                        $('#generateorder').hide();
-                        $('#tradefailure').show();
                         $.alert(JSON.stringify(res));
                     }
                 });
@@ -285,6 +284,7 @@
                 var productList = _payBillViewModel.ProductList;
                 var totalMoney = 0;
                 var body = '';
+                var hasproduct = false;
                 for (var i = 0; i < productList.length; i++) {
                     totalMoney += productList[i].Money;
 
@@ -305,6 +305,9 @@
                             ProductName: productList[i].Name,
                             ImgUrl: productList[i].ImgUrl,
                         });
+                        if (!productList[i].IsMemberCard) {
+                            hasproduct = true;
+                        }
                     } else {
 
                         if (i == 0)
@@ -322,7 +325,13 @@
                             ProductName: productList[i].ProductName,
                             ImgUrl: productList[i].ImgUrl,
                         });
+                        if (productList[i].ProductType==1) {
+                            hasproduct = true;
+                        }
                     }
+                }
+                if (!hasproduct) {
+                    _payBillViewModel.IsAllMemberCard = true;
                 }
                 _payBillViewModel.TotalMoney = totalMoney;
                 _payBillViewModel.Body = body;

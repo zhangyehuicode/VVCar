@@ -121,7 +121,7 @@
                         Ext.Msg.hide();
                         if (batch.hasException()) {
                             Ext.MessageBox.alert("提示", batch.exceptions[0].error);
-                            roleStore.rejectChanges();
+                            store.rejectChanges();
                         } else {
                             Ext.MessageBox.alert("提示", "删除成功");
                         }

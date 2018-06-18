@@ -36,6 +36,8 @@
     <div class="gwc_box3">
         <div class="gwc_text2" style="border-bottom:none;">合计<span style="float:right; color:#ff0c4b; font-size:18px;">￥{{Order.Money}}</span></div>
     </div>
+    @*<a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-if="Order.Status==-1||Order.Status==0" v-on:click="">付款</a>*@
+    @*<a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-if="Order.Status==0" v-on:click="">删除</a>*@
 </div>
 
 @section scripts{
@@ -119,6 +121,12 @@
                     },
                     shoppingcart: function (event) {
                         window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
+                    },
+                    pay: function (event) {
+
+                    },
+                    delete: function (event) {
+
                     },
                 }
             });

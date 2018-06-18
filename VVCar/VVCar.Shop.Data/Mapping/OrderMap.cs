@@ -19,15 +19,15 @@ namespace VVCar.Shop.Data.Mapping
                 .HasMaxLength(50);
 
             Property(t => t.LinkMan)
-                .IsRequired()
+                //.IsRequired()
                 .HasMaxLength(20);
 
             Property(t => t.Phone)
-                .IsRequired()
+                //.IsRequired()
                 .HasMaxLength(20);
 
             Property(t => t.Address)
-                .IsRequired()
+                //.IsRequired()
                 .HasMaxLength(100);
 
             Property(t => t.ExpressNumber)

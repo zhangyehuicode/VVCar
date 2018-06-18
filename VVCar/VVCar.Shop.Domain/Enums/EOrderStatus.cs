@@ -13,27 +13,33 @@ namespace VVCar.Shop.Domain.Enums
     public enum EOrderStatus
     {
         /// <summary>
+        /// 付款不足
+        /// </summary>
+        [Description("付款不足")]
+        UnEnough = -1,
+
+        /// <summary>
         /// 未付款
         /// </summary>
         [Description("未付款")]
-        UnPay = -1,
+        UnPay = 0,
 
         /// <summary>
         /// 已付款未发货
         /// </summary>
         [Description("已付款未发货")]
-        PayUnshipped = 0,
+        PayUnshipped = 1,
 
         /// <summary>
         /// 已发货
         /// </summary>
         [Description("已发货")]
-        Delivered = 1,
+        Delivered = 2,
 
         /// <summary>
         /// 已完成
         /// </summary>
         [Description("已完成")]
-        Finish = 2,
+        Finish = 3,
     }
 }

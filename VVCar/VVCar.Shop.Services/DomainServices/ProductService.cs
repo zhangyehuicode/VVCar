@@ -102,6 +102,8 @@ namespace VVCar.Shop.Services.DomainServices
             product.IsPublish = entity.IsPublish;
             product.IsRecommend = entity.IsRecommend;
             product.Stock = entity.Stock;
+            product.Introduction = entity.Introduction;
+            product.DeliveryNotes = entity.DeliveryNotes;
             //product.EffectiveDate = entity.EffectiveDate;
             //product.ExpiredDate = entity.ExpiredDate;
             product.CommissionRate = entity.CommissionRate;

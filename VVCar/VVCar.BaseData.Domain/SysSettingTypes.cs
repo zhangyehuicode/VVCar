@@ -52,6 +52,11 @@ namespace VVCar.BaseData.Domain
         public const string WXMsg_OrderSuccess = "WXMsg_OrderSuccess";
 
         /// <summary>
+        /// 新订单通知消息模板
+        /// </summary>
+        public const string WXMsg_OrderRemind = "WXMsg_OrderRemind";
+
+        /// <summary>
         /// 礼品领取成功通知消息模板
         /// </summary>
         public const string WXMsg_ReceivedSuccess = "WXMsg_ReceivedSuccess";

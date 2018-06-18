@@ -262,6 +262,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Areas\Mobile\Controllers\CarBitcoinController.cs" />
     <Compile Include="Areas\Mobile\Controllers\CustomerController.cs" />
     <Compile Include="Areas\Mobile\Controllers\MerchantController.cs" />
     <Compile Include="Areas\Mobile\MobileAreaRegistration.cs" />
@@ -288,6 +289,7 @@
     <Compile Include="Controllers\Shop\AppointmentController.cs" />
     <Compile Include="Controllers\Shop\OrderController.cs" />
     <Compile Include="Controllers\Shop\OrderItemController.cs" />
+    <Compile Include="Controllers\Shop\OrderPaymentDetailsController.cs" />
     <Compile Include="Controllers\Shop\PickUpOrderController.cs" />
     <Compile Include="Controllers\Shop\PickUpOrderPaymentDetailsController.cs" />
     <Compile Include="Controllers\Shop\ProductCategoryController.cs" />
@@ -414,6 +416,9 @@
     <Content Include="Areas\resource\img\mobile\banner.jpg" />
     <Content Include="Areas\resource\img\mobile\bg.jpg" />
     <Content Include="Areas\resource\img\mobile\car.png" />
+    <Content Include="Areas\resource\img\mobile\carbitcoinicon.png" />
+    <Content Include="Areas\resource\img\mobile\carcoinicon.png" />
+    <Content Include="Areas\resource\img\mobile\carcoinimg.png" />
     <Content Include="Areas\resource\img\mobile\cb.png" />
     <Content Include="Areas\resource\img\mobile\cph.png" />
     <Content Include="Areas\resource\img\mobile\daodile.png" />
@@ -432,6 +437,7 @@
     <Content Include="Areas\resource\img\mobile\gwc.png" />
     <Content Include="Areas\resource\img\mobile\gwc2.png" />
     <Content Include="Areas\resource\img\mobile\home.png" />
+    <Content Include="Areas\resource\img\mobile\horsepowericon.png" />
     <Content Include="Areas\resource\img\mobile\hot.png" />
     <Content Include="Areas\resource\img\mobile\hy.png" />
     <Content Include="Areas\resource\img\mobile\hyk.png" />
@@ -505,7 +511,9 @@
     <Content Include="Areas\resource\img\mobile\ture.png" />
     <Content Include="Areas\resource\img\mobile\u337.png" />
     <Content Include="Areas\resource\img\mobile\wcpaysuccess.jpg" />
+    <Content Include="Areas\resource\img\mobile\wd.png" />
     <Content Include="Areas\resource\img\mobile\wechatpaysuccess.jpg" />
+    <Content Include="Areas\resource\img\mobile\wk.png" />
     <Content Include="Areas\resource\img\mobile\wxps.jpg" />
     <Content Include="Areas\resource\img\mobile\xcdd.png" />
     <Content Include="Areas\resource\img\mobile\ysh.png" />
@@ -613,12 +621,14 @@
     <Content Include="Scripts\app\controller\PointExchangeCoupon.js" />
     <Content Include="Scripts\app\controller\Product.js" />
     <Content Include="Scripts\app\controller\ProductRetailStatistics.js" />
+    <Content Include="Scripts\app\controller\QuickRepairGuarantee.js" />
     <Content Include="Scripts\app\controller\RechargePlan.js" />
     <Content Include="Scripts\app\controller\RechargeReport.js" />
     <Content Include="Scripts\app\controller\Role.js" />
     <Content Include="Scripts\app\controller\RolePermission.js" />
     <Content Include="Scripts\app\controller\ServicePeriod.js" />
     <Content Include="Scripts\app\controller\StaffPerformanceStatistics.js" />
+    <Content Include="Scripts\app\controller\StockholderCard.js" />
     <Content Include="Scripts\app\controller\SysMenu.js" />
     <Content Include="Scripts\app\controller\SystemSetting.js" />
     <Content Include="Scripts\app\controller\User.js" />
@@ -823,8 +833,11 @@
     <Content Include="Scripts\app\view\Shop\ProductCategoryEdit.js" />
     <Content Include="Scripts\app\view\Shop\ProductCategoryList.js" />
     <Content Include="Scripts\app\view\Shop\ProductEdit.js" />
+    <Content Include="Scripts\app\view\Shop\Service.js" />
     <Content Include="Scripts\app\view\Shop\StockOutInEdit.js" />
     <Content Include="Scripts\app\view\Shop\StockRecord.js" />
+    <Content Include="Scripts\app\view\StockholderCard\StockholderCardEdit.js" />
+    <Content Include="Scripts\app\view\StockholderCard\StockholderCardList.js" />
     <Content Include="Scripts\app\view\SysMenu\AddSysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenuTreeComboBox.js" />
@@ -958,6 +971,8 @@
     <Content Include="Areas\Mobile\Views\Merchant\StockOutIn.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\StockRecord.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\MemberDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\Index.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\MyInfo.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

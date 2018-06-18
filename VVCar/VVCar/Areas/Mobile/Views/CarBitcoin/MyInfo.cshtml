@@ -1,0 +1,228 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="myinfo">
+    <div class="main">
+        <div class="headimgcon">
+            <img class="headimg" src="@ViewBag.HeadImgUrl" />
+        </div>
+        <div class="nicknametext">@ViewBag.NickName</div>
+    </div>
+    <div class="bottomactioncon cbctable">
+        <div class="cbctablecell" style="vertical-align:middle;" v-on:click="wk">
+            <div>
+                <img class="btnicon" src="~/Areas/resource/img/mobile/wk.png" />
+            </div>
+            <div class="btnfont">挖矿</div>
+        </div>
+        <div class="cbctablecell" style="vertical-align:middle;">
+            <div>
+                <img class="btnicon" src="~/Areas/resource/img/mobile/wd.png" />
+            </div>
+            <div class="btnfont" v-on:click="myinfo">我的</div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .headimgcon {
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .nicknametext {
+            font-size: 20px;
+            text-align: center;
+            color: #4fa4f4;
+        }
+
+        .headimgcon {
+            width: 100%;
+        }
+
+        .headimg {
+            width: 80px;
+            height: 80px;
+        }
+
+        .bgimg {
+            width: 100%;
+            height: 480px;
+        }
+
+        .declare {
+            position: absolute;
+            top: 20px;
+            right: 0;
+            border-radius: 10px 0 0 10px;
+            color: #4fa4f4;
+            border: 1px #4fa4f4 solid;
+            font-size: 10px;
+            height: 20px;
+            width: 70px;
+            text-align: center;
+            background: rgba(79,176,255,0.1);
+        }
+
+        .cbctable {
+            display: table;
+        }
+
+        .cbctablecell {
+            display: table-cell;
+            /*vertical-align: middle;*/
+        }
+
+        .valuetitlefont {
+            font-size: 8px;
+            color: #4fa4f4;
+        }
+
+        .valuecon {
+            position: absolute;
+            top: 20px;
+            left: 8px;
+        }
+
+        .valueicon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .valuecell {
+            vertical-align: middle;
+            padding-right: 3px;
+        }
+
+        .ranklist {
+        }
+
+        .rankheadtable {
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px #eee solid;
+        }
+
+        .rankheadcon {
+            font-size: 10px;
+            color: #636363;
+            margin-top: 5px;
+            background: #f9f9f8;
+            border-top: 1px #dedede solid;
+            border-bottom: 1px #dedede solid;
+            height: 35px;
+        }
+
+        .rankcell {
+            width: 30%;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .rankcellname {
+            width: 40%;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .rankheadh {
+            height: 40px;
+        }
+
+        .bottomactioncon {
+            height: 50px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-top: 1px #dcdcdc solid;
+            width: 100%;
+            text-align: center;
+            background: #faf9f9;
+            color: #999;
+        }
+
+        .btnicon {
+            width: 30px;
+            height: 30px;
+            margin-bottom: -9px;
+        }
+
+        .btnfont {
+            font-size: 13px;
+        }
+
+        .main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 50px;
+            overflow-y: auto;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#myinfo',
+            data: {
+            },
+            methods: {
+                wk: function (event) {
+                    window.location.href = "/Mobile/CarBitcoin?mch=" + mch;
+                }
+            }
+        });
+    </script>
+}

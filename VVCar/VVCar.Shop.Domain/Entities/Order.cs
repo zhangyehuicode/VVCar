@@ -80,6 +80,18 @@ namespace VVCar.Shop.Domain.Entities
         public decimal Money { get; set; }
 
         /// <summary>
+        /// 已收款金额
+        /// </summary>
+        [Display(Name = "已收款金额")]
+        public decimal ReceivedMoney { get; set; }
+
+        /// <summary>
+        /// 尚欠金额
+        /// </summary>
+        [Display(Name = "尚欠金额")]
+        public decimal StillOwedMoney { get; set; }
+
+        /// <summary>
         /// 兑换积分
         /// </summary>
         [Display(Name = "兑换积分")]

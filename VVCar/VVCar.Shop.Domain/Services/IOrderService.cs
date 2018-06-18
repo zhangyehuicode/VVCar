@@ -28,5 +28,20 @@ namespace VVCar.Shop.Domain.Services
         /// </summary>
         /// <returns></returns>
         string GetTradeNo();
+
+        /// <summary>
+        /// 重新计算订单金额
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="isNotify"></param>
+        void RecountMoney(Order entity, bool isNotify = false);
+
+        /// <summary>
+        /// 重新计算订单金额并保存
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="isNotify"></param>
+        /// <returns></returns>
+        bool RecountMoneySave(string code, bool isNotify = false);
     }
 }

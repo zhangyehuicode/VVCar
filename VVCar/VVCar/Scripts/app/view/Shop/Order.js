@@ -47,16 +47,18 @@
             { header: '详细地址', dataIndex: 'Address', flex: 1 },
             { header: '备注', dataIndex: 'Remark', flex: 1 },
             {
-                header: '发货状态', dataIndex: 'Status', width: 80,
+                header: '发货状态', dataIndex: 'Status', width: 100,
                 renderer: function (value) {
-                    if (value == 1)
+                    if (value == 2)
                         return "已发货";
+                    else if (value == 1)
+                        return "已付款未发货";
                     else if (value == 0)
-                        return "未发货";
-                    else if (value == -1)
                         return "未付款";
-                    else if (value == 2)
+                    else if (value == 3)
                         return "已完成";
+                    else if (value == -1)
+                        return "付款不足";
                 }
             },
             { header: '快递单号', dataIndex: 'ExpressNumber', width: 180 },

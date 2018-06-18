@@ -1,0 +1,305 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="carbitcoin">
+    <div class="main">
+        <img class="bgimg" src="~/Areas/resource/img/mobile/bg.jpg" />
+        <div class="valuecon">
+            <div class="cbctable valuetitlefont">
+                <div class="cbctablecell valuecell">
+                    <img class="valueicon" src="~/Areas/resource/img/mobile/carbitcoinicon.png" />
+                </div>
+                <div class="cbctablecell">车比特  {{CarBitcoin}}</div>
+            </div>
+            <div class="cbctable valuetitlefont">
+                <div class="cbctablecell valuecell">
+                    <img class="valueicon" src="~/Areas/resource/img/mobile/horsepowericon.png" />
+                </div>
+                <div class="cbctablecell">马力值  {{Horsepower}}</div>
+            </div>
+        </div>
+        <div class="declare">超能秘籍</div>
+        <div>
+            <div>
+                <div style="color:#2f302f;padding-left:13px;font-size:15px;">马力排行榜</div>
+                <div class="cbctable rankheadtable rankheadcon">
+                    <div class="cbctablecell rankcell">名次</div>
+                    <div class="cbctablecell rankcellname">用户名</div>
+                    <div class="cbctablecell rankcell">马力</div>
+                </div>
+                <div v-for="Coiner in CoinerList">
+                    <div class="cbctable rankheadtable rankheadh">
+                        <div class="cbctablecell rankcell">{{Coiner.Ranking}}</div>
+                        <div class="cbctablecell rankcellname">{{Coiner.Name}}</div>
+                        <div class="cbctablecell rankcell">{{Coiner.Horsepower}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottomactioncon cbctable">
+        <div class="cbctablecell" style="vertical-align:middle;">
+            <div>
+                <img class="btnicon" src="~/Areas/resource/img/mobile/wk.png" />
+            </div>
+            <div class="btnfont">挖矿</div>
+        </div>
+        <div class="cbctablecell" style="vertical-align:middle;" v-on:click="myinfo">
+            <div>
+                <img class="btnicon" src="~/Areas/resource/img/mobile/wd.png" />
+            </div>
+            <div class="btnfont">我的</div>
+        </div>
+    </div>
+    <div class="bitcoincon">
+        <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinimg.png" />
+    </div>
+    <div class="bitcoimg">
+        <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinicon.png" />
+    </div>
+    <div class="bitcoimg1">
+        <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinimg.png" />
+    </div>
+    <div class="bitcoimg2">
+        <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinimg.png" />
+    </div>
+    <div class="bitcoimg3">
+        <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinimg.png" />
+    </div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .coinimg {
+            width: 40px;
+        }
+
+        .bitcoincon {
+            position: absolute;
+            top: 100px;
+            left: 50px;
+        }
+
+        .bitcoimg {
+            position: absolute;
+            top: 125px;
+            left: 150px;
+        }
+
+        .bitcoimg1 {
+            position: absolute;
+            top: 167px;
+            left: 120px;
+        }
+
+        .bitcoimg2 {
+            position: absolute;
+            top: 197px;
+            left: 220px;
+        }
+
+        .bitcoimg3 {
+            position: absolute;
+            top: 89px;
+            left: 200px;
+        }
+
+        .bgimg {
+            width: 100%;
+            height: 480px;
+        }
+
+        .declare {
+            position: absolute;
+            top: 20px;
+            right: 0;
+            border-radius: 10px 0 0 10px;
+            color: #4fa4f4;
+            border: 1px #4fa4f4 solid;
+            font-size: 10px;
+            height: 20px;
+            width: 70px;
+            text-align: center;
+            background: rgba(79,176,255,0.1);
+        }
+
+        .cbctable {
+            display: table;
+        }
+
+        .cbctablecell {
+            display: table-cell;
+            /*vertical-align: middle;*/
+        }
+
+        .valuetitlefont {
+            font-size: 8px;
+            color: #4fa4f4;
+        }
+
+        .valuecon {
+            position: absolute;
+            top: 20px;
+            left: 8px;
+        }
+
+        .valueicon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .valuecell {
+            vertical-align: middle;
+            padding-right: 3px;
+        }
+
+        .ranklist {
+        }
+
+        .rankheadtable {
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px #eee solid;
+        }
+
+        .rankheadcon {
+            font-size: 10px;
+            color: #636363;
+            margin-top: 5px;
+            background: #f9f9f8;
+            border-top: 1px #dedede solid;
+            border-bottom: 1px #dedede solid;
+            height: 35px;
+        }
+
+        .rankcell {
+            width: 30%;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .rankcellname {
+            width: 40%;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .rankheadh {
+            height: 40px;
+        }
+
+        .bottomactioncon {
+            height: 50px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-top: 1px #dcdcdc solid;
+            width: 100%;
+            text-align: center;
+            background: #faf9f9;
+            color: #999;
+        }
+
+        .btnicon {
+            width: 30px;
+            height: 30px;
+            margin-bottom: -9px;
+        }
+
+        .btnfont {
+            font-size: 13px;
+        }
+
+        .main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 50px;
+            overflow-y: auto;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#carbitcoin',
+            data: {
+                CarBitcoin: 0.00545,
+                Horsepower: 666,
+                CoinerList: [{
+                    Ranking: 1,
+                    Name: '小晖晖',
+                    Horsepower: 666,
+                }, {
+                    Ranking: 2,
+                    Name: 'zsf',
+                    Horsepower: 571,
+                }, {
+                    Ranking: 3,
+                    Name: '哦那',
+                    Horsepower: 372,
+                }, {
+                    Ranking: 4,
+                    Name: '咯ing',
+                    Horsepower: 119,
+                }],
+            },
+            methods: {
+                myinfo: function (event) {
+                    window.location.href = "/Mobile/CarBitcoin/MyInfo?mch=" + mch;
+                }
+            }
+        });
+    </script>
+}

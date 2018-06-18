@@ -40,9 +40,11 @@
         <div class="gwc_box2">
             <span class="gwc_text">订单号：{{Order.Code}}</span>
             <span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==0">未发货</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==1">已发货</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==2">已完成</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==-1">付款不足</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==0">未付款</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==1">已付款未发货</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==2">已发货</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==3">已完成</span>
         </div>
         <div class="wddd_box2">
             <span style="margin-left:3%;">
