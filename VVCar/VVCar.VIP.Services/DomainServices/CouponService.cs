@@ -482,7 +482,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             var now = DateTime.Now.Date;
             var datasource = Repository.GetInclude(t => t.Template, false).Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID)
-                .Where(t => t.Status == ECouponStatus.Default && t.OwnerOpenID == userOpenID && t.ExpiredDate >= now)
+                .Where(t => t.Status == ECouponStatus.Default && t.OwnerOpenID == userOpenID && t.ExpiredDate >= now && t.CouponValue > 0)
                 .OrderBy(t => t.ExpiredDate).ToList();
             var coupons = datasource.MapTo<List<CouponBaseInfoDto>>();
             var member = MemberRepo.GetInclude(t => t.Card, false).Where(t => t.WeChatOpenID == userOpenID).FirstOrDefault();
@@ -490,7 +490,7 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 coupons.ForEach(t =>
                 {
-                    t.MemberPoint = member.Point;
+                    t.MemberPoint = Math.Round(member.Point, 2);
                     t.TotalConsume = member.Card.TotalConsume;
                 });
             }

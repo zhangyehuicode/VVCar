@@ -7,9 +7,9 @@
 <div id="membercard">
     <div class="top_box">
         <div class="top_box_text">会员卡包</div>
-        <a href="#"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="home"></a>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="back" style="position:absolute;top:17px;"></a>
         <a class="top_box2"></a>
-        <a href="#"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+        <a href="#"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="home"></a>
     </div>
     <div class="nav_box" style="box-shadow:none;">
         <div>
@@ -177,8 +177,11 @@
                 },
             },
             methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
                 home: function (event) {
-                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
                 },
                 shop: function (event) {
                     window.location.href = "/Mobile/Customer/Shop?mch=" + mch;

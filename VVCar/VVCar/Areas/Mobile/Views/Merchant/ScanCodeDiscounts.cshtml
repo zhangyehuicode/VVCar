@@ -6,9 +6,9 @@
 
 <body id="scancodediscounts">
     <div class="toubu">
-        <a v-on:click="back"><img src="img/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        <a><img id="backimg" src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;" v-on:click="back" /></a>
         <div class="title">工作终端</div>
-        <a v-on:click="home"><img src="img/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+        <a><img v-on:click="home" id="homeimg" src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:-36px;"></a>
     </div>
     <div class="touxiang" style="margin-top:50px;">
         <div class="ggy">扫码到领券中心领取优惠券</div>
@@ -96,9 +96,9 @@
                         window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
                     }
                 },
-                couponcenter: function (event) {
-                    window.location.href = "/Mobile/Customer/CouponCenter?mch=" + mch;
-                },
+                //couponcenter: function (event) {
+                //    window.location.href = "/Mobile/Customer/CouponCenter?mch=" + mch;
+                //},
             }
         });
 
@@ -134,6 +134,22 @@
             if (user == null || user=='') {
                 getUserByOpenId();
             }
+
+            $("#backimg").click(function () {
+                if (_ismaster == 'true') {
+                    window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                } else {
+                    window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                }
+            });
+
+            $("#homeimg").click(function () {
+                if (_ismaster == 'true') {
+                    window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                } else {
+                    window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                }
+            });
 
         });
     </script>

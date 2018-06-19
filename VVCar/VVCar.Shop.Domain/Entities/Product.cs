@@ -14,6 +14,11 @@ namespace VVCar.Shop.Domain.Entities
     /// </summary>
     public class Product : EntityBase
     {
+        public Product()
+        {
+            ComboItemList = new List<ComboItem>();
+        }
+
         /// <summary>
         /// 类别ID
         /// </summary>
@@ -140,6 +145,12 @@ namespace VVCar.Shop.Domain.Entities
         public string DeliveryNotes { get; set; }
 
         /// <summary>
+        /// 是否套餐
+        /// </summary>
+        [Display(Name = "是否套餐")]
+        public bool IsCombo { get; set; }
+
+        /// <summary>
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]
@@ -174,5 +185,10 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "最后修改时间")]
         public DateTime? LastUpdateDate { get; set; }
+
+        /// <summary>
+        /// 套餐子项
+        /// </summary>
+        public ICollection<ComboItem> ComboItemList { get; set; }
     }
 }

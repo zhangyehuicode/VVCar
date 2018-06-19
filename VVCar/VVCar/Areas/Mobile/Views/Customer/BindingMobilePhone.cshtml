@@ -7,9 +7,9 @@
 <div id="bindingphone">
     <div class="top_box">
         <div class="top_box_text">手机绑定</div>
-        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" id="backimg" style="position:absolute;top:17px;"></a>
         <a class="top_box2"></a>
-        <a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+        <a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;" id="homeimg"></a>
     </div>
     <div class="pass">
         <img src="~/Areas/resource/img/mobile/pass.png" style="float:left; width:15px; margin-top:8px;">
@@ -248,6 +248,14 @@
             } else {
                 _viewModel.MyInfo = JSON.parse(member);
             }
+
+            $("#backimg").click(function () {
+                history.back(-1);
+            });
+
+            $("#homeimg").click(function () {
+                window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+            });
 
         });
     </script>

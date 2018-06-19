@@ -7,9 +7,9 @@
 <div id="memberservices">
     <div class="top_box">
         <div class="top_box_text">个人中心</div>
-        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
         <a class="top_box2"></a>
-        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;"></a>
     </div>
     <div class="user_box" style="background-color:#fff; box-shadow:0 5px 5px #f1f3fe; position:relative;">
         <img src="@ViewBag.HeadImgUrl">
@@ -99,6 +99,9 @@
             methods: {
                 home: function (event) {
                     window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+                back: function (event) {
+                    history.back(-1);
                 },
             }
         });

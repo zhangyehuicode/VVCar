@@ -7,9 +7,9 @@
 <div style="background-color:#f8f9fe;" id="mypoints">
     <div class="top_box">
         <div class="top_box_text">我的积分</div>
-        <a href="#"><img src="img/ture.png" class="top_box_img"></a>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
         <a class="top_box2"></a>
-        <a href="#"><img src="img/home.png" style="width:5%;"></a>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="home"></a>
     </div>
     <div class="hxjl_box">
         <div class="hxjl_text">积分总额<span style="float:right; color:#ff0c4c;">{{MyInfo.MemberPoint}}积分</span></div>
@@ -100,7 +100,10 @@
             },
             methods: {
                 home: function (event) {
-                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+                back: function (event) {
+                    history.back(-1);
                 },
             }
         });

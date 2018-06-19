@@ -7,9 +7,9 @@
 <div style="background-color:#f8f9fe;" id="shop">
     <div class="top_box">
         <div class="top_box_text">精品商城</div>
-        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
         <a class="top_box2"></a>
-        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;"></a>
     </div>
     <div class="nav_box" style="position:relative;">
         <div>
@@ -188,7 +188,7 @@
                     history.back(-1);
                 },
                 home: function (event) {
-                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
                 },
                 percenter: function (event) {
                     window.location.href = "/Mobile/Customer/PerCenter?mch=" + mch;

@@ -58,6 +58,8 @@
     <Compile Include="Dtos\TurnoverReportingDto.cs" />
     <Compile Include="Dtos\VerificationParam.cs" />
     <Compile Include="Entities\Appointment.cs" />
+    <Compile Include="Entities\ComboItem.cs" />
+    <Compile Include="Entities\ComboVerificationRecord.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderItem.cs" />
     <Compile Include="Entities\OrderPaymentDetails.cs" />

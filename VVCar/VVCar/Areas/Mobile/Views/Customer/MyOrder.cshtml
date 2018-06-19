@@ -7,9 +7,9 @@
 <div id="myorder" style="background-color:#f8f9fe;">
     <div class="top_box">
         <div class="top_box_text">我的订单</div>
-        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
         <a class="top_box2"></a>
-        <a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+        <a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="home"></a>
     </div>
     <div class="nav_box" style="position:relative; box-shadow:none;">
         <div>
@@ -177,6 +177,12 @@
                 orderdetails: function (data, event) {
                     sessionStorage.setItem('order', JSON.stringify(data));
                     window.location.href = "/Mobile/Customer/OrderDetails?mch=" + mch;
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+                back: function (event) {
+                    history.back(-1);
                 },
             }
         });

@@ -7,9 +7,9 @@
 <div id="vcset">
     <div class="top_box">
         <div class="top_box_text">核销密码设置</div>
-        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
         <a class="top_box2"></a>
-        <a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+        <a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="home"></a>
     </div>
     <div class="pass">
         <img src="~/Areas/resource/img/mobile/pass.png" style="float:left; width:15px; margin-top:8px;">
@@ -34,9 +34,10 @@
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -200,6 +201,9 @@
                 VerificationCode: '',
             },
             methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
                 home: function (event) {
                     window.location.href = "/Mobile/Customer/Home?mch=" + mch;
                 },

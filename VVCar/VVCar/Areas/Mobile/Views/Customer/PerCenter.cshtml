@@ -7,9 +7,9 @@
 <div id="pcenter">
     <div class="top_box">
         <div class="top_box_text">个人中心</div>
-        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="home"></a>
+        <a><img id="backimg" src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
         <a class="top_box2"></a>
-        <a href="#"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;"></a>
+        <a><img id="homeimg" src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;"></a>
     </div>
     <div class="nav_box" style="position:relative; box-shadow:none;">
         <div>
@@ -416,6 +416,14 @@
                 });
             }
             getPlateNumber(false);
+
+            $("#backimg").click(function () {
+                history.back(-1);
+            });
+
+            $("#homeimg").click(function () {
+                window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+            });
 
         });
     </script>

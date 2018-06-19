@@ -7,9 +7,9 @@
 <div id="productdetails">
     <div class="top_box">
         <div class="top_box_text">{{Product.Name}}</div>
-        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="back"></a>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="back" style="position:absolute;top:17px;"></a>
         <a class="top_box2"></a>
-        <a><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;" v-on:click="shoppingcart"></a>
+        <a><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="shoppingcart"></a>
     </div>
     <img class="sp_img" v-bind:src=Product.ImgUrl>
     <div class="sp_text">

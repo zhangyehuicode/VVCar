@@ -696,7 +696,7 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 MemberID = member.ID,
                 MemberName = member.Name,
-                MemberPoint = member.Point,
+                MemberPoint = Math.Round(member.Point, 2),
                 MobilePhoneNo = member.MobilePhoneNo,
                 Birthday = member.Birthday.HasValue ? member.Birthday.Value.ToDateString() : string.Empty,
                 Sex = ((int)member.Sex).ToString(),

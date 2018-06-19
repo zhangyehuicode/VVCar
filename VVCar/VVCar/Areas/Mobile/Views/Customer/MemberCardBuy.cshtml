@@ -7,9 +7,9 @@
 <div id="membercardbuy">
     <div class="top_box">
         <div class="top_box_text">会员卡购买</div>
-        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img"></a>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="back" style="position:absolute;top:17px;"></a>
         <a class="top_box2"></a>
-        <a v-on:click="shoppingcart"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;"></a>
+        <a v-on:click="shoppingcart"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;position:absolute;top:17px;right:10px;"></a>
     </div>
     <img class="sp_img" v-bind:src=Product.ImgUrl>
     <div class="sp_text">
@@ -183,6 +183,9 @@
                 },
                 shoppingcart: function (event) {
                     window.location.href = "/Mobile/Customer/ShoppingCart?mch=" + mch;
+                },
+                back: function (event) {
+                    history.back(-1);
                 },
             }
         });
