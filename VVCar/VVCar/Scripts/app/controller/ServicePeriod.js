@@ -351,13 +351,9 @@
 		var me = this;
 		var queryValues = btn.up('form').getValues();
 		if (queryValues != null) {
+			queryValues.ProductType = 0;
 			var store = me.getGridServiceSelector().getStore();
-			Ext.apply(store.proxy.extraParams, {
-				ProductType: 0,
-				CouponPushID: record.data.ID
-			});
-
-			store.load();
+			store.load({ params: queryValues });
 		} else {
 			Ext.Msg.alert('提示', '请输入过滤条件');
 		}

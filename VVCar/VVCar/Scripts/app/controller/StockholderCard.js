@@ -34,7 +34,7 @@
 		var win = Ext.widget('StockholderCardEdit');
 		win.down('textfield[name=id]').setValue(selectedItems[0].data.ID);
 		win.down('numberfield[name=rate]').setValue(selectedItems[0].data.ConsumePointRate);
-		win.setTitle('修改消费返积分比例');
+		win.setTitle('修改消费返佣比例');
 		win.form.getForm().actionMethod = 'GET';
 		win.show();
 	},

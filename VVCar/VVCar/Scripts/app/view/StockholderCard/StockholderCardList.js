@@ -17,7 +17,7 @@
 			{
 				action: 'setConsumePointRate',
 				xtype: 'button',
-				text: '设置消费返积分比例',
+				text: '设置消费返佣比例',
 				scope: this,
 				iconCls: 'fa fa-plus-circle',
 			},
@@ -46,7 +46,7 @@
 				}
 			},
 			//{ header: '库存', dataIndex: 'FreeStock', flex: 1 },
-			{ header: '消费返积分比例', dataIndex: 'ConsumePointRate', flex: 1 },
+			{ header: '消费返佣比例', dataIndex: 'ConsumePointRate', flex: 1 },
 			{ header: '备注', dataIndex: 'Remark', flex: 1 },
 		];
 		me.dockedItems = [{

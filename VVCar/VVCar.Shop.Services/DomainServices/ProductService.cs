@@ -106,6 +106,7 @@ namespace VVCar.Shop.Services.DomainServices
             product.DeliveryNotes = entity.DeliveryNotes;
             //product.EffectiveDate = entity.EffectiveDate;
             //product.ExpiredDate = entity.ExpiredDate;
+            product.IsCombo = entity.IsCombo;
             product.CommissionRate = entity.CommissionRate;
             product.IsCanPointExchange = entity.IsCanPointExchange;
             product.Unit = entity.Unit;
@@ -140,6 +141,8 @@ namespace VVCar.Shop.Services.DomainServices
                 queryable = queryable.Where(t => t.ProductType == EProductType.Goods);
             if (filter.ProductType.HasValue)
                 queryable = queryable.Where(t => t.ProductType == filter.ProductType.Value);
+            if (filter.IsCombo.HasValue)
+                queryable = queryable.Where(t => t.IsCombo == filter.IsCombo.Value);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderBy(t => t.Index).Skip(filter.Start.Value).Take(filter.Limit.Value);

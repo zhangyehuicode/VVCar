@@ -1,7 +1,7 @@
 ﻿Ext.define('WX.view.StockholderCard.StockholderCardEdit', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.StockholderCardEdit',
-	title: '编辑消费返积分比例',
+	title: '编辑消费返佣比例',
 	layout: 'fit',
 	width: 320,
 	initComponent: function () {
@@ -30,7 +30,7 @@
 					xtype: 'numberfield',
 					margin: '5 10 5 5',
 					name: 'rate',
-					fieldLabel: '消费返积分比例',
+					fieldLabel: '消费返佣比例',
 					minValue: 0,
 					width: 50,
 					maxValue: 100,

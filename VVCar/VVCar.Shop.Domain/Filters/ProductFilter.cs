@@ -52,5 +52,11 @@ namespace VVCar.Shop.Domain.Filters
         /// </summary>
         [Display(Name = "是否上架")]
         public bool IsPublish { get; set; }
+
+        /// <summary>
+        /// 是否套餐
+        /// </summary>
+        [Display(Name = "是否套餐")]
+        public bool? IsCombo { get; set; }
     }
 }

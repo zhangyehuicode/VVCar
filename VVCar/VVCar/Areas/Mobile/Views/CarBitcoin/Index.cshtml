@@ -32,42 +32,47 @@
                 </div>
                 <div v-for="Coiner in CoinerList">
                     <div class="cbctable rankheadtable rankheadh">
-                        <div class="cbctablecell rankcell">{{Coiner.Ranking}}</div>
+                        <div class="cbctablecell rankcell">
+                            <div v-if="Coiner.Ranking>3">{{Coiner.Ranking}}</div>
+                            <img v-if="Coiner.Ranking==1" class="medalimg" src="~/Areas/resource/img/mobile/goldmedal.png" />
+                            <img v-if="Coiner.Ranking==2" class="medalimg" src="~/Areas/resource/img/mobile/silvermedal.png" />
+                            <img v-if="Coiner.Ranking==3" class="medalimg" src="~/Areas/resource/img/mobile/coppermedal.png" />
+                        </div>
                         <div class="cbctablecell rankcellname">{{Coiner.Name}}</div>
                         <div class="cbctablecell rankcell">{{Coiner.Horsepower}}</div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="bitcoincon">
+            <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinicon.png" />
+        </div>
+        <div class="bitcoimg">
+            <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinicon.png" />
+        </div>
+        <div class="bitcoimg1">
+            <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinicon.png" />
+        </div>
+        <div class="bitcoimg2">
+            <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinicon.png" />
+        </div>
+        <div class="bitcoimg3">
+            <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinicon.png" />
+        </div>
     </div>
     <div class="bottomactioncon cbctable">
         <div class="cbctablecell" style="vertical-align:middle;">
             <div>
-                <img class="btnicon" src="~/Areas/resource/img/mobile/wk.png" />
+                <img class="btnicon" style="width:35px;margin-bottom:-13px;margin-top:-2px;" src="~/Areas/resource/img/mobile/kuangselected.png" />
             </div>
-            <div class="btnfont">挖矿</div>
+            <div class="btnfont" style="color:#7859f2;">挖矿</div>
         </div>
         <div class="cbctablecell" style="vertical-align:middle;" v-on:click="myinfo">
             <div>
                 <img class="btnicon" src="~/Areas/resource/img/mobile/wd.png" />
             </div>
-            <div class="btnfont">我的</div>
+            <div class="btnfont" v-on:click="myinfo">我的</div>
         </div>
-    </div>
-    <div class="bitcoincon">
-        <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinimg.png" />
-    </div>
-    <div class="bitcoimg">
-        <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinicon.png" />
-    </div>
-    <div class="bitcoimg1">
-        <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinimg.png" />
-    </div>
-    <div class="bitcoimg2">
-        <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinimg.png" />
-    </div>
-    <div class="bitcoimg3">
-        <img class="coinimg" src="~/Areas/resource/img/mobile/carcoinimg.png" />
     </div>
 </div>
 
@@ -109,7 +114,7 @@
 
         .bgimg {
             width: 100%;
-            height: 480px;
+            height: 400px;
         }
 
         .declare {
@@ -119,7 +124,8 @@
             border-radius: 10px 0 0 10px;
             color: #4fa4f4;
             border: 1px #4fa4f4 solid;
-            font-size: 10px;
+            border-right: none;
+            font-size: 13px;
             height: 20px;
             width: 70px;
             text-align: center;
@@ -136,7 +142,7 @@
         }
 
         .valuetitlefont {
-            font-size: 8px;
+            font-size: 13px;
             color: #4fa4f4;
         }
 
@@ -166,7 +172,7 @@
         }
 
         .rankheadcon {
-            font-size: 10px;
+            font-size: 15px;
             color: #636363;
             margin-top: 5px;
             background: #f9f9f8;
@@ -177,18 +183,18 @@
 
         .rankcell {
             width: 30%;
-            font-size: 13px;
+            font-size: 15px;
             vertical-align: middle;
         }
 
         .rankcellname {
             width: 40%;
-            font-size: 13px;
+            font-size: 15px;
             vertical-align: middle;
         }
 
         .rankheadh {
-            height: 40px;
+            height: 42px;
         }
 
         .bottomactioncon {
@@ -205,13 +211,13 @@
         }
 
         .btnicon {
-            width: 30px;
-            height: 30px;
-            margin-bottom: -9px;
+            width: 25px;
+            margin-bottom: -6px;
+            margin-right: 3px;
         }
 
         .btnfont {
-            font-size: 13px;
+            font-size: 10px;
         }
 
         .main {
@@ -221,6 +227,11 @@
             right: 0;
             bottom: 50px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .medalimg {
+            width: 20px;
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />

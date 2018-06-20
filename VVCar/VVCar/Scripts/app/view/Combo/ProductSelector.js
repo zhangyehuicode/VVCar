@@ -1,7 +1,7 @@
-﻿Ext.define('WX.view.ServicePeriod.ServiceSelector', {
+﻿Ext.define('WX.view.Combo.ProductSelector', {
 	extend: 'Ext.window.Window',
-	alias: 'widget.ServiceSelector',
-	title: '选择服务',
+	alias: 'widget.ProductSelector',
+	title: '选择产品',
 	layout: 'fit',
 	width: 600,
 	height: 500,
@@ -11,13 +11,14 @@
 	buttonAlign: 'center',
 	initComponent: function () {
 		var me = this;
-		var serviceStore = Ext.create('WX.store.BaseData.ProductStore');
+		var productStore = Ext.create('WX.store.BaseData.ProductStore');
 		me.items = [{
 			xtype: 'grid',
-			name: 'serviceList',
+			name: 'productList',
 			stripeRows: true,
 			loadMask: true,
-			store: serviceStore,
+			store: productStore,
+			selType: 'checkboxmodel',
 			tbar: {
 				xtype: 'form',
 				layout: 'column',
@@ -33,14 +34,14 @@
 				items: [{
 					name: 'Code',
 					xtype: 'textfield',
-					fieldLabel: '服务编码',
+					fieldLabel: '产品编码',
 					width: 170,
 					labelWidth: 60,
 					margin: '0 0 0 5',
 				}, {
 					name: 'Name',
 					xtype: 'textfield',
-					fieldLabel: '服务名称',
+					fieldLabel: '产品名称',
 					width: 170,
 					labelWidth: 60,
 					margin: '0 0 0 5',
@@ -53,8 +54,8 @@
 				}]
 			},
 			columns: [
-				{ header: '服务编号', dataIndex: 'Code', flex: 1 },
-				{ header: '服务名称', dataIndex: 'Name', flex: 1 },
+				{ header: '产品编号', dataIndex: 'Code', flex: 1 },
+				{ header: '产品名称', dataIndex: 'Name', flex: 1 },
 			],
 			bbar: {
 				xtype: 'pagingtoolbar',

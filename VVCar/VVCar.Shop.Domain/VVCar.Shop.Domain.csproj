@@ -58,6 +58,8 @@
     <Compile Include="Dtos\TurnoverReportingDto.cs" />
     <Compile Include="Dtos\VerificationParam.cs" />
     <Compile Include="Entities\Appointment.cs" />
+    <Compile Include="Entities\CarBitCoinMember.cs" />
+    <Compile Include="Entities\CarBitCoinRecord.cs" />
     <Compile Include="Entities\ComboItem.cs" />
     <Compile Include="Entities\ComboVerificationRecord.cs" />
     <Compile Include="Entities\Order.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="Enums\EStockRecordSource.cs" />
     <Compile Include="Enums\EStockRecordType.cs" />
     <Compile Include="Filters\AppointmentFilter.cs" />
+    <Compile Include="Filters\ComboItemFilter.cs" />
     <Compile Include="Filters\ConsumeHistoryFilter.cs" />
     <Compile Include="Filters\OrderFilter.cs" />
     <Compile Include="Filters\OrderItemFilter.cs" />
@@ -96,6 +99,8 @@
     <Compile Include="Filters\StockRecordFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IAppointmentService.cs" />
+    <Compile Include="Services\ICarBitCoinMemberService.cs" />
+    <Compile Include="Services\IComboItemService.cs" />
     <Compile Include="Services\IOrderItemService.cs" />
     <Compile Include="Services\IOrderPaymentDetailsService.cs" />
     <Compile Include="Services\IOrderService.cs" />

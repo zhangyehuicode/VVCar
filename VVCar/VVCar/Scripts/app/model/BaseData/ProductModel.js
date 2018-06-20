@@ -9,6 +9,7 @@
 		{ name: "Points" },
 		{ name: "UpperLimit" },
 		{ name: "IsPublish" },
+		{ name: "IsCombo" },
 		{ name: "IsRecommend" },
 		{ name: "Stock" },
 		{ name: "CreatedUser" },

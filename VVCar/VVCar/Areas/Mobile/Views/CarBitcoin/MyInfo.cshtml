@@ -6,38 +6,79 @@
 
 <div id="myinfo">
     <div class="main">
-        <div class="headimgcon">
-            <img class="headimg" src="@ViewBag.HeadImgUrl" />
+        <div class="headcon">
+            <div class="headimgcon">
+                <img class="headimg" src="@ViewBag.HeadImgUrl" />
+            </div>
+            <div class="nicknametext">@ViewBag.NickName</div>
+            <div class="loginnow">立即登录</div>
         </div>
-        <div class="nicknametext">@ViewBag.NickName</div>
+        <div class="actionmaincon">
+            <div class="cbctable actioncon">
+                <div class="cbctablecell actioncell actionleftcon">
+                    <img class="actionimg" src="~/Areas/resource/img/mobile/wdzc.png" />
+                </div>
+                <div class="cbctablecell actiontitle actioncell">我的资产</div>
+                <div class="cbctablecell actioncell actionrightcon">
+                    <img style="width:20px;margin-top:5px;" src="~/Areas/resource/img/mobile/arrowr.png" />
+                </div>
+            </div>
+        </div>
     </div>
     <div class="bottomactioncon cbctable">
         <div class="cbctablecell" style="vertical-align:middle;" v-on:click="wk">
             <div>
-                <img class="btnicon" src="~/Areas/resource/img/mobile/wk.png" />
+                <img class="btnicon" style="width:35px;margin-bottom:-13px;margin-top:-2px;" src="~/Areas/resource/img/mobile/kuang.png" />
             </div>
             <div class="btnfont">挖矿</div>
         </div>
         <div class="cbctablecell" style="vertical-align:middle;">
             <div>
-                <img class="btnicon" src="~/Areas/resource/img/mobile/wd.png" />
+                <img class="btnicon" src="~/Areas/resource/img/mobile/wdselected.png" />
             </div>
-            <div class="btnfont" v-on:click="myinfo">我的</div>
+            <div class="btnfont" style="color:#7859f2;" v-on:click="myinfo">我的</div>
         </div>
     </div>
 </div>
 
 @section scripts{
     <style type="text/css">
+        .loginnow {
+            font-size: 13px;
+            border-radius: 3px;
+            background: -webkit-linear-gradient(left,#734dfd,#b43af5); /*#734dfd;*/
+            text-align: center;
+            color: #fbf6bb;
+            width: 80px;
+            margin: auto;
+            height: 25px;
+            line-height: 25px;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        .headcon {
+            margin: 50px 20px 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0px 3px 10px 3px #efecfb;
+            height: 190px;
+        }
+
+        .actionmaincon {
+            margin: 50px 20px 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0px 3px 10px 3px #efecfb;
+        }
+
         .headimgcon {
             text-align: center;
-            padding-top: 100px;
+            padding: 20px 0 0px 0;
         }
 
         .nicknametext {
             font-size: 20px;
             text-align: center;
-            color: #4fa4f4;
+            color: #2c2c2c;
         }
 
         .headimgcon {
@@ -47,6 +88,7 @@
         .headimg {
             width: 80px;
             height: 80px;
+            border-radius: 80px;
         }
 
         .bgimg {
@@ -147,13 +189,13 @@
         }
 
         .btnicon {
-            width: 30px;
-            height: 30px;
-            margin-bottom: -9px;
+            width: 25px;
+            margin-bottom: -6px;
+            margin-right: 3px;
         }
 
         .btnfont {
-            font-size: 13px;
+            font-size: 10px;
         }
 
         .main {
@@ -163,6 +205,38 @@
             right: 0;
             bottom: 50px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .actiontitle {
+            color: #676767;
+            font-size: 17px;
+        }
+
+        .actioncon {
+            height: 50px;
+            width: 100%;
+            vertical-align: middle;
+            border-bottom: 1px #e4e4e4 solid;
+        }
+
+        .actionimg {
+            width: 25px;
+            margin-top: 5px;
+        }
+
+        .actioncell {
+            vertical-align: middle;
+        }
+
+        .actionleftcon {
+            padding-left: 13px;
+            width: 45px;
+        }
+
+        .actionrightcon {
+            padding-right: 13px;
+            text-align: right;
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />

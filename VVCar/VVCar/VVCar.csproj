@@ -287,6 +287,8 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Controllers\Shop\AppointmentController.cs" />
+    <Compile Include="Controllers\Shop\CarBitCoinMemberController.cs" />
+    <Compile Include="Controllers\Shop\ComboItemController.cs" />
     <Compile Include="Controllers\Shop\OrderController.cs" />
     <Compile Include="Controllers\Shop\OrderItemController.cs" />
     <Compile Include="Controllers\Shop\OrderPaymentDetailsController.cs" />
@@ -413,6 +415,7 @@
     <Content Include="Areas\resource\img\mobile\7.png" />
     <Content Include="Areas\resource\img\mobile\8.png" />
     <Content Include="Areas\resource\img\mobile\9.jpg" />
+    <Content Include="Areas\resource\img\mobile\arrowr.png" />
     <Content Include="Areas\resource\img\mobile\banner.jpg" />
     <Content Include="Areas\resource\img\mobile\bg.jpg" />
     <Content Include="Areas\resource\img\mobile\car.png" />
@@ -420,6 +423,7 @@
     <Content Include="Areas\resource\img\mobile\carcoinicon.png" />
     <Content Include="Areas\resource\img\mobile\carcoinimg.png" />
     <Content Include="Areas\resource\img\mobile\cb.png" />
+    <Content Include="Areas\resource\img\mobile\coppermedal.png" />
     <Content Include="Areas\resource\img\mobile\cph.png" />
     <Content Include="Areas\resource\img\mobile\daodile.png" />
     <Content Include="Areas\resource\img\mobile\dd.png" />
@@ -433,6 +437,7 @@
     <Content Include="Areas\resource\img\mobile\fx.png" />
     <Content Include="Areas\resource\img\mobile\fxk.png" />
     <Content Include="Areas\resource\img\mobile\fxk2.png" />
+    <Content Include="Areas\resource\img\mobile\goldmedal.png" />
     <Content Include="Areas\resource\img\mobile\gr.png" />
     <Content Include="Areas\resource\img\mobile\gwc.png" />
     <Content Include="Areas\resource\img\mobile\gwc2.png" />
@@ -450,6 +455,8 @@
     <Content Include="Areas\resource\img\mobile\jr2.png" />
     <Content Include="Areas\resource\img\mobile\kabao.png" />
     <Content Include="Areas\resource\img\mobile\kf.png" />
+    <Content Include="Areas\resource\img\mobile\kuang.png" />
+    <Content Include="Areas\resource\img\mobile\kuangselected.png" />
     <Content Include="Areas\resource\img\mobile\logo.png" />
     <Content Include="Areas\resource\img\mobile\master\5000.png" />
     <Content Include="Areas\resource\img\mobile\master\6.png" />
@@ -488,6 +495,7 @@
     <Content Include="Areas\resource\img\mobile\sc.png" />
     <Content Include="Areas\resource\img\mobile\scj.png" />
     <Content Include="Areas\resource\img\mobile\shop.png" />
+    <Content Include="Areas\resource\img\mobile\silvermedal.png" />
     <Content Include="Areas\resource\img\mobile\sm.png" />
     <Content Include="Areas\resource\img\mobile\ss.png" />
     <Content Include="Areas\resource\img\mobile\staff\6.png" />
@@ -512,6 +520,8 @@
     <Content Include="Areas\resource\img\mobile\u337.png" />
     <Content Include="Areas\resource\img\mobile\wcpaysuccess.jpg" />
     <Content Include="Areas\resource\img\mobile\wd.png" />
+    <Content Include="Areas\resource\img\mobile\wdselected.png" />
+    <Content Include="Areas\resource\img\mobile\wdzc.png" />
     <Content Include="Areas\resource\img\mobile\wechatpaysuccess.jpg" />
     <Content Include="Areas\resource\img\mobile\wk.png" />
     <Content Include="Areas\resource\img\mobile\wxps.jpg" />
@@ -596,6 +606,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\Combo.js" />
     <Content Include="Scripts\app\controller\ConsumeHistory.js" />
     <Content Include="Scripts\app\controller\ConsumeReport.js" />
     <Content Include="Scripts\app\controller\Coupon.js" />
@@ -637,6 +648,7 @@
     <Content Include="Scripts\app\model\BaseData\CardInfoModel.js" />
     <Content Include="Scripts\app\model\BaseData\CardThemeCategoryMenuModel.js" />
     <Content Include="Scripts\app\model\BaseData\CardThemeCategoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\ComboItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\ConsumeHistoryModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponPushItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponPushModel.js" />
@@ -684,6 +696,7 @@
     <Content Include="Scripts\app\model\DataDict\DataDictTypeModel.js" />
     <Content Include="Scripts\app\store\BaseData\CardThemeCategoryMenuStore.js" />
     <Content Include="Scripts\app\store\BaseData\CardThemeCategoryStore.js" />
+    <Content Include="Scripts\app\store\BaseData\ComboItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\ConsumeHistoryStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponPushItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponPushStore.js" />
@@ -755,6 +768,9 @@
     <Content Include="Scripts\app\store\DataDict\YesNoTypeStore.js" />
     <Content Include="Scripts\app\store\Reporting\ConsumeReportStore.js" />
     <Content Include="Scripts\app\store\Reporting\RechargeReportStore.js" />
+    <Content Include="Scripts\app\view\Combo\ComboEdit.js" />
+    <Content Include="Scripts\app\view\Combo\ComboList.js" />
+    <Content Include="Scripts\app\view\Combo\ProductSelector.js" />
     <Content Include="Scripts\app\view\ConsumeReport\ConsumeReport.js" />
     <Content Include="Scripts\app\view\CouponPush\CouponPushEdit.js" />
     <Content Include="Scripts\app\view\CouponPush\CouponPushItemEdit.js" />
@@ -834,6 +850,7 @@
     <Content Include="Scripts\app\view\Shop\ProductCategoryList.js" />
     <Content Include="Scripts\app\view\Shop\ProductEdit.js" />
     <Content Include="Scripts\app\view\Shop\Service.js" />
+    <Content Include="Scripts\app\view\Shop\ServiceEdit.js" />
     <Content Include="Scripts\app\view\Shop\StockOutInEdit.js" />
     <Content Include="Scripts\app\view\Shop\StockRecord.js" />
     <Content Include="Scripts\app\view\StockholderCard\StockholderCardEdit.js" />
