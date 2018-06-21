@@ -2,7 +2,7 @@
 	extend: 'Ext.app.Controller',
 	requires: ['WX.store.BaseData.ProductStore', 'WX.store.BaseData.ProductCategoryTreeStore'],
 	models: ['BaseData.ProductModel', 'BaseData.ProductCategoryModel', 'BaseData.ProductCategoryTreeModel'],
-	views: ['Shop.Service', 'Shop.ServiceEdit', 'Shop.ProductCategoryList', 'Shop.ProductCategoryEdit', 'Shop.ChangeCategory', 'Shop.StockOutInEdit'],
+	views: ['Shop.Service', 'Shop.ServiceEdit', 'Shop.ServiceCategoryList', 'Shop.ServiceCategoryEdit', 'Shop.ChangeCategory', 'Shop.StockOutInEdit'],
 	refs: [{
 		ref: 'service',
 		selector: 'Service grid'
@@ -10,8 +10,8 @@
 		ref: 'serviceEdit',
 		selector: 'ServiceEdit'
 	}, {
-		ref: 'treegridProductCategory',
-		selector: 'ProductCategoryList treepanel[name=treegridProductCategory]'
+		ref: 'treegridServiceCategory',
+		selector: 'ServiceCategoryList treepanel[name=treegridServiceCategory]'
 	}, {
 		ref: 'treeServiceCategory',
 		selector: 'Service treepanel[name=treeServiceCategory]',
@@ -55,16 +55,16 @@
 			'ServiceEdit checkboxfield[name=IsCanPointExchange]': {
 				change: me.pointExchangeChange
 			},
-			'ProductCategoryList button[action=addProductCategory]': {
+			'ServiceCategoryList button[action=addProductCategory]': {
 				click: me.addProductCategory
 			},
-			'ProductCategoryList button[action=editProductCategory]': {
+			'ServiceCategoryList button[action=editProductCategory]': {
 				click: me.EditProductCategory
 			},
-			'ProductCategoryList button[action=delProductCategory]': {
+			'ServiceCategoryList button[action=delProductCategory]': {
 				click: me.delProductCategory
 			},
-			'ProductCategoryEdit button[action=save]': {
+			'ServiceCategoryEdit button[action=save]': {
 				click: me.saveProductCategory
 			},
 			'ChangeCategory button[action=saveProductCategoryBtn]': {
@@ -264,7 +264,7 @@
 		var form = win.form.getForm();
 		var formValues = form.getValues();
 		if (form.isValid()) {
-			var store = me.getTreegridProductCategory().getStore();
+			var store = me.getTreegridServiceCategory().getStore();
 			var treeServiceCategoryStore = me.getTreeServiceCategory().getStore();
 			if (form.actionMethod == 'POST') {
 				store.addProductCategory(formValues, function (request, success, response) {
@@ -319,7 +319,7 @@
 	},
 	delProductCategory: function (btn) {
 		var me = this;
-		var selectedItems = this.getTreegridProductCategory().getView().getSelectionModel().getSelection();
+		var selectedItems = this.getTreegridServiceCategory().getView().getSelectionModel().getSelection();
 		if (selectedItems.length < 1) {
 			Ext.MessageBox.alert("提示", "请先选中需要删除的数据");
 			return;
@@ -327,7 +327,7 @@
 		var ID = selectedItems[0].get('ID');
 		Ext.MessageBox.confirm('询问', '您确定要删除吗?', function (opt) {
 			if (opt == 'yes') {
-				var store = me.getTreegridProductCategory().getStore();
+				var store = me.getTreegridServiceCategory().getStore();
 				Ext.Msg.wait('正在处理数据，请稍候……', '状态提示');
 				store.deleteProductCategory(ID, function (request, success, response) {
 					if (response.timedout) {
@@ -352,26 +352,26 @@
 		});
 	},
 	EditProductCategory: function (btn) {
-		var selectedItems = this.getTreegridProductCategory().getView().getSelectionModel().getSelection();
+		var selectedItems = this.getTreegridServiceCategory().getView().getSelectionModel().getSelection();
 		if (selectedItems.length < 1) {
 			Ext.MessageBox.alert("提示", "请先选中需要编辑的数据");
 			return;
 		}
-		var win = Ext.widget("ProductCategoryEdit");
+		var win = Ext.widget("ServiceCategoryEdit");
 		win.form.loadRecord(selectedItems[0]);
 		win.form.getForm().actionMethod = 'PUT';
 		win.setTitle('修改分类');
 		win.show();
 	},
 	addProductCategory: function (button) {
-		var win = Ext.widget("ProductCategoryEdit");
+		var win = Ext.widget("ServiceCategoryEdit");
 		win.form.getForm().actionMethod = 'POST';
 		win.setTitle('添加分类');
 		//win.down('[name=ParentProductCategoryID]').disable();
 		win.show();
 	},
 	manageProductCategory: function (btn) {
-		var win = Ext.widget("ProductCategoryList");
+		var win = Ext.widget("ServiceCategoryList");
 		win.setTitle('分类管理');
 		win.show();
 	},

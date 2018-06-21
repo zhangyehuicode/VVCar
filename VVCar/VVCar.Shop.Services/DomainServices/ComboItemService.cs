@@ -35,11 +35,11 @@ namespace VVCar.Shop.Services.DomainServices
         {
             if (entity == null)
                 return null;
-            var productCodeList = this.Repository.GetQueryable(false).Where(t => t.ProductID == entity.ProductID).Select(t => t.ProductCode).ToList();
+            var productIDList = this.Repository.GetQueryable(false).Where(t => t.ProductID == entity.ProductID).Select(t => t.ProductID).ToList();
             var existData = false;
-            foreach (var productCode in productCodeList)
+            foreach (var productID in productIDList)
             {
-                if (productCode == entity.ProductCode)
+                if (productID == entity.ProductID)
                     existData = true;
             }
             if (existData)
@@ -93,6 +93,8 @@ namespace VVCar.Shop.Services.DomainServices
         public IEnumerable<ComboItem> Search(ComboItemFilter filter, out int totalCount)
         {
             var queryable = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (filter.ComboID.HasValue)
+                queryable = queryable.Where(t => t.ComboID == filter.ComboID.Value);
             if (filter.ProductID.HasValue)
                 queryable = queryable.Where(t => t.ProductID == filter.ProductID.Value);
             totalCount = queryable.Count();

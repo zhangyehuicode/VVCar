@@ -61,7 +61,6 @@
     <Compile Include="Entities\CarBitCoinMember.cs" />
     <Compile Include="Entities\CarBitCoinRecord.cs" />
     <Compile Include="Entities\ComboItem.cs" />
-    <Compile Include="Entities\ComboVerificationRecord.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderItem.cs" />
     <Compile Include="Entities\OrderPaymentDetails.cs" />

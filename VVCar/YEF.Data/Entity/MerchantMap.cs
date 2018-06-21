@@ -31,7 +31,7 @@ namespace YEF.Data
 
             Property(t => t.Email)
                 .IsRequired()
-                .HasMaxLength(20);
+                .HasMaxLength(25);
 
             Property(t => t.WeChatOAPassword)
                 .HasMaxLength(20);

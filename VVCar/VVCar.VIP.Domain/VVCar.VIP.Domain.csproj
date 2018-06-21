@@ -88,6 +88,8 @@
     <Compile Include="Entities\CardThemeGroup.cs" />
     <Compile Include="Entities\CardThemeGroupUseTime.cs" />
     <Compile Include="Entities\Coupon.cs" />
+    <Compile Include="Entities\CouponItem.cs" />
+    <Compile Include="Entities\CouponItemVerificationRecord.cs" />
     <Compile Include="Entities\CouponPush.cs" />
     <Compile Include="Entities\CouponPushItem.cs" />
     <Compile Include="Entities\CouponPushRecord.cs" />

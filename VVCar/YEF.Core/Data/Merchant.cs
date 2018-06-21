@@ -105,6 +105,12 @@ namespace YEF.Core.Data
         public string WeChatMchKey { get; set; }
 
         /// <summary>
+        /// 微信商户操作密码
+        /// </summary>
+        [Display(Name = "微信商户操作密码")]
+        public string MeChatMchPassword { get; set; }
+
+        /// <summary>
         /// 开户行
         /// </summary>
         [Display(Name = "开户行")]

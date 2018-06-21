@@ -96,6 +96,15 @@
 				allowBlank: false,
 				value: 0,
 			}, {
+				xtype: 'combobox',
+				name: 'IsCombo',
+				store: yesNoDictStore,
+				displayField: 'DictName',
+				valueField: 'DictValue',
+				fieldLabel: '是否套餐',
+				editable: false,
+				value: false,
+			}, {
 				xtype: 'form',
 				border: false,
 				layout: 'hbox',

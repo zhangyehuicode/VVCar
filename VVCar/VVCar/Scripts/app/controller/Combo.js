@@ -78,7 +78,7 @@
 		var me = this;
 		var store = me.getGridComboItem().getStore();
 		var params = {
-			ProductID: record.data.ID,
+			ComboID: record.data.ID,
 		}
 		Ext.apply(store.proxy.extraParams, params);
 		store.load();
@@ -131,13 +131,15 @@
 		var me = this;
 		var win = me.getComboEdit();
 		var store = me.getGridComboItem().getStore();
-		var ProductID = me.tasks[0].data.ID;
+		var ComboID = me.tasks[0].data.ID;
+		var ProductID = win.down('textfield[name=ProductID]').getValue();
 		var ProductCode = win.down('textfield[name=ProductCode]').getValue();
 		var ProductName = win.down('textfield[name=ProductName]').getValue();
 		var BasePrice = win.down('textfield[name=BasePrice]').getValue();
 		var PriceSale = win.down('textfield[name=PriceSale]').getValue();
 		var Quantity = win.down('textfield[name=Quantity]').getValue();
 		var comboItem = {
+			ComboID: ComboID,
 			ProductID: ProductID,
 			ProductCode: ProductCode,
 			ProductName: ProductName,

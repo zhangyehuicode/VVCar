@@ -118,7 +118,8 @@ namespace VVCar.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpPost, Route("UploadIDCard")]
-        public UploadFileResult UploadIDCard() {
+        public UploadFileResult UploadIDCard()
+        {
             return UploadAction("Pictures/IDCard");
         }
 
@@ -127,7 +128,7 @@ namespace VVCar.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpPost, Route("UploadPlate")]
-        public UploadFileResult UploadPlate()
+        public void UploadPlate()
         {
             var result = UploadAction("Pictures/Plate");
             if (!string.IsNullOrEmpty(result.FileUrl) && result.FileUrl.Length > 1)
@@ -135,7 +136,9 @@ namespace VVCar.Controllers.Api
                 var prfilename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, result.FileUrl.Substring(1));
                 result.PRResult = GetPRResult(prfilename);
             }
-            return result;
+            HttpContext.Current.Response.Write(JsonHelper.Serialize(result));
+            HttpContext.Current.Response.End();
+            //return result;
         }
 
         private UploadFileResult UploadAction(string targetDirPath)

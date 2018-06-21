@@ -35,7 +35,7 @@
 		}, {
 			xtype: 'grid',
 			name: 'grdProduct',
-			title: '产品列表',
+			title: '服务列表',
 			flex: 1,
 			store: productStore,
 			stripeRows: true,
@@ -141,6 +141,15 @@
 				},
 				{ header: '兑换积分', dataIndex: 'Points', width: 80 },
 				{ header: '兑换上限', dataIndex: 'UpperLimit', width: 80 },
+				{
+					header: '是否套餐', dataIndex: 'IsCombo', width: 80,
+					renderer: function (value) {
+						if (value == true)
+							return '<span style="color:green;">是</span>';
+						else
+							return '<span style="color:red;">否</span>';
+					}
+				},
 				{
 					header: '是否上架', dataIndex: 'IsPublish', width: 80,
 					renderer: function (value) {

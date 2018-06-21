@@ -18,6 +18,7 @@
 		{ name: 'WeChatAppID' },
 		{ name: 'WeChatAppSercret' },
 		{ name: 'WeChatMchKey' },
+		{ name: "MeChatMchPassword" },
 		{ name: 'Bank' },
 		{ name: 'BankCard' },
 	]

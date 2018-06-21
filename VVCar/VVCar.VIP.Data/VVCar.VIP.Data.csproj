@@ -53,6 +53,8 @@
     <Compile Include="Mapping\CardThemeCategoryMap.cs" />
     <Compile Include="Mapping\CardThemeGroupMap.cs" />
     <Compile Include="Mapping\CardThemeGroupUseTimeMap.cs" />
+    <Compile Include="Mapping\CouponItemMap.cs" />
+    <Compile Include="Mapping\CouponItemVerificationRecordMap.cs" />
     <Compile Include="Mapping\CouponMap.cs" />
     <Compile Include="Mapping\CouponPushItemMap.cs" />
     <Compile Include="Mapping\CouponPushMap.cs" />

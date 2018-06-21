@@ -1,28 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Entities;
 using YEF.Core.Data;
-using System.ComponentModel.DataAnnotations;
 
-namespace VVCar.Shop.Domain.Entities
+namespace VVCar.VIP.Domain.Entities
 {
     /// <summary>
-    /// 套餐核销记录
+    /// 卡券子项核销记录
     /// </summary>
-    public class ComboVerificationRecord : EntityBase
+    public class CouponItemVerificationRecord : EntityBase
     {
         /// <summary>
-        /// 套餐子项ID
+        /// 卡券ID
         /// </summary>
-        [Display(Name = "套餐子项ID")]
-        public Guid ComboItemID { get; set; }
+        [Display(Name = "卡券ID")]
+        public Guid CouponID { get; set; }
 
         /// <summary>
-        /// 套餐子项
+        /// 卡券子项ID
         /// </summary>
-        public virtual ComboItem ComboItem { get; set; }
+        [Display(Name = "卡券子项ID")]
+        public Guid CouponItemID { get; set; }
+
+        /// <summary>
+        /// 卡券子项
+        /// </summary>
+        public virtual CouponItem CouponItem { get; set; }
 
         /// <summary>
         /// 接车单ID
@@ -45,6 +52,12 @@ namespace VVCar.Shop.Domain.Entities
         /// 商城订单
         /// </summary>
         public virtual Order Order { get; set; }
+
+        /// <summary>
+        /// 交易订单号
+        /// </summary>
+        [Display(Name = "交易订单号")]
+        public string TradeNo { get; set; }
 
         /// <summary>
         /// 数量

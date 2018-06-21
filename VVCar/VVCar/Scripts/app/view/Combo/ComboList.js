@@ -61,9 +61,9 @@
 				}
 			],
 			columns: [
-				{ header: '排序', dataIndex: 'Index', width: 60 },
+				//{ header: '排序', dataIndex: 'Index', width: 60 },
 				{ header: '编码', dataIndex: 'Code', width: 80 },
-				{ header: '标题', dataIndex: 'Name', flex: 1 },
+				{ header: '名称', dataIndex: 'Name', flex: 1 },
 				//{
 				//	header: '商品图片', dataIndex: 'ImgUrl', width: 100,
 				//	renderer: function (value) {

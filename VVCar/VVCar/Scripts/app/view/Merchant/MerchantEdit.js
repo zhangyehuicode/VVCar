@@ -37,7 +37,7 @@
 							margin: '5 5 5 10',
 							name: 'Email',
 							fieldLabel: '注册邮箱',
-							maxLength: 20,
+							maxLength: 25,
 							allowBlank: false,
 						}, {
 							xtype: 'textfield',
@@ -118,12 +118,22 @@
 						maxLength: 20,
 						allowBlank: true,
 					}, {
-						xtype: 'textfield',
-						margin: '5 5 5 10',
-						name: 'WeChatMchKey',
-						fieldLabel: '微信商户Key',
-						maxLength: 50,
-						allowBlank: true,
+						xtype: 'form',
+						layout: 'hbox',
+						items: [{
+							xtype: 'textfield',
+							margin: '5 5 5 10',
+							name: 'WeChatMchKey',
+							fieldLabel: '微信商户Key',
+							maxLength: 50,
+							allowBlank: true,
+						}, {
+							xtype: 'textfield',
+							margin: '5 5 5 10',
+							name: 'MeChatMchPassword',
+							fieldLabel: '商户号密码',
+							maxLength: 20,
+						}]
 					}]
 				}, {
 					xtype: 'form',

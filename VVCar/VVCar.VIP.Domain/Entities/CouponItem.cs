@@ -1,25 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Entities;
 using YEF.Core.Data;
-using System.ComponentModel.DataAnnotations;
 
-namespace VVCar.Shop.Domain.Entities
+namespace VVCar.VIP.Domain.Entities
 {
     /// <summary>
-    /// 套餐子项
+    /// 卡券子项
     /// </summary>
-    public class ComboItem : EntityBase
+    public class CouponItem : EntityBase
     {
+        /// <summary>
+        /// 卡券ID
+        /// </summary>
+        [Display(Name = "卡券ID")]
+        public Guid CouponID { get; set; }
+
+        /// <summary>
+        /// 卡券
+        /// </summary>
+        public virtual Coupon Coupon { get; set; }
+
         /// <summary>
         /// 套餐ID
         /// </summary>
         [Display(Name = "套餐ID")]
         public Guid ComboID { get; set; }
 
-        /// <summary> 
+        /// <summary>
         /// 产品ID
         /// </summary>
         [Display(Name = "产品ID")]

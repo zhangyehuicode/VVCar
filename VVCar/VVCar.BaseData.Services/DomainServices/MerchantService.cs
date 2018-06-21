@@ -127,6 +127,7 @@ namespace VVCar.BaseData.Services.DomainServices
             merchant.CompanyAddress = entity.CompanyAddress;
             merchant.WeChatAppID = entity.WeChatAppID;
             merchant.WeChatAppSecret = entity.WeChatAppSecret;
+            merchant.MeChatMchPassword = entity.MeChatMchPassword;
             merchant.WeChatMchID = entity.WeChatMchID;
             merchant.WeChatMchKey = entity.WeChatMchKey;
             merchant.Bank = entity.Bank;
