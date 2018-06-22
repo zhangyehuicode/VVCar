@@ -11,6 +11,7 @@ using NPOI.XSSF.UserModel;
 using VVCar.BaseData.Domain;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
+using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Enums;
@@ -95,6 +96,10 @@ namespace VVCar.VIP.Services.DomainServices
         {
             get => UnitOfWork.GetRepository<IRepository<Merchant>>();
         }
+
+        IRepository<Product> ProductRepo { get => UnitOfWork.GetRepository<IRepository<Product>>(); }
+
+        IRepository<CouponItem> CouponItemRepo { get => UnitOfWork.GetRepository<IRepository<CouponItem>>(); }
 
         #region SystemSettingService
 
@@ -422,60 +427,124 @@ namespace VVCar.VIP.Services.DomainServices
                     }
                     CouponTemplateRepo.Update(template);
                 }
+
+                var newCoupons = new List<Coupon>();
+                var couponItems = new List<CouponItem>();
+                foreach (var template in templates)
+                {
+                    var newCoupon = new Coupon
+                    {
+                        ID = Util.NewID(),
+                        TemplateID = template.ID,
+                        CouponValue = template.CouponValue,
+                        EffectiveDate = template.GetEffectiveDate(),
+                        ExpiredDate = template.GetExpiredDate(),
+                        OwnerOpenID = receiveCouponDto.ReceiveOpenID,
+                        OwnerNickName = receiveCouponDto.NickName,
+                        OwnerHeadImgUrl = receiveCouponDto.HeadImgUrl,
+                        OwnerPhoneNo = receiveCouponDto.MobilePhoneNo,
+                        CreatedDate = DateTime.Now,
+                        IsCanReuse = template.IsSpecialCoupon,
+                        ReceiveChannel = receiveCouponDto.ReceiveChannel,
+                        //IsDeductionFirst = template.IsDeductionFirst,
+                    };
+                    newCoupon.CouponCode = GenerateCouponCode(newCoupon.ID);
+                    if (template.Nature == ENature.Card && !string.IsNullOrEmpty(template.IncludeProducts))
+                    {
+                        var items = AddCouponItem(newCoupon.ID, template.IncludeProducts);
+                        AppContext.Logger.Info($"AddCouponItem result:{items.Count}");
+                        if (items != null)
+                        {
+                            couponItems.AddRange(items);
+                        }
+                        //newCoupon.CouponItemList = items;
+                    }
+                    newCoupons.Add(newCoupon);
+                    if (sendNotify || receiveCouponDto.SendNotify)
+                    {
+                        var companyCode = AppContext.CurrentSession.CompanyCode;
+                        var merchantId = receiveCouponDto.MerchantID.Value;
+                        if (string.IsNullOrEmpty(companyCode))
+                            companyCode = receiveCouponDto.CompanyCode;
+                        if (!receiveCouponDto.MerchantID.HasValue)
+                            merchantId = AppContext.CurrentSession.MerchantID;
+                        var message = new WeChatTemplateMessageDto
+                        {
+                            touser = receiveCouponDto.ReceiveOpenID,
+                            template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ReceivedSuccess, merchantId),//WXMsg_CouponReceived
+                            url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={companyCode}",
+                            data = new System.Dynamic.ExpandoObject(),
+                        };
+                        message.data.first = new WeChatTemplateMessageDto.MessageData("恭喜您获得新的卡券");
+                        message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(receiveCouponDto.NickName);
+                        message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(template.Title);
+                        message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(newCoupon.CreatedDate.ToDateString());
+                        message.data.remark = new WeChatTemplateMessageDto.MessageData("点击查看我的卡包");
+                        WeChatService.SendWeChatNotifyAsync(message, receiveCouponDto.CompanyCode);
+                    }
+                }
+                Repository.Add(newCoupons);
+                CouponItemRepo.Add(couponItems);
+
                 UnitOfWork.CommitTransaction();
+                return newCoupons.ToArray();
             }
             catch (Exception ex)
             {
                 UnitOfWork.RollbackTransaction();
                 throw ex;
             }
+        }
 
-            var newCoupons = new List<Coupon>();
-            foreach (var template in templates)
+        private List<CouponItem> AddCouponItem(Guid couponId, string productCodes)
+        {
+            if (couponId == null || string.IsNullOrEmpty(productCodes))
+                return null;
+            var codes = productCodes.Split(',');
+            if (codes == null || codes.Count() < 1)
+                return null;
+            AppContext.Logger.Info($"AddCouponItem productCodes:{productCodes}");
+            var products = ProductRepo.GetInclude(t => t.ComboItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && codes.Contains(t.Code)).ToList();
+            if (products == null || products.Count < 1)
+                return null;
+            var result = new List<CouponItem>();
+            var normalproducts = products.Where(t => !t.IsCombo).ToList();
+            var comboproducts = products.Where(t => t.IsCombo).ToList();
+            var comboItems = new List<ComboItem>();
+            comboproducts.ForEach(t =>
             {
-                var newCoupon = new Coupon
-                {
-                    ID = Util.NewID(),
-                    TemplateID = template.ID,
-                    CouponValue = template.CouponValue,
-                    EffectiveDate = template.GetEffectiveDate(),
-                    ExpiredDate = template.GetExpiredDate(),
-                    OwnerOpenID = receiveCouponDto.ReceiveOpenID,
-                    OwnerNickName = receiveCouponDto.NickName,
-                    OwnerHeadImgUrl = receiveCouponDto.HeadImgUrl,
-                    OwnerPhoneNo = receiveCouponDto.MobilePhoneNo,
-                    CreatedDate = DateTime.Now,
-                    IsCanReuse = template.IsSpecialCoupon,
-                    ReceiveChannel = receiveCouponDto.ReceiveChannel,
-                    //IsDeductionFirst = template.IsDeductionFirst,
-                };
-                newCoupon.CouponCode = GenerateCouponCode(newCoupon.ID);
-                newCoupons.Add(newCoupon);
-                if (sendNotify || receiveCouponDto.SendNotify)
-                {
-                    var companyCode = AppContext.CurrentSession.CompanyCode;
-                    var merchantId = receiveCouponDto.MerchantID.Value;
-                    if (string.IsNullOrEmpty(companyCode))
-                        companyCode = receiveCouponDto.CompanyCode;
-                    if (!receiveCouponDto.MerchantID.HasValue)
-                        merchantId = AppContext.CurrentSession.MerchantID;
-                    var message = new WeChatTemplateMessageDto
-                    {
-                        touser = receiveCouponDto.ReceiveOpenID,
-                        template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_ReceivedSuccess, merchantId),//WXMsg_CouponReceived
-                        url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={companyCode}",
-                        data = new System.Dynamic.ExpandoObject(),
-                    };
-                    message.data.first = new WeChatTemplateMessageDto.MessageData("恭喜您获得新的卡券");
-                    message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(receiveCouponDto.NickName);
-                    message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(template.Title);
-                    message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(newCoupon.CreatedDate.ToDateString());
-                    message.data.remark = new WeChatTemplateMessageDto.MessageData("点击查看我的卡包");
-                    WeChatService.SendWeChatNotifyAsync(message, receiveCouponDto.CompanyCode);
-                }
-            }
-            Repository.Add(newCoupons);
-            return newCoupons.ToArray();
+                comboItems.AddRange(t.ComboItemList);
+            });
+            var couponItems = normalproducts.Select(t => new CouponItem
+            {
+                ID = Util.NewID(),
+                CouponID = couponId,
+                ProductID = t.ID,
+                ProductName = t.Name,
+                ProductCode = t.Code,
+                BasePrice = t.BasePrice,
+                PriceSale = t.PriceSale,
+                Quantity = 1,
+                CreatedDate = DateTime.Now,
+            }).ToList();
+            var comboCouponItems = comboItems.Select(t => new CouponItem
+            {
+                ID = Util.NewID(),
+                CouponID = couponId,
+                ComboID = t.ComboID,
+                ProductID = t.ProductID,
+                ProductName = t.ProductName,
+                ProductCode = t.ProductCode,
+                BasePrice = t.BasePrice,
+                PriceSale = t.PriceSale,
+                Quantity = t.Quantity,
+                CreatedDate = DateTime.Now,
+            }).ToList();
+
+            result.AddRange(couponItems);
+            result.AddRange(comboCouponItems);
+
+            return result;
         }
 
         public IEnumerable<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID)
@@ -629,7 +698,7 @@ namespace VVCar.VIP.Services.DomainServices
 
         public CouponFullInfoDto GetCouponInfo(Guid couponID)
         {
-            var coupon = Repository.GetInclude(t => t.Template, false)
+            var coupon = Repository.GetIncludes(false, "Template", "CouponItemList")
                 .FirstOrDefault(t => t.ID == couponID);
             if (coupon == null)
             {
@@ -651,6 +720,7 @@ namespace VVCar.VIP.Services.DomainServices
             couponInfo.OwnerPhoneNo = coupon.OwnerPhoneNo;
             couponInfo.CanGiveToPeople = coupon.Template.CanGiveToPeople;
             couponInfo.CanShareByPeople = coupon.Template.CanShareByPeople;
+            couponInfo.CouponItemList = coupon.CouponItemList.ToList();
             return couponInfo;
         }
 
@@ -695,7 +765,7 @@ namespace VVCar.VIP.Services.DomainServices
                 throw new DomainException("优惠券不存在");
             }
             var defaultDeptId = Guid.Parse("00000000-0000-0000-0000-000000000001");
-            var deptQueryable = DepartmentRepo.GetQueryable(false);//.Where(d => d.ID != defaultDeptId);
+            var deptQueryable = DepartmentRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);//.Where(d => d.ID != defaultDeptId);
             if (!couponTemplate.IsApplyAllStore && !string.IsNullOrEmpty(couponTemplate.ApplyStores))
             {
                 var deptCodes = couponTemplate.ApplyStores.Split(',');

@@ -13,6 +13,11 @@ namespace VVCar.VIP.Domain.Dtos
     /// </summary>
     public class CouponFullInfoDto
     {
+        public CouponFullInfoDto()
+        {
+            CouponItemList = new List<CouponItem>();
+        }
+
         /// <summary>
         /// 优惠券ID
         /// </summary>
@@ -341,5 +346,10 @@ namespace VVCar.VIP.Domain.Dtos
                 return builder.ToString();
             }
         }
+
+        /// <summary>
+        /// 卡券子项
+        /// </summary>
+        public List<CouponItem> CouponItemList { get; set; }
     }
 }

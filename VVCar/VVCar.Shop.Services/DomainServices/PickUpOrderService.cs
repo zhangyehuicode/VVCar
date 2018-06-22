@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
 using VVCar.Shop.Domain.Dtos;
@@ -41,6 +42,20 @@ namespace VVCar.Shop.Services.DomainServices
         IRepository<PickUpOrderItem> PickUpOrderItemRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrderItem>>(); }
 
         IMemberService MemberService { get => ServiceLocator.Instance.GetService<IMemberService>(); }
+
+        IRepository<CouponItem> CouponItemRepo { get => UnitOfWork.GetRepository<IRepository<CouponItem>>(); }
+
+        IRepository<CouponItemVerificationRecord> CouponItemVerificationRecordRepo { get => UnitOfWork.GetRepository<IRepository<CouponItemVerificationRecord>>(); }
+
+        ISystemSettingService SystemSettingService
+        {
+            get { return ServiceLocator.Instance.GetService<ISystemSettingService>(); }
+        }
+
+        IWeChatService WeChatService
+        {
+            get { return ServiceLocator.Instance.GetService<IWeChatService>(); }
+        }
 
         #endregion
 
@@ -209,42 +224,51 @@ namespace VVCar.Shop.Services.DomainServices
                 if (orderitemcodes == null || orderitemcodes.Count < 1)
                     throw new DomainException("服务信息为空");
                 var verificationcoupons = new List<Coupon>();
+                var verificationcards = new List<Coupon>();
                 var discountCoupons = coupons.Where(t => t.Template.CouponType == ECouponType.Discount).OrderBy(t => t.Template.CouponValue).ToList();
                 if (discountCoupons != null && discountCoupons.Count > 0)
                 {
                     discountCoupons.ForEach(t =>
                     {
-                        var discountcodes = new List<string>();
-                        var undiscountcodes = new List<string>();
-                        if (!string.IsNullOrEmpty(t.Template.IncludeProducts))
+                        if (t.Template.Nature == ENature.Coupon)
                         {
-                            orderitemcodes.ForEach(item =>
+                            var discountcodes = new List<string>();
+                            var undiscountcodes = new List<string>();
+                            if (!string.IsNullOrEmpty(t.Template.IncludeProducts))
                             {
-                                if (t.Template.IncludeProducts.Contains(item))
+                                orderitemcodes.ForEach(item =>
                                 {
-                                    discountcodes.Add(item);
-                                }
-                            });
-                        }
-                        else if (!string.IsNullOrEmpty(t.Template.ExcludeProducts))
-                        {
-                            orderitemcodes.ForEach(item =>
+                                    if (t.Template.IncludeProducts.Contains(item))
+                                    {
+                                        discountcodes.Add(item);
+                                    }
+                                });
+                            }
+                            else if (!string.IsNullOrEmpty(t.Template.ExcludeProducts))
                             {
-                                if (t.Template.ExcludeProducts.Contains(item))
+                                orderitemcodes.ForEach(item =>
                                 {
-                                    undiscountcodes.Add(item);
-                                }
-                            });
-                            discountcodes = orderitemcodes.Except(undiscountcodes).ToList();
+                                    if (t.Template.ExcludeProducts.Contains(item))
+                                    {
+                                        undiscountcodes.Add(item);
+                                    }
+                                });
+                                discountcodes = orderitemcodes.Except(undiscountcodes).ToList();
+                            }
+                            else
+                            {
+                                discountcodes = orderitemcodes;
+                            }
+                            var discountpickuporderitems = order.PickUpOrderItemList.Where(item => discountcodes.Contains(item.ProductCode)).ToList();
+                            var applyres = ApplyDiscount(discountpickuporderitems, t, order, param);
+                            if (applyres != null)
+                                verificationcoupons.Add(applyres);
                         }
                         else
                         {
-                            discountcodes = orderitemcodes;
+                            var applycard = ApplyCardDiscount(t, order, param);
+                            verificationcards.Add(applycard);
                         }
-                        var discountpickuporderitems = order.PickUpOrderItemList.Where(item => discountcodes.Contains(item.ProductCode)).ToList();
-                        var applyres = ApplyDiscount(discountpickuporderitems, t, order, param);
-                        if (applyres != null)
-                            verificationcoupons.Add(applyres);
                     });
                 }
                 var memberCardVoucherInfo = new List<MemberCardVoucherInfo>();
@@ -253,59 +277,69 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     voucherCoupons.ForEach(t =>
                     {
-                        var vouchercodes = new List<string>();
-                        var unvouchercodes = new List<string>();
-                        if (!string.IsNullOrEmpty(t.Template.IncludeProducts))
+                        if (t.Template.Nature == ENature.Coupon)
                         {
-                            orderitemcodes.ForEach(item =>
+                            var vouchercodes = new List<string>();
+                            var unvouchercodes = new List<string>();
+                            if (!string.IsNullOrEmpty(t.Template.IncludeProducts))
                             {
-                                if (t.Template.IncludeProducts.Contains(item))
+                                orderitemcodes.ForEach(item =>
                                 {
-                                    vouchercodes.Add(item);
-                                }
-                            });
-                        }
-                        else if (!string.IsNullOrEmpty(t.Template.ExcludeProducts))
-                        {
-                            orderitemcodes.ForEach(item =>
+                                    if (t.Template.IncludeProducts.Contains(item))
+                                    {
+                                        vouchercodes.Add(item);
+                                    }
+                                });
+                            }
+                            else if (!string.IsNullOrEmpty(t.Template.ExcludeProducts))
                             {
-                                if (t.Template.ExcludeProducts.Contains(item))
+                                orderitemcodes.ForEach(item =>
                                 {
-                                    unvouchercodes.Add(item);
-                                }
-                            });
-                            vouchercodes = orderitemcodes.Except(unvouchercodes).ToList();
+                                    if (t.Template.ExcludeProducts.Contains(item))
+                                    {
+                                        unvouchercodes.Add(item);
+                                    }
+                                });
+                                vouchercodes = orderitemcodes.Except(unvouchercodes).ToList();
+                            }
+                            else
+                            {
+                                vouchercodes = orderitemcodes;
+                            }
+                            var voucherpickuporderitems = order.PickUpOrderItemList.Where(item => vouchercodes.Contains(item.ProductCode)).ToList();
+                            var applyres = ApplyVoucher(voucherpickuporderitems, t, order, param, memberCardVoucherInfo);
+                            if (applyres != null)
+                                verificationcoupons.Add(applyres);
                         }
                         else
                         {
-                            vouchercodes = orderitemcodes;
+                            var applycard = ApplyCardVoucher(t, order, param);
+                            verificationcards.Add(applycard);
                         }
-                        var voucherpickuporderitems = order.PickUpOrderItemList.Where(item => vouchercodes.Contains(item.ProductCode)).ToList();
-                        var applyres = ApplyVoucher(voucherpickuporderitems, t, order, param, memberCardVoucherInfo);
-                        if (applyres != null)
-                            verificationcoupons.Add(applyres);
                     });
                 }
-                //var verificationcards = verificationcoupons.Where(t => t.Template.Nature == ENature.Card).ToList();
-                //var vcoupons = verificationcoupons.Where(t => t.Template.Nature == ENature.Coupon).ToList();
                 if (verificationcoupons.Count > 0)
                 {
+                    //券核销
                     CouponService.VerifyCoupon(new VerifyCouponDto
                     {
-                        CouponCodes = verificationcoupons.Select(t => t.CouponCode).ToList(),
+                        CouponCodes = verificationcoupons.Where(t => t.Template.Nature == ENature.Coupon).Select(t => t.CouponCode).ToList(),
                         VerificationMode = VIP.Domain.Enums.EVerificationMode.ScanCode,
                         DepartmentCode = param.DepartmentCode,
                         DepartmentID = param.DepartmentID,
                         MemberCardVoucherInfoList = memberCardVoucherInfo,
                     });
-
+                }
+                if (verificationcoupons.Count > 0 || verificationcards.Count > 0)
+                {
                     RecountMoney(order);
                     PickUpOrderItemRepo.UpdateRange(order.PickUpOrderItemList);
                     Repository.Update(order);
                     UnitOfWork.CommitTransaction();
                     return true;
                 }
-                throw new DomainException("没有可以核销对应服务的卡券");
+                else
+                    throw new DomainException("没有可以核销对应服务的卡券");
             }
             catch (Exception e)
             {
@@ -346,6 +380,85 @@ namespace VVCar.Shop.Services.DomainServices
                     PayType = coupon.Template.Nature == ENature.Card ? EPayType.MemberCard : EPayType.Coupon,
                     PayMoney = discountMoney,
                     PayInfo = $"类型:折扣,标题:{coupon.Template.Title},卡券号:{coupon.CouponCode},折扣系数:{coupon.Template.CouponValue / 10},折扣金额:{discountMoney},应用服务:{discountproductnames}",
+                    MemberInfo = "",
+                    StaffID = param.StaffID,
+                    StaffName = param.StaffName,
+                });
+            }
+            if (discountMoney > 0)
+            {
+                if (coupon.Template.ConsumePointRate > 0)
+                {
+                    var sendpoint = discountMoney * coupon.Template.ConsumePointRate / 100;
+                    MemberService.AdjustMemberPoint(coupon.OwnerOpenID, EMemberPointType.MemberCardConsumeReturn, (double)sendpoint);
+                }
+                return coupon;
+            }
+            else
+                return null;
+        }
+
+        private Coupon ApplyCardDiscount(Coupon coupon, PickUpOrder pickUpOrder, VerificationParam param)
+        {
+            if (coupon == null || pickUpOrder == null || pickUpOrder.PickUpOrderItemList == null || pickUpOrder.PickUpOrderItemList.Count < 1 || param == null)
+                return null;
+
+            var couponItems = CouponItemRepo.GetQueryable().Where(t => t.CouponID == coupon.ID).ToList();
+            if (couponItems == null || couponItems.Count < 1)
+                return null;
+
+            var availabletimes = couponItems.GroupBy(g => 1).Select(t => t.Sum(s => s.Quantity)).FirstOrDefault();
+            if (availabletimes < 1)
+                return null;
+            var couponItemProductCodes = couponItems.Select(t => t.ProductCode).ToList();
+
+            var oriMoney = pickUpOrder.PickUpOrderItemList.GroupBy(t => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            pickUpOrder.PickUpOrderItemList.Where(t => couponItemProductCodes.Contains(t.ProductCode)).ForEach(t =>
+             {
+                 var couponItem = couponItems.Where(item => item.ProductCode == t.ProductCode).FirstOrDefault();
+                 if (couponItem != null && couponItem.Quantity > 0)
+                 {
+                     var discount = coupon.CouponValue / 10;
+                     t.Money = Math.Ceiling(t.Money * discount);
+                     t.Discount = (t.Quantity * t.PriceSale) != 0 ? t.Money / (t.Quantity * t.PriceSale) : 0;
+
+                     CouponItemVerificationRecordRepo.Add(new CouponItemVerificationRecord
+                     {
+                         ID = Util.NewID(),
+                         CouponID = coupon.ID,
+                         CouponItemID = couponItem.ID,
+                         PickUpOrderID = pickUpOrder.ID,
+                         TradeNo = pickUpOrder.Code,
+                         Quantity = 1,
+                         CreatedDate = DateTime.Now,
+                     });
+
+                     couponItem.Quantity -= 1;
+                 }
+             });
+            CouponItemRepo.UpdateRange(couponItems);
+
+            var afterMoney = pickUpOrder.PickUpOrderItemList.GroupBy(t => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            var discountMoney = oriMoney - afterMoney;
+            if (discountMoney < 0)
+                discountMoney = 0;
+            if (pickUpOrder != null && discountMoney > 0)
+            {
+                var discountproductnames = string.Empty;
+                pickUpOrder.PickUpOrderItemList.Where(t => couponItemProductCodes.Contains(t.ProductCode)).ForEach(t =>
+                {
+                    if (string.IsNullOrEmpty(discountproductnames))
+                        discountproductnames += t.ProductName;
+                    else
+                        discountproductnames += "、" + t.ProductName;
+                });
+                PickUpOrderPaymentDetailsService.Add(new PickUpOrderPaymentDetails
+                {
+                    PickUpOrderID = pickUpOrder.ID,
+                    PickUpOrderCode = pickUpOrder.Code,
+                    PayType = EPayType.MemberCard,
+                    PayMoney = discountMoney,
+                    PayInfo = $"类型:折扣,标题:{coupon.Template.Title},卡号:{coupon.CouponCode},折扣系数:{coupon.Template.CouponValue / 10},折扣金额:{discountMoney},应用服务:{discountproductnames}",
                     MemberInfo = "",
                     StaffID = param.StaffID,
                     StaffName = param.StaffName,
@@ -433,6 +546,108 @@ namespace VVCar.Shop.Services.DomainServices
             }
             else
                 return null;
+        }
+
+        private Coupon ApplyCardVoucher(Coupon coupon, PickUpOrder pickUpOrder, VerificationParam param)
+        {
+            if (coupon == null || pickUpOrder == null || pickUpOrder.PickUpOrderItemList == null || pickUpOrder.PickUpOrderItemList.Count < 1 || param == null)
+                return null;
+
+            var couponItems = CouponItemRepo.GetQueryable().Where(t => t.CouponID == coupon.ID).ToList();
+            if (couponItems == null || couponItems.Count < 1)
+                return null;
+
+            var availabletimes = couponItems.GroupBy(g => 1).Select(t => t.Sum(s => s.Quantity)).FirstOrDefault();
+            if (availabletimes < 1)
+                return null;
+            var couponItemProductCodes = couponItems.Select(t => t.ProductCode).ToList();
+
+            var voucherproductnames = string.Empty;
+            var oriMoney = pickUpOrder.PickUpOrderItemList.GroupBy(t => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            pickUpOrder.PickUpOrderItemList.Where(t => couponItemProductCodes.Contains(t.ProductCode)).ForEach(t =>
+             {
+                 if (t.Money > 0)
+                 {
+                     var couponItem = couponItems.Where(item => item.ProductCode == t.ProductCode).FirstOrDefault();
+                     if (couponItem != null && couponItem.Quantity > 0)
+                     {
+                         t.Money = 0;
+                         couponItem.Quantity -= 1;
+
+                         CouponItemVerificationRecordRepo.Add(new CouponItemVerificationRecord
+                         {
+                             ID = Util.NewID(),
+                             CouponID = coupon.ID,
+                             CouponItemID = couponItem.ID,
+                             PickUpOrderID = pickUpOrder.ID,
+                             TradeNo = pickUpOrder.Code,
+                             Quantity = 1,
+                             CreatedDate = DateTime.Now,
+                         });
+
+                         if (string.IsNullOrEmpty(voucherproductnames))
+                             voucherproductnames += t.ProductName;
+                         else
+                             voucherproductnames += "、" + t.ProductName;
+                     }
+                 }
+             });
+            CouponItemRepo.UpdateRange(couponItems);
+
+            var afterMoney = pickUpOrder.PickUpOrderItemList.GroupBy(t => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            var voucherMoney = oriMoney - afterMoney;
+            if (voucherMoney < 0)
+                voucherMoney = 0;
+            if (pickUpOrder != null && voucherMoney > 0)
+            {
+                PickUpOrderPaymentDetailsService.Add(new PickUpOrderPaymentDetails
+                {
+                    PickUpOrderID = pickUpOrder.ID,
+                    PickUpOrderCode = pickUpOrder.Code,
+                    PayType = EPayType.MemberCard,
+                    PayMoney = voucherMoney,
+                    PayInfo = $"类型:抵用,标题:{coupon.Template.Title},卡号:{coupon.CouponCode},抵用额度:{voucherMoney},应用服务:{voucherproductnames}",
+                    MemberInfo = "",
+                    StaffID = param.StaffID,
+                    StaffName = param.StaffName,
+                });
+            }
+            if (voucherMoney > 0)
+            {
+                if (coupon.Template.ConsumePointRate > 0)
+                {
+                    var sendpoint = voucherMoney * coupon.Template.ConsumePointRate / 100;
+                    MemberService.AdjustMemberPoint(coupon.OwnerOpenID, EMemberPointType.MemberCardConsumeReturn, (double)sendpoint);
+                }
+                return coupon;
+            }
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// 发送会员卡使用通知
+        /// </summary>
+        /// <param name="coupon"></param>
+        void SendCouponUsedNotify(Coupon coupon, string verificationItems, decimal voucherAmount = 0)
+        {
+            if (string.IsNullOrEmpty(coupon.OwnerOpenID) || "specialcoupon".Equals(coupon.OwnerOpenID))
+                return;
+            var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_VerificationSuccess);
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = coupon.OwnerOpenID,
+                template_id = templateId,
+                url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={AppContext.CurrentSession.CompanyCode}",
+                data = new System.Dynamic.ExpandoObject(),
+            };
+            var couponValueUnit = coupon.Template.CouponType == ECouponType.Discount ? "折" : "元";
+            message.data.first = new WeChatTemplateMessageDto.MessageData(string.Format("您好，您已成功使用{0}！", coupon.Template.Title));
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(coupon.Template.Title);
+            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData($"{voucherAmount.ToString("0.##")}{couponValueUnit}");
+            message.data.remark = new WeChatTemplateMessageDto.MessageData($"核销项目：{verificationItems}。感谢您的使用，欢迎下次光临");
+            WeChatService.SendWeChatNotifyAsync(message);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace VVCar.VIP.Domain.Entities
         /// 套餐ID
         /// </summary>
         [Display(Name = "套餐ID")]
-        public Guid ComboID { get; set; }
+        public Guid? ComboID { get; set; }
 
         /// <summary>
         /// 产品ID

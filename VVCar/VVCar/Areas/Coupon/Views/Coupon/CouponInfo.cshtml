@@ -16,12 +16,12 @@
                 <div class="couponTitle" data-bind="text: CouponInfo().Title"></div>
                 <div id="operationbtncon">
                     <div id="receiveCoupon" class="couponOperate"
-                         data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text:'立即领取', click: operateCoupon,visible:(!@ViewBag.FromMycoupon)&&ShowGetBtn()&&(CouponInfo().Nature==0)">
+                         data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text:'立即领取', click: operateCoupon,visible:(!@ViewBag.FromMycoupon)&&ShowGetBtn()&&(CouponInfo().Nature==0||IsFromGiven)">
                         @*(CouponInfo().CollarQuantityLimit-CouponInfo().UsedStock)>0&&*@
                         @*&&CouponInfo().CouponID==null*@
                     </div>
                     <div id="buycard" class="couponOperate"
-                         data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text:'购买', click: buycard,visible:(!@ViewBag.FromMycoupon)&&ShowGetBtn()&&(CouponInfo().Nature==1)">
+                         data-bind="style: {color: CouponInfo().Color, borderColor: CouponInfo().Color}, text:'购买', click: buycard,visible:(!@ViewBag.FromMycoupon)&&ShowGetBtn()&&(CouponInfo().Nature==1)&&!IsFromGiven">
                         @*(CouponInfo().CollarQuantityLimit-CouponInfo().UsedStock)>0&&*@
                         @*&&CouponInfo().CouponID==null*@
                     </div>
@@ -38,10 +38,16 @@
                 </div>
                 <div class="couponSubTitle" data-bind="text: CouponInfo().SubTitle"></div>
                 <table class="couponExplain">
-                    <tr>
+                    <tr data-bind="visible:(CouponInfo().Nature==0||CouponInfo().CouponType==3)">
                         <td class="couponExplain-field">抵用金额：</td>
                         <td><span data-bind="text: CouponInfo().CouponValue"></span> <span data-bind="text: CouponInfo().CouponValueUnit"></span></td>
                     </tr>
+                    <!--ko foreach:CouponInfo().CouponItemList-->
+                    <tr>
+                        <td class="couponExplain-field"><span data-bind="text:ProductName"></span></td>
+                        <td><span data-bind="text:Quantity"></span></td>
+                    </tr>
+                    <!--/ko-->
                     <tr>
                         <td class="couponExplain-field">使用条件：</td>
                         <td data-bind="text: CouponInfo().UseCondition"></td>
@@ -310,7 +316,8 @@
                 });
             };
             self.ShowBtn = ko.observable(true);
-            self.ShowGetBtn=ko.observable(true);
+            self.ShowGetBtn = ko.observable(true);
+            self.IsFromGiven = ko.observable(_isfromgiven);
             self.loadData = function () {
                 var ajaxUrl = "/api/Coupon/CouponInfo?userOpenID=" + openId + "&ctid=" + _couponTemplateId;
                 if(@ViewBag.FromMycoupon == true){

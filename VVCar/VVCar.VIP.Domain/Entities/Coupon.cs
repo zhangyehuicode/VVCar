@@ -14,6 +14,11 @@ namespace VVCar.VIP.Domain.Entities
     /// </summary>
     public class Coupon : NormalEntityBase
     {
+        public Coupon()
+        {
+            CouponItemList = new List<CouponItem>();
+        }
+
         /// <summary>
         ///  优惠券编号
         /// </summary>
@@ -97,6 +102,11 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "领取渠道")]
         public string ReceiveChannel { get; set; }
+
+        /// <summary>
+        /// 卡券子项
+        /// </summary>
+        public ICollection<CouponItem> CouponItemList { get; set; }
 
         /// <summary>
         /// 是否优先抵扣

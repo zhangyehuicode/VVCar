@@ -12,7 +12,7 @@ namespace VVCar.VIP.Domain.Entities
     /// <summary>
     /// 卡券子项核销记录
     /// </summary>
-    public class CouponItemVerificationRecord : EntityBase
+    public class CouponItemVerificationRecord : NormalEntityBase
     {
         /// <summary>
         /// 卡券ID
