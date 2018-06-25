@@ -108,6 +108,8 @@ namespace VVCar.VIP.Services.DomainServices
             get { return ServiceLocator.Instance.GetService<ISystemSettingService>(); }
         }
 
+        IRepository<ComboItem> ComboItemRepo { get => UnitOfWork.GetRepository<IRepository<ComboItem>>(); }
+
         #endregion SystemSettingService
 
         #endregion properties
@@ -429,7 +431,7 @@ namespace VVCar.VIP.Services.DomainServices
                 }
 
                 var newCoupons = new List<Coupon>();
-                var couponItems = new List<CouponItem>();
+                //var couponItems = new List<CouponItem>();
                 foreach (var template in templates)
                 {
                     var newCoupon = new Coupon
@@ -453,11 +455,11 @@ namespace VVCar.VIP.Services.DomainServices
                     {
                         var items = AddCouponItem(newCoupon.ID, template.IncludeProducts);
                         AppContext.Logger.Info($"AddCouponItem result:{items.Count}");
-                        if (items != null)
+                        if (items != null && items.Count > 0)
                         {
-                            couponItems.AddRange(items);
+                            //couponItems.AddRange(items);
+                            newCoupon.CouponItemList = items;
                         }
-                        //newCoupon.CouponItemList = items;
                     }
                     newCoupons.Add(newCoupon);
                     if (sendNotify || receiveCouponDto.SendNotify)
@@ -484,7 +486,7 @@ namespace VVCar.VIP.Services.DomainServices
                     }
                 }
                 Repository.Add(newCoupons);
-                CouponItemRepo.Add(couponItems);
+                //CouponItemRepo.Add(couponItems);
 
                 UnitOfWork.CommitTransaction();
                 return newCoupons.ToArray();
@@ -513,7 +515,9 @@ namespace VVCar.VIP.Services.DomainServices
             var comboItems = new List<ComboItem>();
             comboproducts.ForEach(t =>
             {
-                comboItems.AddRange(t.ComboItemList);
+                var comboItem = ComboItemRepo.GetQueryable(false).Where(item => item.ComboID == t.ID).ToList();
+                if (comboItem != null && comboItem.Count > 0)
+                    comboItems.AddRange(comboItem);
             });
             var couponItems = normalproducts.Select(t => new CouponItem
             {
@@ -526,6 +530,7 @@ namespace VVCar.VIP.Services.DomainServices
                 PriceSale = t.PriceSale,
                 Quantity = 1,
                 CreatedDate = DateTime.Now,
+                MerchantID = AppContext.CurrentSession.MerchantID,
             }).ToList();
             var comboCouponItems = comboItems.Select(t => new CouponItem
             {
@@ -539,6 +544,7 @@ namespace VVCar.VIP.Services.DomainServices
                 PriceSale = t.PriceSale,
                 Quantity = t.Quantity,
                 CreatedDate = DateTime.Now,
+                MerchantID = AppContext.CurrentSession.MerchantID,
             }).ToList();
 
             result.AddRange(couponItems);
@@ -550,7 +556,7 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID)
         {
             var now = DateTime.Now.Date;
-            var datasource = Repository.GetInclude(t => t.Template, false).Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID)
+            var datasource = Repository.GetIncludes(false, "Template", "CouponItemList").Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Where(t => t.Status == ECouponStatus.Default && t.OwnerOpenID == userOpenID && t.ExpiredDate >= now && t.CouponValue > 0)
                 .OrderBy(t => t.ExpiredDate).ToList();
             var coupons = datasource.MapTo<List<CouponBaseInfoDto>>();
@@ -563,15 +569,38 @@ namespace VVCar.VIP.Services.DomainServices
                     t.TotalConsume = member.Card.TotalConsume;
                 });
             }
+            var removecoupons = new List<CouponBaseInfoDto>();
             coupons.ForEach(t =>
             {
                 if (t.Nature == ENature.Card)
                 {
-                    var source = datasource.FirstOrDefault(s => s.ID == t.CouponID);
-                    if (source != null)
-                        t.CouponValue = source.CouponValue;
+                    if (t.CouponItemList == null || t.CouponItemList.Count < 1)
+                    {
+                        removecoupons.Add(t);
+                    }
+                    else
+                    {
+                        var totalquantity = t.CouponItemList.GroupBy(g => 1).Select(s => s.Sum(su => su.Quantity)).FirstOrDefault();
+                        if (totalquantity < 1)
+                        {
+                            removecoupons.Add(t);
+                        }
+                        else
+                        {
+                            var source = datasource.FirstOrDefault(s => s.ID == t.CouponID);
+                            if (source != null)
+                                t.CouponValue = source.CouponValue;
+                        }
+                    }
                 }
             });
+            if (removecoupons != null && removecoupons.Count > 0)
+            {
+                removecoupons.ForEach(t =>
+                {
+                    coupons.Remove(t);
+                });
+            }
             return coupons;
         }
 
@@ -811,10 +840,10 @@ namespace VVCar.VIP.Services.DomainServices
         /// <param name="coupon">优惠券</param>
         /// <param name="departmentCode">门店编号</param>
         /// <param name="verifyMode">核销方式</param>
-        void CheckCoupon(Coupon coupon, string departmentCode, EVerificationMode verifyMode)
+        public void CheckCoupon(Coupon coupon, string departmentCode, EVerificationMode verifyMode, decimal consumeMoney = 0)
         {
             if (coupon == null)
-                throw new DomainException("券不存在");
+                throw new DomainException("卡券不存在");
             var title = coupon.Template.Title;
             if (coupon.Status != ECouponStatus.Default)
                 throw new DomainException($"{title}不可用，状态为: " + coupon.Status.GetDescription());
@@ -858,6 +887,14 @@ namespace VVCar.VIP.Services.DomainServices
                         throw new DomainException($"{title}不可用，非允许使用时段");
                 }
             }
+            if (coupon.Template.IsMinConsumeLimit && consumeMoney > 0)
+            {
+                if (consumeMoney < coupon.Template.MinConsume)
+                {
+                    AppContext.Logger.Error($"{coupon.Template.Title}最低消费{coupon.Template.MinConsume}元可用");
+                    throw new DomainException($"{coupon.Template.Title}最低消费{coupon.Template.MinConsume}元可用");
+                }
+            }
         }
 
         /// <summary>
@@ -881,7 +918,7 @@ namespace VVCar.VIP.Services.DomainServices
             foreach (var couponCode in couponCodes)
             {
                 var coupon = coupons.FirstOrDefault(c => c.CouponCode == couponCode);
-                CheckCoupon(coupon, departmentCode, verifyDto.VerificationMode);
+                CheckCoupon(coupon, departmentCode, verifyDto.VerificationMode, verifyDto.ConsumeMoney);
             }
             UnitOfWork.BeginTransaction();
             try

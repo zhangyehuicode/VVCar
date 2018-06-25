@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Enums;
 using YEF.Core;
 
@@ -13,6 +14,11 @@ namespace VVCar.VIP.Domain.Dtos
     /// </summary>
     public class CouponBaseInfoDto
     {
+        public CouponBaseInfoDto()
+        {
+            CouponItemList = new List<CouponItem>();
+        }
+
         /// <summary>
         /// 券ID
         /// </summary>
@@ -244,5 +250,10 @@ namespace VVCar.VIP.Domain.Dtos
         /// 是否优先抵扣
         /// </summary>
         public bool IsDeductionFirst { get; set; }
+
+        /// <summary>
+        /// 卡券子项
+        /// </summary>
+        public List<CouponItem> CouponItemList { get; set; }
     }
 }

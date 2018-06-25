@@ -44,8 +44,9 @@
                     </tr>
                     <!--ko foreach:CouponInfo().CouponItemList-->
                     <tr>
-                        <td class="couponExplain-field"><span data-bind="text:ProductName"></span></td>
-                        <td><span data-bind="text:Quantity"></span></td>
+                        <td class="couponExplain-field"><span data-bind="text:ProductName+'：'"></span></td>
+                        @*<td><span data-bind="text:'服务编码 '+ProductCode"></span></td>*@
+                        <td><span data-bind="text:'剩余数量 '+Quantity"></span></td>
                     </tr>
                     <!--/ko-->
                     <tr>

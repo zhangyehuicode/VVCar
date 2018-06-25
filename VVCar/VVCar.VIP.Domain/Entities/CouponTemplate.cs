@@ -344,6 +344,12 @@ namespace VVCar.VIP.Domain.Entities
         public decimal ConsumePointRate { get; set; }
 
         /// <summary>
+        /// 售价
+        /// </summary>
+        [Display(Name = "售价")]
+        public decimal PriceSale { get; set; }
+
+        /// <summary>
         /// 优惠券库存
         /// </summary>
         public virtual CouponTemplateStock Stock { get; set; }

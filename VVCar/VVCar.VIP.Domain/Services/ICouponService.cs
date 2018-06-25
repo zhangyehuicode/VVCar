@@ -18,6 +18,15 @@ namespace VVCar.VIP.Domain.Services
     public partial interface ICouponService : IDomainService<IRepository<Coupon>, Coupon, Guid>
     {
         /// <summary>
+        /// 检查优惠券是否可以被使用
+        /// </summary>
+        /// <param name="coupon"></param>
+        /// <param name="departmentCode"></param>
+        /// <param name="verifyMode"></param>
+        /// <param name="consumeMoney"></param>
+        void CheckCoupon(Coupon coupon, string departmentCode, EVerificationMode verifyMode, decimal consumeMoney = 0);
+
+        /// <summary>
         /// 领取卡券
         /// </summary>
         /// <param name="receiveCouponDto"></param>

@@ -168,7 +168,7 @@
                     <div id="secondstepvoucher" hidden="hidden">
                         @*抵用券*@
                         <div class="form-group">
-                            <label class="col-md-2 control-label">抵用金额</label>
+                            <label class="col-md-2 control-label">抵用金额/售价</label>
                             <div class="col-md-3">
                                 <div class="input-group">
                                     <input type="text" class="form-control" data-bind="value:BaseInfo().CouponValue" name="inputvoucher"
@@ -264,6 +264,18 @@
                         </div>
                         <div id="secondstepdiscount" hidden="hidden">
                             @*折扣券*@
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">售价</label>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" data-bind="value:BaseInfo().PriceSale" name="pricesale"
+                                               data-val="true" data-val-number="请输入数字" data-val-required="不能为空" data-val-range-min="0" data-val-range="请输入大于0的数字" />
+                                        <span class="input-group-addon">元</span>
+                                    </div>
+                                    <span class="field-validation-valid" data-valmsg-for="pricesale" data-valmsg-replace="true"></span>
+                                    <p class="help-block">请输入大于0的数字</p>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-md-2 control-label">折扣额度</label>
                                 <div class="col-md-3">
@@ -1220,6 +1232,7 @@
                             PutawayTime: ko.observable(null),//上架时间
                             SoldOutTime: ko.observable(null),//下架时间
                             ConsumePointRate: ko.observable(0),
+                            PriceSale: ko.observable(0),
                         }
                         me.BaseInfo(baseInfo);
 
@@ -1281,6 +1294,7 @@
                                     $('#DiscountFirst').attr("checked", true);
                                 }
                                 me.BaseInfo().ConsumePointRate(me.ModifyCouponTemplate().ConsumePointRate);
+                                me.BaseInfo().PriceSale(me.ModifyCouponTemplate().PriceSale);
                                 me.BaseInfo().CouponColor(me.ModifyCouponTemplate().Color);
                                 me.BaseInfo().CouponValue(me.ModifyCouponTemplate().CouponValue);
                                 me.BaseInfo().Title(me.ModifyCouponTemplate().Title);
@@ -2122,6 +2136,7 @@
                                     SoldOutTime: window._rootModel.BaseInfo().SoldOutTime(),
                                     IsDeductionFirst: $('#DeductionFirst')[0].checked,
                                     ConsumePointRate: window._rootModel.BaseInfo().ConsumePointRate(),
+                                    PriceSale: window._rootModel.BaseInfo().PriceSale(),
                                 };
                                 var url = '/api/CouponTemplate/';
                                 var confirmcallback = function () {

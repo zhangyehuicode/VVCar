@@ -151,7 +151,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         public IEnumerable<ProductDto> GetProduct()
         {
-            var result = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Goods && t.IsPublish && t.Stock > 0).ToList();
+            var result = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Goods && t.IsPublish && t.Stock > 0 && !t.IsCombo).ToList();
             return result.MapTo<List<ProductDto>>();
         }
 
@@ -259,7 +259,7 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<Product> GetAppointmentProduct()
         {
-            return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Service && t.IsPublish).ToList();
+            return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Service && t.IsPublish && !t.IsCombo).ToList();
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace VVCar.Shop.Services.DomainServices
         {
             var result = new List<HistoryDataAnalysisDto>();
 
-            var servicelist = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Service && t.IsPublish).ToList();
+            var servicelist = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Service && t.IsPublish && !t.IsCombo).ToList();
             if (servicelist != null && servicelist.Count() > 0)
             {
                 var pickuporderQueryable = PickUpOrderRepo.GetInclude(t => t.PickUpOrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);

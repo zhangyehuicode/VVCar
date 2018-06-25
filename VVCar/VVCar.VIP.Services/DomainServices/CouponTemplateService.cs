@@ -309,6 +309,7 @@ namespace VVCar.VIP.Services.DomainServices
                 PutInIsUseAllTime = c.PutInIsUseAllTime,
                 IsDeductionFirst = c.IsDeductionFirst,
                 ConsumePointRate = c.ConsumePointRate,
+                PriceSale = c.PriceSale,
             }).ToArray();
             return result.OrderByDescending(t => t.CreatedDate);
         }
@@ -548,8 +549,8 @@ namespace VVCar.VIP.Services.DomainServices
                     Name = t.Title,
                     ImgUrl = t.CoverImage,
                     Stock = t.Stock.Stock,
-                    BasePrice = t.CouponValue,
-                    PriceSale = t.CouponValue,
+                    BasePrice = t.CouponType == ECouponType.Discount ? t.PriceSale : t.CouponValue,
+                    PriceSale = t.CouponType == ECouponType.Discount ? t.PriceSale : t.CouponValue,
                     Introduction = t.IntroDetail,
                     DeliveryNotes = "购买后可到会员卡包中查看已有卡券",
                     IsMemberCard = true,

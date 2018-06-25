@@ -184,7 +184,7 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     if (t.SubProducts != null && t.SubProducts.Count > 0)
                     {
-                        t.SubProducts = t.SubProducts.Where(item => item.ProductType == EProductType.Service && item.IsPublish).ToList();
+                        t.SubProducts = t.SubProducts.Where(item => item.ProductType == EProductType.Service && item.IsPublish && !item.IsCombo).ToList();
                     }
                 });
             }

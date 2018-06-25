@@ -267,7 +267,8 @@ namespace VVCar.Shop.Services.DomainServices
                         else
                         {
                             var applycard = ApplyCardDiscount(t, order, param);
-                            verificationcards.Add(applycard);
+                            if (applycard != null)
+                                verificationcards.Add(applycard);
                         }
                     });
                 }
@@ -314,7 +315,8 @@ namespace VVCar.Shop.Services.DomainServices
                         else
                         {
                             var applycard = ApplyCardVoucher(t, order, param);
-                            verificationcards.Add(applycard);
+                            if (applycard != null)
+                                verificationcards.Add(applycard);
                         }
                     });
                 }
@@ -328,6 +330,7 @@ namespace VVCar.Shop.Services.DomainServices
                         DepartmentCode = param.DepartmentCode,
                         DepartmentID = param.DepartmentID,
                         MemberCardVoucherInfoList = memberCardVoucherInfo,
+                        ConsumeMoney = order.Money,
                     });
                 }
                 if (verificationcoupons.Count > 0 || verificationcards.Count > 0)
@@ -403,6 +406,15 @@ namespace VVCar.Shop.Services.DomainServices
             if (coupon == null || pickUpOrder == null || pickUpOrder.PickUpOrderItemList == null || pickUpOrder.PickUpOrderItemList.Count < 1 || param == null)
                 return null;
 
+            try
+            {
+                CouponService.CheckCoupon(coupon, "", VIP.Domain.Enums.EVerificationMode.ScanCode, pickUpOrder.Money);
+            }
+            catch
+            {
+                return null;
+            }
+
             var couponItems = CouponItemRepo.GetQueryable().Where(t => t.CouponID == coupon.ID).ToList();
             if (couponItems == null || couponItems.Count < 1)
                 return null;
@@ -419,7 +431,7 @@ namespace VVCar.Shop.Services.DomainServices
                  if (couponItem != null && couponItem.Quantity > 0)
                  {
                      var discount = coupon.CouponValue / 10;
-                     t.Money = Math.Ceiling(t.Money * discount);
+                     t.Money = t.Money * discount;//Math.Ceiling(t.Money * discount);
                      t.Discount = (t.Quantity * t.PriceSale) != 0 ? t.Money / (t.Quantity * t.PriceSale) : 0;
 
                      CouponItemVerificationRecordRepo.Add(new CouponItemVerificationRecord
@@ -442,9 +454,9 @@ namespace VVCar.Shop.Services.DomainServices
             var discountMoney = oriMoney - afterMoney;
             if (discountMoney < 0)
                 discountMoney = 0;
+            var discountproductnames = string.Empty;
             if (pickUpOrder != null && discountMoney > 0)
             {
-                var discountproductnames = string.Empty;
                 pickUpOrder.PickUpOrderItemList.Where(t => couponItemProductCodes.Contains(t.ProductCode)).ForEach(t =>
                 {
                     if (string.IsNullOrEmpty(discountproductnames))
@@ -471,6 +483,7 @@ namespace VVCar.Shop.Services.DomainServices
                     var sendpoint = discountMoney * coupon.Template.ConsumePointRate / 100;
                     MemberService.AdjustMemberPoint(coupon.OwnerOpenID, EMemberPointType.MemberCardConsumeReturn, (double)sendpoint);
                 }
+                SendCardUsedNotify(coupon, discountproductnames, coupon.CouponValue);
                 return coupon;
             }
             else
@@ -553,6 +566,15 @@ namespace VVCar.Shop.Services.DomainServices
             if (coupon == null || pickUpOrder == null || pickUpOrder.PickUpOrderItemList == null || pickUpOrder.PickUpOrderItemList.Count < 1 || param == null)
                 return null;
 
+            try
+            {
+                CouponService.CheckCoupon(coupon, "", VIP.Domain.Enums.EVerificationMode.ScanCode, pickUpOrder.Money);
+            }
+            catch
+            {
+                return null;
+            }
+
             var couponItems = CouponItemRepo.GetQueryable().Where(t => t.CouponID == coupon.ID).ToList();
             if (couponItems == null || couponItems.Count < 1)
                 return null;
@@ -619,6 +641,7 @@ namespace VVCar.Shop.Services.DomainServices
                     var sendpoint = voucherMoney * coupon.Template.ConsumePointRate / 100;
                     MemberService.AdjustMemberPoint(coupon.OwnerOpenID, EMemberPointType.MemberCardConsumeReturn, (double)sendpoint);
                 }
+                SendCardUsedNotify(coupon, voucherproductnames, voucherMoney);
                 return coupon;
             }
             else
@@ -629,9 +652,9 @@ namespace VVCar.Shop.Services.DomainServices
         /// 发送会员卡使用通知
         /// </summary>
         /// <param name="coupon"></param>
-        void SendCouponUsedNotify(Coupon coupon, string verificationItems, decimal voucherAmount = 0)
+        void SendCardUsedNotify(Coupon coupon, string verificationItems, decimal voucherAmount = 0)
         {
-            if (string.IsNullOrEmpty(coupon.OwnerOpenID) || "specialcoupon".Equals(coupon.OwnerOpenID))
+            if (string.IsNullOrEmpty(coupon.OwnerOpenID) || string.IsNullOrEmpty(verificationItems) || voucherAmount <= 0)
                 return;
             var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_VerificationSuccess);
             var message = new WeChatTemplateMessageDto

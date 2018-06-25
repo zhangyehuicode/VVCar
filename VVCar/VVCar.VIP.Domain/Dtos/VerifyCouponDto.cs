@@ -40,6 +40,11 @@ namespace VVCar.VIP.Domain.Dtos
         public Guid? DepartmentID { get; set; }
 
         /// <summary>
+        /// 消费金额
+        /// </summary>
+        public decimal ConsumeMoney { get; set; }
+
+        /// <summary>
         /// 会员卡抵用信息
         /// </summary>
         public List<MemberCardVoucherInfo> MemberCardVoucherInfoList { get; set; }

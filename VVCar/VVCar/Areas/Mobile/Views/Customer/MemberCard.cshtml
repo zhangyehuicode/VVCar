@@ -51,7 +51,9 @@
         <div class="hykb_box2" style="margin-left:3%; margin-top:15px;" v-for="Card in CardList" v-on:click="couponInfo(Card)">
             <a><img class="cardimg" v-bind:src=Card.CoverImage></a>
             <span class=" hykb_text">{{Card.Title}}</span>
-            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text">{{Card.CouponValue}}{{Card.CouponValueUnit}}</span>
+            @*<span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text" v-if="Card.CouponType!=3">抵用</span>
+                <span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text" v-if="Card.CouponType==3">折扣</span>*@
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text" v-if="Card.CouponType==3">{{Card.CouponValue}}{{Card.CouponValueUnit}}</span>
         </div>
     </div>
     <div class="hykb_box" id="coupon">

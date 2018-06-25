@@ -128,10 +128,10 @@ namespace VVCar.Shop.Services.DomainServices
             UnitOfWork.BeginTransaction();
             try
             {
-                var cardItems = entity.OrderItemList.Where(t => t.ProductType == EProductType.MemberCard).ToList();
-                var couponTemplateIDs = cardItems.Select(t => t.GoodsID).ToList();
-                if (couponTemplateIDs != null && couponTemplateIDs.Count > 0)
-                    ReceiveCoupons(couponTemplateIDs, entity.OpenID);
+                //var cardItems = entity.OrderItemList.Where(t => t.ProductType == EProductType.MemberCard).ToList();
+                //var couponTemplateIDs = cardItems.Select(t => t.GoodsID).ToList();
+                //if (couponTemplateIDs != null && couponTemplateIDs.Count > 0)
+                //    ReceiveCoupons(couponTemplateIDs, entity.OpenID);
                 //if (cardItems.Count == entity.OrderItemList.Count)
                 //    entity.Status = EOrderStatus.Finish;
                 RecountMoney(entity);
@@ -191,11 +191,18 @@ namespace VVCar.Shop.Services.DomainServices
             else if (entity.ReceivedMoney >= entity.Money)
             {
                 entity.Status = EOrderStatus.PayUnshipped;
+                var cardItems = entity.OrderItemList.Where(t => t.ProductType == EProductType.MemberCard).ToList();
+                if (cardItems != null && cardItems.Count == entity.OrderItemList.Count)
+                    entity.Status = EOrderStatus.Finish;
                 if (isNotify)
                 {
                     StockOut(entity.OrderItemList.Where(t => t.ProductType == EProductType.Goods).ToList());
                     SendWeChatNotify(entity);
                     SendOrderWeChatNotify(entity);
+
+                    var couponTemplateIDs = cardItems.Select(t => t.GoodsID).ToList();
+                    if (couponTemplateIDs != null && couponTemplateIDs.Count > 0)
+                        ReceiveCoupons(couponTemplateIDs, entity.OpenID);
                 }
             }
         }

@@ -28,7 +28,8 @@
             <div class="shop_box4 hykb_box2" style="width:100%;display:table;" v-on:click="couponInfo(Coupon)">
                 <div style="display:table-cell;width:120px;"><img class="couponimg" v-bind:src=Coupon.CoverImage></div>
                 <div class="hykb_text" style="display:table-cell;vertical-align:middle;">{{Coupon.Title}}</div>
-                <div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text">{{Coupon.CouponValue}}{{Coupon.CouponValueUnit}}</div>
+                @*<div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text" v-if="Coupon.CouponType!=3">抵用</div>*@
+                <div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text" v-if="Coupon.CouponType==3">{{Coupon.CouponValue}}{{Coupon.CouponValueUnit}}</div>
             </div>
             <div class="shop_box4">
                 <div class="deletebtn" v-on:click="deletecoupon">删除</div>
