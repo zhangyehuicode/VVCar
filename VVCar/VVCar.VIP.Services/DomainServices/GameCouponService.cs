@@ -39,34 +39,23 @@ namespace VVCar.VIP.Services.DomainServices
         /// <summary>
         /// 批量新增游戏卡券设置
         /// </summary>
-        /// <param name="templateIds"></param>
+        /// <param name="gameCoupons"></param>
         /// <returns></returns>
-        public bool AddGameCoupon(Guid[] templateIds)
+        public bool BatchAdd(IEnumerable<GameCoupon> gameCoupons)
         {
-            if (templateIds == null || templateIds.Count() < 1)
+            if (gameCoupons == null || gameCoupons.Count() < 1)
                 throw new DomainException("参数错误");
-            var totalCount = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).Count();
-            if (totalCount >= 8 || (totalCount + templateIds.Count()) > 8)
+            var gameSettingId = gameCoupons.ToList().FirstOrDefault().GameSettingID;
+            var totalCount = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.GameSettingID == gameSettingId).Count();
+            if (totalCount >= 8 || (totalCount + gameCoupons.Count()) > 8)
                 throw new DomainException("最多配置8个");
-            UnitOfWork.BeginTransaction();
-            try
+            gameCoupons.ForEach(t =>
             {
-                foreach (var templateId in templateIds)
-                {
-                    var gameCoupon = new GameCoupon
-                    {
-                        CouponTemplateID = templateId,
-                    };
-                    Add(gameCoupon);
-                }
-                UnitOfWork.CommitTransaction();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                UnitOfWork.RollbackTransaction();
-                throw new DomainException(ex.Message);
-            }
+                t.ID = Util.NewID();
+                t.MerchantID = AppContext.CurrentSession.MerchantID;
+                t.CreatedDate = DateTime.Now;
+            });
+            return this.Repository.AddRange(gameCoupons).Count() > 0;
         }
 
         /// <summary>
@@ -92,8 +81,10 @@ namespace VVCar.VIP.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<GameCouponDto> Search(GameCouponFilter filter, out int totalCount)
         {
-            var queryable = this.Repository.GetQueryable(false).Where(t=>t.MerchantID==AppContext.CurrentSession.MerchantID);
+            var queryable = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             totalCount = queryable.Count();
+            if (filter.GameSettingID.HasValue)
+                queryable = queryable.Where(t => t.GameSettingID == filter.GameSettingID);
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.ID).Skip(filter.Start.Value).Take(filter.Limit.Value);
             return queryable.MapTo<GameCouponDto>().ToArray();

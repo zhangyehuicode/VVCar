@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using VVCar.VIP.Domain.Dtos;
@@ -43,12 +44,12 @@ namespace VVCar.Controllers.VIP
         /// 新增游戏卡券配置
         /// </summary>
         /// <returns></returns>
-        [HttpPost, Route("AddGameCoupon")]
-        public JsonActionResult<bool> AddGameCoupon(BatchOperationDto parameter)
+        [HttpPost, Route("BatchAdd")]
+        public JsonActionResult<bool> BatchAdd(IEnumerable<GameCoupon> entity)
         {
             return SafeExecute(() =>
             {
-                return GameCouponService.AddGameCoupon(parameter.IdList.ToArray());
+                return GameCouponService.BatchAdd(entity);
             });
         }
 

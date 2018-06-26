@@ -25,8 +25,8 @@ namespace VVCar.VIP.Domain.Services
         /// <summary>
         /// 批量新增游戏卡券设置
         /// </summary>
-        /// <param name="templateIds"></param>
+        /// <param name="gameCoupons"></param>
         /// <returns></returns>
-        bool AddGameCoupon(Guid[] templateIds);
+        bool BatchAdd(IEnumerable<GameCoupon> gameCoupons);
     }
 }

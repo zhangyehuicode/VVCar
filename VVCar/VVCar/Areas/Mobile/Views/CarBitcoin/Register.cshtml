@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="register">
+    <div class="bgcon">
+        <img class="bgimg" src="~/Areas/resource/img/mobile/cbcbac.jpg" />
+    </div>
+    @*<div class="title">车比特</div>*@
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .bgcon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        .bgimg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .title {
+            font-size: 30px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            position: absolute;
+            top: 50px;
+            letter-spacing: 2px;
+            font-family: 'LeagueGothicRegular';
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#register',
+            data: {
+            },
+            methods: {
+
+            }
+        });
+    </script>
+}

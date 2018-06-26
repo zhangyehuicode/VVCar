@@ -306,6 +306,7 @@
     <Compile Include="Controllers\VIP\CouponPushController.cs" />
     <Compile Include="Controllers\VIP\CouponPushItemController.cs" />
     <Compile Include="Controllers\VIP\CouponTemplateController.cs" />
+    <Compile Include="Controllers\VIP\GameSettingController.cs" />
     <Compile Include="Controllers\VIP\GameCouponController.cs" />
     <Compile Include="Controllers\VIP\MemberCardTypeController.cs" />
     <Compile Include="Controllers\VIP\MemberController.cs" />
@@ -416,13 +417,16 @@
     <Content Include="Areas\resource\img\mobile\8.png" />
     <Content Include="Areas\resource\img\mobile\9.jpg" />
     <Content Include="Areas\resource\img\mobile\arrowr.png" />
+    <Content Include="Areas\resource\img\mobile\asset.png" />
     <Content Include="Areas\resource\img\mobile\banner.jpg" />
     <Content Include="Areas\resource\img\mobile\bg.jpg" />
     <Content Include="Areas\resource\img\mobile\car.png" />
+    <Content Include="Areas\resource\img\mobile\carbitcoin.png" />
     <Content Include="Areas\resource\img\mobile\carbitcoinicon.png" />
     <Content Include="Areas\resource\img\mobile\carcoinicon.png" />
     <Content Include="Areas\resource\img\mobile\carcoinimg.png" />
     <Content Include="Areas\resource\img\mobile\cb.png" />
+    <Content Include="Areas\resource\img\mobile\cbcbac.jpg" />
     <Content Include="Areas\resource\img\mobile\coppermedal.png" />
     <Content Include="Areas\resource\img\mobile\cph.png" />
     <Content Include="Areas\resource\img\mobile\daodile.png" />
@@ -497,6 +501,7 @@
     <Content Include="Areas\resource\img\mobile\shop.png" />
     <Content Include="Areas\resource\img\mobile\silvermedal.png" />
     <Content Include="Areas\resource\img\mobile\sm.png" />
+    <Content Include="Areas\resource\img\mobile\sportcar.png" />
     <Content Include="Areas\resource\img\mobile\ss.png" />
     <Content Include="Areas\resource\img\mobile\staff\6.png" />
     <Content Include="Areas\resource\img\mobile\staff\czt.png" />
@@ -515,8 +520,10 @@
     <Content Include="Areas\resource\img\mobile\staff\wdyj.png" />
     <Content Include="Areas\resource\img\mobile\staff\yhqhz.png" />
     <Content Include="Areas\resource\img\mobile\staff\zk.png" />
+    <Content Include="Areas\resource\img\mobile\store.png" />
     <Content Include="Areas\resource\img\mobile\touxiang.png" />
     <Content Include="Areas\resource\img\mobile\ture.png" />
+    <Content Include="Areas\resource\img\mobile\tyre.png" />
     <Content Include="Areas\resource\img\mobile\u337.png" />
     <Content Include="Areas\resource\img\mobile\wcpaysuccess.jpg" />
     <Content Include="Areas\resource\img\mobile\wd.png" />
@@ -613,7 +620,7 @@
     <Content Include="Scripts\app\controller\CouponPush.js" />
     <Content Include="Scripts\app\controller\DataDict.js" />
     <Content Include="Scripts\app\controller\Department.js" />
-    <Content Include="Scripts\app\controller\GameCoupon.js" />
+    <Content Include="Scripts\app\controller\GameSetting.js" />
     <Content Include="Scripts\app\controller\Login.js" />
     <Content Include="Scripts\app\controller\Main.js" />
     <Content Include="Scripts\app\controller\MakeCodeRule.js" />
@@ -655,6 +662,7 @@
     <Content Include="Scripts\app\model\BaseData\CouponTemplateInfoModel.js" />
     <Content Include="Scripts\app\model\BaseData\DepartmentModel.js" />
     <Content Include="Scripts\app\model\BaseData\GameCouponModel.js" />
+    <Content Include="Scripts\app\model\BaseData\GameSettingModel.js" />
     <Content Include="Scripts\app\model\BaseData\IDCodeNameModel.js" />
     <Content Include="Scripts\app\model\BaseData\MakeCodeRuleModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberBaseInfoModel.js" />
@@ -704,6 +712,7 @@
     <Content Include="Scripts\app\store\BaseData\DepartmentStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\GameCouponStore.js" />
+    <Content Include="Scripts\app\store\BaseData\GameSettingStore.js" />
     <Content Include="Scripts\app\store\BaseData\MakeCodeRuleStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberCardStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberCardThemeGroupStore.js" />
@@ -779,8 +788,9 @@
     <Content Include="Scripts\app\view\DataDict\DataDictList.js" />
     <Content Include="Scripts\app\view\Department\DepartmentEdit.js" />
     <Content Include="Scripts\app\view\Department\DepartmentList.js" />
-    <Content Include="Scripts\app\view\GameCoupon\GameCouponEdit.js" />
-    <Content Include="Scripts\app\view\GameCoupon\GameCouponList.js" />
+    <Content Include="Scripts\app\view\GameSetting\GameCouponEdit.js" />
+    <Content Include="Scripts\app\view\GameSetting\GameSettingEdit.js" />
+    <Content Include="Scripts\app\view\GameSetting\GameSettingList.js" />
     <Content Include="Scripts\app\view\Index.js" />
     <Content Include="Scripts\app\view\Login.js" />
     <Content Include="Scripts\app\view\Main.js" />
@@ -850,6 +860,8 @@
     <Content Include="Scripts\app\view\Shop\ProductCategoryList.js" />
     <Content Include="Scripts\app\view\Shop\ProductEdit.js" />
     <Content Include="Scripts\app\view\Shop\Service.js" />
+    <Content Include="Scripts\app\view\Shop\ServiceCategoryEdit.js" />
+    <Content Include="Scripts\app\view\Shop\ServiceCategoryList.js" />
     <Content Include="Scripts\app\view\Shop\ServiceEdit.js" />
     <Content Include="Scripts\app\view\Shop\StockOutInEdit.js" />
     <Content Include="Scripts\app\view\Shop\StockRecord.js" />
@@ -990,6 +1002,7 @@
     <Content Include="Areas\Mobile\Views\Merchant\MemberDetails.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\Index.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\MyInfo.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\Register.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

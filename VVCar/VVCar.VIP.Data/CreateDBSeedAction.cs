@@ -33,6 +33,7 @@ namespace VVCar.VIP.Data
             SeedMemberGroup(context);
             SeedMemberCardTheme(context);
             SeedCardThemeCategory(context);
+            SeedGameSetting(context);
         }
 
         void SeedMemberCardType(DbContext context)
@@ -68,6 +69,38 @@ namespace VVCar.VIP.Data
             //cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "1类推荐", Grade = 1 });
             //cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000002"), Name = "2类推荐", Grade = 2 });
             //cardThemeCategorySet.Add(new CardThemeCategory { ID = Guid.Parse("00000000-0000-0000-0000-000000000003"), Name = "3类推荐", Grade = 3 });
+        }
+
+        void SeedGameSetting(DbContext context)
+        {
+            var gameSettingSet = context.Set<GameSetting>();
+            gameSettingSet.Add(new GameSetting {
+                ID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                GameType = EGameType.AttractWheel,
+                PeriodDays = 10,
+                PeriodCounts = 20,
+                Limit = 100,
+                IsShare = true,
+                ShareTitle = "拓客转盘",
+                IsOrderShow = true,
+                CreateUserID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                CreateUser = "admin",
+                CreatedDate = DateTime.Now,
+            });
+            gameSettingSet.Add(new GameSetting
+            {
+                ID = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+                GameType = EGameType.ActivityWheel,
+                PeriodDays = 10,
+                PeriodCounts = 20,
+                Limit = 100,
+                IsShare = true,
+                ShareTitle = "活动转盘",
+                IsOrderShow = true,
+                CreateUserID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                CreateUser = "admin",
+                CreatedDate = DateTime.Now,
+            });
         }
     }
 }

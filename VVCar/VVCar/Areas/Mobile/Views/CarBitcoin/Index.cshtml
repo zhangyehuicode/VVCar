@@ -32,14 +32,14 @@
                 </div>
                 <div v-for="Coiner in CoinerList">
                     <div class="cbctable rankheadtable rankheadh">
-                        <div class="cbctablecell rankcell">
+                        <div class="cbctablecell rankcell valuefont">
                             <div v-if="Coiner.Ranking>3">{{Coiner.Ranking}}</div>
                             <img v-if="Coiner.Ranking==1" class="medalimg" src="~/Areas/resource/img/mobile/goldmedal.png" />
                             <img v-if="Coiner.Ranking==2" class="medalimg" src="~/Areas/resource/img/mobile/silvermedal.png" />
                             <img v-if="Coiner.Ranking==3" class="medalimg" src="~/Areas/resource/img/mobile/coppermedal.png" />
                         </div>
-                        <div class="cbctablecell rankcellname">{{Coiner.Name}}</div>
-                        <div class="cbctablecell rankcell">{{Coiner.Horsepower}}</div>
+                        <div class="cbctablecell rankcellname namefont">{{Coiner.Name}}</div>
+                        <div class="cbctablecell rankcell valuefont">{{Coiner.Horsepower}}</div>
                     </div>
                 </div>
             </div>
@@ -231,7 +231,15 @@
         }
 
         .medalimg {
-            width: 20px;
+            width: 30px;
+        }
+
+        .valuefont {
+            color: #676767;
+        }
+
+        .namefont {
+            font-size: 16px;
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />

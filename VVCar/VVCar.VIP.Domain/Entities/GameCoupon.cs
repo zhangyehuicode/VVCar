@@ -10,6 +10,12 @@ namespace VVCar.VIP.Domain.Entities
     public class GameCoupon : EntityBase
     {
         /// <summary>
+        /// 游戏类型ID
+        /// </summary>
+        [Display(Name = "游戏类型ID")]
+        public Guid GameSettingID { get; set; }
+
+        /// <summary>
         /// 卡券模板ID
         /// </summary>
         [Display(Name = "卡券模板ID")]

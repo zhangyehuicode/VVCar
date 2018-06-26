@@ -6,16 +6,16 @@
 		url: Ext.GlobalConfig.ApiDomainUrl + 'api/GameCoupon',
 		api: {
 			read: Ext.GlobalConfig.ApiDomainUrl + 'api/GameCoupon?All=false',
-			addGameCoupon: Ext.GlobalConfig.ApiDomainUrl + 'api/GameCoupon/AddGameCoupon'
+			batchAdd: Ext.GlobalConfig.ApiDomainUrl + 'api/GameCoupon/BatchAdd'
 		}
 	},
-	addGameCoupon: function (templateIds, cb) {
+	batchAdd: function (data, success, failure) {
 		Ext.Ajax.request({
-			ContentType: 'application/json',
+			url: this.proxy.api.batchAdd,
 			method: 'POST',
-			url: this.proxy.api.addGameCoupon,
-			jsonData: { IdList: templateIds },
-			callback: cb
+			jsonData: data,
+			success: success,
+			failure: failure,
 		});
 	}
 });

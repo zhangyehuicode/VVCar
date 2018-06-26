@@ -1,4 +1,4 @@
-﻿Ext.define('WX.view.GameCoupon.GameCouponEdit', {
+﻿Ext.define('WX.view.GameSetting.GameCouponEdit', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.GameCouponEdit',
 	title: '游戏卡券编辑',
