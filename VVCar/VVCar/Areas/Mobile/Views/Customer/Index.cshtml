@@ -185,7 +185,7 @@
                 return;
             }
             $.ajax({
-                url: '/AliyunSMS/Sms/SendSms/' + mobilephoneno+'/SMS_119520024',
+                url: '/AliyunSMS/Sms/SendSms?mobilePhoneNo=' + mobilephoneno + '&templateCode=SMS_119520024',//'/AliyunSMS/Sms/SendSms/' + mobilephoneno+'/SMS_119520024',
                 type: 'GET',
                 beforeSend: function () {
                     $.showLoading();

@@ -63,6 +63,7 @@
     <Compile Include="Mapping\CouponTemplateStockMap.cs" />
     <Compile Include="Mapping\CouponTemplateUseTimeMap.cs" />
     <Compile Include="Mapping\GameCouponMap.cs" />
+    <Compile Include="Mapping\GameCouponRecordMap.cs" />
     <Compile Include="Mapping\GameSettingMap.cs" />
     <Compile Include="Mapping\GivenCouponRecordMap.cs" />
     <Compile Include="Mapping\MemberCardMap.cs" />

@@ -465,11 +465,11 @@ namespace VVCar.VIP.Services.DomainServices
                     if (sendNotify || receiveCouponDto.SendNotify)
                     {
                         var companyCode = AppContext.CurrentSession.CompanyCode;
-                        var merchantId = receiveCouponDto.MerchantID.Value;
+                        var merchantId = AppContext.CurrentSession.MerchantID;
                         if (string.IsNullOrEmpty(companyCode))
                             companyCode = receiveCouponDto.CompanyCode;
-                        if (!receiveCouponDto.MerchantID.HasValue)
-                            merchantId = AppContext.CurrentSession.MerchantID;
+                        if (receiveCouponDto.MerchantID.HasValue)
+                            merchantId = receiveCouponDto.MerchantID.Value;
                         var message = new WeChatTemplateMessageDto
                         {
                             touser = receiveCouponDto.ReceiveOpenID,

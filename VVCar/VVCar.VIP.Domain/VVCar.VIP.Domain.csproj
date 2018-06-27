@@ -97,6 +97,7 @@
     <Compile Include="Entities\CouponTemplateStock.cs" />
     <Compile Include="Entities\CouponTemplateUseTime.cs" />
     <Compile Include="Entities\GameCoupon.cs" />
+    <Compile Include="Entities\GameCouponRecord.cs" />
     <Compile Include="Entities\GameSetting.cs" />
     <Compile Include="Entities\GivenCouponRecord.cs" />
     <Compile Include="Entities\Member.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Filters\CouponTemplateFilter.cs" />
     <Compile Include="Filters\GameCouponFilter.cs" />
     <Compile Include="Filters\CouponPushFilter.cs" />
+    <Compile Include="Filters\GameCouponRecordFilter.cs" />
     <Compile Include="Filters\GameSettingFilter.cs" />
     <Compile Include="Filters\GivenCouponFilter.cs" />
     <Compile Include="Filters\HistoryFilter.cs" />
@@ -172,6 +174,7 @@
     <Compile Include="MakeCodeTypes.cs" />
     <Compile Include="MemberCardTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IGameCouponRecordService.cs" />
     <Compile Include="Services\IGameSettingService.cs" />
     <Compile Include="Services\ICardThemeCategoryService.cs" />
     <Compile Include="Services\ICardThemeGroupService.cs" />

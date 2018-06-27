@@ -11,7 +11,7 @@
                 <img class="headimg" src="@ViewBag.HeadImgUrl" />
             </div>
             <div class="nicknametext">@ViewBag.NickName</div>
-            <div class="loginnow">立即注册</div>
+            <div class="loginnow" v-if="!IsRegister" v-on:click="register">立即注册</div>
             <img class="tyre" style="top:-70px;left:30px;" src="~/Areas/resource/img/mobile/tyre.png" />
             <img class="tyre" style="top:-110px;left:35px;" src="~/Areas/resource/img/mobile/tyre.png" />
             <img class="tyre" style="top:-20px;left:30px;" src="~/Areas/resource/img/mobile/tyre.png" />
@@ -328,16 +328,56 @@
         wxConfig();
     </script>
     <script type="text/javascript">
-        var mch = $.getUrlParam('mch');
-        _viewModel = new Vue({
-            el: '#myinfo',
-            data: {
-            },
-            methods: {
-                wk: function (event) {
-                    window.location.href = "/Mobile/CarBitcoin?mch=" + mch;
-                }
-            }
+         $(function(){
+             var mch = $.getUrlParam('mch');
+
+             _viewModel = new Vue({
+                 el: '#myinfo',
+                 data: {
+                     IsRegister: false,
+                 },
+                 methods: {
+                     wk: function (event) {
+                         window.location.href = "/Mobile/CarBitcoin?mch=" + mch;
+                     },
+                     register: function (event) {
+                         window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                     }
+                 }
+             });
+
+            function init() {
+                $.ajax({
+                    url: '/api/CarBitCoinMember/GetCarBitCoinMemberByOpenID?openId=@ViewBag.OpenId',
+                    type: 'GET',
+                    headers: { 'CompanyCode':mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('cbcmember', JSON.stringify(res.Data));
+                                _viewModel.IsRegister = true;
+                            } else {
+                                //window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+             }
+             var cbcmember = sessionStorage.getItem('cbcmember');
+             if (cbcmember == null || cbcmember == '') {
+                 init();
+             } else {
+                 _viewModel.IsRegister = true;
+             }
         });
     </script>
 }
