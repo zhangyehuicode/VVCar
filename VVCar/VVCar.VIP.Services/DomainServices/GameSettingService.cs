@@ -17,10 +17,18 @@ namespace VVCar.VIP.Services.DomainServices
     /// </summary>
     public class GameSettingService : DomainServiceBase<IRepository<GameSetting>, GameSetting, Guid>, IGameSettingService
     {
-        IRepository<CouponTemplate> CouponTemplateRepo
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public GameSettingService()
         {
-            get { return UnitOfWork.GetRepository<IRepository<CouponTemplate>>(); }
         }
+
+        #region properties
+
+        IRepository<CouponTemplate> CouponTemplateRepo { get => UnitOfWork.GetRepository<IRepository<CouponTemplate>>(); }
+
+        #endregion 
 
         /// <summary>
         /// 查询游戏设置

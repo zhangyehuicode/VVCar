@@ -43,11 +43,25 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 判断游戏设置
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, AllowAnonymous, Route("ValidateGameSetting")]
+        public JsonActionResult<bool> ValidateGameSetting([FromUri]GameCouponRecordFilter filter)
+        {
+            return SafeExecute(() =>
+            {
+                return GameCouponRecordService.ValidateGameSetting(filter);
+            });
+        }
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public PagedActionResult<GameCouponRecord> Search([FromUri]GameCouponRecordFilter filter)
         {
             return SafeGetPagedData<GameCouponRecord>((result) =>

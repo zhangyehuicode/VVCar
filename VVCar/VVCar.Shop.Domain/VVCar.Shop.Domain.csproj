@@ -76,6 +76,7 @@
     <Compile Include="Entities\StockRecord.cs" />
     <Compile Include="Enums\EAdjustDirection.cs" />
     <Compile Include="Enums\EAppointmentStatus.cs" />
+    <Compile Include="Enums\ECarBitCoinRecordType.cs" />
     <Compile Include="Enums\EOrderStatus.cs" />
     <Compile Include="Enums\EPayType.cs" />
     <Compile Include="Enums\EPickUpOrderStatus.cs" />

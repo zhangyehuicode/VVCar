@@ -25,7 +25,7 @@ namespace VVCar.VIP.Data.Mapping
                 .IsRequired()
                 .HasMaxLength(50);
 
-            Property(t => t.GameCouponTitle)
+            Property(t => t.CouponTitle)
                 .HasMaxLength(18);
 
             Property(t => t.NickName)

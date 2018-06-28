@@ -51,14 +51,18 @@
 		});
 		store.reload();
 	},
-	editGameSetting: function (gird, record) {
+    editGameSetting: function(gird, record) {
 		var win = Ext.widget('GameSettingEdit');
+        if (record.data.GameType == 0) {
+            win.down('combobox[name=IsOrderShow]').hidden = true;
+            win.down('label[name=tip]').hidden = true;
+        }
 		win.form.loadRecord(record);
-		win.form.getForm().actionMethod = 'PUT';
+        win.form.getForm().actionMethod = 'PUT';
 		win.setTitle('编辑游戏设置');
 		win.show();
 	},
-	saveGameSetting: function (btn) {
+	saveGameSetting: function () {
 		var win = this.getGameSettingEdit();
 		var form = win.form.getForm();
 		var formValues = form.getValues();

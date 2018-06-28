@@ -16,8 +16,6 @@ namespace VVCar.VIP.Services.DomainServices
     /// </summary>
     public class CouponPushItemService : DomainServiceBase<IRepository<CouponPushItem>, CouponPushItem, Guid>, ICouponPushItemService
     {
-        #region ctor.
-
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -25,13 +23,11 @@ namespace VVCar.VIP.Services.DomainServices
         {
         }
 
+        #region properties
+
+        IRepository<CouponPush> CouponPushRepo { get => UnitOfWork.GetRepository<IRepository<CouponPush>>(); }
+
         #endregion
-
-        IRepository<CouponPush> CouponPushRepo
-        {
-            get { return UnitOfWork.GetRepository<IRepository<CouponPush>>(); }
-        }
-
 
         /// <summary>
         /// 新增

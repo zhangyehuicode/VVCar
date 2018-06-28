@@ -6,7 +6,7 @@
 		{ name: 'GameType' },
 		{ name: 'ReceiveOpenID' },
 		{ name: 'CouponTemplateID' },
-		{ name: 'GameCouponTitle' },
+		{ name: 'CouponTitle' },
 		{ name: 'ReceiveCount' },
 		{ name: 'NickName' },
 		{ name: 'OutTradeNo' },

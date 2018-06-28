@@ -23,7 +23,7 @@ namespace VVCar.VIP.Data.Mapping
             this.Property(t => t.ShareTitle)
                 .HasMaxLength(20);
 
-            this.Property(t => t.CreateUser)
+            this.Property(t => t.CreatedUser)
                 .IsRequired()
                 .HasMaxLength(20);
 

@@ -6,6 +6,7 @@ using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Enums;
 using VVCar.BaseData.Domain.Filters;
 using VVCar.BaseData.Domain.Services;
+using VVCar.VIP.Domain.Entities;
 using YEF.Core;
 using YEF.Core.Data;
 using YEF.Core.Domain;
@@ -31,6 +32,8 @@ namespace VVCar.BaseData.Services.DomainServices
         IRepository<UserRole> UserRoleRepo { get => UnitOfWork.GetRepository<IRepository<UserRole>>(); }
 
         IRepository<SystemSetting> SystemSettingRepo { get => UnitOfWork.GetRepository<IRepository<SystemSetting>>(); }
+
+        IRepository<GameSetting> GameSettingRepo { get => UnitOfWork.GetRepository<IRepository<GameSetting>>(); }
 
         #endregion
 
@@ -323,6 +326,36 @@ namespace VVCar.BaseData.Services.DomainServices
                 IsVisible = true,
                 IsAvailable = true,
                 Type = ESystemSettingType.Parameter,
+                CreatedUserID = AppContext.CurrentSession.UserID,
+                CreatedUser = AppContext.CurrentSession.UserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = merchantId,
+            });
+            GameSettingRepo.Add(new GameSetting
+            {
+                ID = Util.NewID(),
+                GameType = VIP.Domain.Enums.EGameType.AttractWheel,
+                PeriodDays = 0,
+                PeriodCounts = 0,
+                Limit = 0,
+                IsShare = false,
+                ShareTitle = "拓客转盘",
+                IsOrderShow = false,
+                CreatedUserID = AppContext.CurrentSession.UserID,
+                CreatedUser = AppContext.CurrentSession.UserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = merchantId,
+            });
+            GameSettingRepo.Add(new GameSetting
+            {
+                ID = Util.NewID(),
+                GameType = VIP.Domain.Enums.EGameType.ActivityWheel,
+                PeriodDays = 0,
+                PeriodCounts = 0,
+                Limit = 0,
+                IsShare = false,
+                ShareTitle = "活动转盘",
+                IsOrderShow = false,
                 CreatedUserID = AppContext.CurrentSession.UserID,
                 CreatedUser = AppContext.CurrentSession.UserName,
                 CreatedDate = DateTime.Now,

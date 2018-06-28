@@ -443,7 +443,10 @@ namespace VVCar.Shop.Services.DomainServices
                 if (filter.StartTime.HasValue)
                     result = result.Where(t => t.CreatedDate >= filter.StartTime.Value).ToList();
                 if (filter.EndTime.HasValue)
-                    result = result.Where(t => t.CreatedDate < filter.EndTime.Value).ToList();
+                {
+                    var endTime = filter.EndTime.Value.AddDays(1);
+                    result = result.Where(t => t.CreatedDate < endTime).ToList();
+                }
                 if (filter.Source.HasValue)
                     result = result.Where(t => t.Source == filter.Source.Value).ToList();
                 totalCount = result.Count();

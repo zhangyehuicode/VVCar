@@ -16,6 +16,13 @@ namespace VVCar.VIP.Domain.Services
     public partial interface IGameCouponRecordService : IDomainService<IRepository<GameCouponRecord>, GameCouponRecord, Guid>
     {
         /// <summary>
+        /// 判断游戏设置
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        bool ValidateGameSetting(GameCouponRecordFilter filter);
+
+        /// <summary>
         /// 查询游戏卡券领取记录
         /// </summary>
         /// <param name="filter"></param>

@@ -92,12 +92,12 @@ namespace VVCar.VIP.Domain.Entities
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]
-        public Guid? CreateUserID { get; set; }
+        public Guid? CreatedUserID { get; set; }
 
         /// <summary>
         /// 创建人
         /// </summary>
-        public string CreateUser { get; set; }
+        public string CreatedUser { get; set; }
 
         /// <summary>
         /// 创建时间

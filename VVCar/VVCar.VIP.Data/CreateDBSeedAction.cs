@@ -83,8 +83,8 @@ namespace VVCar.VIP.Data
                 IsShare = true,
                 ShareTitle = "拓客转盘",
                 IsOrderShow = true,
-                CreateUserID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
-                CreateUser = "admin",
+                CreatedUserID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                CreatedUser = "admin",
                 CreatedDate = DateTime.Now,
             });
             gameSettingSet.Add(new GameSetting
@@ -97,8 +97,8 @@ namespace VVCar.VIP.Data
                 IsShare = true,
                 ShareTitle = "活动转盘",
                 IsOrderShow = true,
-                CreateUserID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
-                CreateUser = "admin",
+                CreatedUserID = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                CreatedUser = "admin",
                 CreatedDate = DateTime.Now,
             });
         }

@@ -8,7 +8,7 @@ namespace VVCar.VIP.Domain.Entities
     /// <summary>
     /// 游戏卡券记录
     /// </summary>
-    public class GameCouponRecord : NormalEntityBase
+    public class GameCouponRecord : EntityBase
     {
         /// <summary>
         /// 游戏类型
@@ -37,7 +37,7 @@ namespace VVCar.VIP.Domain.Entities
         /// 游戏卡券标题
         /// </summary>
         [Display(Name = "游戏卡券标题")]
-        public string GameCouponTitle { get; set; }
+        public string CouponTitle { get; set; }
 
         /// <summary>
         /// 领取游戏卡券数量
@@ -56,12 +56,6 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "订单号")]
         public string OutTradeNo { get; set; }
-
-        /// <summary>
-        /// 商户ID
-        /// </summary>
-        [Display(Name = "商户ID")]
-        public Guid MerchantID { get; set; }
 
         /// <summary>
         /// 创建时间
