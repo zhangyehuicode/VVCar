@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using VVCar.Shop.Domain.Entities;
+using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
 using YEF.Core.Dtos;
 
@@ -48,6 +49,23 @@ namespace VVCar.Controllers.Shop
             return SafeExecute(() =>
             {
                 return CarBitCoinMemberService.GetCarBitCoinMemberByOpenID(openId);
+            });
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, AllowAnonymous]
+        public PagedActionResult<CarBitCoinMember> Search([FromUri]CarBitCoinMemberFilter filter)
+        {
+            return SafeGetPagedData<CarBitCoinMember>((result) =>
+            {
+                var totalCount = 0;
+                var data = CarBitCoinMemberService.Search(filter, out totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
             });
         }
     }

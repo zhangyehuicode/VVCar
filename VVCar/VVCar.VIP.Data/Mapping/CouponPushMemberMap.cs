@@ -8,21 +8,20 @@ using VVCar.VIP.Domain.Entities;
 
 namespace VVCar.VIP.Data.Mapping
 {
-    public class CouponPushMap : EntityTypeConfiguration<CouponPush>
+    /// <summary>
+    /// 卡券推送会员Map
+    /// </summary>
+    public class CouponPushMemberMap : EntityTypeConfiguration<CouponPushMember>
     {
-        public CouponPushMap()
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        public CouponPushMemberMap()
         {
             HasKey(t => t.ID);
 
-            Property(t => t.Title)
-                .IsRequired()
-                .HasMaxLength(30);
-
             Property(t => t.CreatedUser)
                 .IsRequired()
-                .HasMaxLength(20);
-
-            Property(t => t.LastUpdateUser)
                 .HasMaxLength(20);
         }
     }

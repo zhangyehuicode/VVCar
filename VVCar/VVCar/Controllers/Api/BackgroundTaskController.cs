@@ -54,6 +54,14 @@ namespace VVCar.Controllers.Api
             }
         }
 
+        ICarBitCoinDistributionService CarBitCoinDistributionService
+        {
+            get
+            {
+                return ServiceLocator.Instance.GetService<ICarBitCoinDistributionService>();
+            }
+        }
+
         ///// <summary>
         ///// 微信粉丝 领域服务
         ///// </summary>
@@ -108,6 +116,19 @@ namespace VVCar.Controllers.Api
             return SafeExecute(() =>
             {
                 return ServicePeriodService.ServicePeriodReminder();
+            });
+        }
+
+        /// <summary>
+        /// 分配车比特
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("DistributionCarBitCoin"), AllowAnonymous]
+        public JsonActionResult<bool> DistributionCarBitCoin()
+        {
+            return SafeExecute(() =>
+            {
+                return CarBitCoinDistributionService.DistributionCarBitCoin(null);
             });
         }
 

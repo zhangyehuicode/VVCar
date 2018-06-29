@@ -29,9 +29,9 @@ namespace VVCar.VIP.Domain.Entities
         public EGameType GameType { get; set; }
 
         /// <summary>
-        /// 推送子项
+        /// 游戏卡券
         /// </summary>
-        [Display(Name = "推送子项")]
+        [Display(Name = "游戏卡券")]
         public virtual ICollection<GameCoupon> GameCoupons { get; set; }
 
         /// <summary>

@@ -41,6 +41,12 @@ namespace VVCar.VIP.Domain.Entities
         public ECouponPushStatus Status { get; set; }
 
         /// <summary>
+        /// 是否推送所有会员
+        /// </summary>
+        [Display(Name = "是否推送所有会员")]
+        public bool PushAllMembers { get; set; }
+
+        /// <summary>
         /// 创建日期
         /// </summary>
         [Display(Name = "创建日期")]
@@ -57,6 +63,24 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "创建人")]
         public string CreatedUser { get; set; }
+
+        /// <summary>
+        /// 最后修改人ID
+        /// </summary>
+        [Display(Name = "最后修改人ID")]
+        public Guid? LastUpdateUserID { get; set; }
+
+        /// <summary>
+        /// 最后修改人名称
+        /// </summary>
+        [Display(Name = "最后修改人名称")]
+        public string LastUpdateUser { get; set; }
+
+        /// <summary>
+        /// 最后修改日期
+        /// </summary>
+        [Display(Name = "最后修改日期")]
+        public DateTime? LastUpdateDate { get; set; }
 
         /// <summary>
         /// 推送子项

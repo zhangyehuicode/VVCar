@@ -13,19 +13,25 @@ namespace VVCar.Shop.Domain.Enums
     public enum ECarBitCoinRecordType
     {
         /// <summary>
+        /// 赠送币
+        /// </summary>
+        [Description("赠送币")]
+        Give = -4,
+
+        /// <summary>
         /// 系统分配币
         /// </summary>
         [Description("系统分配币")]
         SystemDistribution = -3,
 
         /// <summary>
-        /// 购买比特币
+        /// 购买车比特
         /// </summary>
         [Description("购买比特币")]
         BuyBitCoin = -2,
 
         /// <summary>
-        /// 出售比特币
+        /// 出售车比特
         /// </summary>
         [Description("出售比特币")]
         SaleBitCoin = -1,

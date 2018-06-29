@@ -33,6 +33,24 @@ namespace VVCar.VIP.Domain.Entities
         [Display(Name = "卡券")]
         public virtual CouponTemplate CouponTemplate { get; set; }
 
+        /// <summary>
+        /// 创建人ID
+        /// </summary>
+        [Display(Name = "创建人ID")]
+        public Guid CreatedUserID { get; set; }
+
+        /// <summary>
+        /// 创建人名称
+        /// </summary>
+        [Display(Name = "创建人名称")]
+        public string CreatedUser { get; set; }
+
+        /// <summary>
+        /// 创建日期
+        /// </summary>
+        [Display(Name = "创建日期")]
+        public DateTime CreatedDate { get; set; }
+
         ///// <summary>
         ///// 被推送ID(人员ID/分组ID)
         ///// </summary>

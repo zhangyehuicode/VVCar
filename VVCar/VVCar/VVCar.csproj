@@ -287,6 +287,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Controllers\Shop\AppointmentController.cs" />
+    <Compile Include="Controllers\Shop\CarBitCoinDistributionController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinMemberController.cs" />
     <Compile Include="Controllers\Shop\ComboItemController.cs" />
     <Compile Include="Controllers\Shop\OrderController.cs" />
@@ -305,6 +306,7 @@
     <Compile Include="Controllers\VIP\CouponController.cs" />
     <Compile Include="Controllers\VIP\CouponPushController.cs" />
     <Compile Include="Controllers\VIP\CouponPushItemController.cs" />
+    <Compile Include="Controllers\VIP\CouponPushMemberController.cs" />
     <Compile Include="Controllers\VIP\CouponTemplateController.cs" />
     <Compile Include="Controllers\VIP\GameCouponRecordController.cs" />
     <Compile Include="Controllers\VIP\GameSettingController.cs" />
@@ -662,6 +664,7 @@
     <Content Include="Scripts\app\model\BaseData\ComboItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\ConsumeHistoryModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponPushItemModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CouponPushMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponPushModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponTemplateInfoModel.js" />
     <Content Include="Scripts\app\model\BaseData\DepartmentModel.js" />
@@ -712,6 +715,7 @@
     <Content Include="Scripts\app\store\BaseData\ComboItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\ConsumeHistoryStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponPushItemStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CouponPushMemberStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponPushStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponTemplateInfoStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentStore.js" />
@@ -851,6 +855,7 @@
     <Content Include="Scripts\app\view\Role\RoleEdit.js" />
     <Content Include="Scripts\app\view\Role\RoleList.js" />
     <Content Include="Scripts\app\view\selector\CouponTemplateSelector.js" />
+    <Content Include="Scripts\app\view\selector\MemberSelector.js" />
     <Content Include="Scripts\app\view\selector\PosProductSelector.js" />
     <Content Include="Scripts\app\view\selector\PosRetailPlanSelector.js" />
     <Content Include="Scripts\app\view\selector\UserSelector.js" />

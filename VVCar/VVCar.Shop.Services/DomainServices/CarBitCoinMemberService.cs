@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Enums;
+using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
 using VVCar.VIP.Domain.Entities;
 using YEF.Core;
@@ -31,6 +32,8 @@ namespace VVCar.Shop.Services.DomainServices
         IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
 
         IRepository<CarBitCoinRecord> CarBitCoinRecordRepo { get => UnitOfWork.GetRepository<IRepository<CarBitCoinRecord>>(); }
+
+        ICarBitCoinDistributionService CarBitCoinDistributionService { get => ServiceLocator.Instance.GetService<ICarBitCoinDistributionService>(); }
 
         #endregion
 
@@ -96,8 +99,9 @@ namespace VVCar.Shop.Services.DomainServices
                 MobilePhoneNo = entity.MobilePhoneNo,
                 Sex = entity.Sex,
                 OpenID = entity.OpenID,
-                Horsepower = CalculateHorsepower(entity.MobilePhoneNo),
+                //Horsepower = CalculateHorsepower(entity.MobilePhoneNo),
             });
+            CarBitCoinDistributionService.DistributionCarBitCoin(result.ID);
             return result;
         }
 
@@ -138,6 +142,19 @@ namespace VVCar.Shop.Services.DomainServices
             return result;
         }
 
+        public bool CalculateHorsepowerSave(Guid carBitMemberId)
+        {
+            if (carBitMemberId == null)
+                return false;
+            var cbcmember = Repository.GetByKey(carBitMemberId);
+            if (cbcmember == null)
+                return false;
+            var horsepower = CalculateHorsepower(cbcmember.MobilePhoneNo);
+            cbcmember.Horsepower = horsepower;
+            Repository.Update(cbcmember);
+            return true;
+        }
+
         public bool ChangeHorsepowerCarBitCoin(string mobilePhoneNo, ECarBitCoinRecordType carBitCoinRecordType, int horsepower, decimal carBitCoin, string tradeNo)
         {
             if (string.IsNullOrEmpty(mobilePhoneNo) || (horsepower == 0 && carBitCoin == 0))
@@ -160,7 +177,6 @@ namespace VVCar.Shop.Services.DomainServices
                     CarBitCoin = carBitCoin,
                     TradeNo = tradeNo,
                     CreatedDate = DateTime.Now,
-                    MerchantID = AppContext.CurrentSession.MerchantID,
                 });
                 UnitOfWork.CommitTransaction();
             }
@@ -170,6 +186,23 @@ namespace VVCar.Shop.Services.DomainServices
                 throw e;
             }
             return true;
+        }
+
+        public IEnumerable<CarBitCoinMember> Search(CarBitCoinMemberFilter filter, out int totalCount)
+        {
+            var queryable = Repository.GetQueryable(false);
+            if (!string.IsNullOrEmpty(filter.OpenID))
+                queryable = queryable.Where(t => t.OpenID == filter.OpenID);
+            if (!string.IsNullOrEmpty(filter.MobilePhoneNo))
+                queryable = queryable.Where(t => t.MobilePhoneNo == filter.MobilePhoneNo);
+            totalCount = queryable.Count();
+            if (filter.SortDirection == ESortDirection.Horsepower)
+                queryable = queryable.OrderByDescending(t => t.Horsepower);
+            else
+                queryable = queryable.OrderByDescending(t => t.CarBitCoin);
+            if (filter.Start.HasValue && filter.Limit.HasValue)
+                queryable = queryable.Skip(filter.Start.Value).Take(filter.Limit.Value);
+            return queryable.ToArray();
         }
     }
 }

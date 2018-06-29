@@ -131,6 +131,10 @@ namespace VVCar.BaseData.Services
 
                 cfg.CreateMap<CouponPushItem, CouponPushItemDto>()
                 .ForMember(dest => dest.TemplateCode, opt => opt.MapFrom(src => src.CouponTemplate.TemplateCode));
+
+                cfg.CreateMap<CouponPushMember, CouponPushMemberDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Member.Name))
+                .ForMember(dest => dest.MobilePhoneNo, opt => opt.MapFrom(src => src.Member.MobilePhoneNo));
             });
 
             //Mapper.CreateMap<Member, MemberDto>()

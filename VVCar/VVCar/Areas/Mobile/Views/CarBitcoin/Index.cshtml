@@ -13,13 +13,13 @@
                 <div class="cbctablecell valuecell">
                     <img class="valueicon" src="~/Areas/resource/img/mobile/carbitcoinicon.png" />
                 </div>
-                <div class="cbctablecell">车比特  {{CarBitcoin}}</div>
+                <div class="cbctablecell">车比特  {{MyInfo.CarBitCoin}}</div>
             </div>
             <div class="cbctable valuetitlefont">
                 <div class="cbctablecell valuecell">
                     <img class="valueicon" src="~/Areas/resource/img/mobile/horsepowericon.png" />
                 </div>
-                <div class="cbctablecell">马力值  {{Horsepower}}</div>
+                <div class="cbctablecell">马力值  {{MyInfo.Horsepower}}</div>
             </div>
         </div>
         <div class="declare">超能秘籍</div>
@@ -31,7 +31,7 @@
                     <div class="cbctablecell rankcellname">用户名</div>
                     <div class="cbctablecell rankcell">马力</div>
                 </div>
-                <div v-for="Coiner in CoinerList">
+                <div v-for="Coiner in CarBitCoinMemberList">
                     <div class="cbctable rankheadtable rankheadh">
                         <div class="cbctablecell rankcell valuefont">
                             <div v-if="Coiner.Ranking>3">{{Coiner.Ranking}}</div>
@@ -45,27 +45,27 @@
                 </div>
             </div>
         </div>
-        <div class="bitcoincon">
+        <div class="bitcoincon" v-bind:style="CarBitCoin.style" v-bind:id="CarBitCoin.ID" v-for="CarBitCoin in CarBitCoinDistributionList" v-on:click="carBitCoinTransform(CarBitCoin)">
             @*<img src="~/Areas/resource/img/mobile/cbc.png" />*@
             <img class="coinimg" src="~/Areas/resource/img/mobile/cbc.png" />@*carcoinicon*@
-            <div style="color:#fff;text-align:center;font-size:8px;">0.00128</div>
+            <div style="color:#fff;text-align:center;font-size:8px;">{{CarBitCoin.CarBitCoin}}</div>
         </div>
-        <div class="bitcoimg">
-            <img class="coinimg" src="~/Areas/resource/img/mobile/cbc.png" />
-            <div style="color:#fff;text-align:center;font-size:8px;">0.00347</div>
-        </div>
-        <div class="bitcoimg1">
-            <img class="coinimg" src="~/Areas/resource/img/mobile/cbc.png" />
-            <div style="color:#fff;text-align:center;font-size:8px;">0.00569</div>
-        </div>
-        <div class="bitcoimg2">
-            <img class="coinimg" src="~/Areas/resource/img/mobile/cbc.png" />
-            <div style="color:#fff;text-align:center;font-size:8px;">0.00236</div>
-        </div>
-        <div class="bitcoimg3">
-            <img class="coinimg" src="~/Areas/resource/img/mobile/cbc.png" />
-            <div style="color:#fff;text-align:center;font-size:8px;">0.00154</div>
-        </div>
+        @*<div class="bitcoimg">
+                <img class="coinimg" src="~/Areas/resource/img/mobile/cbc.png" />
+                <div style="color:#fff;text-align:center;font-size:8px;">0.00347</div>
+            </div>
+            <div class="bitcoimg1">
+                <img class="coinimg" src="~/Areas/resource/img/mobile/cbc.png" />
+                <div style="color:#fff;text-align:center;font-size:8px;">0.00569</div>
+            </div>
+            <div class="bitcoimg2">
+                <img class="coinimg" src="~/Areas/resource/img/mobile/cbc.png" />
+                <div style="color:#fff;text-align:center;font-size:8px;">0.00236</div>
+            </div>
+            <div class="bitcoimg3">
+                <img class="coinimg" src="~/Areas/resource/img/mobile/cbc.png" />
+                <div style="color:#fff;text-align:center;font-size:8px;">0.00154</div>
+            </div>*@
     </div>
     <div class="bottomactioncon cbctable">
         <div class="cbctablecell" style="vertical-align:middle;">
@@ -305,31 +305,123 @@
         _viewModel = new Vue({
             el: '#carbitcoin',
             data: {
-                CarBitcoin: 0.00545,
-                Horsepower: 666,
-                CoinerList: [{
-                    Ranking: 1,
-                    Name: '小晖晖',
-                    Horsepower: 666,
-                }, {
-                    Ranking: 2,
-                    Name: 'zsf',
-                    Horsepower: 571,
-                }, {
-                    Ranking: 3,
-                    Name: '哦那',
-                    Horsepower: 372,
-                }, {
-                    Ranking: 4,
-                    Name: '咯ing',
-                    Horsepower: 119,
-                }],
+                CarBitCoinMemberList: [],
+                MyInfo: {},
+                CoinerList: [],
+                CarBitCoinDistributionList:[],
             },
             methods: {
                 myinfo: function (event) {
                     window.location.href = "/Mobile/CarBitcoin/MyInfo?mch=" + mch;
-                }
+                },
+                carBitCoinTransform: function (data, event) {
+                    carBitCoinTransform(data.ID);
+                },
             }
         });
+
+        function getCarBitCoin(isshowloading) {
+            $.ajax({
+                url: '/api/CarBitCoinMember',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                    if (isshowloading)
+                      $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            for (var i = 0; i < res.Data.length; i++) {
+                                res.Data[i].Ranking = i + 1;
+                                if (res.Data[i].OpenID == '@ViewBag.OpenId') {
+                                    _viewModel.MyInfo = res.Data[i];
+                                    getDistributionCarBitCoin(res.Data[i].ID);
+                                }
+                            }
+                            _viewModel.CarBitCoinMemberList = res.Data;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+        getCarBitCoin();
+
+        function getDistributionCarBitCoin(id) {
+            if (id == null||id=='') {
+                return;
+            }
+            $.ajax({
+                url: '/api/CarBitCoinDistribution?CarBitCoinMemberID=' + id +'&Status=0&Start=0&Limit=6',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                    //$.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            for (var i = 0; i < res.Data.length; i++) {
+                                res.Data[i].style = {
+                                    position: 'absolute',
+                                    top: 300 * res.Data[i].PositionY + 'px',
+                                    left: 350 * res.Data[i].PositionX + 'px',
+                                    display: 'table-cell',
+                                    textAlign: 'center',
+                                    verticalAlign: 'middle',
+                                };
+                            }
+                            _viewModel.CarBitCoinDistributionList = res.Data;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
+        function carBitCoinTransform(id) {
+            if (id == null || id == '') {
+                return;
+            }
+            $.ajax({
+                url: '/api/CarBitCoinDistribution/CarBitCoinTransform?id=' + id,
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                    //$.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data) {
+                            getCarBitCoin(false);
+                            //$('#' + id).hide();
+                            getDistributionCarBitCoin(_viewModel.MyInfo.ID);
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
+        var setIntervalId = setInterval(function () {
+                getDistributionCarBitCoin(_viewModel.MyInfo.ID);
+        },3000);
+
     </script>
 }

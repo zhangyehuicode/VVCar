@@ -18,7 +18,7 @@
         </div>
         <div class="zcdl_box3" style="margin-top:inherit;">
             <img src="~/Areas/resource/img/mobile/yzm2.png" style="width:16px; float:left; margin-top:18px;">
-            <input v-model="UserInfo.VerificationCode" type="number" placeholder="请输入验证码" name="address" size="6" maxlength="6" style="color:#fff" class="zcdl_box4" oninput="if(value.length>6)value=value.slice(0,6)">
+            <input v-model="UserInfo.VerificationCode" type="text" placeholder="请输入验证码" name="address" size="6" maxlength="6" style="color:#fff" class="zcdl_box4" oninput="if(value.length>6)value=value.slice(0,6)">
         </div>
         <a class="zcdl_btn" style="border-radius:20px;letter-spacing:2px;font-size:15px;" v-on:click="register">立即开启</a>
     </div>

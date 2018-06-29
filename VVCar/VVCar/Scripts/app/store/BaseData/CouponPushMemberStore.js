@@ -1,14 +1,14 @@
-﻿Ext.define('WX.store.BaseData.CouponPushItemStore', {
+﻿Ext.define('WX.store.BaseData.CouponPushMemberStore', {
     extend: 'Ext.data.Store',
-    model: 'WX.model.BaseData.CouponPushItemModel',
-    pageSize: 8,
+    model: 'WX.model.BaseData.CouponPushMemberModel',
+    pageSize: 10,
     proxy: {
         type: 'rest',
-        url: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponPushItem',
+        url: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponPushMember',
         api: {
-            read: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponPushItem?All=false',
-            batchAdd: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponPushItem/BatchAdd',
-            batchDelete: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponPushItem/deleteCouponPushItems'
+            read: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponPushMember?All=false',
+            batchAdd: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponPushMember/BatchAdd',
+            batchDelete: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponPushMember/BatchDelete'
         }
     },
     batchAdd: function(data, success, failure) {

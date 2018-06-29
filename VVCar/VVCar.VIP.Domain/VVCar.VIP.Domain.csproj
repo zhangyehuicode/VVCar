@@ -56,6 +56,7 @@
     <Compile Include="Dtos\CouponGivenDto.cs" />
     <Compile Include="Dtos\CouponPushDto.cs" />
     <Compile Include="Dtos\CouponPushItemDto.cs" />
+    <Compile Include="Dtos\CouponPushMemberDto.cs" />
     <Compile Include="Dtos\CouponStatusInfoDto.cs" />
     <Compile Include="Dtos\CouponInfoDto.cs" />
     <Compile Include="Dtos\CouponReportDto.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Entities\CouponItemVerificationRecord.cs" />
     <Compile Include="Entities\CouponPush.cs" />
     <Compile Include="Entities\CouponPushItem.cs" />
+    <Compile Include="Entities\CouponPushMember.cs" />
     <Compile Include="Entities\CouponPushRecord.cs" />
     <Compile Include="Entities\CouponTemplate.cs" />
     <Compile Include="Entities\CouponTemplateStock.cs" />
@@ -154,6 +156,7 @@
     <Compile Include="Filters\CardThemeGroupFilter.cs" />
     <Compile Include="Filters\CouponFilter.cs" />
     <Compile Include="Filters\CouponPushItemFilter.cs" />
+    <Compile Include="Filters\CouponPushMemberFilter.cs" />
     <Compile Include="Filters\CouponReportFilter.cs" />
     <Compile Include="Filters\CouponTemplateFilter.cs" />
     <Compile Include="Filters\GameCouponFilter.cs" />
@@ -174,6 +177,7 @@
     <Compile Include="MakeCodeTypes.cs" />
     <Compile Include="MemberCardTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ICouponPushMemberService.cs" />
     <Compile Include="Services\IGameCouponRecordService.cs" />
     <Compile Include="Services\IGameSettingService.cs" />
     <Compile Include="Services\ICardThemeCategoryService.cs" />

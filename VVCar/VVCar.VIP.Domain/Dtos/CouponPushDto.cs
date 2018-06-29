@@ -34,6 +34,12 @@ namespace VVCar.VIP.Domain.Dtos
         public ECouponPushStatus Status { get; set; }
 
         /// <summary>
+        /// 是否推送所有会员
+        /// </summary>
+        [Display(Name = "是否推送所有会员")]
+        public bool PushAllMembers { get; set; }
+
+        /// <summary>
         /// 创建日期
         /// </summary>
         [Display(Name = "创建日期")]

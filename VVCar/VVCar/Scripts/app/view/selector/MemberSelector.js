@@ -1,24 +1,27 @@
-﻿Ext.define('WX.view.CouponPush.CouponPushItemEdit', {
+﻿Ext.define('WX.view.selector.MemberSelector', {
     extend: 'Ext.window.Window',
-    alias: 'widget.CouponPushItemEdit',
-    title: '卡券推送子项编辑',
+    alias: 'widget.MemberSelector',
+    title: '选择会员',
     layout: 'fit',
     width: 600,
     bodyPadding: 5,
     modal: true,
     initComponent: function() {
         var me = this;
-        var couponTemplateInfoStore = Ext.create('WX.store.BaseData.CouponTemplateInfoStore');
+        var store = Ext.create('WX.store.BaseData.MemberStore');
+        store.limit = 10,
+            store.pageSize = 10,
+            store.load();
         me.grid = Ext.create('Ext.grid.Panel', {
-            name: "couponTemplate",
+            name: "gridMember",
             flex: 1,
-            store: couponTemplateInfoStore,
+            store: store,
             stripeRows: true,
             selModel: Ext.create('Ext.selection.CheckboxModel', { model: 'SIMPLE' }),
             columns: [
-                { header: '模板编号', dataIndex: 'TemplateCode', flex: 1 },
-                { header: '卡券类型', dataIndex: 'CouponTypeName', flex: 1 },
-                { header: '标题', dataIndex: 'Title', flex: 1 }
+                { header: '会员名称', dataIndex: 'Name', flex: 1 },
+                { header: '手机号码', dataIndex: 'MobilePhoneNo', flex: 1 },
+                { header: '车牌号', dataIndex: 'PlateList', flex: 1 },
             ],
             bbar: {
                 xtype: 'pagingtoolbar',

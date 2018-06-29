@@ -17,6 +17,10 @@ namespace VVCar.VIP.Data.Mapping
             Property(t => t.CouponTemplateTitle)
              .IsRequired()
              .HasMaxLength(18);
+
+            Property(t => t.CreatedUser)
+                .IsRequired()
+                .HasMaxLength(20);
         }
     }
 }

@@ -102,7 +102,11 @@ namespace VVCar.VIP.Services.DomainServices
                 throw new DomainException("已推送不能修改");
             couponPush.Title = entity.Title;
             couponPush.PushDate = entity.PushDate;
+            couponPush.PushAllMembers = entity.PushAllMembers;
             couponPush.Status = entity.Status;
+            couponPush.LastUpdateUserID = AppContext.CurrentSession.UserID;
+            couponPush.LastUpdateUser = AppContext.CurrentSession.UserName;
+            couponPush.LastUpdateDate = DateTime.Now;
             return Repository.Update(couponPush) > 0;
         }
 

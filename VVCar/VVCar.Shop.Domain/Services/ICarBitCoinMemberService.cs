@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.Shop.Domain.Entities;
+using VVCar.Shop.Domain.Filters;
 using YEF.Core.Data;
 using YEF.Core.Domain;
 
@@ -38,5 +39,27 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="id"></param>
         /// <returns></returns>
         CarBitCoinMember GetCarBitCoinMember(Guid id);
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        IEnumerable<CarBitCoinMember> Search(CarBitCoinMemberFilter filter, out int totalCount);
+
+        /// <summary>
+        /// 计算马力
+        /// </summary>
+        /// <param name="mobilePhoneNo"></param>
+        /// <returns></returns>
+        int CalculateHorsepower(string mobilePhoneNo);
+
+        /// <summary>
+        /// 计算马力并保存
+        /// </summary>
+        /// <param name="carBitMemberId"></param>
+        /// <returns></returns>
+        bool CalculateHorsepowerSave(Guid carBitMemberId);
     }
 }

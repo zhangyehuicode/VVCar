@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="AutoMapper\DtoMapper.cs" />
     <Compile Include="DomainServices\AppointmentService.cs" />
+    <Compile Include="DomainServices\CarBitCoinDistributionService.cs" />
     <Compile Include="DomainServices\CarBitCoinMemberService.cs" />
     <Compile Include="DomainServices\ComboItemService.cs" />
     <Compile Include="DomainServices\OrderItemService.cs" />

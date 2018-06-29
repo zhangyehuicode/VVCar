@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Enums;
 using YEF.Core.Data;
 using System.ComponentModel.DataAnnotations;
-using VVCar.Shop.Domain.Enums;
 
 namespace VVCar.Shop.Domain.Entities
 {
     /// <summary>
-    /// 车比特记录
+    /// 车比特分配
     /// </summary>
-    public class CarBitCoinRecord : NormalEntityBase
+    public class CarBitCoinDistribution : NormalEntityBase
     {
         /// <summary>
         /// 车比特会员ID
@@ -21,21 +21,21 @@ namespace VVCar.Shop.Domain.Entities
         public Guid CarBitCoinMemberID { get; set; }
 
         /// <summary>
+        /// 电话号码
+        /// </summary>
+        [Display(Name = "电话号码")]
+        public string MobilePhoneNo { get; set; }
+
+        /// <summary>
         /// 车比特会员
         /// </summary>
-        public CarBitCoinMember CarBitCoinMember { get; set; }
+        public virtual CarBitCoinMember CarBitCoinMember { get; set; }
 
         /// <summary>
-        /// 车比特记录类型
+        /// 状态
         /// </summary>
-        [Display(Name = "车比特记录类型")]
-        public ECarBitCoinRecordType CarBitCoinRecordType { get; set; }
-
-        /// <summary>
-        /// 马力
-        /// </summary>
-        [Display(Name = "马力")]
-        public int Horsepower { get; set; }
+        [Display(Name = "状态")]
+        public ECarBitCoinDistributionStatus Status { get; set; }
 
         /// <summary>
         /// 车比特
@@ -44,16 +44,16 @@ namespace VVCar.Shop.Domain.Entities
         public decimal CarBitCoin { get; set; }
 
         /// <summary>
-        /// 交易单号（商城订单、接车单、币交易、购买引擎）
+        /// 随机横向位置（0-1）
         /// </summary>
-        [Display(Name = "交易单号（商城订单、接车单、币交易、购买引擎）")]
-        public string TradeNo { get; set; }
+        [Display(Name = "随机横向位置（0-1）")]
+        public double PositionX { get; set; }
 
         /// <summary>
-        /// 备注
+        /// 随机垂直位置（0-1）
         /// </summary>
-        [Display(Name = "备注")]
-        public string Remark { get; set; }
+        [Display(Name = "随机垂直位置（0-1）")]
+        public double PositionY { get; set; }
 
         /// <summary>
         /// 创建时间
