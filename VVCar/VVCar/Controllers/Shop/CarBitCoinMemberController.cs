@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
@@ -66,6 +67,20 @@ namespace VVCar.Controllers.Shop
                 var data = CarBitCoinMemberService.Search(filter, out totalCount);
                 result.Data = data;
                 result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        /// 赠送车比特
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost, Route("GiveAwayCarBitCoin")]
+        public JsonActionResult<bool> GiveAwayCarBitCoin(GiveAwayCarBitCoinParam param)
+        {
+            return SafeExecute(() =>
+            {
+                return CarBitCoinMemberService.GiveAwayCarBitCoin(param);
             });
         }
     }

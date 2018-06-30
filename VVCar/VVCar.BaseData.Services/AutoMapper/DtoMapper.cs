@@ -58,6 +58,8 @@ namespace VVCar.BaseData.Services
 
                 cfg.CreateMap<ProductCategory, ProductCategoryTreeDto>();
 
+                cfg.CreateMap<CarBitCoinProductCategory, CarBitCoinProductCategoryTreeDto>();
+
                 //VIP Domain
                 cfg.CreateMap<Member, IDCodeNameDto>()
                    .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.CardNumber));
@@ -86,7 +88,12 @@ namespace VVCar.BaseData.Services
                 cfg.CreateMap<MemberRegisterDto, Member>();
 
                 cfg.CreateMap<ProductCategory, ProductCategoryLiteDto>();
+
+                cfg.CreateMap<CarBitCoinProductCategory, CarBitCoinProductCategoryLiteDto>();
+
                 cfg.CreateMap<Product, ProductLiteDto>();
+
+                cfg.CreateMap<CarBitCoinProduct, CarBitCoinProductLiteDto>();
 
                 cfg.CreateMap<Department, DepartmentLiteDto>();
 
@@ -115,6 +122,8 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.Nature, opt => opt.MapFrom(src => src.Template.Nature));
 
                 cfg.CreateMap<Product, ProductDto>();
+
+                cfg.CreateMap<CarBitCoinProduct, CarBitCoinProductDto>();
 
                 cfg.CreateMap<GameCoupon, GameCouponDto>()
                 .ForMember(dest => dest.Nature, opt => opt.MapFrom(src => src.CouponTemplate.Nature))

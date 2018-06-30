@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.BaseData.Domain.Entities;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
@@ -155,11 +156,15 @@ namespace VVCar.Shop.Services.DomainServices
             return true;
         }
 
-        public bool ChangeHorsepowerCarBitCoin(string mobilePhoneNo, ECarBitCoinRecordType carBitCoinRecordType, int horsepower, decimal carBitCoin, string tradeNo)
+        public bool ChangeHorsepowerCarBitCoin(Guid? cbcmemberId, string mobilePhoneNo, ECarBitCoinRecordType carBitCoinRecordType, int horsepower, decimal carBitCoin, string tradeNo, string remark)
         {
-            if (string.IsNullOrEmpty(mobilePhoneNo) || (horsepower == 0 && carBitCoin == 0))
+            if (((!cbcmemberId.HasValue) && string.IsNullOrEmpty(mobilePhoneNo)) || (horsepower == 0 && carBitCoin == 0))
                 return false;
-            var cbcmember = Repository.GetQueryable().Where(t => t.MobilePhoneNo == mobilePhoneNo).FirstOrDefault();
+            CarBitCoinMember cbcmember = null;
+            if (cbcmemberId.HasValue)
+                cbcmember = Repository.GetByKey(cbcmemberId.Value);
+            else if (!string.IsNullOrEmpty(mobilePhoneNo))
+                cbcmember = Repository.GetQueryable().Where(t => t.MobilePhoneNo == mobilePhoneNo).FirstOrDefault();
             if (cbcmember == null)
                 return false;
             UnitOfWork.BeginTransaction();
@@ -176,6 +181,7 @@ namespace VVCar.Shop.Services.DomainServices
                     Horsepower = horsepower,
                     CarBitCoin = carBitCoin,
                     TradeNo = tradeNo,
+                    Remark = remark,
                     CreatedDate = DateTime.Now,
                 });
                 UnitOfWork.CommitTransaction();
@@ -188,13 +194,20 @@ namespace VVCar.Shop.Services.DomainServices
             return true;
         }
 
+        public bool GiveAwayCarBitCoin(GiveAwayCarBitCoinParam param)
+        {
+            if (param == null || param.CarBitCoinMemberID == null || param.CarBitCoin < 1)
+                return false;
+            return ChangeHorsepowerCarBitCoin(param.CarBitCoinMemberID, string.Empty, ECarBitCoinRecordType.Give, 0, param.CarBitCoin, string.Empty, param.Remark);
+        }
+
         public IEnumerable<CarBitCoinMember> Search(CarBitCoinMemberFilter filter, out int totalCount)
         {
             var queryable = Repository.GetQueryable(false);
             if (!string.IsNullOrEmpty(filter.OpenID))
                 queryable = queryable.Where(t => t.OpenID == filter.OpenID);
             if (!string.IsNullOrEmpty(filter.MobilePhoneNo))
-                queryable = queryable.Where(t => t.MobilePhoneNo == filter.MobilePhoneNo);
+                queryable = queryable.Where(t => t.MobilePhoneNo.Contains(filter.MobilePhoneNo));
             totalCount = queryable.Count();
             if (filter.SortDirection == ESortDirection.Horsepower)
                 queryable = queryable.OrderByDescending(t => t.Horsepower);

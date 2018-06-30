@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using YEF.Core.Data;
@@ -61,5 +62,12 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="carBitMemberId"></param>
         /// <returns></returns>
         bool CalculateHorsepowerSave(Guid carBitMemberId);
+
+        /// <summary>
+        /// 赠送车比特
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        bool GiveAwayCarBitCoin(GiveAwayCarBitCoinParam param);
     }
 }

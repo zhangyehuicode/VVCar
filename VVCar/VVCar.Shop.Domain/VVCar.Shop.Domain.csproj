@@ -43,7 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\AdjustIndexParam.cs" />
+    <Compile Include="Dtos\CarBitCoinProductCategoryLiteDto.cs" />
+    <Compile Include="Dtos\CarBitCoinProductCategoryTreeDto.cs" />
+    <Compile Include="Dtos\CarBitCoinProductDto.cs" />
+    <Compile Include="Dtos\CarBitCoinProductLiteDto.cs" />
     <Compile Include="Dtos\ConsumeHistoryDto.cs" />
+    <Compile Include="Dtos\GiveAwayCarBitCoinParam.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisDto.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisParam.cs" />
     <Compile Include="Dtos\OrderDto.cs" />
@@ -60,6 +65,8 @@
     <Compile Include="Entities\Appointment.cs" />
     <Compile Include="Entities\CarBitCoinDistribution.cs" />
     <Compile Include="Entities\CarBitCoinMember.cs" />
+    <Compile Include="Entities\CarBitCoinProduct.cs" />
+    <Compile Include="Entities\CarBitCoinProductCategory.cs" />
     <Compile Include="Entities\CarBitCoinRecord.cs" />
     <Compile Include="Entities\ComboItem.cs" />
     <Compile Include="Entities\Order.cs" />
@@ -77,6 +84,7 @@
     <Compile Include="Entities\StockRecord.cs" />
     <Compile Include="Enums\EAdjustDirection.cs" />
     <Compile Include="Enums\EAppointmentStatus.cs" />
+    <Compile Include="Enums\ECarBitCoinProductType.cs" />
     <Compile Include="Enums\ECarBitCoinDistributionStatus.cs" />
     <Compile Include="Enums\ECarBitCoinRecordType.cs" />
     <Compile Include="Enums\EOrderStatus.cs" />
@@ -86,6 +94,8 @@
     <Compile Include="Enums\EStockRecordSource.cs" />
     <Compile Include="Enums\EStockRecordType.cs" />
     <Compile Include="Filters\AppointmentFilter.cs" />
+    <Compile Include="Filters\CarBitCoinProductCategoryFilter.cs" />
+    <Compile Include="Filters\CarBitCoinProductFilter.cs" />
     <Compile Include="Filters\CarBitCoinDistributionFilter.cs" />
     <Compile Include="Filters\CarBitCoinMemberFilter.cs" />
     <Compile Include="Filters\ComboItemFilter.cs" />
@@ -105,6 +115,8 @@
     <Compile Include="Services\IAppointmentService.cs" />
     <Compile Include="Services\ICarBitCoinDistributionService.cs" />
     <Compile Include="Services\ICarBitCoinMemberService.cs" />
+    <Compile Include="Services\ICarBitCoinProductCategoryService.cs" />
+    <Compile Include="Services\ICarBitCoinProductService.cs" />
     <Compile Include="Services\IComboItemService.cs" />
     <Compile Include="Services\IOrderItemService.cs" />
     <Compile Include="Services\IOrderPaymentDetailsService.cs" />

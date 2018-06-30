@@ -1,0 +1,28 @@
+﻿Ext.define("WX.model.BaseData.CarBitCoinProductModel", {
+	extend: "Ext.data.Model",
+	idProperty: "ID",
+	fields: [
+		{ name: "Index" },
+		{ name: "Name" },
+		{ name: "Code" },
+		{ name: "ImgUrl" },
+		{ name: "CarBitCoinPoints" },
+		{ name: "UpperLimit" },
+		{ name: "IsPublish" },
+		{ name: "IsCombo" },
+		{ name: "IsRecommend" },
+		{ name: "Stock" },
+		{ name: "CreatedUser" },
+		{ name: "EffectiveDate" },
+		{ name: "ExpiredDate" },
+		{ name: "CreatedDate" },
+		{ name: "BasePrice" },
+		{ name: "PriceSale" },
+		{ name: "CarBitCoinProductType" },
+		{ name: "CommissionRate" },
+		{ name: "IsCanPointExchange" },
+		{ name: "Unit" },
+		{ name: "Introduction" },
+		{ name: "DeliveryNotes" },
+	]
+});

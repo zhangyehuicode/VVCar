@@ -1,0 +1,247 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div style="background-color:#f8f9fe;" id="shop">
+    <div class="top_box">
+        <div class="top_box_text" style="background:#b23af4;">车比特商城</div>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
+        <a class="top_box2"></a>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;"></a>
+    </div>
+    <div class="shop_box2">
+        <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;精品推荐
+    </div>
+    <div class="slide-box">
+        <div class="shop_box4" v-for="Product in RecommendProductList" v-on:click="productdetails(Product)">
+            <a><img class="productimg" v-bind:src=Product.ImgUrl></a>
+            <span>{{Product.Name}}</span>
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;">￥{{Product.PriceSale}}</span>
+        </div>
+    </div>
+    <div class="shop_box">
+        <div class="shop_box2">
+            <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;引擎
+        </div>
+        <div class="shop_box3">
+            <div class="shop_box3_div" v-for="Product in ProductList" v-on:click="productdetails(Product)">
+                <span class="shop_box3_span">{{Product.Name}}</span>
+                <a><img class="shop_box3_img cardimg" v-bind:src=Product.ImgUrl></a>
+                <div class="shop_box3_div2">
+                    ￥{{Product.PriceSale}}
+                </div>
+            </div>
+        </div>
+        <div class="shop_box2">
+            <img src="~/Areas/resource/img/mobile/shop.png" style="width:3.8%;">&nbsp;商品
+        </div>
+        <div class="shop_box3">
+            <div class="shop_box3_div" v-for="Product in GoodsList" v-on:click="productdetails(Product)">
+                <span class="shop_box3_span">{{Product.Name}}</span>
+                <a><img class="shop_box3_img cardimg" v-bind:src=Product.ImgUrl></a>
+                <div class="shop_box3_div2">
+                    ￥{{Product.PriceSale}}
+                </div>
+            </div>
+        </div>
+        <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+    </div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .productimg {
+            height: 190px;
+        }
+
+        .cardimg {
+            height: 100px;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var mch = $.getUrlParam('mch');
+            function init() {
+                $.ajax({
+                    url: '/api/CarBitCoinMember/GetCarBitCoinMemberByOpenID?openId=@ViewBag.OpenId',
+                    type: 'GET',
+                    headers: { 'CompanyCode':mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('cbcmember', JSON.stringify(res.Data));
+                            } else {
+                                window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+             }
+             var cbcmember = sessionStorage.getItem('cbcmember');
+             if (cbcmember == null || cbcmember == '') {
+                 init();
+             }
+        });
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#shop',
+            data: {
+                GoodsList: [],
+                ProductList: [],
+                RecommendProductList: [],
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/CarBitCoin/MyInfo?mch=" + mch;
+                },
+                productdetails: function (data, event) {
+                    //if (!data.IsMemberCard) {
+                    sessionStorage.setItem('product', JSON.stringify(data));
+                    window.location.href = "/Mobile/CarBitCoin/ProductDetails?mch=" + mch;
+                    //} else {
+                    //    sessionStorage.setItem('engine', JSON.stringify(data));
+                    //    window.location.href = "/Mobile/CarBitCoin/MemberCardBuy?mch=" + mch;
+                    //}
+                },
+            }
+        });
+
+        function getRecommendProduct() {
+            $.ajax({
+                url: '/api/CarBitCoinProduct/GetRecommendProduct',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforesend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null)
+                            _payBillViewModel.RecommendProductList = res.Data;
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+        getRecommendProduct();
+
+        function getProduct() {
+            $.ajax({
+                url: '/api/CarBitCoinProduct/GetProduct',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforesend: function () {
+                    //$.showLoading();
+                },
+                success: function (res) {
+                    //$.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            _payBillViewModel.GoodsList = res.Data;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    //$.hideLoading();
+                }
+            });
+        }
+
+        function getEngineProduct() {
+            $.ajax({
+                url: '/api/CarBitCoinProduct/GetEngineProduct',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforesend: function () {
+                    //$.showLoading();
+                },
+                success: function (res) {
+                    //$.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            _payBillViewModel.ProductList = res.Data;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    //$.hideLoading();
+                }
+            });
+        }
+
+        getProduct();
+        getEngineProduct();
+
+    </script>
+}

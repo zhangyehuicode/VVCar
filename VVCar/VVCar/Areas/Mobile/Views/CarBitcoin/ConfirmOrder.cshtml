@@ -1,0 +1,343 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="confirmorder" style="background-color:#f8f9fe;">
+    <div class="top_box">
+        <div class="top_box_text" style="background:#b23af4;">确认订单</div>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
+        <a class="top_box2"></a>
+    </div>
+    <div class="qr_box" v-if="!IsAllMemberCard">
+        <div class="gwc_text2">
+            <div class="labeltext">收件人：</div>
+            <input type="text" class="inputbox linkman listen" v-model="Order.LinkMan" />
+        </div>
+        <div class="gwc_text2">
+            <div class="labeltext"> 联系电话：</div>
+            <input type="text" class="inputbox phone listen" v-model="Order.Phone" />
+        </div>
+        <div class="gwc_text2">
+            <div class="labeltext">收货地址：</div>
+            <input type="text" class="inputbox address listen" v-model="Order.Address" />
+        </div>
+        <img src="~/Areas/resource/img/mobile/fgx.png" style=" width:100%;">
+    </div>
+    <div class="gwc_box" v-for="Product in ProductList">
+        <img class="gwc_img" v-bind:src=Product.ImgUrl />
+        <div class="gwc_box2">
+            <span class="gwc_text">{{Product.Name}}</span>
+            <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left; margin-bottom:10px;">￥{{Product.Money}}<span style="float:right; color:#999; font-size:13px; padding-top:5px;">数量：{{Product.Quantity}}</span></div>
+        </div>
+    </div>
+    <div class="gwc_box3">
+        <div class="gwc_text2" v-if="!IsAllMemberCard">配送方式<span style="float:right;"></span></div>
+        <div class="gwc_text2">买家留言<input type="text" v-model="Order.Remark" class="inputbox" style="margin-left:10px;"></div>
+        <div class="gwc_text2">微信支付<input type="checkbox" style="float:right;width:13px; height:13px; margin-top:15px;"></div>
+        <div class="gwc_text2">车比特支付<input type="checkbox" style="float:right;width:13px; height:13px; margin-top:15px;"></div>
+        <div class="gwc_text2" style="border-bottom:none;">合计<span style="float:right; color:#ff0c4b; font-size:18px;">￥{{TotalMoney}}</span></div>
+        <div class="gwc_box4" v-on:click="pay" style="margin-top:15px;">确认支付</div>
+    </div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .inputbox {
+            border: none;
+            height: 30px;
+            width: 250px;
+            font-size: 15px;
+        }
+
+        .labeltext {
+            float: left;
+            width: 75px;
+        }
+
+        .inputerror {
+            border: 1px #ff0000 solid;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+
+        var mch = $.getUrlParam('mch');
+        _payBillViewModel = new Vue({
+            el: '#confirmorder',
+            data: {
+                ProductList: [],
+                MemberInfo: {},
+                TotalMoney: 0,
+                Body:'',
+                Order:{
+                        Code:'',
+                        OpenID:'@ViewBag.OpenId',
+                        LinkMan: '',
+                        Phone: '',
+                        Address: '',
+                        Status: 0,
+                        Money: 0,
+                        Points: 0,
+                        Remark: '',
+                        OrderItemList: [],
+                },
+                IsAllMemberCard: false,
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/CarBitCoin/Home?mch=" + mch;
+                },
+                pay: function (event) {
+                    if (this.ProductList == null || this.ProductList.length < 1 || this.Order == null || this.Order=='') {
+                        $.alert('订单为空');
+                        return;
+                    }
+                    if (this.Order.OpenID == '' || this.Order.OrderItemList == null || this.Order.OrderItemList.length < 1) {
+                        $.alert('参数错误');
+                        return;
+                    }
+                    if (!this.IsAllMemberCard&&(this.Order.LinkMan == '' || this.Order.Phone == '' || this.Order.Address == '')) {
+                        //$.alert('请填写完整收货信息');
+                        if (this.Order.LinkMan == '') {
+                            $('.linkman').addClass('inputerror');
+                        }
+                        if (this.Order.Phone == '') {
+                            $('.phone').addClass('inputerror');
+                        }
+                        if (this.Order.Address == '') {
+                            $('.address').addClass('inputerror');
+                        }
+                        return;
+                    }
+                    //orderAction();
+                    @*$.ajax({
+                        url: '/api/Order/GetTradeNo',
+                        type: 'GET',
+                        headers: { 'CompanyCode': mch },
+                        success: function (res) {
+                            if (res.IsSuccessful) {
+                                if (res.Data == null || res.Data=='') {
+                                    $.alert('生成订单号失败');
+                                } else {
+                                    //$.alert(res.Data);
+                                    //return;
+                                    //window.location.href = "http://www.cheyinz.cn:8025/Default.aspx";
+                                    sessionStorage.setItem('order', JSON.stringify(_payBillViewModel.Order));
+                                    //$.alert(JSON.stringify(_payBillViewModel.Order));
+                                    window.location.href = "http://www.cheyinz.cn:8025/pay/JsApiPayPage.aspx?openid=@ViewBag.OpenId&total_fee=" + _payBillViewModel.TotalMoney * 100 + "&out_trade_no=" + res.Data + "&mch=" + mch + "&device_info=" + mch + "&body=" + _payBillViewModel.Body + "&notify_url=http://www.cheyinz.cn/Mobile/Customer/PayResult";
+                                    //window.location.href = "/Mobile/Customer/PayResult?TradeSate=true&OutTradeNo=DD2018051400001&TotalFee=1";
+                                }
+                            } else {
+                                $.alert(res.ErrorMessage);
+                            }
+                        },
+                        error: function () {
+                            $.alert('生成订单号失败');
+                        }
+                    });*@
+                },
+            }
+            });
+
+            //支付下单
+
+            function orderAction() {
+                if (_payBillViewModel.Order == null || _payBillViewModel.Order == '' || _payBillViewModel.Order == {}) {
+                    $.alert('参数错误');
+                    return;
+                }
+                $.ajax({
+                    url: '/api/CarBitCoinOrder',
+                    type: 'POST',
+                    data: _payBillViewModel.Order,
+                    headers: { 'CompanyCode': mch },
+                    beforesend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('isallmembercard', _payBillViewModel.IsAllMemberCard);
+                                sessionStorage.setItem('order', JSON.stringify(_payBillViewModel.Order));
+                                window.location.href = "http://www.cheyinz.cn:8025/pay/JsApiPayPage.aspx?openid=@ViewBag.OpenId&total_fee=" + _payBillViewModel.TotalMoney * 100 + "&out_trade_no=" + res.Data.Code + "&mch=" + mch + "&device_info=" + mch + "&body=" + _payBillViewModel.Body + "&notify_url=http://www.cheyinz.cn/Mobile/Customer/PayResult";
+                            } else {
+                                $.alert('下单失败，请重试');
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function (res) {
+                        $.hideLoading();
+                        $.alert(JSON.stringify(res));
+                    }
+                });
+            }
+
+            //end
+
+            var isfromsc = sessionStorage.getItem('isfromshoppingcart');
+            if (isfromsc != null && isfromsc == 'true')
+                isfromsc = true;
+            else
+                isfromsc = false;
+            var productlist = sessionStorage.getItem('productlist');
+            var orderitemlist = [];
+            if (productlist != null && productlist != '') {
+                _payBillViewModel.ProductList = JSON.parse(productlist);
+
+                if (isfromsc) {
+                    for (var i = 0; i < _payBillViewModel.ProductList.length; i++) {
+                        _payBillViewModel.ProductList[i].Name = _payBillViewModel.ProductList[i].ProductName;
+                    }
+                }
+
+                var productList = _payBillViewModel.ProductList;
+                var totalMoney = 0;
+                var body = '';
+                var hasproduct = false;
+                for (var i = 0; i < productList.length; i++) {
+                    totalMoney += productList[i].Money;
+
+                    if (!isfromsc) {
+
+                    if(i==0)
+                        body += productList[i].Name;
+                    else
+                            body += '、' + productList[i].Name;
+
+                        orderitemlist.push({
+                            GoodsID: productList[i].ID,
+                            ProductType: productList[i].IsMemberCard ? 2 : 1,
+                            Quantity: productList[i].Quantity,
+                            PriceSale: productList[i].PriceSale,
+                            Money: productList[i].Money,
+                            Points: 0,
+                            ProductName: productList[i].Name,
+                            ImgUrl: productList[i].ImgUrl,
+                        });
+                        if (!productList[i].IsMemberCard) {
+                            hasproduct = true;
+                        }
+                    } else {
+
+                        if (i == 0)
+                            body += productList[i].ProductName;
+                        else
+                            body += '、' + productList[i].ProductName;
+
+                        orderitemlist.push({
+                            GoodsID: productList[i].GoodsID,
+                            ProductType: productList[i].ProductType,
+                            Quantity: productList[i].Quantity,
+                            PriceSale: productList[i].PriceSale,
+                            Money: productList[i].Money,
+                            Points: 0,
+                            ProductName: productList[i].ProductName,
+                            ImgUrl: productList[i].ImgUrl,
+                        });
+                        if (productList[i].ProductType==1) {
+                            hasproduct = true;
+                        }
+                    }
+                }
+                if (!hasproduct) {
+                    _payBillViewModel.IsAllMemberCard = true;
+                }
+                _payBillViewModel.TotalMoney = totalMoney;
+                _payBillViewModel.Body = body;
+                _payBillViewModel.Order.Money = totalMoney;
+                _payBillViewModel.Order.OrderItemList = orderitemlist;
+            }
+
+            function init() {
+                $.ajax({
+                    url: '/api/CarBitCoinMember/GetCarBitCoinMemberByOpenID?openId=@ViewBag.OpenId',
+                    type: 'GET',
+                    headers: { 'CompanyCode':mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('cbcmember', JSON.stringify(res.Data));
+                                _payBillViewModel.MemberInfo = res.Data;
+                            } else {
+                                window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+             }
+             var cbcmember = sessionStorage.getItem('cbcmember');
+             if (cbcmember == null || cbcmember == '') {
+                 init();
+             } else {
+                 _payBillViewModel.MemberInfo = JSON.parse(cbcmember);
+            }
+            _payBillViewModel.Order.Phone = _payBillViewModel.MemberInfo.MobilePhoneNo;
+            _payBillViewModel.Order.LinkMan = _payBillViewModel.MemberInfo.Name;
+        });
+    </script>
+}
+

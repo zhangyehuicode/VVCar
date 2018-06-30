@@ -1,0 +1,187 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="productdetails">
+    <div class="top_box">
+        <div class="top_box_text" style="background:#b23af4;">{{Product.Name}}</div>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="back" style="position:absolute;top:17px;"></a>
+        <a class="top_box2"></a>
+    </div>
+    <img class="sp_img" v-bind:src=Product.ImgUrl>
+    <div class="sp_text">
+        {{Product.Name}}
+    </div>
+    <div class="sp_text2" style="border:none;">
+        ￥{{TotalMoney}}
+        <div style="float:right;display:table;">
+            <div style="display:table-cell;height:25px;" v-on:click="subtract" v-if="Quantity>0">
+                <img class="addsubimg" style="display:table-cell;" src="~/Areas/resource/img/mobile/jian.png" />
+            </div>
+            <div class="quantity">{{Quantity}}</div>
+            <div style="display:table-cell;height:25px;" v-on:click="add">
+                <img class="addsubimg" src="~/Areas/resource/img/mobile/jia.png" />
+            </div>
+        </div>
+    </div>
+    <div class="kc_box"><span style="float:left;">原价：￥{{Product.BasePrice}}</span>库存：{{Product.Stock}}<span style="float:right; margin-bottom:10px;"></span></div>
+    <div class="kc_box2">配送说明：<span style="font-size:14px; color:#666;">{{Product.DeliveryNotes}}</span></div>
+    <div class="kc_box2">
+        产品介绍：<br>
+    </div>
+    <div class="kc_box3">
+        {{Product.Introduction}}
+    </div>
+    <a class="btn1" style="margin-top:20px;" v-on:click="wechatpay">立即支付</a>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .addsubimg {
+            width: 25px;
+            height: 25px;
+        }
+
+        .quantity {
+            display: table-cell;
+            min-width: 25px;
+            color: black;
+            height: 25px;
+            line-height: 25px;
+            font-size: 20px;
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+
+        $(function () {
+            var mch = $.getUrlParam('mch');
+
+           function init() {
+                $.ajax({
+                    url: '/api/CarBitCoinMember/GetCarBitCoinMemberByOpenID?openId=@ViewBag.OpenId',
+                    type: 'GET',
+                    headers: { 'CompanyCode':mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('cbcmember', JSON.stringify(res.Data));
+                            } else {
+                                window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+             }
+             var cbcmember = sessionStorage.getItem('cbcmember');
+             if (cbcmember == null || cbcmember == '') {
+                 init();
+             }
+
+        var product = sessionStorage.getItem('product');
+        if (product == null || product == '') {
+            $.alert('未获取到产品信息');
+        }
+        product = JSON.parse(product);
+
+        _viewModel = new Vue({
+            el: '#productdetails',
+            data: {
+                Product: product,
+                Quantity: 1,
+                TotalMoney: product.PriceSale,
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/CarBitCoin/MyInfo?mch=" + mch;
+                },
+                wechatpay: function (event) {
+                    product.Money = _viewModel.TotalMoney;
+                    product.Quantity = _viewModel.Quantity;
+                    sessionStorage.setItem('productlist', JSON.stringify([product]));
+                    window.location.href = "/Mobile/CarBitCoin/ConfirmOrder?mch=" + mch;
+                },
+                cbcpay: function (event) {
+                    product.Money = _viewModel.TotalMoney;
+                    product.Quantity = _viewModel.Quantity;
+                    sessionStorage.setItem('productlist', JSON.stringify([product]));
+                },
+                add: function (event) {
+                    _viewModel.Quantity += 1;
+                    _viewModel.TotalMoney = _viewModel.Quantity * product.PriceSale;
+                },
+                subtract: function (event) {
+                    if (_viewModel.Quantity > 1) {
+                        _viewModel.Quantity -= 1;
+                        _viewModel.TotalMoney = _viewModel.Quantity * product.PriceSale;
+                    }
+                },
+            }
+            });
+
+         });
+    </script>
+}
+

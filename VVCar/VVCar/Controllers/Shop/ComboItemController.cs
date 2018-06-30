@@ -71,6 +71,20 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 更新库存数量
+        /// </summary>
+        /// <param name="comboItem"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public JsonActionResult<bool> UpdateStock(ComboItem comboItem)
+        {
+            return SafeExecute(() =>
+            {
+                return ComboItemService.Update(comboItem);
+            });
+        }
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>

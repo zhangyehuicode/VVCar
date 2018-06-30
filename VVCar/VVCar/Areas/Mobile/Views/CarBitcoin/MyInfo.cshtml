@@ -25,7 +25,8 @@
             <div class="cbctable actioncon">
                 <div class="cbctablecell actioncell actionleftcon">
                     @*<img class="actionimg" src="~/Areas/resource/img/mobile/wdzc.png" />*@
-                    <img class="actionimg" src="~/Areas/resource/img/mobile/asset.png" />
+                    @*<img class="actionimg" src="~/Areas/resource/img/mobile/asset.png" />*@
+                    <img class="actionimg" src="~/Areas/resource/img/mobile/dols.png" />
                 </div>
                 <div class="cbctablecell actiontitle actioncell">我的资产</div>
                 <div class="cbctablecell actioncell actionrightcon">
@@ -41,11 +42,11 @@
                     <img style="width:20px;margin-top:5px;" src="~/Areas/resource/img/mobile/arrowr.png" />
                 </div>
             </div>
-            <div class="cbctable actioncon">
+            <div class="cbctable actioncon" v-on:click="shop">
                 <div class="cbctablecell actioncell actionleftcon">
                     <img class="actionimg" src="~/Areas/resource/img/mobile/store.png" />
                 </div>
-                <div class="cbctablecell actiontitle actioncell">引擎商城</div>
+                <div class="cbctablecell actiontitle actioncell">商城</div>
                 <div class="cbctablecell actioncell actionrightcon">
                     <img style="width:20px;margin-top:5px;" src="~/Areas/resource/img/mobile/arrowr.png" />
                 </div>
@@ -54,7 +55,7 @@
                 <div class="cbctablecell actioncell actionleftcon">
                     <img class="actionimg" src="~/Areas/resource/img/mobile/carbitcoin.png" />
                 </div>
-                <div class="cbctablecell actiontitle actioncell">车比特交易</div>
+                <div class="cbctablecell actiontitle actioncell">车比特</div>
                 <div class="cbctablecell actioncell actionrightcon">
                     <img style="width:20px;margin-top:5px;" src="~/Areas/resource/img/mobile/arrowr.png" />
                 </div>
@@ -342,7 +343,10 @@
                      },
                      register: function (event) {
                          window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
-                     }
+                     },
+                     shop: function (event) {
+                         window.location.href = "/Mobile/CarBitcoin/Shop?mch=" + mch;
+                     },
                  }
              });
 

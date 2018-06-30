@@ -119,6 +119,7 @@
     <Compile Include="Entities\PointExchangeCoupon.cs" />
     <Compile Include="Entities\RechargeHistory.cs" />
     <Compile Include="Entities\RechargePlan.cs" />
+    <Compile Include="Entities\Recruitmemt.cs" />
     <Compile Include="Entities\SalesActivityRecord.cs" />
     <Compile Include="Entities\TradeHistory.cs" />
     <Compile Include="Entities\VerificationCode.cs" />

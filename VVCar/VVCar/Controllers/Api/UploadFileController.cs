@@ -90,6 +90,16 @@ namespace VVCar.Controllers.Api
             return UploadAction("Pictures/Product");
         }
 
+        /// <summary>
+        /// 上传车比特商品图片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadCarBitCoinProduct")]
+        public UploadFileResult UploadCarBitCoinProduct()
+        {
+            return UploadAction("Pictures/CarBitCoinProduct");
+        }
+
         private string GetPRResult(string filename)
         {
             if (string.IsNullOrEmpty(filename))

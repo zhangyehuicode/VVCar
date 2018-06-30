@@ -117,9 +117,10 @@
 			return;
 		}
 		var selectedItems = grid.getSelectionModel().getSelection();
-		if (selectedItems.length === 0)
+		if (selectedItems.length === 0) {
 			Ext.Msg.alert("提示", "未选择操作数据");
-
+			return;
+		}
 		var store = me.getGridGameCoupon().getStore();
 		var gameCoupons = [];
 		selectedItems.forEach(function (item) {

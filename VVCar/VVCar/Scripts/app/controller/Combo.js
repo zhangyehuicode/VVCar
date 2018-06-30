@@ -11,7 +11,7 @@
 		selector: 'ComboList grid[name=gridCombo]',
 	}, {
 		ref: 'gridComboItem',
-		selector: 'ComboList grid[name=gridComboItem]',
+			selector: 'ComboList grid[name=gridComboItem]',
 	}, {
 		ref: 'productSelector',
 		selector: 'ProductSelector',
@@ -40,6 +40,9 @@
 			'ComboList grid[name=gridCombo]': {
 				select: me.gridComboSelect,
 			},
+			'ComboList grid[name=gridComboItem]': {
+				edit: me.stockEdit
+			},
 			'ComboList': {
 				afterrender: me.afterrender,
 			},
@@ -56,6 +59,35 @@
 				click: me.searchProduct,
 			},
 		});
+	},
+	stockEdit: function (editor, context, eOpts) {
+		if (context.record.phantom) {//表示新增
+			context.store.create(context.record.data, {
+				callback: function (records, operation, success) {
+					if (!success) {
+						Ext.MessageBox.alert("提示", operation.error);
+						return;
+					} else {
+						context.record.copyFrom(records[0]);
+						context.record.commit();
+						Ext.MessageBox.alert("提示", "新增成功");
+					}
+				}
+			});
+		} else {
+			if (!context.record.dirty)
+				return;
+			context.store.update({
+				callback: function (records, operation, success) {
+					if (!success) {
+						Ext.MessageBox.alert("提示", operation.error.statusText);
+						return;
+					} else {
+						Ext.MessageBox.alert("提示", "更新成功");
+					}
+				}
+			});
+		}
 	},
 	selectProduct: function () {
 		var win = Ext.widget('ProductSelector');
@@ -133,6 +165,10 @@
 		var store = me.getGridComboItem().getStore();
 		var ComboID = me.tasks[0].data.ID;
 		var ProductID = win.down('textfield[name=ProductID]').getValue();
+		if (ProductID == null || ProductID == '') {
+			Ext.Msg.alert('提示', '请选择产品');
+			return;
+		}
 		var ProductCode = win.down('textfield[name=ProductCode]').getValue();
 		var ProductName = win.down('textfield[name=ProductName]').getValue();
 		var BasePrice = win.down('textfield[name=BasePrice]').getValue();

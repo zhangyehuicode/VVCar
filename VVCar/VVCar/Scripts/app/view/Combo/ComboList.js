@@ -165,6 +165,25 @@
 					margin: '5 5 5 5',
 				}
 			],
+			plugins: [
+				Ext.create('Ext.grid.plugin.RowEditing', {
+					saveBtnText: '保存',
+					cancelBtnText: "取消",
+					autoCancel: false,
+					listeners: {
+						cancelEdit: function (rowEditing, context) {
+							//如果是新增的数据，则删除
+							if (context.record.phantom) {
+								me.store.remove(context.record);
+							}
+						},
+						beforeedit: function (editor, context, eOpts) {
+							if (editor.editing == true)
+								return false;
+						},
+					}
+				})
+			],
 			columns: [
 				//{ header: 'ID', dataIndex: 'ID', flex: 1 },
 				//{ header: '产品ID', dataIndex: 'ProductID', flex: 1 },
@@ -172,7 +191,7 @@
 				{ header: '产品名称', dataIndex: 'ProductName', flex: 1 },
 				{ header: '原单价', dataIndex: 'BasePrice', flex: 1 },
 				{ header: '销售单价', dataIndex: 'PriceSale', flex: 1 },
-				{ header: '数量', dataIndex: 'Quantity', flex: 1 },
+				{ header: '数量', dataIndex: 'Quantity', flex: 1, editor: { xtype: 'textfield', allowBlank: false } },
 				{ header: '创建时间', dataIndex: 'CreatedDate', flex: 1 },
 			],
 			bbar: {
