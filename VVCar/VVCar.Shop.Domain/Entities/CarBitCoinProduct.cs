@@ -50,6 +50,12 @@ namespace VVCar.Shop.Domain.Entities
         public ECarBitCoinProductType CarBitCoinProductType { get; set; }
 
         /// <summary>
+        /// 马力
+        /// </summary>
+        [Display(Name = "马力")]
+        public int Horsepower { get; set; }
+
+        /// <summary>
         /// 图片
         /// </summary>
         [Display(Name = "图片")]

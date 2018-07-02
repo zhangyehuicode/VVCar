@@ -191,7 +191,7 @@
 				{ header: '产品名称', dataIndex: 'ProductName', flex: 1 },
 				{ header: '原单价', dataIndex: 'BasePrice', flex: 1 },
 				{ header: '销售单价', dataIndex: 'PriceSale', flex: 1 },
-				{ header: '数量', dataIndex: 'Quantity', flex: 1, editor: { xtype: 'textfield', allowBlank: false } },
+				{ header: '数量', dataIndex: 'Quantity', flex: 1, editor: { xtype: 'numberfield', allowBlank: false } },
 				{ header: '创建时间', dataIndex: 'CreatedDate', flex: 1 },
 			],
 			bbar: {

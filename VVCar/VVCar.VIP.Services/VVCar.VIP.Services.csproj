@@ -86,6 +86,7 @@
     <Compile Include="DomainServices\MemberService.cs" />
     <Compile Include="DomainServices\RechargeHistoryService.cs" />
     <Compile Include="DomainServices\RechargePlanService.cs" />
+    <Compile Include="DomainServices\RecruitmemtService.cs" />
     <Compile Include="DomainServices\TradeHistoryService.cs" />
     <Compile Include="DomainServices\VerificationRecordService.cs" />
     <Compile Include="DomainServices\VisitRecordService.cs" />

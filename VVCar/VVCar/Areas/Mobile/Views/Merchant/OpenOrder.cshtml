@@ -239,11 +239,11 @@
                 },
                 addproduct: function (event) {
                     var addflag = true;
-                    for (var i = 0; i < _viewModel.CurrentProductList.length; i++) {
-                        if (_viewModel.CurrentProductList[i].ID == _viewModel.CurrentProduct.ID) {
-                            addflag = false;
-                        }
-                    }
+                    //for (var i = 0; i < _viewModel.CurrentProductList.length; i++) {
+                    //    if (_viewModel.CurrentProductList[i].ID == _viewModel.CurrentProduct.ID) {
+                    //        addflag = false;
+                    //    }
+                    //}
                     if (addflag) {
                         _viewModel.CurrentProductList.push(_viewModel.CurrentProduct);
                     }
@@ -252,11 +252,11 @@
                     if (data == null)
                         return;
                     var addflag = true;
-                    for (var i = 0; i < _viewModel.CurrentProductList.length; i++) {
-                        if (_viewModel.CurrentProductList[i].ID == data.ID) {
-                            addflag = false;
-                        }
-                    }
+                    //for (var i = 0; i < _viewModel.CurrentProductList.length; i++) {
+                    //    if (_viewModel.CurrentProductList[i].ID == data.ID) {
+                    //        addflag = false;
+                    //    }
+                    //}
                     if (addflag) {
                         _viewModel.CurrentProductList.push(data);
                     }

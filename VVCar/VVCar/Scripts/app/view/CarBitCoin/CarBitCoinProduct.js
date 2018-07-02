@@ -119,6 +119,7 @@
 							return '商品';
 					}
 				},
+				{ header: '增加马力', dataIndex: 'Horsepower', width: 100 },
 				{ header: '原单价', dataIndex: 'BasePrice', width: 100 },
 				{ header: '销售单价', dataIndex: 'PriceSale', width: 100 },
 				{

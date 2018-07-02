@@ -144,6 +144,10 @@ namespace VVCar.BaseData.Services
                 cfg.CreateMap<CouponPushMember, CouponPushMemberDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Member.Name))
                 .ForMember(dest => dest.MobilePhoneNo, opt => opt.MapFrom(src => src.Member.MobilePhoneNo));
+
+                cfg.CreateMap<CarBitCoinRecord, CarBitCoinRecordDto>()
+                .ForMember(dest => dest.CarBitCoinMemberName, opt => opt.MapFrom(src => src.CarBitCoinMember.Name))
+                .ForMember(dest => dest.MobilePhoneNo, opt => opt.MapFrom(src => src.CarBitCoinMember.MobilePhoneNo));
             });
 
             //Mapper.CreateMap<Member, MemberDto>()

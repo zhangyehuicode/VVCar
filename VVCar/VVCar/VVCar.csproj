@@ -289,6 +289,8 @@
     <Compile Include="Controllers\Shop\AppointmentController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinDistributionController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinMemberController.cs" />
+    <Compile Include="Controllers\Shop\CarBitCoinOrderController.cs" />
+    <Compile Include="Controllers\Shop\CarBitCoinOrderItemController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinProductController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinProductCategoryController.cs" />
     <Compile Include="Controllers\Shop\ComboItemController.cs" />
@@ -320,6 +322,7 @@
     <Compile Include="Controllers\VIP\MemberPlateController.cs" />
     <Compile Include="Controllers\VIP\RechargeHistoryController.cs" />
     <Compile Include="Controllers\VIP\RechargePlanController.cs" />
+    <Compile Include="Controllers\VIP\RecruitmentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -623,6 +626,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\CarBitCoinMember.js" />
     <Content Include="Scripts\app\controller\CarBitCoinProduct.js" />
+    <Content Include="Scripts\app\controller\CarBitCoinRecord.js" />
     <Content Include="Scripts\app\controller\Combo.js" />
     <Content Include="Scripts\app\controller\ConsumeHistory.js" />
     <Content Include="Scripts\app\controller\ConsumeReport.js" />
@@ -668,6 +672,7 @@
     <Content Include="Scripts\app\model\BaseData\CarBitCoinProductCategoryModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinProductCategoryTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinProductModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CarBitCoinRecordModel.js" />
     <Content Include="Scripts\app\model\BaseData\CardInfoModel.js" />
     <Content Include="Scripts\app\model\BaseData\CardThemeCategoryMenuModel.js" />
     <Content Include="Scripts\app\model\BaseData\CardThemeCategoryModel.js" />
@@ -725,6 +730,7 @@
     <Content Include="Scripts\app\store\BaseData\CarBitCoinProductCategoryLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinProductCategoryTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinProductStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CarBitCoinRecordStore.js" />
     <Content Include="Scripts\app\store\BaseData\CardThemeCategoryMenuStore.js" />
     <Content Include="Scripts\app\store\BaseData\CardThemeCategoryStore.js" />
     <Content Include="Scripts\app\store\BaseData\ComboItemStore.js" />
@@ -783,6 +789,7 @@
     <Content Include="Scripts\app\store\DataDict\AdjustTypeDicStore.js" />
     <Content Include="Scripts\app\store\DataDict\BusinessTypeStore.js" />
     <Content Include="Scripts\app\store\DataDict\CarBitCoinProductTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\CarBitCoinRecordTypeStore.js" />
     <Content Include="Scripts\app\store\DataDict\ConsumeReportTypeStore.js" />
     <Content Include="Scripts\app\store\DataDict\ConsumeTypeStore.js" />
     <Content Include="Scripts\app\store\DataDict\CouponTemplateTypeStore.js" />
@@ -806,6 +813,7 @@
     <Content Include="Scripts\app\store\Reporting\RechargeReportStore.js" />
     <Content Include="Scripts\app\view\CarBitCoinMember\CarBitCoinMemberList.js" />
     <Content Include="Scripts\app\view\CarBitCoinMember\CarBitCoinMemberEdit.js" />
+    <Content Include="Scripts\app\view\CarBitCoinRecord\CarBitCoinRecordList.js" />
     <Content Include="Scripts\app\view\CarBitCoin\CarBitCoinProduct.js" />
     <Content Include="Scripts\app\view\CarBitCoin\CarBitCoinProductCategoryEdit.js" />
     <Content Include="Scripts\app\view\CarBitCoin\CarBitCoinProductCategoryList.js" />

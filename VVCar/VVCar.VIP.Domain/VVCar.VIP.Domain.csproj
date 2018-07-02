@@ -119,7 +119,7 @@
     <Compile Include="Entities\PointExchangeCoupon.cs" />
     <Compile Include="Entities\RechargeHistory.cs" />
     <Compile Include="Entities\RechargePlan.cs" />
-    <Compile Include="Entities\Recruitmemt.cs" />
+    <Compile Include="Entities\Recruitment.cs" />
     <Compile Include="Entities\SalesActivityRecord.cs" />
     <Compile Include="Entities\TradeHistory.cs" />
     <Compile Include="Entities\VerificationCode.cs" />
@@ -135,6 +135,7 @@
     <Compile Include="Enums\ECouponPushType.cs" />
     <Compile Include="Enums\ECouponStatus.cs" />
     <Compile Include="Enums\ECouponType.cs" />
+    <Compile Include="Enums\EDegreeType.cs" />
     <Compile Include="Enums\EDeliveryMode.cs" />
     <Compile Include="Enums\EExchangeType.cs" />
     <Compile Include="Enums\EGameType.cs" />
@@ -174,6 +175,7 @@
     <Compile Include="Filters\MemberPlateFilter.cs" />
     <Compile Include="Filters\RechargeHistoryFilter.cs" />
     <Compile Include="Filters\RechargePlanFilter.cs" />
+    <Compile Include="Filters\RecruitmentFilter.cs" />
     <Compile Include="Filters\SearchCardThemeGroupFilter.cs" />
     <Compile Include="MakeCodeTypes.cs" />
     <Compile Include="MemberCardTypes.cs" />
@@ -203,6 +205,7 @@
     <Compile Include="Services\IMemberService.cs" />
     <Compile Include="Services\IRechargeHistoryService.cs" />
     <Compile Include="Services\IRechargePlanService.cs" />
+    <Compile Include="Services\IRecruitmentService.cs" />
     <Compile Include="Services\ITradeHistoryService.cs" />
     <Compile Include="Services\IVerificationRecordService.cs" />
     <Compile Include="Services\IVisitRecordService.cs" />

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Enums;
 
 namespace VVCar.Shop.Domain.Dtos
 {
@@ -29,6 +30,12 @@ namespace VVCar.Shop.Domain.Dtos
         /// </summary>
         [Display(Name = "名称")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// 车比特产品类型
+        /// </summary>
+        [Display(Name = "车比特产品类型")]
+        public ECarBitCoinProductType CarBitCoinProductType { get; set; }
 
         /// <summary>
         /// 图片

@@ -16,6 +16,7 @@
 		{ name: "EffectiveDate" },
 		{ name: "ExpiredDate" },
 		{ name: "CreatedDate" },
+		{ name: "Horsepower" },
 		{ name: "BasePrice" },
 		{ name: "PriceSale" },
 		{ name: "CarBitCoinProductType" },

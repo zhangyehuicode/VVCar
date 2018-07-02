@@ -83,6 +83,13 @@
 				editable: false,
 			}, {
 				xtype: 'numberfield',
+				name: 'Horsepower',
+				fieldLabel: '增加马力',
+				minValue: 0,
+				allowBlank: true,
+				value: 0,
+			}, {
+				xtype: 'numberfield',
 				name: 'BasePrice',
 				fieldLabel: '原单价',
 				minValue: 0,

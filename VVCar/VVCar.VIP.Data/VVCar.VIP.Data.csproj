@@ -81,6 +81,7 @@
     <Compile Include="Mapping\PointExchangeCouponMap.cs" />
     <Compile Include="Mapping\RechargeHistoryMap.cs" />
     <Compile Include="Mapping\RechargePlanMap.cs" />
+    <Compile Include="Mapping\RecruitmentMap.cs" />
     <Compile Include="Mapping\SalesActivityRecordMap.cs" />
     <Compile Include="Mapping\TradeHistoryMap.cs" />
     <Compile Include="Mapping\VerificationCodeMap.cs" />

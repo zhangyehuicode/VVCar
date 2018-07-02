@@ -52,6 +52,9 @@
     <Compile Include="Mapping\AppointmentMap.cs" />
     <Compile Include="Mapping\CarBitCoinDistributionMap.cs" />
     <Compile Include="Mapping\CarBitCoinMemberMap.cs" />
+    <Compile Include="Mapping\CarBitCoinOrderItemMap.cs" />
+    <Compile Include="Mapping\CarBitCoinOrderMap.cs" />
+    <Compile Include="Mapping\CarBitCoinOrderPaymentDetailsMap.cs" />
     <Compile Include="Mapping\CarBitCoinProductCategoryMap.cs" />
     <Compile Include="Mapping\CarBitCoinProductMap.cs" />
     <Compile Include="Mapping\CarBitCoinRecordMap.cs" />

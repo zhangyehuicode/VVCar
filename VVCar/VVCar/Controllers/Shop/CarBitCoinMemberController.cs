@@ -71,6 +71,22 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 查询车比特记录
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("SearchCarBitCoinRecord")]
+        public PagedActionResult<CarBitCoinRecordDto> SearchCarBitCoinRecord([FromUri]CarBitCoinRecordFilter filter)
+        {
+            return SafeGetPagedData<CarBitCoinRecordDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = CarBitCoinMemberService.SearchCarBitCoinRecord(filter, out totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
         /// 赠送车比特
         /// </summary>
         /// <param name="param"></param>

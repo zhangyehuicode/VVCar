@@ -10,7 +10,7 @@
         <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
         <a class="top_box2"></a>
     </div>
-    <div class="qr_box" v-if="!IsAllMemberCard">
+    <div class="qr_box" v-if="!IsAllEngine">
         <div class="gwc_text2">
             <div class="labeltext">收件人：</div>
             <input type="text" class="inputbox linkman listen" v-model="Order.LinkMan" />
@@ -33,12 +33,13 @@
         </div>
     </div>
     <div class="gwc_box3">
-        <div class="gwc_text2" v-if="!IsAllMemberCard">配送方式<span style="float:right;"></span></div>
+        <div class="gwc_text2" v-if="!IsAllEngine">配送方式<span style="float:right;"></span></div>
         <div class="gwc_text2">买家留言<input type="text" v-model="Order.Remark" class="inputbox" style="margin-left:10px;"></div>
-        <div class="gwc_text2">微信支付<input type="checkbox" style="float:right;width:13px; height:13px; margin-top:15px;"></div>
-        <div class="gwc_text2">车比特支付<input type="checkbox" style="float:right;width:13px; height:13px; margin-top:15px;"></div>
+        @*<div class="gwc_text2">微信支付<input type="checkbox" name="paytype" style="float:right;width:13px; height:13px; margin-top:15px;"></div>
+            <div class="gwc_text2" v-if="!IsAllEngine">车比特支付<input type="checkbox" name="paytype" style="float:right;width:13px; height:13px; margin-top:15px;"></div>*@
         <div class="gwc_text2" style="border-bottom:none;">合计<span style="float:right; color:#ff0c4b; font-size:18px;">￥{{TotalMoney}}</span></div>
-        <div class="gwc_box4" v-on:click="pay" style="margin-top:15px;">确认支付</div>
+        <div class="gwc_box4" v-on:click="pay" style="margin-top:15px;">微信支付</div>
+        <div class="gwc_box4" v-on:click="" style="margin-top:0px;" v-if="!IsAllEngine">车比特支付</div>
     </div>
 </div>
 
@@ -118,7 +119,8 @@
                 MemberInfo: {},
                 TotalMoney: 0,
                 Body:'',
-                Order:{
+                Order: {
+                        MemberID:'',
                         Code:'',
                         OpenID:'@ViewBag.OpenId',
                         LinkMan: '',
@@ -126,11 +128,11 @@
                         Address: '',
                         Status: 0,
                         Money: 0,
-                        Points: 0,
+                        CarBitCoins: 0,
                         Remark: '',
-                        OrderItemList: [],
+                        CarBitCoinOrderItemList: [],
                 },
-                IsAllMemberCard: false,
+                IsAllEngine: true,
             },
             methods: {
                 back: function (event) {
@@ -148,7 +150,7 @@
                         $.alert('参数错误');
                         return;
                     }
-                    if (!this.IsAllMemberCard&&(this.Order.LinkMan == '' || this.Order.Phone == '' || this.Order.Address == '')) {
+                    if (!this.IsAllEngine&&(this.Order.LinkMan == '' || this.Order.Phone == '' || this.Order.Address == '')) {
                         //$.alert('请填写完整收货信息');
                         if (this.Order.LinkMan == '') {
                             $('.linkman').addClass('inputerror');
@@ -210,9 +212,9 @@
                         $.hideLoading();
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
-                                sessionStorage.setItem('isallmembercard', _payBillViewModel.IsAllMemberCard);
+                                sessionStorage.setItem('IsAllEngine', _payBillViewModel.IsAllEngine);
                                 sessionStorage.setItem('order', JSON.stringify(_payBillViewModel.Order));
-                                window.location.href = "http://www.cheyinz.cn:8025/pay/JsApiPayPage.aspx?openid=@ViewBag.OpenId&total_fee=" + _payBillViewModel.TotalMoney * 100 + "&out_trade_no=" + res.Data.Code + "&mch=" + mch + "&device_info=" + mch + "&body=" + _payBillViewModel.Body + "&notify_url=http://www.cheyinz.cn/Mobile/Customer/PayResult";
+                                window.location.href = "http://www.cheyinz.cn:8025/pay/JsApiPayPage.aspx?openid=@ViewBag.OpenId&total_fee=" + _payBillViewModel.TotalMoney * 100 + "&out_trade_no=" + res.Data.Code + "&mch=" + mch + "&device_info=" + mch + "&body=" + _payBillViewModel.Body + "&notify_url=http://www.cheyinz.cn/Mobile/CarBitCoin/PayResult";
                             } else {
                                 $.alert('下单失败，请重试');
                             }
@@ -229,21 +231,21 @@
 
             //end
 
-            var isfromsc = sessionStorage.getItem('isfromshoppingcart');
-            if (isfromsc != null && isfromsc == 'true')
-                isfromsc = true;
-            else
-                isfromsc = false;
+            //var isfromsc = sessionStorage.getItem('isfromshoppingcart');
+            //if (isfromsc != null && isfromsc == 'true')
+            //    isfromsc = true;
+            //else
+            //    isfromsc = false;
             var productlist = sessionStorage.getItem('productlist');
             var orderitemlist = [];
             if (productlist != null && productlist != '') {
                 _payBillViewModel.ProductList = JSON.parse(productlist);
 
-                if (isfromsc) {
-                    for (var i = 0; i < _payBillViewModel.ProductList.length; i++) {
-                        _payBillViewModel.ProductList[i].Name = _payBillViewModel.ProductList[i].ProductName;
-                    }
-                }
+                //if (isfromsc) {
+                //    for (var i = 0; i < _payBillViewModel.ProductList.length; i++) {
+                //        _payBillViewModel.ProductList[i].Name = _payBillViewModel.ProductList[i].ProductName;
+                //    }
+                //}
 
                 var productList = _payBillViewModel.ProductList;
                 var totalMoney = 0;
@@ -252,7 +254,7 @@
                 for (var i = 0; i < productList.length; i++) {
                     totalMoney += productList[i].Money;
 
-                    if (!isfromsc) {
+                    //if (!isfromsc) {
 
                     if(i==0)
                         body += productList[i].Name;
@@ -261,46 +263,47 @@
 
                         orderitemlist.push({
                             GoodsID: productList[i].ID,
-                            ProductType: productList[i].IsMemberCard ? 2 : 1,
+                            ProductType: productList[i].CarBitCoinProductType,
                             Quantity: productList[i].Quantity,
                             PriceSale: productList[i].PriceSale,
                             Money: productList[i].Money,
-                            Points: 0,
+                            CarBitCoins: 0,
+                            Horsepower: productList[i].Horsepower,
                             ProductName: productList[i].Name,
                             ImgUrl: productList[i].ImgUrl,
                         });
-                        if (!productList[i].IsMemberCard) {
+                        if (productList[i].CarBitCoinProductType==1) {
                             hasproduct = true;
                         }
-                    } else {
+                    //} else {
 
-                        if (i == 0)
-                            body += productList[i].ProductName;
-                        else
-                            body += '、' + productList[i].ProductName;
+                    //    if (i == 0)
+                    //        body += productList[i].ProductName;
+                    //    else
+                    //        body += '、' + productList[i].ProductName;
 
-                        orderitemlist.push({
-                            GoodsID: productList[i].GoodsID,
-                            ProductType: productList[i].ProductType,
-                            Quantity: productList[i].Quantity,
-                            PriceSale: productList[i].PriceSale,
-                            Money: productList[i].Money,
-                            Points: 0,
-                            ProductName: productList[i].ProductName,
-                            ImgUrl: productList[i].ImgUrl,
-                        });
-                        if (productList[i].ProductType==1) {
-                            hasproduct = true;
-                        }
-                    }
+                    //    orderitemlist.push({
+                    //        GoodsID: productList[i].GoodsID,
+                    //        ProductType: productList[i].ProductType,
+                    //        Quantity: productList[i].Quantity,
+                    //        PriceSale: productList[i].PriceSale,
+                    //        Money: productList[i].Money,
+                    //        Points: 0,
+                    //        ProductName: productList[i].ProductName,
+                    //        ImgUrl: productList[i].ImgUrl,
+                    //    });
+                    //    if (productList[i].ProductType==1) {
+                    //        hasproduct = true;
+                    //    }
+                    //}
                 }
-                if (!hasproduct) {
-                    _payBillViewModel.IsAllMemberCard = true;
+                if (hasproduct) {
+                    _payBillViewModel.IsAllEngine = false;
                 }
                 _payBillViewModel.TotalMoney = totalMoney;
                 _payBillViewModel.Body = body;
                 _payBillViewModel.Order.Money = totalMoney;
-                _payBillViewModel.Order.OrderItemList = orderitemlist;
+                _payBillViewModel.Order.CarBitCoinOrderItemList = orderitemlist;
             }
 
             function init() {

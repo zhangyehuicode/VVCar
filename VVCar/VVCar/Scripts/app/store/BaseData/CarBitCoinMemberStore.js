@@ -18,5 +18,5 @@
 			success: success,
 			failure: failure,
 		});
-	}
+	},
 });

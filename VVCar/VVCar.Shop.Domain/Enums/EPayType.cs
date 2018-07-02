@@ -41,5 +41,11 @@ namespace VVCar.Shop.Domain.Enums
         /// </summary>
         [Description("优惠券")]
         Coupon = 4,
+
+        /// <summary>
+        /// 车比特
+        /// </summary>
+        [Description("车比特")]
+        CarBitCoin = 5,
     }
 }

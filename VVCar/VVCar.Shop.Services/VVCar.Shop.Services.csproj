@@ -49,6 +49,9 @@
     <Compile Include="DomainServices\AppointmentService.cs" />
     <Compile Include="DomainServices\CarBitCoinDistributionService.cs" />
     <Compile Include="DomainServices\CarBitCoinMemberService.cs" />
+    <Compile Include="DomainServices\CarBitCoinOrderItemService.cs" />
+    <Compile Include="DomainServices\CarBitCoinOrderPaymentDetailsService.cs" />
+    <Compile Include="DomainServices\CarBitCoinOrderService.cs" />
     <Compile Include="DomainServices\CarBitCoinProductCategoryService.cs" />
     <Compile Include="DomainServices\CarBitCoinProductService.cs" />
     <Compile Include="DomainServices\ComboItemService.cs" />

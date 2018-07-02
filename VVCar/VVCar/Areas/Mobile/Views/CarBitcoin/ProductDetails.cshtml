@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="kc_box"><span style="float:left;">原价：￥{{Product.BasePrice}}</span>库存：{{Product.Stock}}<span style="float:right; margin-bottom:10px;"></span></div>
-    <div class="kc_box2">配送说明：<span style="font-size:14px; color:#666;">{{Product.DeliveryNotes}}</span></div>
+    <div class="kc_box2" v-if="Product.CarBitCoinProductType==1">配送说明：<span style="font-size:14px; color:#666;">{{Product.DeliveryNotes}}</span></div>
     <div class="kc_box2">
         产品介绍：<br>
     </div>

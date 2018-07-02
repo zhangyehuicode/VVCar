@@ -46,6 +46,10 @@
 		var win = me.getCarBitCoinMemberEdit();
 		var form = win.form.getForm();
 		var formValues = form.getValues();
+		if (formValues.CarBitCoin == 0) {
+			Ext.Msg.alert('提示', '赠送的车比特要大于零');
+			return;
+		}
 		formValues.CarBitCoinMemberID = me.task;
 		if (form.isValid()) {
 			var store = this.getCarBitCoinMemberList().getStore();
@@ -53,8 +57,11 @@
 				store.giveAwayCarBitCoin(formValues, function (response, opts) {
 					var ajaxResult = JSON.parse(response.responseText);
 					if (ajaxResult.Data == false) {
-						Ext.Msg.alert("提示", ajaxResult.ErrorMessage);
+						Ext.Msg.alert("提示", '赠送失败');
 						return;
+					} else {
+						Ext.Msg.alert("提示", '赠送成功');
+						win.close();
 					}
 				}, function (response, opts) {
 					var ajaxResult = JSON.parse(response.responseText);

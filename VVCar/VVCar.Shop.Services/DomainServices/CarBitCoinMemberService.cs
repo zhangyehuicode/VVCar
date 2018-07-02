@@ -1,9 +1,11 @@
-﻿using System;
+﻿using AutoMapper.QueryableExtensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.BaseData.Domain.Entities;
+using VVCar.BaseData.Services;
 using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Enums;
@@ -196,7 +198,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         public bool GiveAwayCarBitCoin(GiveAwayCarBitCoinParam param)
         {
-            if (param == null || param.CarBitCoinMemberID == null || param.CarBitCoin < 1)
+            if (param == null || param.CarBitCoinMemberID == null || param.CarBitCoin <= 0)
                 return false;
             return ChangeHorsepowerCarBitCoin(param.CarBitCoinMemberID, string.Empty, ECarBitCoinRecordType.Give, 0, param.CarBitCoin, string.Empty, param.Remark);
         }
@@ -216,6 +218,25 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.Skip(filter.Start.Value).Take(filter.Limit.Value);
             return queryable.ToArray();
+        }
+
+        /// <summary>
+        /// 查询车比特记录
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<CarBitCoinRecordDto> SearchCarBitCoinRecord(CarBitCoinRecordFilter filter, out int totalCount)
+        {
+            var queryable = CarBitCoinRecordRepo.GetInclude(t => t.CarBitCoinMember, false);
+            if (filter.CarBitCoinRecordType.HasValue)
+                queryable = queryable.Where(t => t.CarBitCoinRecordType == filter.CarBitCoinRecordType);
+            if (!string.IsNullOrEmpty(filter.NamePhone))
+                queryable = queryable.Where(t => t.CarBitCoinMember.Name.Contains(filter.NamePhone) || t.CarBitCoinMember.MobilePhoneNo.Contains(filter.NamePhone));
+            totalCount = queryable.Count();
+            if (filter.Start.HasValue && filter.Limit.HasValue)
+                queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
+            return queryable.MapTo<CarBitCoinRecordDto>().ToArray();
         }
     }
 }

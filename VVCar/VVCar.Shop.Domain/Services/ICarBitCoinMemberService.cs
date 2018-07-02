@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
+using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
 using YEF.Core.Data;
 using YEF.Core.Domain;
@@ -50,6 +51,14 @@ namespace VVCar.Shop.Domain.Services
         IEnumerable<CarBitCoinMember> Search(CarBitCoinMemberFilter filter, out int totalCount);
 
         /// <summary>
+        /// 查询车比特记录
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        IEnumerable<CarBitCoinRecordDto> SearchCarBitCoinRecord(CarBitCoinRecordFilter filter, out int totalCount);
+
+        /// <summary>
         /// 计算马力
         /// </summary>
         /// <param name="mobilePhoneNo"></param>
@@ -69,5 +78,18 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="param"></param>
         /// <returns></returns>
         bool GiveAwayCarBitCoin(GiveAwayCarBitCoinParam param);
+
+        /// <summary>
+        /// 更改马力车比特值
+        /// </summary>
+        /// <param name="cbcmemberId"></param>
+        /// <param name="mobilePhoneNo"></param>
+        /// <param name="carBitCoinRecordType"></param>
+        /// <param name="horsepower"></param>
+        /// <param name="carBitCoin"></param>
+        /// <param name="tradeNo"></param>
+        /// <param name="remark"></param>
+        /// <returns></returns>
+        bool ChangeHorsepowerCarBitCoin(Guid? cbcmemberId, string mobilePhoneNo, ECarBitCoinRecordType carBitCoinRecordType, int horsepower, decimal carBitCoin, string tradeNo, string remark);
     }
 }

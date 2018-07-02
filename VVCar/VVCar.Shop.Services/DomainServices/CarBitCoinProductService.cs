@@ -89,6 +89,7 @@ namespace VVCar.Shop.Services.DomainServices
             if (carBitCoinProduct == null)
                 throw new DomainException("更新的产品不存在");
             carBitCoinProduct.CarBitCoinProductType = entity.CarBitCoinProductType;
+            carBitCoinProduct.Horsepower = entity.Horsepower;
             carBitCoinProduct.CarBitCoinProductCategoryID = entity.CarBitCoinProductCategoryID;
             carBitCoinProduct.Name = entity.Name;
             carBitCoinProduct.Code = entity.Code;
@@ -240,7 +241,7 @@ namespace VVCar.Shop.Services.DomainServices
         public IEnumerable<CarBitCoinProduct> GetRecommendCarBitCoinProduct()
         {
             var result = new List<CarBitCoinProduct>();
-            var queryable = Repository.GetQueryable(false).Where(t => t.CarBitCoinProductType == ECarBitCoinProductType.Goods && t.IsPublish && t.Stock > 0);
+            var queryable = Repository.GetQueryable(false).Where(t => t.IsPublish && t.Stock > 0);
             var recommend = queryable.Where(t => t.IsRecommend).ToList();
             result = recommend;
             if (result.Count < 4)

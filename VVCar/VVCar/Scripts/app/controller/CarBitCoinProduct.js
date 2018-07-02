@@ -101,19 +101,25 @@
                 com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(true);
 				com.up('window').down('checkboxfield[name=IsCanPointExchange]').setValue(false);
 				com.up('window').down('textfield[name=DeliveryNotes]').hide();
+				com.up('window').down('numberfield[name=Horsepower]').show();
             } else {
-                com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(false);
+				com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(false);
+				com.up('window').down('numberfield[name=Horsepower]').setValue(0);
+				com.up('window').down('numberfield[name=Horsepower]').hide();
             }
         } else {
             if (newValue == 0) {
                 //com.up('window').down('numberfield[name=Stock]').setDisabled(true);
-                com.up('window').down('numberfield[name=Stock]').setValue(0);
+				com.up('window').down('numberfield[name=Stock]').setValue(0);
+				com.up('window').down('numberfield[name=Horsepower]').show();
                 com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(true);
 				com.up('window').down('checkboxfield[name=IsCanPointExchange]').setValue(false);
 				com.up('window').down('textfield[name=DeliveryNotes]').hide();
             } else {
                 //com.up('window').down('numberfield[name=Stock]').setDisabled(false);
-                com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(false);
+				com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(false);
+				com.up('window').down('numberfield[name=Horsepower]').setValue(0);
+				com.up('window').down('numberfield[name=Horsepower]').hide();
             }
         }
     },
