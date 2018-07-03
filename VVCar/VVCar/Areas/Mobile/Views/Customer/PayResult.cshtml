@@ -35,7 +35,7 @@
         <div class="shop_box3">
             <div class="shop_box3_div" v-for="Template in CouponTemplateList" v-on:click="productdetails(Template)">
                 <span class="shop_box3_span">{{Template.Name}}</span>
-                <a><img class="shop_box3_img" v-bind:src=Template.ImgUrl></a>
+                <a><img class="shop_box3_img cardimg" v-bind:src=Template.ImgUrl></a>
                 <div class="shop_box3_div2">
                     ￥{{Template.PriceSale}}
                 </div>

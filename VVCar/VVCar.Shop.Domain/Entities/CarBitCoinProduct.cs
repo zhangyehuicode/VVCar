@@ -83,7 +83,7 @@ namespace VVCar.Shop.Domain.Entities
         /// 车比特兑换
         /// </summary>
         [Display(Name = "车比特兑换")]
-        public int CarBitCoinPoints { get; set; }
+        public int CarBitCoin { get; set; }
 
         /// <summary>
         /// 兑换上限
@@ -110,10 +110,10 @@ namespace VVCar.Shop.Domain.Entities
         public int Stock { get; set; }
 
         /// <summary>
-        /// 是否可以积分兑换
+        /// 是否可以车比特兑换
         /// </summary>
-        [Display(Name = "是否可以积分兑换")]
-        public bool IsCanPointExchange { get; set; }
+        [Display(Name = "是否可以车比特兑换")]
+        public bool IsCanCarBitCoinExchange { get; set; }
 
         /// <summary>
         /// 单位

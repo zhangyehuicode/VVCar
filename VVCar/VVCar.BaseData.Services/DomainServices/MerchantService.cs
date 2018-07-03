@@ -131,6 +131,7 @@ namespace VVCar.BaseData.Services.DomainServices
             merchant.WeChatAppID = entity.WeChatAppID;
             merchant.WeChatAppSecret = entity.WeChatAppSecret;
             merchant.MeChatMchPassword = entity.MeChatMchPassword;
+            merchant.IsAgent = entity.IsAgent;
             merchant.WeChatMchID = entity.WeChatMchID;
             merchant.WeChatMchKey = entity.WeChatMchKey;
             merchant.Bank = entity.Bank;
@@ -341,6 +342,8 @@ namespace VVCar.BaseData.Services.DomainServices
                 IsShare = false,
                 ShareTitle = "拓客转盘",
                 IsOrderShow = false,
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatedUserID = AppContext.CurrentSession.UserID,
                 CreatedUser = AppContext.CurrentSession.UserName,
                 CreatedDate = DateTime.Now,
@@ -356,6 +359,8 @@ namespace VVCar.BaseData.Services.DomainServices
                 IsShare = false,
                 ShareTitle = "活动转盘",
                 IsOrderShow = false,
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatedUserID = AppContext.CurrentSession.UserID,
                 CreatedUser = AppContext.CurrentSession.UserName,
                 CreatedDate = DateTime.Now,
@@ -402,7 +407,7 @@ namespace VVCar.BaseData.Services.DomainServices
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
-                queryable = queryable.OrderBy(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
+                queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
             return queryable.ToArray();
         }
     }

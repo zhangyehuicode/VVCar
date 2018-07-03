@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CreateDBSeedAction.cs" />
+    <Compile Include="Mapping\AgentDepartmentMap.cs" />
     <Compile Include="Mapping\DataDictTypeMap.cs" />
     <Compile Include="Mapping\DataDictValueMap.cs" />
     <Compile Include="Mapping\DepartmentMap.cs" />

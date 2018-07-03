@@ -173,7 +173,10 @@ namespace VVCar.Shop.Services.DomainServices
             try
             {
                 cbcmember.Horsepower += horsepower;
-                cbcmember.CarBitCoin += carBitCoin;
+                if (carBitCoinRecordType == ECarBitCoinRecordType.Give)
+                    cbcmember.FrozenCoin += carBitCoin;
+                else
+                    cbcmember.CarBitCoin += carBitCoin;
                 Repository.Update(cbcmember);
                 CarBitCoinRecordRepo.Add(new CarBitCoinRecord
                 {
@@ -233,10 +236,12 @@ namespace VVCar.Shop.Services.DomainServices
                 queryable = queryable.Where(t => t.CarBitCoinRecordType == filter.CarBitCoinRecordType);
             if (!string.IsNullOrEmpty(filter.NamePhone))
                 queryable = queryable.Where(t => t.CarBitCoinMember.Name.Contains(filter.NamePhone) || t.CarBitCoinMember.MobilePhoneNo.Contains(filter.NamePhone));
+            if (filter.CarBitCoinMemberID.HasValue)
+                queryable = queryable.Where(t => t.CarBitCoinMemberID == filter.CarBitCoinMemberID.Value);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.MapTo<CarBitCoinRecordDto>().ToArray();
+            return queryable.OrderByDescending(t => t.CreatedDate).MapTo<CarBitCoinRecordDto>().ToArray();
         }
     }
 }

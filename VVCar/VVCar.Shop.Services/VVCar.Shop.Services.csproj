@@ -48,6 +48,7 @@
     <Compile Include="AutoMapper\DtoMapper.cs" />
     <Compile Include="DomainServices\AppointmentService.cs" />
     <Compile Include="DomainServices\CarBitCoinDistributionService.cs" />
+    <Compile Include="DomainServices\CarBitCoinMemberEngineService.cs" />
     <Compile Include="DomainServices\CarBitCoinMemberService.cs" />
     <Compile Include="DomainServices\CarBitCoinOrderItemService.cs" />
     <Compile Include="DomainServices\CarBitCoinOrderPaymentDetailsService.cs" />

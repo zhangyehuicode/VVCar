@@ -221,6 +221,7 @@
 							store.add(records[0].data);
 							store.commitChanges();
 							Ext.Msg.alert('提示', '新增成功');
+							store.reload();
 							win.close();
 						}
 					}
@@ -238,6 +239,7 @@
 							return;
 						} else {
 							Ext.Msg.alert('提示', '更新成功');
+							store.reload();
 							win.close();
 						}
 					}
@@ -270,6 +272,7 @@
 							store.rejectChanges();
 						} else {
 							Ext.Msg.alert('操作成功', '删除成功');
+							store.reload();
 						}
 					}
 				});

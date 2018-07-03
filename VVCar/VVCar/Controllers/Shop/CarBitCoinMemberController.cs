@@ -74,7 +74,7 @@ namespace VVCar.Controllers.Shop
         /// 查询车比特记录
         /// </summary>
         /// <returns></returns>
-        [HttpGet, Route("SearchCarBitCoinRecord")]
+        [HttpGet, Route("SearchCarBitCoinRecord"), AllowAnonymous]
         public PagedActionResult<CarBitCoinRecordDto> SearchCarBitCoinRecord([FromUri]CarBitCoinRecordFilter filter)
         {
             return SafeGetPagedData<CarBitCoinRecordDto>((result) =>

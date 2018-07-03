@@ -88,6 +88,7 @@ namespace VVCar.VIP.Services.DomainServices
                 couponPushItem.ID = Util.NewID();
                 couponPushItem.MerchantID = AppContext.CurrentSession.MerchantID;
                 couponPushItem.CreatedUserID = AppContext.CurrentSession.UserID;
+                couponPushItem.CreatedUser = AppContext.CurrentSession.UserName;
                 couponPushItem.CreatedDate = DateTime.Now;
             }
             this.Repository.AddRange(couponPushItemList);

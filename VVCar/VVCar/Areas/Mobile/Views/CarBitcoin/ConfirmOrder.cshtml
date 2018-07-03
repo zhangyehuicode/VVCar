@@ -146,7 +146,7 @@
                         $.alert('订单为空');
                         return;
                     }
-                    if (this.Order.OpenID == '' || this.Order.OrderItemList == null || this.Order.OrderItemList.length < 1) {
+                    if (this.Order.OpenID == '' || this.Order.CarBitCoinOrderItemList == null || this.Order.CarBitCoinOrderItemList.length < 1) {
                         $.alert('参数错误');
                         return;
                     }
@@ -163,7 +163,7 @@
                         }
                         return;
                     }
-                    //orderAction();
+                    orderAction();
                     @*$.ajax({
                         url: '/api/Order/GetTradeNo',
                         type: 'GET',
@@ -213,7 +213,7 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 sessionStorage.setItem('IsAllEngine', _payBillViewModel.IsAllEngine);
-                                sessionStorage.setItem('order', JSON.stringify(_payBillViewModel.Order));
+                                sessionStorage.setItem('cbcorder', JSON.stringify(_payBillViewModel.Order));
                                 window.location.href = "http://www.cheyinz.cn:8025/pay/JsApiPayPage.aspx?openid=@ViewBag.OpenId&total_fee=" + _payBillViewModel.TotalMoney * 100 + "&out_trade_no=" + res.Data.Code + "&mch=" + mch + "&device_info=" + mch + "&body=" + _payBillViewModel.Body + "&notify_url=http://www.cheyinz.cn/Mobile/CarBitCoin/PayResult";
                             } else {
                                 $.alert('下单失败，请重试');
@@ -320,6 +320,7 @@
                             if (res.Data != null) {
                                 sessionStorage.setItem('cbcmember', JSON.stringify(res.Data));
                                 _payBillViewModel.MemberInfo = res.Data;
+                                _payBillViewModel.Order.MemberID = res.Data.ID;
                             } else {
                                 window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
                             }
@@ -336,7 +337,9 @@
              if (cbcmember == null || cbcmember == '') {
                  init();
              } else {
-                 _payBillViewModel.MemberInfo = JSON.parse(cbcmember);
+                 cbcmember=JSON.parse(cbcmember);
+                 _payBillViewModel.MemberInfo = cbcmember;
+                 _payBillViewModel.Order.MemberID = cbcmember.ID;
             }
             _payBillViewModel.Order.Phone = _payBillViewModel.MemberInfo.MobilePhoneNo;
             _payBillViewModel.Order.LinkMan = _payBillViewModel.MemberInfo.Name;

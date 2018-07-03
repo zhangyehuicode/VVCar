@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="myengine">
+    <div class="top_box">
+        <div class="top_box_text" style="background:#b23af4;">我的引擎</div>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
+        <a class="top_box2"></a>
+        <a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="home"></a>
+    </div>
+    <div class="hykb_box">
+        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;display:table;" v-for="Engine in EngineList">
+            <div style="display:table-cell;width:120px;"><img class="couponimg" v-bind:src=Engine.ImgUrl></div>
+            <div class="hykb_text" style="display:table-cell;">{{Engine.CarBitCoinProductName}}</div>
+            <div class="hykb_text" style="display:table-cell;">（马力：{{Engine.Horsepower}}）</div>
+            <div style="display:table-cell;float:right; margin-right:10%; color:#ff0c4b;" class="hykb_text">x{{Engine.Quantity}}</div>
+        </div>
+    </div>
+    <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .couponimg {
+            width: 80px !important;
+            height: 50px;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#myengine',
+            data: {
+                EngineList: [],
+                Member: {},
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/CarBitCoin?mch=" + mch;
+                },
+            }
+        });
+
+          function init() {
+                $.ajax({
+                    url: '/api/CarBitCoinMember/GetCarBitCoinMemberByOpenID?openId=@ViewBag.OpenId',
+                    type: 'GET',
+                    headers: { 'CompanyCode':mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('cbcmember', JSON.stringify(res.Data));
+                                _viewModel.Member = res.Data;
+                                getMyEngine();
+                            } else {
+                                window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+             }
+             var cbcmember = sessionStorage.getItem('cbcmember');
+             if (cbcmember == null || cbcmember == '') {
+                 init();
+             } else {
+                 cbcmember = JSON.parse(cbcmember);
+                 _viewModel.Member = cbcmember;
+                 getMyEngine();
+             }
+
+        function getMyEngine() {
+            $.ajax({
+                url: '/api/CarBitCoinMemberEngine?CarBitCoinMemberID=' + _viewModel.Member.ID,
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforesend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            _viewModel.EngineList = res.Data;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
+    </script>
+}

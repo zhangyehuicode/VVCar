@@ -28,6 +28,12 @@ namespace YEF.Core.Data
         public bool IsHQ { get; set; }
 
         /// <summary>
+        /// 是否代理商
+        /// </summary>
+        [Display(Name = "是否代理商")]
+        public bool IsAgent { get; set; }
+
+        /// <summary>
         /// 法人(负责人)
         /// </summary>
         [Display(Name = "法人(负责人)")]

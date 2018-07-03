@@ -13,7 +13,7 @@
                 <div class="cbctablecell valuecell">
                     <img class="valueicon" src="~/Areas/resource/img/mobile/carbitcoinicon.png" />
                 </div>
-                <div class="cbctablecell">车比特  {{MyInfo.CarBitCoin}}</div>
+                <div class="cbctablecell">车比特  {{MyInfo.CarBitCoin+MyInfo.FrozenCoin}}</div>
             </div>
             <div class="cbctable valuetitlefont">
                 <div class="cbctablecell valuecell">
@@ -22,7 +22,7 @@
                 <div class="cbctablecell">马力值  {{MyInfo.Horsepower}}</div>
             </div>
         </div>
-        <div class="declare">超能秘籍</div>
+        <div class="declare" v-on:click="myproperty">超能秘籍</div>
         <div>
             <div>
                 <div style="color:#2f302f;padding-left:13px;font-size:15px;">马力排行榜</div>
@@ -316,6 +316,9 @@
                 },
                 carBitCoinTransform: function (data, event) {
                     carBitCoinTransform(data.ID);
+                },
+                myproperty: function (event) {
+                    window.location.href = "/Mobile/CarBitcoin/MyProperty?mch=" + mch;
                 },
             }
         });

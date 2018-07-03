@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoMapper\DtoMapper.cs" />
+    <Compile Include="DomainServices\AgentDepartmentService.cs" />
     <Compile Include="DomainServices\DataDictTypeService.cs" />
     <Compile Include="DomainServices\DataDictValueService.cs" />
     <Compile Include="DomainServices\DepartmentService.cs" />

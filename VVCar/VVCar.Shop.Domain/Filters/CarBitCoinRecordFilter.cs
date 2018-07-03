@@ -24,5 +24,10 @@ namespace VVCar.Shop.Domain.Filters
         /// 会员名称/手机号
         /// </summary>
         public string NamePhone { get; set; }
+
+        /// <summary>
+        /// 车比特会员ID
+        /// </summary>
+        public Guid? CarBitCoinMemberID { get; set; }
     }
 }

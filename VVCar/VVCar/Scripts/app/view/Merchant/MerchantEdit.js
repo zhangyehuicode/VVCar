@@ -8,6 +8,7 @@
 	modal: true,
 	initComponent: function () {
 		var me = this;
+		var yesNoDictStore = Ext.create('WX.store.DataDict.YesNoTypeStore');
 		me.form = Ext.create('Ext.form.Panel', {
 			border: false,
 			trackResetOnLoad: true,
@@ -30,22 +31,12 @@
 						maxLength: 100,
 						allowBlank: false,
 					}, {
-						xtype: 'form',
-						layout: 'hbox',
-						items: [{
-							xtype: 'textfield',
-							margin: '5 5 5 10',
-							name: 'Email',
-							fieldLabel: '注册邮箱',
-							maxLength: 25,
-							allowBlank: false,
-						}, {
-							xtype: 'textfield',
-							margin: '5 5 5 10',
-							name: 'WeChatOAPassword',
-							fieldLabel: '公众号密码',
-							maxLength: 20,
-						}]
+						xtype: 'textfield',
+						margin: '5 8 5 10',
+						name: 'Email',
+						fieldLabel: '注册邮箱',
+						maxLength: 25,
+						allowBlank: true,
 					}]
 				}, {
 					xtype: 'form',
@@ -78,7 +69,7 @@
 						fieldLabel: '手机号码',
 						vtype: 'mobilephone',
 						maxLength: 11,
-						allowBlank: true,
+						allowBlank: false,
 
 					}, {
 						xtype: 'textfield',
@@ -86,7 +77,7 @@
 						name: 'CompanyAddress',
 						fieldLabel: '公司地址',
 						maxLength: 50,
-						allowBlank: true,
+						allowBlank: false,
 
 					}]
 				}, {
@@ -118,22 +109,32 @@
 						maxLength: 20,
 						allowBlank: true,
 					}, {
-						xtype: 'form',
-						layout: 'hbox',
-						items: [{
-							xtype: 'textfield',
-							margin: '5 5 5 10',
-							name: 'WeChatMchKey',
-							fieldLabel: '微信商户Key',
-							maxLength: 50,
-							allowBlank: true,
-						}, {
-							xtype: 'textfield',
-							margin: '5 5 5 10',
-							name: 'MeChatMchPassword',
-							fieldLabel: '商户号密码',
-							maxLength: 20,
-						}]
+						xtype: 'textfield',
+						margin: '5 8 5 10',
+						name: 'WeChatMchKey',
+						fieldLabel: '微信商户Key',
+						maxLength: 50,
+						allowBlank: true,
+					}]
+				}, {
+					xtype: 'form',
+					layout: 'hbox',
+					items: [{
+						xtype: 'textfield',
+						margin: '5 10 5 5',
+						name: 'WeChatOAPassword',
+						fieldLabel: '微信公众平台登录密码',
+						emptyText: '微信公众平台登录密码',
+						maxLength: 20,
+
+					}, {
+						xtype: 'textfield',
+						margin: '5 5 5 10',
+						name: 'MeChatMchPassword',
+						fieldLabel: '微信商户平台操作密码',
+						emptyText: '微信商户平台操作密码',
+						maxLength: 20,
+
 					}]
 				}, {
 					xtype: 'form',
@@ -146,12 +147,27 @@
 						maxLength: 20,
 						allowBlank: true,
 					}, {
-						xtype: 'textfield',
-						margin: '5 5 5 10',
-						name: 'BankCard',
-						fieldLabel: '账号',
-						maxLength: 32,
-						allowBlank: true,
+						xtype: 'form',
+						layout: 'hbox',
+						items: [{
+							xtype: 'textfield',
+							margin: '5 8 5 10',
+							name: 'BankCard',
+							fieldLabel: '账号',
+							maxLength: 32,
+							allowBlank: true,
+						}, {
+							xtype: 'combobox',
+							name: 'IsAgent',
+							store: yesNoDictStore,
+							displayField: 'DictName',
+							valueField: 'DictValue',
+							fieldLabel: '是否代理商',
+							margin: '5 5 5 10',
+							labelWidth: 80,
+							editable: false,
+							allowBlank: true,
+						}]
 					}]
 				}, {
 					xtype: 'form',

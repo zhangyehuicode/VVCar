@@ -44,6 +44,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<CarBitCoinMember> CarBitCoinMemberRepo { get => UnitOfWork.GetRepository<IRepository<CarBitCoinMember>>(); }
 
+        IRepository<CarBitCoinMemberEngine> CarBitCoinMemberEngineRepo { get => UnitOfWork.GetRepository<IRepository<CarBitCoinMemberEngine>>(); }
+
         #endregion
 
         public override bool Delete(Guid key)
@@ -179,13 +181,37 @@ namespace VVCar.Shop.Services.DomainServices
 
                     if (cardItems != null && cardItems.Count > 0)
                     {
+                        CarBitCoinMember cbcmember = null;
                         if (entity.MemberID.HasValue)
+                            cbcmember = CarBitCoinMemberRepo.GetByKey(entity.MemberID.Value, false);
+                        else if (!string.IsNullOrEmpty(entity.OpenID))
+                            cbcmember = CarBitCoinMemberRepo.GetQueryable(false).Where(t => t.OpenID == entity.OpenID).FirstOrDefault();
+                        if (cbcmember != null)
                         {
-                            var cbcmember = CarBitCoinMemberRepo.GetByKey(entity.MemberID.Value, false);
-                            if (cbcmember != null)
+                            var horsepower = 0;
+                            cardItems.ForEach(t =>
                             {
-                                var horsepower = cardItems.GroupBy(g => 1).Select(t => t.Sum(s => s.Horsepower)).FirstOrDefault();
+                                horsepower += t.Quantity * t.Horsepower;
+                            });
+                            if (horsepower > 0)
+                            {
                                 MemberService.ChangeHorsepowerCarBitCoin(cbcmember.ID, string.Empty, ECarBitCoinRecordType.BuyEngine, horsepower, 0, entity.Code, string.Empty);
+                                cardItems.ForEach(t =>
+                                {
+                                    CarBitCoinMemberEngineRepo.Add(new CarBitCoinMemberEngine
+                                    {
+                                        ID = Util.NewID(),
+                                        CarBitCoinMemberID = cbcmember.ID,
+                                        CarBitCoinProductID = t.GoodsID,
+                                        CarBitCoinProductName = t.ProductName,
+                                        Horsepower = t.Horsepower,
+                                        Source = ECarBitCoinMemberEngineSource.Buy,
+                                        TradeNo = entity.Code,
+                                        Quantity = t.Quantity,
+                                        CreatedDate = DateTime.Now,
+                                        ImgUrl = t.ImgUrl,
+                                    });
+                                });
                             }
                         }
                     }

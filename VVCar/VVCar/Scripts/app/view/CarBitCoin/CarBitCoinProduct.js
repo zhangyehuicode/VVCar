@@ -130,7 +130,7 @@
 				},
 				{ header: '单位', dataIndex: 'Unit', width: 60 },
 				{
-					header: '车比特兑换', dataIndex: 'IsCanPointExchange', width: 80,
+					header: '车比特兑换', dataIndex: 'IsCanCarBitCoinExchange', width: 80,
 					renderer: function (value) {
 						if (value)
 							return '<span style="color:green;">允许</span>';
@@ -138,7 +138,7 @@
 							return '<span style="color:red;">关闭</span>';
 					}
 				},
-				{ header: '兑换车比特', dataIndex: 'CarBitCoinPoints', width: 80 },
+				{ header: '兑换车比特', dataIndex: 'CarBitCoin', width: 80 },
 				{ header: '兑换上限', dataIndex: 'UpperLimit', width: 80 },
 				{
 					header: '是否上架', dataIndex: 'IsPublish', width: 80,

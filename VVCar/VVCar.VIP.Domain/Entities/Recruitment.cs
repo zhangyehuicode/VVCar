@@ -37,7 +37,7 @@ namespace VVCar.VIP.Domain.Entities
         /// 招聘结束时间
         /// </summary>
         [Display(Name = "招聘结束时间")]
-        public DateTime endDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         /// <summary>
         /// 联系人姓名

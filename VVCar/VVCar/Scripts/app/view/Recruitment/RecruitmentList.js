@@ -61,9 +61,11 @@
 		];
 		me.columns = [
 			{ header: 'ID', dataIndex: 'id', flex: 1 },
-			{ header: '招聘单位', dataIndex: 'Recruiter', flex: 2 },
-			{ header: '招聘岗位', dataIndex: 'Position' }
-			{ header: '招聘人数', dataIndex: 'RecruitNumber', flex: 3 },
+			{ header: '招聘单位', dataIndex: 'Recruiter', flex: 1 },
+			{ header: '招聘岗位', dataIndex: 'Position', flex: 1 },
+			{ header: '招聘人数', dataIndex: 'RecruitNumber', flex: 1 },
+			{ header: '开始时间', dataIndex: 'StartDate', flex: 1 },
+			{ header: '结束时间', dataIndex: 'EndDate', flex: 1 },
 			{ header: '职位职责要求', dataIndex: 'Requirement', flex: 1 },
 			{
 				text: '操作功能',

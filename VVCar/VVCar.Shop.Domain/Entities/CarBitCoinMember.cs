@@ -51,6 +51,12 @@ namespace VVCar.Shop.Domain.Entities
         public decimal CarBitCoin { get; set; }
 
         /// <summary>
+        /// 冻结的车比特（赠送）
+        /// </summary>
+        [Display(Name = "冻结的车比特（赠送）")]
+        public decimal FrozenCoin { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         [Display(Name = "创建时间")]

@@ -96,7 +96,7 @@ namespace VVCar.Shop.Services.DomainServices
             carBitCoinProduct.ImgUrl = entity.ImgUrl;
             carBitCoinProduct.BasePrice = entity.BasePrice;
             carBitCoinProduct.PriceSale = entity.PriceSale;
-            carBitCoinProduct.CarBitCoinPoints = entity.CarBitCoinPoints;
+            carBitCoinProduct.CarBitCoin = entity.CarBitCoin;
             carBitCoinProduct.UpperLimit = entity.UpperLimit;
             carBitCoinProduct.IsPublish = entity.IsPublish;
             carBitCoinProduct.IsRecommend = entity.IsRecommend;
@@ -104,7 +104,7 @@ namespace VVCar.Shop.Services.DomainServices
             carBitCoinProduct.Introduction = entity.Introduction;
             carBitCoinProduct.DeliveryNotes = entity.DeliveryNotes;
             carBitCoinProduct.CommissionRate = entity.CommissionRate;
-            carBitCoinProduct.IsCanPointExchange = entity.IsCanPointExchange;
+            carBitCoinProduct.IsCanCarBitCoinExchange = entity.IsCanCarBitCoinExchange;
             carBitCoinProduct.Unit = entity.Unit;
             carBitCoinProduct.LastUpdateDate = DateTime.Now;
             carBitCoinProduct.LastUpdateUser = AppContext.CurrentSession.UserName;

@@ -22,7 +22,7 @@
             <img class="tyre" style="top:-25px;left:66px;" src="~/Areas/resource/img/mobile/tyre.png" />
         </div>
         <div class="actionmaincon">
-            <div class="cbctable actioncon">
+            <div class="cbctable actioncon" v-on:click="myproperty">
                 <div class="cbctablecell actioncell actionleftcon">
                     @*<img class="actionimg" src="~/Areas/resource/img/mobile/wdzc.png" />*@
                     @*<img class="actionimg" src="~/Areas/resource/img/mobile/asset.png" />*@
@@ -33,7 +33,7 @@
                     <img style="width:20px;margin-top:5px;" src="~/Areas/resource/img/mobile/arrowr.png" />
                 </div>
             </div>
-            <div class="cbctable actioncon">
+            <div class="cbctable actioncon" v-on:click="myengine">
                 <div class="cbctablecell actioncell actionleftcon">
                     <img class="actionimg" src="~/Areas/resource/img/mobile/sportcar.png" />
                 </div>
@@ -51,11 +51,20 @@
                     <img style="width:20px;margin-top:5px;" src="~/Areas/resource/img/mobile/arrowr.png" />
                 </div>
             </div>
-            <div class="cbctable actioncon">
+            <div class="cbctable actioncon" v-on:click="cbc">
                 <div class="cbctablecell actioncell actionleftcon">
                     <img class="actionimg" src="~/Areas/resource/img/mobile/carbitcoin.png" />
                 </div>
                 <div class="cbctablecell actiontitle actioncell">车比特</div>
+                <div class="cbctablecell actioncell actionrightcon">
+                    <img style="width:20px;margin-top:5px;" src="~/Areas/resource/img/mobile/arrowr.png" />
+                </div>
+            </div>
+            <div class="cbctable actioncon" v-on:click="myorder">
+                <div class="cbctablecell actioncell actionleftcon">
+                    <img class="actionimg" src="~/Areas/resource/img/mobile/order.png" />
+                </div>
+                <div class="cbctablecell actiontitle actioncell">我的订单</div>
                 <div class="cbctablecell actioncell actionrightcon">
                     <img style="width:20px;margin-top:5px;" src="~/Areas/resource/img/mobile/arrowr.png" />
                 </div>
@@ -346,6 +355,18 @@
                      },
                      shop: function (event) {
                          window.location.href = "/Mobile/CarBitcoin/Shop?mch=" + mch;
+                     },
+                     myorder: function (event) {
+                         window.location.href = "/Mobile/CarBitcoin/MyOrder?mch=" + mch;
+                     },
+                     myengine: function (event) {
+                         window.location.href = "/Mobile/CarBitcoin/MyEngine?mch=" + mch;
+                     },
+                     myproperty: function (event) {
+                         window.location.href = "/Mobile/CarBitcoin/MyProperty?mch=" + mch;
+                     },
+                     cbc: function (event) {
+                         $.alert("敬请期待!");
                      },
                  }
              });

@@ -124,13 +124,13 @@
 				}]
 			}, {
 				xtype: 'checkboxfield',
-				name: 'IsCanPointExchange',
+				name: 'IsCanCarBitCoinExchange',
 				fieldLabel: '车比特兑换',
 				checked: false,
 				inputValue: true,
 			}, {
 				xtype: 'numberfield',
-				name: 'CarBitCoinPoints',
+				name: 'CarBitCoin',
 				fieldLabel: '兑换车比特',
 				minValue: 0,
 				allowBlank: false,

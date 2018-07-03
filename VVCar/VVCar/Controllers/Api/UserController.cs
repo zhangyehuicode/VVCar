@@ -150,6 +150,19 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 获取商户店员信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetManagerUser")]
+        public PagedActionResult<User> GetManagerUser()
+        {
+            return SafeGetPagedData<User>((result) =>
+            {
+                result.Data = UserService.GetManagerUser();
+            });
+        }
+
+        /// <summary>
         /// 获取用户功能权限代码列表
         /// </summary>
         /// <returns></returns>

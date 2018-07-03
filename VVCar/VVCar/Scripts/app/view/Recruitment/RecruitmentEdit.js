@@ -1,7 +1,7 @@
 ﻿Ext.define('WX.view.Recruitment.RecruitmentEdit', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.RecruitmentEdit',
-	title: '编辑商户信息',
+	title: '编辑人才需求信息',
 	layout: 'fit',
 	width: 1100,
 	bodyPadding: 5,
@@ -25,27 +25,17 @@
 					items: [{
 						xtype: 'textfield',
 						margin: '5 10 5 5',
-						name: 'Name',
-						fieldLabel: '名称',
+						name: 'Recruiter',
+						fieldLabel: '招聘单位',
 						maxLength: 100,
 						allowBlank: false,
 					}, {
-						xtype: 'form',
-						layout: 'hbox',
-						items: [{
 							xtype: 'textfield',
-							margin: '5 5 5 10',
-							name: 'Email',
-							fieldLabel: '注册邮箱',
-							maxLength: 25,
+							margin: '5 10 5 5',
+							name: 'Recruiter',
+							fieldLabel: '招聘单位',
+							maxLength: 100,
 							allowBlank: false,
-						}, {
-							xtype: 'textfield',
-							margin: '5 5 5 10',
-							name: 'WeChatOAPassword',
-							fieldLabel: '公众号密码',
-							maxLength: 20,
-						}]
 					}]
 				}, {
 					xtype: 'form',
@@ -153,107 +143,6 @@
 						maxLength: 32,
 						allowBlank: true,
 					}]
-				}, {
-					xtype: 'form',
-					layout: 'hbox',
-					items: [{
-						xtype: 'form',
-						border: false,
-						layout: 'hbox',
-						items: [{
-							xtype: 'filefield',
-							fieldLabel: '营业执照',
-							labelWidth: 60,
-							allowBlank: true,
-							buttonText: '选择图片',
-						}, {
-							xtype: 'button',
-							text: '上传',
-							margin: '5 60 0 5',
-							action: 'uploadLicensePic',
-						}]
-					}, {
-						xtype: 'form',
-						border: false,
-						layout: 'hbox',
-						items: [{
-							xtype: 'filefield',
-							fieldLabel: '身份证(正)',
-							labelWidth: 70,
-							allowBlank: true,
-							buttonText: '选择图片',
-						}, {
-							xtype: 'button',
-							text: '上传',
-							margin: '5 60 0 5',
-							action: 'uploadIDCardFrontPic',
-						}]
-					}, {
-						xtype: 'form',
-						border: false,
-						layout: 'hbox',
-						items: [{
-							xtype: 'filefield',
-							fieldLabel: '身份证(反)',
-							labelWidth: 70,
-							allowBlank: true,
-							buttonText: '选择图片',
-						}, {
-							xtype: 'button',
-							text: '上传',
-							margin: '5 60 0 5',
-							action: 'uploadIDCardBehindPic',
-						}]
-					}]
-				}, {
-					xtype: 'form',
-					layout: 'hbox',
-					items: [{
-						xtype: 'box',
-						name: 'ImgLicenseShow',
-						width: 200,
-						height: 290,
-						margin: '5 5 5 100',
-						autoEl: {
-							tag: 'img',
-							src: '',
-						},
-					}, {
-						xtype: 'box',
-						name: 'ImgIDCardFrontShow',
-						width: 200,
-						height: 290,
-						margin: '5 5 5 100',
-						autoEl: {
-							tag: 'img',
-							src: '',
-						}
-					}, {
-						xtype: 'box',
-						name: 'ImgIDCardBehindShow',
-						width: 200,
-						height: 290,
-						margin: '5 5 5 180',
-						autoEl: {
-							tag: 'img',
-							src: '',
-						}
-					}]
-				}, {
-					xtype: 'textfield',
-					name: 'BusinessLicenseImgUrl',
-					fieldLabel: '营业执照图片路径',
-					hidden: true,
-				}, {
-					xtype: 'textfield',
-					name: 'LegalPersonIDCardFrontImgUrl',
-					fieldLabel: '法人身份证正面图片路径',
-					hidden: true,
-				}, {
-					xtype: 'textfield',
-					name: 'LegalPersonIDCardBehindImgUrl',
-					fieldLabel: '法人身份证背面图片路径',
-					hidden: true,
 				}
 			]
 		});

@@ -267,6 +267,7 @@
     <Compile Include="Areas\Mobile\Controllers\MerchantController.cs" />
     <Compile Include="Areas\Mobile\MobileAreaRegistration.cs" />
     <Compile Include="Common\ExportHelper.cs" />
+    <Compile Include="Controllers\Api\AgentDepartmentController.cs" />
     <Compile Include="Controllers\Api\BackgroundTaskController.cs" />
     <Compile Include="Controllers\Api\CommonController.cs" />
     <Compile Include="Controllers\Api\DataDictTypeController.cs" />
@@ -289,8 +290,10 @@
     <Compile Include="Controllers\Shop\AppointmentController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinDistributionController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinMemberController.cs" />
+    <Compile Include="Controllers\Shop\CarBitCoinMemberEngineController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinOrderController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinOrderItemController.cs" />
+    <Compile Include="Controllers\Shop\CarBitCoinOrderPaymentDetailsController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinProductController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinProductCategoryController.cs" />
     <Compile Include="Controllers\Shop\ComboItemController.cs" />
@@ -505,6 +508,7 @@
     <Content Include="Areas\resource\img\mobile\master\zk.png" />
     <Content Include="Areas\resource\img\mobile\my.png" />
     <Content Include="Areas\resource\img\mobile\nj.png" />
+    <Content Include="Areas\resource\img\mobile\order.png" />
     <Content Include="Areas\resource\img\mobile\pass.png" />
     <Content Include="Areas\resource\img\mobile\plate.jpg" />
     <Content Include="Areas\resource\img\mobile\sc.png" />
@@ -624,6 +628,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\AgentDepartment.js" />
+    <Content Include="Scripts\app\controller\AgentDepartmentAudit.js" />
     <Content Include="Scripts\app\controller\CarBitCoinMember.js" />
     <Content Include="Scripts\app\controller\CarBitCoinProduct.js" />
     <Content Include="Scripts\app\controller\CarBitCoinRecord.js" />
@@ -668,6 +674,8 @@
     <Content Include="Scripts\app\controller\User.js" />
     <Content Include="Scripts\app\controller\UserRole.js" />
     <Content Include="Scripts\app\controller\WeChatFans.js" />
+    <Content Include="Scripts\app\model\BaseData\AgentDepartmentAuditModel.js" />
+    <Content Include="Scripts\app\model\BaseData\AgentDepartmentModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinProductCategoryModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinProductCategoryTreeModel.js" />
@@ -688,6 +696,8 @@
     <Content Include="Scripts\app\model\BaseData\GameSettingModel.js" />
     <Content Include="Scripts\app\model\BaseData\IDCodeNameModel.js" />
     <Content Include="Scripts\app\model\BaseData\MakeCodeRuleModel.js" />
+    <Content Include="Scripts\app\model\BaseData\ManageUserAuditModel.js" />
+    <Content Include="Scripts\app\model\BaseData\ManageUserModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberBaseInfoModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberCardModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberCardThemeGroupModel.js" />
@@ -726,6 +736,8 @@
     <Content Include="Scripts\app\model\BaseData\WeChatFansTagModel.js" />
     <Content Include="Scripts\app\model\DataDict\DataDictModel.js" />
     <Content Include="Scripts\app\model\DataDict\DataDictTypeModel.js" />
+    <Content Include="Scripts\app\store\BaseData\AgentDepartmentAuditStore.js" />
+    <Content Include="Scripts\app\store\BaseData\AgentDepartmentStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinMemberStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinProductCategoryLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinProductCategoryTreeStore.js" />
@@ -745,6 +757,8 @@
     <Content Include="Scripts\app\store\BaseData\GameCouponStore.js" />
     <Content Include="Scripts\app\store\BaseData\GameSettingStore.js" />
     <Content Include="Scripts\app\store\BaseData\MakeCodeRuleStore.js" />
+    <Content Include="Scripts\app\store\BaseData\ManageUserAuditStore.js" />
+    <Content Include="Scripts\app\store\BaseData\ManageUserStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberCardStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberCardThemeGroupStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberCardThemeStore.js" />
@@ -811,6 +825,12 @@
     <Content Include="Scripts\app\store\DataDict\YesNoTypeStore.js" />
     <Content Include="Scripts\app\store\Reporting\ConsumeReportStore.js" />
     <Content Include="Scripts\app\store\Reporting\RechargeReportStore.js" />
+    <Content Include="Scripts\app\view\AgentDepartmentAudit\AgentDepartmentAuditEdit.js" />
+    <Content Include="Scripts\app\view\AgentDepartmentAudit\AgentDepartmentAuditList.js" />
+    <Content Include="Scripts\app\view\AgentDepartmentAudit\ManageUserAuditSelector.js" />
+    <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentEdit.js" />
+    <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentList.js" />
+    <Content Include="Scripts\app\view\AgentDepartment\ManageUserSelector.js" />
     <Content Include="Scripts\app\view\CarBitCoinMember\CarBitCoinMemberList.js" />
     <Content Include="Scripts\app\view\CarBitCoinMember\CarBitCoinMemberEdit.js" />
     <Content Include="Scripts\app\view\CarBitCoinRecord\CarBitCoinRecordList.js" />
@@ -1053,6 +1073,11 @@
     <Content Include="Areas\Mobile\Views\CarBitcoin\Shop.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\ProductDetails.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\ConfirmOrder.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\PayResult.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\MyOrder.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\OrderDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\MyEngine.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\MyProperty.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />
