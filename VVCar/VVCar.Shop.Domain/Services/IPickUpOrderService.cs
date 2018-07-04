@@ -48,5 +48,12 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="param"></param>
         /// <returns></returns>
         bool Verification(VerificationParam param);
+
+        /// <summary>
+        /// 获取会员接车单
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        IEnumerable<PickUpOrder> GetMemberPickUpOrder(Guid memberId);
     }
 }

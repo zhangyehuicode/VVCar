@@ -19,7 +19,19 @@
 			{
 				action: 'auditAgentDepartment',
 				xtype: 'button',
-				text: '商户门店审核',
+				text: '审核',
+				scope: this,
+				iconCls: 'fa fa-plus-circle',
+			}, {
+				action: 'antiAuditAgentDepartment',
+				xtype: 'button',
+				text: '反审核',
+				scope: this,
+				iconCls: 'fa fa-plus-circle',
+			}, {
+				action: 'importAgentDepartment',
+				xtype: 'button',
+				text: '导入',
 				scope: this,
 				iconCls: 'fa fa-plus-circle',
 			}, {
@@ -61,11 +73,11 @@
 					cls: 'submitBtn',
 					margin: '0 0 0 5',
 				}, {
-					action: 'export',
-					xtype: 'button',
-					text: '导出',
-					iconCls: '',
-					margin: '0 0 0 5',
+					//action: 'export',
+					//xtype: 'button',
+					//text: '导出',
+					//iconCls: '',
+					//margin: '0 0 0 5',
 				}]
 			},
 		];

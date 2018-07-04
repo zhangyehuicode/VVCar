@@ -561,6 +561,7 @@
     <Content Include="Areas\resource\js\jquery.qrcode.min.js" />
     <Content Include="Areas\resource\js\jquery.tmpl.js" />
     <Content Include="Areas\resource\js\mobile\touchwipe.js" />
+    <Content Include="Areas\resource\voice\cbc.wav" />
     <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -631,6 +632,7 @@
     <Content Include="Scripts\app\controller\AgentDepartment.js" />
     <Content Include="Scripts\app\controller\AgentDepartmentAudit.js" />
     <Content Include="Scripts\app\controller\CarBitCoinMember.js" />
+    <Content Include="Scripts\app\controller\CarBitCoinOrder.js" />
     <Content Include="Scripts\app\controller\CarBitCoinProduct.js" />
     <Content Include="Scripts\app\controller\CarBitCoinRecord.js" />
     <Content Include="Scripts\app\controller\Combo.js" />
@@ -677,6 +679,8 @@
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentAuditModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinMemberModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CarBitCoinOrderItemModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CarBitCoinOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinProductCategoryModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinProductCategoryTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinProductModel.js" />
@@ -739,6 +743,8 @@
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentAuditStore.js" />
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinMemberStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CarBitCoinOrderItemStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CarBitCoinOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinProductCategoryLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinProductCategoryTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinProductStore.js" />
@@ -811,6 +817,7 @@
     <Content Include="Scripts\app\store\DataDict\DataDictStore.js" />
     <Content Include="Scripts\app\store\DataDict\DataDictTypeStore.js" />
     <Content Include="Scripts\app\store\DataDict\DataDictValueStore.js" />
+    <Content Include="Scripts\app\store\DataDict\DegreeTypeStore.js" />
     <Content Include="Scripts\app\store\DataDict\EnableDisableTypeStore.js" />
     <Content Include="Scripts\app\store\DataDict\MemberCardStatusStore.js" />
     <Content Include="Scripts\app\store\DataDict\MemberGradeStatusStore.js" />
@@ -819,6 +826,7 @@
     <Content Include="Scripts\app\store\DataDict\ProductTypeStore.js" />
     <Content Include="Scripts\app\store\DataDict\RechargePlanTypeStore.js" />
     <Content Include="Scripts\app\store\DataDict\RechargeReportTypeStore.js" />
+    <Content Include="Scripts\app\store\DataDict\RecruitmentSexStore.js" />
     <Content Include="Scripts\app\store\DataDict\SexStore.js" />
     <Content Include="Scripts\app\store\DataDict\TradeSourceStore.js" />
     <Content Include="Scripts\app\store\DataDict\UserStore.js" />
@@ -833,6 +841,9 @@
     <Content Include="Scripts\app\view\AgentDepartment\ManageUserSelector.js" />
     <Content Include="Scripts\app\view\CarBitCoinMember\CarBitCoinMemberList.js" />
     <Content Include="Scripts\app\view\CarBitCoinMember\CarBitCoinMemberEdit.js" />
+    <Content Include="Scripts\app\view\CarBitCoinOrder\CarBitCoinOrder.js" />
+    <Content Include="Scripts\app\view\CarBitCoinOrder\CarBitCoinOrderDetails.js" />
+    <Content Include="Scripts\app\view\CarBitCoinOrder\CarBitCoinOrderEdit.js" />
     <Content Include="Scripts\app\view\CarBitCoinRecord\CarBitCoinRecordList.js" />
     <Content Include="Scripts\app\view\CarBitCoin\CarBitCoinProduct.js" />
     <Content Include="Scripts\app\view\CarBitCoin\CarBitCoinProductCategoryEdit.js" />

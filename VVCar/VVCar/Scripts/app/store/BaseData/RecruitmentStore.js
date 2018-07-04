@@ -4,38 +4,19 @@
 	pageSize: 25,
 	proxy: {
 		type: 'rest',
-		url: Ext.GlobalConfig.ApiDomainUrl + 'api/Merchant',
+		url: Ext.GlobalConfig.ApiDomainUrl + 'api/Recruitment',
 		api: {
-			read: Ext.GlobalConfig.ApiDomainUrl + 'api/Merchant?All=false',
-			activateMerchant: Ext.GlobalConfig.ApiDomainUrl + 'api/Merchant/activateMerchant',
-			freezeMerchant: Ext.GlobalConfig.ApiDomainUrl + 'api/Merchant/freezeMerchant',
-			export: Ext.GlobalConfig.ApiDomainUrl + 'api/Merchant/ExportMerchant',
+			read: Ext.GlobalConfig.ApiDomainUrl + 'api/Recruitment?All=false',
+			batchDelete: Ext.GlobalConfig.ApiDomainUrl + 'api/Recruitment/BatchDelete',
 		}
 	},
-	activateMerchant: function (ids, cb) {
+	batchDelete: function (ids, cb) {
 		Ext.Ajax.request({
 			ContentType: 'application/json',
-			method: 'POST',
-			url: this.proxy.api.activateMerchant,
+			url: this.proxy.api.batchDelete,
+			method: 'DELETE',
 			jsonData: { IdList: ids },
-			callback: cb,
-		})
-	},
-	freezeMerchant: function (ids, cb) {
-		Ext.Ajax.request({
-			ContentType: 'application/json',
-			method: 'POST',
-			url: this.proxy.api.freezeMerchant,
-			jsonData: { IdList: ids },
-			callback: cb,
-		})
-	},
-	export: function (p, cb) {
-		Ext.Ajax.request({
-			method: "GET",
-			url: this.proxy.api.export,
-			params: p,
 			callback: cb
 		});
-	}
+	},
 });

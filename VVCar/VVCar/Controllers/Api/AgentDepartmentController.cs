@@ -86,6 +86,34 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 反审核代理商门店
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpPost, Route("RejectAgentDepartment")]
+        public JsonActionResult<bool> RejectAgentDepartment(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return AgentDepartmentService.RejectAgentDepartment(parameter.IdList.ToArray());
+            });
+        }
+
+        /// <summary>
+        /// 导入
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpPost, Route("ImportAgentDepartment")]
+        public JsonActionResult<bool> ImportAgentDepartment(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return AgentDepartmentService.ImportAgentDepartment(parameter.IdList.ToArray());
+            });
+        }
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>

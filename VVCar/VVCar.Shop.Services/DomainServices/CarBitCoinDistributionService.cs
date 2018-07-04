@@ -60,8 +60,8 @@ namespace VVCar.Shop.Services.DomainServices
                 return null;
             entity.ID = Util.NewID();
             entity.CreatedDate = DateTime.Now;
-            entity.PositionX = GenerateRandom(10, 100) / 100;
-            entity.PositionY = GenerateRandom(0, 100) / 100;
+            entity.PositionX = GenerateRandom(10, 90) / 100;
+            entity.PositionY = GenerateRandom(15, 90) / 100;
             return base.Add(entity);
         }
 
@@ -103,9 +103,9 @@ namespace VVCar.Shop.Services.DomainServices
         public bool DistributionCarBitCoin(Guid? cbcmemberId)
         {
             var result = new List<CarBitCoinDistribution>();
-            var carBitCoinMemberQueryable = CarBitCoinMemberRepo.GetQueryable(false);
+            var carBitCoinMemberQueryable = CarBitCoinMemberRepo.GetQueryable(false).Where(t => t.Horsepower > 0);
             if (cbcmemberId != null)
-                carBitCoinMemberQueryable = carBitCoinMemberQueryable.Where(t => t.ID == cbcmemberId);
+                carBitCoinMemberQueryable = CarBitCoinMemberRepo.GetQueryable(false).Where(t => t.ID == cbcmemberId);
             var cbcmemberids = carBitCoinMemberQueryable.Select(t => t.ID).ToList();
             cbcmemberids.ForEach(t =>
             {
@@ -120,8 +120,8 @@ namespace VVCar.Shop.Services.DomainServices
                     CarBitCoinMemberID = t.ID,
                     MobilePhoneNo = t.MobilePhoneNo,
                     CarBitCoin = (decimal)GenerateRandom(100, 600) / 100000,
-                    PositionX = GenerateRandom(10, 100) / 100,
-                    PositionY = GenerateRandom(0, 100) / 100,
+                    PositionX = GenerateRandom(10, 90) / 100,
+                    PositionY = GenerateRandom(15, 90) / 100,
                     CreatedDate = DateTime.Now,
                 }).ToList();
                 result.AddRange(carBitCoinDistributions);

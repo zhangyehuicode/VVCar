@@ -16,6 +16,13 @@ namespace VVCar.VIP.Domain.Services
     public interface IRecruitmentService : IDomainService<IRepository<Recruitment>, Recruitment, Guid>
     {
         /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool BatchDelete(Guid[] ids);
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>

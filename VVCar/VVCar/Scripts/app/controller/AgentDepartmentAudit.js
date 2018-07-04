@@ -19,6 +19,12 @@
 			'AgentDepartmentAuditList button[action=auditAgentDepartment]': {
 				click: me.auditAgentDepartment
 			},
+			'AgentDepartmentAuditList button[action=antiAuditAgentDepartment]': {
+				click: me.antiAuditAgentDepartment
+			},
+			'AgentDepartmentAuditList button[action=importAgentDepartment]': {
+				click: me.importAgentDepartment
+			},
 			'AgentDepartmentAuditList button[action=search]': {
 				click: me.search
 			},
@@ -157,7 +163,7 @@
 			Ext.Msg.alert('提示', '请选择未审核的数据!');
 			return;
 		}
-		Ext.Msg.confirm('询问', '确定要审核所选商户吗?', function (operational) {
+		Ext.Msg.confirm('询问', '确定通过审核?', function (operational) {
 			if (operational == 'yes') {
 				store.approveAgentDepartment(ids,
 					function success(response, request, c) {
@@ -171,6 +177,88 @@
 					},
 					function failure(a, b, c) {
 						Ext.Msg.alert('提示', '审核失败!');
+					}
+				);
+			}
+		});
+	},
+	antiAuditAgentDepartment: function () {
+		var me = this;
+		var store = me.getAgentDepartmentAuditList().getStore();
+		var selectedItems = me.getAgentDepartmentAuditList().getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '未选择数据');
+			return;
+		}
+		var ids = [];
+		var approvedData = false;
+		selectedItems.forEach(function (item) {
+			if (item.data.ApproveStatus != 1) {
+				approvedData = true;
+				return;
+			} else {
+				ids.push(item.data.ID);
+			}
+		});
+		if (approvedData) {
+			Ext.Msg.alert('提示', '请选择已审核的数据!');
+			return;
+		}
+		Ext.Msg.confirm('询问', '确定要反审核?', function (operational) {
+			if (operational == 'yes') {
+				store.rejectAgentDepartment(ids,
+					function success(response, request, c) {
+						var result = Ext.decode(c.responseText);
+						if (result.IsSuccessful) {
+							store.reload();
+							Ext.Msg.alert('提示', '反审核成功!');
+						} else {
+							Ext.Msg.alert('提示', result.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', '反审核失败!');
+					}
+				);
+			}
+		});
+	},
+	importAgentDepartment: function () {
+		var me = this;
+		var store = me.getAgentDepartmentAuditList().getStore();
+		var selectedItems = me.getAgentDepartmentAuditList().getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '未选择数据');
+			return;
+		}
+		var ids = [];
+		var approvedData = false;
+		selectedItems.forEach(function (item) {
+			if (item.data.ApproveStatus != 1) {
+				approvedData = true;
+				return;
+			} else {
+				ids.push(item.data.ID);
+			}
+		});
+		if (approvedData) {
+			Ext.Msg.alert('提示', '请选择已审核的数据!');
+			return;
+		}
+		Ext.Msg.confirm('询问', '确定要导入?', function (operational) {
+			if (operational == 'yes') {
+				store.importAgentDepartment(ids,
+					function success(response, request, c) {
+						var result = Ext.decode(c.responseText);
+						if (result.IsSuccessful) {
+							store.reload();
+							Ext.Msg.alert('提示', '导入成功!');
+						} else {
+							Ext.Msg.alert('提示', result.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', '导入失败!');
 					}
 				);
 			}

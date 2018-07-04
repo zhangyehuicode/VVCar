@@ -119,7 +119,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (ids == null || ids.Length < 1)
                 throw new DomainException("参数不正确");
-            var notPushData = this.Repository.GetInclude(t => t.CouponPushItems).Where(t => ids.Contains(t.ID) && ECouponPushStatus.NotPush == t.Status).ToList();
+            var notPushData = this.Repository.GetIncludes(false, "CouponPushItems", "CouponPushMembers").Where(t => ids.Contains(t.ID) && ECouponPushStatus.NotPush == t.Status).ToList();
             if (notPushData.Count < 1)
                 throw new DomainException("请选择未推送的数据");
             var notExistItem = false;
@@ -163,7 +163,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             var starttime = DateTime.Now.Date;
             var endtime = starttime.AddDays(1);
-            var couponPushList = Repository.GetInclude(t => t.CouponPushItems).Where(t => t.PushDate >= starttime && t.PushDate < endtime && t.Status == ECouponPushStatus.NotPush).ToList();
+            var couponPushList = Repository.GetIncludes(false, "CouponPushItems", "CouponPushMembers").Where(t => t.PushDate >= starttime && t.PushDate < endtime && t.Status == ECouponPushStatus.NotPush).ToList();
             return CouponPushAction(couponPushList);
         }
 
@@ -184,6 +184,13 @@ namespace VVCar.VIP.Services.DomainServices
                     {
                         if (t.CouponPushItems != null && t.CouponPushItems.Count() > 0)
                         {
+                            if (!t.PushAllMembers)
+                            {
+                                var memberids = new List<Guid>();
+                                if (t.CouponPushMembers != null)
+                                    memberids = t.CouponPushMembers.Select(m => m.MemberID).ToList();
+                                memberQueryable = memberQueryable.Where(m => memberids.Contains(m.ID));
+                            }
                             var members = memberQueryable.Where(m => m.MerchantID == t.MerchantID).ToList();
                             var merchant = MerchantRepo.GetQueryable(false).Where(m => m.ID == t.MerchantID).FirstOrDefault();
                             if (members != null && members.Count() > 0 && merchant != null)

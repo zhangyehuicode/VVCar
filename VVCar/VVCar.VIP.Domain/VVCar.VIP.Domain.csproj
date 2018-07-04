@@ -149,6 +149,7 @@
     <Compile Include="Enums\EPaymentType.cs" />
     <Compile Include="Enums\EPeopleSort.cs" />
     <Compile Include="Enums\EPlanType.cs" />
+    <Compile Include="Enums\ERecruitSex.cs" />
     <Compile Include="Enums\ESalesActivityType.cs" />
     <Compile Include="Enums\ETradeSource.cs" />
     <Compile Include="Enums\EUseTimeType.cs" />

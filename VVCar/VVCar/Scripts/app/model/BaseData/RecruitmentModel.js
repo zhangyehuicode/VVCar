@@ -10,6 +10,7 @@
 		{ name: 'HRName' },
 		{ name: 'HRPhoneNo' },
 		{ name: 'DegreeType' },
+		{ name: 'Sex' },
 		{ name: 'Address' },
 		{ name: 'WorkTime' },
 		{ name: 'RecruitNumber' },

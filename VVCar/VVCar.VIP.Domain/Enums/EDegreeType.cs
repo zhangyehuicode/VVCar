@@ -13,6 +13,12 @@ namespace VVCar.VIP.Domain.Enums
     public enum EDegreeType
     {
         /// <summary>
+        /// 不限
+        /// </summary>
+        [Display(Name = "不限")]
+        NoLimit = -1,
+
+        /// <summary>
         /// 大专
         /// </summary>
         [Display(Name = "大专")]

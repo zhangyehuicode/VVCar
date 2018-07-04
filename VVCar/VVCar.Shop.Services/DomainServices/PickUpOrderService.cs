@@ -57,6 +57,8 @@ namespace VVCar.Shop.Services.DomainServices
             get { return ServiceLocator.Instance.GetService<IWeChatService>(); }
         }
 
+        IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
+
         #endregion
 
         public string GetTradeNo()
@@ -199,6 +201,25 @@ namespace VVCar.Shop.Services.DomainServices
         public PickUpOrder GetOrder(Guid id)
         {
             return Repository.GetByKey(id);
+        }
+
+        /// <summary>
+        /// 获取会员接车单
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        public IEnumerable<PickUpOrder> GetMemberPickUpOrder(Guid memberId)
+        {
+            var result = new List<PickUpOrder>();
+            if (memberId == null)
+                return result;
+            var member = MemberRepo.GetInclude(t => t.MemberPlateList, false).Where(t => t.ID == memberId).FirstOrDefault();
+            if (member != null && member.MemberPlateList != null)
+            {
+                var platenumbers = member.MemberPlateList.Select(t => t.PlateNumber).ToList();
+                result = Repository.GetQueryable(false).Where(t => platenumbers.Contains(t.PlateNumber)).ToList();
+            }
+            return result;
         }
 
         /// <summary>

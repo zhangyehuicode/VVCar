@@ -77,7 +77,7 @@
 						name: 'CompanyAddress',
 						fieldLabel: '公司地址',
 						maxLength: 50,
-						allowBlank: true,
+						allowBlank: false,
 
 					}]
 				}, {
@@ -110,10 +110,11 @@
 						allowBlank: true,
 					}, {
 						xtype: 'textfield',
-						margin: '5 5 5 10',
-						name: 'MeChatMchPassword',
-						fieldLabel: '商户号密码',
-						maxLength: 20,
+						margin: '5 8 5 10',
+						name: 'WeChatMchKey',
+						fieldLabel: '微信商户Key',
+						maxLength: 50,
+						allowBlank: true,
 					}]
 				}, {
 					xtype: 'form',
@@ -161,9 +162,9 @@
 							fieldLabel: '销售经理',
 							readOnly: true,
 							width: 190,
-							allowBlank: false,
+							allowBlank: true,
 						}, {
-							action: 'selectManageAuditUser',
+							action: 'selectManageUser',
 							xtype: 'button',
 							text: '查找',
 							cls: 'submitBtn',

@@ -8,7 +8,7 @@
     <div class="headcon">
         <div class="cbccon">
             <div class="headdescfont">车比特总数</div>
-            <div class="cbc">{{Member.CarBitCoin}}</div>
+            <div class="cbc">{{Member.CarBitCoin+Member.FrozenCoin}}</div>
         </div>
         <div class="frozencbc headdescfont">冻结车比特数 {{Member.FrozenCoin}}</div>
     </div>
@@ -17,6 +17,8 @@
         <div class="cbcintrocontent">
             车比特是基于在车因子系统中的资金流量产生的，包括会员消费、门店业绩、代理商业绩，资金流量越多马力值越大。<br>
             系统每日更新一次马力值，根据马力值大小分配获得的车比特。<br>
+            可在车比特商城购买引擎增加相应的马力值，以获得更多的车比特。<br>
+            注册车比特会员立即获得60马力并赠送车比特。<br>
             车比特总量有限，随着时间的推移获取难度越来越大，前期参与更有优势。
         </div>
     </div>
@@ -178,7 +180,7 @@
         _viewModel = new Vue({
             el: '#myproperty',
             data: {
-                Member: {},
+                Member: { CarBitCoin: 0, FrozenCoin: 0,},
                 CarBitCoinRecordList: [],
             },
             methods: {
@@ -204,7 +206,7 @@
                             _viewModel.Member = res.Data;
                             getCarBitCoinRecord();
                         } else {
-                            //window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                            window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
                         }
                     } else {
                         $.alert(res.ErrorMessage);
@@ -215,14 +217,14 @@
                 }
             });
         }
-        var cbcmember = sessionStorage.getItem('cbcmember');
-        if (cbcmember == null || cbcmember == '') {
+        //var cbcmember = sessionStorage.getItem('cbcmember');
+        //if (cbcmember == null || cbcmember == '') {
             init();
-        } else {
-            cbcmember = JSON.parse(cbcmember);
-            _viewModel.Member = cbcmember;
-            getCarBitCoinRecord();
-        }
+        //} else {
+        //    cbcmember = JSON.parse(cbcmember);
+        //    _viewModel.Member = cbcmember;
+        //    getCarBitCoinRecord();
+        //}
 
         function getCarBitCoinRecord() {
             $.ajax({

@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using VVCar.VIP.Domain.Enums;
 using YEF.Core.Data;
-using YEF.Core.Enums;
 
 namespace VVCar.VIP.Domain.Entities
 {
@@ -31,13 +30,13 @@ namespace VVCar.VIP.Domain.Entities
         /// 招聘开始时间
         /// </summary>
         [Display(Name = "招聘开始时间")]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         /// <summary>
         /// 招聘结束时间
         /// </summary>
         [Display(Name = "招聘结束时间")]
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         /// <summary>
         /// 联系人姓名
@@ -61,7 +60,7 @@ namespace VVCar.VIP.Domain.Entities
         /// 性别要求
         /// </summary>
         [Display(Name = "性别要求")]
-        public ESex Sex { get; set; }
+        public ERecruitSex Sex { get; set; }
 
         /// <summary>
         /// 工作地点

@@ -222,7 +222,7 @@ namespace VVCar.BaseData.Services.DomainServices
                     if (!isstaff)
                         throw new DomainException("非店员登录");
                 }
-                if (string.IsNullOrEmpty(user.OpenID) && !string.IsNullOrEmpty(param.OpenID))
+                if (!string.IsNullOrEmpty(param.OpenID) && param.OpenID != user.OpenID)
                 {
                     user.OpenID = param.OpenID;
                     base.Update(user);

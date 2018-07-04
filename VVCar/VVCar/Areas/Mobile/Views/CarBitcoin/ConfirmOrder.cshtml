@@ -67,7 +67,7 @@
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
         function wxConfig() {
-            var mch = $.getUrlParam('mch');
+            var mch = "VVCar";//$.getUrlParam('mch');
             $.ajax({
                 type: "POST",
                 url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
@@ -111,7 +111,7 @@
     <script type="text/javascript">
         $(function () {
 
-        var mch = $.getUrlParam('mch');
+        var mch = "VVCar";//$.getUrlParam('mch');
         _payBillViewModel = new Vue({
             el: '#confirmorder',
             data: {

@@ -102,6 +102,7 @@ namespace VVCar.Shop.Services.DomainServices
                 MobilePhoneNo = entity.MobilePhoneNo,
                 Sex = entity.Sex,
                 OpenID = entity.OpenID,
+                Horsepower = 60,
                 //Horsepower = CalculateHorsepower(entity.MobilePhoneNo),
             });
             CarBitCoinDistributionService.DistributionCarBitCoin(result.ID);
@@ -153,6 +154,10 @@ namespace VVCar.Shop.Services.DomainServices
             if (cbcmember == null)
                 return false;
             var horsepower = CalculateHorsepower(cbcmember.MobilePhoneNo);
+            if (horsepower < 60)
+                horsepower = 60;
+            if (cbcmember.Horsepower == horsepower)
+                return true;
             cbcmember.Horsepower = horsepower;
             Repository.Update(cbcmember);
             return true;

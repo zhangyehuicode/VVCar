@@ -24,6 +24,20 @@ namespace VVCar.BaseData.Domain.Services
         bool ApproveAgentDepartment(Guid[] ids);
 
         /// <summary>
+        /// 反审核代理门店
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool RejectAgentDepartment(Guid[] ids);
+
+        /// <summary>
+        /// 导入
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool ImportAgentDepartment(Guid[] ids);
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>

@@ -88,6 +88,11 @@ namespace VVCar.VIP.Domain.Entities
         [Display(Name = "推送子项")]
         public virtual ICollection<CouponPushItem> CouponPushItems { get; set; }
 
+        /// <summary>
+        /// 推送会员
+        /// </summary>
+        public virtual ICollection<CouponPushMember> CouponPushMembers { get; set; }
+
         ///// <summary>
         ///// 优惠券模板ID
         ///// </summary>

@@ -25,11 +25,19 @@
         <div class="declare" v-on:click="myproperty">超能秘籍</div>
         <div>
             <div>
-                <div style="color:#2f302f;padding-left:13px;font-size:15px;">马力排行榜</div>
+                <div v-if="HorsepowerRank">
+                    <div class="ranktitle">马力排行榜</div>
+                    <div class="ranktext" v-on:click="cbcrank">按车比特排行&nbsp;></div>
+                </div>
+                <div v-if="!HorsepowerRank">
+                    <div class="ranktitle">车比特排行榜</div>
+                    <div class="ranktext" v-on:click="horsepowerrank">按马力排行&nbsp;></div>
+                </div>
                 <div class="cbctable rankheadtable rankheadcon">
                     <div class="cbctablecell rankcell">名次</div>
                     <div class="cbctablecell rankcellname">用户名</div>
-                    <div class="cbctablecell rankcell">马力</div>
+                    <div class="cbctablecell rankcell" v-if="HorsepowerRank">马力</div>
+                    <div class="cbctablecell rankcell" v-if="!HorsepowerRank">车比特</div>
                 </div>
                 <div v-for="Coiner in CarBitCoinMemberList">
                     <div class="cbctable rankheadtable rankheadh">
@@ -40,10 +48,16 @@
                             <img v-if="Coiner.Ranking==3" class="medalimg" src="~/Areas/resource/img/mobile/coppermedal.png" />
                         </div>
                         <div class="cbctablecell rankcellname namefont">{{Coiner.Name}}</div>
-                        <div class="cbctablecell rankcell valuefont">{{Coiner.Horsepower}}</div>
+                        <div class="cbctablecell rankcell valuefont" v-if="HorsepowerRank">{{Coiner.Horsepower}}</div>
+                        <div class="cbctablecell rankcell valuefont" v-if="!HorsepowerRank">{{Coiner.CarBitCoin+Coiner.FrozenCoin}}</div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="bitcoincongenerate" style="width:100%;" v-if="CarBitCoinDistributionList.length<1" v-on:click="register">
+            <img class="coinimg" src="~/Areas/resource/img/mobile/cbc.png" />
+            <div style="color:#fff;text-align:center;font-size:8px;" v-if="IsMember">生成中...</div>
+            <div style="color:#fff;text-align:center;font-size:8px;" v-if="!IsMember">立即登录</div>
         </div>
         <div class="bitcoincon" v-bind:style="CarBitCoin.style" v-bind:id="CarBitCoin.ID" v-for="CarBitCoin in CarBitCoinDistributionList" v-on:click="carBitCoinTransform(CarBitCoin)">
             @*<img src="~/Areas/resource/img/mobile/cbc.png" />*@
@@ -83,6 +97,10 @@
     </div>
 </div>
 
+<audio controls="controls" id="cbcv" style="display:none;">
+    <source src="~/Areas/resource/voice/cbc.wav">
+</audio>
+
 @section scripts{
     <style type="text/css">
         .coinimg {
@@ -94,6 +112,14 @@
             position: absolute;
             top: 100px;
             left: 50px;
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .bitcoincongenerate {
+            position: absolute;
+            top: 110px;
             display: table-cell;
             text-align: center;
             vertical-align: middle;
@@ -252,6 +278,24 @@
         .namefont {
             font-size: 16px;
         }
+
+        .ranktext {
+            font-size: 12px;
+            color: #b23af4;
+            float: right;
+            padding-right: 13px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .ranktitle {
+            color: #2f302f;
+            padding-left: 13px;
+            font-size: 15px;
+            float: left;
+            height: 30px;
+            line-height: 30px;
+        }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
@@ -287,7 +331,7 @@
                             ]
                         });
                         wx.ready(function () {
-                            wx.hideAllNonBaseMenuItem();
+                            //wx.hideAllNonBaseMenuItem();
                         });
                     } else {
                     }
@@ -306,9 +350,11 @@
             el: '#carbitcoin',
             data: {
                 CarBitCoinMemberList: [],
-                MyInfo: {},
+                MyInfo: { CarBitCoin: 0, FrozenCoin: 0, Horsepower:0,},
                 CoinerList: [],
-                CarBitCoinDistributionList:[],
+                CarBitCoinDistributionList: [],
+                HorsepowerRank: true,
+                IsMember: false,
             },
             methods: {
                 myinfo: function (event) {
@@ -320,12 +366,27 @@
                 myproperty: function (event) {
                     window.location.href = "/Mobile/CarBitcoin/MyProperty?mch=" + mch;
                 },
+                horsepowerrank: function (event) {
+                    this.HorsepowerRank = true;
+                    getCarBitCoin(false);
+                },
+                cbcrank: function (event) {
+                    this.HorsepowerRank = false;
+                    getCarBitCoin(false, 1);
+                },
+                register: function (event) {
+                    if (!_viewModel.IsMember)
+                        window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                },
             }
         });
 
-        function getCarBitCoin(isshowloading) {
+        function getCarBitCoin(isshowloading, sortDirection) {
+            var url = '/api/CarBitCoinMember';
+            if (sortDirection != null && sortDirection != '' && sortDirection == 1)
+                url = '/api/CarBitCoinMember?SortDirection=1';
             $.ajax({
-                url: '/api/CarBitCoinMember',
+                url: url,
                 type: 'GET',
                 headers: { 'CompanyCode': mch },
                 beforeSend: function () {
@@ -341,6 +402,7 @@
                                 if (res.Data[i].OpenID == '@ViewBag.OpenId') {
                                     _viewModel.MyInfo = res.Data[i];
                                     getDistributionCarBitCoin(res.Data[i].ID);
+                                    _viewModel.IsMember = true;
                                 }
                             }
                             _viewModel.CarBitCoinMemberList = res.Data;
@@ -411,6 +473,12 @@
                             getCarBitCoin(false);
                             //$('#' + id).hide();
                             getDistributionCarBitCoin(_viewModel.MyInfo.ID);
+                            //$('#cbcv')[0].play();
+                            if (!_viewModel.HorsepowerRank)
+                                getCarBitCoin(false, 1);
+                            else
+                                getCarBitCoin(false);
+                            play();
                         }
                     } else {
                         $.alert(res.ErrorMessage);
@@ -423,8 +491,35 @@
         }
 
         var setIntervalId = setInterval(function () {
-                getDistributionCarBitCoin(_viewModel.MyInfo.ID);
+            getDistributionCarBitCoin(_viewModel.MyInfo.ID);
+            if (!_viewModel.HorsepowerRank)
+                getCarBitCoin(false, 1);
+            else
+                getCarBitCoin(false);
         },3000);
+
+        function play() {
+            //var audio = document.createElement('audio');
+            //var source = document.createElement('source');
+            //source.type = "audio/mpeg";
+            //source.type = "audio/mpeg";
+            //source.src ="/Areas/resource/voice/cbc.wav";
+            //source.autoplay = "autoplay";
+            //source.controls = "controls";
+            //audio.appendChild(source);
+            //audio.play();
+
+            //var audio = document.getElementById('cbcv');
+            //audio.play();
+            //document.addEventListener("WeixinJSBridgeReady", function () {
+            //    audio.play();
+            //}, false);
+
+            WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+                // 在这里拿到 e.err_msg, 这里面就包含了所有的网络类型
+                document.getElementById('cbcv').play();
+            });
+        }
 
     </script>
 }

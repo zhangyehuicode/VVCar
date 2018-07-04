@@ -42,30 +42,40 @@
 		win.show();
 	},
 	editRecruitment: function (grid, record) {
-		var win = Ext.widget('Recruitmentdit');
+		var win = Ext.widget('RecruitmentEdit');
 		win.form.loadRecord(record);
 		win.form.getForm().actionMethod = 'PUT';
 		win.setTitle('编辑人才需求');
 		win.show();
 	},
-	deleteMerchant: function (grid, record) {
+	deleteRecruitment: function (btn) {
 		var me = this;
+		var selectedItems = btn.up('grid').getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '请先选择要删除的人才需求!');
+			return;
+		}
 		Ext.Msg.confirm('询问', '您确定要删除吗?', function (opt) {
 			if (opt == 'yes') {
-				Ext.Msg.wait('正在处理数据,请稍后...', '状态显示');
-				var store = me.getRecruitmentList().getStore();
-				store.remove(record);
-				store.sync({
-					callback: function (batch, options) {
-						Ext.Msg.hide();
-						if (batch.hasException()) {
-							Ext.Msg.alert('操作失败', batch.exceptions[0].error);
-							store.rejectChanges();
-						} else {
-							Ext.Msg.alert('操作成功', '删除成功');
-						}
-					}
+				var ids = [];
+				selectedItems.forEach(function (item) {
+					ids.push(item.data.ID);
 				});
+				var store = me.getRecruitmentList().getStore();
+				store.batchDelete(ids,
+					function success(response, request, c) {
+						var ajaxResult = JSON.parse(c.responseText);
+						if (ajaxResult.IsSuccessful) {
+							store.reload();
+							Ext.Msg.alert('提示', '删除成功');
+						} else {
+							Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+					}
+				);
 			}
 		});
 	},
@@ -108,6 +118,17 @@
 					}
 				});
 			}
+		}
+	},
+	search: function (btn) {
+		var me = this;
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			var store = me.getRecruitmentList().getStore();
+			store.proxy.extraParams = queryValues;
+			store.load();
+		} else {
+			Ext.Msg.alert('提示', '请输入过滤条件');
 		}
 	},
 	export: function (btn) {

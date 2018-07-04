@@ -97,5 +97,19 @@ namespace VVCar.Controllers.Shop
                 return PickUpOrderService.Verification(param);
             });
         }
+
+        /// <summary>
+        /// 获取会员接车单
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetMemberPickUpOrder"), AllowAnonymous]
+        public PagedActionResult<PickUpOrder> GetMemberPickUpOrder(Guid memberId)
+        {
+            return SafeGetPagedData<PickUpOrder>((result) =>
+            {
+                result.Data = PickUpOrderService.GetMemberPickUpOrder(memberId);
+            });
+        }
     }
 }

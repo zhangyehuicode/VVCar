@@ -9,7 +9,6 @@
 	initComponent: function () {
 		var me = this;
 		var yesNoDictStore = Ext.create('WX.store.DataDict.YesNoTypeStore');
-		var userStore = Ext.create('WX.store.DataDict.UserStore');
 		me.form = Ext.create('Ext.form.Panel', {
 			border: false,
 			trackResetOnLoad: true,

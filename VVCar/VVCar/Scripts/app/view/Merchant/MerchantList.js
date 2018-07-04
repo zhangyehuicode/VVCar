@@ -56,7 +56,7 @@
 					fieldLabel: '是否代理商',
 					name: 'IsAgent',
 					width: 175,
-					labelWidth: 60,
+					labelWidth: 70,
 					margin: '0 0 0 5',
 					store: [
 						[0, '否'],
