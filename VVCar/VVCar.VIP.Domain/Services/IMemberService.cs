@@ -264,6 +264,13 @@ namespace VVCar.VIP.Domain.Services
         Member ManualAddMember(AddMemberParam param);
 
         /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool BatchDelete(Guid[] ids);
+
+        /// <summary>
         /// 批量手动新增会员
         /// </summary>
         /// <param name="addparam"></param>

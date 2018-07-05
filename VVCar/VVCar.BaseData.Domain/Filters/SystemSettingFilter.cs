@@ -14,9 +14,15 @@ namespace VVCar.BaseData.Domain.Filters
     public class SystemSettingFilter : BasePageFilter
     {
         /// <summary>
-        /// 餐厅名称
+        /// 参数名称
         /// </summary>
         [Display(Name = "参数名称")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// 商户名称
+        /// </summary>
+        [Display(Name = "商户名称")]
+        public string MerchantName { get; set; }
     }
 }

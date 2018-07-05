@@ -38,6 +38,10 @@ namespace VVCar.Shop.Services.DomainServices
 
         ICarBitCoinDistributionService CarBitCoinDistributionService { get => ServiceLocator.Instance.GetService<ICarBitCoinDistributionService>(); }
 
+        IRepository<CarBitCoinMember> CarBitCoinMemberRepo { get => UnitOfWork.GetRepository<IRepository<CarBitCoinMember>>(); }
+
+        IRepository<CarBitCoinMemberEngine> CarBitCoinMemberEngineRepo { get => UnitOfWork.GetRepository<IRepository<CarBitCoinMemberEngine>>(); }
+
         #endregion
 
         protected override bool DoValidate(CarBitCoinMember entity)
@@ -142,7 +146,11 @@ namespace VVCar.Shop.Services.DomainServices
             var users = UserRepo.GetQueryable(false).Where(t => t.MobilePhoneNo == mobilePhoneNo).ToList();
             var userids = users.Select(t => t.ID).ToList();
             var userpickuoordersmoney = PickUpOrderRepo.GetQueryable(false).Where(t => userids.Contains(t.StaffID)).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
-            result = (int)Math.Floor(ordersmoney + pickuoordersmoney + userpickuoordersmoney);
+            var carBitCoinMember = CarBitCoinMemberRepo.GetQueryable(false).Where(t => t.MobilePhoneNo == mobilePhoneNo).FirstOrDefault();
+            //var carBitCoinRecords = CarBitCoinRecordRepo.GetQueryable(false).Where(t => t.CarBitCoinMemberID == carBitCoinMember.ID && t.CarBitCoinRecordType == ECarBitCoinRecordType.BuyEngine).ToList();
+            var carBitCoinMemberEngines = CarBitCoinMemberEngineRepo.GetQueryable(false).Where(t => t.CarBitCoinMemberID == carBitCoinMember.ID).ToList();
+            var engineHorsepower = carBitCoinMemberEngines.GroupBy(g => 1).Select(t => t.Sum(s => s.Horsepower * s.Quantity)).FirstOrDefault();
+            result = (int)Math.Floor(ordersmoney + pickuoordersmoney + userpickuoordersmoney + engineHorsepower + 60);
             return result;
         }
 
@@ -156,7 +164,7 @@ namespace VVCar.Shop.Services.DomainServices
             var horsepower = CalculateHorsepower(cbcmember.MobilePhoneNo);
             if (horsepower < 60)
                 horsepower = 60;
-            if (cbcmember.Horsepower == horsepower)
+            if (cbcmember.Horsepower >= horsepower)
                 return true;
             cbcmember.Horsepower = horsepower;
             Repository.Update(cbcmember);

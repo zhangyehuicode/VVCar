@@ -15,6 +15,12 @@ namespace VVCar.BaseData.Services.DomainServices
         {
         }
 
+        #region properties
+
+        IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
+
+        #endregion
+
         #region methods
 
         public override Role Add(Role entity)
@@ -41,6 +47,12 @@ namespace VVCar.BaseData.Services.DomainServices
                 throw new DomainException("不允许删除店长角色");
             else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000003"))
                 throw new DomainException("不允许删除店员角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000004"))
+                throw new DomainException("不允许删除代理商角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000005"))
+                throw new DomainException("不允许删除销售经理角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000006"))
+                throw new DomainException("不允许删除总经理角色");
 
             role.IsDeleted = true;
             return this.Repository.Update(role) > 0;
@@ -60,6 +72,12 @@ namespace VVCar.BaseData.Services.DomainServices
                 throw new DomainException("不允许修改店长角色");
             else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000003"))
                 throw new DomainException("不允许修改店员角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000004"))
+                throw new DomainException("不允许修改代理商角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000005"))
+                throw new DomainException("不允许修改销售经理角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000006"))
+                throw new DomainException("不允许修改总经理角色");
 
             role.Code = entity.Code;
             role.Name = entity.Name;
@@ -93,6 +111,16 @@ namespace VVCar.BaseData.Services.DomainServices
             {
                 var adminId = Guid.Parse("00000000-0000-0000-0000-000000000001");
                 queryable = queryable.Where(t => t.ID != adminId);
+                var merchant = MerchantRepo.GetByKey(AppContext.CurrentSession.MerchantID, false);
+                if (merchant != null)
+                {
+                    if (!merchant.IsAgent)
+                    {
+                        var salesmanagerId = Guid.Parse("00000000-0000-0000-0000-000000000005");
+                        var generalmanagerId = Guid.Parse("00000000-0000-0000-0000-000000000006");
+                        queryable = queryable.Where(t => t.ID != salesmanagerId && t.ID != generalmanagerId);
+                    }
+                }
             }
             if (filter != null)
             {

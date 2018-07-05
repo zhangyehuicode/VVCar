@@ -164,7 +164,7 @@
 							width: 190,
 							allowBlank: true,
 						}, {
-							action: 'selectManageUser',
+							action: 'selectManageAuditUser',
 							xtype: 'button',
 							text: '查找',
 							cls: 'submitBtn',

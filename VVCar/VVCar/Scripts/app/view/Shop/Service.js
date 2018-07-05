@@ -121,14 +121,15 @@
 							return '商品';
 					}
 				},
+				{ header: '成本价', dataIndex: 'CostPrice', width: 100 },
 				{ header: '原单价', dataIndex: 'BasePrice', width: 100 },
 				{ header: '销售单价', dataIndex: 'PriceSale', width: 100 },
-				{
-					header: '库存', dataIndex: 'Stock', width: 100,
-					renderer: function (value) {
-						return '<span style="color:green;">' + value + '</span>';
-					}
-				},
+				//{
+				//	header: '库存', dataIndex: 'Stock', width: 100,
+				//	renderer: function (value) {
+				//		return '<span style="color:green;">' + value + '</span>';
+				//	}
+				//},
 				{ header: '单位', dataIndex: 'Unit', width: 60 },
 				{
 					header: '积分兑换', dataIndex: 'IsCanPointExchange', width: 80,

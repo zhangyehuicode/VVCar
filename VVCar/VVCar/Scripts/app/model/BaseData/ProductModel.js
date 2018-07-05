@@ -16,6 +16,7 @@
 		{ name: "EffectiveDate" },
 		{ name: "ExpiredDate" },
 		{ name: "CreatedDate" },
+		{ name: "CostPrice" },
 		{ name: "BasePrice" },
 		{ name: "PriceSale" },
 		{ name: "ProductType" },

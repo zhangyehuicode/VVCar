@@ -22,6 +22,7 @@ Ext.define("WX.store.BaseData.MemberStore", {
 			changeMemberGroup: Ext.GlobalConfig.ApiDomainUrl + "api/Member/ChangeMemberGroup",
 			adjustMemberPoint: Ext.GlobalConfig.ApiDomainUrl + "api/Member/AdjustMemberPoint",
 			manualAddMember: Ext.GlobalConfig.ApiDomainUrl + "api/Member/ManualAddMember",
+			batchDelete: Ext.GlobalConfig.ApiDomainUrl + "api/Member/BatchDelete",
 		},
 	},
 	failure: function (response) {
@@ -126,6 +127,15 @@ Ext.define("WX.store.BaseData.MemberStore", {
 			jsonData: entity,
 			success: success,
 			failure: this.failure
+		});
+	},
+	batchDelete: function (ids, cb) {
+		Ext.Ajax.request({
+			ContentType: 'application/json',
+			url: this.proxy.api.batchDelete,
+			method: 'DELETE',
+			jsonData: { IdList: ids },
+			callback: cb
 		});
 	}
 });

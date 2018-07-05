@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain.Dtos;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Filters;
 using YEF.Core.Data;
@@ -34,7 +35,8 @@ namespace VVCar.BaseData.Domain.Services
         /// 查询系统参数
         /// </summary>
         /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
         /// <returns></returns>
-        IEnumerable<SystemSetting> Search(SystemSettingFilter filter);
+        IEnumerable<SystemSettingDto> Search(SystemSettingFilter filter, out int totalCount);
     }
 }

@@ -27,12 +27,6 @@ namespace VVCar.BaseData.Services.DomainServices
         {
         }
 
-        #region properties
-
-        IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
-
-        #endregion
-
         /// <summary>
         /// 新增
         /// </summary>

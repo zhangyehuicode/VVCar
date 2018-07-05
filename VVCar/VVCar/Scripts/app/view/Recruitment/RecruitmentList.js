@@ -51,11 +51,11 @@
 					cls: 'submitBtn',
 					margin: '0 0 0 5',
 				}, {
-					action: 'export',
-					xtype: 'button',
-					text: '导出',
-					iconCls: '',
-					margin: '0 0 0 5',
+					//action: 'export',
+					//xtype: 'button',
+					//text: '导出',
+					//iconCls: '',
+					//margin: '0 0 0 5',
 				}]
 			},
 		];

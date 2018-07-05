@@ -107,7 +107,11 @@ namespace VVCar.VIP.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<Recruitment> Search(RecruitmentFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetQueryable(false);
+            var queryable = this.Repository.GetInclude(t => t.Merchant, false);
+            if (!(AppContext.CurrentSession.MerchantID == Guid.Parse("00000000-0000-0000-0000-000000000001")))
+            {
+                queryable = queryable.Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            }
             if (!string.IsNullOrEmpty(filter.Recruiter))
                 queryable = queryable.Where(t => t.Recruiter.Contains(filter.Recruiter));
             totalCount = queryable.Count();

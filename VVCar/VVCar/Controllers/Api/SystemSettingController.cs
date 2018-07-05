@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using VVCar.BaseData.Domain.Dtos;
 using VVCar.BaseData.Domain.Entities;
+using VVCar.BaseData.Domain.Filters;
 using VVCar.BaseData.Domain.Services;
 using YEF.Core.Dtos;
 
@@ -54,11 +55,14 @@ namespace VVCar.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public JsonActionResult<IEnumerable<SystemSetting>> GetSystemSettings()
+        public PagedActionResult<SystemSettingDto> GetSystemSettings([FromUri]SystemSettingFilter filter)
         {
-            return SafeExecute(() =>
+            return SafeGetPagedData<SystemSettingDto>((result) =>
             {
-                return SysSettingService.Search(null);
+                var totalCount = 0;
+                var data = SysSettingService.Search(filter, out totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
             });
         }
 

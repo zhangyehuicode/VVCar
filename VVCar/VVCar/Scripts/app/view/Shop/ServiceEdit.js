@@ -83,6 +83,13 @@
 				editable: false,
 			}, {
 				xtype: 'numberfield',
+				name: 'CostPrice',
+				fieldLabel: '成本价',
+				minValue: 0,
+				allowBlank: false,
+				value: 0,
+			}, {
+				xtype: 'numberfield',
 				name: 'BasePrice',
 				fieldLabel: '原单价',
 				minValue: 0,

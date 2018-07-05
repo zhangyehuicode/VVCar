@@ -121,5 +121,10 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "最后修改日期")]
         public DateTime? LastUpdateDate { get; set; }
+
+        /// <summary>
+        /// 商户
+        /// </summary>
+        public virtual Merchant Merchant { get; set; }
     }
 }

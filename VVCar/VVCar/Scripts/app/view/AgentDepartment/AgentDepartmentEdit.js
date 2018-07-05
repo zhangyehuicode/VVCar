@@ -163,12 +163,14 @@
 							readOnly: true,
 							width: 190,
 							allowBlank: true,
+							permissionCode: 'AgentDepartment.SelectManager',
 						}, {
 							action: 'selectManageUser',
 							xtype: 'button',
 							text: '查找',
 							cls: 'submitBtn',
 							margin: '5 5 5 10',
+							permissionCode: 'AgentDepartment.SelectManager',
 						}, {
 							xtype: 'textfield',
 							name: 'UserID',

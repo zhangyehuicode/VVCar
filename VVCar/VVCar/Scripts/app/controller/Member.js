@@ -41,6 +41,9 @@ Ext.define('WX.controller.Member', {
 			"Member button[action=manualAddMember]": {
 				click: me.manualAddMember
 			},
+			"Member button[action=deleteMember]": {
+				click: me.deleteMember
+			},
 			"Member button[action=resetPassword]": {
 				click: me.resetPassword
 			},
@@ -643,4 +646,35 @@ Ext.define('WX.controller.Member', {
 		win.setTitle('手动添加会员');
 		win.show();
 	},
+	deleteMember: function (btn) {
+		var me = this;
+		var selectedItems = btn.up('grid').getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '请先选择要删除的会员!');
+			return;
+		}
+		Ext.Msg.confirm('提示', '确定要删除会员吗?', function (optional) {
+			if (optional === 'yes') {
+				var store = btn.up('grid').getStore();
+				var ids = [];
+				selectedItems.forEach(function (item) {
+					ids.push(item.data.ID);
+				});
+				store.batchDelete(ids,
+					function success(response, request, c) {
+						var ajaxResult = JSON.parse(c.responseText);
+						if (ajaxResult.IsSuccessful) {
+							store.reload();
+							Ext.Msg.alert('提示', '删除成功');
+						} else {
+							Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+					}
+				);
+			}
+		})
+	}
 });

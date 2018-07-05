@@ -77,6 +77,14 @@
 				margin: '0 0 0 5',
 			},
 			{
+				action: 'deleteMember',
+				xtype: 'button',
+				text: '删除会员',
+				scope: this,
+				iconCls: 'fa fa-close',
+				margin: '0 0 0 5',
+			},
+			{
 				action: 'search',
 				xtype: 'button',
 				text: '搜 索',

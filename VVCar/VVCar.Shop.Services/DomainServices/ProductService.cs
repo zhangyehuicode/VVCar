@@ -19,9 +19,9 @@ namespace VVCar.Shop.Services.DomainServices
     /// <summary>
     /// 产品领域服务
     /// </summary>
-    public class ProductServic : DomainServiceBase<IRepository<Product>, Product, Guid>, IProductService
+    public class ProductService : DomainServiceBase<IRepository<Product>, Product, Guid>, IProductService
     {
-        public ProductServic()
+        public ProductService()
         {
         }
 
@@ -82,6 +82,12 @@ namespace VVCar.Shop.Services.DomainServices
             return base.Add(entity);
         }
 
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override bool Update(Product entity)
         {
             if (entity == null)
@@ -97,6 +103,7 @@ namespace VVCar.Shop.Services.DomainServices
             product.ImgUrl = entity.ImgUrl;
             product.BasePrice = entity.BasePrice;
             product.PriceSale = entity.PriceSale;
+            product.CostPrice = entity.CostPrice;
             product.Points = entity.Points;
             product.UpperLimit = entity.UpperLimit;
             product.IsPublish = entity.IsPublish;

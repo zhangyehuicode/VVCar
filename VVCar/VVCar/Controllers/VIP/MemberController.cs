@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using VVCar.Common;
 using VVCar.VIP.Domain.Dtos;
@@ -88,6 +86,20 @@ namespace VVCar.Controllers.VIP
         public JsonActionResult<Member> AddMember(Member member)
         {
             return SafeExecute(() => MemberService.Add(member));
+        }
+
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpDelete, Route("BatchDelete")]
+        public JsonActionResult<bool> BatchDelete(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.BatchDelete(parameter.IdList.ToArray());
+            });
         }
 
         /// <summary>

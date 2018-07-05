@@ -1,19 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using YEF.Core.Data;
 using VVCar.BaseData.Domain.Enums;
 
-namespace VVCar.BaseData.Domain.Entities
+namespace VVCar.BaseData.Domain.Dtos
 {
     /// <summary>
-    /// 系统设置
+    /// 系统设置Dto
     /// </summary>
-    public partial class SystemSetting : EntityBase
+    public class SystemSettingDto
     {
+
+        /// <summary>
+        /// 商户 Code
+        /// </summary>
+        [Display(Name = "商户 Code")]
+        public String MerchantCode { get; set; }
+
+        /// <summary>
+        /// 商户 Name
+        /// </summary>
+        [Display(Name = "商户 Name")]
+        public String MerchantName { get; set; }
+
         /// <summary>
         /// 序号
         /// </summary>
@@ -61,46 +69,5 @@ namespace VVCar.BaseData.Domain.Entities
         /// </summary>
         [Display(Name = "是否可用")]
         public bool IsAvailable { get; set; }
-        
-        /// <summary>
-        /// 商户
-        /// </summary>
-        public virtual Merchant Merchant { get; set; }
-
-        /// <summary>
-        /// 创建人ID
-        /// </summary>
-        [Display(Name = "创建人ID")]
-        public Guid CreatedUserID { get; set; }
-
-        /// <summary>
-        /// 创建人
-        /// </summary>
-        [Display(Name = "创建人")]
-        public string CreatedUser { get; set; }
-
-        /// <summary>
-        /// 创建日期
-        /// </summary>
-        [Display(Name = "创建日期")]
-        public DateTime CreatedDate { get; set; }
-
-        /// <summary>
-        /// 最后修改人ID
-        /// </summary>
-        [Display(Name = "最后修改人ID")]
-        public Guid? LastUpdateUserID { get; set; }
-
-        /// <summary>
-        /// 最后修改人
-        /// </summary>
-        [Display(Name = "最后修改人")]
-        public string LastUpdateUser { get; set; }
-
-        /// <summary>
-        /// 最后修改日期
-        /// </summary>
-        [Display(Name = "最后修改日期")]
-        public DateTime? LastUpdateDate { get; set; }
     }
 }

@@ -465,6 +465,22 @@ namespace VVCar.VIP.Services.DomainServices
         }
 
         /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public bool BatchDelete(Guid[] ids)
+        {
+            if (ids == null || ids.Length < 1)
+                throw new DomainException("参数错误");
+            var memberList = this.Repository.GetQueryable(false).Where(t => ids.Contains(t.ID)).ToList();
+            if (memberList == null || memberList.Count() < 1)
+                throw new DomainException("数据不存在");
+            memberList.ForEach(t => t.IsDeleted = true);
+            return Repository.Update(memberList) > 0;
+        }
+
+        /// <summary>
         /// 获取号码归属地
         /// </summary>
         /// <param name="phoneNumber">手机号码</param>

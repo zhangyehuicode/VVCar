@@ -343,6 +343,22 @@ namespace VVCar.BaseData.Services.DomainServices
                 CreatedDate = DateTime.Now,
                 MerchantID = merchantId,
             });
+            SystemSettingRepo.Add(new SystemSetting
+            {
+                ID = Util.NewID(),
+                Index = 8,
+                Name = SysSettingTypes.WXMsg_OrderRemind,
+                Caption = "新订单提醒消息模板",
+                DefaultValue = string.Empty,
+                SettingValue = string.Empty,
+                IsVisible = true,
+                IsAvailable = true,
+                Type = ESystemSettingType.Parameter,
+                CreatedUserID = AppContext.CurrentSession.UserID,
+                CreatedUser = AppContext.CurrentSession.UserName,
+                CreatedDate = DateTime.Now,
+                MerchantID = merchantId,
+            });
             GameSettingRepo.Add(new GameSetting
             {
                 ID = Util.NewID(),

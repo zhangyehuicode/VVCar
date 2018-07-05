@@ -103,7 +103,7 @@ namespace VVCar.Shop.Services.DomainServices
         public bool DistributionCarBitCoin(Guid? cbcmemberId)
         {
             var result = new List<CarBitCoinDistribution>();
-            var carBitCoinMemberQueryable = CarBitCoinMemberRepo.GetQueryable(false).Where(t => t.Horsepower > 0);
+            var carBitCoinMemberQueryable = CarBitCoinMemberRepo.GetQueryable(false);
             if (cbcmemberId != null)
                 carBitCoinMemberQueryable = CarBitCoinMemberRepo.GetQueryable(false).Where(t => t.ID == cbcmemberId);
             var cbcmemberids = carBitCoinMemberQueryable.Select(t => t.ID).ToList();
@@ -111,7 +111,7 @@ namespace VVCar.Shop.Services.DomainServices
             {
                 CarBitCoinMemberService.CalculateHorsepowerSave(t);
             });
-            var carBitCoinMembers = carBitCoinMemberQueryable.ToList();
+            var carBitCoinMembers = carBitCoinMemberQueryable.Where(t => t.Horsepower > 0).ToList();
             for (var i = 0; i < 5; i++)
             {
                 var carBitCoinDistributions = carBitCoinMembers.Select(t => new CarBitCoinDistribution

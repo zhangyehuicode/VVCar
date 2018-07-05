@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain.Dtos;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Filters;
 using VVCar.BaseData.Domain.Services;
@@ -86,17 +87,30 @@ namespace VVCar.BaseData.Services.DomainServices
             return setting.SettingValue == null ? setting.DefaultValue : setting.SettingValue;
         }
 
-        public IEnumerable<SystemSetting> Search(SystemSettingFilter filter)
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<SystemSettingDto> Search(SystemSettingFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetQueryable(false).Where(t => t.IsAvailable && t.IsVisible && t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = Repository.GetInclude(t=>t.Merchant, false).Where(t => t.IsAvailable && t.IsVisible);
+            if (AppContext.CurrentSession.MerchantID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
+                queryable = queryable.Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter != null)
             {
                 if (!string.IsNullOrEmpty(filter.Name))
                     queryable = queryable.Where(t => t.Name == filter.Name);
             }
-            var queryData = queryable.OrderBy(t => t.Caption).ToList();
-            queryData.ForEach(s => s.SettingValue = s.SettingValue ?? s.DefaultValue);
-            return queryData;
+            if (!string.IsNullOrEmpty(filter.MerchantName))
+                queryable = queryable.Where(t => t.Merchant.Name.Contains(filter.MerchantName));
+            totalCount = queryable.Count();
+            if (filter.Start.HasValue && filter.Limit.HasValue)
+                queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
+            var systemSettingDtoList = queryable.OrderBy(t=>t.Caption).MapTo<SystemSettingDto>().ToList();
+            systemSettingDtoList.ForEach(s => s.SettingValue = s.SettingValue ?? s.DefaultValue);
+            return systemSettingDtoList;
         }
 
         #endregion

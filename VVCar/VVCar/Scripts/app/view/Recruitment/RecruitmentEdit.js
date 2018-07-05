@@ -125,6 +125,18 @@
 					xtype: 'form',
 					layout: 'hbox',
 					items: [{
+						xtype: 'numberfield',
+						margin: '5 10 5 5',
+						name: 'RecruitNumber',
+						fieldLabel: '招聘人数',
+						minValue: 1,
+						value: 1,
+						allowBlank: true,
+					}]
+				}, {
+					xtype: 'form',
+					layout: 'hbox',
+					items: [{
 						xtype: 'textareafield',
 						margin: '5 10 5 5',
 						name: 'Requirement',

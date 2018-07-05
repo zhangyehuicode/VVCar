@@ -121,6 +121,7 @@
 							return '商品';
 					}
 				},
+				{ header: '成本价', dataIndex: 'CostPrice', width: 100 },
 				{ header: '原单价', dataIndex: 'BasePrice', width: 100 },
 				{ header: '销售单价', dataIndex: 'PriceSale', width: 100 },
 				{
