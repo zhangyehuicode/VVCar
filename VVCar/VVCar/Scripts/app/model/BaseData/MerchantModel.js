@@ -7,6 +7,7 @@
 		{ name: 'Name' },
 		{ name: 'IsHQ' },
 		{ name: 'IsAgent' },
+		{ name: 'IsGeneralMerchant' },
 		{ name: 'LegalPerson' },
 		{ name: 'IDNumber' },
 		{ name: 'Email' },
@@ -23,6 +24,7 @@
 		{ name: "MeChatMchPassword" },
 		{ name: 'Bank' },
 		{ name: 'BankCard' },
+		{ name: 'DataSource' },
 		{ name: 'CreatedDate' },
 	]
 });

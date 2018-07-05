@@ -104,9 +104,9 @@ namespace VVCar.Controllers.Shop
         /// <param name="memberId"></param>
         /// <returns></returns>
         [HttpGet, Route("GetMemberPickUpOrder"), AllowAnonymous]
-        public PagedActionResult<PickUpOrder> GetMemberPickUpOrder(Guid memberId)
+        public PagedActionResult<PickUpOrderDto> GetMemberPickUpOrder(Guid memberId)
         {
-            return SafeGetPagedData<PickUpOrder>((result) =>
+            return SafeGetPagedData<PickUpOrderDto>((result) =>
             {
                 result.Data = PickUpOrderService.GetMemberPickUpOrder(memberId);
             });

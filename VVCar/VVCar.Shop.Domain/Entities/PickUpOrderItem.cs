@@ -70,5 +70,11 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "服务次数")]
         public int Quantity { get; set; }
+
+        /// <summary>
+        /// 图片
+        /// </summary>
+        [Display(Name = "图片")]
+        public string ImgUrl { get; set; }
     }
 }

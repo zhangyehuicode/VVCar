@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using VVCar.BaseData.Domain.Enums;
 using YEF.Core.Dtos;
-using YEF.Core.Enums;
 
 namespace VVCar.BaseData.Domain.Filters
 {
@@ -16,10 +10,10 @@ namespace VVCar.BaseData.Domain.Filters
     public class AgentDepartmentFilter : BasePageFilter
     {
         /// <summary>
-        /// ID
+        /// 商户名称
         /// </summary>
-        [Display(Name = "ID")]
-        public Guid? ID { get; set; }
+        [Display(Name = "商户名称")]
+        public string MerchantName { get; set; }
 
         /// <summary>
         /// 名称

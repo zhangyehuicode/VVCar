@@ -207,8 +207,27 @@
 	save: function () {
 		var me = this;
 		var win = me.getMerchantEdit();
+		var merchantType = Ext.getCmp('merchantType').getChecked();
+		if (merchantType.length < 1) {
+			Ext.Msg.alert('提示', '请选择商户性质');
+			return;
+		}
+		var merchantTypeValue = 0;
+		Ext.Array.each(merchantType, function (item) {
+			merchantTypeValue += item.inputValue;
+		});
 		var form = win.form.getForm();
 		var formValues = form.getValues();
+		if (merchantTypeValue == 1) {
+			formValues.IsAgent = true;
+			formValues.IsGeneralMerchant = false;
+		} else if (merchantTypeValue == 2) {
+			formValues.IsAgent = false;
+			formValues.IsGeneralMerchant = true;
+		} else if (merchantTypeValue == 3) {
+			formValues.IsAgent = true;
+			formValues.IsGeneralMerchant = true;
+		}
 		if (form.isValid()) {
 			var store = me.getMerchantList().getStore();
 			if (form.actionMethod == 'POST') {

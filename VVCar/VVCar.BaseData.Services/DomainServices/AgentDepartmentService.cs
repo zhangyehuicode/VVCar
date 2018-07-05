@@ -27,6 +27,12 @@ namespace VVCar.BaseData.Services.DomainServices
         {
         }
 
+        #region properties
+
+        IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
+
+        #endregion
+
         /// <summary>
         /// 新增
         /// </summary>
@@ -41,7 +47,7 @@ namespace VVCar.BaseData.Services.DomainServices
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
-            entity.MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000001");
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 
@@ -95,6 +101,7 @@ namespace VVCar.BaseData.Services.DomainServices
             agentDpartment.ApproveStatus = entity.ApproveStatus;
             agentDpartment.UserID = entity.UserID;
             agentDpartment.BankCard = entity.BankCard;
+            agentDpartment.DataSource = entity.DataSource;
             agentDpartment.LastUpdatedDate = DateTime.Now;
             agentDpartment.LastUpdatedUserID = AppContext.CurrentSession.UserID;
             agentDpartment.LastUpdatedUser = AppContext.CurrentSession.UserName;
@@ -191,11 +198,15 @@ namespace VVCar.BaseData.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<AgentDepartmentDto> Search(AgentDepartmentFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetInclude(t => t.User, false);
+            var queryable = Repository.GetIncludes(false, "Merchant", "User");
+            if (!(AppContext.CurrentSession.MerchantID == Guid.Parse("00000000-0000-0000-0000-000000000001")))
+            {
+                queryable = queryable.Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            }
             if (filter.ApproveStatus.HasValue)
                 queryable = queryable.Where(t => t.ApproveStatus == filter.ApproveStatus.Value);
-            if (filter.ID.HasValue)
-                queryable = queryable.Where(t => t.ID == filter.ID.Value);
+            if (!string.IsNullOrEmpty(filter.MerchantName))
+                queryable = queryable.Where(t => t.Merchant.Name.Contains(filter.MerchantName));
             if (!string.IsNullOrEmpty(filter.Name))
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
             totalCount = queryable.Count();

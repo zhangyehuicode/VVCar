@@ -34,6 +34,12 @@ namespace YEF.Core.Data
         public bool IsAgent { get; set; }
 
         /// <summary>
+        /// 是否普通商户
+        /// </summary>
+        [Display(Name = "是否普通商户")]
+        public bool IsGeneralMerchant { get; set; }
+
+        /// <summary>
         /// 法人(负责人)
         /// </summary>
         [Display(Name = "法人(负责人)")]

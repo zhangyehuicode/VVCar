@@ -53,6 +53,7 @@
     <Compile Include="Dtos\HistoryDataAnalysisDto.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisParam.cs" />
     <Compile Include="Dtos\OrderDto.cs" />
+    <Compile Include="Dtos\PickUpOrderDto.cs" />
     <Compile Include="Dtos\ProductCategoryLiteDto.cs" />
     <Compile Include="Dtos\ProductCategoryTreeDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />

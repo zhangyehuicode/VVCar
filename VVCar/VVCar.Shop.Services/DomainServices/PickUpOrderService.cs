@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VVCar.BaseData.Domain;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
+using VVCar.BaseData.Services;
 using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Enums;
@@ -208,16 +209,16 @@ namespace VVCar.Shop.Services.DomainServices
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        public IEnumerable<PickUpOrder> GetMemberPickUpOrder(Guid memberId)
+        public IEnumerable<PickUpOrderDto> GetMemberPickUpOrder(Guid memberId)
         {
-            var result = new List<PickUpOrder>();
+            var result = new List<PickUpOrderDto>();
             if (memberId == null)
                 return result;
             var member = MemberRepo.GetInclude(t => t.MemberPlateList, false).Where(t => t.ID == memberId).FirstOrDefault();
             if (member != null && member.MemberPlateList != null)
             {
                 var platenumbers = member.MemberPlateList.Select(t => t.PlateNumber).ToList();
-                result = Repository.GetQueryable(false).Where(t => platenumbers.Contains(t.PlateNumber)).ToList();
+                result = Repository.GetIncludes(false, "PickUpOrderItemList", "Merchant").Where(t => platenumbers.Contains(t.PlateNumber)).OrderByDescending(t => t.CreatedDate).ToList().MapTo<List<PickUpOrderDto>>();
             }
             return result;
         }

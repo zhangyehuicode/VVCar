@@ -36,8 +36,13 @@ namespace VVCar.BaseData.Domain.Dtos
         /// 商户号
         /// </summary>
         [Display(Name = "商户号")]
-        public string Code { get; set; }
+        public string MerchantCode { get; set; }
 
+        /// <summary>
+        /// 商户名称
+        /// </summary>
+        [Display(Name = "商户名称")]
+        public string MerchantName { get; set; }
         /// <summary>
         /// 名称
         /// </summary>
@@ -150,6 +155,12 @@ namespace VVCar.BaseData.Domain.Dtos
         /// </summary>
         [Display(Name = "商户门店审核状态")]
         public EAgentDepartmentApproveStatus ApproveStatus { get; set; }
+
+        /// <summary>
+        /// 数据来源
+        /// </summary>
+        [Display(Name = "数据来源")]
+        public EAgentDepartmentSource DataSource { get; set; }
 
         /// <summary>
         /// 创建人ID

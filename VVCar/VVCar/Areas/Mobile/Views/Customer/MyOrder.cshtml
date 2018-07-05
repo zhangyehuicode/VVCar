@@ -12,21 +12,29 @@
         <a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="home"></a>
     </div>
     <div class="nav_box" style="position:relative; box-shadow:none;">
-        <div>
-            <a><img src="~/Areas/resource/img/mobile/dfk.png"></a><br>
-            待付款
+        @*<div>
+                <a><img src="~/Areas/resource/img/mobile/dfk.png"></a><br>
+                待付款
+            </div>
+            <div>
+                <a><img src="~/Areas/resource/img/mobile/dsh.png"></a><br>
+                待收货
+            </div>
+            <div>
+                <a><img src="~/Areas/resource/img/mobile/ysh.png"></a><br>
+                已完成
+            </div>
+            <div>
+                <a><img src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
+                现场订单
+            </div>*@
+        <div v-on:click="storeorder" style="width:50%;">
+            <a><img style="width:35px;" src="~/Areas/resource/img/mobile/ysh.png"></a><br>
+            商城订单
         </div>
-        <div>
-            <a><img src="~/Areas/resource/img/mobile/dsh.png"></a><br>
-            待收货
-        </div>
-        <div>
-            <a href="#"><img src="~/Areas/resource/img/mobile/ysh.png"></a><br>
-            已完成
-        </div>
-        <div>
-            <a><img src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
-            现场订单
+        <div v-on:click="pickuporder" style="width:50%;">
+            <a><img style="width:35px;" src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
+            接车单
         </div>
     </div>
     <div class="wddd_box">
@@ -35,7 +43,7 @@
             <a><img src="~/Areas/resource/img/mobile/ss.png" style="width:6%; margin-top:10px; float:right; margin-right:4%;"></a>
         </div>
     </div>
-    <div class="gwc_box" style="margin-top:15px;" v-for="Order in OrderList">
+    <div class="gwc_box" style="margin-top:15px;" v-for="Order in OrderList" v-if="ShowOrder">
         <img class="gwc_img" src="~/Areas/resource/img/mobile/defaultimg1.png">
         <div class="gwc_box2">
             <span class="gwc_text">订单号：{{Order.Code}}</span>
@@ -56,6 +64,25 @@
             <a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="orderdetails(Order)">详情</a>
         </div>
     </div>
+    <div class="gwc_box" style="margin-top:15px;" v-for="Order in PickUpOrderList" v-if="!ShowOrder">
+        <img class="gwc_img" src="~/Areas/resource/img/mobile/defaultimg1.png">
+        <div class="gwc_box2">
+            <span class="gwc_text">订单号：{{Order.Code}}</span>
+            <span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==2">付款不足</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==0">未付款</span>
+            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==1">已付款</span>
+        </div>
+        <div class="wddd_box2">
+            <span style="margin-left:3%;">
+                共计{{Order.Quantity}}个项目
+                <span style="margin-left:3%;">
+                    合计:<span style="color:#ff0c4b;">{{Order.Money}}</span>
+                </span>
+            </span>
+            <a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="pickuporderdetails(Order)">详情</a>
+        </div>
+    </div>
     <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
 </div>
 
@@ -68,9 +95,10 @@
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -109,47 +137,13 @@
         wxConfig();
     </script>
     <script type="text/javascript">
-        $(function () {
-            var member = sessionStorage.getItem('member');
-            if (member == null || member=='') {
-                var mch = $.getUrlParam('mch');
-                function init() {
-                   $.ajax({
-                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
-                        type: 'GET',
-                        headers: { 'CompanyCode':mch },
-                        beforeSend: function () {
-                            $.showLoading();
-                        },
-                        success: function (res) {
-                            $.hideLoading();
-                            if (res.IsSuccessful) {
-                                if (res.Data != null) {
-                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                } else {
-                                    window.location.href = "/Mobile/Customer?mch=" + mch;
-                               }
-                            } else {
-                                $.alert(res.ErrorMessage);
-                                window.location.href = "/Mobile/Customer?mch=" + mch;
-                            }
-                        },
-                        error: function () {
-                            $.hideLoading();
-                            window.location.href = "/Mobile/Customer?mch=" + mch;
-                        }
-                   });
-                }
-                init();
-            }
-        });
-    </script>
-    <script type="text/javascript">
         var mch = $.getUrlParam('mch');
         _viewModel = new Vue({
             el: '#myorder',
             data: {
                 OrderList: [],
+                PickUpOrderList: [],
+                ShowOrder: true,
             },
             methods: {
                 shop: function (event) {
@@ -175,7 +169,13 @@
                     });
                 },
                 orderdetails: function (data, event) {
+                    sessionStorage.setItem('isorder', this.ShowOrder);
                     sessionStorage.setItem('order', JSON.stringify(data));
+                    window.location.href = "/Mobile/Customer/OrderDetails?mch=" + mch;
+                },
+                pickuporderdetails: function (data, event) {
+                    sessionStorage.setItem('isorder', this.ShowOrder);
+                    sessionStorage.setItem('pickuporder', JSON.stringify(data));
                     window.location.href = "/Mobile/Customer/OrderDetails?mch=" + mch;
                 },
                 home: function (event) {
@@ -184,8 +184,46 @@
                 back: function (event) {
                     history.back(-1);
                 },
+                storeorder: function (event) {
+                    this.ShowOrder = true;
+                },
+                pickuporder: function (event) {
+                    this.ShowOrder = false;
+                },
             }
         });
+
+          var member = sessionStorage.getItem('member');
+            if (member == null || member=='') {
+                function init() {
+                   $.ajax({
+                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                        type: 'GET',
+                        headers: { 'CompanyCode':mch },
+                        beforeSend: function () {
+                            $.showLoading();
+                        },
+                        success: function (res) {
+                            $.hideLoading();
+                            if (res.IsSuccessful) {
+                                if (res.Data != null) {
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                } else {
+                                    //window.location.href = "/Mobile/Customer?mch=" + mch;
+                               }
+                            } else {
+                                $.alert(res.ErrorMessage);
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        },
+                        error: function () {
+                            $.hideLoading();
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                   });
+                }
+                init();
+            }
 
         function getmyorder() {
             $.ajax({
@@ -220,6 +258,44 @@
             });
         }
         getmyorder();
+
+        function getmypickuporder() {
+            var member = sessionStorage.getItem('member');
+            if (member == null || member == '')
+                return;
+            member = JSON.parse(member);
+            $.ajax({
+                url: '/api/PickUpOrder/GetMemberPickUpOrder?memberId=' + member.MemberID,
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            for (var i = 0; i < res.Data.length; i++) {
+                                var quantity = 0;
+                                if (res.Data[i].PickUpOrderItemList != null) {
+                                    for (var j = 0; j < res.Data[i].PickUpOrderItemList.length; j++) {
+                                        quantity += res.Data[i].PickUpOrderItemList[j].Quantity;
+                                    }
+                                }
+                                res.Data[i].Quantity = quantity;
+                            }
+                            _viewModel.PickUpOrderList = res.Data;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+        getmypickuporder();
 
     </script>
 }

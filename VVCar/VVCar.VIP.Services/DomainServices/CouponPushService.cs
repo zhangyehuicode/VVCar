@@ -28,6 +28,8 @@ namespace VVCar.VIP.Services.DomainServices
 
         IRepository<CouponPushItem> CouponPushItemRepo { get => UnitOfWork.GetRepository<IRepository<CouponPushItem>>(); }
 
+        IRepository<CouponPushMember> CouponPushMemberRepo { get => UnitOfWork.GetRepository<IRepository<CouponPushMember>>(); }
+
         ICouponService CouponService { get => ServiceLocator.Instance.GetService<ICouponService>(); }
 
         IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
@@ -61,9 +63,9 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (ids == null || ids.Length < 1)
                 throw new DomainException("参数错误");
-            var couponPushList = this.Repository.GetInclude(t => t.CouponPushItems, false).Where(t => ids.Contains(t.ID)).ToList();
+            var couponPushList = this.Repository.GetIncludes(false, "CouponPushItems", "CouponPushMembers").Where(t => ids.Contains(t.ID) && t.Status == ECouponPushStatus.NotPush).ToList();
             if (couponPushList == null || couponPushList.Count() < 1)
-                throw new DomainException("数据不存在");
+                throw new DomainException("请选择未推送的数据");
             UnitOfWork.BeginTransaction();
             try
             {
@@ -73,6 +75,11 @@ namespace VVCar.VIP.Services.DomainServices
                     {
                         CouponPushItemRepo.DeleteRange(couponPush.CouponPushItems);
                         couponPush.CouponPushItems = null;
+                    }
+                    if (couponPush.CouponPushMembers.Count() > 0)
+                    {
+                        CouponPushMemberRepo.DeleteRange(couponPush.CouponPushMembers);
+                        couponPush.CouponPushMembers = null;
                     }
                 }
                 this.Repository.Delete(couponPushList);

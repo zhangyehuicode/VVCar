@@ -147,27 +147,29 @@
 						maxLength: 20,
 						allowBlank: true,
 					}, {
-						xtype: 'form',
-						layout: 'hbox',
-						items: [{
-							xtype: 'textfield',
-							margin: '5 8 5 10',
-							name: 'BankCard',
-							fieldLabel: '账号',
-							maxLength: 32,
-							allowBlank: true,
-						}, {
-							xtype: 'combobox',
-							name: 'IsAgent',
-							store: yesNoDictStore,
-							displayField: 'DictName',
-							valueField: 'DictValue',
-							fieldLabel: '是否代理商',
-							margin: '5 5 5 10',
-							labelWidth: 80,
-							editable: false,
-							allowBlank: true,
-						}]
+						xtype: 'textfield',
+						margin: '5 5 5 10',
+						name: 'BankCard',
+						fieldLabel: '账号',
+						maxLength: 32,
+						allowBlank: true,
+					}]
+				}, {
+					xtype: 'form',
+					layout: 'hbox',
+					width: 300,
+					items: [{
+						xtype: "checkboxgroup",
+						fieldLabel: "商户性质",
+						id: 'merchantType',
+						labelWidth: 70,
+						columns: 2,
+						items: [
+							{ boxLabel: '代理商', name: 'IsAgent', inputValue: 1 },
+							{ boxLabel: '普通商户', name: 'IsGeneralMerchant', inputValue: 2 },
+						]
+					}, {
+
 					}]
 				}, {
 					xtype: 'form',

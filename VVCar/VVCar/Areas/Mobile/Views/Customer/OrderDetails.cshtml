@@ -9,32 +9,84 @@
         <div class="top_box_text">订单详情</div>
         <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
         <a class="top_box2"></a>
-        <a v-on:click="shoppingcart"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;position:absolute;top:17px;right:10px;"></a>
+        <a v-on:click="shoppingcart" v-if="ShowOrder"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;position:absolute;top:17px;right:10px;"></a>
     </div>
-    <div class="qr_box">
-        <div class="gwc_text2">
-            <div class="labeltext">收件人：{{Order.LinkMan}}</div>
+    <div v-if="ShowOrder">
+        <div class="qr_box">
+            <div class="gwc_text2">
+                <div class="labeltext">收件人：{{Order.LinkMan}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext"> 联系电话：{{Order.Phone}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext">收货地址：{{Order.Address}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext">下单时间：{{Order.CreatedDate}}</div>
+            </div>
+            <img src="~/Areas/resource/img/mobile/fgx.png" style=" width:100%;">
         </div>
-        <div class="gwc_text2">
-            <div class="labeltext"> 联系电话：{{Order.Phone}}</div>
+        <div class="gwc_box" v-for="Product in Order.OrderItemList">
+            <img class="gwc_img" v-bind:src=Product.ImgUrl />
+            <div class="gwc_box2">
+                <span class="gwc_text">{{Product.ProductName}}</span>
+                <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left; margin-bottom:10px;">￥{{Product.Money}}<span style="float:right; color:#999; font-size:13px; padding-top:5px;">数量：{{Product.Quantity}}</span></div>
+            </div>
         </div>
-        <div class="gwc_text2">
-            <div class="labeltext">收货地址：{{Order.Address}}</div>
+        <div class="gwc_box3">
+            <div class="gwc_text2" style="border-bottom:none;">合计<span style="float:right; color:#ff0c4b; font-size:18px;">￥{{Order.Money}}</span></div>
         </div>
-        <div class="gwc_text2">
-            <div class="labeltext">下单时间：{{Order.CreatedDate}}</div>
-        </div>
-        <img src="~/Areas/resource/img/mobile/fgx.png" style=" width:100%;">
     </div>
-    <div class="gwc_box" v-for="Product in Order.OrderItemList">
-        <img class="gwc_img" v-bind:src=Product.ImgUrl />
-        <div class="gwc_box2">
-            <span class="gwc_text">{{Product.ProductName}}</span>
-            <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left; margin-bottom:10px;">￥{{Product.Money}}<span style="float:right; color:#999; font-size:13px; padding-top:5px;">数量：{{Product.Quantity}}</span></div>
+    <div v-if="!ShowOrder">
+        <div class="qr_box">
+            <div class="gwc_text2">
+                <div class="labeltext">订单号：{{PickUpOrder.Code}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext">车牌号：{{PickUpOrder.PlateNumber}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext"> 门店：{{PickUpOrder.DepartmentName}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext"> 地址：{{PickUpOrder.DepartmentAddress}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext"> 店员：{{PickUpOrder.StaffName}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext"> 联系电话：{{PickUpOrder.MobilePhoneNo}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext">订单总额：{{PickUpOrder.Money}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext">已收金额：{{PickUpOrder.ReceivedMoney}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext">尚欠金额：{{PickUpOrder.StillOwedMoney}}</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext" v-if="PickUpOrder.Status==0">状态：未付款</div>
+                <div class="labeltext" v-if="PickUpOrder.Status==1">状态：已付款</div>
+                <div class="labeltext" v-if="PickUpOrder.Status==2">状态：付款不足</div>
+            </div>
+            <div class="gwc_text2">
+                <div class="labeltext">创建时间：{{PickUpOrder.CreatedDate}}</div>
+            </div>
+            <img src="~/Areas/resource/img/mobile/fgx.png" style=" width:100%;">
         </div>
-    </div>
-    <div class="gwc_box3">
-        <div class="gwc_text2" style="border-bottom:none;">合计<span style="float:right; color:#ff0c4b; font-size:18px;">￥{{Order.Money}}</span></div>
+        <div class="gwc_box" v-for="Product in PickUpOrder.PickUpOrderItemList">
+            <img class="gwc_img" v-bind:src=Product.ImgUrl />
+            <div class="gwc_box2">
+                <span class="gwc_text">{{Product.ProductName}}</span>
+                <div style=" width:100%;font-size:18px; color:#ff0c4b; padding-top:6px; float:left; margin-bottom:10px;">￥{{Product.Money}}<span style="float:right; color:#999; font-size:13px; padding-top:5px;">数量：{{Product.Quantity}}</span></div>
+            </div>
+        </div>
+        <div class="gwc_box3">
+            <div class="gwc_text2" style="border-bottom:none;">合计<span style="float:right; color:#ff0c4b; font-size:18px;">￥{{PickUpOrder.Money}}</span></div>
+        </div>
     </div>
     @*<a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-if="Order.Status==-1||Order.Status==0" v-on:click="">付款</a>*@
     @*<a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-if="Order.Status==0" v-on:click="">删除</a>*@
@@ -111,6 +163,8 @@
                 el: '#orderdetails',
                 data: {
                     Order: {},
+                    PickUpOrder: {},
+                    ShowOrder: true,
                 },
                 methods: {
                     back: function (event) {
@@ -130,9 +184,18 @@
                     },
                 }
             });
-            var order = sessionStorage.getItem('order');
-            if (order != null && order != '') {
-                _viewModel.Order = JSON.parse(order);
+            var isorder = sessionStorage.getItem('isorder');
+            if (isorder == 'true') {
+                var order = sessionStorage.getItem('order');
+                if (order != null && order != '') {
+                    _viewModel.Order = JSON.parse(order);
+                }
+            } else {
+                var pickuporder = sessionStorage.getItem('pickuporder');
+                if (pickuporder != null && pickuporder != '') {
+                    _viewModel.PickUpOrder = JSON.parse(pickuporder);
+                    _viewModel.ShowOrder = false;
+                }
             }
         });
     </script>

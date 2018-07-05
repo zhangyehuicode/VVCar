@@ -137,6 +137,7 @@
 		var win = me.getAgentDepartmentEdit();
 		var form = win.form.getForm();
 		var formValues = form.getValues();
+		formValues.DataSource = 0;
 		if (form.isValid()) {
 			var store = me.getAgentDepartmentList().getStore();
 			if (form.actionMethod == 'POST') {

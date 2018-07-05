@@ -99,6 +99,11 @@ namespace VVCar.BaseData.Services.DomainServices
             return base.Add(entity);
         }
 
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public override bool Delete(Guid key)
         {
             var entity = Repository.GetByKey(key);
@@ -111,6 +116,11 @@ namespace VVCar.BaseData.Services.DomainServices
             return Repository.Update(entity) > 0;
         }
 
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override bool Update(Merchant entity)
         {
             if (entity == null)
@@ -132,6 +142,7 @@ namespace VVCar.BaseData.Services.DomainServices
             merchant.WeChatAppSecret = entity.WeChatAppSecret;
             merchant.MeChatMchPassword = entity.MeChatMchPassword;
             merchant.IsAgent = entity.IsAgent;
+            merchant.IsGeneralMerchant = entity.IsGeneralMerchant;
             merchant.WeChatMchID = entity.WeChatMchID;
             merchant.WeChatMchKey = entity.WeChatMchKey;
             merchant.Bank = entity.Bank;

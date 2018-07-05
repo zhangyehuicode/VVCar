@@ -3,6 +3,8 @@
 	idProperty: 'ID',
 	fields: [
 		{ name: 'ID' },
+		{ name: 'MerchantCode' },
+		{ name: 'MerchantName' },
 		{ name: 'Name' },
 		{ name: 'UserID' },
 		{ name: 'UserName' },

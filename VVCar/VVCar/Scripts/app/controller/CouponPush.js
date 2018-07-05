@@ -181,6 +181,7 @@
 						if (ajaxResult.IsSuccessful) {
 							store.reload();
 							me.getGridCouponPushItem().getStore().reload();
+							me.getGridCouponPushMember().getStore().reload();
 							Ext.Msg.alert('提示', '删除成功');
 						} else {
 							Ext.Msg.alert('提示', ajaxResult.ErrorMessage);

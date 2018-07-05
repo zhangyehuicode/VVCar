@@ -136,6 +136,12 @@ namespace VVCar.BaseData.Domain.Entities
         public EAgentDepartmentApproveStatus ApproveStatus { get; set; }
 
         /// <summary>
+        /// 数据来源
+        /// </summary>
+        [Display(Name = "数据来源")]
+        public EAgentDepartmentSource DataSource { get; set; }
+
+        /// <summary>
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]
@@ -170,5 +176,10 @@ namespace VVCar.BaseData.Domain.Entities
         /// </summary>
         [Display(Name = "最后修改时间")]
         public DateTime? LastUpdatedDate { get; set; }
+
+        /// <summary>
+        /// 代理商
+        /// </summary>
+        public virtual Merchant Merchant { get; set; }
     }
 }

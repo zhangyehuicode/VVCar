@@ -91,10 +91,19 @@
 			},
 		];
 		me.columns = [
-			{ header: '商户号', dataIndex: 'Code', width: 100 },
+			{ header: '商户号', dataIndex: 'Code', width: 90 },
 			{ header: '名称', dataIndex: 'Name', width: 150 },
 			{
-				header: '是否代理商', dataIndex: 'IsAgent', width: 100,
+				header: '代理商', dataIndex: 'IsAgent', width: 70,
+				renderer: function (value) {
+					if (value == true)
+						return '<span><font color="green">是</font></span>';
+					if (value == false)
+						return '<span><font color="red">否</font></span>';
+				}
+			},
+			{
+				header: '普通商户', dataIndex: 'IsGeneralMerchant', width: 80,
 				renderer: function (value) {
 					if (value == true)
 						return '<span><font color="green">是</font></span>';
@@ -116,12 +125,12 @@
 					}
 				}
 			},
-			{ header: '注册邮箱', dataIndex: 'Email', flex: 3 },
+			{ header: '注册邮箱', dataIndex: 'Email', width: 140 },
 			{ header: '法人(负责人)', dataIndex: 'LegalPerson', width: 100 },
-			{ header: '法人身份证编号', dataIndex: 'IDNumber', width: 160 },
+			{ header: '法人身份证编号', dataIndex: 'IDNumber', width: 150 },
 			{ header: '联系电话', dataIndex: 'MobilePhoneNo', width: 110 },
-			{ header: '开户行', dataIndex: 'Bank', flex: 4 },
-			{ header: '账号', dataIndex: 'BankCard', width: 170 },
+			//{ header: '开户行', dataIndex: 'Bank', flex: 4 },
+			//{ header: '账号', dataIndex: 'BankCard', width: 170 },
 			{
 				header: '营业执照', dataIndex: 'BusinessLicenseImgUrl', width: 100,
 				renderer: function (value) {
@@ -148,7 +157,7 @@
 			},
 			{ header: '公司地址', dataIndex: 'CompanyAddress', flex: 2 },
 			{
-				header: '创建时间', dataIndex: 'CreatedDate', flex: 2,
+				header: '创建时间', dataIndex: 'CreatedDate', width: 100,
 				renderer: Ext.util.Format.dateRenderer('Y-m-d'),
 			},
 			{

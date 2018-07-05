@@ -54,6 +54,6 @@ namespace VVCar.Shop.Domain.Services
         /// </summary>
         /// <param name="memberId"></param>
         /// <returns></returns>
-        IEnumerable<PickUpOrder> GetMemberPickUpOrder(Guid memberId);
+        IEnumerable<PickUpOrderDto> GetMemberPickUpOrder(Guid memberId);
     }
 }
