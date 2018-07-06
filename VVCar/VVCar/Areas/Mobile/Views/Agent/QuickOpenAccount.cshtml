@@ -1,0 +1,322 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="quickopenaccount" class="main">
+    <div class="toubu">
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        <div class="title">填写商户信息</div>
+        <a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="contentcon">
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle">商户名称</div>
+            <input class="quickoatablecell inputbottom" placeholder="商户名称" />
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle">法人（负责人）</div>
+            <input class="quickoatablecell inputbottom" placeholder="法人（负责人）" />
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle">手机号码</div>
+            <input type="number" class="quickoatablecell inputbottom" placeholder="手机号码" />
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle">身份证编号</div>
+            <input class="quickoatablecell inputbottom" placeholder="身份证编号" />
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle" style="vertical-align:middle;">公司地址</div>
+            <textarea class="quickoatablecell inputbottom" placeholder="公司地址"></textarea>
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle" style="vertical-align:middle;">开户银行</div>
+            <textarea class="quickoatablecell inputbottom" placeholder="开户银行"></textarea>
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle">银行账号</div>
+            <input type="number" class="quickoatablecell inputbottom" placeholder="银行账号" />
+        </div>
+    </div>
+    <div class="uploadcon">
+        @*<div class="platecon" id="uploadImageTop">
+                <input class="fileinput" type="file" accept="image/*">
+                <img class="plateimg" />
+            </div>*@
+        <div class="uploadimgcon" id="uploadImage">
+            <span class="btn btn-default plateconpre">
+                <img class="addplateimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="BusinessLicense"><br>
+                <input class="fileinput" type="file" accept="image/*">
+            </span>
+            <div class="platebtmtips">营业执照</div>
+        </div>
+        @*<div class="platecon" id="uploadImageTop">
+                <input class="fileinput" type="file" accept="image/*">
+                <img class="plateimg" />
+            </div>*@
+        <div class="uploadimgcon" id="uploadImage">
+            <span class="btn btn-default plateconpre">
+                <img class="addplateimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="LegalPersonIDCardFront"><br>
+                <input class="fileinput" type="file" accept="image/*">
+            </span>
+            <div class="platebtmtips">身份证正面</div>
+        </div>
+        @*<div class="platecon" id="uploadImageTop">
+                <input class="fileinput" type="file" accept="image/*">
+                <img class="plateimg" />
+            </div>*@
+        <div class="uploadimgcon" id="uploadImage">
+            <span class="btn btn-default plateconpre">
+                <img class="addplateimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="LegalPersonIDCardBehindImgUrl"><br>
+                <input class="fileinput" type="file" accept="image/*">
+            </span>
+            <div class="platebtmtips">身份证反面</div>
+        </div>
+    </div>
+    <div class="confirmbtn" v-on:click="confirm">确认开户</div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .main {
+            font-size: 15px;
+            /*background: #cccbcb;*/
+        }
+
+        .contentcon {
+            margin: 0px 20px;
+            background: #fff;
+        }
+
+        .quickoatable {
+            display: table;
+            width: 100%;
+            padding: 10px 0;
+            border-bottom: 1px #ccc solid;
+        }
+
+        .quickoatablecell {
+            display: table-cell;
+        }
+
+        .widthfill {
+            width: 100%;
+        }
+
+        .platecon {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            text-align: center;
+            /*display: none;*/
+            height: 188px;
+        }
+
+        .fileinput {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            opacity: 0;
+            -ms-filter: 'alpha(opacity=0)';
+            width: 100%;
+            direction: ltr;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .plateimg {
+            width: 100%;
+            height: 188px;
+            border-radius: 5px;
+        }
+
+        .uploadimgcon {
+            width: 94%;
+            float: left;
+            margin-top: 30px;
+            border-radius: 10px;
+            border: 3px dashed #ddd;
+            text-align: center;
+            margin-left: 3%;
+            box-sizing: border-box;
+            height: 200px;
+        }
+
+        .plateconpre {
+            position: relative;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            text-align: center;
+            overflow: hidden;
+            height: 188px;
+        }
+
+        .addplateimg {
+            height: 25px;
+            width: 25px;
+            margin-top: 55px;
+        }
+
+        .platebtmtips {
+            position: relative;
+            top: 50px;
+            left: 0;
+            right: 0;
+            color: #999;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .itemtitle {
+            width: 110px;
+            color: #696969;
+        }
+
+        input {
+            width: 100%;
+            border: none;
+            height: 30px;
+        }
+
+        .inputbottom {
+            /*border-bottom: 1px #ccc solid;*/
+            font-size: 15px;
+        }
+
+        .confirmbtn {
+            /*position: relative;*/
+            /*top: 600px;*/
+            margin: 30px 20px 25px 20px;
+            background: #51b3f0;
+            color: #fff;
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+        }
+
+        .uploadcon {
+            position: relative;
+            height: 690px;
+            margin: 0 8px;
+        }
+
+        textarea {
+            width: 100%;
+            border: 1px #ccc solid;
+            height: 65px;
+            box-shadow: 0px 0px 0px rgba(0,0,0,0);
+            -webkit-appearance: none;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var mch = $.getUrlParam('mch');
+            var isgeneralmanager = sessionStorage.getItem('isgeneralmanager');
+            if (isgeneralmanager != null && isgeneralmanager != '')
+                isgeneralmanager = isgeneralmanager == 'true';
+            else
+                isgeneralmanager = false;
+            _viewModel = new Vue({
+                el: '#quickopenaccount',
+                data: {
+                    UserInfo: {},
+                },
+                methods: {
+                    back: function (event) {
+                        history.back(-1);
+                    },
+                    home: function (event) {
+                        window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+                    },
+                    confirm: function (event) {
+                        $.toast('开户成功');
+                    },
+                }
+            });
+
+              function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsGeneralManager: isgeneralmanager,
+                        IsSalesManger: !isgeneralmanager,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('agentuser', JSON.stringify(res.Data));
+                                _viewModel.UserInfo = res.Data;
+                            }
+                            else {
+                                window.location.href = "/Mobile/Agent?mch=" + mch;
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            window.location.href = "/Mobile/Agent?mch=" + mch;
+                        }
+                    },
+                    error: function () {
+                        window.location.href = "/Mobile/Agent?mch=" + mch;
+                    }
+                });
+            }
+            getUserByOpenId();
+        });
+    </script>
+}

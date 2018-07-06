@@ -194,23 +194,40 @@ namespace VVCar.BaseData.Services.DomainServices
                             DepartmentID = dept.ID,
                             IsAvailable = true,
                             CanLoginAdminPortal = true,
-                            Password = "AD0A291E6FCB621F836866D99F62D2C0",
+                            Password = Util.EncryptPassword("admin", $"{t.Code}@{DateTime.Now.ToString("yyyyMMdd")}"),//"AD0A291E6FCB621F836866D99F62D2C0",
                             CreatedUserID = AppContext.CurrentSession.UserID,
                             CreatedUser = AppContext.CurrentSession.UserName,
                             CreatedDate = DateTime.Now,
                             MerchantID = t.ID,
                         });
 
-                        UserRoleRepo.Add(new UserRole
+                        if (t.IsGeneralMerchant)
                         {
-                            ID = Util.NewID(),
-                            UserID = user.ID,
-                            RoleID = Guid.Parse("00000000-0000-0000-0000-000000000002"),
-                            CreatedUserID = AppContext.CurrentSession.UserID,
-                            CreatedUser = AppContext.CurrentSession.UserName,
-                            CreatedDate = DateTime.Now,
-                            MerchantID = t.ID,
-                        });
+                            UserRoleRepo.Add(new UserRole
+                            {
+                                ID = Util.NewID(),
+                                UserID = user.ID,
+                                RoleID = Guid.Parse("00000000-0000-0000-0000-000000000002"),//店长
+                                CreatedUserID = AppContext.CurrentSession.UserID,
+                                CreatedUser = AppContext.CurrentSession.UserName,
+                                CreatedDate = DateTime.Now,
+                                MerchantID = t.ID,
+                            });
+                        }
+
+                        if (t.IsAgent)
+                        {
+                            UserRoleRepo.Add(new UserRole
+                            {
+                                ID = Util.NewID(),
+                                UserID = user.ID,
+                                RoleID = Guid.Parse("00000000-0000-0000-0000-000000000006"),//总经理
+                                CreatedUserID = AppContext.CurrentSession.UserID,
+                                CreatedUser = AppContext.CurrentSession.UserName,
+                                CreatedDate = DateTime.Now,
+                                MerchantID = t.ID,
+                            });
+                        }
 
                         ActivateMerchantDataOperation(t.ID);
                     }

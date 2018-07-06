@@ -7,7 +7,7 @@
 		type: 'rest',
 		url: Ext.GlobalConfig.ApiDomainUrl + 'api/User',
 		api: {
-			read: Ext.GlobalConfig.ApiDomainUrl + 'api/User/GetManagerUser?All=false',
+			read: Ext.GlobalConfig.ApiDomainUrl + 'api/User/GetSaleUser?All=false',
 		},
 	},
 });

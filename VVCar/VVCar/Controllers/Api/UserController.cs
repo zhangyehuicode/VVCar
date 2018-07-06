@@ -163,6 +163,19 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 获取销售人员名单
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetSaleUser")]
+        public PagedActionResult<User> GetSaleUser()
+        {
+            return SafeGetPagedData<User>((result) =>
+            {
+                result.Data = UserService.GetSaleUser();
+            });
+        }
+
+        /// <summary>
         /// 获取用户功能权限代码列表
         /// </summary>
         /// <returns></returns>

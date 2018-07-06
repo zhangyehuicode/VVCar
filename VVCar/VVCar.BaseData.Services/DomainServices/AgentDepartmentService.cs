@@ -18,7 +18,7 @@ namespace VVCar.BaseData.Services.DomainServices
     /// <summary>
     /// 代理商门店领域服务
     /// </summary>
-    public class AgentDepartmentService : DomainServiceBase<IRepository<AgentDpartment>, AgentDpartment, Guid>, IAgentDepartmentService
+    public class AgentDepartmentService : DomainServiceBase<IRepository<AgentDepartment>, AgentDepartment, Guid>, IAgentDepartmentService
     {
         /// <summary>
         /// ctor
@@ -32,7 +32,7 @@ namespace VVCar.BaseData.Services.DomainServices
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override AgentDpartment Add(AgentDpartment entity)
+        public override AgentDepartment Add(AgentDepartment entity)
         {
             if (entity == null)
                 return null;
@@ -67,7 +67,7 @@ namespace VVCar.BaseData.Services.DomainServices
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public override bool Update(AgentDpartment entity)
+        public override bool Update(AgentDepartment entity)
         {
             if (entity == null)
                 return false;

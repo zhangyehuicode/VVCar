@@ -241,6 +241,75 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 门店开发业绩统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("DepartmentPerformanceStatistics")]
+        public PagedActionResult<DepartmentPerformance> DepartmentPerformanceStatistics([FromUri]DepartmentPerformanceFilter filter)
+        {
+            return SafeGetPagedData<DepartmentPerformance>((result) =>
+            {
+                var totalCount = 0;
+                filter.Start = null;
+                filter.Limit = null;
+                var data = ReportingService.DepartmentPerformanceStatistics(filter, ref totalCount).ToList();
+                var departmentPerformance = new DepartmentPerformance();
+                var departmentPerformanceStatisticsList = data.ToList();
+                departmentPerformanceStatisticsList.ForEach(t =>
+                {
+                    departmentPerformance.TotalDepartmentNumber += t.TotalDepartmentNumber;
+                    departmentPerformance.CurrentDepartmentNumber += t.CurrentDepartmentNumber;
+                    departmentPerformance.MonthDepartmentNumber += t.MonthDepartmentNumber;
+                });
+                departmentPerformance.StaffName = "合计:";
+                data.Add(departmentPerformance);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        /// 门店开发业绩统计导出
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ExportDepartmentPerformanceStatistics")]
+        public JsonActionResult<string> ExportDepartmentPerformanceStatistics([FromUri]DepartmentPerformanceFilter filter)
+        {
+            return SafeExecute(() =>
+            {
+                if (!ModelState.IsValid)
+                {
+                    throw new DomainException("查询参数错误");
+                }
+                var totalCount = 0;
+                filter.Start = null;
+                filter.Limit = null;
+                var data = ReportingService.DepartmentPerformanceStatistics(filter, ref totalCount);
+                var departmentPerformanceStatisticsList = data.ToList();
+                var departmentPerformance = new DepartmentPerformance();
+                departmentPerformanceStatisticsList.ForEach(t =>
+                {
+                    departmentPerformance.TotalDepartmentNumber += t.TotalDepartmentNumber;
+                    departmentPerformance.CurrentDepartmentNumber += t.CurrentDepartmentNumber;
+                    departmentPerformance.MonthDepartmentNumber += t.MonthDepartmentNumber;
+                });
+                departmentPerformance.StaffName = "合计:";
+                var exporter = new ExportHelper(new[]
+                {
+                    new ExportInfo("StaffName", "员工姓名"),
+                    new ExportInfo("StaffCode","员工编码"),
+                    new ExportInfo("TotalDepartmentNumber","总开发门店数量"),
+                    new ExportInfo("CurrentDepartmentNumber","当前开发门店数量"),
+                    new ExportInfo("MonthDepartmentNumber","当月开发门店数量"),
+                });
+                (data as List<DepartmentPerformance>).Add(departmentPerformance);
+                return exporter.Export(data.ToList(), "门店开发业绩汇总统计");
+            });
+        }
+
+        /// <summary>
         /// 获取消费记录
         /// </summary>
         /// <param name="filter"></param>

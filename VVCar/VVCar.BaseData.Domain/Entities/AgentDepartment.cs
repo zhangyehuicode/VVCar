@@ -9,7 +9,7 @@ namespace VVCar.BaseData.Domain.Entities
     /// <summary>
     /// 代理商门店
     /// </summary>
-    public class AgentDpartment : EntityBase
+    public class AgentDepartment : EntityBase
     {
         /// <summary>
         /// 用户ID

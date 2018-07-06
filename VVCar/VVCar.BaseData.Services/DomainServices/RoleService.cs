@@ -120,6 +120,12 @@ namespace VVCar.BaseData.Services.DomainServices
                         var generalmanagerId = Guid.Parse("00000000-0000-0000-0000-000000000006");
                         queryable = queryable.Where(t => t.ID != salesmanagerId && t.ID != generalmanagerId);
                     }
+                    if (!merchant.IsGeneralMerchant)
+                    {
+                        var managerId = Guid.Parse("00000000-0000-0000-0000-000000000002");
+                        var staffId = Guid.Parse("00000000-0000-0000-0000-000000000003");
+                        queryable = queryable.Where(t => t.ID != managerId && t.ID != staffId);
+                    }
                 }
             }
             if (filter != null)

@@ -86,6 +86,7 @@ namespace YEF.Core.Data
         /// </summary>
         [Display(Name = "法人身份证反面 图片地址")]
         public string LegalPersonIDCardBehindImgUrl { get; set; }
+
         /// <summary>
         /// 公司地址
         /// </summary>

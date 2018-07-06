@@ -40,7 +40,11 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<User> UserRepo { get => ServiceLocator.Instance.GetService<IRepository<User>>(); }
 
+        IRepository<UserRole> UserRoleRepo { get => ServiceLocator.Instance.GetService<IRepository<UserRole>>(); }
+
         IRepository<Member> MemberRepo { get => ServiceLocator.Instance.GetService<IRepository<Member>>(); }
+
+        IRepository<AgentDepartment> AgentDepartmentRepo { get => ServiceLocator.Instance.GetService<IRepository<AgentDepartment>>(); }
 
         #endregion
 
@@ -299,6 +303,62 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
                 result = result.OrderByDescending(t => t.CurrentPerformance).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             return result.OrderByDescending(t => t.CurrentPerformance).ToList();
+        }
+
+        /// <summary>
+        /// 门店开发业绩统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<DepartmentPerformance> DepartmentPerformanceStatistics(DepartmentPerformanceFilter filter, ref int totalCount)
+        {
+            var result = new List<DepartmentPerformance>();
+            var salesmanager = Guid.Parse("00000000-0000-0000-0000-000000000005");
+            var generalmanager = Guid.Parse("00000000-0000-0000-0000-000000000006");
+            var saleUserIDs = UserRoleRepo.GetQueryable(false).Where(t => (t.RoleID == salesmanager || t.RoleID == generalmanager)).Select(t => t.UserID).Distinct();
+            var agentDepartmentQueryable = AgentDepartmentRepo.GetInclude(t => t.User, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var userQueryable = UserRepo.GetQueryable(false).Where(t => (saleUserIDs.Contains(t.ID) && t.MerchantID == AppContext.CurrentSession.MerchantID));
+            if (filter != null && !string.IsNullOrEmpty(filter.StaffName))
+                userQueryable = userQueryable.Where(t => t.Name.Contains(filter.StaffName));
+            var userList = userQueryable.ToList();
+            if (userList != null && userList.Count > 0)
+            {
+                var now = DateTime.Now;
+                var monthStartTime = new DateTime(now.Year, now.Month, 1);
+                var nextMonthStartTime = monthStartTime.AddMonths(1);
+                var currentAgentDepartmentQueryable = agentDepartmentQueryable;
+                var monthAgentDepartmentQueryable = agentDepartmentQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
+                if (filter != null)
+                {
+                    if (filter.StartDate.HasValue)
+                        currentAgentDepartmentQueryable = currentAgentDepartmentQueryable.Where(t => t.CreatedDate >= filter.StartDate.Value);
+                    if (filter.EndDate.HasValue)
+                        currentAgentDepartmentQueryable = currentAgentDepartmentQueryable.Where(t => t.CreatedDate < filter.EndDate.Value);
+                }
+                userList.ForEach(user =>
+                {
+                    var userAgentDepartmentList = agentDepartmentQueryable.Where(t => t.UserID == user.ID).ToList();
+                    var monthUserAgentDepartmentList = monthAgentDepartmentQueryable.Where(t => t.UserID == user.ID).ToList();
+                    var currentUserAgentDepartmentList = currentAgentDepartmentQueryable.Where(t => t.UserID == user.ID).ToList();
+
+                    var departmentPerformance = new DepartmentPerformance();
+                    departmentPerformance.TotalDepartmentNumber = userAgentDepartmentList.Count;
+                    departmentPerformance.CurrentDepartmentNumber = currentUserAgentDepartmentList.Count;
+                    departmentPerformance.MonthDepartmentNumber = monthUserAgentDepartmentList.Count;
+
+
+                    departmentPerformance.StaffID = user.ID;
+                    departmentPerformance.StaffName = user.Name;
+                    departmentPerformance.StaffCode = user.Code;
+
+                    result.Add(departmentPerformance);
+                });
+            }
+            totalCount = result.Count();
+            if (filter != null && filter.StartDate.HasValue && filter.EndDate.HasValue)
+                result = result.OrderByDescending(t => t.CurrentDepartmentNumber).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
+            return result.OrderByDescending(t=>t.CurrentDepartmentNumber);
         }
 
         public IEnumerable<ProductRetailStatisticsDto> ProductRetailStatistics(ProductRetailStatisticsFilter filter, ref int totalCount)

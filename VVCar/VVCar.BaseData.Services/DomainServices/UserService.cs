@@ -52,6 +52,8 @@ namespace VVCar.BaseData.Services.DomainServices
 
         IRepository<Appointment> AppointmentRepo { get => UnitOfWork.GetRepository<IRepository<Appointment>>(); }
 
+        IRepository<UserRole> UserRoleRepo { get => UnitOfWork.GetRepository<IRepository<UserRole>>(); }
+
         IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
 
         IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
@@ -191,34 +193,34 @@ namespace VVCar.BaseData.Services.DomainServices
             var result = Login(param.UserName, password, param.MerchantCode);
 
             var user = Repository.GetInclude(t => t.UserRoles, false).Where(t => t.ID == result.ID).FirstOrDefault();
-            if (user != null)
+            if (user != null && user.UserRoles != null)
             {
-                var userRoles = user.UserRoles;
+                var userRoles = user.UserRoles.ToList();
                 if (param.IsManager)
                 {
-                    var ismanager = false;
-                    foreach (var role in userRoles)
-                    {
-                        if (role.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000002"))
-                        {
-                            ismanager = true;
-                            break;
-                        }
-                    }
+                    var ismanager = userRoles.Exists(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000002"));
                     if (!ismanager)
                         throw new DomainException("非店长登录");
                 }
+                else if (param.IsGeneralManager)
+                {
+                    var isgeneralmanager = userRoles.Exists(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000006") || t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000005"));
+                    if (!isgeneralmanager)
+                        throw new DomainException("非代理商登录");
+                    if (userRoles.Exists(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000006")))
+                        result.IsGeneralManager = true;
+                    else
+                        result.IsSalesManger = true;
+                }
+                else if (param.IsSalesManger)
+                {
+                    var issalesmanger = userRoles.Exists(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000005"));
+                    if (!issalesmanger)
+                        throw new DomainException("非销售经理登录");
+                }
                 else
                 {
-                    var isstaff = false;
-                    foreach (var role in userRoles)
-                    {
-                        if (role.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000003"))
-                        {
-                            isstaff = true;
-                            break;
-                        }
-                    }
+                    var isstaff = userRoles.Exists(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000003"));
                     if (!isstaff)
                         throw new DomainException("非店员登录");
                 }
@@ -236,9 +238,9 @@ namespace VVCar.BaseData.Services.DomainServices
         {
             var users = Repository.GetInclude(t => t.UserRoles, false).Where(t => t.OpenID == param.OpenID && t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
             User user = null;
+            var userRoles = new List<UserRole>();
             if (users != null && users.Count > 0)
             {
-                var userRoles = new List<UserRole>();
                 users.ForEach(t =>
                 {
                     userRoles.AddRange(t.UserRoles);
@@ -246,6 +248,10 @@ namespace VVCar.BaseData.Services.DomainServices
                 UserRole userrole = null;
                 if (param.IsManager)
                     userrole = userRoles.Where(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000002")).FirstOrDefault();
+                else if (param.IsGeneralManager)
+                    userrole = userRoles.Where(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000006") || t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000005")).FirstOrDefault();
+                else if (param.IsSalesManger)
+                    userrole = userRoles.Where(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000005")).FirstOrDefault();
                 else
                     userrole = userRoles.Where(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000003")).FirstOrDefault();
                 if (userrole == null)
@@ -290,6 +296,11 @@ namespace VVCar.BaseData.Services.DomainServices
 
                 var couponTemplateStock = CouponTemplateRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Nature == VIP.Domain.Enums.ENature.Card).Select(t => t.Stock).GroupBy(g => 1).Select(t => t.Sum(s => s.Stock)).FirstOrDefault();
                 result.MemberCardStockCount = couponTemplateStock;
+
+                if (userRoles.Exists(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000006")))
+                    result.IsGeneralManager = true;
+                else if (userRoles.Exists(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000005")))
+                    result.IsSalesManger = true;
 
                 return result;
             }
@@ -600,6 +611,18 @@ namespace VVCar.BaseData.Services.DomainServices
         public List<User> GetManagerUser()
         {
             return Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+        }
+
+        /// <summary>
+        /// 获取销售人员名单
+        /// </summary>
+        /// <returns></returns>
+        public List<User> GetSaleUser()
+        {
+            var salesmanager = Guid.Parse("00000000-0000-0000-0000-000000000005");
+            var generalmanager = Guid.Parse("00000000-0000-0000-0000-000000000006");
+            var userIDs = UserRoleRepo.GetQueryable(false).Where(t => t.RoleID == salesmanager || t.RoleID == generalmanager).Select(t => t.UserID).Distinct();
+            return Repository.GetQueryable(false).Where(t => userIDs.Contains(t.ID) && t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
         }
 
         public bool BindingMobilePhone(BindingMobilePhoneParam param)

@@ -149,7 +149,7 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.CarBitCoinMemberName, opt => opt.MapFrom(src => src.CarBitCoinMember.Name))
                 .ForMember(dest => dest.MobilePhoneNo, opt => opt.MapFrom(src => src.CarBitCoinMember.MobilePhoneNo));
 
-                cfg.CreateMap<AgentDpartment, AgentDepartmentDto>()
+                cfg.CreateMap<AgentDepartment, AgentDepartmentDto>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Name))
                 .ForMember(dest => dest.MerchantCode, opt => opt.MapFrom(src => src.Merchant.Code))
                 .ForMember(dest => dest.MerchantName, opt => opt.MapFrom(src => src.Merchant.Name));

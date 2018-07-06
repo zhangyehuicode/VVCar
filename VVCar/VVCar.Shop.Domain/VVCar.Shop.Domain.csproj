@@ -109,6 +109,7 @@
     <Compile Include="Filters\CarBitCoinRecordFilter.cs" />
     <Compile Include="Filters\ComboItemFilter.cs" />
     <Compile Include="Filters\ConsumeHistoryFilter.cs" />
+    <Compile Include="Filters\DepartmentPerformanceFilter.cs" />
     <Compile Include="Filters\OrderFilter.cs" />
     <Compile Include="Filters\OrderItemFilter.cs" />
     <Compile Include="Filters\PickUpOrderFilter.cs" />

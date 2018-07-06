@@ -262,6 +262,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Areas\Mobile\Controllers\AgentController.cs" />
     <Compile Include="Areas\Mobile\Controllers\CarBitcoinController.cs" />
     <Compile Include="Areas\Mobile\Controllers\CustomerController.cs" />
     <Compile Include="Areas\Mobile\Controllers\MerchantController.cs" />
@@ -642,6 +643,7 @@
     <Content Include="Scripts\app\controller\CouponPush.js" />
     <Content Include="Scripts\app\controller\DataDict.js" />
     <Content Include="Scripts\app\controller\Department.js" />
+    <Content Include="Scripts\app\controller\DepartmentPerformanceStatistics.js" />
     <Content Include="Scripts\app\controller\GameCouponRecord.js" />
     <Content Include="Scripts\app\controller\GameSetting.js" />
     <Content Include="Scripts\app\controller\Login.js" />
@@ -671,6 +673,7 @@
     <Content Include="Scripts\app\controller\ServicePeriod.js" />
     <Content Include="Scripts\app\controller\StaffPerformanceStatistics.js" />
     <Content Include="Scripts\app\controller\StockholderCard.js" />
+    <Content Include="Scripts\app\controller\SuperClass.js" />
     <Content Include="Scripts\app\controller\SysMenu.js" />
     <Content Include="Scripts\app\controller\SystemSetting.js" />
     <Content Include="Scripts\app\controller\User.js" />
@@ -695,6 +698,7 @@
     <Content Include="Scripts\app\model\BaseData\CouponPushModel.js" />
     <Content Include="Scripts\app\model\BaseData\CouponTemplateInfoModel.js" />
     <Content Include="Scripts\app\model\BaseData\DepartmentModel.js" />
+    <Content Include="Scripts\app\model\BaseData\DepartmentPerformanceStatisticsModel.js" />
     <Content Include="Scripts\app\model\BaseData\GameCouponModel.js" />
     <Content Include="Scripts\app\model\BaseData\GameCouponRecordModel.js" />
     <Content Include="Scripts\app\model\BaseData\GameSettingModel.js" />
@@ -757,6 +761,7 @@
     <Content Include="Scripts\app\store\BaseData\CouponPushMemberStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponPushStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponTemplateInfoStore.js" />
+    <Content Include="Scripts\app\store\BaseData\DepartmentPerformanceStatisticsStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\GameCouponRecordStore.js" />
@@ -916,6 +921,7 @@
     <Content Include="Scripts\app\view\Recruitment\RecruitmentEdit.js" />
     <Content Include="Scripts\app\view\Recruitment\RecruitmentList.js" />
     <Content Include="Scripts\app\view\Report\ConsumeHistoryList.js" />
+    <Content Include="Scripts\app\view\Report\DepartmentPerformanceStatisticsList.js" />
     <Content Include="Scripts\app\view\Report\ProductRetailStatisticsList.js" />
     <Content Include="Scripts\app\view\Report\StaffPerfromanceStatisticsList.js" />
     <Content Include="Scripts\app\view\Role\RoleEdit.js" />
@@ -945,6 +951,7 @@
     <Content Include="Scripts\app\view\Shop\StockRecord.js" />
     <Content Include="Scripts\app\view\StockholderCard\StockholderCardEdit.js" />
     <Content Include="Scripts\app\view\StockholderCard\StockholderCardList.js" />
+    <Content Include="Scripts\app\view\SuperClass\SuperClassList.js" />
     <Content Include="Scripts\app\view\SysMenu\AddSysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenuTreeComboBox.js" />
@@ -1089,6 +1096,10 @@
     <Content Include="Areas\Mobile\Views\CarBitcoin\OrderDetails.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\MyEngine.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\MyProperty.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\Index.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\SalesManagerIndex.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\GeneralManagerHome.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\QuickOpenAccount.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

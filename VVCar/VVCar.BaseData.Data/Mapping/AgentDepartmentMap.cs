@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Entity.ModelConfiguration;
 using VVCar.BaseData.Domain.Entities;
 
 namespace VVCar.BaseData.Data.Mapping
@@ -11,8 +6,11 @@ namespace VVCar.BaseData.Data.Mapping
     /// <summary>
     /// 代理商门店Map
     /// </summary>
-    public class AgentDepartmentMap : EntityTypeConfiguration<AgentDpartment>
+    public class AgentDepartmentMap : EntityTypeConfiguration<AgentDepartment>
     {
+        /// <summary>
+        /// ctor
+        /// </summary>
         public AgentDepartmentMap()
         {
             HasKey(t => t.ID);

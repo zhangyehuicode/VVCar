@@ -14,7 +14,7 @@ namespace VVCar.BaseData.Domain.Services
     /// <summary>
     /// 代理商门店领域服务接口
     /// </summary>
-    public interface IAgentDepartmentService : IDomainService<IRepository<AgentDpartment>, AgentDpartment, Guid>
+    public interface IAgentDepartmentService : IDomainService<IRepository<AgentDepartment>, AgentDepartment, Guid>
     {
         /// <summary>
         /// 审核代理商门店

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -196,5 +197,47 @@ namespace VVCar.Shop.Domain.Dtos
                 return BasicSalary + Subsidy + MonthCommission;
             }
         }
+    }
+
+    /// <summary>
+    /// 门店开发业绩
+    /// </summary>
+    public class DepartmentPerformance
+    {
+        /// <summary>
+        /// 员工ID
+        /// </summary>
+        [Display(Name = "员工ID")]
+        public Guid StaffID { get; set; }
+
+        /// <summary>
+        /// 员工姓名
+        /// </summary>
+        [Display(Name = "员工姓名")]
+        public string StaffName { get; set; }
+
+        /// <summary>
+        /// 员工编码
+        /// </summary>
+        [Display(Name = "员工编码")]
+        public string StaffCode { get; set; }
+
+        /// <summary>
+        /// 总开发门店数量
+        /// </summary>
+        [Display(Name = "总开发门店数量")]
+        public decimal TotalDepartmentNumber { get; set; }
+
+        /// <summary>
+        /// 当前开发门店数量
+        /// </summary>
+        [Display(Name = "当前开发门店数量")]
+        public decimal CurrentDepartmentNumber { get; set; }
+
+        /// <summary>
+        /// 当月开发门店数量
+        /// </summary>
+        [Display(Name = "当月开发门店数量")]
+        public decimal MonthDepartmentNumber { get; set; }
     }
 }

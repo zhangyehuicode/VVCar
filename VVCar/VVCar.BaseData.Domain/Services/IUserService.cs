@@ -121,6 +121,12 @@ namespace VVCar.BaseData.Domain.Services
         List<User> GetManagerUser();
 
         /// <summary>
+        /// 获取销售人员名单
+        /// </summary>
+        /// <returns></returns>
+        List<User> GetSaleUser();
+
+        /// <summary>
         /// 绑定手机号
         /// </summary>
         /// <param name="param"></param>

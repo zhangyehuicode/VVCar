@@ -35,5 +35,15 @@ namespace VVCar.BaseData.Domain.Dtos
         /// 商户号
         /// </summary>
         public string MerchantCode { get; set; }
+
+        /// <summary>
+        /// 是否代理商总经理
+        /// </summary>
+        public bool IsGeneralManager { get; set; }
+
+        /// <summary>
+        /// 是否代理商销售经理
+        /// </summary>
+        public bool IsSalesManger { get; set; }
     }
 }

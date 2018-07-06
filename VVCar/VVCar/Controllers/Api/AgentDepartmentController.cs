@@ -35,7 +35,7 @@ namespace VVCar.Controllers.Api
         /// <param name="entity"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonActionResult<AgentDpartment> Add(AgentDpartment entity)
+        public JsonActionResult<AgentDepartment> Add(AgentDepartment entity)
         {
             return SafeExecute(() =>
             {
@@ -63,7 +63,7 @@ namespace VVCar.Controllers.Api
         /// <param name="entity"></param>
         /// <returns></returns>
         [HttpPut]
-        public JsonActionResult<bool> Update(AgentDpartment entity)
+        public JsonActionResult<bool> Update(AgentDepartment entity)
         {
             return SafeExecute(() =>
             {

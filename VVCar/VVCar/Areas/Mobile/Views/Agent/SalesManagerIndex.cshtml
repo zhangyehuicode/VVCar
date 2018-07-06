@@ -1,0 +1,165 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="smloginreg">
+    <div class="zcdl_box">
+        <div class="zcdl_box2">
+            <img src="@ViewBag.HeadImgUrl" class="zcdl_img2" style="width:80px;height:80px;border-radius:80px;"><br>
+            <span style=" font-size:15px; color:#2d2d30;">@ViewBag.NickName</span>
+        </div>
+        <div class="zcdl_box3">
+            <img src="~/Areas/resource/img/mobile/master/gr.png" style="width:16px; float:left; margin-top:19px;">
+            <input v-model="UserInfo.UserName" type="text" placeholder="请输入用户名" style="color:#343232" class="zcdl_box4">
+        </div>
+        <div class="zcdl_box3" style="margin-top:inherit;">
+            <img src="~/Areas/resource/img/mobile/master/yzm2.png" style="width:16px; float:left; margin-top:18px;">
+            <input v-model="UserInfo.Password" type="password" placeholder="请输入密码" style="color:#343232" class="zcdl_box4">
+        </div>
+        <a class="zcdl_btn" style="background-color:#51b3f0;" v-on:click="login">销售经理登录</a>
+    </div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+
+            var mch = $.getUrlParam('mch');
+
+            function weChatLogin() {
+                if (_viewModel.UserInfo.UserName == null || _viewModel.UserInfo.UserName == '') {
+                    $.alert('请输入账号');
+                    return;
+                }
+                if (_viewModel.UserInfo.Password == null || _viewModel.UserInfo.Password == '') {
+                    $.alert('请输入密码');
+                    return;
+                }
+                $.ajax({
+                    url: '/api/User/WeChatLogin',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        UserName: _viewModel.UserInfo.UserName,
+                        Password: _viewModel.UserInfo.Password,
+                        OpenID: '@ViewBag.OpenId',
+                        MerchantCode: mch,
+                        IsSalesManger: true,
+                    },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                window.location.href = "/Mobile/Agent/SalesManagerHome?mch=" + mch;
+                            } else {
+                                $.alert("用户不存在");
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
+            _viewModel = new Vue({
+                el: '#smloginreg',
+                data: {
+                    UserInfo: {
+                        MobilePhoneNo: '',
+                        VerificationCode: '',
+                        UserName: '',
+                        Password:'',
+                    },
+                },
+                methods: {
+                    login: function (event) {
+                        weChatLogin();
+                    },
+                }
+            });
+
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsSalesManger: true,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                window.location.href = "/Mobile/Agent/SalesManagerHome?mch=" + mch;
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+            getUserByOpenId();
+
+        });
+    </script>
+}
