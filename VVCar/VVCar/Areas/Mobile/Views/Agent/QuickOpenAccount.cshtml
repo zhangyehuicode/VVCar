@@ -13,31 +13,31 @@
     <div class="contentcon">
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle">商户名称</div>
-            <input class="quickoatablecell inputbottom" placeholder="商户名称" />
+            <input class="quickoatablecell inputbottom" placeholder="商户名称" v-model:value="AgentDepartment.Name" />
         </div>
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle">法人（负责人）</div>
-            <input class="quickoatablecell inputbottom" placeholder="法人（负责人）" />
+            <input class="quickoatablecell inputbottom" placeholder="法人（负责人）" v-model:value="AgentDepartment.LegalPerson" />
         </div>
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle">手机号码</div>
-            <input type="number" class="quickoatablecell inputbottom" placeholder="手机号码" />
+            <input type="number" class="quickoatablecell inputbottom" placeholder="手机号码" v-model:value="AgentDepartment.MobilePhoneNo" />
         </div>
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle">身份证编号</div>
-            <input class="quickoatablecell inputbottom" placeholder="身份证编号" />
+            <input class="quickoatablecell inputbottom" placeholder="身份证编号" v-model:value="AgentDepartment.IDNumber" />
         </div>
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle" style="vertical-align:middle;">公司地址</div>
-            <textarea class="quickoatablecell inputbottom" placeholder="公司地址"></textarea>
+            <textarea class="quickoatablecell inputbottom" placeholder="公司地址" v-model:value="AgentDepartment.CompanyAddress"></textarea>
         </div>
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle" style="vertical-align:middle;">开户银行</div>
-            <textarea class="quickoatablecell inputbottom" placeholder="开户银行"></textarea>
+            <textarea class="quickoatablecell inputbottom" placeholder="开户银行" v-model:value="AgentDepartment.Bank"></textarea>
         </div>
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle">银行账号</div>
-            <input type="number" class="quickoatablecell inputbottom" placeholder="银行账号" />
+            <input type="number" class="quickoatablecell inputbottom" placeholder="银行账号" v-model:value="AgentDepartment.BankCard" />
         </div>
     </div>
     <div class="uploadcon">
@@ -45,37 +45,40 @@
                 <input class="fileinput" type="file" accept="image/*">
                 <img class="plateimg" />
             </div>*@
-        <div class="uploadimgcon" id="uploadImage">
+        <div class="uploadimgcon BusinessLicense" id="uploadBusinessLicenseImage">
             <span class="btn btn-default plateconpre">
-                <img class="addplateimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="BusinessLicense"><br>
+                <img class="addimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="BusinessLicense"><br>
+                <img class="uploadimg" /><br>
                 <input class="fileinput" type="file" accept="image/*">
             </span>
-            <div class="platebtmtips">营业执照</div>
+            <div class="tips">营业执照</div>
         </div>
         @*<div class="platecon" id="uploadImageTop">
                 <input class="fileinput" type="file" accept="image/*">
                 <img class="plateimg" />
             </div>*@
-        <div class="uploadimgcon" id="uploadImage">
+        <div class="uploadimgcon LegalPersonIDCardFront" id="uploadLegalPersonIDCardFrontImage">
             <span class="btn btn-default plateconpre">
-                <img class="addplateimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="LegalPersonIDCardFront"><br>
+                <img class="addimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="LegalPersonIDCardFront"><br>
+                <img class="uploadimg" /><br>
                 <input class="fileinput" type="file" accept="image/*">
             </span>
-            <div class="platebtmtips">身份证正面</div>
+            <div class="tips">身份证正面</div>
         </div>
         @*<div class="platecon" id="uploadImageTop">
                 <input class="fileinput" type="file" accept="image/*">
                 <img class="plateimg" />
             </div>*@
-        <div class="uploadimgcon" id="uploadImage">
+        <div class="uploadimgcon LegalPersonIDCardBehindImgUrl" id="uploadLegalPersonIDCardBehindImgUrlImage">
             <span class="btn btn-default plateconpre">
-                <img class="addplateimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="LegalPersonIDCardBehindImgUrl"><br>
+                <img class="addimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="LegalPersonIDCardBehindImgUrl"><br>
+                <img class="uploadimg" /><br>
                 <input class="fileinput" type="file" accept="image/*">
             </span>
-            <div class="platebtmtips">身份证反面</div>
+            <div class="tips">身份证反面</div>
         </div>
     </div>
-    <div class="confirmbtn" v-on:click="confirm">确认开户</div>
+    <div class="confirmbtn" v-on:click="confirm">开户</div>
 </div>
 
 @section scripts{
@@ -116,8 +119,8 @@
         }
 
         .fileinput {
-            position: absolute;
-            top: 0;
+            position: relative;
+            top: -200px;
             right: 0;
             margin: 0;
             opacity: 0;
@@ -126,6 +129,7 @@
             direction: ltr;
             cursor: pointer;
             height: 100%;
+            pointer-events: all;
         }
 
         .plateimg {
@@ -156,15 +160,15 @@
             height: 188px;
         }
 
-        .addplateimg {
+        .addimg {
             height: 25px;
             width: 25px;
             margin-top: 55px;
         }
 
-        .platebtmtips {
+        .tips {
             position: relative;
-            top: 50px;
+            top: -250px;
             left: 0;
             right: 0;
             color: #999;
@@ -203,6 +207,7 @@
             position: relative;
             height: 690px;
             margin: 0 8px;
+            pointer-events: none;
         }
 
         textarea {
@@ -212,7 +217,19 @@
             box-shadow: 0px 0px 0px rgba(0,0,0,0);
             -webkit-appearance: none;
         }
+
+        .uploadimg {
+            height: 191px;
+            width: 100%;
+            margin-top: -85px;
+        }
     </style>
+    @Styles.Render("~/content/jquery-fileupd")
+    @Scripts.Render("~/bundles/jquery-fileupd")
+    <script id="template-upload" type="text/x-jquery-tmpl">
+    </script>
+    <script id="template-download" type="text/x-jquery-tmpl">
+    </script>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
     <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -262,6 +279,306 @@
     </script>
     <script type="text/javascript">
         $(function () {
+
+            var uploadimgcons = $('.uploadimgcon');
+            if (uploadimgcons != null && uploadimgcons != '') {
+                for (var i = 0; i < uploadimgcons.length; i++) {
+                    var target = uploadimgcons[i];
+                    var uploadurl = "";
+                    if ($(target).hasClass('BusinessLicense'))
+                        uploadurl = "/api/UploadFile/UploadLicense";
+                    else if ($(target).hasClass('LegalPersonIDCardFront') || $(target).hasClass('LegalPersonIDCardBehindImgUrl'))
+                        uploadurl = "/api/UploadFile/UploadIDCard";
+                    uploadImage($(target).attr('id'), uploadurl);
+                }
+            }
+
+            function uploadImage(id, url) {
+                if (id == null || id == '' || url == null || url == '')
+                    return;
+                $('#' + id).fileupload({
+                    dropZone: $('#' + id),
+                    pasteZone: $('#' + id),
+                    dataType: 'json',
+                    autoUpload: true,
+                    url: url,
+                    add: function (e, data) {
+                        var uploadErrors = [];
+                        var acceptFileTypes = /(gif|jpe?g|png|bmp)$/i;
+                        if (!acceptFileTypes.test(data.originalFiles[0]['name'])) {
+                            uploadErrors.push('不允许的文件类型');
+                        }
+                        if (uploadErrors.length > 0) {
+                            $.alert(uploadErrors.join(", "));
+                        } else {
+                            data.submit();
+                        }
+                    },
+                    send: function (e, data) {
+                        $.showLoading();
+                    },
+                    done: function (e, data) {
+                        $.hideLoading();
+                        if (data.result.success == true) {
+                            $('#' + id).find('.uploadimg').attr('src', data.result.FileUrl);
+                            //$('.platecon').show();
+                        } else {
+                            $.alert(data.result.errorMessage);
+                        }
+                    }
+                });
+                //$('#' + id).fileupload({
+                //    dropZone: $('#' + id),
+                //    pasteZone: $('#' + id),
+                //    dataType: 'json',
+                //    autoUpload: true,
+                //    url: url,
+                //    add: function (e, data) {
+                //        var uploadErrors = [];
+                //        var acceptFileTypes = /(gif|jpe?g|png|bmp)$/i;
+                //        if (!acceptFileTypes.test(data.originalFiles[0]['name'])) {
+                //            uploadErrors.push('不允许的文件类型');
+                //        }
+                //        if (uploadErrors.length > 0) {
+                //            $.alert(uploadErrors.join(", "));
+                //        } else {
+                //            data.submit();
+                //        }
+                //    },
+                //    send: function (e, data) {
+                //        $.showLoading();
+                //    },
+                //    done: function (e, data) {
+                //        $.hideLoading();
+                //        if (data.result.success == true) {
+                //            $('#' + id).find('.uploadimg').attr('src', data.result.FileUrl);
+                //            //$('.platecon').show();
+                //        } else {
+                //            $.alert(data.result.errorMessage);
+                //        }
+                //    }
+                //});
+            }
+
+            $('.fileinput').on('change input', function (e) {
+                handleinputchange(this);
+            });
+
+            // 全局对象，不同function使用传递数据
+            const imgFile = {};
+
+            function handleinputchange(target) {
+                if (target == null)
+                    return;
+                var uploadurl = "";
+                if ($(target).parent('div[.uploadimgcon]').hasClass('BusinessLicense'))
+                    uploadurl = "/api/UploadFile/UploadLicense";
+                else if ($(target).parent('div[.uploadimgcon]').hasClass('LegalPersonIDCardFront') || $(target).hasClass('LegalPersonIDCardBehindImgUrl'))
+                    uploadurl = "/api/UploadFile/UploadIDCard";
+                if (uploadurl == null || uploadurl == '')
+                    return;
+                //$.alert('enter 1 event:' + event);
+                // 获取当前选中的文件
+                const file = target.files[0];//event.target.files[0];
+                //$.alert(event.files.length);
+                const imgMasSize = 1024 * 1024 * 10; // 10MB
+
+                // 检查文件类型
+                if (['jpeg', 'png', 'gif', 'jpg'].indexOf(file.type.split("/")[1]) < 0) {
+                    // 自定义报错方式
+                    // Toast.error("文件类型仅支持 jpeg/png/gif！", 2000, undefined, false);
+                    $.alert("文件类型仅支持 jpeg/png/gif！");
+                    return;
+                }
+
+                // 文件大小限制
+                if (file.size > imgMasSize) {
+                    // 文件大小自定义限制
+                    // Toast.error("文件大小不能超过10MB！", 2000, undefined, false);
+                    $.alert("文件大小不能超过10MB！");
+                    return;
+                }
+
+                // 判断是否是ios
+                if (!!window.navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+                    // iOS
+                    transformFileToFormData(file);
+                    return;
+                }
+
+                // 图片压缩之旅
+                transformFileToDataUrl(file);
+            }
+            // 将File append进 FormData
+            function transformFileToFormData(file) {
+                //$.alert('enter transformFileToFormData');
+                const formData = new FormData();
+                // 自定义formData中的内容
+                // type
+                formData.append('type', file.type);
+                // size
+                formData.append('size', file.size || "image/jpeg");
+                // name
+                formData.append('name', file.name);
+                // lastModifiedDate
+                formData.append('lastModifiedDate', file.lastModifiedDate);
+                // append 文件
+                formData.append('file', file);
+                // 上传图片
+                uploadImg(formData);
+            }
+            // 将file转成dataUrl
+            function transformFileToDataUrl(file) {
+                //$.alert("enter transformFileToDataUrl");
+                const imgCompassMaxSize = 200 * 1024; // 超过 200k 就压缩
+
+                // 存储文件相关信息
+                imgFile.type = file.type || 'image/jpeg'; // 部分安卓出现获取不到type的情况
+                imgFile.size = file.size;
+                imgFile.name = file.name;
+                imgFile.lastModifiedDate = file.lastModifiedDate;
+
+                // 封装好的函数
+                const reader = new FileReader();
+
+                // file转dataUrl是个异步函数，要将代码写在回调里
+                reader.onload = function (e) {
+                    const result = e.target.result;
+
+                    if (result.length < imgCompassMaxSize) {
+                        compress(result, processData, false);    // 图片不压缩
+                    } else {
+                        compress(result, processData);            // 图片压缩
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            }
+            // 使用canvas绘制图片并压缩
+            function compress(dataURL, callback, shouldCompress = true) {
+                //$("enter compress");
+                const img = new window.Image();
+
+                img.src = dataURL;
+
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    let compressedDataUrl;
+
+                    if (shouldCompress) {
+                        compressedDataUrl = canvas.toDataURL(imgFile.type, 0.2);
+                    } else {
+                        compressedDataUrl = canvas.toDataURL(imgFile.type, 1);
+                    }
+
+                    callback(compressedDataUrl);
+                }
+            }
+
+            function processData(dataUrl) {
+                //$.alert('enter processData');
+                try {
+                    // 这里使用二进制方式处理dataUrl
+                    const binaryString = window.atob(dataUrl.split(',')[1]);
+                    const arrayBuffer = new ArrayBuffer(binaryString.length);
+                    const intArray = new Uint8Array(arrayBuffer);
+                    //const imgFile = this.imgFile;
+
+                    for (let i = 0, j = binaryString.length; i < j; i++) {
+                        intArray[i] = binaryString.charCodeAt(i);
+                    }
+
+                    const data = [intArray];
+
+                    let blob;
+
+                    try {
+                        blob = new Blob(data, { type: imgFile.type });
+                    } catch (error) {
+                        window.BlobBuilder = window.BlobBuilder ||
+                            window.WebKitBlobBuilder ||
+                            window.MozBlobBuilder ||
+                            window.MSBlobBuilder;
+                        if (error.name === 'TypeError' && window.BlobBuilder) {
+                            const builder = new BlobBuilder();
+                            builder.append(arrayBuffer);
+                            blob = builder.getBlob(imgFile.type);
+                        } else {
+                            // Toast.error("版本过低，不支持上传图片", 2000, undefined, false);
+                            // throw new Error('版本过低，不支持上传图片');
+                            $.alert('版本过低，不支持上传图片');
+                        }
+                    }
+
+                    // blob 转file
+                    const fileOfBlob = new File([blob], imgFile.name);
+                    const formData = new FormData();
+
+                    // type
+                    formData.append('type', imgFile.type);
+                    // size
+                    formData.append('size', fileOfBlob.size);
+                    // name
+                    formData.append('name', imgFile.name);
+                    // lastModifiedDate
+                    formData.append('lastModifiedDate', imgFile.lastModifiedDate);
+                    // append 文件
+                    formData.append('file', fileOfBlob);
+
+                    uploadImg(formData);
+                } catch (e) {
+                    $.alert(e.message);
+                }
+            }
+
+            // 上传图片
+            function uploadImg(formData) {
+                //$.alert('enter uploadImg');
+                const xhr = new XMLHttpRequest();
+                xhr.responseType = "";//json
+                // 进度监听
+                xhr.upload.addEventListener('progress', (e) => {
+                    //console.log(e.loaded / e.total)
+                    $.showLoading();
+                }, false);
+                // 加载监听
+                // xhr.addEventListener('load', ()=>{console.log("加载中");}, false);
+                // 错误监听
+                xhr.addEventListener('error', () => {
+                    $.hideLoading();
+                    $.alert("上传失败");
+                }, false);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        $.hideLoading();
+                        if (xhr.status === 200) {
+                            var result = JSON.parse(xhr.responseText);
+                            if (result.success == true) {
+                                $(target).find('.uploadimg').attr('src', result.FileUrl);
+                                //$('.platecon').show();
+                            } else {
+                                $.alert(result.errorMessage);
+                            }
+                        } else {
+                            $.alert("上传失败");
+                        }
+                    }
+                };
+                xhr.open('POST', uploadurl, true);
+                xhr.send(formData);
+            }
+
+        });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ////////});
+    </script>
+    <script type="text/javascript">
+        //$(function () {
             var mch = $.getUrlParam('mch');
             var isgeneralmanager = sessionStorage.getItem('isgeneralmanager');
             if (isgeneralmanager != null && isgeneralmanager != '')
@@ -272,6 +589,20 @@
                 el: '#quickopenaccount',
                 data: {
                     UserInfo: {},
+                    AgentDepartment: {
+                        UserID: '',
+                        Name: '',
+                        LegalPerson: '',
+                        IDNumber: '',
+                        Email: '',
+                        MobilePhoneNo: '',
+                        BusinessLicenseImgUrl: '',
+                        LegalPersonIDCardFrontImgUrl: '',
+                        LegalPersonIDCardBehindImgUrl: '',
+                        CompanyAddress: '',
+                        Bank: '',
+                        BankCard:'',
+                    },
                 },
                 methods: {
                     back: function (event) {
@@ -281,7 +612,9 @@
                         window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
                     },
                     confirm: function (event) {
-                        $.toast('开户成功');
+                        $.confirm('确认开户？', function () {
+                            confirm();
+                        });
                     },
                 }
             });
@@ -301,6 +634,7 @@
                             if (res.Data != null) {
                                 sessionStorage.setItem('agentuser', JSON.stringify(res.Data));
                                 _viewModel.UserInfo = res.Data;
+                                _viewModel.AgentDepartment.UserID = res.Data.ID;
                             }
                             else {
                                 window.location.href = "/Mobile/Agent?mch=" + mch;
@@ -317,6 +651,92 @@
                 });
             }
             getUserByOpenId();
-        });
+
+        function checkdata(data) {
+            if (data == null || data.UserID == null || data.UserID == '') {
+                $.alert('参数错误');
+                return false;
+            }
+            if (data.Name == null || data.Name == '') {
+                $.alert('请填写商户名称');
+                return false;
+            }
+            if (data.LegalPerson == null || data.LegalPerson == '') {
+                $.alert('请填写法人（负责人）');
+                return false;
+            }
+            if (data.MobilePhoneNo == null || data.MobilePhoneNo == '') {
+                $.alert('请填写手机号码');
+                return false;
+            } else if (data.MobilePhoneNo.toString().length!=11) {
+                $.alert('请填写正确的手机号码');
+                return false;
+            }
+            if (data.IDNumber == null || data.IDNumber == '') {
+                $.alert('请填写身份证编号');
+                return false;
+            }
+            if (data.CompanyAddress == null || data.CompanyAddress == '') {
+                $.alert('请填写公司地址');
+                return false;
+            }
+            if (data.Bank == null || data.Bank == '') {
+                $.alert('请填写开户银行');
+                return false;
+            }
+            if (data.BankCard == null || data.BankCard == '') {
+                $.alert('请填写银行账号');
+                return false;
+            }
+            if (data.BusinessLicenseImgUrl == null || data.BusinessLicenseImgUrl == '') {
+                $.alert('请上传营业执照');
+                return false;
+            }
+            if (data.LegalPersonIDCardFrontImgUrl == null || data.LegalPersonIDCardFrontImgUrl == '') {
+                $.alert('请上传身份证正面照');
+                return false;
+            }
+            if (data.LegalPersonIDCardBehindImgUrl == null || data.LegalPersonIDCardBehindImgUrl == '') {
+                $.alert('请上传身份证反面照');
+                return false;
+            }
+            return true;
+        }
+
+        function confirm() {
+            var data = _viewModel.AgentDepartment;
+            data.BusinessLicenseImgUrl = $('#uploadBusinessLicenseImage').find('.uploadimg').attr('src');
+            data.LegalPersonIDCardFrontImgUrl = $('#uploadLegalPersonIDCardFrontImage').find('.uploadimg').attr('src');
+            data.LegalPersonIDCardBehindImgUrl = $('#uploadLegalPersonIDCardBehindImgUrlImage').find('.uploadimg').attr('src');
+            if (!checkdata(data))
+                return;
+            //$.alert(JSON.stringify(data));
+            //return;
+            $.ajax({
+                url: '/api/AgentDepartment',
+                type: 'POST',
+                data: data,
+                headers: {'CompanyCode': mch },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            $.toast("开户成功");
+                            window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
+        //});
     </script>
 }

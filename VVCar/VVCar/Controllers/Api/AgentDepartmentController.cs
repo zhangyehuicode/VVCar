@@ -34,7 +34,7 @@ namespace VVCar.Controllers.Api
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, AllowAnonymous]
         public JsonActionResult<AgentDepartment> Add(AgentDepartment entity)
         {
             return SafeExecute(() =>

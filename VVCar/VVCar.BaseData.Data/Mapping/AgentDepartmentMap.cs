@@ -27,7 +27,6 @@ namespace VVCar.BaseData.Data.Mapping
                 .HasMaxLength(18);
 
             Property(t => t.Email)
-                .IsRequired()
                 .HasMaxLength(25);
 
             Property(t => t.WeChatOAPassword)

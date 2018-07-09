@@ -12,9 +12,9 @@ namespace VVCar.BaseData.Domain.Entities
     public class AgentDepartment : EntityBase
     {
         /// <summary>
-        /// 用户ID
+        /// 销售经理ID
         /// </summary>
-        [Display(Name = "用户ID")]
+        [Display(Name = "销售经理ID")]
         public Guid? UserID { get; set; }
 
         /// <summary>
@@ -81,6 +81,7 @@ namespace VVCar.BaseData.Domain.Entities
         /// </summary>
         [Display(Name = "法人身份证反面 图片地址")]
         public string LegalPersonIDCardBehindImgUrl { get; set; }
+
         /// <summary>
         /// 公司地址
         /// </summary>
