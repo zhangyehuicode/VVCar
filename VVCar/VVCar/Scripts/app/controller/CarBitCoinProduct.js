@@ -350,7 +350,7 @@
 							store.reload();
 							me.getTreeCarBitCoinProductCategory().getStore().load();
 						} else {
-							Ext.Msg.alert('提示', "操作失败" + result.ErrorMessage);
+							Ext.Msg.alert('提示', "操作失败" + result.ErrorMessage).setStyle('z-index', '20000');
 						}
 					} else {
 						Ext.Msg.alert('提示', result.Message);

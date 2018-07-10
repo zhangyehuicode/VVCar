@@ -7,7 +7,8 @@
 <div id="staffmanager">
     <div class="toubu">
         <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
-        店长工作终端
+        <div v-if="IsAgent">代理商工作终端</div>
+        <div v-if="!IsAgent">店长工作终端</div>
         <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
     </div>
     <div class="touxiang">
@@ -161,19 +162,29 @@
     <script type="text/javascript">
         $(function () {
         var mch = $.getUrlParam('mch');
-        var user = sessionStorage.getItem('user');
+            var user = sessionStorage.getItem('user');
+
+            var agentuser = sessionStorage.getItem('agentuser');
+            if (agentuser != null && agentuser != '')
+                user = agentuser;
+            var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
+
         _viewModel = new Vue({
             el: '#staffmanager',
             data: {
                 User: {},
                 UserList: [],
                 ShowYGMD: true,
+                IsAgent: false,
             },
             methods: {
                 back: function (event) {
                     history.back(-1);
                 },
                 home: function (event) {
+                    if (agentuser != null && agentuser != '')
+                        window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+                    else
                         window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
                 },
                 showYGMD: function (event) {
@@ -197,15 +208,25 @@
             }
         });
 
+              var userdata = {
+                OpenID: '@ViewBag.OpenId',
+                IsManager: true,
+            };
+            if (agentuser != null && agentuser != '') {
+                userdata = {
+                    OpenID: '@ViewBag.OpenId',
+                    IsGeneralManager: isgeneralmanager,
+                    IsSalesManger: !isgeneralmanager,
+                };
+                _viewModel.IsAgent = true;
+            }
+
             function getUserByOpenId() {
                 $.ajax({
                     url: '/api/User/GetUserByOpenID',
                     type: 'GET',
                     headers: { 'CompanyCode': mch },
-                    data: {
-                        OpenID: '@ViewBag.OpenId',
-                        IsManager: true,
-                    },
+                    data:userdata,
                     success: function (res) {
                         if (res.IsSuccessful) {
                             if (res.Data != null) {

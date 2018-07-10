@@ -338,14 +338,14 @@
 					var result = JSON.parse(response.responseText);
 					if (success) {
 						if (result.IsSuccessful && result.Data) {
-							Ext.Msg.alert('提示', '操作成功');
+							Ext.Msg.alert('提示', '操作成功').setStyle('z-index', '20000');;
 							store.reload();
 							me.getTreeServiceCategory().getStore().load();
 						} else {
-							Ext.Msg.alert('提示', "操作失败" + result.ErrorMessage);
+							Ext.Msg.alert('提示', "操作失败" + result.ErrorMessage).setStyle('z-index', '20000');
 						}
 					} else {
-						Ext.Msg.alert('提示', result.Message);
+						Ext.Msg.alert('提示', result.Message).setStyle('z-index', '20000');;
 					}
 				});
 			}

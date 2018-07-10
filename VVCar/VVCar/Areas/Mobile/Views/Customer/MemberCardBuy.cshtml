@@ -24,6 +24,11 @@
             <div>会员卡可自用也可赠送，并同样可参与<span>全员股东计划</span></div>
         </div>*@
     @*<div class="hykgm_box"><input type="checkbox" style=" width:13px; height:13px; background:none; float:left; margin-top:14px;">&nbsp;我已经阅读并同意会员卡使用协议</div>*@
+    <div class="kc_box2">
+        产品介绍：<br>
+    </div>
+    <div class="kc_box3 introduction">
+    </div>
     <a class="btn1" v-on:click="buynow">立即购买</a>
     <a class="btn2" v-on:click="addtoshoppingcart">加入购物车</a>
 </div>
@@ -117,6 +122,7 @@
               var product = sessionStorage.getItem('membercard');
               if (product != null && product != '') {
                   product = JSON.parse(product);
+                  $('.introduction').append(product.Introduction);
               } else {
                   $.alert('未获取到会员卡信息');
               }

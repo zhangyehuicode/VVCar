@@ -151,6 +151,26 @@ namespace VVCar.Controllers.Api
             //return result;
         }
 
+        /// <summary>
+        /// 上传课程
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadSuperClass")]
+        public UploadFileResult UploadVideo()
+        {
+            return UploadAction("Video/SuperClass");
+        }
+
+        /// <summary>
+        /// 上传报销单
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadReimbursement")]
+        public UploadFileResult UploadReimbursement()
+        {
+            return UploadAction("Pictures/Reimbursement");
+        }
+
         private UploadFileResult UploadAction(string targetDirPath)
         {
             AppContext.Logger.Debug($"EnterUploadAction");

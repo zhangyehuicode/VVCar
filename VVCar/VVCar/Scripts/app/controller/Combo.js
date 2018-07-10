@@ -11,7 +11,7 @@
 		selector: 'ComboList grid[name=gridCombo]',
 	}, {
 		ref: 'gridComboItem',
-			selector: 'ComboList grid[name=gridComboItem]',
+		selector: 'ComboList grid[name=gridComboItem]',
 	}, {
 		ref: 'productSelector',
 		selector: 'ProductSelector',
@@ -93,7 +93,7 @@
 		var win = Ext.widget('ProductSelector');
 		var grid = win.down('grid');
 		var store = grid.getStore();
-		store.proxy.extraParams = { IsCombo: false };
+		store.proxy.extraParams = { IsCombo: false, ProductType: 0 };
 		store.load();
 		win.show();
 	},

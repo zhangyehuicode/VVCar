@@ -327,6 +327,8 @@
     <Compile Include="Controllers\VIP\RechargeHistoryController.cs" />
     <Compile Include="Controllers\VIP\RechargePlanController.cs" />
     <Compile Include="Controllers\VIP\RecruitmentController.cs" />
+    <Compile Include="Controllers\VIP\ReimbursementController.cs" />
+    <Compile Include="Controllers\VIP\SuperClassController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -668,6 +670,7 @@
     <Content Include="Scripts\app\controller\RechargePlan.js" />
     <Content Include="Scripts\app\controller\RechargeReport.js" />
     <Content Include="Scripts\app\controller\Recruitment.js" />
+    <Content Include="Scripts\app\controller\Reimbursement.js" />
     <Content Include="Scripts\app\controller\Role.js" />
     <Content Include="Scripts\app\controller\RolePermission.js" />
     <Content Include="Scripts\app\controller\ServicePeriod.js" />
@@ -728,11 +731,13 @@
     <Content Include="Scripts\app\model\BaseData\RechargeHistoryModel.js" />
     <Content Include="Scripts\app\model\BaseData\RechargePlanModel.js" />
     <Content Include="Scripts\app\model\BaseData\RecruitmentModel.js" />
+    <Content Include="Scripts\app\model\BaseData\ReimbursementModel.js" />
     <Content Include="Scripts\app\model\BaseData\RoleModel.js" />
     <Content Include="Scripts\app\model\BaseData\RolePermissionModel.js" />
     <Content Include="Scripts\app\model\BaseData\ServicePeriodCouponModel.js" />
     <Content Include="Scripts\app\model\BaseData\ServicePeriodModel.js" />
     <Content Include="Scripts\app\model\BaseData\StaffPerformanceStatisticsModel.js" />
+    <Content Include="Scripts\app\model\BaseData\SuperClassModel.js" />
     <Content Include="Scripts\app\model\BaseData\SysMenuModel.js" />
     <Content Include="Scripts\app\model\BaseData\SysNavMenuModel.js" />
     <Content Include="Scripts\app\model\BaseData\SystemSettingModel.js" />
@@ -793,12 +798,14 @@
     <Content Include="Scripts\app\store\BaseData\RechargeHistoryStore.js" />
     <Content Include="Scripts\app\store\BaseData\RechargePlanStore.js" />
     <Content Include="Scripts\app\store\BaseData\RecruitmentStore.js" />
+    <Content Include="Scripts\app\store\BaseData\ReimbursementStore.js" />
     <Content Include="Scripts\app\store\BaseData\RoleStore.js" />
     <Content Include="Scripts\app\store\BaseData\StaffPerformanceStatisticsStore.js" />
     <Content Include="Scripts\app\store\BaseData\StockRecordStore.js" />
     <Content Include="Scripts\app\store\BaseData\OrderItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\ServicePeriodCouponStore.js" />
     <Content Include="Scripts\app\store\BaseData\ServicePeriodStore.js" />
+    <Content Include="Scripts\app\store\BaseData\SuperClassStore.js" />
     <Content Include="Scripts\app\store\BaseData\SysMenuStore.js" />
     <Content Include="Scripts\app\store\BaseData\SysNavManageMenuStore.js" />
     <Content Include="Scripts\app\store\BaseData\SysNavMenuStore.js" />
@@ -920,6 +927,8 @@
     <Content Include="Scripts\app\view\RechargeReport\RHPayTypeReport.js" />
     <Content Include="Scripts\app\view\Recruitment\RecruitmentEdit.js" />
     <Content Include="Scripts\app\view\Recruitment\RecruitmentList.js" />
+    <Content Include="Scripts\app\view\Reimbursement\ReimbursementEdit.js" />
+    <Content Include="Scripts\app\view\Reimbursement\ReimbursementList.js" />
     <Content Include="Scripts\app\view\Report\ConsumeHistoryList.js" />
     <Content Include="Scripts\app\view\Report\DepartmentPerformanceStatisticsList.js" />
     <Content Include="Scripts\app\view\Report\ProductRetailStatisticsList.js" />
@@ -951,6 +960,7 @@
     <Content Include="Scripts\app\view\Shop\StockRecord.js" />
     <Content Include="Scripts\app\view\StockholderCard\StockholderCardEdit.js" />
     <Content Include="Scripts\app\view\StockholderCard\StockholderCardList.js" />
+    <Content Include="Scripts\app\view\SuperClass\SuperClassEdit.js" />
     <Content Include="Scripts\app\view\SuperClass\SuperClassList.js" />
     <Content Include="Scripts\app\view\SysMenu\AddSysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenu.js" />
@@ -1100,6 +1110,8 @@
     <Content Include="Areas\Mobile\Views\Agent\SalesManagerIndex.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\GeneralManagerHome.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\QuickOpenAccount.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\StockManager.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\TodayOpenAccount.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />
@@ -1854,6 +1866,7 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\vswd-ext_2.0.2.js" />
     <None Include="Scripts\_references.js" />
+    <Content Include="Video\SuperClass\hd.mp4" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1914,6 +1927,10 @@
     <ProjectReference Include="..\VVCar.VIP.Domain\VVCar.VIP.Domain.csproj">
       <Project>{5e2b30a6-bd56-4e3f-9626-2f717340a7cc}</Project>
       <Name>VVCar.VIP.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VVCar.VIP.Services\VVCar.VIP.Services.csproj">
+      <Project>{02E421ED-F25B-4A0A-9B4A-763C9A729137}</Project>
+      <Name>VVCar.VIP.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\YEF.Core\YEF.Core.csproj">
       <Project>{3897ea87-56ff-459d-a321-9821c6269617}</Project>

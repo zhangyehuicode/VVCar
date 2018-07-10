@@ -80,6 +80,7 @@
     <Compile Include="Dtos\ReceiveCouponDto.cs" />
     <Compile Include="Dtos\RechargePlanDto.cs" />
     <Compile Include="Dtos\RechargeTotalDataDto.cs" />
+    <Compile Include="Dtos\ReimbursementDto.cs" />
     <Compile Include="Dtos\TradeHistoryDto.cs" />
     <Compile Include="Dtos\UpdateMemberDto.cs" />
     <Compile Include="Dtos\UseMemberGradeRightsResult.cs" />
@@ -120,7 +121,9 @@
     <Compile Include="Entities\RechargeHistory.cs" />
     <Compile Include="Entities\RechargePlan.cs" />
     <Compile Include="Entities\Recruitment.cs" />
+    <Compile Include="Entities\Reimbursement.cs" />
     <Compile Include="Entities\SalesActivityRecord.cs" />
+    <Compile Include="Entities\SuperClass.cs" />
     <Compile Include="Entities\TradeHistory.cs" />
     <Compile Include="Entities\VerificationCode.cs" />
     <Compile Include="Entities\VerificationRecord.cs" />
@@ -150,6 +153,7 @@
     <Compile Include="Enums\EPeopleSort.cs" />
     <Compile Include="Enums\EPlanType.cs" />
     <Compile Include="Enums\ERecruitSex.cs" />
+    <Compile Include="Enums\EReimbursementApproveStatus.cs" />
     <Compile Include="Enums\ESalesActivityType.cs" />
     <Compile Include="Enums\ETradeSource.cs" />
     <Compile Include="Enums\EUseTimeType.cs" />
@@ -177,7 +181,9 @@
     <Compile Include="Filters\RechargeHistoryFilter.cs" />
     <Compile Include="Filters\RechargePlanFilter.cs" />
     <Compile Include="Filters\RecruitmentFilter.cs" />
+    <Compile Include="Filters\ReimbursementFilter.cs" />
     <Compile Include="Filters\SearchCardThemeGroupFilter.cs" />
+    <Compile Include="Filters\SuperClassFilter.cs" />
     <Compile Include="MakeCodeTypes.cs" />
     <Compile Include="MemberCardTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -207,6 +213,8 @@
     <Compile Include="Services\IRechargeHistoryService.cs" />
     <Compile Include="Services\IRechargePlanService.cs" />
     <Compile Include="Services\IRecruitmentService.cs" />
+    <Compile Include="Services\IReimbursementService.cs" />
+    <Compile Include="Services\ISuperClassService.cs" />
     <Compile Include="Services\ITradeHistoryService.cs" />
     <Compile Include="Services\IVerificationRecordService.cs" />
     <Compile Include="Services\IVisitRecordService.cs" />

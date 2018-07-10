@@ -29,7 +29,7 @@
         <a class="bq_box" style="border-right:none;">
             <div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
             <span>我的业绩</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共0户</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共{{UserInfo.TotalOpenAccountCount}}户</span>
         </a>
         @*<a class="bq_box" style="width:33.4%;border-bottom:none;">
                 <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:23px;"></div>
@@ -73,6 +73,23 @@
             <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:21px;"></div>
             <span>销售报表</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报表</span>
+        </a>
+        <a class="bq_box" style=" border-right:none;border-bottom:none;" v-on:click="mydepartment">
+            <div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:23px;"></div>
+            <span>我的门店</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">门店</span>
+        </a>
+    </div>
+    <div class="touxiang" style="margin-top:0px;">
+        <a class="bq_box" v-on:click="reimbursement">
+            <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:25px; margin-top:5px;"></div>
+            <span>业务报销</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">报销</span>
+        </a>
+        <a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="myreimbursement">
+            <div><img src="~/Areas/resource/img/mobile/master/hygl.png" style="width:21px;"></div>
+            <span>我的报销</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报销</span>
         </a>
         <a class="bq_box" style=" border-right:none;border-bottom:none;" v-on:click="stockmanager">
             <div><img src="~/Areas/resource/img/mobile/master/hdgl.png" style="width:23px;"></div>
@@ -151,16 +168,25 @@
                         //window.location.href = "/Mobile/Agent/MyInfo?mch=" + mch;
                     },
                     staffmanager: function (event) {
-                        //window.location.href = "/Mobile/Agent/StaffManager?mch=" + mch;
+                        window.location.href = "/Mobile/Merchant/StaffManager?mch=" + mch;
                     },
                     membermanager: function (event) {
                         //window.location.href = "/Mobile/Agent/MemberManager?mch=" + mch;
                     },
                     stockmanager: function (event) {
-                        //window.location.href = "/Mobile/Agent/StockManager?mch=" + mch;
+                        window.location.href = "/Mobile/Agent/StockManager?mch=" + mch;
                     },
                     salessatement: function (event) {
                         //window.location.href = "/Mobile/Agent/SalesStatement?mch=" + mch;
+                    },
+                    reimbursement: function (event) {
+                        //window.location.href = "/Mobile/Agent/Reimbursement?mch=" + mch;
+                    },
+                    myreimbursement: function (event) {
+                        //window.location.href = "/Mobile/Agent/MyReimbursement?mch=" + mch;
+                    },
+                    mydepartment: function (event) {
+                        //window.location.href = "/Mobile/Agent/MyDepartment?mch=" + mch;
                     },
                 }
             });

@@ -12,6 +12,7 @@
 	initComponent: function () {
 		var me = this;
 		var productStore = Ext.create('WX.store.BaseData.ProductStore');
+		productStore.load();
 		me.items = [{
 			xtype: 'grid',
 			name: 'productList',

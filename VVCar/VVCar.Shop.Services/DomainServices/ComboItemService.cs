@@ -31,17 +31,16 @@ namespace VVCar.Shop.Services.DomainServices
             return true;
         }
 
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override ComboItem Add(ComboItem entity)
         {
             if (entity == null)
                 return null;
-            var productIDList = this.Repository.GetQueryable(false).Where(t => t.ProductID == entity.ProductID).Select(t => t.ProductID).ToList();
-            var existData = false;
-            foreach (var productID in productIDList)
-            {
-                if (productID == entity.ProductID)
-                    existData = true;
-            }
+            var existData = this.Repository.Exists(t => t.ComboID == entity.ComboID && t.ProductID == entity.ProductID);
             if (existData)
                 throw new DomainException("数据已存在");
             entity.ID = Util.NewID();

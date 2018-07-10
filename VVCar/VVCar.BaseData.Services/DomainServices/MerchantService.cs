@@ -232,6 +232,9 @@ namespace VVCar.BaseData.Services.DomainServices
                         ActivateMerchantDataOperation(t.ID);
                     }
                     t.Status = EMerchantStatus.Activated;
+                    t.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+                    t.LastUpdatedUser = AppContext.CurrentSession.UserName;
+                    t.LastUpdatedDate = DateTime.Now;
                 });
                 this.Repository.UpdateRange(merchantList);
                 UnitOfWork.CommitTransaction();
@@ -428,6 +431,9 @@ namespace VVCar.BaseData.Services.DomainServices
             merchantList.ForEach(t =>
             {
                 t.Status = EMerchantStatus.Freeze;
+                t.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+                t.LastUpdatedUser = AppContext.CurrentSession.UserName;
+                t.LastUpdatedDate = DateTime.Now;
             });
             return this.Repository.UpdateRange(merchantList) > 0;
         }

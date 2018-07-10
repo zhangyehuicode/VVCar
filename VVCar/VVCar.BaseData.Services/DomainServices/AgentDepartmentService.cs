@@ -125,6 +125,9 @@ namespace VVCar.BaseData.Services.DomainServices
             agentDepartmentList.ForEach(t =>
             {
                 t.ApproveStatus = EAgentDepartmentApproveStatus.Approved;
+                t.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+                t.LastUpdatedUser = AppContext.CurrentSession.UserName;
+                t.LastUpdatedDate = DateTime.Now;
             });
             return Repository.UpdateRange(agentDepartmentList) > 0;
         }
@@ -152,6 +155,9 @@ namespace VVCar.BaseData.Services.DomainServices
             agentDepartmentList.ForEach(t =>
             {
                 t.ApproveStatus = EAgentDepartmentApproveStatus.Pedding;
+                t.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+                t.LastUpdatedUser = AppContext.CurrentSession.UserName;
+                t.LastUpdatedDate = DateTime.Now;
             });
             return Repository.UpdateRange(agentDepartmentList) > 0;
         }
@@ -180,6 +186,9 @@ namespace VVCar.BaseData.Services.DomainServices
             agentDepartmentList.ForEach(t =>
             {
                 t.ApproveStatus = EAgentDepartmentApproveStatus.Imported;
+                t.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+                t.LastUpdatedUser = AppContext.CurrentSession.UserName;
+                t.LastUpdatedDate = DateTime.Now;
             });
             return Repository.UpdateRange(agentDepartmentList) > 0;
         }

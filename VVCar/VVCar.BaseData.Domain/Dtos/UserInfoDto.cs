@@ -150,5 +150,10 @@ namespace VVCar.BaseData.Domain.Dtos
         /// 是否代理商销售经理
         /// </summary>
         public bool IsSalesManger { get; set; }
+
+        /// <summary>
+        /// 总开户数量
+        /// </summary>
+        public int TotalOpenAccountCount { get; set; }
     }
 }

@@ -20,6 +20,7 @@ namespace VVCar.VIP.Domain.Entities
         public CouponPush()
         {
             CouponPushItems = new List<CouponPushItem>();
+            CouponPushMembers = new List<CouponPushMember>();
         }
 
         /// <summary>

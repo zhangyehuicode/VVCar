@@ -62,6 +62,8 @@ namespace VVCar.BaseData.Services.DomainServices
 
         IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
 
+        IRepository<AgentDepartment> AgentDepartmentRepo { get => UnitOfWork.GetRepository<IRepository<AgentDepartment>>(); }
+
         #endregion
 
         #region methods
@@ -301,6 +303,8 @@ namespace VVCar.BaseData.Services.DomainServices
                     result.IsGeneralManager = true;
                 else if (userRoles.Exists(t => t.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000005")))
                     result.IsSalesManger = true;
+
+                result.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
 
                 return result;
             }

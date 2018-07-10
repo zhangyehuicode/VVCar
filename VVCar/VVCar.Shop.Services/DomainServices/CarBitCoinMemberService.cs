@@ -141,11 +141,12 @@ namespace VVCar.Shop.Services.DomainServices
                 if (t.MemberPlateList != null && t.MemberPlateList.Count() > 0)
                     plates.AddRange(t.MemberPlateList.Select(p => p.PlateNumber));
             });
-            var ordersmoney = OrderRepo.GetQueryable(false).Where(t => openids.Contains(t.OpenID)).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
-            var pickuoordersmoney = PickUpOrderRepo.GetQueryable(false).Where(t => plates.Contains(t.PlateNumber)).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            var hqid = Guid.Parse("00000000-0000-0000-0000-000000000001");
+            var ordersmoney = OrderRepo.GetQueryable(false).Where(t => t.MerchantID != hqid).Where(t => openids.Contains(t.OpenID)).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            var pickuoordersmoney = PickUpOrderRepo.GetQueryable(false).Where(t => t.MerchantID != hqid).Where(t => plates.Contains(t.PlateNumber)).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
             var users = UserRepo.GetQueryable(false).Where(t => t.MobilePhoneNo == mobilePhoneNo).ToList();
             var userids = users.Select(t => t.ID).ToList();
-            var userpickuoordersmoney = PickUpOrderRepo.GetQueryable(false).Where(t => userids.Contains(t.StaffID)).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            var userpickuoordersmoney = PickUpOrderRepo.GetQueryable(false).Where(t => t.MerchantID != hqid).Where(t => userids.Contains(t.StaffID)).GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
             var carBitCoinMember = CarBitCoinMemberRepo.GetQueryable(false).Where(t => t.MobilePhoneNo == mobilePhoneNo).FirstOrDefault();
             //var carBitCoinRecords = CarBitCoinRecordRepo.GetQueryable(false).Where(t => t.CarBitCoinMemberID == carBitCoinMember.ID && t.CarBitCoinRecordType == ECarBitCoinRecordType.BuyEngine).ToList();
             var carBitCoinMemberEngines = CarBitCoinMemberEngineRepo.GetQueryable(false).Where(t => t.CarBitCoinMemberID == carBitCoinMember.ID).ToList();
@@ -164,8 +165,6 @@ namespace VVCar.Shop.Services.DomainServices
             var horsepower = CalculateHorsepower(cbcmember.MobilePhoneNo);
             if (horsepower < 60)
                 horsepower = 60;
-            if (cbcmember.Horsepower >= horsepower)
-                return true;
             cbcmember.Horsepower = horsepower;
             Repository.Update(cbcmember);
             return true;
