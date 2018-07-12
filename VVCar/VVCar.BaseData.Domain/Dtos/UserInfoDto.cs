@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain.Entities;
 
 namespace VVCar.BaseData.Domain.Dtos
 {
@@ -155,5 +156,20 @@ namespace VVCar.BaseData.Domain.Dtos
         /// 总开户数量
         /// </summary>
         public int TotalOpenAccountCount { get; set; }
+
+        /// <summary>
+        /// 今日开户数量
+        /// </summary>
+        public int TodayOpenAccountCount { get; set; }
+
+        /// <summary>
+        /// 当月开发门店数
+        /// </summary>
+        public int MonthOpenAccountCount { get; set; }
+
+        /// <summary>
+        /// 角色
+        /// </summary>
+        public List<UserRole> UserRoles { get; set; }
     }
 }

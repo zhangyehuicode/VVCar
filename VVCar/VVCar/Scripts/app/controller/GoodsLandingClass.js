@@ -1,50 +1,50 @@
-﻿Ext.define('WX.controller.SuperClass', {
+﻿Ext.define('WX.controller.GoodsLandingClass', {
 	extend: 'Ext.app.Controller',
-	views: ['SuperClass.SuperClassList', 'SuperClass.SuperClassEdit'],
+	views: ['GoodsLandingClass.GoodsLandingClassList', 'GoodsLandingClass.GoodsLandingClassEdit'],
 	refs: [{
-		ref: 'superClassList',
-		selector: 'SuperClassList'
+		ref: 'goodsLandingClassList',
+		selector: 'GoodsLandingClassList'
 	}, {
-		ref: 'superClassEdit',
-		selector: 'SuperClassEdit'
+		ref: 'goodsLandingClassEdit',
+		selector: 'GoodsLandingClassEdit'
 	}],
 	init: function () {
 		var me = this;
 		me.control({
-			'SuperClassList button[action=addVideo]': {
+			'GoodsLandingClassList button[action=addVideo]': {
 				click: me.addVideo
 			},
-			'SuperClassList button[action=editVideo]': {
-				click: me.editSuperClassBtn
+			'GoodsLandingClassList button[action=editVideo]': {
+				click: me.editGoodsLandingClassBtn
 			},
-			'SuperClassList button[action=delVideo]': {
+			'GoodsLandingClassList button[action=delVideo]': {
 				click: me.delVideo
 			},
-			'SuperClassList button[action=search]': {
+			'GoodsLandingClassList button[action=search]': {
 				click: me.search
 			},
-			'SuperClassList': {
-				//itemdblclick: me.editSuperClass
+			'GoodsLandingClassList': {
+				//itemdblclick: me.editGoodsLandingClass
 			},
-			'SuperClassEdit button[action=uploadVideo]': {
+			'GoodsLandingClassEdit button[action=uploadVideo]': {
 				click: me.uploadVideo
 			},
-			'SuperClassEdit button[action=save]': {
+			'GoodsLandingClassEdit button[action=save]': {
 				click: me.saveVideo
 			}
 		});
 	},
-	editSuperClass: function (grid, record) {
-		var win = Ext.widget('SuperClassEdit');
+	editGoodsLandingClass: function (grid, record) {
+		var win = Ext.widget('GoodsLandingClassEdit');
 		win.form.loadRecord(record);
 		win.down('box[name=VideoShow]').autoEl.src = record.data.VideoUrl;
 		win.form.getForm().actionMethod = 'PUT';
 		win.setTitle('编辑商户');
 		win.show();
 	},
-	editSuperClassBtn: function (btn) {
+	editGoodsLandingClassBtn: function (btn) {
 		var me = this;
-		var selectedItems = me.getSuperClassList().getSelectionModel().getSelection();
+		var selectedItems = me.getGoodsLandingClassList().getSelectionModel().getSelection();
 		if (selectedItems < 1) {
 			Ext.Msg.alert('提示', '请先选中需要编辑的数据');
 			return;
@@ -53,10 +53,10 @@
 			Ext.Msg.alert('提示', '一次只能编辑一条数据');
 			return;
 		}
-		this.editSuperClass(null, selectedItems[0]);
+		this.editGoodsLandingClass(null, selectedItems[0]);
 	},
 	addVideo: function () {
-		var win = Ext.widget('SuperClassEdit');
+		var win = Ext.widget('GoodsLandingClassEdit');
 		win.form.getForm().actionMethod = 'POST';
 		win.setTitle('添加视频');
 		win.show();
@@ -97,7 +97,7 @@
 		var win = btn.up('window');
 		if (form.isValid()) {
 			form.submit({
-				url: '/api/UploadFile/UploadSuperClass',
+				url: '/api/UploadFile/UploadGoodsLandingClass',
 				waitMsg: '正在上传...',
 				success: function (fp, o) {
 					if (o.result.success) {
@@ -116,16 +116,16 @@
 	},
 	saveVideo: function () {
 		var me = this;
-		var win = me.getSuperClassEdit();
+		var win = me.getGoodsLandingClassEdit();
 		var form = win.form.getForm();
 		var formValues = form.getValues();
 		if (formValues.ImgUrl == '') {
 			Ext.Msg.alert('提示', '请先上传视频');
 			return;
 		}
-		formValues.VideoType = 0;
+		formValues.VideoType = 1;
 		if (form.isValid()) {
-			var store = me.getSuperClassList().getStore();
+			var store = me.getGoodsLandingClassList().getStore();
 			if (form.actionMethod == 'POST') {
 				store.create(formValues, {
 					callback: function (records, operation, success) {
@@ -164,8 +164,8 @@
 		var me = this;
 		var queryValues = btn.up('form').getValues();
 		if (queryValues != null) {
-			queryValues.VideoType = 0;
-			var store = me.getSuperClassList().getStore();
+			queryValues.VideoType = 1;
+			var store = me.getGoodsLandingClassList().getStore();
 			store.proxy.extraParams = queryValues;
 			store.load();
 		} else {

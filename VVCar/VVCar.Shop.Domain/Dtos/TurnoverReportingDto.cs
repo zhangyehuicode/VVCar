@@ -81,7 +81,7 @@ namespace VVCar.Shop.Domain.Dtos
         public int Unit { get; set; }
 
         /// <summary>
-        /// 营业额
+        /// 营业额/数量
         /// </summary>
         public decimal Turnover { get; set; }
 
@@ -197,6 +197,16 @@ namespace VVCar.Shop.Domain.Dtos
                 return BasicSalary + Subsidy + MonthCommission;
             }
         }
+
+        /// <summary>
+        /// 总开发门店数
+        /// </summary>
+        public int TotalOpenAccountCount { get; set; }
+
+        /// <summary>
+        /// 当月开发门店数
+        /// </summary>
+        public int MonthOpenAccountCount { get; set; }
     }
 
     /// <summary>
@@ -239,5 +249,33 @@ namespace VVCar.Shop.Domain.Dtos
         /// </summary>
         [Display(Name = "当月开发门店数量")]
         public decimal MonthDepartmentNumber { get; set; }
+    }
+
+    /// <summary>
+    /// 代理商门店开发报表Dto
+    /// </summary>
+    public class OpenAccountReportingDto
+    {
+        public OpenAccountReportingDto()
+        {
+            TotalOpenAccount = new List<TurnoverDto>();
+        }
+
+        /// <summary>
+        /// 门店开发总数
+        /// </summary>
+        [Display(Name = "门店开发总数")]
+        public List<TurnoverDto> TotalOpenAccount { get; set; }
+    }
+
+    /// <summary>
+    /// 月开发门店业绩
+    /// </summary>
+    public class MonthOpenAccountPerformanceDto
+    {
+        /// <summary>
+        /// 月总开发门店数
+        /// </summary>
+        public decimal TotalOpenAccountCount { get; set; }
     }
 }

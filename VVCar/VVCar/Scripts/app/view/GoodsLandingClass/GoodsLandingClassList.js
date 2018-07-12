@@ -1,8 +1,8 @@
-﻿Ext.define('WX.view.SuperClass.SuperClassList', {
+﻿Ext.define('WX.view.GoodsLandingClass.GoodsLandingClassList', {
 	extend: 'Ext.grid.Panel',
-	alias: 'widget.SuperClassList',
-	title: '软件使用课程',
-	name: 'gridSuperClass',
+	alias: 'widget.GoodsLandingClassList',
+	title: '商品落地课程',
+	name: 'gridGoodsLandingClass',
 	store: Ext.create('WX.store.BaseData.SuperClassStore'),
 	stripeRows: true,
 	loadMask: true,
@@ -17,21 +17,21 @@
 			text: '添加课程',
 			scope: this,
 			iconCls: 'fa fa-plus-circle',
-			permissionCode: 'SuperClass.SuperClassEdit',
+			permissionCode: 'GoodsLandingClass.GoodsLandingClassEdit',
 		}, {
 			action: 'editVideo',
 			xtype: 'button',
 			text: '修改课程',
 			scope: this,
 			iconCls: 'fa fa-pencil',
-			permissionCode: 'SuperClass.SuperClassEdit',
+			permissionCode: 'GoodsLandingClass.GoodsLandingClassEdit',
 		}, {
 			action: 'delVideo',
 			xtype: 'button',
 			text: '删除课程',
 			scope: this,
 			iconCls: 'fa fa-close',
-			permissionCode: 'SuperClass.SuperClassEdit',
+			permissionCode: 'GoodsLandingClass.GoodsLandingClassEdit',
 		}, {
 			xtype: 'form',
 			layout: 'column',
@@ -89,7 +89,7 @@
 		var me = this;
 		var store = me.getStore();
 		var params = {
-			VideoType: 0,
+			VideoType: 1,
 		}
 		Ext.apply(store.proxy.extraParams, params);
 		store.load();

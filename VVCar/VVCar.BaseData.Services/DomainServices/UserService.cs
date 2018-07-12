@@ -294,6 +294,19 @@ namespace VVCar.BaseData.Services.DomainServices
                 result.DailyPickUpOrderCount = PickUpOrderRepo.GetQueryable(false).Count(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedDate >= starttime && t.CreatedDate < endtime);
                 result.CustomerAppointmentCount = AppointmentRepo.GetQueryable(false).Count(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
                 result.StaffCount = UserRepo.GetQueryable(false).Count(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+                if (param.IsGeneralManager)
+                {
+                    var generalmanagerid = Guid.Parse("00000000-0000-0000-0000-000000000006");
+                    var salesmanagerid = Guid.Parse("00000000-0000-0000-0000-000000000005");
+                    var agentusers = UserRepo.GetInclude(t => t.UserRoles, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+                    result.StaffCount = 0;
+                    agentusers.ForEach(t =>
+                    {
+                        var userroles = t.UserRoles.ToList();
+                        if (userroles != null && userroles.Exists(r => r.RoleID == generalmanagerid || r.RoleID == salesmanagerid))
+                            result.StaffCount += 1;
+                    });
+                }
                 result.MemberCount = MemberRepo.GetQueryable(false).Count(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
 
                 var couponTemplateStock = CouponTemplateRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Nature == VIP.Domain.Enums.ENature.Card).Select(t => t.Stock).GroupBy(g => 1).Select(t => t.Sum(s => s.Stock)).FirstOrDefault();
@@ -305,6 +318,7 @@ namespace VVCar.BaseData.Services.DomainServices
                     result.IsSalesManger = true;
 
                 result.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
+                result.TodayOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.CreatedDate >= starttime && t.CreatedDate < endtime).Count();
 
                 return result;
             }
@@ -396,7 +410,7 @@ namespace VVCar.BaseData.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<UserInfoDto> GetUsers(UserFilter filter, ref int totalCount)
         {
-            var queryable = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = this.Repository.GetInclude(t => t.UserRoles, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.Code))
                 queryable = queryable.Where(t => t.Code.Contains(filter.Code));
             if (!string.IsNullOrEmpty(filter.Name))
@@ -422,8 +436,24 @@ namespace VVCar.BaseData.Services.DomainServices
                 t.CustomerServiceCount = staffPerformance.CustomerServiceCount;
                 t.MonthCustomerServiceCount = staffPerformance.MonthCustomerServiceCount;
                 t.MonthIncome = staffPerformance.MonthIncome;
+                t.TotalOpenAccountCount = staffPerformance.TotalOpenAccountCount;
+                t.MonthOpenAccountCount = staffPerformance.MonthOpenAccountCount;
             });
             result = result.OrderByDescending(t => t.MonthPerformance).ToList();
+            if (filter.SortDirection == EUserSortDirection.MonthOpenAccountCount)
+            {
+                //result = result.Where(t => t.UserRoles.Exists(s => s.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000005") || s.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000006"))).ToList();
+                var restmp = new List<UserInfoDto>();
+                result.ForEach(t =>
+                {
+                    var isagent = t.UserRoles.Exists(s => s.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000005") || s.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000006"));
+                    if (isagent)
+                        restmp.Add(t);
+                });
+                result = restmp;
+                result = result.OrderByDescending(t => t.MonthOpenAccountCount).ToList();
+                totalCount = result.Count();
+            }
             var ranking = 1;
             result.ForEach(t =>
             {

@@ -14,6 +14,9 @@ namespace VVCar.Shop.Data.Mapping
         {
             HasKey(t => t.ID);
 
+            Property(t => t.CouponTemplateCode)
+                .HasMaxLength(50);
+
             Property(t => t.CouponTemplateTitle)
              .HasMaxLength(18);
         }

@@ -152,13 +152,23 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
-        /// 上传课程
+        /// 上传软件使用课程
         /// </summary>
         /// <returns></returns>
         [HttpPost, Route("UploadSuperClass")]
-        public UploadFileResult UploadVideo()
+        public UploadFileResult UploadSuperClass()
         {
             return UploadAction("Video/SuperClass");
+        }
+
+        /// <summary>
+        /// 上传商品落地课程
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadGoodsLandingClass")]
+        public UploadFileResult UploadGoodsLandingClass()
+        {
+            return UploadAction("Video/GoodsLandingClass");
         }
 
         /// <summary>

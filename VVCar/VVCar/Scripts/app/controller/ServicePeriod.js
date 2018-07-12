@@ -257,7 +257,7 @@
 		me.tasks.forEach(function (item) {
 			var servicePeriodCoupon = [];
 			selectedItems.forEach(function (index) {
-				servicePeriodCoupon.push({ ServicePeriodSettingID: item.data.ID, CouponTemplateID: index.data.ID, CouponTemplateTitle: index.data.Title });
+				servicePeriodCoupon.push({ ServicePeriodSettingID: item.data.ID, CouponTemplateID: index.data.ID, CouponTemplateTitle: index.data.Title, CouponTemplateCode: index.data.TemplateCode });
 			});
 			store.batchAdd(servicePeriodCoupon, function (response, opts) {
 				var ajaxResult = JSON.parse(response.responseText);

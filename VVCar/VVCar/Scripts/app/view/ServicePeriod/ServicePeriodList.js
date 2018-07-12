@@ -121,7 +121,7 @@
 				}
 			],
 			columns: [
-				{ header: '卡券编号', dataIndex: 'TemplateCode', flex: 1 },
+				{ header: '优惠券模板编号', dataIndex: 'CouponTemplateCode', flex: 1 },
 				{ header: '优惠券模板标题', dataIndex: 'CouponTemplateTitle', flex: 1 },
 			],
 			bbar: {

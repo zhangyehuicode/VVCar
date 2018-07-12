@@ -158,6 +158,7 @@
     <Compile Include="Enums\ETradeSource.cs" />
     <Compile Include="Enums\EUseTimeType.cs" />
     <Compile Include="Enums\EVerificationMode.cs" />
+    <Compile Include="Enums\EVideoType.cs" />
     <Compile Include="Filters\AdjustMemberPointFilter.cs" />
     <Compile Include="Filters\CardThemeCategoryFilter.cs" />
     <Compile Include="Filters\CardThemeGroupFilter.cs" />

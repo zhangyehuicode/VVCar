@@ -4,6 +4,7 @@
 	fields: [
 		{ name: 'ID' },
 		{ name: 'CouponTemplateID' },
+		{ name: 'CouponTemplateCode' },
 		{ name: 'CouponTemplateTitle' },
 	]
 })

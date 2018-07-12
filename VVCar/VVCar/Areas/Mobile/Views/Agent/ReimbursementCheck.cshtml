@@ -4,10 +4,10 @@
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<div id="mstockmanager">
+<div id="reimbursementcheck">
     <div class="toubu">
         <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
-        库存管理
+        <div>报销审核</div>
         <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
     </div>
     <div class="touxiang">
@@ -15,63 +15,68 @@
             <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
             <div class="touxiang_div">
                 <span>{{User.Name}}</span>
-                <span style=" font-size:14px; color:#999;">库存商品：{{ProductCount}}</span>
+                <span style=" font-size:14px; color:#999;">报销：{{ReimbursementList.length}}</span>
             </div>
         </div>
     </div>
     <div class="kcd_box2">
         <form>
-            <select class="kcd_input" style="width:25%;" id="productcategoryselect">
-                <option v-for="ProductCategory in ProductCategoryList" v-bind:value="ProductCategory.ID">{{ProductCategory.Name}}</option>
-            </select>
-            <input type="text" class="kcgl_input" style="color:#999" placeholder="请输入库存商品名称/编号" id="namecode">
+            <input type="text" class="kcgl_input" style="color:#999;width:75%;" placeholder="请输入报销项目名称" id="reimbursementname">
         </form>
-        <div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="searchProduct"></div>
+        <div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="searchReimbursement"></div>
     </div>
-    <div class="touxiang" v-for="Product in ProductList">
+    <div class="touxiang" v-for="Reimbursement in ReimbursementList">
         <div class="kcgl_box">
-            <div class="kcgl">商品编号</div>
+            <div class="kcgl">报销项目</div>
             <div class="kcgl2">
-                <span>{{Product.Code}}</span>
+                <span>{{Reimbursement.Project}}</span>
             </div>
         </div>
         <div class="kcgl_box">
-            <div class="kcgl">商品名称</div>
+            <div class="kcgl">申请报销人</div>
             <div class="kcgl2">
-                <span>{{Product.Name}}</span>
+                <span>{{Reimbursement.UserName}}</span>
             </div>
         </div>
         <div class="kcgl_box">
-            <div class="kcgl">库存</div>
+            <div class="kcgl">报销金额</div>
             <div class="kcgl2">
-                <span style="color:#ff0c4c;">{{Product.Stock}}</span>
+                <span>{{Reimbursement.Money}}</span>
             </div>
         </div>
         <div class="kcgl_box">
-            <div class="kcgl">是否上架</div>
+            <div class="kcgl">备注</div>
             <div class="kcgl2">
-                <span style="color:#ff0c4c;" v-if="Product.IsPublish==false">否</span>
-                <span v-if="Product.IsPublish==true">是</span>
+                <span>{{Reimbursement.Remark}}</span>
             </div>
         </div>
         <div class="kcgl_box">
-            <div class="kcgl">记录查询</div>
+            <div class="kcgl">提交时间</div>
             <div class="kcgl2">
-                <span>
-                    <a style="background-color:#51b3f0;float:left; margin-left:10%; font-size:12px; width:70px;" v-on:click="stockinrecord(Product)">入库记录</a>
-                    <a style="float:left; font-size:12px; width:70px;background-color:#51b3f0;" v-on:click="stockoutrecord(Product)">出库记录</a>
-                </span>
+                <span>{{Reimbursement.CreatedDate}}</span>
             </div>
         </div>
-
+        <div class="kcgl_box">
+            <div class="kcgl">审核状态</div>
+            <div class="kcgl2">
+                <span style="color:#ff0c4c;" v-if="Reimbursement.Status==0">未审核</span>
+                <span style="color:green;" v-if="Reimbursement.Status==1">已审核</span>
+            </div>
+        </div>
+        <div class="kcgl_box">
+            <div class="kcgl" style="border:none;">票据</div>
+            <div style="margin:10px 13px;">
+                <img style="width:100%;height:200px;" v-bind:src=Reimbursement.ImgUrl v-on:click="checkimg(Reimbursement)" />
+            </div>
+        </div>
         <div class="kcgl_box" style="border:none;">
             <div class="kcgl">操作</div>
             <div class="kcgl2">
                 <span>
-                    <a style="background-color:#ff0c4c;float:left; margin-left:10%; width:16%;" v-on:click="stockin(Product)">入库</a>
-                    <a style="background-color:#51b3f0;float:left; width:16%;" v-on:click="stockout(Product)">出库</a>
-                    <a style="background-color:#51b3f0;float:left; width:16%;" v-if="Product.IsPublish==false" v-on:click="changePublishStatus(Product)">上架</a>
-                    <a style="background-color:#51b3f0;float:left; width:16%;" v-if="Product.IsPublish==true" v-on:click="changePublishStatus(Product)">下架</a>
+                    <a style="background-color:#51b3f0; width:55px;float:left;margin-left:15px;" v-if="Reimbursement.Status==0" v-on:click="passcheck(Reimbursement)">通过审核</a>
+                </span>
+                <span>
+                    <a style="background-color:#51b3f0;width:55px;float:left;margin-left:15px;" v-if="Reimbursement.Status==1" v-on:click="unpasscheck(Reimbursement)">反审核</a>
                 </span>
             </div>
         </div>
@@ -132,55 +137,38 @@
         $(function () {
         var mch = $.getUrlParam('mch');
             var user = sessionStorage.getItem('agentuser');
-            var isgeneralmanager= sessionStorage.getItem('isgeneralmanager')=='true';
-        _viewModel = new Vue({
-            el: '#mstockmanager',
-            data: {
-                User: {},
-                ProductCategoryList: [],
-                ProductList: [],
-                ProductCount:0,
-            },
-            methods: {
-                back: function (event) {
-                    history.back(-1);
+            var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
+            if (!isgeneralmanager)
+                window.location.href = "/Mobile/Agent?mch=" + mch;
+            _viewModel = new Vue({
+                el: '#reimbursementcheck',
+                data: {
+                    User: {},
+                    ReimbursementList: [],
                 },
-                home: function (event) {
-                    window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
-                },
-                changePublishStatus: function (data, event) {
-                    var tips = '确定';
-                    if (data.IsPublish)
-                        tips += '下架？';
-                    else
-                        tips += '上架？';
-                    $.confirm(tips, function () {
-                        changePublishStatus(data.ID);
-                    });
-                },
-                searchProduct: function (event) {
-                    searchProduct();
-                },
-                stockout: function (data, event) {
-                    sessionStorage.setItem('stockout','true');
-                    sessionStorage.setItem('product', JSON.stringify(data));
-                    window.location.href = "/Mobile/Merchant/StockOutIn?mch=" + mch;
-                },
-                stockin: function (data, event) {
-                    sessionStorage.setItem('stockout', 'false');
-                    sessionStorage.setItem('product', JSON.stringify(data));
-                    window.location.href = "/Mobile/Merchant/StockOutIn?mch=" + mch;
-                },
-                stockinrecord: function (data, event) {
-                    sessionStorage.setItem('stockout', 'false');
-                    sessionStorage.setItem('product', JSON.stringify(data));
-                    window.location.href = "/Mobile/Merchant/StockRecord?mch=" + mch;
-                },
-                stockoutrecord: function (data, event) {
-                    sessionStorage.setItem('stockout', 'true');
-                    sessionStorage.setItem('product', JSON.stringify(data));
-                    window.location.href = "/Mobile/Merchant/StockRecord?mch=" + mch;
-                },
+                methods: {
+                    back: function (event) {
+                        history.back(-1);
+                    },
+                    home: function (event) {
+                        window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+                    },
+                    searchReimbursement: function (event) {
+                        searchReimbursement();
+                    },
+                    passcheck: function (data, event) {
+                        $.confirm('确认通过审核？', function () {
+                            passcheck(data.ID);
+                        });
+                    },
+                    unpasscheck: function (data, event) {
+                        $.confirm('确认反审核？', function () {
+                            unpasscheck(data.ID);
+                        });
+                    },
+                    checkimg: function (data, event) {
+                        window.location.href = data.ImgUrl;
+                    },
             }
         });
 
@@ -220,9 +208,9 @@
                 _viewModel.User = JSON.parse(user);
             }
 
-            function getProductCategory() {
+            function getMyReimbursement() {
                 $.ajax({
-                    url: '/api/ProductCategory?IsFromStockManager=true',
+                    url: '/api/Reimbursement?All=false',
                     type: 'GET',
                     headers: { 'CompanyCode': mch },
                     beforeSend: function () {
@@ -231,14 +219,7 @@
                     success: function (res) {
                         $.hideLoading();
                         if (res.IsSuccessful) {
-                            _viewModel.ProductCategoryList = res.Data;
-                            if (res.Data != null && res.Data.length > 0) {
-                                _viewModel.ProductList = res.Data[0].SubProducts;
-                                for (var i = 0; i < res.Data.length; i++) {
-                                    if (res.Data[i].SubProducts != null)
-                                        _viewModel.ProductCount += res.Data[i].SubProducts.length;
-                                }
-                            }
+                            _viewModel.ReimbursementList = res.Data;
                         } else {
                             $.alert(res.ErrorMessage);
                         }
@@ -248,26 +229,38 @@
                     }
                 });
             }
-            getProductCategory();
+            getMyReimbursement();
 
-            $('#productcategoryselect').change(function () {
-                var value = $(this).val();
-                for (var i = 0; i < _viewModel.ProductCategoryList.length; i++) {
-                    if (_viewModel.ProductCategoryList[i].ID == value) {
-                        _viewModel.ProductList = _viewModel.ProductCategoryList[i].SubProducts;
-                        break;
-                    }
-                }
-            });
-
-            function changePublishStatus(id) {
-                if (id == null || id == '') {
-                    $.alert('参数错误');
-                    return;
-                }
+            function searchReimbursement() {
+                var reimbursementname = $('#reimbursementname').val();
                 $.ajax({
-                    url: '/api/Product/ChangePublishStatus?id=' + id,
+                    url: '/api/Reimbursement?All=false&Project=' + reimbursementname,
                     type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.ReimbursementList = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
+            function passcheck(id) {
+                if (id == null || id == '')
+                    return;
+                $.ajax({
+                    url: '/api/Reimbursement/ApproveReimbursement',
+                    type: 'POST',
+                    data: { IdList: [id] },
                     headers: { 'CompanyCode': mch },
                     beforeSend: function () {
                         $.showLoading();
@@ -276,16 +269,19 @@
                         $.hideLoading();
                         if (res.IsSuccessful) {
                             if (res.Data) {
-                                $.toast('操作成功');
-                                for (var i = 0; i < _viewModel.ProductList.length; i++) {
-                                    if (_viewModel.ProductList[i].ID == id) {
-                                        _viewModel.ProductList[i].IsPublish = !_viewModel.ProductList[i].IsPublish;
+                                $.toast('审核成功');
+                                for (var i = 0; i < _viewModel.ReimbursementList.length; i++) {
+                                    if (_viewModel.ReimbursementList[i].ID == id) {
+                                        if (_viewModel.ReimbursementList[i].Status == 0)
+                                            _viewModel.ReimbursementList[i].Status = 1;
+                                        else
+                                            _viewModel.ReimbursementList[i].Status = 0;
                                         break;
                                     }
                                 }
-                            } else {
-                                $.alert('操作失败，请重试');
                             }
+                            else
+                                $.toast('审核失败');
                         } else {
                             $.alert(res.ErrorMessage);
                         }
@@ -296,16 +292,13 @@
                 });
             }
 
-            function searchProduct() {
-                var productCategoryID = $('#productcategoryselect').val();
-                if (productCategoryID == null || productCategoryID == '') {
-                    $.alert('参数错误，类别信息不存在');
+            function unpasscheck(id) {
+                if (id == null || id == '')
                     return;
-                }
-                var namecode = $('#namecode').val();
                 $.ajax({
-                    url: '/api/Product?IsFromStockManager=true&ProductCategoryID=' + productCategoryID + '&NameCode=' + namecode,
-                    type: 'GET',
+                    url: '/api/Reimbursement/AntiApproveReimbursement',
+                    type: 'POST',
+                    data: { IdList: [id] },
                     headers: { 'CompanyCode': mch },
                     beforeSend: function () {
                         $.showLoading();
@@ -313,7 +306,20 @@
                     success: function (res) {
                         $.hideLoading();
                         if (res.IsSuccessful) {
-                            _viewModel.ProductList = res.Data;
+                            if (res.Data) {
+                                $.toast('反审核成功');
+                                for (var i = 0; i < _viewModel.ReimbursementList.length; i++) {
+                                    if (_viewModel.ReimbursementList[i].ID == id) {
+                                        if (_viewModel.ReimbursementList[i].Status == 0)
+                                            _viewModel.ReimbursementList[i].Status = 1;
+                                        else
+                                            _viewModel.ReimbursementList[i].Status = 0;
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                                $.toast('反审核失败');
                         } else {
                             $.alert(res.ErrorMessage);
                         }

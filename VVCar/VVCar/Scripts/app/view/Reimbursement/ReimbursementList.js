@@ -93,10 +93,10 @@
 				}
 			},
 			{
-				header: '报销单图片', dataIndex: 'ImgUrl', width: 100,
+				header: '报销单图片', dataIndex: 'ImgUrl', width: 180,
 				renderer: function (value) {
 					if (value != "" && value != null) {
-						return '<a href="' + value + '"download="' + value + '"><img src="' + value + '" style="width: 80px; height: 50px;" /></a>';
+						return '<a href="' + value + '"download="' + value + '"><img src="' + value + '" style="width: 150px; height: 50px;" /></a>';
 					}
 				},
 			},

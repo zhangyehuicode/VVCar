@@ -125,7 +125,7 @@
 			Ext.Msg.alert('提示', '请先选择要删除的数据!');
 			return;
 		}
-		Ext.Msg.confirm('提示', '确定要删除任务吗', function (optional) {
+		Ext.Msg.confirm('提示', '确定要删除报销单吗', function (optional) {
 			if (optional === 'yes') {
 				var store = btn.up('grid').getStore();
 				var ids = [];
@@ -170,7 +170,7 @@
 				Ext.Msg.alert('提示', '请选择未审核的数据!');
 				return;
 			}
-			Ext.Msg.confirm('询问', '确定要审核吗?', function (operational) {
+			Ext.Msg.confirm('询问', '确定要通过审核吗?', function (operational) {
 				if (operational == 'yes') {
 					store.approveReimbursement(ids,
 						function success(response, request, c) {

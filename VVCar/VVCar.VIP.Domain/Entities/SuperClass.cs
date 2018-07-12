@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.VIP.Domain.Enums;
 using YEF.Core.Data;
 
 namespace VVCar.VIP.Domain.Entities
@@ -31,6 +32,12 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "视频")]
         public string VideoUrl { get; set; }
+
+        /// <summary>
+        /// 视频类型
+        /// </summary>
+        [Display(Name = "视频类型")]
+        public EVideoType VideoType { get; set; }
 
         /// <summary>
         /// 视频简介

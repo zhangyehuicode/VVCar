@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
@@ -47,6 +45,7 @@ namespace VVCar.VIP.Services.DomainServices
             if (superClass == null)
                 throw new DomainException("更新的视频不存在");
             superClass.Name = entity.Name;
+            superClass.VideoType = entity.VideoType;
             superClass.VideoUrl = entity.VideoUrl;
             superClass.LastUpdateDate = DateTime.Now;
             superClass.LastUpdateUser = AppContext.CurrentSession.UserName;
@@ -69,6 +68,9 @@ namespace VVCar.VIP.Services.DomainServices
             superClassList.ForEach(t =>
             {
                 t.IsDeleted = true;
+                t.LastUpdateDate = DateTime.Now;
+                t.LastUpdateUser = AppContext.CurrentSession.UserName;
+                t.LastUpdateUserID = AppContext.CurrentSession.UserID;
             });
             return this.Repository.Update(superClassList) > 0;
         }
@@ -84,6 +86,8 @@ namespace VVCar.VIP.Services.DomainServices
             var queryable = Repository.GetQueryable(false);
             if (!string.IsNullOrEmpty(filter.Name))
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
+            if (filter.VideoType.HasValue)
+                queryable = queryable.Where(t => t.VideoType == filter.VideoType);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);

@@ -30,5 +30,11 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "优惠券模板标题")]
         public string CouponTemplateTitle { get; set; }
+
+        /// <summary>
+        /// 优惠券模板编号
+        /// </summary>
+        [Display(Name = "优惠券模板编号")]
+        public string CouponTemplateCode { get; set; }
     }
 }

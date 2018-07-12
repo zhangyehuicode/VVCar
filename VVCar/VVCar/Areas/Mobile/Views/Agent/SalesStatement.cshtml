@@ -1,0 +1,297 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="salesstatement">
+    <div class="toubu">
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        人员管理
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="touxiang">
+        <div style="width:100%; float:left; border-bottom:1px solid #eee;">
+            <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
+            <div class="touxiang_div">
+                <span>{{User.Name}}</span>
+                <span style=" font-size:14px; color:#999;">{{DisplayDate}}开发门店：{{MonthPerformance.TotalOpenAccountCount}}</span>
+            </div>
+        </div>
+        <a class="bq_box" style="border-bottom:none;width:50%;" v-on:click="xsbb">
+            <div><img src="~/Areas/resource/img/mobile/master/yybb.png" style="width:22px;"></div>
+            <span>销售报表</span>
+        </a>
+        <a class="bq_box" style="border-bottom:none;width:50%;" v-on:click="bbfx">
+            <div><img src="~/Areas/resource/img/mobile/master/cbgl.png" style="width:25px;"></div>
+            <span>报表分析</span>
+        </a>
+    </div>
+    <div class="touxiang" style="margin-bottom:25px;" id="xsbb">
+        <div class="gzb_box">
+            <span style="margin-left:3%;">{{DisplayDate}}报表</span>
+            <form action="#" method="get" style="float:right; margin-right:3%;">
+                <input type="date" v-bind:value="Date" class="dateinput" />
+            </form>
+        </div>
+        <div class="yybb_box" style="text-align:center;">
+            <div style="width:35%;"><span>报表名称</span></div>
+            <div style="border-right:none;width:65%;"><span style="color:#666;">{{DisplayDate}}销售报表</span></div>
+        </div>
+        <div class="yybb_box" style="text-align:center;">
+            <div style="width:35%;"><span style="text-align:center;">开发门店</span></div>
+            <div style="border-right:none; width:65%;"><span style="color:#ff0c4c;">￥{{MonthPerformance.TotalOpenAccountCount}}</span></div>
+        </div>
+    </div>
+    <div style="display:none;" id="bbfx">
+        <div class="touxiang">
+            <div class="gzb_box" style="border-bottom:none;">
+                <span style="margin-left:3%; font-size:16px;">{{CurrentDate}}门店开发：<span style=" color:#ff0c4c;">{{CurrentMonthPerformance.TotalOpenAccountCount}}</span></span>
+            </div>
+            <div id="mdkf" style="width:350px;height:250px;overflow:auto!important;margin:0 10px;"></div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .dateinput {
+            height: 30px;
+            width: 90px;
+            border-radius: 4px;
+            border-color: #eee;
+            outline-style: none;
+            font-size: 12px;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+    <script src="~/Content/js/echarts.js"></script>
+    <script src="~/Content/js/dark.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+
+        var mch = $.getUrlParam('mch');
+            var user = sessionStorage.getItem('agentuser');
+            var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
+        _viewModel = new Vue({
+            el: '#salesstatement',
+            data: {
+                User: {},
+                MonthPerformance: {},
+                CurrentMonthPerformance: {},
+                CurrentDate: '@DateTime.Now.Date.ToString("yyyy-MM")',
+                Date: '@DateTime.Now.Date.ToString("yyyy-MM-dd")',
+                DisplayDate:'@DateTime.Now.Date.ToString("yyyy-MM")',
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+                },
+                bbfx: function (event) {
+                    $('#xsbb').hide();
+                    $('#bbfx').show();
+                },
+                xsbb: function (event) {
+                    $('#bbfx').hide();
+                    $('#xsbb').show();
+                },
+            }
+        });
+
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsGeneralManager: isgeneralmanager,
+                        IsSalesManger: !isgeneralmanager,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.User = res.Data;
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            if (user == null || user == '') {
+                getUserByOpenId();
+            } else {
+                _viewModel.User = JSON.parse(user);
+            }
+
+            function getLineChartOption(data) {
+                if (data == null || data == '')
+                    return;
+                var option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999'
+                            }
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: data.xAxisdata
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '门店/个',
+                        min: 0,
+                        axisLabel: {
+                            formatter: '{value}'
+                        }
+                    },
+                    series: [{
+                        data: data.seriesdata,
+                        type: 'line'
+                    }]
+                };
+                return option;
+            }
+
+            function getChartPerformanceData(data) {
+                if (data == null || data == '' || data.length < 1)
+                    return null;
+                var result = { xAxisdata: [], seriesdata:[]};
+                for (var i = 0; i < data.length; i++) {
+                    result.xAxisdata.push(data[i].Unit+'号');
+                    result.seriesdata.push(data[i].Turnover);
+                }
+                return result;
+            }
+
+            function getOpenAccountReporting() {
+                $.ajax({
+                    url: '/api/Reporting/GetOpenAccountReporting',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                if (res.Data.TotalOpenAccount != null) {
+                                    var totalOpenAccount = getChartPerformanceData(res.Data.TotalOpenAccount);
+                                    if (totalOpenAccount != null) {
+                                        var mdkfoption = getLineChartOption(totalOpenAccount);
+                                        var mdkfchart = echarts.init(document.getElementById('mdkf'));
+                                        mdkfchart.setOption(mdkfoption);
+                                    }
+                                }
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getOpenAccountReporting();
+
+            var isfirstload = true;
+            function getMonthOpenAccountPerformance(date) {
+                if (date == null || date == '')
+                    return;
+                $.ajax({
+                    url: '/api/Reporting/GetMonthOpenAccountPerformance?date=' + date,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                if (isfirstload)
+                                    _viewModel.CurrentMonthPerformance = res.Data;
+                                isfirstload = false;
+                                _viewModel.MonthPerformance = res.Data;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+            getMonthOpenAccountPerformance(_viewModel.Date);
+
+            $('.dateinput').change(function () {
+                var date = $(this).val();
+                _viewModel.Date = date;
+                _viewModel.DisplayDate = date.substring(0,7);
+                getMonthOpenAccountPerformance(_viewModel.Date);
+            });
+        });
+    </script>
+}

@@ -5,7 +5,7 @@
 }
 
 <div id="generalmanagerhome">
-    <div class="toubu">代理商工作终端</div>
+    <div class="toubu">代理商</div>
     <div class="touxiang">
         <div style="width:100%; float:left; border-bottom:1px solid #eee;">
             <img style="border-radius:80px;" src="@ViewBag.HeadImgUrl" class="touxiang_img">
@@ -24,7 +24,7 @@
         <a class="bq_box" style="width:33.4%" v-on:click="agentdepartment">
             <div><img src="~/Areas/resource/img/mobile/master/hykhx.png" style="width:25px;"></div>
             <span>今日开户</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共0户</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共{{UserInfo.TodayOpenAccountCount}}户</span>
         </a>
         <a class="bq_box" style="border-right:none;">
             <div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
@@ -97,6 +97,13 @@
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">库存</span>
         </a>
     </div>
+    <div class="touxiang" style="margin-top:0px;">
+        <a class="bq_box" v-on:click="reimbursementcheck">
+            <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:25px; margin-top:5px;"></div>
+            <span>报销审核</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">审核</span>
+        </a>
+    </div>
     <img src="~/Areas/resource/img/mobile/master/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">
 </div>
 
@@ -162,10 +169,10 @@
                         window.location.href = "/Mobile/Agent/QuickOpenAccount?mch=" + mch;
                     },
                     agentdepartment: function (event) {
-                        //window.location.href = "/Mobile/Agent/AgentDepartment?mch=" + mch;
+                        window.location.href = "/Mobile/Agent/TodayOpenAccount?mch=" + mch;
                     },
                     myinfo: function (event) {
-                        //window.location.href = "/Mobile/Agent/MyInfo?mch=" + mch;
+                        window.location.href = "/Mobile/Agent/MyInfo?mch=" + mch;
                     },
                     staffmanager: function (event) {
                         window.location.href = "/Mobile/Merchant/StaffManager?mch=" + mch;
@@ -177,16 +184,19 @@
                         window.location.href = "/Mobile/Agent/StockManager?mch=" + mch;
                     },
                     salessatement: function (event) {
-                        //window.location.href = "/Mobile/Agent/SalesStatement?mch=" + mch;
+                        window.location.href = "/Mobile/Agent/SalesStatement?mch=" + mch;
                     },
                     reimbursement: function (event) {
-                        //window.location.href = "/Mobile/Agent/Reimbursement?mch=" + mch;
+                        window.location.href = "/Mobile/Agent/Reimbursement?mch=" + mch;
                     },
                     myreimbursement: function (event) {
-                        //window.location.href = "/Mobile/Agent/MyReimbursement?mch=" + mch;
+                        window.location.href = "/Mobile/Agent/MyReimbursement?mch=" + mch;
                     },
                     mydepartment: function (event) {
-                        //window.location.href = "/Mobile/Agent/MyDepartment?mch=" + mch;
+                        window.location.href = "/Mobile/Agent/MyDepartment?mch=" + mch;
+                    },
+                    reimbursementcheck: function (event) {
+                        window.location.href = "/Mobile/Agent/ReimbursementCheck?mch=" + mch;
                     },
                 }
             });

@@ -33,20 +33,21 @@ namespace VVCar.BaseData.Domain.Dtos
         public string UserName { get; set; }
 
         /// <summary>
-        /// 商户号
+        /// 代理商户号
         /// </summary>
-        [Display(Name = "商户号")]
+        [Display(Name = "代理商户号")]
         public string MerchantCode { get; set; }
+
+        /// <summary>
+        /// 代理商名称
+        /// </summary>
+        [Display(Name = "代理商名称")]
+        public string MerchantName { get; set; }
 
         /// <summary>
         /// 商户名称
         /// </summary>
         [Display(Name = "商户名称")]
-        public string MerchantName { get; set; }
-        /// <summary>
-        /// 名称
-        /// </summary>
-        [Display(Name = "名称")]
         public string Name { get; set; }
 
         /// <summary>
@@ -102,6 +103,7 @@ namespace VVCar.BaseData.Domain.Dtos
         /// </summary>
         [Display(Name = "法人身份证反面 图片地址")]
         public string LegalPersonIDCardBehindImgUrl { get; set; }
+
         /// <summary>
         /// 公司地址
         /// </summary>

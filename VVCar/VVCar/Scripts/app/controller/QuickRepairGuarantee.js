@@ -82,6 +82,9 @@
 			'ServiceEdit combobox[name=ProductType]': {
 				change: me.producttypechange
 			},
+			'ServiceEdit combobox[name=IsCombo]': {
+				change: me.isComboChange
+			},
 			'Service combobox[name=ProductType]': {
 				change: me.productproducttypechange
 			},
@@ -112,6 +115,25 @@
 			} else {
 				com.up('window').down('numberfield[name=Stock]').setDisabled(false);
 				com.up('window').down('checkboxfield[name=IsCanPointExchange]').setDisabled(false);
+			}
+		}
+	},
+	isComboChange: function (com, newValue, oldValue, eOpts) {
+		var me = this;
+		var win = com.up('window');
+		if (win.form.getForm().actionMethod == 'PUT') {
+			if (newValue == 0) {
+				com.up('window').down('combobox[name=IsPublish]').show();
+			} else {
+				com.up('window').down('combobox[name=IsPublish]').hide();
+			}
+		} else {
+			if (newValue == 0) {
+				com.up('window').down('combobox[name=IsPublish]').show();
+				com.up('window').down('combobox[name=IsPublish]').setValue(['否']);
+			} else {
+				com.up('window').down('combobox[name=IsPublish]').hide();
+				com.up('window').down('combobox[name=IsPublish]').setValue(['是']);
 			}
 		}
 	},
@@ -410,10 +432,10 @@
 		var win = me.getServiceEdit();
 		var form = win.form.getForm();
 		var formValues = form.getValues();
-		if (formValues.ImgUrl == '') {
-			Ext.Msg.alert('提示', '请先上传商品图片');
-			return;
-		}
+		//if (formValues.ImgUrl == '') {
+		//	Ext.Msg.alert('提示', '请先上传商品图片');
+		//	return;
+		//}
 		if (form.isValid()) {
 			var store = me.getService().getStore();
 			if (form.actionMethod == 'POST') {

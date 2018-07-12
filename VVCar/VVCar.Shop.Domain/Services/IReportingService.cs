@@ -66,5 +66,18 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<ConsumeHistoryDto> GetConsumeHistory(ConsumeHistoryFilter filter, ref int totalCount);
+
+        /// <summary>
+        /// 获取代理商门店开发报表
+        /// </summary>
+        /// <returns></returns>
+        OpenAccountReportingDto GetOpenAccountReporting();
+
+        /// <summary>
+        /// 获取月开发门店业绩
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        MonthOpenAccountPerformanceDto GetMonthOpenAccountPerformance(DateTime date);
     }
 }

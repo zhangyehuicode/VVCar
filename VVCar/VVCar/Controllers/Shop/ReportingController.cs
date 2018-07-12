@@ -326,7 +326,6 @@ namespace VVCar.Controllers.Shop
             });
         }
 
-
         /// <summary>
         /// 员工业绩汇总统计导出
         /// </summary>
@@ -369,6 +368,33 @@ namespace VVCar.Controllers.Shop
                 });
                 (data as List<ConsumeHistoryDto>).Add(consumeHistoryDto);
                 return exporter.Export(data.ToList(), "员工业绩汇总统计");
+            });
+        }
+
+        /// <summary>
+        /// 获取代理商门店开发报表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetOpenAccountReporting"), AllowAnonymous]
+        public JsonActionResult<OpenAccountReportingDto> GetOpenAccountReporting()
+        {
+            return SafeExecute(() =>
+            {
+                return ReportingService.GetOpenAccountReporting();
+            });
+        }
+
+        /// <summary>
+        /// 获取月开发门店业绩
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetMonthOpenAccountPerformance"), AllowAnonymous]
+        public JsonActionResult<MonthOpenAccountPerformanceDto> GetMonthOpenAccountPerformance(DateTime date)
+        {
+            return SafeExecute(() =>
+            {
+                return ReportingService.GetMonthOpenAccountPerformance(date);
             });
         }
     }

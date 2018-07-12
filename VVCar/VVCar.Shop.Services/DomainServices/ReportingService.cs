@@ -229,6 +229,9 @@ namespace VVCar.Shop.Services.DomainServices
             });
             staffPerformance.BasicSalary = user.BasicSalary;
 
+            staffPerformance.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
+            staffPerformance.MonthOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID && t.CreatedDate >= starttime && t.CreatedDate < endtime).Count();
+
             return staffPerformance;
         }
 
@@ -296,6 +299,9 @@ namespace VVCar.Shop.Services.DomainServices
                     staffPerformance.StaffName = user.Name;
                     staffPerformance.StaffCode = user.Code;
 
+                    staffPerformance.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
+                    staffPerformance.MonthOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID && t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime).Count();
+
                     result.Add(staffPerformance);
                 });
             }
@@ -358,7 +364,7 @@ namespace VVCar.Shop.Services.DomainServices
             totalCount = result.Count();
             if (filter != null && filter.StartDate.HasValue && filter.EndDate.HasValue)
                 result = result.OrderByDescending(t => t.CurrentDepartmentNumber).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
-            return result.OrderByDescending(t=>t.CurrentDepartmentNumber);
+            return result.OrderByDescending(t => t.CurrentDepartmentNumber);
         }
 
         public IEnumerable<ProductRetailStatisticsDto> ProductRetailStatistics(ProductRetailStatisticsFilter filter, ref int totalCount)
@@ -515,6 +521,45 @@ namespace VVCar.Shop.Services.DomainServices
             }
 
             return result.OrderByDescending(t => t.CreatedDate).ToList();
+        }
+
+        public OpenAccountReportingDto GetOpenAccountReporting()
+        {
+            var result = new OpenAccountReportingDto();
+            var resultitem = new List<TurnoverDto>();
+
+            var starttime = DateTime.Now.AddDays(-6).Date;
+            var now = DateTime.Now.Date;
+            var agentdepartmentlist = AgentDepartmentRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedDate > starttime).ToList();
+
+            while (starttime <= now)
+            {
+                var agentdepartments = agentdepartmentlist.Where(t => t.CreatedDate.Date == starttime.Date).ToList();
+                resultitem.Add(new TurnoverDto
+                {
+                    Unit = starttime.Date.Day,
+                    Turnover = agentdepartments.Count(),
+                });
+                starttime = starttime.AddDays(1);
+            }
+
+            result.TotalOpenAccount = resultitem;
+            return result;
+        }
+
+        public MonthOpenAccountPerformanceDto GetMonthOpenAccountPerformance(DateTime date)
+        {
+            if (date == null)
+                throw new DomainException("参数错误");
+            var result = new MonthOpenAccountPerformanceDto();
+
+            var starttime = new DateTime(date.Year, date.Month, 1);
+            var endtime = starttime.AddMonths(1);
+            var agentdepartmentlist = AgentDepartmentRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedDate >= starttime && t.CreatedDate < endtime).ToList();
+
+            result.TotalOpenAccountCount = agentdepartmentlist.Count();
+
+            return result;
         }
     }
 }

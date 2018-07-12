@@ -212,10 +212,20 @@ namespace VVCar.BaseData.Services.DomainServices
                 queryable = queryable.Where(t => t.Merchant.Name.Contains(filter.MerchantName));
             if (!string.IsNullOrEmpty(filter.Name))
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
+            if (filter.CreatedDate.HasValue)
+            {
+                var startday = filter.CreatedDate.Value.Date;
+                var nextday = startday.AddDays(1);
+                queryable = queryable.Where(t => t.CreatedDate >= startday && t.CreatedDate < nextday);
+            }
+            if (filter.AgentDepartmentID.HasValue)
+                queryable = queryable.Where(t => t.ID == filter.AgentDepartmentID.Value);
+            if (filter.UserID.HasValue)
+                queryable = queryable.Where(t => t.UserID == filter.UserID.Value);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.MapTo<AgentDepartmentDto>().ToArray();
+            return queryable.OrderByDescending(t => t.CreatedDate).MapTo<AgentDepartmentDto>().ToArray();
         }
     }
 }

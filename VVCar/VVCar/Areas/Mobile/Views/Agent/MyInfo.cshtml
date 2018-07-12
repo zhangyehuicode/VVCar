@@ -1,0 +1,170 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="myinfo">
+    <div class="toubu">
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        <div class="title">我的资料</div>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="touxiang">
+        <div style="width:100%; float:left; border-bottom:1px solid #eee;">
+            <img class="touxiang_img" src="@ViewBag.HeadImgUrl">
+            <div class="touxiang_div">
+                <span>{{User.Name}}</span>
+                @*<span style=" font-size:14px; color:#999;">绑定手机：{{User.MobilePhoneNo}}<a style="font-size:13px; color:#51b3f0; float:right; margin-right:4%;" v-on:click="bindingmobilephone">[更换手机]</a></span>*@
+            </div>
+        </div>
+        <ul>
+            <li class="tongzhi">
+                本月业绩（<span>@DateTime.Now.Month</span>月，排名第<span>{{User.PerformanceRanking}}</span>）
+            </li>
+        </ul>
+    </div>
+    <div class="touxiang">
+        <ul class="yj_box" style="width:50%;">
+            <li style="color:#ff0c4c;"><span style="font-size:13px;">￥</span>{{User.MonthPerformance}}</li>
+            <span style="font-size:14px; color:#666;">业绩</span>
+        </ul>
+    </div>
+    <div class="touxiang" style="background-color:#ff0c4c; color:#fff; line-height:50px; font-size:14px; text-indent:1em;">
+        公司感谢你的付出，送你一份礼物！点此抽奖!
+    </div>
+    <div class="touxiang">
+        <div class="gzb_box">本月工资表</div>
+        <div class="gzb_box2">
+            <div>工资类型</div>
+            <div style="border-right:none;">金额</div>
+        </div>
+        <div class="gzb_box2">
+            <div>底薪</div>
+            <div style="border-right:none; color:#51b3f0;">￥{{User.BasicSalary}}</div>
+        </div>
+        @*<div class="gzb_box2">
+                <div>奖励/补贴</div>
+                <div style="border-right:none;color:#51b3f0;">￥{{User.Subsidy}}</div>
+            </div>*@
+        <div class="gzb_box2">
+            <div>销售提成</div>
+            <div style="border-right:none;color:#51b3f0;">￥{{User.MonthCommission}}</div>
+        </div>
+        <div class="gzb_box2" style=" margin-bottom:20px;">
+            <div>本月总收入</div>
+            <div style="border-right:none;color:#ff0c4c;">￥{{User.MonthIncome}}</div>
+        </div>
+    </div>
+    <footer>
+        <img src="~/Areas/resource/img/mobile/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">
+    </footer>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+        var mch = $.getUrlParam('mch');
+            var user = sessionStorage.getItem('agentuser');
+            var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
+        _viewModel = new Vue({
+            el: '#myinfo',
+            data: {
+                User: {},
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                    window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+                },
+                bindingmobilephone: function (event) {
+                    //window.location.href = "/Mobile/Merchant/BindingMobilePhone?mch=" + mch;
+                }
+            }
+        });
+
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsGeneralManager: isgeneralmanager,
+                        IsSalesManger: !isgeneralmanager,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.User = res.Data;
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+
+            getUserByOpenId();
+
+        });
+    </script>
+}

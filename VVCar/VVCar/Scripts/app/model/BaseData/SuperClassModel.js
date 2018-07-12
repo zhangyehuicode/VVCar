@@ -7,5 +7,6 @@
 		{ name: 'Description' },
 		{ name: 'CreatedUser' },
 		{ name: 'CreatedDate' },
+		{ name: 'VideoType' },
 	]
 });

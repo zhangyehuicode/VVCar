@@ -648,6 +648,7 @@
     <Content Include="Scripts\app\controller\DepartmentPerformanceStatistics.js" />
     <Content Include="Scripts\app\controller\GameCouponRecord.js" />
     <Content Include="Scripts\app\controller\GameSetting.js" />
+    <Content Include="Scripts\app\controller\GoodsLandingClass.js" />
     <Content Include="Scripts\app\controller\Login.js" />
     <Content Include="Scripts\app\controller\Main.js" />
     <Content Include="Scripts\app\controller\MakeCodeRule.js" />
@@ -878,6 +879,8 @@
     <Content Include="Scripts\app\view\GameSetting\GameCouponEdit.js" />
     <Content Include="Scripts\app\view\GameSetting\GameSettingEdit.js" />
     <Content Include="Scripts\app\view\GameSetting\GameSettingList.js" />
+    <Content Include="Scripts\app\view\GoodsLandingClass\GoodsLandingClassEdit.js" />
+    <Content Include="Scripts\app\view\GoodsLandingClass\GoodsLandingClassList.js" />
     <Content Include="Scripts\app\view\Index.js" />
     <Content Include="Scripts\app\view\Login.js" />
     <Content Include="Scripts\app\view\Main.js" />
@@ -1112,6 +1115,13 @@
     <Content Include="Areas\Mobile\Views\Agent\QuickOpenAccount.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\StockManager.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\TodayOpenAccount.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\AgentDepartmentDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\MyDepartment.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\SalesStatement.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\Reimbursement.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\MyReimbursement.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\ReimbursementCheck.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\MyInfo.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

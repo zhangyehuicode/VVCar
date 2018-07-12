@@ -36,7 +36,7 @@ namespace VVCar.Controllers.VIP
         /// </summary>
         /// <param name="reimbursement"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost, AllowAnonymous]
         public JsonActionResult<Reimbursement> AddReimbursement(Reimbursement reimbursement)
         {
             return SafeExecute(() =>
@@ -78,7 +78,7 @@ namespace VVCar.Controllers.VIP
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        [HttpPost, Route("ApproveReimbursement")]
+        [HttpPost, Route("ApproveReimbursement"), AllowAnonymous]
         public JsonActionResult<bool> ApproveReimbursement(BatchOperationDto parameter)
         {
             return SafeExecute(() =>
@@ -92,7 +92,7 @@ namespace VVCar.Controllers.VIP
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        [HttpPost, Route("AntiApproveReimbursement")]
+        [HttpPost, Route("AntiApproveReimbursement"), AllowAnonymous]
         public JsonActionResult<bool> AntiApproveReimbursement(BatchOperationDto parameter)
         {
             return SafeExecute(() =>
