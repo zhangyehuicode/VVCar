@@ -40,6 +40,9 @@ namespace VVCar.Shop.Data.Mapping
 
             Property(t => t.Unit)
                 .HasMaxLength(10);
+
+            Property(t => t.GraphicIntroduction)
+                .HasMaxLength(500);
         }
     }
 }

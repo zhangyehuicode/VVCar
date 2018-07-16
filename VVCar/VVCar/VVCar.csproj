@@ -948,6 +948,7 @@
     <Content Include="Scripts\app\view\ServicePeriod\ServicePeriodList.js" />
     <Content Include="Scripts\app\view\ServicePeriod\ServiceSelector.js" />
     <Content Include="Scripts\app\view\Shop\ChangeCategory.js" />
+    <Content Include="Scripts\app\view\Shop\HtmlEditorImage.js" />
     <Content Include="Scripts\app\view\Shop\Order.js" />
     <Content Include="Scripts\app\view\Shop\OrderDetails.js" />
     <Content Include="Scripts\app\view\Shop\OrderEdit.js" />

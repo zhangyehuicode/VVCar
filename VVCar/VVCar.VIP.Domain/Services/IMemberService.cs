@@ -276,5 +276,12 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="addparam"></param>
         /// <returns></returns>
         bool BatchManualAddMember(List<AddMemberParam> addparam);
+
+        /// <summary>
+        /// 导入会员数据
+        /// </summary>
+        /// <param name="members"></param>
+        /// <returns></returns>
+        bool ImportMember(IEnumerable<AddMemberParam> members);
     }
 }

@@ -131,7 +131,7 @@
     <script type="text/javascript">
         $(function () {
         var mch = $.getUrlParam('mch');
-            var user = sessionStorage.getItem('agentuser');
+            var user = sessionStorage.getItem('user');
             var isgeneralmanager= sessionStorage.getItem('isgeneralmanager')=='true';
         _viewModel = new Vue({
             el: '#mstockmanager',
@@ -198,7 +198,7 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 _viewModel.User = res.Data;
-                                sessionStorage.setItem('agentuser', JSON.stringify(res.Data));
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
                             }
                             else {
                                 _viewModel.home();

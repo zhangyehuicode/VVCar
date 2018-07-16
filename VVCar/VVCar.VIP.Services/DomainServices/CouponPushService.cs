@@ -204,25 +204,26 @@ namespace VVCar.VIP.Services.DomainServices
                             {
                                 members.ForEach(m =>
                                 {
-                                    if (!string.IsNullOrEmpty(m.WeChatOpenID))
+                                    //if (!string.IsNullOrEmpty(m.WeChatOpenID))
+                                    //{
+                                    try
                                     {
-                                        try
+                                        CouponService.ReceiveCouponsAtcion(new ReceiveCouponDto
                                         {
-                                            CouponService.ReceiveCouponsAtcion(new ReceiveCouponDto
-                                            {
-                                                ReceiveOpenID = m.WeChatOpenID,
-                                                CouponTemplateIDs = t.CouponPushItems.Select(item => item.CouponTemplateID).ToList(),
-                                                ReceiveChannel = "卡券推送",
-                                                CompanyCode = merchant.Code,
-                                                NickName = m.Name,
-                                                MerchantID = merchant.ID,
-                                            }, true);
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            AppContext.Logger.Error($"卡券推送自动领取卡券出现异常，{e.Message}");
-                                        }
+                                            ReceiveOpenID = m.WeChatOpenID,
+                                            CouponTemplateIDs = t.CouponPushItems.Select(item => item.CouponTemplateID).ToList(),
+                                            ReceiveChannel = "卡券推送",
+                                            CompanyCode = merchant.Code,
+                                            NickName = m.Name,
+                                            MerchantID = merchant.ID,
+                                            MemberID = m.ID,
+                                        }, true);
                                     }
+                                    catch (Exception e)
+                                    {
+                                        AppContext.Logger.Error($"卡券推送自动领取卡券出现异常，{e.Message}");
+                                    }
+                                    //}
                                 });
                                 t.Status = ECouponPushStatus.Pushed;
                             }

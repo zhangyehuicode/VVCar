@@ -102,10 +102,7 @@
         $(function () {
         var user = sessionStorage.getItem('user');
 
-            var agentuser = sessionStorage.getItem('agentuser');
-            if (agentuser != null && agentuser != '')
-                user = agentuser;
-            var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
+        var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
 
         var mch = $.getUrlParam('mch');
         _viewModel = new Vue({

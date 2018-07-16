@@ -41,7 +41,7 @@
 			}, {
 				xtype: 'box',
 				name: 'ImgShow',
-				width: 300,
+				width: 260,
 				height: 100,
 				margin: '0 0 10 75',
 				autoEl: {

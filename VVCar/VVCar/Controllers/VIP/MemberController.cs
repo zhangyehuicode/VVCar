@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Http;
 using VVCar.Common;
@@ -322,6 +323,60 @@ namespace VVCar.Controllers.VIP
                     //new ExportInfo("WeChatOpenID","OpenId"),
                 });
                 return exporter.Export(pagedData.Items.ToList(), "会员信息");
+            });
+        }
+
+        /// <summary>
+        /// 会员导入模板
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("ImportMemberTemplate")]
+        public JsonActionResult<string> ImportMemberTemplate()
+        {
+            return SafeExecute(() =>
+            {
+                var templateData = new List<AddMemberParam>();
+                var exportInfos = new[]
+                {
+                    new ExportInfo("Name", "姓名"),
+                    new ExportInfo("Sex", "性别"),
+                    new ExportInfo("Birthday", "出生年月"),
+                    new ExportInfo("MobilePhoneNo", "手机号码"),
+                    new ExportInfo("PlateNumber", "车牌号"),
+                    new ExportInfo("InsuranceExpirationDate", "保险到期"),
+                };
+                var eh = new ExportHelper(exportInfos);
+                return eh.ImportMemberTemplate("会员导入模板");
+            });
+        }
+
+        /// <summary>
+        /// 导入会员数据
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ImportMember")]
+        public JsonActionResult<bool> ImportMember(string fileName)
+        {
+            return SafeExecute(() =>
+            {
+                var targetDir = Path.Combine(AppContext.PathInfo.AppDataPath, "Upload/Excel/Member");
+                string targetPath = Path.Combine(targetDir, fileName);
+
+                var excelFieldInfos = new[]
+                {
+                    new ExcelFieldInfo(0, "Name", "姓名"),
+                    new ExcelFieldInfo(1, "Sex", "性别"),
+                    new ExcelFieldInfo(2, "Birthday", "出生年月", true),
+                    new ExcelFieldInfo(3, "MobilePhoneNo", "手机号码"),
+                    new ExcelFieldInfo(4, "PlateNumber", "车牌号", true),
+                    new ExcelFieldInfo(5, "InsuranceExpirationDate", "保险到期", true)
+                };
+                var data = ExcelHelper.ImportFromExcel<AddMemberParam>(targetPath, excelFieldInfos);
+                if (data == null || data.Count < 1)
+                    throw new DomainException("没有可以导入的数据");
+                return MemberService.ImportMember(data);
             });
         }
 

@@ -20,6 +20,17 @@ namespace VVCar.VIP.Domain.Entities
         }
 
         /// <summary>
+        /// 会员ID
+        /// </summary>
+        [Display(Name = "会员ID")]
+        public Guid? MemberID { get; set; }
+
+        /// <summary>
+        /// 会员
+        /// </summary>
+        public virtual Member Member { get; set; }
+
+        /// <summary>
         ///  优惠券编号
         /// </summary>
         [Display(Name = "优惠券编号")]

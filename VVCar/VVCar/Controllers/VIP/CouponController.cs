@@ -331,11 +331,11 @@ namespace VVCar.Controllers.VIP
         /// <param name="userOpenID"></param>
         /// <returns></returns>
         [HttpGet, Route("GetAvailableCouponList"), AllowAnonymous]
-        public PagedActionResult<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID)
+        public PagedActionResult<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID, Guid? userid)
         {
             return SafeGetPagedData<CouponBaseInfoDto>((result) =>
             {
-                var data = CouponService.GetAvailableCouponList(userOpenID);
+                var data = CouponService.GetAvailableCouponList(userOpenID, userid);
                 result.Data = data;
             });
         }

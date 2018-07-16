@@ -71,7 +71,7 @@ namespace VVCar.BaseData.Services
                     .ForMember(dest => dest.EffectiveDate, opt => opt.MapFrom(src => src.Card.EffectiveDate))
                     .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.Card.ExpiredDate))
                     .ForMember(dest => dest.OwnerDepartment, opt => opt.MapFrom(src => src.OwnerDepartment.Name))
-                    //.ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))
+                    .ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.MemberGroup.Name))
                     //.ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))
                     .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType))
                     .ForMember(dest => dest.Point, opt => opt.MapFrom(src => src.Point));

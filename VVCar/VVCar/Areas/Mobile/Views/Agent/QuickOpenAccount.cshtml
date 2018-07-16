@@ -632,7 +632,7 @@
                     success: function (res) {
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
-                                sessionStorage.setItem('agentuser', JSON.stringify(res.Data));
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
                                 _viewModel.UserInfo = res.Data;
                                 _viewModel.AgentDepartment.UserID = res.Data.ID;
                             }

@@ -448,6 +448,7 @@ namespace VVCar.VIP.Services.DomainServices
                         CreatedDate = DateTime.Now,
                         IsCanReuse = template.IsSpecialCoupon,
                         ReceiveChannel = receiveCouponDto.ReceiveChannel,
+                        MemberID = receiveCouponDto.MemberID,
                         //IsDeductionFirst = template.IsDeductionFirst,
                     };
                     newCoupon.CouponCode = GenerateCouponCode(newCoupon.ID);
@@ -462,7 +463,7 @@ namespace VVCar.VIP.Services.DomainServices
                         }
                     }
                     newCoupons.Add(newCoupon);
-                    if (sendNotify || receiveCouponDto.SendNotify)
+                    if ((sendNotify || receiveCouponDto.SendNotify) && !string.IsNullOrEmpty(receiveCouponDto.ReceiveOpenID))
                     {
                         var companyCode = AppContext.CurrentSession.CompanyCode;
                         var merchantId = AppContext.CurrentSession.MerchantID;
@@ -553,10 +554,16 @@ namespace VVCar.VIP.Services.DomainServices
             return result;
         }
 
-        public IEnumerable<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID)
+        public IEnumerable<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID, Guid? userid)
         {
             var now = DateTime.Now.Date;
-            var datasource = Repository.GetIncludes(false, "Template", "CouponItemList").Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID)
+            var datasource = new List<Coupon>();
+            if (userid.HasValue)
+                datasource = Repository.GetIncludes(false, "Template", "CouponItemList").Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID)
+                .Where(t => t.Status == ECouponStatus.Default && (t.OwnerOpenID == userOpenID || t.MemberID == userid) && t.ExpiredDate >= now && t.CouponValue > 0)
+                .OrderBy(t => t.ExpiredDate).ToList();
+            else
+                datasource = Repository.GetIncludes(false, "Template", "CouponItemList").Where(t => t.Template.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Where(t => t.Status == ECouponStatus.Default && t.OwnerOpenID == userOpenID && t.ExpiredDate >= now && t.CouponValue > 0)
                 .OrderBy(t => t.ExpiredDate).ToList();
             var coupons = datasource.MapTo<List<CouponBaseInfoDto>>();

@@ -55,6 +55,9 @@
 			'ProductEdit checkboxfield[name=IsCanPointExchange]': {
 				change: me.pointExchangeChange
 			},
+			'ProductEdit checkboxfield[name=IsInternaCollection]': {
+				change: me.internaCollectionChange
+			},
 			'ProductCategoryList button[action=addProductCategory]': {
 				click: me.addProductCategory
 			},
@@ -83,7 +86,7 @@
 				change: me.producttypechange
 			},
 			'ProductEdit combobox[name=IsCombo]': {
-				change: me.isComboChange
+				//change: me.isComboChange
 			},
 			'Product combobox[name=ProductType]': {
 				change: me.productproducttypechange
@@ -125,14 +128,14 @@
 			if (newValue == 0) {
 				com.up('window').down('combobox[name=IsPublish]').show();
 			} else {
-				com.up('window').down('combobox[name=IsPublish]').hide();
+				com.up('window').down('combobox[name=IsPublish]').setDisabled(false);
 			}
 		} else {
 			if (newValue == 0) {
 				com.up('window').down('combobox[name=IsPublish]').show();
 				com.up('window').down('combobox[name=IsPublish]').setValue(['否']);
 			} else {
-				com.up('window').down('combobox[name=IsPublish]').hide();
+				com.up('window').down('combobox[name=IsPublish]').setDisabled(true);
 				com.up('window').down('combobox[name=IsPublish]').setValue(['是']);
 			}
 		}
@@ -198,6 +201,18 @@
 			me.getProductEdit().down('numberfield[name=UpperLimit]').setValue(0);
 		}
 	},
+	internaCollectionChange: function (com, newValue, oldValue, eOpts) {
+		var me = this;
+		if (newValue) {
+			me.getProductEdit().down('combobox[name=IsPublish]').setDisabled(true);
+			me.getProductEdit().down('combobox[name=IsRecommend]').setDisabled(true);
+			me.getProductEdit().down('combobox[name=IsPublish]').setValue(['否']);
+			me.getProductEdit().down('combobox[name=IsRecommend]').setValue(['否']);
+		} else {
+			me.getProductEdit().down('combobox[name=IsPublish]').setDisabled(false);
+			me.getProductEdit().down('combobox[name=IsRecommend]').setDisabled(false);
+		}
+	},
 	ontreeProductCategoryItemClick: function (tree, record, item) {
 		var myStore = this.getProduct().getStore();
 		Ext.apply(myStore.proxy.extraParams, {
@@ -251,7 +266,6 @@
 					Ext.MessageBox.hide();
 				}
 			});
-
 			this.hasUpdateDeptRegion = true;
 		}
 	},
@@ -446,6 +460,7 @@
 							store.add(records[0].data);
 							store.commitChanges();
 							Ext.MessageBox.alert("提示", "新增成功");
+							store.reload();
 							win.close();
 						}
 					}
@@ -463,6 +478,7 @@
 							return;
 						} else {
 							Ext.MessageBox.alert("提示", "更新成功");
+							store.reload();
 							win.close();
 						}
 					}
@@ -552,6 +568,7 @@
 		if (form.isValid()) {
 			form.submit({
 				url: '/api/UploadFile/UploadProduct',
+				method: 'POST',
 				waitMsg: '正在上传...',
 				success: function (fp, o) {
 					if (o.result.success) {

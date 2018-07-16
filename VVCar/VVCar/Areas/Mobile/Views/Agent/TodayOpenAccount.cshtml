@@ -87,10 +87,7 @@
         $(function () {
         var user = sessionStorage.getItem('user');
 
-            var agentuser = sessionStorage.getItem('agentuser');
-            if (agentuser != null && agentuser != '')
-                user = agentuser;
-            var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
+        var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
 
         var mch = $.getUrlParam('mch');
         var searchdate = '@DateTime.Now.Date.ToString("yyyy-MM-dd")';

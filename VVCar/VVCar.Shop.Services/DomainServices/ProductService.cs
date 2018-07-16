@@ -106,8 +106,17 @@ namespace VVCar.Shop.Services.DomainServices
             product.CostPrice = entity.CostPrice;
             product.Points = entity.Points;
             product.UpperLimit = entity.UpperLimit;
-            product.IsPublish = entity.IsPublish;
-            product.IsRecommend = entity.IsRecommend;
+            product.IsInternaCollection = entity.IsInternaCollection;
+            if (entity.IsInternaCollection)
+            {
+                product.IsPublish = false;
+                product.IsRecommend = false;
+            }
+            else
+            {
+                product.IsPublish = entity.IsPublish;
+                product.IsRecommend = entity.IsRecommend;
+            }
             product.Stock = entity.Stock;
             product.Introduction = entity.Introduction;
             product.DeliveryNotes = entity.DeliveryNotes;
@@ -117,6 +126,7 @@ namespace VVCar.Shop.Services.DomainServices
             product.CommissionRate = entity.CommissionRate;
             product.IsCanPointExchange = entity.IsCanPointExchange;
             product.Unit = entity.Unit;
+            product.GraphicIntroduction = entity.GraphicIntroduction;
             product.LastUpdateDate = DateTime.Now;
             product.LastUpdateUser = AppContext.CurrentSession.UserName;
             product.LastUpdateUserID = AppContext.CurrentSession.UserID;

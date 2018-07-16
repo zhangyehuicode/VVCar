@@ -47,6 +47,7 @@
     <Compile Include="Dtos\BuyGiftCardByPosDto.cs" />
     <Compile Include="Dtos\CardThemeCategoryMenu.cs" />
     <Compile Include="Dtos\CardThemeGroupDto.cs" />
+    <Compile Include="Dtos\ChangeMemberGroupDto.cs" />
     <Compile Include="Dtos\ChangePasswordDto.cs" />
     <Compile Include="Dtos\CheckCouponDto.cs" />
     <Compile Include="Dtos\CouponApplyStoreDto.cs" />

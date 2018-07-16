@@ -93,7 +93,7 @@
 		var win = Ext.widget('ProductSelector');
 		var grid = win.down('grid');
 		var store = grid.getStore();
-		store.proxy.extraParams = { IsCombo: false, ProductType: 0 };
+		store.proxy.extraParams = { IsCombo: false };
 		store.load();
 		win.show();
 	},

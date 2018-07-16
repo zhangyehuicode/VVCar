@@ -187,10 +187,10 @@ namespace VVCar.VIP.Services.DomainServices
                 entity.CardID = GetCardID(entity.CardNumber);
             }
             entity.PhoneLocation = GetPhoneLoaction(entity.MobilePhoneNo);
-            //if (!entity.MemberGroupID.HasValue)
-            //{
-            //    entity.MemberGroupID = MemberGroupService.GetDefaultMemberGroupID();
-            //}
+            if (!entity.MemberGroupID.HasValue)
+            {
+                entity.MemberGroupID = Guid.Parse("00000000-0000-0000-0000-000000000001");//MemberGroupService.GetDefaultMemberGroupID();
+            }
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
@@ -232,7 +232,7 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 member.OwnerDepartmentID = entity.OwnerDepartmentID;
             }
-            //member.MemberGroupID = entity.MemberGroupID;
+            member.MemberGroupID = entity.MemberGroupID;
             member.LastUpdateUserID = AppContext.CurrentSession.UserID;
             member.LastUpdateUser = AppContext.CurrentSession.UserName;
             member.LastUpdateDate = DateTime.Now;
@@ -261,10 +261,13 @@ namespace VVCar.VIP.Services.DomainServices
                     queryable = queryable.Where(p => p.Card.Status == filter.Status.Value);
                 if (filter.CardTypeID.HasValue)
                     queryable = queryable.Where(p => p.Card.CardTypeID == filter.CardTypeID.Value);
-                //if (filter.MemberGroupID.HasValue && filter.MemberGroupID != Guid.Empty)
-                //{
-                //    queryable = queryable.Where(t => t.MemberGroupID == filter.MemberGroupID);
-                //}
+                if (filter.MemberGroupID.HasValue && filter.MemberGroupID != Guid.Empty)
+                {
+                    if (filter.MemberGroupID.Value == Guid.Parse("00000000-0000-0000-0000-000000000001"))
+                        queryable = queryable.Where(t => t.MemberGroupID == null || t.MemberGroupID == filter.MemberGroupID.Value);
+                    else
+                        queryable = queryable.Where(t => t.MemberGroupID == filter.MemberGroupID.Value);
+                }
                 //if (filter.MemberGradeID.HasValue)
                 //{
                 //    queryable = queryable.Where(t => t.MemberGradeID == filter.MemberGradeID);
@@ -409,6 +412,38 @@ namespace VVCar.VIP.Services.DomainServices
         }
 
         /// <summary>
+        /// 批量导入
+        /// </summary>
+        /// <param name="members"></param>
+        /// <returns></returns>
+        public bool ImportMember(IEnumerable<AddMemberParam> members)
+        {
+            var index = 1;
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                foreach (var member in members)
+                {
+                    if (string.IsNullOrEmpty(member.Name))
+                        throw new DomainException("批量导入会员失败" + "第" + index + "行数据姓名不能为空.");
+                    if (string.IsNullOrEmpty(member.MobilePhoneNo))
+                        throw new DomainException("批量导入会员失败" + "第" + index + "行数据手机号不能为空.");
+                    ManualAddMember(member);
+                    index++;
+                }
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppContext.Logger.Error("批量导入会员失败" + "第" + index + "行数据有误.", ex);
+                UnitOfWork.RollbackTransaction();
+                throw ex;
+            }
+
+        }
+
+        /// <summary>
         /// 手动新增会员
         /// </summary>
         /// <param name="param"></param>
@@ -435,6 +470,10 @@ namespace VVCar.VIP.Services.DomainServices
                     Point = param.Point,
                     InsuranceExpirationDate = param.InsuranceExpirationDate,
                 };
+                if (newMember.Birthday == new DateTime(1000, 1, 1))
+                    newMember.Birthday = null;
+                if (newMember.InsuranceExpirationDate == new DateTime(1000, 1, 1))
+                    newMember.InsuranceExpirationDate = null;
                 newMember.CardID = memberCard.ID;
                 newMember.CardNumber = memberCard.Code;
                 newMember.Password = "123456";
@@ -703,7 +742,7 @@ namespace VVCar.VIP.Services.DomainServices
             //var consumeAmountOfCurrentGrade = TradeHistoryRepo.GetQueryable(false).Where(t => t.MemberID == member.ID && t.MemberGradeID == member.MemberGradeID).GroupBy(t => 1).Select(t => t.Sum(s => s.TradeAmount)).FirstOrDefault();
             //var consumeCountOfCurrentGrade = TradeHistoryRepo.Count(t => t.MemberID == member.ID && t.MemberGradeID == member.MemberGradeID && t.CreatedDate > limitDate);
             var cardCount = 0;
-            var cards = CouponService.GetAvailableCouponList(member.WeChatOpenID);
+            var cards = CouponService.GetAvailableCouponList(member.WeChatOpenID, member.ID);
             if (cards != null && cards.Count() > 0)
             {
                 cardCount = cards.Where(t => t.Nature == ENature.Card).Count();
@@ -1168,28 +1207,28 @@ namespace VVCar.VIP.Services.DomainServices
         //    }).FirstOrDefault() ?? new StatisticDto();
         //}
 
-        //public bool ChangeMemberGroup(ChangeMemberGroupDto changeDto)
-        //{
-        //    if (changeDto == null || changeDto.MemberIDList == null || changeDto.MemberIDList.Count() < 1)
-        //        throw new DomainException("参数错误");
-        //    var memberGroupID = changeDto.MemberGroupID;
-        //    if (!memberGroupID.HasValue && memberGroupID == Guid.Empty)
-        //    {
-        //        memberGroupID = MemberGroupService.GetDefaultMemberGroupID();
-        //    }
-        //    else
-        //    {
-        //        var exists = MemberGroupService.Exists(t => t.ID == memberGroupID);
-        //        if (!exists)
-        //            throw new DomainException("会员分组不存在");
-        //    }
-        //    var memberList = Repository.GetQueryable()
-        //        .Where(t => changeDto.MemberIDList.Contains(t.ID))
-        //        .ToList();
-        //    memberList.ForEach(t => t.MemberGroupID = memberGroupID);
-        //    Repository.Update(memberList);
-        //    return true;
-        //}
+        public bool ChangeMemberGroup(ChangeMemberGroupDto changeDto)
+        {
+            if (changeDto == null || changeDto.MemberIDList == null || changeDto.MemberIDList.Count() < 1)
+                throw new DomainException("参数错误");
+            var memberGroupID = changeDto.MemberGroupID;
+            if (!memberGroupID.HasValue && memberGroupID == Guid.Empty)
+            {
+                memberGroupID = MemberGroupService.GetDefaultMemberGroupID();
+            }
+            else
+            {
+                var exists = MemberGroupService.Exists(t => t.ID == memberGroupID);
+                if (!exists)
+                    throw new DomainException("会员分组不存在");
+            }
+            var memberList = Repository.GetQueryable()
+                .Where(t => changeDto.MemberIDList.Contains(t.ID))
+                .ToList();
+            memberList.ForEach(t => t.MemberGroupID = memberGroupID);
+            Repository.Update(memberList);
+            return true;
+        }
 
         ///// <summary>
         ///// 校验会员是否享有POS权益

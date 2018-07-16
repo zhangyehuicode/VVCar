@@ -8,6 +8,7 @@
 		{ name: "ImgUrl" },
 		{ name: "Points" },
 		{ name: "UpperLimit" },
+		{ name: "IsInternaCollection" },
 		{ name: "IsPublish" },
 		{ name: "IsCombo" },
 		{ name: "IsRecommend" },
@@ -25,5 +26,6 @@
 		{ name: "Unit" },
 		{ name: "Introduction" },
 		{ name: "DeliveryNotes" },
+		{ name: "GraphicIntroduction" },
 	]
 });

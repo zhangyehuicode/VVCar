@@ -7,7 +7,7 @@
 <div id="mydepartment">
     <div class="toubu">
         <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
-        我的门店
+        我的客户
         <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
     </div>
     <div class="touxiang">
@@ -123,7 +123,7 @@
     <script type="text/javascript">
         $(function () {
         var mch = $.getUrlParam('mch');
-            var user = sessionStorage.getItem('agentuser');
+            var user = sessionStorage.getItem('user');
             var isgeneralmanager= sessionStorage.getItem('isgeneralmanager')=='true';
             _viewModel = new Vue({
                 el: '#mydepartment',
@@ -167,7 +167,7 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 _viewModel.User = res.Data;
-                                sessionStorage.setItem('agentuser', JSON.stringify(res.Data));
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
                             }
                             else {
                                 _viewModel.home();

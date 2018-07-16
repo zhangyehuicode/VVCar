@@ -11,7 +11,7 @@ namespace VVCar.VIP.Domain.Entities
     /// <summary>
     /// 会员分组
     /// </summary>
-    public class MemberGroup : NormalEntityBase
+    public class MemberGroup : EntityBase
     {
         /// <summary>
         /// 分组名称
@@ -30,5 +30,11 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "排序")]
         public int Index { get; set; }
+
+        /// <summary>
+        /// 是否成本价
+        /// </summary>
+        [Display(Name = "是否成本价")]
+        public bool IsCostPrice { get; set; }
     }
 }

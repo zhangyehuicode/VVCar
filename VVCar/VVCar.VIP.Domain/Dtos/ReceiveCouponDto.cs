@@ -12,6 +12,11 @@ namespace VVCar.VIP.Domain.Dtos
     public class ReceiveCouponDto
     {
         /// <summary>
+        /// 会员ID
+        /// </summary>
+        public Guid? MemberID { get; set; }
+
+        /// <summary>
         ///卡券ID
         /// </summary>
         public Guid? CouponID { get; set; }

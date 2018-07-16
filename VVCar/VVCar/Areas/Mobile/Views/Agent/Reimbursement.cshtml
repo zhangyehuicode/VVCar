@@ -492,7 +492,8 @@
             if (isgeneralmanager != null && isgeneralmanager != '')
                 isgeneralmanager = isgeneralmanager == 'true';
             else
-                isgeneralmanager = false;
+            isgeneralmanager = false;
+        var ismaster = sessionStorage.getItem('ismaster');
             _viewModel = new Vue({
                 el: '#reimbursement',
                 data: {
@@ -510,7 +511,14 @@
                         history.back(-1);
                     },
                     home: function (event) {
-                        window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+                        if (ismaster != null) {
+                            if (ismaster=='true')
+                                window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                            else
+                                window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                        }
+                        else
+                            window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
                     },
                     confirm: function (event) {
                         $.confirm('确认提交？', function () {
@@ -519,36 +527,50 @@
                         });
                     },
                 }
-            });
+        });
+
+        var userdata = {
+              OpenID: '@ViewBag.OpenId',
+              IsGeneralManager: isgeneralmanager,
+              IsSalesManger: !isgeneralmanager,
+        };
+        if (ismaster != null && ismaster != '') {
+            if (ismaster=='true')
+                 userdata = {
+                    OpenID: '@ViewBag.OpenId',
+                    IsManager: true,
+                 };
+            else
+                 userdata = {
+                    OpenID: '@ViewBag.OpenId',
+                    IsManager: false,
+                 };
+        }
 
               function getUserByOpenId() {
                 $.ajax({
                     url: '/api/User/GetUserByOpenID',
                     type: 'GET',
                     headers: { 'CompanyCode': mch },
-                    data: {
-                        OpenID: '@ViewBag.OpenId',
-                        IsGeneralManager: isgeneralmanager,
-                        IsSalesManger: !isgeneralmanager,
-                    },
+                    data: userdata,
                     success: function (res) {
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
-                                sessionStorage.setItem('agentuser', JSON.stringify(res.Data));
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
                                 _viewModel.UserInfo = res.Data;
                                 _viewModel.Reimbursement.UserID = res.Data.ID;
                             }
                             else {
-                                window.location.href = "/Mobile/Agent?mch=" + mch;
+                                _viewModel.home();
                             }
                         }
                         else {
                             $.alert(res.ErrorMessage);
-                            window.location.href = "/Mobile/Agent?mch=" + mch;
+                            _viewModel.home();
                         }
                     },
                     error: function () {
-                        window.location.href = "/Mobile/Agent?mch=" + mch;
+                        _viewModel.home();
                     }
                 });
             }

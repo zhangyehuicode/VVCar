@@ -156,7 +156,7 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns>产品分类数据集</returns>
         public IEnumerable<ProductCategory> Search(ProductCategoryFilter filter, out int totalCount)
         {
-            var result = new List<ProductCategory>(); ;
+            var result = new List<ProductCategory>();
             var queryable = Repository.GetInclude(t => t.SubProducts, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter != null)
             {
@@ -184,7 +184,7 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     if (t.SubProducts != null && t.SubProducts.Count > 0)
                     {
-                        t.SubProducts = t.SubProducts.Where(item => item.ProductType == EProductType.Service && item.IsPublish && !item.IsCombo).ToList();
+                        t.SubProducts = t.SubProducts.Where(item => item.IsPublish && !item.IsCombo).ToList();//item.ProductType == EProductType.Service &&
                     }
                 });
             }

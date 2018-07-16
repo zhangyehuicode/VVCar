@@ -1,6 +1,4 @@
-﻿/// <reference path="../../ext/ext-all-dev.js" />
-
-Ext.define("WX.store.BaseData.MemberStore", {
+﻿Ext.define("WX.store.BaseData.MemberStore", {
 	extend: "Ext.data.Store",
 	model: "WX.model.BaseData.MemberModel",
 	autoLoad: false,
@@ -18,6 +16,8 @@ Ext.define("WX.store.BaseData.MemberStore", {
 			resetPassword: Ext.GlobalConfig.ApiDomainUrl + "api/Member/ResetPassword/",
 			changeCard: Ext.GlobalConfig.ApiDomainUrl + "api/Member/ChangeCard/",
 			exportMember: Ext.GlobalConfig.ApiDomainUrl + "api/Member/ExportMember?All=false",
+			importMember: Ext.GlobalConfig.ApiDomainUrl + "api/Member/ImportMember",
+			importMemberTemplate: Ext.GlobalConfig.ApiDomainUrl + "api/Member/ImportMemberTemplate",
 			getPhoneLocation: Ext.GlobalConfig.ApiDomainUrl + "api/Member/GetPhoneLoaction/",
 			changeMemberGroup: Ext.GlobalConfig.ApiDomainUrl + "api/Member/ChangeMemberGroup",
 			adjustMemberPoint: Ext.GlobalConfig.ApiDomainUrl + "api/Member/AdjustMemberPoint",
@@ -89,12 +89,54 @@ Ext.define("WX.store.BaseData.MemberStore", {
 			failure: this.failure
 		});
 	},
+	importMember: function (filename, cb) {
+		Ext.Ajax.request({
+			method: "GET",
+			url: this.proxy.api.importMember + "?fileName=" + filename,
+			success: function (options, request) {
+				var response = JSON.parse(options.responseText);
+				if (response.IsSuccessful) {
+					Ext.Msg.alert('提示', '数据上传成功');
+					store.load();
+				} else {
+					Ext.Msg.alert('提示', response.ErrorMessage);
+				}
+			},
+			failure: function (response, opts) {
+				var responseText = JSON.parse(response.responseText);
+				Ext.Msg.alert('提示', responseText.Message + responseText.MessageDetail);
+			}
+		});
+	},
 	exportMember: function (p, cb) {
 		Ext.Ajax.request({
 			method: "GET",
 			url: this.proxy.api.exportMember,
 			params: p,
 			callback: cb
+		});
+	},
+	importMemberTemplate: function () {
+		Ext.MessageBox.show({
+			msg: '正在生成导入模板文件……, 请稍侯',
+			progressText: '正在生成导入模板文件……',
+			width: 300,
+			wait: true,
+			waitConfig: { interval: 200 }
+		});
+		Ext.Ajax.request({
+			method: "GET",
+			url: this.proxy.api.importMemberTemplate,
+			success: function (options, request) {
+				var response = JSON.parse(options.responseText);
+				if (response.IsSuccessful) {
+					window.location.href = response.Data;
+				}
+				Ext.MessageBox.hide();
+			},
+			failure: function (a, b, c) {
+				Ext.MessageBox.hide();
+			}
 		});
 	},
 	getPhoneLocation: function (phoneNumber, success) {
@@ -137,5 +179,5 @@ Ext.define("WX.store.BaseData.MemberStore", {
 			jsonData: { IdList: ids },
 			callback: cb
 		});
-	}
+	},
 });

@@ -1,5 +1,4 @@
-﻿/// <reference path="../../ext/ext-all-dev.js" />
-Ext.define('WX.controller.Member', {
+﻿Ext.define('WX.controller.Member', {
 	extend: 'Ext.app.Controller',
 	requires: ['WX.store.BaseData.MemberStore', "WX.store.BaseData.RechargeHistoryStore", "WX.store.BaseData.MemberCardStore", "WX.store.DataDict.MemberCardStatusStore", "WX.store.DataDict.AdjustTypeDicStore",
 		'WX.store.DataDict.SexStore', 'WX.store.BaseData.MemberGroupStore', 'WX.store.BaseData.MemberGroupTreeStore', 'WX.store.BaseData.MemberGradeStore', 'WX.store.DataDict.AdjustMemberPointTypeDicStore', 'WX.store.BaseData.TradeHistoryStore'],
@@ -31,6 +30,12 @@ Ext.define('WX.controller.Member', {
 		me.control({
 			"Member button[action=search]": {
 				click: me.search
+			},
+			"Member button[action=importMemberTemplate]": {
+				click: me.importMemberTemplate
+			},
+			"Member filefield[name=importMember]": {
+				change: me.importMember
 			},
 			"Member button[action=export]": {
 				click: me.exportMember
@@ -457,6 +462,35 @@ Ext.define('WX.controller.Member', {
 		//me.getMember().down('button[action=changeCard]').setDisabled(disabled);
 		me.getMember().down('button[action=editMember]').setDisabled(disabled);
 		//me.getMember().down('button[action=adjustBalance]').setDisabled(disabled);
+	},
+	importMemberTemplate: function () {
+		var me = this;
+		me.getMember().store.importMemberTemplate();
+	},
+	importMember: function (filefield, value, eOpts) {
+		var me = this;
+		var store = me.getMember().getStore();
+		var form = filefield.up('form').getForm();
+		Ext.Msg.alert('tip', Ext.GlobalConfig.ApiDomainUrl + 'aaaa');
+		if (form.isValid()) {
+			Ext.Msg.alert('提示', '确定要导入数据吗?', function (optional) {
+				if (optional === 'ok') {
+					form.submit({
+						url: Ext.GlobalConfig.ApiDomainUrl + 'api/UploadFile/UploadMemberExcel',
+						waitMsg: '正在上传文件...',
+						headers: { 'Content-Type': 'multipart/form-data; charset=UTF-8' },
+						clientValidation: true,
+						success: function (form, action) {
+							Ext.Msg.alert('提示', '上传文件成功');
+							store.importMember(action.result.FileName, store);
+						},
+						failure: function (form, action) {
+							Ext.Msg.alert('提示', '上传文件失败, ' + action.result.errorMessage);
+						}
+					});
+				}
+			});
+		}
 	},
 	exportMember: function (btn) {
 		Ext.MessageBox.show({

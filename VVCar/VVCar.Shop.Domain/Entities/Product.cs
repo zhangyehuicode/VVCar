@@ -14,6 +14,9 @@ namespace VVCar.Shop.Domain.Entities
     /// </summary>
     public class Product : EntityBase
     {
+        /// <summary>
+        /// ctor
+        /// </summary>
         public Product()
         {
             ComboItemList = new List<ComboItem>();
@@ -97,6 +100,12 @@ namespace VVCar.Shop.Domain.Entities
         public int UpperLimit { get; set; }
 
         /// <summary>
+        /// 员工内部领取
+        /// </summary>
+        [Display(Name = "员工内部领取")]
+        public bool IsInternaCollection { get; set; }
+
+        /// <summary>
         /// 是否上架
         /// </summary>
         [Display(Name = "是否上架")]
@@ -155,6 +164,12 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "是否套餐")]
         public bool IsCombo { get; set; }
+
+        /// <summary>
+        /// 图文介绍
+        /// </summary>
+        [Display(Name = "图文介绍")]
+        public string GraphicIntroduction { get; set; }
 
         /// <summary>
         /// 创建人ID

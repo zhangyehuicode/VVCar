@@ -95,6 +95,13 @@
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">库存</span>
         </a>
     </div>
+    <div class="touxiang" style="margin-top:0px;">
+        <a class="bq_box" v-on:click="reimbursementcheck">
+            <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:25px; margin-top:5px;"></div>
+            <span>报销审核</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">审核</span>
+        </a>
+    </div>
     <img src="~/Areas/resource/img/mobile/master/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">
 </div>
 
@@ -196,6 +203,9 @@
                     },
                     privilegeorder: function (event) {
                         window.location.href = "/Mobile/Merchant/PrivilegeOrder?mch=" + mch;
+                    },
+                    reimbursementcheck: function (event) {
+                        window.location.href = "/Mobile/Agent/ReimbursementCheck?mch=" + mch;
                     },
                 }
             });

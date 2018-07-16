@@ -76,8 +76,8 @@
         </a>
         <a class="bq_box" style=" border-right:none;border-bottom:none;" v-on:click="mydepartment">
             <div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:23px;"></div>
-            <span>我的门店</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">门店</span>
+            <span>我的客户</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">客户</span>
         </a>
     </div>
     <div class="touxiang" style="margin-top:0px;">
@@ -98,7 +98,7 @@
         </a>
     </div>
     <div class="touxiang" style="margin-top:0px;">
-        <a class="bq_box" v-on:click="reimbursementcheck">
+        <a class="bq_box" v-on:click="reimbursementcheck" v-if="IsGeneralManager">
             <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:25px; margin-top:5px;"></div>
             <span>报销审核</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">审核</span>
@@ -163,6 +163,7 @@
                 el: '#generalmanagerhome',
                 data: {
                     UserInfo: {},
+                    IsGeneralManager: false,
                 },
                 methods: {
                     quickopenaccount: function (event) {
@@ -213,8 +214,9 @@
                     success: function (res) {
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
-                                sessionStorage.setItem('agentuser', JSON.stringify(res.Data));
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
                                 _viewModel.UserInfo = res.Data;
+                                _viewModel.IsGeneralManager = res.Data.IsGeneralManager;
                             }
                             else {
                                 window.location.href = "/Mobile/Agent?mch=" + mch;

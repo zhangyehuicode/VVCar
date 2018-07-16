@@ -83,7 +83,7 @@
 				change: me.producttypechange
 			},
 			'ServiceEdit combobox[name=IsCombo]': {
-				change: me.isComboChange
+				//change: me.isComboChange
 			},
 			'Service combobox[name=ProductType]': {
 				change: me.productproducttypechange

@@ -91,6 +91,16 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 上传图文介绍图片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadGraphicIntroduction")]
+        public UploadFileResult UploadGraphicIntroduction()
+        {
+            return UploadAction("Pictures/GraphicIntroduction");
+        }
+
+        /// <summary>
         /// 上传车比特商品图片
         /// </summary>
         /// <returns></returns>
@@ -169,6 +179,16 @@ namespace VVCar.Controllers.Api
         public UploadFileResult UploadGoodsLandingClass()
         {
             return UploadAction("Video/GoodsLandingClass");
+        }
+
+        /// <summary>
+        /// 上传会员数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadMemberExcel")]
+        public UploadFileResult UploadMemberExcel()
+        {
+            return UploadAction(Path.Combine(AppContext.PathInfo.AppDataPath, "Upload/Excel/Member"));
         }
 
         /// <summary>

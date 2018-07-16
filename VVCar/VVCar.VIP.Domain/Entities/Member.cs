@@ -149,7 +149,7 @@ namespace VVCar.VIP.Domain.Entities
         /// <summary>
         /// 会员分组
         /// </summary>
-        public virtual MemberGroup OwnerGroup { get; set; }
+        public virtual MemberGroup MemberGroup { get; set; }
 
         /// <summary>
         /// 会员等级ID

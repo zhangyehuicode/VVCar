@@ -62,6 +62,23 @@
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">{{UserInfo.CustomerAppointmentCount}}个预约</span>
         </a>
     </div>
+    <div class="touxiang" style="margin-top:0px;">
+        <a class="bq_box" v-on:click="reimbursement">
+            <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:25px; margin-top:5px;"></div>
+            <span>业务报销</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">报销</span>
+        </a>
+        <a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="myreimbursement">
+            <div><img src="~/Areas/resource/img/mobile/master/hygl.png" style="width:21px;"></div>
+            <span>我的报销</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报销</span>
+        </a>
+        <a class="bq_box" style=" border-right:none;border-bottom:none;" v-on:click="">
+            <div><img src="~/Areas/resource/img/mobile/master/hdgl.png" style="width:23px;"></div>
+            <span>工具/耗材</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">领取</span>
+        </a>
+    </div>
     <div class="touxiang">
         <div class="pm_box">
             <div class="pm_text">业绩排名</div>
@@ -163,6 +180,12 @@
                 },
                 myinfo: function (event) {
                     window.location.href = "/Mobile/Merchant/MyInfo?mch=" + mch;
+                },
+                reimbursement: function (event) {
+                    window.location.href = "/Mobile/Agent/Reimbursement?mch=" + mch;
+                },
+                myreimbursement: function (event) {
+                    window.location.href = "/Mobile/Agent/MyReimbursement?mch=" + mch;
                 },
             }
         });

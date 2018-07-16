@@ -38,7 +38,7 @@ namespace VVCar.VIP.Domain.Services
         /// </summary>
         /// <param name="userOpenID"></param>
         /// <returns></returns>
-        IEnumerable<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID);
+        IEnumerable<CouponBaseInfoDto> GetAvailableCouponList(string userOpenID, Guid? userid);
 
         /// <summary>
         /// 领券中心可用列表 
