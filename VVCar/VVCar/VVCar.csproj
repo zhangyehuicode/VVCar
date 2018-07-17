@@ -317,6 +317,9 @@
     <Compile Include="Controllers\VIP\CouponPushMemberController.cs" />
     <Compile Include="Controllers\VIP\CouponTemplateController.cs" />
     <Compile Include="Controllers\VIP\GameCouponRecordController.cs" />
+    <Compile Include="Controllers\VIP\GamePushController.cs" />
+    <Compile Include="Controllers\VIP\GamePushItemController.cs" />
+    <Compile Include="Controllers\VIP\GamePushMemberController.cs" />
     <Compile Include="Controllers\VIP\GameSettingController.cs" />
     <Compile Include="Controllers\VIP\GameCouponController.cs" />
     <Compile Include="Controllers\VIP\MemberCardTypeController.cs" />
@@ -647,6 +650,7 @@
     <Content Include="Scripts\app\controller\Department.js" />
     <Content Include="Scripts\app\controller\DepartmentPerformanceStatistics.js" />
     <Content Include="Scripts\app\controller\GameCouponRecord.js" />
+    <Content Include="Scripts\app\controller\GamePush.js" />
     <Content Include="Scripts\app\controller\GameSetting.js" />
     <Content Include="Scripts\app\controller\GoodsLandingClass.js" />
     <Content Include="Scripts\app\controller\Login.js" />
@@ -705,6 +709,9 @@
     <Content Include="Scripts\app\model\BaseData\DepartmentPerformanceStatisticsModel.js" />
     <Content Include="Scripts\app\model\BaseData\GameCouponModel.js" />
     <Content Include="Scripts\app\model\BaseData\GameCouponRecordModel.js" />
+    <Content Include="Scripts\app\model\BaseData\GamePushItemModel.js" />
+    <Content Include="Scripts\app\model\BaseData\GamePushMemberModel.js" />
+    <Content Include="Scripts\app\model\BaseData\GamePushModel.js" />
     <Content Include="Scripts\app\model\BaseData\GameSettingModel.js" />
     <Content Include="Scripts\app\model\BaseData\IDCodeNameModel.js" />
     <Content Include="Scripts\app\model\BaseData\MakeCodeRuleModel.js" />
@@ -766,12 +773,16 @@
     <Content Include="Scripts\app\store\BaseData\CouponPushItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponPushMemberStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponPushStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CouponPushTemplateInfoStore.js" />
     <Content Include="Scripts\app\store\BaseData\CouponTemplateInfoStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentPerformanceStatisticsStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentStore.js" />
     <Content Include="Scripts\app\store\BaseData\DepartmentTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\GameCouponRecordStore.js" />
     <Content Include="Scripts\app\store\BaseData\GameCouponStore.js" />
+    <Content Include="Scripts\app\store\BaseData\GamePushItemStore.js" />
+    <Content Include="Scripts\app\store\BaseData\GamePushMemberStore.js" />
+    <Content Include="Scripts\app\store\BaseData\GamePushStore.js" />
     <Content Include="Scripts\app\store\BaseData\GameSettingStore.js" />
     <Content Include="Scripts\app\store\BaseData\MakeCodeRuleStore.js" />
     <Content Include="Scripts\app\store\BaseData\ManageUserAuditStore.js" />
@@ -876,6 +887,10 @@
     <Content Include="Scripts\app\view\Department\DepartmentEdit.js" />
     <Content Include="Scripts\app\view\Department\DepartmentList.js" />
     <Content Include="Scripts\app\view\GameCouponRecord\GameCouponRecordList.js" />
+    <Content Include="Scripts\app\view\GamePush\GamePushEdit.js" />
+    <Content Include="Scripts\app\view\GamePush\GamePushItemEdit.js" />
+    <Content Include="Scripts\app\view\GamePush\GamePushList.js" />
+    <Content Include="Scripts\app\view\GamePush\GameMemberSelector.js" />
     <Content Include="Scripts\app\view\GameSetting\GameCouponEdit.js" />
     <Content Include="Scripts\app\view\GameSetting\GameSettingEdit.js" />
     <Content Include="Scripts\app\view\GameSetting\GameSettingList.js" />

@@ -304,6 +304,7 @@ namespace VVCar.Controllers.VIP
                 //{ header: "余额（元）", dataIndex:"CardBalance"      , flex: 1, xtype: "numbercolumn" }
                 var exporter = new ExportHelper(new[]
                 {
+                    new ExportInfo("MemberGroup","分组"),
                     new ExportInfo("Name", "姓名"),
                     new ExportInfo("Sex", "性别"),
                     new ExportInfo("MobilePhoneNo", "手机号码"),
@@ -315,7 +316,6 @@ namespace VVCar.Controllers.VIP
                     new ExportInfo("CreatedDate","注册时间"),
                     //new ExportInfo("CardNumber","会员卡号"),
                     //new ExportInfo("CardTypeDesc","卡片类型"),
-                    //new ExportInfo("MemberGroup","分组"),
                     //new ExportInfo("PhoneLocation","归属地"),
                     //new ExportInfo("MemberGradeName","会员等级"),
                     //new ExportInfo("OwnerDepartment","所属门店"),
@@ -405,16 +405,16 @@ namespace VVCar.Controllers.VIP
         //    return SafeExecute(() => MemberService.Statistic());
         //}
 
-        ///// <summary>
-        ///// 移动会员分组
-        ///// </summary>
-        ///// <param name="changeDto"></param>
-        ///// <returns></returns>
-        //[HttpPut, Route("ChangeMemberGroup")]
-        //public JsonActionResult<bool> ChangeMemberGroup(ChangeMemberGroupDto changeDto)
-        //{
-        //    return SafeExecute(() => MemberService.ChangeMemberGroup(changeDto));
-        //}
+        /// <summary>
+        /// 移动会员分组
+        /// </summary>
+        /// <param name="changeDto"></param>
+        /// <returns></returns>
+        [HttpPut, Route("ChangeMemberGroup")]
+        public JsonActionResult<bool> ChangeMemberGroup(ChangeMemberGroupDto changeDto)
+        {
+            return SafeExecute(() => MemberService.ChangeMemberGroup(changeDto));
+        }
 
         /// <summary>
         /// 会员积分调整

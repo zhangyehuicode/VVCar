@@ -171,6 +171,19 @@ namespace VVCar.Providers
             set { }
         }
 
+        /// <summary>
+        /// 会员ID
+        /// </summary>
+        public Guid MemberID
+        {
+            get
+            {
+                var memberId = GetClaimsPrincipalValue(YEF.Core.Security.ClaimTypes.MemberID);
+                return string.IsNullOrWhiteSpace(memberId) ? Guid.Empty : Guid.Parse(memberId);
+            }
+            set { }
+        }
+
         #endregion
     }
 }

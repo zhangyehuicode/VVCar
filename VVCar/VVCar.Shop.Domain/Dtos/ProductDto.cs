@@ -44,6 +44,11 @@ namespace VVCar.Shop.Domain.Dtos
         public decimal PriceSale { get; set; }
 
         /// <summary>
+        /// 批发价
+        /// </summary>
+        public decimal WholesalePrice { get; set; }
+
+        /// <summary>
         /// 库存
         /// </summary>
         public int Stock { get; set; }
@@ -52,6 +57,11 @@ namespace VVCar.Shop.Domain.Dtos
         /// 产品介绍
         /// </summary>
         public string Introduction { get; set; }
+
+        /// <summary>
+        /// 图文介绍
+        /// </summary>
+        public string GraphicIntroduction { get; set; }
 
         /// <summary>
         /// 配送说明

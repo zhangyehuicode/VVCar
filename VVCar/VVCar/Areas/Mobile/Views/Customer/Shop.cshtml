@@ -97,9 +97,10 @@
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -138,42 +139,6 @@
         wxConfig();
     </script>
     <script type="text/javascript">
-       $(function () {
-            var member = sessionStorage.getItem('member');
-            if (member == null || member=='') {
-                var mch = $.getUrlParam('mch');
-                function init() {
-                   $.ajax({
-                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
-                        type: 'GET',
-                        headers: { 'CompanyCode':mch },
-                        beforeSend: function () {
-                            $.showLoading();
-                        },
-                        success: function (res) {
-                            $.hideLoading();
-                            if (res.IsSuccessful) {
-                                if (res.Data != null) {
-                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                } else {
-                                    window.location.href = "/Mobile/Customer?mch=" + mch;
-                               }
-                            } else {
-                                $.alert(res.ErrorMessage);
-                                window.location.href = "/Mobile/Customer?mch=" + mch;
-                            }
-                        },
-                        error: function () {
-                            $.hideLoading();
-                            window.location.href = "/Mobile/Customer?mch=" + mch;
-                        }
-                   });
-              }
-              init();
-            }
-        });
-    </script>
-    <script type="text/javascript">
         var mch = $.getUrlParam('mch');
         _payBillViewModel = new Vue({
             el: '#shop',
@@ -182,6 +147,7 @@
                 ProductList: [],
                 RecommendProductList: [],
                 AppointmentProduct: [],
+                Member: {},
             },
             methods: {
                 back: function (event) {
@@ -224,11 +190,51 @@
             }
         });
 
+        var member = sessionStorage.getItem('member');
+        if (member == null || member == '') {
+            function init() {
+                $.ajax({
+                    url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                _payBillViewModel.Member = res.Data;
+                                getRecommendProduct();
+                                getProduct();
+                            } else {
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                        window.location.href = "/Mobile/Customer?mch=" + mch;
+                    }
+                });
+            }
+            init();
+        } else {
+            member = JSON.parse(member);
+            _payBillViewModel.Member = member;
+            getRecommendProduct();
+            getProduct();
+        }
+
         function getRecommendProduct() {
             $.ajax({
                 url: '/api/Product/GetRecommendProduct',
                 type: 'GET',
-                headers: { 'CompanyCode': mch },
+                headers: { 'CompanyCode': mch, 'MemberID': _payBillViewModel.Member.MemberID },
                 beforesend: function () {
                     $.showLoading();
                 },
@@ -246,7 +252,7 @@
                 }
             });
         }
-        getRecommendProduct();
+        //getRecommendProduct();
 
         function getCardOfCouponTemplate() {
             $.ajax({
@@ -279,7 +285,7 @@
             $.ajax({
                 url: '/api/Product/GetProduct',
                 type: 'GET',
-                headers: { 'CompanyCode': mch },
+                headers: { 'CompanyCode': mch, 'MemberID': _payBillViewModel.Member.MemberID },
                 beforesend: function () {
                     //$.showLoading();
                 },
@@ -323,7 +329,7 @@
             });
         }
 
-        getProduct();
+        //getProduct();
         getCardOfCouponTemplate();
         getAppointmentProduct();
 

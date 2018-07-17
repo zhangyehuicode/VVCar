@@ -134,7 +134,7 @@
                         fieldLabel: '会员分组',
                         displayField: 'Name',
                         valueField: 'ID',
-                        editable: false,
+                        editable: true,
                         name: 'MemberGroupID'
                     }]
                 }, {

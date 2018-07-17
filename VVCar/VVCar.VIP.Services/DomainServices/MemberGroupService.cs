@@ -45,12 +45,12 @@ namespace VVCar.VIP.Services.DomainServices
 
         protected override bool DoValidate(MemberGroup entity)
         {
-            var exists = Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID);
+            var exists = Repository.Exists(t => t.Code == entity.Code && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (exists)
             {
                 throw new DomainException($"代码 {entity.Code} 已使用，不能重复添加。");
             }
-            exists = Repository.Exists(t => t.Name == entity.Name && t.ID != entity.ID);
+            exists = Repository.Exists(t => t.Name == entity.Name && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (exists)
             {
                 throw new DomainException($"名称 {entity.Name} 已使用，不能重复添加。");
@@ -61,6 +61,7 @@ namespace VVCar.VIP.Services.DomainServices
         public override MemberGroup Add(MemberGroup entity)
         {
             entity.ID = Util.NewID();
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 
@@ -71,7 +72,7 @@ namespace VVCar.VIP.Services.DomainServices
                 return true;
             }
             if (entity.ID == _defaultGroupID)
-                throw new DomainException("不允许删除默认分组");
+                throw new DomainException("不允许修改默认分组");
             var membergroup = Repository.GetByKey(entity.ID);
             if (membergroup == null)
             {
@@ -80,6 +81,7 @@ namespace VVCar.VIP.Services.DomainServices
             membergroup.Name = entity.Name;
             membergroup.Code = entity.Code;
             membergroup.Index = entity.Index;
+            membergroup.IsWholesalePrice = entity.IsWholesalePrice;
             return base.Update(membergroup);
         }
 
@@ -104,7 +106,7 @@ namespace VVCar.VIP.Services.DomainServices
 
         public IEnumerable<MemberGroup> Search(MemberGroupFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetQueryable(false).Where(t => t.ID != _defaultGroupID);
+            var queryable = Repository.GetQueryable(false).Where(t => t.ID != _defaultGroupID && t.MerchantID == AppContext.CurrentSession.MerchantID);
             var result = new List<MemberGroup>();
             if (filter != null)
             {
@@ -128,7 +130,7 @@ namespace VVCar.VIP.Services.DomainServices
 
         public IEnumerable<IDCodeNameDto> GetTreeData()
         {
-            var groups = Repository.GetQueryable(false)
+            var groups = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID || t.ID == _defaultGroupID)
                 .OrderBy(t => t.Index)
                 .Select(t => new IDCodeNameDto
                 {
@@ -136,7 +138,7 @@ namespace VVCar.VIP.Services.DomainServices
                     Code = t.Code,
                     Name = t.Name,
                 }).ToList();
-            var groupMember = MemberRepo.GetQueryable(false)
+            var groupMember = MemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 .GroupBy(t => t.MemberGroupID)
                 .Select(group => new
                 {
@@ -166,7 +168,7 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<MemberGroupTreeDto> GetTreeDataContainsMember(MemberGroupFilter filter)
         {
             var result = new List<MemberGroupTreeDto>();
-            var memberQueryable = MemberRepo.GetQueryable(false)
+            var memberQueryable = MemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Where(t => t.Card.Status != Domain.Enums.ECardStatus.Lost && t.Card.ExpiredDate != null ? t.Card.ExpiredDate >= DateTime.Now : true);
             if (filter != null && !string.IsNullOrEmpty(filter.CardNumberOrName))
             {

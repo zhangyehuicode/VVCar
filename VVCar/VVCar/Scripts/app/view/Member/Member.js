@@ -266,6 +266,6 @@
     },
     afterRender: function () {
         this.callParent(arguments);
-        this.down('grid').getStore().load();
+        //this.down('grid').getStore().load();
     }
 });

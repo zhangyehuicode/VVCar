@@ -1,24 +1,25 @@
 ﻿Ext.define('WX.view.CouponPush.CouponPushItemEdit', {
     extend: 'Ext.window.Window',
     alias: 'widget.CouponPushItemEdit',
-    title: '卡券推送子项编辑',
+    title: '游戏推送子项编辑',
     layout: 'fit',
     width: 600,
     bodyPadding: 5,
     modal: true,
     initComponent: function() {
         var me = this;
-        var couponTemplateInfoStore = Ext.create('WX.store.BaseData.CouponTemplateInfoStore');
+		var couponTemplateInfoStore = Ext.create('WX.store.BaseData.CouponPushTemplateInfoStore');
         me.grid = Ext.create('Ext.grid.Panel', {
             name: "couponTemplate",
-            flex: 1,
+			flex: 1,
+			emptyText: '没有数据',
             store: couponTemplateInfoStore,
             stripeRows: true,
             selModel: Ext.create('Ext.selection.CheckboxModel', { model: 'SIMPLE' }),
             columns: [
-                { header: '模板编号', dataIndex: 'TemplateCode', flex: 1 },
+				{ header: '模板编号', dataIndex: 'TemplateCode', flex: 1 },
                 { header: '卡券类型', dataIndex: 'CouponTypeName', flex: 1 },
-                { header: '标题', dataIndex: 'Title', flex: 1 }
+				{ header: '标题', dataIndex: 'Title', flex: 1 },
             ],
             bbar: {
                 xtype: 'pagingtoolbar',

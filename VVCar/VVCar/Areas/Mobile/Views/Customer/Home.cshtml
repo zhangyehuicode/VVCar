@@ -131,9 +131,10 @@
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -173,44 +174,6 @@
     </script>
     <script type="text/javascript">
         $(function () {
-
-            var member = sessionStorage.getItem('member');
-            if (member == null || member=='') {
-                var mch = $.getUrlParam('mch');
-                //$.alert(mch);
-                function init() {
-                   $.ajax({
-                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
-                        type: 'GET',
-                        headers: { 'CompanyCode':mch },
-                        beforeSend: function () {
-                            $.showLoading();
-                        },
-                        success: function (res) {
-                            $.hideLoading();
-                            if (res.IsSuccessful) {
-                                if (res.Data != null) {
-                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                    //window.location.href="/Mobile/Customer/Home?mch="+mch;
-                                } else {
-                                    window.location.href = "/Mobile/Customer?mch=" + mch;
-                               }
-                            } else {
-                                $.alert(res.ErrorMessage);
-                                window.location.href = "/Mobile/Customer?mch=" + mch;
-                            }
-                        },
-                        error: function (res) {
-                            $.hideLoading();
-                            $.alert(JSON.stringify(res), function () {
-                                window.location.href = "/Mobile/Customer?mch=" + mch;
-                            });
-                            //window.location.href = "/Mobile/Customer?mch=" + mch;
-                        }
-                   });
-              }
-              init();
-            }
 
             var banner = {
                 init: function () {
@@ -308,6 +271,7 @@
             data: {
                 ProductList: [],
                 CouponTemplateList: [],
+                Member: {},
             },
             methods: {
                 shop: function (event) {
@@ -339,11 +303,51 @@
             }
         });
 
+         var member = sessionStorage.getItem('member');
+        if (member == null || member == '') {
+            function init() {
+                $.ajax({
+                    url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                _payBillViewModel.Member = res.Data;
+                                getRecommendProduct();
+                            } else {
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                    },
+                    error: function (res) {
+                        $.hideLoading();
+                        $.alert(JSON.stringify(res), function () {
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        });
+                    }
+                });
+            }
+            init();
+        } else {
+            member = JSON.parse(member);
+            _payBillViewModel.Member = member;
+            getRecommendProduct();
+        }
+
         function getRecommendProduct() {
             $.ajax({
                 url: '/api/Product/GetRecommendProduct',
                 type: 'GET',
-                headers: { 'CompanyCode': mch },
+                headers: { 'CompanyCode': mch, 'MemberID': _payBillViewModel.Member.MemberID },
                 beforesend: function () {
                     $.showLoading();
                     //request.setRequestHeader("CompanyCode", mch);
@@ -362,7 +366,7 @@
                 }
             });
         }
-        getRecommendProduct();
+        //getRecommendProduct();
 
         function getRecommendCouponTemplate() {
             $.ajax({

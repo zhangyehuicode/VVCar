@@ -107,7 +107,10 @@ namespace VVCar
             }
             merchantId = merchant.ID.ToString();
 
-            var identity = GetSystemPrincipal(merchantId, companyCode);
+            var memberIds = actionContext.Request.Headers.FirstOrDefault(t => t.Key.ToLower() == "memberid");
+            var memberId = memberIds.Value == null ? string.Empty : memberIds.Value.FirstOrDefault();
+
+            var identity = GetSystemPrincipal(merchantId, companyCode, memberId);
             actionContext.RequestContext.Principal = new ClaimsPrincipal(identity);
         }
 
@@ -117,7 +120,7 @@ namespace VVCar
                 || actionContext.ControllerContext.ControllerDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any();
         }
 
-        static ClaimsIdentity GetSystemPrincipal(string merchantId, string companyCode = "")
+        static ClaimsIdentity GetSystemPrincipal(string merchantId, string companyCode = "", string memberId = "")
         {
             string departmentId = "00000000-0000-0000-0000-000000000001";
             var departmentName = "system";
@@ -157,6 +160,7 @@ namespace VVCar
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.DepartmentCode, departmentCode));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, companyCode));
             identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantID, merchantId));
+            identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MemberID, memberId));
 
             return identity;
         }

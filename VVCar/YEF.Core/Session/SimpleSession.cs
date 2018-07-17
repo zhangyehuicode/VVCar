@@ -63,6 +63,11 @@ namespace YEF.Core.Session
         /// </summary>
         public string MerchantName { get; set; }
 
+        /// <summary>
+        /// 会员ID
+        /// </summary>
+        public Guid MemberID { get; set; }
+
         #endregion
 
         #region ISessionProvider 成员

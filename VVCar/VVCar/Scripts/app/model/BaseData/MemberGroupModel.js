@@ -5,6 +5,7 @@
         { name: "ID" },
         { name: "Name" },
         { name: "Code" },
-        { name: "Index" }
+        { name: "Index" },
+        { name: "IsWholesalePrice" },
     ]
 });

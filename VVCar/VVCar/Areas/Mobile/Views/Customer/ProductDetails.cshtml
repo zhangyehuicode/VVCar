@@ -31,28 +31,13 @@
     <div class="kc_box"><span style="float:left;">原价：￥{{Product.BasePrice}}</span>库存：{{Product.Stock}}<span style="float:right; margin-bottom:10px;">月销：0</span></div>
     <div class="kc_box2">配送说明：<span style="font-size:14px; color:#666;">{{Product.DeliveryNotes}}</span></div>
     <div class="kc_box2">
-        产品介绍：<br>
-        @*<a><div>参数一</div></a>
-            <a><div style="background-color:#ddd; color:#666; margin-left:2%; margin-bottom:15px;">参数二</div></a>*@
-    </div>
-    <div class="kc_box3">
-        @*商品详情：<br>
-            <div>上市时间</div>
-            <div style="width:70%; color:#666;">2017年春夏</div>
-            <div>材质</div>
-            <div style="width:70%; color:#666;">钛钢</div>
-            <div>品牌</div>
-            <div style="width:70%; color:#666;">凝石轩</div>
-            <div>成色</div>
-            <div style="width:70%; color:#666;">全新</div>
-            <div>是否现货</div>
-            <div style="width:70%; color:#666;">现货</div>
-            <div>货号</div>
-            <div style="width:70%; color:#666;">R3-YOGJZ001</div>*@
+        产品介绍：
         {{Product.Introduction}}
     </div>
     <a class="btn1" style="margin-top:20px;" v-on:click="paynow">立即购买</a>
     <a class="btn2" style="margin-bottom:20px;" v-on:click="addtoshoppingcart">加入购物车</a>
+    <div class="graphicintroduction">
+    </div>
 </div>
 
 @section scripts{
@@ -71,6 +56,10 @@
             font-size: 20px;
             text-align: center;
             vertical-align: middle;
+        }
+
+        .graphicintroduction {
+            margin: 0 13px 20px 13px;
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
@@ -163,7 +152,8 @@
         if (product == null || product == '') {
             $.alert('未获取到产品信息');
         }
-        product = JSON.parse(product);
+             product = JSON.parse(product);
+             $('.graphicintroduction').append(product.GraphicIntroduction);
 
         function addtoshoppingcart(data) {
             if (data == null) {

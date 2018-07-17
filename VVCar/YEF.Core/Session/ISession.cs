@@ -61,6 +61,11 @@ namespace YEF.Core
         /// 商户名称
         /// </summary>
         string MerchantName { get; set; }
+
+        /// <summary>
+        /// 会员ID
+        /// </summary>
+        Guid MemberID { get; set; }
     }
 
     /// <summary>

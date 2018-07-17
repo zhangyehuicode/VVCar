@@ -162,12 +162,12 @@ namespace VVCar.VIP.Domain.Services
         ///// <returns></returns>
         //IEnumerable<MemberDetailDto> GetMemberDetailForConsumeAnalysis(MemberDetailFilter filter, ref int totalCount);
 
-        ///// <summary>
-        ///// 移动会员分组
-        ///// </summary>
-        ///// <param name="changeDto"></param>
-        ///// <returns></returns>
-        //bool ChangeMemberGroup(ChangeMemberGroupDto changeDto);
+        /// <summary>
+        /// 移动会员分组
+        /// </summary>
+        /// <param name="changeDto"></param>
+        /// <returns></returns>
+        bool ChangeMemberGroup(ChangeMemberGroupDto changeDto);
 
         /// <summary>
         /// 调整会员积分

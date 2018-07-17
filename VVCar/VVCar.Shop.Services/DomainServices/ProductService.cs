@@ -102,6 +102,7 @@ namespace VVCar.Shop.Services.DomainServices
             product.Code = entity.Code;
             product.ImgUrl = entity.ImgUrl;
             product.BasePrice = entity.BasePrice;
+            product.WholesalePrice = entity.WholesalePrice;
             product.PriceSale = entity.PriceSale;
             product.CostPrice = entity.CostPrice;
             product.Points = entity.Points;
@@ -168,8 +169,21 @@ namespace VVCar.Shop.Services.DomainServices
 
         public IEnumerable<ProductDto> GetProduct()
         {
-            var result = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Goods && t.IsPublish && t.Stock > 0 && !t.IsCombo).ToList();
-            return result.MapTo<List<ProductDto>>();
+            var result = new List<ProductDto>();
+            var resulttmp = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Goods && t.IsPublish && t.Stock > 0 && !t.IsCombo).ToList();
+            result = resulttmp.MapTo<List<ProductDto>>();
+            if (AppContext.CurrentSession.MemberID != null && AppContext.CurrentSession.MemberID != Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            {
+                var member = MemberRepo.GetInclude(t => t.MemberGroup, false).FirstOrDefault(t => t.ID == AppContext.CurrentSession.MemberID);
+                if (member != null && member.MemberGroup != null && member.MemberGroup.IsWholesalePrice)
+                {
+                    result.ForEach(t =>
+                    {
+                        t.PriceSale = t.WholesalePrice;
+                    });
+                }
+            }
+            return result;
         }
 
         public bool AdjustIndex(AdjustIndexParam param)
@@ -265,6 +279,17 @@ namespace VVCar.Shop.Services.DomainServices
                     result.Add(item);
                     if (result.Count >= 4)
                         break;
+                }
+            }
+            if (AppContext.CurrentSession.MemberID != null && AppContext.CurrentSession.MemberID != Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            {
+                var member = MemberRepo.GetInclude(t => t.MemberGroup, false).FirstOrDefault(t => t.ID == AppContext.CurrentSession.MemberID);
+                if (member != null && member.MemberGroup != null && member.MemberGroup.IsWholesalePrice)
+                {
+                    result.ForEach(t =>
+                    {
+                        t.PriceSale = t.WholesalePrice;
+                    });
                 }
             }
             return result;

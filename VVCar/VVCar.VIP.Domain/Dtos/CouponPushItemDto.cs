@@ -33,6 +33,18 @@ namespace VVCar.VIP.Domain.Dtos
         public string CouponTemplateTitle { get; set; }
 
         /// <summary>
+        ///投放开始时间
+        /// </summary>
+        [Display(Name = "投放开始时间")]
+        public DateTime PutInStartDate { get; set; }
+
+        /// <summary>
+        ///投放结束时间
+        /// </summary>
+        [Display(Name = "投放结束时间")]
+        public DateTime PutInEndDate { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         [Display(Name = "创建时间")]

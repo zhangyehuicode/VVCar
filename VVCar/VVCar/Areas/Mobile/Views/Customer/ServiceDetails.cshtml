@@ -20,12 +20,15 @@
     </div>
     <div class="kc_box"><span style="float:left;">原价：￥{{Product.BasePrice}}</span></div>
     <div class="kc_box2">
-        服务介绍：<br>
+        服务介绍：
         {{Product.Introduction}}
     </div>
     <div class="kc_box2">预约日期：<input type="date" style="width:120px;height:20px;border:none;border-bottom:1px #ccc solid;font-size:15px;" v-model="AppointmentData.AppointmentDate" /></div>
     <div class="kc_box2">预约时间：<input type="time" style="width:80px;height:20px;border:none;border-bottom:1px #ccc solid;font-size:15px;" v-model="AppointmentData.AppointmentTime" /></div>
     <a class="btn1" style="margin-top:20px;margin-bottom:10px;" v-on:click="appointmentnow">立即预约</a>
+    @*<div class="kc_box3">
+            {{Product.GraphicIntroduction}}
+        </div>*@
 </div>
 
 @section scripts{

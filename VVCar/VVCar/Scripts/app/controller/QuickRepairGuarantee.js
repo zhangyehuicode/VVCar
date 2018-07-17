@@ -409,7 +409,7 @@
 			win.down('numberfield[name=Stock]').hide();
 			win.down('textfield[name=DeliveryNotes]').hide();
 			win.form.getForm().actionMethod = 'POST';
-			win.setTitle('快修快保');
+			win.setTitle('服务');
 			win.show();
 		} else {
 			Ext.MessageBox.alert('提示', '未选择分类');
@@ -424,7 +424,7 @@
 		win.down('combobox[name=ProductType]').hidden = true;
 		win.down('textfield[name=DeliveryNotes]').hide();
 		win.form.getForm().actionMethod = 'PUT';
-		win.setTitle('编辑快修快保');
+		win.setTitle('编辑服务');
 		win.show();
 	},
 	save: function (btn) {

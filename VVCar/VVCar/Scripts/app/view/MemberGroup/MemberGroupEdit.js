@@ -33,6 +33,12 @@
                 name: 'Index',
                 fieldLabel: '排序',
                 minValue: 1
+            }, {
+                xtype: 'checkboxfield',
+                name: 'IsWholesalePrice',
+                fieldLabel: '批发价',
+                checked: false,
+                inputValue: true,
             }]
         });
 

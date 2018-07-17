@@ -80,5 +80,10 @@ namespace VVCar.BaseData.Domain
         /// 服务到期提醒消息模板
         /// </summary>
         public const string WXMsg_ServiceExpiredRemind = "WXMsg_ServiceExpiredRemind";
+
+        /// <summary>
+        /// 游戏通知消息模板
+        /// </summary>
+        public const string WXMsg_GameRemind = "WXMsg_GameRemind";
     }
 }

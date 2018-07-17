@@ -32,9 +32,9 @@ namespace VVCar.VIP.Domain.Entities
         public int Index { get; set; }
 
         /// <summary>
-        /// 是否成本价
+        /// 是否批发价
         /// </summary>
-        [Display(Name = "是否成本价")]
-        public bool IsCostPrice { get; set; }
+        [Display(Name = "是否批发价")]
+        public bool IsWholesalePrice { get; set; }
     }
 }

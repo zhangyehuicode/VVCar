@@ -63,6 +63,9 @@
     <Compile Include="Dtos\CouponReportDto.cs" />
     <Compile Include="Dtos\CouponTemplateDto.cs" />
     <Compile Include="Dtos\GameCouponDto.cs" />
+    <Compile Include="Dtos\GamePushDto.cs" />
+    <Compile Include="Dtos\GamePushItemDto.cs" />
+    <Compile Include="Dtos\GamePushMemberDto.cs" />
     <Compile Include="Dtos\GiftCardDtoOfOW.cs" />
     <Compile Include="Dtos\GiftCardReceiveDto.cs" />
     <Compile Include="Dtos\MemberBaseInfoDto.cs" />
@@ -79,6 +82,7 @@
     <Compile Include="Dtos\MemberRightDto.cs" />
     <Compile Include="Dtos\NewUpdateRechargePlanDto.cs" />
     <Compile Include="Dtos\ReceiveCouponDto.cs" />
+    <Compile Include="Dtos\ReceiveGameDto.cs" />
     <Compile Include="Dtos\RechargePlanDto.cs" />
     <Compile Include="Dtos\RechargeTotalDataDto.cs" />
     <Compile Include="Dtos\ReimbursementDto.cs" />
@@ -102,6 +106,9 @@
     <Compile Include="Entities\CouponTemplateUseTime.cs" />
     <Compile Include="Entities\GameCoupon.cs" />
     <Compile Include="Entities\GameCouponRecord.cs" />
+    <Compile Include="Entities\GamePush.cs" />
+    <Compile Include="Entities\GamePushItem.cs" />
+    <Compile Include="Entities\GamePushMember.cs" />
     <Compile Include="Entities\GameSetting.cs" />
     <Compile Include="Entities\GivenCouponRecord.cs" />
     <Compile Include="Entities\Member.cs" />
@@ -142,6 +149,7 @@
     <Compile Include="Enums\EDegreeType.cs" />
     <Compile Include="Enums\EDeliveryMode.cs" />
     <Compile Include="Enums\EExchangeType.cs" />
+    <Compile Include="Enums\EGamePushStatus.cs" />
     <Compile Include="Enums\EGameType.cs" />
     <Compile Include="Enums\EGradeRightType.cs" />
     <Compile Include="Enums\EMemberFindType.cs" />
@@ -171,6 +179,9 @@
     <Compile Include="Filters\GameCouponFilter.cs" />
     <Compile Include="Filters\CouponPushFilter.cs" />
     <Compile Include="Filters\GameCouponRecordFilter.cs" />
+    <Compile Include="Filters\GamePushFilter.cs" />
+    <Compile Include="Filters\GamePushItemFilter.cs" />
+    <Compile Include="Filters\GamePushMemberFilter.cs" />
     <Compile Include="Filters\GameSettingFilter.cs" />
     <Compile Include="Filters\GivenCouponFilter.cs" />
     <Compile Include="Filters\HistoryFilter.cs" />
@@ -191,6 +202,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ICouponPushMemberService.cs" />
     <Compile Include="Services\IGameCouponRecordService.cs" />
+    <Compile Include="Services\IGamePushItemService.cs" />
+    <Compile Include="Services\IGamePushMemberService.cs" />
+    <Compile Include="Services\IGamePushService.cs" />
     <Compile Include="Services\IGameSettingService.cs" />
     <Compile Include="Services\ICardThemeCategoryService.cs" />
     <Compile Include="Services\ICardThemeGroupService.cs" />

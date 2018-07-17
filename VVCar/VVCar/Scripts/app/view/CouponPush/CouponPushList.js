@@ -179,6 +179,14 @@
 				columns: [
 					{ header: '卡券编号', dataIndex: 'TemplateCode', flex: 1 },
 					{ header: '优惠券模板标题', dataIndex: 'CouponTemplateTitle', flex: 1 },
+					{
+						header: '投放开始时间', dataIndex: 'PutInStartDate', flex: 1,
+						renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+					},
+					{
+						header: '投放结束时间', dataIndex: 'PutInEndDate', flex: 1,
+						renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+					}
 				],
 				bbar: {
 					xtype: "pagingtoolbar",

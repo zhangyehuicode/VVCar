@@ -33,7 +33,17 @@
             columns: [
                 { header: '名称', dataIndex: 'Name', flex: 1, },
                 { header: '编号', dataIndex: 'Code', flex: 1, },
-                { header: '排序', dataIndex: 'Index', flex: 1 }],
+                { header: '排序', dataIndex: 'Index', flex: 1 },
+                {
+                    header: '批发价', dataIndex: 'IsWholesalePrice', flex: 1,
+                    renderer: function (value) {
+                        if (value)
+                            return "<span style='color:green;'>是</span>";
+                        else
+                            return "<span style='color:red;'>否</span>";
+                    }
+                },
+            ],
             dockedItems: [{
                 xtype: 'pagingtoolbar',
                 dock: 'bottom',

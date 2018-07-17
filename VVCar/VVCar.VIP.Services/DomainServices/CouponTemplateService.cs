@@ -364,6 +364,10 @@ namespace VVCar.VIP.Services.DomainServices
                 {
                     queryable = queryable.Where(t => t.TemplateCode.Contains(filter.TemplateCodeOrTitle) || t.Title.Contains(filter.TemplateCodeOrTitle));
                 }
+                if (filter.Nature != -1)
+                {
+                    queryable = queryable.Where(t => t.Nature == (ENature)filter.Nature);
+                }
             }
             var result = queryable.Where(c => c.ApproveStatus == EApproveStatus.Delivered && !c.IsSpecialCoupon && ((c.EffectiveDate != null && c.ExpiredDate > dateNow) || c.EffectiveDate == null) && (c.PutInStartDate != null && c.PutInStartDate <= dateNow) && (c.PutInEndDate != null && c.PutInEndDate > dateNow)).ToArray();
             result = result.Where(t => t.Stock.FreeStock > 0).ToArray();

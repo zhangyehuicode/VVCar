@@ -90,6 +90,8 @@ namespace VVCar.VIP.Services.DomainServices
 
         IRepository<MemberPlate> MemberPlateRepo { get => UnitOfWork.GetRepository<IRepository<MemberPlate>>(); }
 
+        IRepository<MemberGroup> MemberGroupRepo { get => UnitOfWork.GetRepository<IRepository<MemberGroup>>(); }
+
         #endregion
 
         #region propertiesTemp
@@ -971,6 +973,29 @@ namespace VVCar.VIP.Services.DomainServices
             return base.Update(member);
         }
 
+        public bool ChangeMemberGroup(ChangeMemberGroupDto changeDto)
+        {
+            if (changeDto == null || changeDto.MemberIDList == null || changeDto.MemberIDList.Count() < 1)
+                throw new DomainException("参数错误");
+            var memberGroupID = changeDto.MemberGroupID;
+            if (!memberGroupID.HasValue && memberGroupID == Guid.Empty)
+            {
+                memberGroupID = Guid.Parse("00000000-0000-0000-0000-000000000001");//MemberGroupService.GetDefaultMemberGroupID();
+            }
+            else
+            {
+                var exists = MemberGroupRepo.Exists(t => t.ID == memberGroupID);
+                if (!exists)
+                    throw new DomainException("会员分组不存在");
+            }
+            var memberList = Repository.GetQueryable()
+                .Where(t => changeDto.MemberIDList.Contains(t.ID))
+                .ToList();
+            memberList.ForEach(t => t.MemberGroupID = memberGroupID);
+            Repository.Update(memberList);
+            return true;
+        }
+
         #endregion
 
         #region methodsTemp
@@ -1206,29 +1231,6 @@ namespace VVCar.VIP.Services.DomainServices
         //        RechargeAndGive = g.Sum(t => t.Card.TotalRecharge + t.Card.TotalGive)
         //    }).FirstOrDefault() ?? new StatisticDto();
         //}
-
-        public bool ChangeMemberGroup(ChangeMemberGroupDto changeDto)
-        {
-            if (changeDto == null || changeDto.MemberIDList == null || changeDto.MemberIDList.Count() < 1)
-                throw new DomainException("参数错误");
-            var memberGroupID = changeDto.MemberGroupID;
-            if (!memberGroupID.HasValue && memberGroupID == Guid.Empty)
-            {
-                memberGroupID = MemberGroupService.GetDefaultMemberGroupID();
-            }
-            else
-            {
-                var exists = MemberGroupService.Exists(t => t.ID == memberGroupID);
-                if (!exists)
-                    throw new DomainException("会员分组不存在");
-            }
-            var memberList = Repository.GetQueryable()
-                .Where(t => changeDto.MemberIDList.Contains(t.ID))
-                .ToList();
-            memberList.ForEach(t => t.MemberGroupID = memberGroupID);
-            Repository.Update(memberList);
-            return true;
-        }
 
         ///// <summary>
         ///// 校验会员是否享有POS权益

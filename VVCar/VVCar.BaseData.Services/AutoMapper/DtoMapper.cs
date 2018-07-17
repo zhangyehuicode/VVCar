@@ -139,9 +139,15 @@ namespace VVCar.BaseData.Services
                 cfg.CreateMap<User, UserInfoDto>();
 
                 cfg.CreateMap<CouponPushItem, CouponPushItemDto>()
-                .ForMember(dest => dest.TemplateCode, opt => opt.MapFrom(src => src.CouponTemplate.TemplateCode));
+                .ForMember(dest => dest.TemplateCode, opt => opt.MapFrom(src => src.CouponTemplate.TemplateCode))
+                .ForMember(dest => dest.PutInStartDate, opt => opt.MapFrom(src => src.CouponTemplate.PutInStartDate))
+                .ForMember(dest => dest.PutInEndDate, opt => opt.MapFrom(src => src.CouponTemplate.PutInEndDate));
 
                 cfg.CreateMap<CouponPushMember, CouponPushMemberDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Member.Name))
+                .ForMember(dest => dest.MobilePhoneNo, opt => opt.MapFrom(src => src.Member.MobilePhoneNo));
+
+                cfg.CreateMap<GamePushMember, GamePushMemberDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Member.Name))
                 .ForMember(dest => dest.MobilePhoneNo, opt => opt.MapFrom(src => src.Member.MobilePhoneNo));
 
@@ -165,6 +171,14 @@ namespace VVCar.BaseData.Services
 
                 cfg.CreateMap<Reimbursement, ReimbursementDto>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Name));
+
+                cfg.CreateMap<GamePushItem, GamePushItemDto>()
+                .ForMember(dest => dest.GameType, opt => opt.MapFrom(src => src.GameSetting.GameType))
+                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.GameSetting.StartTime))
+                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.GameSetting.EndTime))
+                .ForMember(dest => dest.PeriodDays, opt => opt.MapFrom(src => src.GameSetting.PeriodDays))
+                .ForMember(dest => dest.PeriodCounts, opt => opt.MapFrom(src => src.GameSetting.PeriodCounts))
+                .ForMember(dest => dest.Limit, opt => opt.MapFrom(src => src.GameSetting.Limit));
             });
 
             //Mapper.CreateMap<Member, MemberDto>()
