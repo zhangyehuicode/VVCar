@@ -35,10 +35,20 @@
         <div class="kcd_btn" v-on:click="addproduct">增加</div>
     </div>
     <div class="kcd_box" style="padding:0 0 10px 3px;">
-        <div class="kcd_bt">当前服务</div>
-        <div>
-            <div class="currentproduct" v-for="Product in CurrentProductList" v-on:click="currentproductclick(Product)">{{Product.Name}}</div>
-        </div>
+        <div class="kcd_bt">当前项目</div>
+        @*<div>
+                <div class="currentproduct" v-for="Product in CurrentProductList" v-on:click="currentproductclick(Product)">{{Product.Name}}</div>
+            </div>*@
+        <table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
+            <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
+                <th scope="col" width="25%">项目</th>
+                <th scope="col" width="25%">操作</th>
+            </tr>
+            <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; " v-for="Product in CurrentProductList">
+                <td>{{Product.Name}}</td>
+                <td><span class="addbtn" style="margin:5px;padding:3px;" v-on:click="currentproductclick(Product)">删除</span><span class="addbtn" style="margin:5px;padding:3px;" v-on:click="distribution(Product)">人员分配</span></td>
+            </tr>
+        </table>
     </div>
     <div class="kcd_box">
         <div class="kcd_bt">实时体现历史数据信息</div>
@@ -58,10 +68,19 @@
         </table>
     </div>
     <div class="kcd_btn2" v-on:click="openorder">开单</div>
+    <div class="distributioncon">
+        <div class="distributionmain">
+
+        </div>
+    </div>
 </div>
 
 @section scripts{
     <style type="text/css">
+        #openorder {
+            position: absolute;
+        }
+
         .addbtn {
             background: #51b3f0;
             width: 50px;
@@ -89,6 +108,25 @@
         .currentproductcon {
             width: 100%;
             padding: 0 13px 13px 13px;
+        }
+
+        .distributioncon {
+            /*display: none;*/
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+        }
+
+        .distributionmain {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            right: 20px;
+            bottom: 50px;
+            background: rgba(255, 255, 255,1);
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
@@ -142,7 +180,7 @@
         $(function () {
         var platenum = sessionStorage.getItem('platenum');
         if (platenum == null || platenum == '') {
-            $.alert('车牌号为空');
+            //$.alert('车牌号为空');
         }
         var user = sessionStorage.getItem('user');
         var _ismaster = sessionStorage.getItem('ismaster');
@@ -230,6 +268,7 @@
                             PriceSale: items[i].PriceSale,
                             Quantity: 1,
                             ImgUrl: items[i].ImgUrl,
+                            PickUpOrderTaskDistributionList: items[i].PickUpOrderTaskDistributionList,
                         });
                     }
                     $.confirm("确认开单？", function () {
@@ -275,6 +314,11 @@
                     if (index!=-1)
                     _viewModel.CurrentProductList.splice(index,1);
                 },
+                distribution: function (data, event) {
+                    if (data == null)
+                        $.alert('参数错误');
+                    $('.distributioncon').show();
+                },
             }
         });
            var ismaster = _ismaster == 'true';
@@ -309,7 +353,7 @@
                 });
             }
             if (user == null || user == '') {
-                getUserByOpenId();
+                //getUserByOpenId();
             } else {
                 user = JSON.parse(user);
                 _viewModel.PickUpOrder.StaffID = user.ID;

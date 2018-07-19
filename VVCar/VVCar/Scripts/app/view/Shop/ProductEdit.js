@@ -2,17 +2,21 @@
     extend: 'Ext.window.Window',
     alias: 'widget.ProductEdit',
     title: '',
-    layout: 'fit',
-    width: 600,
+    //layout: 'fit',
+	width: 640,
+	height: 600,
     modal: true,
     bodyPadding: 5,
-    resizable: false,
+	resizable: false,
+	autoScroll: true,
+	bodyStyle: 'overflow-y:auto; overflow-x:hidden;',
     initComponent: function () {
-        var me = this;
+		var me = this;
         var yesNoDictStore = Ext.create('WX.store.DataDict.YesNoTypeStore');
         var productTypeStore = Ext.create('WX.store.DataDict.ProductTypeStore');
         me.form = Ext.create('Ext.form.Panel', {
-            border: false,
+			border: false,
+			width: 600,
             trackResetOnLoad: true,
             fieldDefaults: {
                 labelAlign: 'left',

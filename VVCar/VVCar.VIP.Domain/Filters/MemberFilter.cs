@@ -42,5 +42,10 @@ namespace VVCar.VIP.Domain.Filters
         /// 会员等级
         /// </summary>
         public Guid? MemberGradeID { get; set; }
+
+        /// <summary>
+        /// 是否来自后台客户分配请求
+        /// </summary>
+        public bool IsFromUserMember { get; set; }
     }
 }

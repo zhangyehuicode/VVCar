@@ -60,6 +60,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
 
+        IRepository<Product> ProductRepo { get => UnitOfWork.GetRepository<IRepository<Product>>(); }
+
         #endregion
 
         public string GetTradeNo()
@@ -107,8 +109,39 @@ namespace VVCar.Shop.Services.DomainServices
                 t.Discount = 1;
             });
             RecountMoney(entity);
+            PickUpOrderTaskDistribution(entity.PickUpOrderItemList.ToList());
             entity.PlateNumber = entity.PlateNumber.ToUpper();
             return base.Add(entity);
+        }
+
+        private void PickUpOrderTaskDistribution(List<PickUpOrderItem> pickUpOrderItemList)
+        {
+            if (pickUpOrderItemList == null || pickUpOrderItemList.Count < 1)
+                return;
+            foreach (var pickUpOrderItem in pickUpOrderItemList)
+            {
+                if (pickUpOrderItem == null || pickUpOrderItem.PickUpOrderTaskDistributionList == null || pickUpOrderItem.PickUpOrderTaskDistributionList.Count < 1)
+                    continue;
+                var constructionCount = pickUpOrderItem.PickUpOrderTaskDistributionList.Count();
+                var product = ProductRepo.GetByKey(pickUpOrderItem.ProductID, false);
+                pickUpOrderItem.PickUpOrderTaskDistributionList.ForEach(t =>
+                {
+                    t.ID = Util.NewID();
+                    t.CreatedUserID = AppContext.CurrentSession.UserID;
+                    t.CreatedUser = AppContext.CurrentSession.UserName;
+                    t.CreatedDate = DateTime.Now;
+                    t.MerchantID = AppContext.CurrentSession.MerchantID;
+                    t.PickUpOrderID = pickUpOrderItem.PickUpOrderID;
+                    t.PickUpOrderItemID = pickUpOrderItem.ID;
+                    t.ConstructionCount = constructionCount;
+                    t.TotalMoney = pickUpOrderItem.Money;
+                    if (product != null)
+                    {
+                        t.CommissionRate = product.CommissionRate;
+                        t.Commission = Math.Floor(pickUpOrderItem.Money * product.CommissionRate / 100 / constructionCount);
+                    }
+                });
+            }
         }
 
         public void RecountMoney(PickUpOrder entity)

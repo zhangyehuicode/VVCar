@@ -125,6 +125,7 @@ namespace VVCar.Shop.Services.DomainServices
             //product.ExpiredDate = entity.ExpiredDate;
             product.IsCombo = entity.IsCombo;
             product.CommissionRate = entity.CommissionRate;
+            product.SalesmanCommissionRate = entity.SalesmanCommissionRate;
             product.IsCanPointExchange = entity.IsCanPointExchange;
             product.Unit = entity.Unit;
             product.GraphicIntroduction = entity.GraphicIntroduction;

@@ -143,6 +143,12 @@
 					allowBlank: false,
 					value: 0,
 				}, {
+					
+				}]
+			}, {
+				xtype: 'form',
+				layout: 'hbox',
+				items: [{
 					xtype: 'form',
 					border: false,
 					layout: 'hbox',
@@ -151,7 +157,27 @@
 						xtype: 'numberfield',
 						width: 202,
 						name: 'CommissionRate',
-						fieldLabel: '抽成比例',
+						fieldLabel: '施工抽成',
+						minValue: 0,
+						maxValue: 100,
+						allowBlank: false,
+						value: 0,
+					}, {
+						xtype: 'label',
+						text: '%（0~100）',
+						margin: '12 0 0 0',
+					}]
+				}, {
+					xtype: 'form',
+					border: false,
+					layout: 'hbox',
+					margin: '0 10 5 0',
+					items: [{
+						xtype: 'numberfield',
+						width: 202,
+						name: 'SalesManCommissionRate',
+						fieldLabel: '业务员抽成',
+						labelWidth: 70,
 						minValue: 0,
 						maxValue: 100,
 						allowBlank: false,

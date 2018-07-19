@@ -283,6 +283,7 @@
     <Compile Include="Controllers\Api\TradeHistoryController.cs" />
     <Compile Include="Controllers\Api\UploadFileController.cs" />
     <Compile Include="Controllers\Api\UserController.cs" />
+    <Compile Include="Controllers\Api\UserMemberController.cs" />
     <Compile Include="Controllers\Api\UserRoleController.cs" />
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -303,6 +304,7 @@
     <Compile Include="Controllers\Shop\OrderPaymentDetailsController.cs" />
     <Compile Include="Controllers\Shop\PickUpOrderController.cs" />
     <Compile Include="Controllers\Shop\PickUpOrderPaymentDetailsController.cs" />
+    <Compile Include="Controllers\Shop\PickUpOrderTaskDistributionController.cs" />
     <Compile Include="Controllers\Shop\ProductCategoryController.cs" />
     <Compile Include="Controllers\Shop\ProductController.cs" />
     <Compile Include="Controllers\Shop\ReportingController.cs" />
@@ -685,6 +687,7 @@
     <Content Include="Scripts\app\controller\SysMenu.js" />
     <Content Include="Scripts\app\controller\SystemSetting.js" />
     <Content Include="Scripts\app\controller\User.js" />
+    <Content Include="Scripts\app\controller\UserMember.js" />
     <Content Include="Scripts\app\controller\UserRole.js" />
     <Content Include="Scripts\app\controller\WeChatFans.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentAuditModel.js" />
@@ -750,6 +753,7 @@
     <Content Include="Scripts\app\model\BaseData\SysNavMenuModel.js" />
     <Content Include="Scripts\app\model\BaseData\SystemSettingModel.js" />
     <Content Include="Scripts\app\model\BaseData\TradeHistoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\UserMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\UserModel.js" />
     <Content Include="Scripts\app\model\BaseData\UserRoleModel.js" />
     <Content Include="Scripts\app\model\BaseData\ValidCouponTemplateModel.js" />
@@ -823,6 +827,7 @@
     <Content Include="Scripts\app\store\BaseData\SysNavMenuStore.js" />
     <Content Include="Scripts\app\store\BaseData\SystemSettingStore.js" />
     <Content Include="Scripts\app\store\BaseData\TradeHistoryStore.js" />
+    <Content Include="Scripts\app\store\BaseData\UserMemberStore.js" />
     <Content Include="Scripts\app\store\BaseData\UserRoleStore.js" />
     <Content Include="Scripts\app\store\BaseData\UserStore.js" />
     <Content Include="Scripts\app\store\BaseData\ValidCouponTemplateStore.js" />
@@ -985,6 +990,8 @@
     <Content Include="Scripts\app\view\SysMenu\SysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenuTreeComboBox.js" />
     <Content Include="Scripts\app\view\SystemSetting\SystemSetting.js" />
+    <Content Include="Scripts\app\view\UserMember\UserMember.js" />
+    <Content Include="Scripts\app\view\UserMember\UserMemberSelector.js" />
     <Content Include="Scripts\app\view\UserRole\UserRole.js" />
     <Content Include="Scripts\app\view\User\ChangePassword.js" />
     <Content Include="Scripts\app\view\User\UserEdit.js" />

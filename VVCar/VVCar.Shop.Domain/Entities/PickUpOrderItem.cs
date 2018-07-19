@@ -13,6 +13,11 @@ namespace VVCar.Shop.Domain.Entities
     /// </summary>
     public class PickUpOrderItem : EntityBase
     {
+        public PickUpOrderItem()
+        {
+            PickUpOrderTaskDistributionList = new List<PickUpOrderTaskDistribution>();
+        }
+
         /// <summary>
         /// 接车单ID
         /// </summary>
@@ -76,5 +81,10 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "图片")]
         public string ImgUrl { get; set; }
+
+        /// <summary>
+        /// 接车单任务分配
+        /// </summary>
+        public ICollection<PickUpOrderTaskDistribution> PickUpOrderTaskDistributionList { get; set; }
     }
 }

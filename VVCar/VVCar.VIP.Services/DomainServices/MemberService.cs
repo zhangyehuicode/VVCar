@@ -14,6 +14,7 @@ using YEF.Utility;
 using YEF.Core.Dtos;
 using VVCar.VIP.Domain.Filters;
 using VVCar.Shop.Domain.Entities;
+using VVCar.BaseData.Domain.Entities;
 
 namespace VVCar.VIP.Services.DomainServices
 {
@@ -91,6 +92,8 @@ namespace VVCar.VIP.Services.DomainServices
         IRepository<MemberPlate> MemberPlateRepo { get => UnitOfWork.GetRepository<IRepository<MemberPlate>>(); }
 
         IRepository<MemberGroup> MemberGroupRepo { get => UnitOfWork.GetRepository<IRepository<MemberGroup>>(); }
+
+        IRepository<UserMember> UserMemberRepo { get => UnitOfWork.GetRepository<IRepository<UserMember>>(); }
 
         #endregion
 
@@ -258,6 +261,11 @@ namespace VVCar.VIP.Services.DomainServices
                 {
                     queryable = queryable.Where(p => p.CardNumber.Contains(filter.Keyword)
                     || p.MobilePhoneNo.Contains(filter.Keyword) || p.Name.Contains(filter.Keyword));
+                }
+                if (filter.IsFromUserMember)
+                {
+                    var memberIds = UserMemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).Select(t => t.MemberID).Distinct();
+                    queryable = queryable.Where(p=> !memberIds.Contains(p.ID));
                 }
                 if (filter.Status.HasValue)
                     queryable = queryable.Where(p => p.Card.Status == filter.Status.Value);

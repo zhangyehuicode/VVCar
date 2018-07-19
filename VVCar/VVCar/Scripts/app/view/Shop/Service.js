@@ -170,7 +170,13 @@
 					}
 				},
 				{
-					header: '抽成比例', dataIndex: 'CommissionRate', width: 80,
+					header: '施工抽成', dataIndex: 'CommissionRate', width: 80,
+					renderer: function (value) {
+						return value + '%';
+					}
+				},
+				{
+					header: '业务员抽成', dataIndex: 'SalesmanCommissionRate', width: 90,
 					renderer: function (value) {
 						return value + '%';
 					}

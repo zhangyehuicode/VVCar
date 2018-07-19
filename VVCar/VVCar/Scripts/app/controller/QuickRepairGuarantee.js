@@ -465,6 +465,7 @@
 							return;
 						} else {
 							Ext.MessageBox.alert("提示", "更新成功");
+							store.reload();
 							win.close();
 						}
 					}

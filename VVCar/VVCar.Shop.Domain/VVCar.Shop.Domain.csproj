@@ -81,6 +81,7 @@
     <Compile Include="Entities\PickUpOrder.cs" />
     <Compile Include="Entities\PickUpOrderItem.cs" />
     <Compile Include="Entities\PickUpOrderPaymentDetails.cs" />
+    <Compile Include="Entities\PickUpOrderTaskDistribution.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\ProductCategory.cs" />
     <Compile Include="Entities\ServicePeriodCoupon.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Services\IOrderService.cs" />
     <Compile Include="Services\IPickUpOrderPaymentDetailsService.cs" />
     <Compile Include="Services\IPickUpOrderService.cs" />
+    <Compile Include="Services\IPickUpOrderTaskDistributionService.cs" />
     <Compile Include="Services\IProductCategoryService.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\IReportingService.cs" />
@@ -148,6 +150,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\VVCar.BaseData.Domain\VVCar.BaseData.Domain.csproj">
+      <Project>{2575EDA0-B3BA-473A-8CEB-455404BCDF06}</Project>
+      <Name>VVCar.BaseData.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\YEF.Core\YEF.Core.csproj">
       <Project>{3897ea87-56ff-459d-a321-9821c6269617}</Project>
       <Name>YEF.Core</Name>

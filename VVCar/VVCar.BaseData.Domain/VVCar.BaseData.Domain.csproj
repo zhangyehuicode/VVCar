@@ -55,6 +55,7 @@
     <Compile Include="Dtos\SystemInfoDto.cs" />
     <Compile Include="Dtos\SystemSettingDto.cs" />
     <Compile Include="Dtos\UserInfoDto.cs" />
+    <Compile Include="Dtos\UserMemberDto.cs" />
     <Compile Include="Dtos\WeChatLoginParams.cs" />
     <Compile Include="Entities\AgentDepartment.cs" />
     <Compile Include="Entities\DataDictType.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Entities\Department.cs" />
     <Compile Include="Entities\MakeCodeRule.cs" />
     <Compile Include="Entities\SystemSetting.cs" />
+    <Compile Include="Entities\UserMember.cs" />
     <Compile Include="Entities\UserRole.cs" />
     <Compile Include="Enums\EAgentDepartmentApproveStatus.cs" />
     <Compile Include="Enums\EAgentDepartmentSource.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="Filters\SysMenuFilter.cs" />
     <Compile Include="Filters\SystemSettingFilter.cs" />
     <Compile Include="Filters\UserFilter.cs" />
+    <Compile Include="Filters\UserMemberFilter.cs" />
     <Compile Include="Filters\UserRoleFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IAgentDepartmentService.cs" />
@@ -95,6 +98,7 @@
     <Compile Include="Services\IRoleService.cs" />
     <Compile Include="Services\ISysMenuService.cs" />
     <Compile Include="Services\ISystemSettingService.cs" />
+    <Compile Include="Services\IUserMemberService.cs" />
     <Compile Include="Services\IUserRoleService.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="SysSettingTypes.cs" />

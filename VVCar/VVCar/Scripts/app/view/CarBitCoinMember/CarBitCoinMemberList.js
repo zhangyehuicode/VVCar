@@ -60,7 +60,17 @@
         me.columns = [
             { header: '姓名', dataIndex: 'Name', flex: 1 },
             { header: '电话号码', dataIndex: 'MobilePhoneNo', flex: 1 },
-            { header: '性别', dataIndex: 'Sex', flex: 1 },
+			{
+				header: '性别', dataIndex: 'Sex', flex: 1,
+				renderer: function () {
+					if (value == 1)
+						return "男";
+					else if (value == 2)
+						return "女";
+					else
+						return "未知";
+				}
+			},
             { header: '马力', dataIndex: 'Horsepower', flex: 1 },
             { header: '车比特', dataIndex: 'CarBitCoin', flex: 1 },
             {

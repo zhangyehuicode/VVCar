@@ -23,6 +23,7 @@
 		{ name: "PriceSale" },
 		{ name: "ProductType" },
 		{ name: "CommissionRate" },
+		{ name: "SalesManCommissionRate" },
 		{ name: "IsCanPointExchange" },
 		{ name: "Unit" },
 		{ name: "Introduction" },

@@ -94,6 +94,12 @@ namespace VVCar.Shop.Domain.Entities
         public decimal CommissionRate { get; set; }
 
         /// <summary>
+        /// 业务员抽成比例(0~100)
+        /// </summary>
+        [Display(Name = "业务员抽成比例(0~100)")]
+        public decimal SalesmanCommissionRate { get; set; }
+
+        /// <summary>
         /// 兑换积分
         /// </summary>
         [Display(Name = "兑换积分")]

@@ -272,7 +272,7 @@ namespace VVCar.VIP.Services.DomainServices
                     data = new System.Dynamic.ExpandoObject(),
                 };
                 message.data.first = new WeChatTemplateMessageDto.MessageData("您好，您获得了一次抽奖机会");
-                message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(t.GameType.ToString());
+                message.data.keyword1 = new WeChatTemplateMessageDto.MessageData("游戏");
                 message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(receiveGameDto.NickName);
                 message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(t.ShareTitle);
                 message.data.keyword4 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateString());
