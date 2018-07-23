@@ -13,15 +13,34 @@
 	},
 	initComponent: function () {
 		var me = this;
+		me.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+			saveBtnText: '保存',
+			cancelBtnText: "取消",
+			autoCancel: false,
+			listeners: {
+				cancelEdit: function (rowEditing, context) {
+					//如果是新增的数据，则删除
+					if (context.record.phantom) {
+						me.store.remove(context.record);
+					}
+				},
+				beforeedit: function (editor, context, eOpts) {
+					if (editor.editing == true)
+						return false;
+				},
+			}
+		});
 		this.tbar = [
 			{
-				action: 'setConsumePointRate',
+				action: 'addStockholderCard',
 				xtype: 'button',
-				text: '设置消费返佣比例',
+				text: '新增股东卡',
 				scope: this,
 				iconCls: 'fa fa-plus-circle',
 			},
 		];
+		me.columnLines = true;
+		me.plugins = [me.rowEditing];
 		this.columns = [
 			//{ header: 'ID', dataIndex: 'ID', flex: 1 },
 			//{
@@ -31,12 +50,13 @@
 			//		if (value == 1) return '会员卡';
 			//	}
 			//},
-			{ header: '优惠类型', dataIndex: 'CouponTypeName', flex: 1, },
-			{ header: '编号', dataIndex: 'TemplateCode', flex: 1 },
-			{ header: '创建时间', dataIndex: 'CreatedDate', flex: 1 },
-			{ header: '投放时间', dataIndex: 'PutInDate', flex: 1 },
+			{ header: '优惠类型', dataIndex: 'CouponTypeName', width: 80, },
+			{ header: '编号', dataIndex: 'TemplateCode', width: 110 },
+			{ header: '投放时间', dataIndex: 'PutInDate', width: 160 },
 			{ header: '标题', dataIndex: 'Title', flex: 1 },
 			{ header: '有效时间', dataIndex: 'Validity', flex: 1 },
+			{ header: '消费返佣比例', dataIndex: 'ConsumePointRate', width: 100, editor: { xtype: 'textfield', allowBlank: true } },
+			{ header: '折扣系数', dataIndex: 'DiscountRate', width: 100, editor: { xtype: 'textfield', allowBlank: true } },
 			{ header: '状态', dataIndex: 'AproveStatusText', flex: 1 },
 			{ header: '发行量', dataIndex: 'Stock', flex: 1 },
 			{
@@ -46,8 +66,11 @@
 				}
 			},
 			//{ header: '库存', dataIndex: 'FreeStock', flex: 1 },
-			{ header: '消费返佣比例', dataIndex: 'ConsumePointRate', flex: 1 },
 			{ header: '备注', dataIndex: 'Remark', flex: 1 },
+			{
+				header: '创建时间', dataIndex: 'CreatedDate', width: 100,
+				renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+			},
 		];
 		me.dockedItems = [{
 			xtype: 'pagingtoolbar',
@@ -64,6 +87,7 @@
 			Nature: 1,
 			CouponType: -1,
 			AproveStatus: -2,
+			IsStockholderCard: true,
 		}
 		Ext.apply(store.proxy.extraParams, params);
 		store.load();

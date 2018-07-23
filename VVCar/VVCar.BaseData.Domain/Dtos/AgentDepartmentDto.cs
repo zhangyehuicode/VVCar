@@ -51,6 +51,12 @@ namespace VVCar.BaseData.Domain.Dtos
         public string Name { get; set; }
 
         /// <summary>
+        /// 门店类型
+        /// </summary>
+        [Display(Name = "门店类型")]
+        public EAgentDepartmentType Type { get; set; }
+
+        /// <summary>
         /// 是否总部
         /// </summary>
         [Display(Name = "是否总部")]

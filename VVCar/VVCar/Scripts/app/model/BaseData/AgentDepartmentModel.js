@@ -24,6 +24,7 @@
 		{ name: 'Bank' },
 		{ name: 'BankCard' },
 		{ name: 'ApproveStatus' },
+		{ name: 'Type' },
 		{ name: 'CreatedDate' },
 	]
 });

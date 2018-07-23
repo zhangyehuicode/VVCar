@@ -385,6 +385,12 @@ namespace VVCar.VIP.Domain.Dtos
         public decimal ConsumePointRate { get; set; }
 
         /// <summary>
+        /// 股东卡折扣系数
+        /// </summary>
+        [Display(Name = "股东卡折扣系数")]
+        public decimal DiscountRate { get; set; }
+
+        /// <summary>
         /// 售价
         /// </summary>
         [Display(Name = "售价")]

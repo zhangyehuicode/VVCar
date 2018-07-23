@@ -21,7 +21,7 @@
 		memberStore.load();
 		me.items = [{
 			xtype: 'grid',
-			name: 'memberList',
+			name: 'userMemberList',
 			stripeRows: true,
 			loadMask: true,
 			store: memberStore,
@@ -39,16 +39,9 @@
 				autoScroll: true,
 				columnWidth: 1,
 				items: [{
-					name: 'Code',
+					name: 'Keyword',
 					xtype: 'textfield',
-					fieldLabel: '服务编码',
-					width: 170,
-					labelWidth: 60,
-					margin: '0 0 0 5',
-				}, {
-					name: 'Name',
-					xtype: 'textfield',
-					fieldLabel: '服务名称',
+					fieldLabel: '关键字',
 					width: 170,
 					labelWidth: 60,
 					margin: '0 0 0 5',

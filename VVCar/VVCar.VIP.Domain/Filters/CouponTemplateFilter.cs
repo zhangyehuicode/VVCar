@@ -51,5 +51,10 @@ namespace VVCar.VIP.Domain.Filters
         /// 性质
         /// </summary>
         public int Nature { get; set; }
+
+        /// <summary>
+        /// 是否是股东卡
+        /// </summary>
+        public bool? IsStockholderCard { get; set; }
     }
 }

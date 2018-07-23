@@ -67,6 +67,7 @@
     <Compile Include="Entities\UserRole.cs" />
     <Compile Include="Enums\EAgentDepartmentApproveStatus.cs" />
     <Compile Include="Enums\EAgentDepartmentSource.cs" />
+    <Compile Include="Enums\EAgentDepartmentType.cs" />
     <Compile Include="Enums\ECodePrefixRule.cs" />
     <Compile Include="Enums\ESysMenuType.cs" />
     <Compile Include="Entities\PermissionFunc.cs" />

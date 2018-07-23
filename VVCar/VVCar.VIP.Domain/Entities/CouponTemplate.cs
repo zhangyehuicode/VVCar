@@ -275,6 +275,12 @@ namespace VVCar.VIP.Domain.Entities
         public bool IsAvailable { get; set; }
 
         /// <summary>
+        /// 是否是股东卡
+        /// </summary>
+        [Display(Name = "是否是股东卡")]
+        public bool IsStockholderCard { get; set; }
+
+        /// <summary>
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]
@@ -313,16 +319,19 @@ namespace VVCar.VIP.Domain.Entities
         /// <summary>
         ///是否在微信领券中心显示(是否上架)
         /// </summary>
+        [Display(Name = "是否在微信领券中心显示(是否上架)")]
         public bool IsPutaway { get; set; }
 
         /// <summary>
         /// 上架时间
         /// </summary>
+        [Display(Name = "上架时间")]
         public DateTime? PutawayTime { get; set; }
 
         /// <summary>
         /// 下架时间
         /// </summary>
+        [Display(Name = "下架时间")]
         public DateTime? SoldOutTime { get; set; }
 
         /// <summary>
@@ -344,6 +353,12 @@ namespace VVCar.VIP.Domain.Entities
         public decimal ConsumePointRate { get; set; }
 
         /// <summary>
+        /// 股东卡折扣系数
+        /// </summary>
+        [Display(Name = "股东卡折扣系数")]
+        public decimal DiscountRate { get; set; }
+
+        /// <summary>
         /// 售价
         /// </summary>
         [Display(Name = "售价")]
@@ -363,6 +378,7 @@ namespace VVCar.VIP.Domain.Entities
         /// 获取生效日期
         /// </summary>
         /// <returns></returns>
+        [Display(Name = "获取生效日期")]
         public DateTime GetEffectiveDate()
         {
             if (IsFiexedEffectPeriod)
@@ -375,6 +391,7 @@ namespace VVCar.VIP.Domain.Entities
         /// 获取截止日期
         /// </summary>
         /// <returns></returns>
+        [Display(Name = "获取截止日期")]
         public DateTime GetExpiredDate()
         {
             DateTime expiredDate;

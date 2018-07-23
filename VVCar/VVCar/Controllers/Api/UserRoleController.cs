@@ -76,7 +76,7 @@ namespace VVCar.Controllers.Api
         /// </summary>
         /// <param name="filter">过滤条件</param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public PagedActionResult<UserRole> GetDataByRoleID([FromUri]UserRoleFilter filter)
         {
             return SafeGetPagedData<UserRole>((result) =>

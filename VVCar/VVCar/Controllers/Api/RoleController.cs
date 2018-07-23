@@ -94,7 +94,7 @@ namespace VVCar.Controllers.Api
         /// 查询角色
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public JsonActionResult<IEnumerable<Role>> Search([FromUri]RoleFilter filter)
         {
             return SafeExecute(() =>

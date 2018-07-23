@@ -24,6 +24,7 @@
 				text: '删除报销单',
 				scope: this,
 				iconCls: 'fa fa-key',
+				permissionCode: 'Reimbursement.Delete',
 			}, {
 				action: 'approveReimbursement',
 				xtype: 'button',

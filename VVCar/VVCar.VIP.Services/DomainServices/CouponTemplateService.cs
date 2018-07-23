@@ -239,6 +239,10 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 queryable = queryable.Where(t => t.Nature == (ENature)filter.Nature);
             }
+            if(filter.IsStockholderCard.HasValue)
+            {
+                queryable = queryable.Where(t => t.IsStockholderCard == filter.IsStockholderCard);
+            }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
             {
@@ -309,6 +313,7 @@ namespace VVCar.VIP.Services.DomainServices
                 PutInIsUseAllTime = c.PutInIsUseAllTime,
                 IsDeductionFirst = c.IsDeductionFirst,
                 ConsumePointRate = c.ConsumePointRate,
+                DiscountRate = c.DiscountRate,
                 PriceSale = c.PriceSale,
             }).ToArray();
             return result.OrderByDescending(t => t.CreatedDate);
@@ -610,6 +615,30 @@ namespace VVCar.VIP.Services.DomainServices
             if (entity == null)
                 throw new DomainException("数据不存在");
             entity.ConsumePointRate = rate;
+            return Repository.Update(entity) > 0;
+        }
+
+        /// <summary>
+        /// 设置股东卡消费返积分比例及折扣系数
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="consumePointRate"></param>
+        /// <param name="discountRate"></param>
+        /// <returns></returns>
+        public bool SetConsumePointRateAndDiscountRate(Guid id, decimal consumePointRate, decimal discountRate)
+        {
+            if (id == null)
+                throw new DomainException("参数错误");
+            if (consumePointRate < 0 || consumePointRate > 100)
+                throw new DomainException("返佣比例参数必须在0到100之间");
+            if(discountRate < 0 || discountRate > 100)
+                throw new DomainException("折扣系数参数必须在0到100之间");
+            var entity = Repository.GetByKey(id);
+            if (entity == null)
+                throw new DomainException("数据不存在");
+            entity.IsStockholderCard = true;
+            entity.ConsumePointRate = consumePointRate;
+            entity.DiscountRate = discountRate;
             return Repository.Update(entity) > 0;
         }
     }

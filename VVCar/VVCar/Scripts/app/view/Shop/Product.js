@@ -30,7 +30,7 @@
                 tooltip: '分类管理',
                 width: 100,
                 margin: '0 0 2 0',
-                permissionCode: 'Portal.BaseDataEdit',
+                //permissionCode: 'Portal.BaseDataEdit',
             }, '->'],
         }, {
             xtype: 'grid',
@@ -89,14 +89,14 @@
                     xtype: 'button',
                     text: '移动至其他分类',
                     scope: this,
-                    permissionCode: 'Portal.BaseDataEdit',
+                    //permissionCode: 'Portal.BaseDataEdit',
                     margin: '0 0 0 5'
                 }, {
                     action: 'stockOutIn',
                     xtype: 'button',
                     text: '出/入库',
                     scope: this,
-                    permissionCode: 'Portal.BaseDataEdit',
+                    //permissionCode: 'Portal.BaseDataEdit',
                     margin: '0 0 0 5'
                 }]
             }],

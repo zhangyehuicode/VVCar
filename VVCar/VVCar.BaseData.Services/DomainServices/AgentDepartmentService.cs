@@ -93,6 +93,7 @@ namespace VVCar.BaseData.Services.DomainServices
             agentDpartment.WeChatMchKey = entity.WeChatMchKey;
             agentDpartment.Bank = entity.Bank;
             agentDpartment.ApproveStatus = entity.ApproveStatus;
+            agentDpartment.Type = entity.Type;
             agentDpartment.UserID = entity.UserID;
             agentDpartment.BankCard = entity.BankCard;
             agentDpartment.DataSource = entity.DataSource;

@@ -448,6 +448,7 @@
     <Content Include="Areas\resource\img\mobile\cbc.png" />
     <Content Include="Areas\resource\img\mobile\cbcbac.jpg" />
     <Content Include="Areas\resource\img\mobile\cbcindex.png" />
+    <Content Include="Areas\resource\img\mobile\close.png" />
     <Content Include="Areas\resource\img\mobile\coppermedal.png" />
     <Content Include="Areas\resource\img\mobile\cph.png" />
     <Content Include="Areas\resource\img\mobile\daodile.png" />
@@ -984,6 +985,7 @@
     <Content Include="Scripts\app\view\Shop\StockRecord.js" />
     <Content Include="Scripts\app\view\StockholderCard\StockholderCardEdit.js" />
     <Content Include="Scripts\app\view\StockholderCard\StockholderCardList.js" />
+    <Content Include="Scripts\app\view\StockholderCard\StockholderCardSelector.js" />
     <Content Include="Scripts\app\view\SuperClass\SuperClassEdit.js" />
     <Content Include="Scripts\app\view\SuperClass\SuperClassList.js" />
     <Content Include="Scripts\app\view\SysMenu\AddSysMenu.js" />

@@ -15,6 +15,7 @@
 		{ name: "FreeStock" },
 		{ name: "CanGiveToPeople" },
 		{ name: "ConsumePointRate" },
+		{ name: "DiscountRate" },
 		{ name: "PutInStartDate", type: "date" },
 	]
 });

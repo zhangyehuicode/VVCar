@@ -107,5 +107,14 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="rate"></param>
         /// <returns></returns>
         bool SetConsumePointRate(Guid id, decimal rate);
+
+        /// <summary>
+        /// 设置股东卡消费返积分比例及折扣系数
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="consumePointRate"></param>
+        /// <param name="discountRate"></param>
+        /// <returns></returns>
+        bool SetConsumePointRateAndDiscountRate(Guid id, decimal consumePointRate, decimal discountRate);
     }
 }

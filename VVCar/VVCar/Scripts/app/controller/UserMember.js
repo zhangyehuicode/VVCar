@@ -9,6 +9,10 @@
 	}, {
 		ref: 'gridUserMember',
 		selector: 'UserMember grid[name=gridUserMember]'
+	},
+	{
+		ref: 'gridUserMemberSelector',
+		selector: 'UserMemberSelector grid[name=userMemberList]'
 	}],
 	init: function () {
 		var me = this;
@@ -24,6 +28,9 @@
 			},
 			'UserMemberSelector button[action=save]': {
 				click: me.save
+			},
+			'UserMemberSelector button[action=search]': {
+				click: me.search
 			}
 		});
 	},
@@ -73,7 +80,7 @@
 	save: function (btn) {
 		var me = this;
 		var win = me.getGridUserMember();
-		
+
 		var selectedMemberItems = btn.up('grid').getSelectionModel().getSelection();
 		if (selectedMemberItems.length < 1) {
 			Ext.Msg.alert('提示', '未选择会员');
@@ -91,26 +98,34 @@
 		selectedMemberItems.forEach(function (item) {
 			userMember.push({ UserID: userId, MemberID: item.data.ID });
 		});
-		Ext.Msg.confirm('提示', '确定要添加会员关联吗', function (optional) {
-			if (optional === 'yes') {
-				var store = win.getStore();
-				store.batchAdd(userMember, function (response, opts) {
-					var ajaxResult = JSON.parse(response.responseText);
-					if (ajaxResult.Data == true) {
-						Ext.Msg.alert('提示', '新增成功');
-						btn.up('grid').getStore().reload();
-						store.reload();
-						return;
-					} else {
-						Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
-						return;
-					}
-					store.reload();
-				}, function (response, opts) {
-					var ajaxResult = JSON.parse(response.responseText);
-					Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
-				});
+		var store = win.getStore();
+		store.batchAdd(userMember, function (response, opts) {
+			var ajaxResult = JSON.parse(response.responseText);
+			if (ajaxResult.Data == true) {
+				Ext.Msg.alert('提示', '新增成功');
+				btn.up('grid').getStore().reload();
+				win.close();
+				store.reload();
+				return;
+			} else {
+				Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+				return;
 			}
-		})
+			store.reload();
+		}, function (response, opts) {
+			var ajaxResult = JSON.parse(response.responseText);
+			Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+		});
 	},
+	search: function (btn) {
+		var me = this;
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			queryValues.ProductType = 0;
+			var store = me.getGridUserMemberSelector().getStore();
+			store.load({ params: queryValues });
+		} else {
+			Ext.Msg.alert('提示', '请输入过滤条件');
+		}
+	}
 });

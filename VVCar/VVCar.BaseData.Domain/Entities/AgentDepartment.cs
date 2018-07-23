@@ -137,6 +137,12 @@ namespace VVCar.BaseData.Domain.Entities
         public EAgentDepartmentApproveStatus ApproveStatus { get; set; }
 
         /// <summary>
+        /// 门店类型
+        /// </summary>
+        [Display(Name = "门店类型")]
+        public EAgentDepartmentType Type { get; set; }
+
+        /// <summary>
         /// 数据来源
         /// </summary>
         [Display(Name = "数据来源")]
