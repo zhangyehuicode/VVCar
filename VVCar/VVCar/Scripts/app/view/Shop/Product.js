@@ -170,7 +170,7 @@
                     }
                 },
                 {
-                    header: '抽成比例', dataIndex: 'CommissionRate', width: 80,
+					header: '抽成比例', dataIndex: 'SalesmanCommissionRate', width: 80,
                     renderer: function (value) {
                         return value + '%';
                     }

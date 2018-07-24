@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using YEF.Core.Data;
 using System.ComponentModel.DataAnnotations;
 using VVCar.BaseData.Domain.Entities;
+using VVCar.Shop.Domain.Enums;
 
 namespace VVCar.Shop.Domain.Entities
 {
@@ -48,10 +49,22 @@ namespace VVCar.Shop.Domain.Entities
         public virtual User User { get; set; }
 
         /// <summary>
+        /// 人员类型
+        /// </summary>
+        [Display(Name = "人员类型")]
+        public ETaskDistributionPeopleType PeopleType { get; set; }
+
+        /// <summary>
         /// 施工人数
         /// </summary>
         [Display(Name = "施工人数")]
         public int ConstructionCount { get; set; }
+
+        /// <summary>
+        /// 业务员人数
+        /// </summary>
+        [Display(Name = "业务员人数")]
+        public int SalesmanCount { get; set; }
 
         /// <summary>
         /// 接车单订单子项总额
@@ -70,6 +83,18 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "抽成")]
         public decimal Commission { get; set; }
+
+        /// <summary>
+        /// 业务员抽成比例(0~100)
+        /// </summary>
+        [Display(Name = "业务员抽成比例(0~100)")]
+        public decimal SalesmanCommissionRate { get; set; }
+
+        /// <summary>
+        /// 业务员抽成
+        /// </summary>
+        [Display(Name = "业务员抽成")]
+        public decimal SalesmanCommission { get; set; }
 
         /// <summary>
         /// 创建人ID

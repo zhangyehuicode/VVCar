@@ -175,7 +175,7 @@
 					items: [{
 						xtype: 'numberfield',
 						width: 202,
-						name: 'SalesManCommissionRate',
+						name: 'SalesmanCommissionRate',
 						fieldLabel: '业务员抽成',
 						labelWidth: 70,
 						minValue: 0,

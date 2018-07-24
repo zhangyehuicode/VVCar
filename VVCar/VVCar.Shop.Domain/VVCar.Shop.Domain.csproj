@@ -101,6 +101,7 @@
     <Compile Include="Enums\EProductType.cs" />
     <Compile Include="Enums\EStockRecordSource.cs" />
     <Compile Include="Enums\EStockRecordType.cs" />
+    <Compile Include="Enums\ETaskDistributionPeopleType.cs" />
     <Compile Include="Filters\AppointmentFilter.cs" />
     <Compile Include="Filters\CarBitCoinMemberEngineFilter.cs" />
     <Compile Include="Filters\CarBitCoinProductCategoryFilter.cs" />

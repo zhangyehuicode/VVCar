@@ -122,7 +122,8 @@ namespace VVCar.Shop.Services.DomainServices
             {
                 if (pickUpOrderItem == null || pickUpOrderItem.PickUpOrderTaskDistributionList == null || pickUpOrderItem.PickUpOrderTaskDistributionList.Count < 1)
                     continue;
-                var constructionCount = pickUpOrderItem.PickUpOrderTaskDistributionList.Count();
+                var constructionCount = pickUpOrderItem.PickUpOrderTaskDistributionList.Count(t => t.PeopleType == ETaskDistributionPeopleType.ConstructionCrew);
+                var salesmanCount = pickUpOrderItem.PickUpOrderTaskDistributionList.Count(t => t.PeopleType == ETaskDistributionPeopleType.Salesman);
                 var product = ProductRepo.GetByKey(pickUpOrderItem.ProductID, false);
                 pickUpOrderItem.PickUpOrderTaskDistributionList.ForEach(t =>
                 {
@@ -134,11 +135,20 @@ namespace VVCar.Shop.Services.DomainServices
                     t.PickUpOrderID = pickUpOrderItem.PickUpOrderID;
                     t.PickUpOrderItemID = pickUpOrderItem.ID;
                     t.ConstructionCount = constructionCount;
+                    t.SalesmanCount = salesmanCount;
                     t.TotalMoney = pickUpOrderItem.Money;
                     if (product != null)
                     {
-                        t.CommissionRate = product.CommissionRate;
-                        t.Commission = Math.Floor(pickUpOrderItem.Money * product.CommissionRate / 100 / constructionCount);
+                        if (t.PeopleType == ETaskDistributionPeopleType.ConstructionCrew)
+                        {
+                            t.CommissionRate = product.CommissionRate;
+                            t.Commission = constructionCount != 0 ? Math.Floor(pickUpOrderItem.Money * product.CommissionRate / 100 / constructionCount) : 0;
+                        }
+                        if (t.PeopleType == ETaskDistributionPeopleType.Salesman)
+                        {
+                            t.SalesmanCommissionRate = product.SalesmanCommissionRate;
+                            t.SalesmanCommission = salesmanCount != 0 ? Math.Floor(pickUpOrderItem.Money * product.SalesmanCommissionRate / 100 / salesmanCount) : 0;
+                        }
                     }
                 });
             }

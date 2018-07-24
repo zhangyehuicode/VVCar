@@ -72,6 +72,7 @@
         <div class="distributionmain">
             <img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closedistribution" />
             <div class="distributionmaincon">
+                <div style="text-align:center;">{{CurrentDistributionProduct.Name}}</div>
                 <div class="kcd_bt">人员选择</div>
                 <select class="kcd_input" id="userroleselect">
                     <option v-for="UserRole in UserRoleList" v-bind:value="UserRole.ID">{{UserRole.Name}}</option>
@@ -166,8 +167,8 @@
             top: 50px;
             left: 20px;
             right: 20px;
-            /*bottom: 50px;*/
-            height: 560px;
+            bottom: 50px;
+            /*height: 560px;*/
             background: rgba(255, 255, 255,1);
         }
 
@@ -307,6 +308,7 @@
                 HistoryAnalysisData: [],
                 CurrentProductList: [],
                 CurrentProduct: {},
+                CurrentDistributionProduct: {},
                 PickUpOrder: {
                     PlateNumber: platenum,
                     StaffID: '',
@@ -343,6 +345,9 @@
                             PickUpOrderTaskDistributionList: items[i].PickUpOrderTaskDistributionList,
                         });
                     }
+                    //$.alert(JSON.stringify(_viewModel.PickUpOrder));
+                    //console.log(JSON.stringify(_viewModel.PickUpOrder));
+                    //return;
                     $.confirm("确认开单？", function () {
                         addPickUpOrder(_viewModel.PickUpOrder);
                     }, function () {
@@ -357,7 +362,8 @@
                     //    }
                     //}
                     if (addflag) {
-                        _viewModel.CurrentProductList.push(_viewModel.CurrentProduct);
+                        var currentProduct = $.extend(true, {}, _viewModel.CurrentProduct);
+                        _viewModel.CurrentProductList.push(currentProduct);
                     }
                 },
                 historyaddproduct: function (data, event) {
@@ -370,7 +376,8 @@
                     //    }
                     //}
                     if (addflag) {
-                        _viewModel.CurrentProductList.push(data);
+                        var datatemp = $.extend(true, {}, data);
+                        _viewModel.CurrentProductList.push(datatemp);
                     }
                 },
                 currentproductclick: function (data, event) {
@@ -389,6 +396,19 @@
                 distribution: function (data, event) {
                     if (data == null)
                         $.alert('参数错误');
+                    _viewModel.CurrentDistributionProduct = data;
+                    var pickUpOrderTaskDistributionList = _viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList;
+                    _viewModel.ConstructionList = [];
+                    _viewModel.SalesmanList = [];
+                    if (pickUpOrderTaskDistributionList != null) {
+                        for (var i = 0; i < pickUpOrderTaskDistributionList.length; i++) {
+                            if (pickUpOrderTaskDistributionList[i].PeopleType == 0) {
+                                _viewModel.ConstructionList.push(pickUpOrderTaskDistributionList[i]);
+                            } else if(pickUpOrderTaskDistributionList[i].PeopleType == 1) {
+                                _viewModel.SalesmanList.push(pickUpOrderTaskDistributionList[i]);
+                            }
+                        }
+                    }
                     $('.distributioncon').show();
                 },
                 closedistribution: function (event) {
@@ -401,10 +421,43 @@
                         selectuser = JSON.parse(selectuser);
                     else
                         return;
+                    var hasuser = false;
+                    if (_viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList == null)
+                        _viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList = [];
                     if (usertype == 0) {
-                        _viewModel.ConstructionList.push(selectuser);
-                    } else {
-                        _viewModel.SalesmanList.push(selectuser);
+                        for (var i = 0; i < _viewModel.ConstructionList.length; i++) {
+                            if (_viewModel.ConstructionList[i].ID == selectuser.ID) {
+                                hasuser = true;
+                                break;
+                            }
+                        }
+                        if (!hasuser) {
+                            _viewModel.ConstructionList.push(selectuser);
+                            _viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList.push({
+                                ID: selectuser.ID,
+                                UserID: selectuser.ID,
+                                PeopleType: 0,
+                                Name: selectuser.Name,
+                                Code: selectuser.Code,
+                            });
+                        }
+                    } else if(usertype == 1){
+                        for (var i = 0; i < _viewModel.SalesmanList.length; i++) {
+                            if (_viewModel.SalesmanList[i].ID == selectuser.ID) {
+                                hasuser = true;
+                                break;
+                            }
+                        }
+                        if (!hasuser) {
+                            _viewModel.SalesmanList.push(selectuser);
+                            _viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList.push({
+                                ID: selectuser.ID,
+                                UserID: selectuser.ID,
+                                PeopleType: 1,
+                                Name: selectuser.Name,
+                                Code: selectuser.Code,
+                            });
+                        }
                     }
                 },
                 deletesalesman: function (data, event) {
@@ -417,6 +470,15 @@
                     }
                     if (index != -1)
                         _viewModel.SalesmanList.splice(index, 1);
+                    var disindex = -1;
+                    for (var i = 0; i < _viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList.length; i++) {
+                        if (_viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList[i].UserID == data.ID && _viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList[i].PeopleType == 1) {
+                            disindex = i;
+                            break;
+                        }
+                    }
+                    if (disindex != -1)
+                        _viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList.splice(disindex, 1);
                 },
                 deleteconstruction: function (data, event) {
                     var index = -1;
@@ -428,6 +490,15 @@
                     }
                     if (index != -1)
                         _viewModel.ConstructionList.splice(index, 1);
+                    var disindex = -1;
+                    for (var i = 0; i < _viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList.length; i++) {
+                        if (_viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList[i].UserID == data.ID && _viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList[i].PeopleType==0) {
+                            disindex = i;
+                            break;
+                        }
+                    }
+                    if (disindex != -1)
+                        _viewModel.CurrentDistributionProduct.PickUpOrderTaskDistributionList.splice(disindex, 1);
                 },
             }
         });
@@ -463,7 +534,7 @@
                 });
             }
             if (user == null || user == '') {
-                //getUserByOpenId();
+                getUserByOpenId();
             } else {
                 user = JSON.parse(user);
                 _viewModel.PickUpOrder.StaffID = user.ID;
@@ -587,11 +658,6 @@
             $('#userroleselect').change(function () {
                 var value = $(this).val();
                 getUser(value);
-            });
-
-            $('#userselect').change(function () {
-                var value = $(this).val();
-
             });
 
         });

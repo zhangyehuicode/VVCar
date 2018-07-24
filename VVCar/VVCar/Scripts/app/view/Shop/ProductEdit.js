@@ -168,7 +168,7 @@
                     items: [{
                         xtype: 'numberfield',
                         width: 202,
-                        name: 'CommissionRate',
+						name: 'SalesmanCommissionRate',
                         fieldLabel: '抽成比例',
                         minValue: 0,
                         maxValue: 100,
