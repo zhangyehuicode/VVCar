@@ -4,6 +4,7 @@
 	fields: [
 		{ name: 'ID' },
 		{ name: 'Name' },
+		{ name: 'Type' },
 		{ name: 'UserID' },
 		{ name: 'UserName' },
 		{ name: 'IsHQ' },

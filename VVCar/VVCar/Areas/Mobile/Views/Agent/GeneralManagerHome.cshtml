@@ -21,16 +21,21 @@
             <span>快捷开户</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">开户</span>
         </a>
-        <a class="bq_box" style="width:33.4%" v-on:click="agentdepartment">
+        <a class="bq_box" style="width:33.4%" v-on:click="potentialclients">
+            <div><img src="~/Areas/resource/img/mobile/master/yhqhz.png" style="width:25px;"></div>
+            <span>意向客户</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">资料录入</span>
+        </a>
+        <a class="bq_box" style="border-right:none;" v-on:click="agentdepartment">
             <div><img src="~/Areas/resource/img/mobile/master/hykhx.png" style="width:25px;"></div>
             <span>今日开户</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共{{UserInfo.TodayOpenAccountCount}}户</span>
         </a>
-        <a class="bq_box" style="border-right:none;">
-            <div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
-            <span>我的业绩</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共{{UserInfo.TotalOpenAccountCount}}户</span>
-        </a>
+        @*<a class="bq_box" style="border-right:none;">
+                <div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
+                <span>我的业绩</span>
+                <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共{{UserInfo.TotalOpenAccountCount}}户</span>
+            </a>*@
         @*<a class="bq_box" style="width:33.4%;border-bottom:none;">
                 <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:23px;"></div>
                 <span>我的分红</span>
@@ -69,15 +74,20 @@
                 <span>会员卡管理</span>
                 <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">已发行{{UserInfo.MemberCardStockCount}}张</span>
             </a>*@
-        <a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="salessatement">
-            <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:21px;"></div>
-            <span>销售报表</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报表</span>
-        </a>
-        <a class="bq_box" style=" border-right:none;border-bottom:none;" v-on:click="mydepartment">
+        @*<a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="salessatement">
+                <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:21px;"></div>
+                <span>销售报表</span>
+                <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报表</span>
+            </a>*@
+        <a class="bq_box" style="border-bottom:none;" v-on:click="mydepartment">
             <div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:23px;"></div>
             <span>我的客户</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">客户</span>
+        </a>
+        <a class="bq_box" style="border-right:none;">
+            <div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
+            <span>我的业绩</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共{{UserInfo.TotalOpenAccountCount}}户</span>
         </a>
     </div>
     <div class="touxiang" style="margin-top:0px;">
@@ -102,6 +112,11 @@
             <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:25px; margin-top:5px;"></div>
             <span>报销审核</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">审核</span>
+        </a>
+        <a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="salessatement">
+            <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:21px;"></div>
+            <span>销售报表</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报表</span>
         </a>
     </div>
     <img src="~/Areas/resource/img/mobile/master/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">
@@ -158,7 +173,7 @@
     <script type="text/javascript">
         $(function () {
             var mch = $.getUrlParam('mch');
-            sessionStorage.setItem('isgeneralmanager', 'true');
+            //sessionStorage.setItem('isgeneralmanager', 'true');
             _viewModel = new Vue({
                 el: '#generalmanagerhome',
                 data: {
@@ -199,6 +214,9 @@
                     reimbursementcheck: function (event) {
                         window.location.href = "/Mobile/Agent/ReimbursementCheck?mch=" + mch;
                     },
+                    potentialclients: function (event) {
+                        window.location.href = "/Mobile/Agent/PotentialClients?mch=" + mch;
+                    },
                 }
             });
 
@@ -217,6 +235,10 @@
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
                                 _viewModel.UserInfo = res.Data;
                                 _viewModel.IsGeneralManager = res.Data.IsGeneralManager;
+                                if (res.Data.IsGeneralManager)
+                                    sessionStorage.setItem('isgeneralmanager', 'true');
+                                else
+                                    sessionStorage.setItem('isgeneralmanager', 'false');
                             }
                             else {
                                 window.location.href = "/Mobile/Agent?mch=" + mch;

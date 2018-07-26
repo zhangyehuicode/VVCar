@@ -44,6 +44,9 @@ namespace VVCar.BaseData.Data.Mapping
             Property(t => t.LegalPersonIDCardBehindImgUrl)
                 .HasMaxLength(50);
 
+            Property(t => t.DepartmentImgUrl)
+                .HasMaxLength(50);
+
             Property(t => t.CompanyAddress)
                 .HasMaxLength(50);
 
@@ -67,11 +70,9 @@ namespace VVCar.BaseData.Data.Mapping
                 .HasMaxLength(50);
 
             Property(t => t.Bank)
-                .IsRequired()
                 .HasMaxLength(20);
 
             Property(t => t.BankCard)
-                .IsRequired()
                 .HasMaxLength(32);
         }
     }

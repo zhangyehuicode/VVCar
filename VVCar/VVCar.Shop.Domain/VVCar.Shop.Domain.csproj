@@ -52,6 +52,7 @@
     <Compile Include="Dtos\GiveAwayCarBitCoinParam.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisDto.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisParam.cs" />
+    <Compile Include="Dtos\LogisticsDto.cs" />
     <Compile Include="Dtos\OrderDto.cs" />
     <Compile Include="Dtos\PickUpOrderDto.cs" />
     <Compile Include="Dtos\ProductCategoryLiteDto.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Entities\CarBitCoinProductCategory.cs" />
     <Compile Include="Entities\CarBitCoinRecord.cs" />
     <Compile Include="Entities\ComboItem.cs" />
+    <Compile Include="Entities\Logistics.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderItem.cs" />
     <Compile Include="Entities\OrderPaymentDetails.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="Enums\EPayType.cs" />
     <Compile Include="Enums\EPickUpOrderStatus.cs" />
     <Compile Include="Enums\EProductType.cs" />
+    <Compile Include="Enums\ERevisitStatus.cs" />
     <Compile Include="Enums\EStockRecordSource.cs" />
     <Compile Include="Enums\EStockRecordType.cs" />
     <Compile Include="Enums\ETaskDistributionPeopleType.cs" />
@@ -112,6 +115,7 @@
     <Compile Include="Filters\ComboItemFilter.cs" />
     <Compile Include="Filters\ConsumeHistoryFilter.cs" />
     <Compile Include="Filters\DepartmentPerformanceFilter.cs" />
+    <Compile Include="Filters\LogisticsFilter.cs" />
     <Compile Include="Filters\OrderFilter.cs" />
     <Compile Include="Filters\OrderItemFilter.cs" />
     <Compile Include="Filters\PickUpOrderFilter.cs" />
@@ -134,6 +138,7 @@
     <Compile Include="Services\ICarBitCoinProductCategoryService.cs" />
     <Compile Include="Services\ICarBitCoinProductService.cs" />
     <Compile Include="Services\IComboItemService.cs" />
+    <Compile Include="Services\ILogisticsService.cs" />
     <Compile Include="Services\IOrderItemService.cs" />
     <Compile Include="Services\IOrderPaymentDetailsService.cs" />
     <Compile Include="Services\IOrderService.cs" />

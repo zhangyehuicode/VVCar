@@ -268,7 +268,10 @@
     <Compile Include="Areas\Mobile\Controllers\MerchantController.cs" />
     <Compile Include="Areas\Mobile\MobileAreaRegistration.cs" />
     <Compile Include="Common\ExportHelper.cs" />
+    <Compile Include="Controllers\Api\AgentDepartmentCategoryController.cs" />
     <Compile Include="Controllers\Api\AgentDepartmentController.cs" />
+    <Compile Include="Controllers\Api\AgentDepartmentTagController.cs" />
+    <Compile Include="Controllers\Api\TagController.cs" />
     <Compile Include="Controllers\Api\BackgroundTaskController.cs" />
     <Compile Include="Controllers\Api\CommonController.cs" />
     <Compile Include="Controllers\Api\DataDictTypeController.cs" />
@@ -640,6 +643,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\AgentDepartment.js" />
     <Content Include="Scripts\app\controller\AgentDepartmentAudit.js" />
+    <Content Include="Scripts\app\controller\Tag.js" />
     <Content Include="Scripts\app\controller\CarBitCoinMember.js" />
     <Content Include="Scripts\app\controller\CarBitCoinOrder.js" />
     <Content Include="Scripts\app\controller\CarBitCoinProduct.js" />
@@ -692,7 +696,11 @@
     <Content Include="Scripts\app\controller\UserRole.js" />
     <Content Include="Scripts\app\controller\WeChatFans.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentAuditModel.js" />
+    <Content Include="Scripts\app\model\BaseData\AgentDepartmentCategoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\AgentDepartmentCategoryTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentModel.js" />
+    <Content Include="Scripts\app\model\BaseData\AgentDepartmentTagModel.js" />
+    <Content Include="Scripts\app\model\BaseData\TagModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinOrderItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinOrderModel.js" />
@@ -763,7 +771,11 @@
     <Content Include="Scripts\app\model\DataDict\DataDictModel.js" />
     <Content Include="Scripts\app\model\DataDict\DataDictTypeModel.js" />
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentAuditStore.js" />
+    <Content Include="Scripts\app\store\BaseData\AgentDepartmentCategoryLiteStore.js" />
+    <Content Include="Scripts\app\store\BaseData\AgentDepartmentCategoryTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentStore.js" />
+    <Content Include="Scripts\app\store\BaseData\AgentDepartmentTagStore.js" />
+    <Content Include="Scripts\app\store\BaseData\TagStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinMemberStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinOrderItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinOrderStore.js" />
@@ -866,6 +878,12 @@
     <Content Include="Scripts\app\view\AgentDepartmentAudit\AgentDepartmentAuditEdit.js" />
     <Content Include="Scripts\app\view\AgentDepartmentAudit\AgentDepartmentAuditList.js" />
     <Content Include="Scripts\app\view\AgentDepartmentAudit\ManageUserAuditSelector.js" />
+    <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentTagEdit.js" />
+    <Content Include="Scripts\app\view\AgentDepartment\TagSelector.js" />
+    <Content Include="Scripts\app\view\Tag\TagEdit.js" />
+    <Content Include="Scripts\app\view\Tag\TagList.js" />
+    <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentCategoryEdit.js" />
+    <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentCategoryList.js" />
     <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentEdit.js" />
     <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentList.js" />
     <Content Include="Scripts\app\view\AgentDepartment\ManageUserSelector.js" />
@@ -1147,6 +1165,7 @@
     <Content Include="Areas\Mobile\Views\Agent\MyReimbursement.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\ReimbursementCheck.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\MyInfo.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\PotentialClients.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

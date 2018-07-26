@@ -21,6 +21,13 @@
 			},
 			items: [
 				{
+					xtype: 'textfield',
+					margin: '5 10 5 5',
+					fieldLabel: '分类ID',
+					name: 'AgentDepartmentCategoryID',
+					allowBlank: true,
+					hidden: true,
+				}, {
 					xtype: 'form',
 					layout: 'hbox',
 					items: [{
@@ -38,6 +45,7 @@
 							margin: '5 5 5 10',
 							fieldLabel: '客户类型',
 							name: 'Type',
+							editable: false,
 							store: [
 								[0, '开发客户'],
 								[1, '意向客户'],

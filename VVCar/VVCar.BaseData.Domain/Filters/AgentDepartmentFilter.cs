@@ -23,6 +23,17 @@ namespace VVCar.BaseData.Domain.Filters
         public string Name { get; set; }
 
         /// <summary>
+        /// 客户类型
+        /// </summary>
+        [Display(Name = "客户类型")]
+        public EAgentDepartmentType? Type { get; set; }
+
+        /// <summary>
+        /// 类别ID
+        /// </summary>
+        public Guid? AgentDepartmentCategoryID { get; set; }
+
+        /// <summary>
         /// 代理门店审核状态
         /// </summary>
         [Display(Name = "代理门店审核状态")]

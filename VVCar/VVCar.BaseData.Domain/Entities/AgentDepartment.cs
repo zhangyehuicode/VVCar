@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using VVCar.BaseData.Domain.Enums;
 using YEF.Core.Data;
-using YEF.Core.Enums;
 
 namespace VVCar.BaseData.Domain.Entities
 {
@@ -16,6 +15,17 @@ namespace VVCar.BaseData.Domain.Entities
         /// </summary>
         [Display(Name = "销售经理ID")]
         public Guid? UserID { get; set; }
+
+        /// <summary>
+        /// 类别ID
+        /// </summary>
+        [Display(Name = "类别ID")]
+        public Guid? AgentDepartmentCategoryID { get; set; }
+
+        /// <summary>
+        /// 类别
+        /// </summary>
+        public virtual AgentDepartmentCategory AgentDepartmentCategory { get; set; }
 
         /// <summary>
         /// 用户
@@ -81,6 +91,12 @@ namespace VVCar.BaseData.Domain.Entities
         /// </summary>
         [Display(Name = "法人身份证反面 图片地址")]
         public string LegalPersonIDCardBehindImgUrl { get; set; }
+
+        /// <summary>
+        /// 门店照片 图片地址
+        /// </summary>
+        [Display(Name = "门店照片 图片地址")]
+        public string DepartmentImgUrl { get; set; }
 
         /// <summary>
         /// 公司地址

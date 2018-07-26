@@ -144,6 +144,16 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 上传门店照片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadDepartment")]
+        public UploadFileResult UploadDepartment()
+        {
+            return UploadAction("Pictures/Department");
+        }
+
+        /// <summary>
         /// 上传车牌
         /// </summary>
         /// <returns></returns>

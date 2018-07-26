@@ -39,7 +39,7 @@
 				xtype: 'textfield',
 				name: 'ID',
 				fieldLabel: '会员卡ID',
-				//hidden: true,
+				hidden: true,
 			}, {
 				xtype: 'form',
 				layout: 'vbox',

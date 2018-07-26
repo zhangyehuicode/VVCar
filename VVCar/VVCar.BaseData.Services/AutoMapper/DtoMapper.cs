@@ -57,6 +57,7 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.iconCls, opt => opt.MapFrom(src => src.SysMenuIcon));
 
                 cfg.CreateMap<ProductCategory, ProductCategoryTreeDto>();
+                cfg.CreateMap<AgentDepartmentCategory, AgentDepartmentCategoryTreeDto>();
 
                 cfg.CreateMap<CarBitCoinProductCategory, CarBitCoinProductCategoryTreeDto>();
 
@@ -160,6 +161,12 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.MerchantCode, opt => opt.MapFrom(src => src.Merchant.Code))
                 .ForMember(dest => dest.MerchantName, opt => opt.MapFrom(src => src.Merchant.Name));
 
+                cfg.CreateMap<AgentDepartmentTag, AgentDepartmentTagDto>()
+                .ForMember(dest => dest.TagCode, opt => opt.MapFrom(src => src.Tag.Code))
+                .ForMember(dest => dest.TagName, opt => opt.MapFrom(src => src.Tag.Name));
+
+                cfg.CreateMap<Tag, TagDto>();
+
                 cfg.CreateMap<SystemSetting, SystemSettingDto>()
                 .ForMember(dest => dest.MerchantCode, opt => opt.MapFrom(src => src.Merchant.Code))
                 .ForMember(dest => dest.MerchantName, opt => opt.MapFrom(src => src.Merchant.Name));
@@ -179,6 +186,14 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.PeriodDays, opt => opt.MapFrom(src => src.GameSetting.PeriodDays))
                 .ForMember(dest => dest.PeriodCounts, opt => opt.MapFrom(src => src.GameSetting.PeriodCounts))
                 .ForMember(dest => dest.Limit, opt => opt.MapFrom(src => src.GameSetting.Limit));
+
+                cfg.CreateMap<Logistics, LogisticsDto>()
+                .ForMember(dest => dest.OrderCode, opt => opt.MapFrom(src => src.Order.Code))
+                .ForMember(dest => dest.LinkMan, opt => opt.MapFrom(src => src.Order.LinkMan))
+                .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Order.Phone))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Order.Address))
+                .ForMember(dest => dest.ExpressNumber, opt => opt.MapFrom(src => src.Order.ExpressNumber))
+                .ForMember(dest => dest.LogisticsCompany, opt => opt.MapFrom(src => src.Order.LogisticsCompany));
             });
 
             //Mapper.CreateMap<Member, MemberDto>()

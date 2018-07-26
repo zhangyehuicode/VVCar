@@ -68,6 +68,12 @@ namespace VVCar.Shop.Domain.Entities
         public string ExpressNumber { get; set; }
 
         /// <summary>
+        /// 物流公司
+        /// </summary>
+        [Display(Name = "物流公司")]
+        public string LogisticsCompany { get; set; }
+
+        /// <summary>
         /// 状态
         /// </summary>
         [Display(Name = "状态")]

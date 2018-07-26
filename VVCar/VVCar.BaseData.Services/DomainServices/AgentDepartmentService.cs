@@ -71,36 +71,36 @@ namespace VVCar.BaseData.Services.DomainServices
         {
             if (entity == null)
                 return false;
-            var agentDpartment = Repository.GetByKey(entity.ID);
-            if (agentDpartment == null)
+            var agentDepartment = Repository.GetByKey(entity.ID);
+            if (agentDepartment == null)
                 return false;
-            if (agentDpartment.ApproveStatus != EAgentDepartmentApproveStatus.Pedding)
+            if (agentDepartment.ApproveStatus != EAgentDepartmentApproveStatus.Pedding)
                 throw new DomainException("已通过审核或导入的不能修改");
-            agentDpartment.Name = entity.Name;
-            agentDpartment.LegalPerson = entity.LegalPerson;
-            agentDpartment.IDNumber = entity.IDNumber;
-            agentDpartment.Email = entity.Email;
-            agentDpartment.WeChatOAPassword = entity.WeChatOAPassword;
-            agentDpartment.MobilePhoneNo = entity.MobilePhoneNo;
-            agentDpartment.BusinessLicenseImgUrl = entity.BusinessLicenseImgUrl;
-            agentDpartment.LegalPersonIDCardFrontImgUrl = entity.LegalPersonIDCardFrontImgUrl;
-            agentDpartment.LegalPersonIDCardBehindImgUrl = entity.LegalPersonIDCardBehindImgUrl;
-            agentDpartment.CompanyAddress = entity.CompanyAddress;
-            agentDpartment.WeChatAppID = entity.WeChatAppID;
-            agentDpartment.WeChatAppSecret = entity.WeChatAppSecret;
-            agentDpartment.MeChatMchPassword = entity.MeChatMchPassword;
-            agentDpartment.WeChatMchID = entity.WeChatMchID;
-            agentDpartment.WeChatMchKey = entity.WeChatMchKey;
-            agentDpartment.Bank = entity.Bank;
-            agentDpartment.ApproveStatus = entity.ApproveStatus;
-            agentDpartment.Type = entity.Type;
-            agentDpartment.UserID = entity.UserID;
-            agentDpartment.BankCard = entity.BankCard;
-            agentDpartment.DataSource = entity.DataSource;
-            agentDpartment.LastUpdatedDate = DateTime.Now;
-            agentDpartment.LastUpdatedUserID = AppContext.CurrentSession.UserID;
-            agentDpartment.LastUpdatedUser = AppContext.CurrentSession.UserName;
-            return Repository.Update(agentDpartment) > 0;
+            agentDepartment.Name = entity.Name;
+            agentDepartment.LegalPerson = entity.LegalPerson;
+            agentDepartment.IDNumber = entity.IDNumber;
+            agentDepartment.Email = entity.Email;
+            agentDepartment.WeChatOAPassword = entity.WeChatOAPassword;
+            agentDepartment.MobilePhoneNo = entity.MobilePhoneNo;
+            agentDepartment.BusinessLicenseImgUrl = entity.BusinessLicenseImgUrl;
+            agentDepartment.LegalPersonIDCardFrontImgUrl = entity.LegalPersonIDCardFrontImgUrl;
+            agentDepartment.LegalPersonIDCardBehindImgUrl = entity.LegalPersonIDCardBehindImgUrl;
+            agentDepartment.CompanyAddress = entity.CompanyAddress;
+            agentDepartment.WeChatAppID = entity.WeChatAppID;
+            agentDepartment.WeChatAppSecret = entity.WeChatAppSecret;
+            agentDepartment.MeChatMchPassword = entity.MeChatMchPassword;
+            agentDepartment.WeChatMchID = entity.WeChatMchID;
+            agentDepartment.WeChatMchKey = entity.WeChatMchKey;
+            agentDepartment.Bank = entity.Bank;
+            agentDepartment.ApproveStatus = entity.ApproveStatus;
+            agentDepartment.Type = entity.Type;
+            agentDepartment.UserID = entity.UserID;
+            agentDepartment.BankCard = entity.BankCard;
+            agentDepartment.DataSource = entity.DataSource;
+            agentDepartment.LastUpdatedDate = DateTime.Now;
+            agentDepartment.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+            agentDepartment.LastUpdatedUser = AppContext.CurrentSession.UserName;
+            return Repository.Update(agentDepartment) > 0;
         }
 
         /// <summary>
@@ -213,6 +213,10 @@ namespace VVCar.BaseData.Services.DomainServices
                 queryable = queryable.Where(t => t.Merchant.Name.Contains(filter.MerchantName));
             if (!string.IsNullOrEmpty(filter.Name))
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
+            if (filter.AgentDepartmentCategoryID.HasValue && filter.AgentDepartmentCategoryID.Value != Guid.Parse("00000000-0000-0000-0000-000000000001"))
+                queryable = queryable.Where(t => t.AgentDepartmentCategoryID == filter.AgentDepartmentCategoryID.Value);
+            if (filter.Type.HasValue)
+                queryable = queryable.Where(t => t.Type == filter.Type.Value);
             if (filter.CreatedDate.HasValue)
             {
                 var startday = filter.CreatedDate.Value.Date;

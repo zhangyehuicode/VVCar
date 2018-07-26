@@ -177,10 +177,8 @@
         var mch = $.getUrlParam('mch');
             var user = sessionStorage.getItem('user');
 
-            var agentuser = sessionStorage.getItem('agentuser');
-            if (agentuser != null && agentuser != '')
-                user = agentuser;
             var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
+            var issalesmanger = sessionStorage.getItem('isgeneralmanager') == 'false';
 
         _viewModel = new Vue({
             el: '#staffmanager',
@@ -195,7 +193,7 @@
                     history.back(-1);
                 },
                 home: function (event) {
-                    if (agentuser != null && agentuser != '')
+                    if (isgeneralmanager || issalesmanger)
                         window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
                     else
                         window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
@@ -226,7 +224,7 @@
                 OpenID: '@ViewBag.OpenId',
                 IsManager: true,
             };
-            if (agentuser != null && agentuser != '') {
+            if (isgeneralmanager || issalesmanger) {
                 userdata = {
                     OpenID: '@ViewBag.OpenId',
                     IsGeneralManager: isgeneralmanager,
