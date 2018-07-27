@@ -44,6 +44,20 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 新增带标签
+        /// </summary>
+        /// <param name="agentDepartmentDto"></param>
+        /// <returns></returns>
+        [HttpPost, Route("AddWidthTag"), AllowAnonymous]
+        public JsonActionResult<AgentDepartment> AddWidthTag(AgentDepartmentDto agentDepartmentDto)
+        {
+            return SafeExecute(() =>
+            {
+                return AgentDepartmentService.AddWidthTag(agentDepartmentDto);
+            });
+        }
+
+        /// <summary>
         /// 删除
         /// </summary>
         /// <param name="id"></param>

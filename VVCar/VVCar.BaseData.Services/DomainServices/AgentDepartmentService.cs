@@ -27,6 +27,12 @@ namespace VVCar.BaseData.Services.DomainServices
         {
         }
 
+        #region properties
+
+        IAgentDepartmentTagService AgentDepartmentTagService { get => ServiceLocator.Instance.GetService<IAgentDepartmentTagService>(); }
+
+        #endregion
+
         /// <summary>
         /// 新增
         /// </summary>
@@ -43,6 +49,45 @@ namespace VVCar.BaseData.Services.DomainServices
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
+        }
+
+        /// <summary>
+        /// 新增带标签
+        /// </summary>
+        /// <param name="agentDepartmentDto"></param>
+        /// <returns></returns>
+        public AgentDepartment AddWidthTag(AgentDepartmentDto agentDepartmentDto)
+        {
+            if (agentDepartmentDto == null)
+                return null;
+            var agentDepartment = agentDepartmentDto.MapTo<AgentDepartment>();
+            if (agentDepartment == null)
+                return null;
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                var result = Add(agentDepartment);
+                if (agentDepartmentDto.TagList != null && agentDepartmentDto.TagList.Count > 0)
+                {
+                    var agentDepartmentTagList = new List<AgentDepartmentTag>();
+                    agentDepartmentDto.TagList.ForEach(t =>
+                    {
+                        agentDepartmentTagList.Add(new AgentDepartmentTag
+                        {
+                            AgentDepartmentID = result.ID,
+                            TagID = t.ID,
+                        });
+                    });
+                    AgentDepartmentTagService.BatchAdd(agentDepartmentTagList);
+                }
+                UnitOfWork.CommitTransaction();
+                return result;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
+            }
         }
 
         /// <summary>
@@ -162,7 +207,6 @@ namespace VVCar.BaseData.Services.DomainServices
             });
             return Repository.UpdateRange(agentDepartmentList) > 0;
         }
-
 
         /// <summary>
         /// 导入

@@ -487,6 +487,7 @@
     <Content Include="Areas\resource\img\mobile\kf.png" />
     <Content Include="Areas\resource\img\mobile\kuang.png" />
     <Content Include="Areas\resource\img\mobile\kuangselected.png" />
+    <Content Include="Areas\resource\img\mobile\location.png" />
     <Content Include="Areas\resource\img\mobile\logo.png" />
     <Content Include="Areas\resource\img\mobile\master\5000.png" />
     <Content Include="Areas\resource\img\mobile\master\6.png" />
@@ -614,6 +615,7 @@
     <Content Include="Content\icons\list.png" />
     <Content Include="Content\icons\login3.png" />
     <Content Include="Content\icons\logout.png" />
+    <Content Include="Content\icons\recharge.png" />
     <Content Include="Content\icons\refresh.png" />
     <Content Include="Content\icons\reportLoss.png" />
     <Content Include="Content\icons\reset.png" />
@@ -622,6 +624,7 @@
     <Content Include="Content\icons\search_r.png" />
     <Content Include="Content\icons\stock.png" />
     <Content Include="Content\icons\stop.png" />
+    <Content Include="Content\icons\tookeen.png" />
     <Content Include="Content\image\cheyinzi.jpg" />
     <Content Include="Content\image\cheyinzilogo.png" />
     <Content Include="Content\image\cheyinzi_qrcode.jpg" />

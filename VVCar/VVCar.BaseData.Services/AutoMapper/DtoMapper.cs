@@ -27,8 +27,7 @@ namespace VVCar.BaseData.Services
         #endregion
 
         #region methods
-        public static void Initialize()
-        {
+        public static void Initialize() =>
             //var cfg = new MapperConfigurationExpression();
             //cfg.CreateMap<SysMenu, SysNavMenuDto>()
             //     .ForMember(dest => dest.leaf, opt => opt.MapFrom(src => src.IsLeaf))
@@ -161,6 +160,8 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.MerchantCode, opt => opt.MapFrom(src => src.Merchant.Code))
                 .ForMember(dest => dest.MerchantName, opt => opt.MapFrom(src => src.Merchant.Name));
 
+                cfg.CreateMap<AgentDepartmentDto, AgentDepartment>();
+
                 cfg.CreateMap<AgentDepartmentTag, AgentDepartmentTagDto>()
                 .ForMember(dest => dest.TagCode, opt => opt.MapFrom(src => src.Tag.Code))
                 .ForMember(dest => dest.TagName, opt => opt.MapFrom(src => src.Tag.Name));
@@ -194,47 +195,7 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Order.Address))
                 .ForMember(dest => dest.ExpressNumber, opt => opt.MapFrom(src => src.Order.ExpressNumber))
                 .ForMember(dest => dest.LogisticsCompany, opt => opt.MapFrom(src => src.Order.LogisticsCompany));
-            });
-
-            //Mapper.CreateMap<Member, MemberDto>()
-            //    //.ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType.Name))
-            //    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))
-            //    .ForMember(dest => dest.CardBalance, opt => opt.MapFrom(src => src.Card.CardBalance))
-            //    .ForMember(dest => dest.EffectiveDate, opt => opt.MapFrom(src => src.Card.EffectiveDate))
-            //    .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.Card.ExpiredDate))
-            //    .ForMember(dest => dest.OwnerDepartment, opt => opt.MapFrom(src => src.OwnerDepartment.Name))
-            //    .ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))
-            //    .ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))
-            //    .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType))
-            //    .ForMember(dest => dest.Point, opt => opt.MapFrom(src => src.Point));
-            //Mapper.CreateMap<Member, MemberLiteInfoDto>()
-            //    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))
-            //    .ForMember(dest => dest.CardBalance, opt => opt.MapFrom(src => src.Card.CardBalance))
-            //    .ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))
-            //    .ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))
-            //    .ForMember(dest => dest.CardTypeID, opt => opt.MapFrom(src => src.Card.CardTypeID));
-            //Mapper.CreateMap<Member, MemberNanoInfoDto>();
-
-            //Mapper.CreateMap<MemberCardType, MemberCardTypeDto>();
-            //Mapper.CreateMap<Department, DepartmentLiteDto>();
-            //Mapper.CreateMap<MemberCard, MemberCardExportDto>();
-            //Mapper.CreateMap<ChatUserModel, WeChatFans>()
-            //    .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.city))
-            //    .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.country))
-            //    .ForMember(dest => dest.HeadImgUrl, opt => opt.MapFrom(src => src.headimgurl))
-            //    .ForMember(dest => dest.NickName, opt => opt.MapFrom(src => src.nickname))
-            //    .ForMember(dest => dest.OpenID, opt => opt.MapFrom(src => src.openid))
-            //    .ForMember(dest => dest.Province, opt => opt.MapFrom(src => src.province))
-            //    .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.sex))
-            //    .ForMember(dest => dest.SubscribeTime, opt => opt.MapFrom(src => src.SubscribeTime));
-            //Mapper.CreateMap<WeChatFans, WeChatFansDto>();
-            //Mapper.CreateMap<NewUpdateRechargePlanDto, RechargePlan>();
-            //Mapper.CreateMap<MemberCard, MemberCardThemeDto>();
-            //Mapper.CreateMap<CardThemeGroup, CardThemeGroupDto>()
-            //    .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.CardThemeCategory.Name))
-            //    .ForMember(dest => dest.CardThemeCategoryID, opt => opt.MapFrom(src => src.CardThemeCategory.ID))
-            //    .ForMember(dest => dest.CategoryGrade, opt => opt.MapFrom(src => src.CardThemeCategory.Grade));
-        }
+            });//Mapper.CreateMap<Member, MemberDto>()//    //.ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType.Name))//    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))//    .ForMember(dest => dest.CardBalance, opt => opt.MapFrom(src => src.Card.CardBalance))//    .ForMember(dest => dest.EffectiveDate, opt => opt.MapFrom(src => src.Card.EffectiveDate))//    .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.Card.ExpiredDate))//    .ForMember(dest => dest.OwnerDepartment, opt => opt.MapFrom(src => src.OwnerDepartment.Name))//    .ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))//    .ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))//    .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType))//    .ForMember(dest => dest.Point, opt => opt.MapFrom(src => src.Point));//Mapper.CreateMap<Member, MemberLiteInfoDto>()//    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))//    .ForMember(dest => dest.CardBalance, opt => opt.MapFrom(src => src.Card.CardBalance))//    .ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))//    .ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))//    .ForMember(dest => dest.CardTypeID, opt => opt.MapFrom(src => src.Card.CardTypeID));//Mapper.CreateMap<Member, MemberNanoInfoDto>();//Mapper.CreateMap<MemberCardType, MemberCardTypeDto>();//Mapper.CreateMap<Department, DepartmentLiteDto>();//Mapper.CreateMap<MemberCard, MemberCardExportDto>();//Mapper.CreateMap<ChatUserModel, WeChatFans>()//    .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.city))//    .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.country))//    .ForMember(dest => dest.HeadImgUrl, opt => opt.MapFrom(src => src.headimgurl))//    .ForMember(dest => dest.NickName, opt => opt.MapFrom(src => src.nickname))//    .ForMember(dest => dest.OpenID, opt => opt.MapFrom(src => src.openid))//    .ForMember(dest => dest.Province, opt => opt.MapFrom(src => src.province))//    .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.sex))//    .ForMember(dest => dest.SubscribeTime, opt => opt.MapFrom(src => src.SubscribeTime));//Mapper.CreateMap<WeChatFans, WeChatFansDto>();//Mapper.CreateMap<NewUpdateRechargePlanDto, RechargePlan>();//Mapper.CreateMap<MemberCard, MemberCardThemeDto>();//Mapper.CreateMap<CardThemeGroup, CardThemeGroupDto>()//    .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.CardThemeCategory.Name))//    .ForMember(dest => dest.CardThemeCategoryID, opt => opt.MapFrom(src => src.CardThemeCategory.ID))//    .ForMember(dest => dest.CategoryGrade, opt => opt.MapFrom(src => src.CardThemeCategory.Grade));
 
         /// <summary>
         /// 映射到目标类型

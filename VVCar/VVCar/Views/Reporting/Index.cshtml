@@ -125,18 +125,40 @@
         <div style="width:100%">
             <div class="reporttable" style="width:100%;">
                 <div class="reporttablecell">
-                    <div class="quickoperation" style="background:#1ab394;color:#fff;float:right;margin-right:120px;cursor:pointer;" id="addmember">
+                    <div class="quickoperation" style="background:#1ab394;color:#fff;float:left;margin-left:120px;cursor:pointer;" id="tookeen">
+                        <div class="reporttable" style="float:left;margin-top:10px;margin-left:15px;">
+                            <img class="iconimg" src="~/Content/icons/tookeen.png" />
+                        </div>
+                        <div class="reporttable" style="float:right;margin-top:10px;margin-right:15px;">
+                            <div style="font-size:8px;">拓客</div>
+                            <div style="margin-top:5px;">超能拓客</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reporttablecell">
+                    <div class="quickoperation" style="background:#1c83c6;color:#fff;float:right;margin-right:120px;cursor:pointer;" id="addmember">
                         <div class="reporttable" style="float:left;margin-top:10px;margin-left:15px;">
                             <img class="iconimg" src="~/Content/icons/addmember.png" />
                         </div>
                         <div class="reporttable" style="float:right;margin-top:10px;margin-right:15px;">
-                            <div style="font-size:8px;">新增会员</div>
+                            <div style="font-size:8px;">会员</div>
                             <div style="margin-top:5px;">新增会员</div>
                         </div>
                     </div>
                 </div>
                 <div class="reporttablecell">
-                    <div class="quickoperation" style="background:#23c7c9;color:#fff;float:left;margin-left:120px;cursor:pointer;" id="stockoutin">
+                    <div class="quickoperation" style="background:#23c7c9;color:#fff;float:left;margin-left:120px;cursor:pointer;" id="recharge">
+                        <div class="reporttable" style="float:left;margin-top:10px;margin-left:15px;">
+                            <img class="iconimg" src="~/Content/icons/recharge.png" />
+                        </div>
+                        <div class="reporttable" style="float:right;margin-top:10px;margin-right:15px;">
+                            <div style="font-size:8px;">充值</div>
+                            <div style="margin-top:5px;">会员充值</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reporttablecell">
+                    <div class="quickoperation" style="background:#f8ab59;color:#fff;float:left;margin-left:120px;cursor:pointer;" id="stockoutin">
                         <div class="reporttable" style="float:left;margin-top:10px;margin-left:15px;">
                             <img class="iconimg" src="~/Content/icons/stock.png" />
                         </div>
@@ -339,6 +361,14 @@
 
         $('#stockoutin').click(function () {
             navigate('Product', '产品');
+        });
+
+        $('#tookeen').click(function () {
+            navigate('GamePush', '游戏推送');
+        });
+
+        $('#recharge').click(function () {
+            navigate('Member', '会员信息');
         });
 
         function navigate(name, text) {

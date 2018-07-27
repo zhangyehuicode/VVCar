@@ -88,7 +88,7 @@ namespace VVCar.Controllers.Api
         /// 获取门店分类列表, 用于门店分类选择下拉框
         /// </summary>
         /// <returns></returns>
-        [HttpGet, Route("LiteData")]
+        [HttpGet, Route("LiteData"), AllowAnonymous]
         public JsonActionResult<IList<IDCodeNameDto>> GetLiteData()
         {
             return SafeExecute(() =>

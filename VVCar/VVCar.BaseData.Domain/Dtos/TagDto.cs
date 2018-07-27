@@ -13,6 +13,7 @@ namespace VVCar.BaseData.Domain.Dtos
         /// </summary>
         [Display(Name = "客户标签ID")]
         public Guid ID { get; set; }
+
         /// <summary>
         /// 客户标签编码
         /// </summary>

@@ -24,8 +24,25 @@
             <input type="number" class="quickoatablecell inputbottom" placeholder="手机号码" v-model:value="AgentDepartment.MobilePhoneNo" />
         </div>
         <div class="quickoatable">
-            <div class="quickoatablecell itemtitle" style="vertical-align:middle;">公司地址</div>
+            <div class="quickoatablecell itemtitle" style="vertical-align:middle;">
+                公司地址
+                <img class="locationimg" src="~/Areas/resource/img/mobile/location.png" />
+            </div>
             <textarea class="quickoatablecell inputbottom" placeholder="公司地址" v-model:value="AgentDepartment.CompanyAddress"></textarea>
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle" style="vertical-align:middle;">类别</div>
+            <div class="quickoatablecell">
+                <select class="kcd_input" style="width:120px;margin:0;" id="agentdepartmentcategoryselect">
+                    <option v-for="AgentDepartmentCategory in AgentDepartmentCategoryList" v-bind:value="AgentDepartmentCategory.ID">{{AgentDepartmentCategory.Name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle" style="vertical-align:middle;">客户标签</div>
+            <div class="quickoatablecell">
+                <div class="tagselectbtn" v-on:click="showtag">选择标签</div>
+            </div>
         </div>
     </div>
     <div class="uploadcon">
@@ -39,13 +56,26 @@
         </div>
     </div>
     <div class="confirmbtn" v-on:click="confirm">提交</div>
+    <div class="tagmain">
+        <div class="tagcon">
+            <img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closetag" />
+            <div class="tagtitle">选择标签</div>
+            <div class="tagitemcon">
+                <div class="tag" v-for="Tag in TagList" v-on:click="tagclick(Tag,$event)">{{Tag.Name}}</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section scripts{
     <style type="text/css">
         .main {
             font-size: 15px;
-            /*background: #cccbcb;*/
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            -webkit-overflow-scrolling: touch;
         }
 
         .contentcon {
@@ -165,7 +195,7 @@
 
         .uploadcon {
             position: relative;
-            height: 690px;
+            height: 250px;
             margin: 0 8px;
             pointer-events: none;
         }
@@ -182,6 +212,68 @@
             height: 191px;
             width: 100%;
             margin-top: -85px;
+        }
+
+        .tagmain {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+        }
+
+        .tagcon {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            right: 20px;
+            bottom: 80px;
+            background: rgba(255,255,255,1);
+        }
+
+        .tagselectbtn {
+            padding: 5px;
+            background: #51b3f0;
+            color: #fff;
+            text-align: center;
+            width: 75px;
+        }
+
+        .tag {
+            padding: 0px 5px;
+            border: 1px #CCC solid;
+            color: #ccc;
+            float: left;
+            background: #fff;
+            margin: 10px 5px;
+        }
+
+        .tagselected {
+            border: 1px #51b3f0 solid;
+            color: #51b3f0;
+        }
+
+        .closeimg {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            width: 20px;
+        }
+
+        .tagtitle {
+            color: #696969;
+            padding: 30px 0 5px 13px;
+        }
+
+        .tagitemcon {
+            margin: 10px 13px;
+        }
+
+        .locationimg {
+            width: 20px;
+            margin: 3px 0 0 5px;
         }
     </style>
     @Styles.Render("~/content/jquery-fileupd")
@@ -284,9 +376,9 @@
                 });
             }
 
-            $('.fileinput').on('change input', function (e) {
-                handleinputchange(this);
-            });
+            //$('.fileinput').on('change input', function (e) {
+            //    handleinputchange(this);
+            //});
 
             // 全局对象，不同function使用传递数据
             const imgFile = {};
@@ -505,7 +597,9 @@
                 el: '#potentialclients',
                 data: {
                     UserInfo: {},
+                    AgentDepartmentCategoryList:[],
                     AgentDepartment: {
+                        AgentDepartmentCategoryID:'',
                         UserID: '',
                         Name: '',
                         LegalPerson: '',
@@ -519,8 +613,10 @@
                         CompanyAddress: '',
                         Bank: '',
                         BankCard: '',
-                        Type:1,
+                        Type: 1,
+                        TagList:[],
                     },
+                    TagList:[] ,//[{ Name: '好人' }, { Name: '专业' }, { Name: '认真' }, { Name: '牛人' }],
                 },
                 methods: {
                     back: function (event) {
@@ -533,6 +629,33 @@
                         $.confirm('确认提交？', function () {
                             confirm();
                         });
+                    },
+                    showtag: function (event) {
+                        $('.tagmain').show();
+                    },
+                    tagclick: function (data,event) {
+                        if (event == null)
+                            return;
+                        var target = event.target;
+                        if ($(target).hasClass('tagselected')) {
+                            $(target).removeClass('tagselected');
+                            var index = -1;
+                            for (var i = 0; i < _viewModel.AgentDepartment.TagList.length; i++) {
+                                if (_viewModel.AgentDepartment.TagList[i].ID == data.ID) {
+                                    index = i;
+                                    break;
+                                }
+                            }
+                            if (index!=-1)
+                                _viewModel.AgentDepartment.TagList.splice(index, 1);
+                        }
+                        else {
+                            $(target).addClass('tagselected');
+                            _viewModel.AgentDepartment.TagList.push(data);
+                        }
+                    },
+                    closetag: function (event) {
+                        $('.tagmain').hide();
                     },
                 }
             });
@@ -568,7 +691,7 @@
                     }
                 });
             }
-            getUserByOpenId();
+            //getUserByOpenId();
 
         function checkdata(data) {
             if (data == null || data.UserID == null || data.UserID == '') {
@@ -630,12 +753,13 @@
             //data.LegalPersonIDCardFrontImgUrl = $('#uploadLegalPersonIDCardFrontImage').find('.uploadimg').attr('src');
             //data.LegalPersonIDCardBehindImgUrl = $('#uploadLegalPersonIDCardBehindImgUrlImage').find('.uploadimg').attr('src');
             data.DepartmentImgUrl = $('#uploadDepartmentImage').find('.uploadimg').attr('src');
+            data.AgentDepartmentCategoryID = $('#agentdepartmentcategoryselect').val();
             if (!checkdata(data))
                 return;
             //$.alert(JSON.stringify(data));
             //return;
             $.ajax({
-                url: '/api/AgentDepartment',
+                url: '/api/AgentDepartment/AddWidthTag',
                 type: 'POST',
                 data: data,
                 headers: {'CompanyCode': mch },
@@ -658,5 +782,42 @@
                 }
             });
         }
+
+        function getTag() {
+            $.ajax({
+                url: '/api/Tag',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                success: function (res) {
+                    if (res.IsSuccessful) {
+                        _viewModel.TagList = res.Data;
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                }
+            });
+        }
+        getTag();
+
+        function getAgentDepartmentCategory() {
+            $.ajax({
+                url: '/api/AgentDepartmentCategory/LiteData',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                success: function (res) {
+                    if (res.IsSuccessful) {
+                        _viewModel.AgentDepartmentCategoryList = res.Data;
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                }
+            });
+        }
+        getAgentDepartmentCategory();
+
     </script>
 }

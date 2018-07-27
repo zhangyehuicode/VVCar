@@ -15,10 +15,24 @@ namespace VVCar.BaseData.Domain.Dtos
     public class AgentDepartmentDto
     {
         /// <summary>
+        /// 代理商门店Dto ctor.
+        /// </summary>
+        public AgentDepartmentDto()
+        {
+            TagList = new List<TagDto>();
+        }
+
+        /// <summary>
         /// 代理商门店ID
         /// </summary>
         [Display(Name = "代理商门店ID")]
         public Guid ID { get; set; }
+
+        /// <summary>
+        /// 类别ID
+        /// </summary>
+        [Display(Name = "类别ID")]
+        public Guid? AgentDepartmentCategoryID { get; set; }
 
         /// <summary>
         /// 用户ID
@@ -109,6 +123,12 @@ namespace VVCar.BaseData.Domain.Dtos
         /// </summary>
         [Display(Name = "法人身份证反面 图片地址")]
         public string LegalPersonIDCardBehindImgUrl { get; set; }
+
+        /// <summary>
+        /// 门店照片 图片地址
+        /// </summary>
+        [Display(Name = "门店照片 图片地址")]
+        public string DepartmentImgUrl { get; set; }
 
         /// <summary>
         /// 公司地址
@@ -205,5 +225,11 @@ namespace VVCar.BaseData.Domain.Dtos
         /// </summary>
         [Display(Name = "最后修改时间")]
         public DateTime? LastUpdatedDate { get; set; }
+
+        /// <summary>
+        /// 客户标签
+        /// </summary>
+        [Display(Name = "客户标签")]
+        public List<TagDto> TagList { get; set; }
     }
 }

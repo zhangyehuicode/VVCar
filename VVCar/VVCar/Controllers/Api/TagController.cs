@@ -73,7 +73,7 @@ namespace VVCar.Controllers.Api
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public PagedActionResult<TagDto> Search([FromUri]TagFilter filter)
         {
             return SafeGetPagedData<TagDto>((result) =>

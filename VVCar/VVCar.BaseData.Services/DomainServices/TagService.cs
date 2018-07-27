@@ -90,11 +90,7 @@ namespace VVCar.BaseData.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<TagDto> Search(TagFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetQueryable(false);
-            if (!(AppContext.CurrentSession.MerchantID == Guid.Parse("00000000-0000-0000-0000-000000000001")))
-            {
-                queryable = queryable.Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
-            }
+            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.Code))
                 queryable = queryable.Where(t => t.Code.Contains(filter.Code));
             if (!string.IsNullOrEmpty(filter.Name))

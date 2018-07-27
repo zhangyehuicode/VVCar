@@ -5,7 +5,9 @@
 }
 
 <div id="generalmanagerhome">
-    <div class="toubu">代理商</div>
+    <div class="toubu" v-if="IsGeneralManager">代理商-总经理</div>
+    <div class="toubu" v-if="IsSalesManger">代理商-销售经理</div>
+    <div class="toubu" v-if="IsLogistics">代理商-后勤</div>
     <div class="touxiang">
         <div style="width:100%; float:left; border-bottom:1px solid #eee;">
             <img style="border-radius:80px;" src="@ViewBag.HeadImgUrl" class="touxiang_img">
@@ -119,7 +121,7 @@
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报表</span>
         </a>
     </div>
-    <img src="~/Areas/resource/img/mobile/master/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">
+    @*<img src="~/Areas/resource/img/mobile/master/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">*@
 </div>
 
 @section scripts{
@@ -179,6 +181,8 @@
                 data: {
                     UserInfo: {},
                     IsGeneralManager: false,
+                    IsSalesManger: false,
+                    IsLogistics: false,
                 },
                 methods: {
                     quickopenaccount: function (event) {
@@ -235,6 +239,7 @@
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
                                 _viewModel.UserInfo = res.Data;
                                 _viewModel.IsGeneralManager = res.Data.IsGeneralManager;
+                                _viewModel.IsSalesManger = !res.Data.IsGeneralManager;
                                 if (res.Data.IsGeneralManager)
                                     sessionStorage.setItem('isgeneralmanager', 'true');
                                 else

@@ -44,5 +44,12 @@ namespace VVCar.BaseData.Domain.Services
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<AgentDepartmentDto> Search(AgentDepartmentFilter filter, out int totalCount);
+
+        /// <summary>
+        /// 新增带标签
+        /// </summary>
+        /// <param name="agentDepartmentDto"></param>
+        /// <returns></returns>
+        AgentDepartment AddWidthTag(AgentDepartmentDto agentDepartmentDto);
     }
 }
