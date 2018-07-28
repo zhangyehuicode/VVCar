@@ -356,29 +356,29 @@
         getTurnoverReporting();
 
         $('#addmember').click(function () {
-            navigate('Member', '会员信息');
+            navigate('Member', 'Member', '会员信息');
         });
 
         $('#stockoutin').click(function () {
-            navigate('Product', '产品');
+            navigate('Product', 'Product', '产品');
         });
 
         $('#tookeen').click(function () {
-            navigate('GamePush', '游戏推送');
+            navigate('GamePush', 'GamePushList', '游戏推送');
         });
 
         $('#recharge').click(function () {
-            navigate('Member', '会员信息');
+            navigate('Member', 'Member', '会员信息');
         });
 
-        function navigate(name, text) {
+        function navigate(cname, mname, text) {
             var mainPanel = parent.Ext.getCmp("tabPanelMain");
-            parent.Ext.require('WX.controller.' + name, function () {
+            parent.Ext.require('WX.controller.' + cname, function () {
                 parent.Ext.onReady(function () {
-                    parent.Ext.getApplication().loadModule(name);
-                    var panel = mainPanel.down(name);
+                    parent.Ext.getApplication().loadModule(cname);
+                    var panel = mainPanel.down(mname);
                     if (!panel) {
-                        var panel = parent.Ext.widget(name, { title: text, minWidth: 1100 });
+                        var panel = parent.Ext.widget(mname, { title: text, minWidth: 1100 });
                         parent.Ext.checkActionPermission(panel);
                         mainPanel.add(panel);
                         mainPanel.setActiveTab(panel);
