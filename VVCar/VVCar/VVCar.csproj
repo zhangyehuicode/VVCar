@@ -302,6 +302,7 @@
     <Compile Include="Controllers\Shop\CarBitCoinProductController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinProductCategoryController.cs" />
     <Compile Include="Controllers\Shop\ComboItemController.cs" />
+    <Compile Include="Controllers\Shop\LogisticsController.cs" />
     <Compile Include="Controllers\Shop\OrderController.cs" />
     <Compile Include="Controllers\Shop\OrderItemController.cs" />
     <Compile Include="Controllers\Shop\OrderPaymentDetailsController.cs" />
