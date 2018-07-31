@@ -60,7 +60,6 @@
     <Compile Include="Mapping\CarBitCoinProductMap.cs" />
     <Compile Include="Mapping\CarBitCoinRecordMap.cs" />
     <Compile Include="Mapping\ComboItemMap.cs" />
-    <Compile Include="Mapping\LogisticsMap.cs" />
     <Compile Include="Mapping\OrderItemMap.cs" />
     <Compile Include="Mapping\OrderMap.cs" />
     <Compile Include="Mapping\OrderPaymentDetailsMap.cs" />

@@ -30,7 +30,7 @@
 			}, '->']
 		}, {
 			xtype: 'grid',
-			name: 'agendDepartment',
+			name: 'gridAgendDepartment',
 			title: '客户资料列表',
 			flex: 1,
 			store: agentDepartmentStore,
@@ -97,6 +97,12 @@
 					iconCls: 'fa fa-search',
 					cls: 'submitBtn',
 					margin: '0 0 0 5',
+				}, {
+						action: 'changeCategory',
+						xtype: 'button',
+						text: '移动至其他分类',
+						margin: '0 0 0 5',
+						scope: this,
 				}]
 			}],
 			columns: [
@@ -135,6 +141,14 @@
 				{ header: '销售经理', dataIndex: 'UserName', width: 80 },
 				{
 					header: '营业执照', dataIndex: 'BusinessLicenseImgUrl', width: 100,
+					renderer: function (value) {
+						if (value != "" && value != null) {
+							return '<a href="' + value + '"download="' + value + '"><img src="' + value + '" style="width: 80px; height: 50px;" /></a>';
+						}
+					},
+				},
+				{
+					header: '门店照片', dataIndex: 'DepartmentImgUrl', width: 100,
 					renderer: function (value) {
 						if (value != "" && value != null) {
 							return '<a href="' + value + '"download="' + value + '"><img src="' + value + '" style="width: 80px; height: 50px;" /></a>';

@@ -31,6 +31,7 @@
 			'AgentDepartmentAuditList': {
 				editActionClick: me.editAgentDepartment,
 				itemdblclick: me.editAgentDepartmentAudit,
+				afterrender: me.afterrender, 
 			},
 			'AgentDepartmentAuditEdit button[action=selectManageAuditUser]': {
 				click: me.selectManageAuditUser
@@ -319,6 +320,7 @@
 		var me = this;
 		var queryValues = btn.up('form').getValues();
 		if (queryValues != null) {
+			queryValues.Type = 0;
 			var store = me.getAgentDepartmentAuditList().getStore();
 			store.proxy.extraParams = queryValues;
 			store.load();
@@ -326,4 +328,14 @@
 			Ext.Msg.alert('提示', '请输入过滤条件');
 		}
 	},
+	afterrender: function () {
+		var me = this;
+		var store = me.getAgentDepartmentAuditList().getStore();
+		var params = {
+			Type: 0,
+			All: true,
+		}
+		Ext.apply(store.proxy.extraParams, params);
+		store.load();
+	}
 });

@@ -122,6 +122,13 @@ namespace VVCar.BaseData.Services.DomainServices
             if (agentDepartment.ApproveStatus != EAgentDepartmentApproveStatus.Pedding)
                 throw new DomainException("已通过审核或导入的不能修改");
             agentDepartment.Name = entity.Name;
+            if (entity.AgentDepartmentCategoryID != Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            {
+                agentDepartment.AgentDepartmentCategoryID = entity.AgentDepartmentCategoryID;
+            }
+            else {
+                agentDepartment.AgentDepartmentCategoryID = null;
+            }
             agentDepartment.LegalPerson = entity.LegalPerson;
             agentDepartment.IDNumber = entity.IDNumber;
             agentDepartment.Email = entity.Email;
@@ -130,6 +137,7 @@ namespace VVCar.BaseData.Services.DomainServices
             agentDepartment.BusinessLicenseImgUrl = entity.BusinessLicenseImgUrl;
             agentDepartment.LegalPersonIDCardFrontImgUrl = entity.LegalPersonIDCardFrontImgUrl;
             agentDepartment.LegalPersonIDCardBehindImgUrl = entity.LegalPersonIDCardBehindImgUrl;
+            agentDepartment.DepartmentImgUrl = entity.DepartmentImgUrl;
             agentDepartment.CompanyAddress = entity.CompanyAddress;
             agentDepartment.WeChatAppID = entity.WeChatAppID;
             agentDepartment.WeChatAppSecret = entity.WeChatAppSecret;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
@@ -76,9 +77,9 @@ namespace VVCar.Controllers.Shop
         /// <param name="filter">The filter.</param>
         /// <returns></returns>
         [HttpGet, AllowAnonymous]
-        public PagedActionResult<Order> Search([FromUri]OrderFilter filter)
+        public PagedActionResult<OrderDto> Search([FromUri]OrderFilter filter)
         {
-            return SafeGetPagedData<Order>((result) =>
+            return SafeGetPagedData<OrderDto>((result) =>
             {
                 var totalCount = 0;
                 var data = OrderService.Search(filter, out totalCount);
@@ -97,6 +98,62 @@ namespace VVCar.Controllers.Shop
             return SafeExecute(() =>
             {
                 return OrderService.GetTradeNo();
+            });
+        }
+
+        /// <summary>
+        /// 发货
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        [HttpPost, Route("Delivery")]
+        public JsonActionResult<bool> Delivery(Order order)
+        {
+            return SafeExecute(() =>
+            {
+                return OrderService.Delivery(order);
+            });
+        }
+
+        /// <summary>
+        /// 微信端发货
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        [HttpPost, Route("DeliveryByWeChat"), AllowAnonymous]
+        public JsonActionResult<bool> DeliveryByWeChat(Order order)
+        {
+            return SafeExecute(() =>
+            {
+                return OrderService.Delivery(order);
+            });
+        }
+
+        /// <summary>
+        /// 取消发货
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet, Route("AntiDelivery")]
+        public JsonActionResult<bool> AntiDelivery(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return OrderService.AntiDelivery(id);
+            });
+        }
+
+        /// <summary>
+        /// 取消发货
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet, Route("AntiDeliveryByWeChat"), AllowAnonymous]
+        public JsonActionResult<bool> AntiDeliveryByWeChat(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return OrderService.AntiDelivery(id);
             });
         }
     }

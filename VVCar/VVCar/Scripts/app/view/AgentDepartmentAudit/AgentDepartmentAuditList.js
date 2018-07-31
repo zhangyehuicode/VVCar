@@ -93,6 +93,17 @@
 			{ header: '商户名称', dataIndex: 'MerchantName', width: 90 },
 			{ header: '名称', dataIndex: 'Name', width: 150 },
 			{
+				header: '客户类型', dataIndex: 'Type', width: 100,
+				renderer: function (value) {
+					if (value == 0) {
+						return "<span><font>开发客户</font></span>";
+					}
+					if (value == 1) {
+						return "<span><font>意向客户</font></span>";
+					}
+				}
+			},
+			{
 				header: '审核状态', dataIndex: 'ApproveStatus', width: 100,
 				renderer: function (value) {
 					if (value == 0) {
@@ -131,6 +142,14 @@
 				},
 			},
 			{
+				header: '门店照片', dataIndex: 'DepartmentImgUrl', width: 100,
+				renderer: function (value) {
+					if (value != "" && value != null) {
+						return '<a href="' + value + '"download="' + value + '"><img src="' + value + '" style="width: 80px; height: 50px;" /></a>';
+					}
+				},
+			},
+			{
 				header: '法人身份证(正)', dataIndex: 'LegalPersonIDCardFrontImgUrl', width: 110,
 				renderer: function (value) {
 					if (value != "" && value != null) {
@@ -160,9 +179,9 @@
 		}];
 		me.callParent();
 	},
-	afterRender: function () {
-		var me = this;
-		me.callParent(arguments);
-		me.getStore().load();
-	}
+	//afterRender: function () {
+	//	var me = this;
+	//	me.callParent(arguments);
+	//	me.getStore().load();
+	//}
 });

@@ -2,7 +2,7 @@
 	extend: 'Ext.app.Controller',
 	requires: ['WX.store.BaseData.AgentDepartmentStore'],
 	models: ['BaseData.AgentDepartmentModel'],
-	views: ['AgentDepartment.AgentDepartmentList', 'AgentDepartment.AgentDepartmentCategoryList', 'AgentDepartment.ManageUserSelector', 'AgentDepartment.TagSelector', 'AgentDepartment.AgentDepartmentCategoryEdit', 'AgentDepartment.AgentDepartmentEdit', 'AgentDepartment.AgentDepartmentTagEdit'],
+	views: ['AgentDepartment.AgentDepartmentList', 'AgentDepartment.AgentDepartmentCategoryList', 'AgentDepartment.AgentDepartmentChangeCategory', 'AgentDepartment.ManageUserSelector', 'AgentDepartment.TagSelector', 'AgentDepartment.AgentDepartmentCategoryEdit', 'AgentDepartment.AgentDepartmentEdit', 'AgentDepartment.AgentDepartmentTagEdit'],
 	refs: [{
 		ref: 'agentDepartmentList',
 		selector: 'AgentDepartmentList grid'
@@ -49,6 +49,9 @@
 			'AgentDepartmentList button[action=search]': {
 				click: me.search
 			},
+			'AgentDepartmentList button[action=changeCategory]': {
+				click: me.changeAgentDepartmentCategory
+			},
 			'AgentDepartmentList grid': {
 				itemdblclick: me.editAgentDepartment,
 			},
@@ -66,11 +69,17 @@
 			'AgentDepartmentCategoryEdit button[action=save]': {
 				click: me.saveAgentDeaprtmentCategory
 			},
+			'AgentDepartmentChangeCategory button[action=saveAgentDepartmentCategory]': {
+				click: me.saveAgentDepartmentCategory
+			},
 			'AgentDepartmentEdit button[action=selectManageUser]': {
 				click: me.selectManageUser
 			},
 			'AgentDepartmentEdit button[action=uploadLicensePic]': {
 				click: me.uploadLicensePic
+			},
+			'AgentDepartmentEdit button[action=uploadDepartmentPic]': {
+				click: me.uploadDepartmentPic
 			},
 			'AgentDepartmentEdit button[action=uploadIDCardFrontPic]': {
 				click: me.uploadIDCardFrontPic
@@ -112,9 +121,13 @@
 		var me = this;
 		var tree = Ext.ComponentQuery.query('treepanel[name=treeAgentDepartmentCategory]');
 		var selectedItems = tree[0].getView().getSelectionModel().getSelection();
-		if (selectedItems.length > 0 && selectedItems[0].data.ID != '' && selectedItems[0].data.ID != null && selectedItems[0].data.ID != '00000000-0000-0000-0000-000000000001') {
+		//if (selectedItems.length > 0 && selectedItems[0].data.ID != '' && selectedItems[0].data.ID != null && selectedItems[0].data.ID != '00000000-0000-0000-0000-000000000001') {
+		if (selectedItems.length > 0 && selectedItems[0].data.ID != '' && selectedItems[0].data.ID != null) {
 			var win = Ext.widget('AgentDepartmentEdit');
-			win.down('textfield[name=AgentDepartmentCategoryID]').setValue(selectedItems[0].data.ID);
+			if (selectedItems[0].data.ID != '00000000-0000-0000-0000-000000000001') {
+				win.down('textfield[name=AgentDepartmentCategoryID]').setValue(selectedItems[0].data.ID);
+			}
+			win.down('combobox[name=Type]').setValue(0);
 			win.form.getForm().actionMethod = 'POST';
 			win.setTitle('添加客户');
 			win.show();
@@ -188,6 +201,28 @@
 						Ext.Msg.alert('提示', '上传成功');
 						win.down('textfield[name=BusinessLicenseImgUrl]').setValue(o.result.FileUrl);
 						win.down('box[name=ImgLicenseShow]').el.dom.src = o.result.FileUrl;
+					} else {
+						Ext.Msg.alert('提示', o.result.errorMessage);
+					}
+				},
+				failure: function (fp, o) {
+					Ext.Msg.alert('提示', o.result.errorMessage);
+				}
+			});
+		}
+	},
+	uploadDepartmentPic: function (btn) {
+		var form = btn.up('form').getForm();
+		var win = btn.up('window');
+		if (form.isValid()) {
+			form.submit({
+				url: '/api/UploadFile/UploadDepartment',
+				waitMsg: '正在上传...',
+				success: function (fp, o) {
+					if (o.result.success) {
+						Ext.Msg.alert('提示', '上传成功');
+						win.down('textfield[name=DepartmentImgUrl]').setValue(o.result.FileUrl);
+						win.down('box[name=ImgDepartmentShow]').el.dom.src = o.result.FileUrl;
 					} else {
 						Ext.Msg.alert('提示', o.result.errorMessage);
 					}
@@ -346,6 +381,90 @@
 		var win = Ext.widget('AgentDepartmentCategoryList');
 		win.setTitle('分类管理');
 		win.show();
+	},
+	changeAgentDepartmentCategory: function (btn) {
+		var gridAgentDepartment = btn.up('grid');
+		var selectedItems = gridAgentDepartment.getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '请选择数据');
+			return;
+		}
+		if (selectedItems.length > 1) {
+			Ext.Msg.alert('提示', '一次只能选择一条数据');
+			return;
+		}
+		var selectedData = selectedItems[0].data;
+		var win = Ext.widget("AgentDepartmentChangeCategory");
+		win.form.getForm().actionMethod = 'PUT';
+		win.form.loadRecord(selectedItems[0]);
+		var cmbCurrentRegion = win.down('combo[name=CurrCategory]');
+		var cmbDestRegion = win.down('combo[name=DestCategory]');
+		cmbCurrentRegion.store.clearFilter();
+		cmbCurrentRegion.store.load({
+			params: {
+				All: true
+			}
+		});
+		if (selectedData.AgentDepartmentCategoryID == null) {
+			cmbCurrentRegion.setValue('全部分类');
+		} else {
+			cmbCurrentRegion.setValue(selectedData.AgentDepartmentCategoryID);
+		}
+		cmbDestRegion.setValue(selectedData.AgentDepartmentCategoryID);
+		win.show();
+	},
+	saveAgentDepartmentCategory: function (btn) {
+		var me = this;
+		var win = btn.up('window');
+		var form = win.form.getForm();
+		var formValues = form.getValues();
+		var record = form.getRecord().data;
+		record.AgentDepartmentCategoryID = formValues.DestCategory;
+		if (form.isValid()) {
+			var store = me.getAgentDepartmentList().getStore();
+			var rr = store.getById(record.ID);
+			if (record.AgentDepartmentCategoryID != '00000000-0000-0000-0000-000000000000') {
+				rr.AgentDepartmentCategoryID = record.AgentDepartmentCategoryID;
+			} else {
+				rr.AgentDepartmentCategoryID = '';
+			}
+			Ext.Msg.show({
+				msg: '正在请求数据，请稍候',
+				progressText: '正在请求数据',
+				width: 300,
+				wait: true,
+				waitConfig: {
+					interval: 200
+				}
+			});
+			var url = Ext.GlobalConfig.ApiDomainUrl + 'api/AgentDepartment';
+			var tms = rr.data;
+			Ext.Ajax.request({
+				url: url,
+				method: 'PUT',
+				clientValidation: true,
+				jsonData: Ext.JSON.encode(tms),
+				callback: function (options, success, response) {
+					if (success) {
+						Ext.Msg.hide();
+						store.load();
+						win.close();
+						Ext.Msg.alert('操作成功', '更新成功');
+					} else {
+						Ext.Msg.hide();
+						Ext.Msg.alert('失败,请重试', response.responseText);
+					}
+				},
+				failure: function (response, options) {
+					Ext.Msg.hide();
+					Ext.Msg.alert('警告', '出现异常错误');
+				},
+				success: function (response, options) {
+					Ext.Msg.hide();
+				}
+			});
+			this.hasUpdateDeptRegion = true;
+		}
 	},
 	addAgentDepartmentCategory: function (btn) {
 		var win = Ext.widget('AgentDepartmentCategoryEdit');

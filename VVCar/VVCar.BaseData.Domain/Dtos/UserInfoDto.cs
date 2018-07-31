@@ -153,6 +153,11 @@ namespace VVCar.BaseData.Domain.Dtos
         public bool IsSalesManger { get; set; }
 
         /// <summary>
+        /// 是否后勤
+        /// </summary>
+        public bool IsLogistics { get; set; }
+
+        /// <summary>
         /// 总开户数量
         /// </summary>
         public int TotalOpenAccountCount { get; set; }

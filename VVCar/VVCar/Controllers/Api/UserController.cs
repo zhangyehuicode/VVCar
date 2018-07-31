@@ -167,11 +167,13 @@ namespace VVCar.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("GetSaleUser")]
-        public PagedActionResult<User> GetSaleUser()
+        public PagedActionResult<User> GetSaleUser([FromUri]UserFilter filter)
         {
             return SafeGetPagedData<User>((result) =>
             {
-                result.Data = UserService.GetSaleUser();
+                var totalCount = 0;
+                result.Data = UserService.GetSaleUser(filter, out totalCount);
+                result.TotalCount = totalCount;
             });
         }
 

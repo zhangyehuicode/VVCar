@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using YEF.Core.Data;
@@ -21,7 +22,7 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="filter">The filter.</param>
         /// <param name="totalCount">The total count.</param>
         /// <returns></returns>
-        IEnumerable<Order> Search(OrderFilter filter, out int totalCount);
+        IEnumerable<OrderDto> Search(OrderFilter filter, out int totalCount);
 
         /// <summary>
         /// 生成订单号
@@ -43,5 +44,19 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="isNotify"></param>
         /// <returns></returns>
         bool RecountMoneySave(string code, bool isNotify = false);
+
+        /// <summary>
+        /// 发货
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        bool Delivery(Order order);
+
+        /// <summary>
+        /// 取消发货
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool AntiDelivery(Guid id);
     }
 }

@@ -134,6 +134,16 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 上传门店图片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadDepartment")]
+        public UploadFileResult UploadDepartment()
+        {
+            return UploadAction("Pictures/Department");
+        }
+
+        /// <summary>
         /// 上传身份证照片
         /// </summary>
         /// <returns></returns>
@@ -141,16 +151,6 @@ namespace VVCar.Controllers.Api
         public UploadFileResult UploadIDCard()
         {
             return UploadAction("Pictures/IDCard");
-        }
-
-        /// <summary>
-        /// 上传门店照片
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost, Route("UploadDepartment")]
-        public UploadFileResult UploadDepartment()
-        {
-            return UploadAction("Pictures/Department");
         }
 
         /// <summary>

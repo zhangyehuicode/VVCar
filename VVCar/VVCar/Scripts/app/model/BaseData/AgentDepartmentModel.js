@@ -16,6 +16,7 @@
 		{ name: 'BusinessLicenseImgUrl' },
 		{ name: 'LegalPersonIDCardFrontImgUrl' },
 		{ name: 'LegalPersonIDCardBehindImgUrl' },
+		{ name: 'DepartmentImgUrl' },
 		{ name: 'CompanyAddress' },
 		{ name: 'WeChatAppID' },
 		{ name: 'WeChatAppSecret' },

@@ -62,7 +62,7 @@
             { header: '电话号码', dataIndex: 'MobilePhoneNo', flex: 1 },
 			{
 				header: '性别', dataIndex: 'Sex', flex: 1,
-				renderer: function () {
+				renderer: function (value) {
 					if (value == 1)
 						return "男";
 					else if (value == 2)

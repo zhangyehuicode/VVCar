@@ -302,7 +302,6 @@
     <Compile Include="Controllers\Shop\CarBitCoinProductController.cs" />
     <Compile Include="Controllers\Shop\CarBitCoinProductCategoryController.cs" />
     <Compile Include="Controllers\Shop\ComboItemController.cs" />
-    <Compile Include="Controllers\Shop\LogisticsController.cs" />
     <Compile Include="Controllers\Shop\OrderController.cs" />
     <Compile Include="Controllers\Shop\OrderItemController.cs" />
     <Compile Include="Controllers\Shop\OrderPaymentDetailsController.cs" />
@@ -317,6 +316,7 @@
     <Compile Include="Controllers\Shop\ShoppingCartController.cs" />
     <Compile Include="Controllers\Shop\ShoppingCartItemController.cs" />
     <Compile Include="Controllers\Shop\StockRecordController.cs" />
+    <Compile Include="Controllers\VIP\ArticleController.cs" />
     <Compile Include="Controllers\VIP\CouponController.cs" />
     <Compile Include="Controllers\VIP\CouponPushController.cs" />
     <Compile Include="Controllers\VIP\CouponPushItemController.cs" />
@@ -488,7 +488,6 @@
     <Content Include="Areas\resource\img\mobile\kf.png" />
     <Content Include="Areas\resource\img\mobile\kuang.png" />
     <Content Include="Areas\resource\img\mobile\kuangselected.png" />
-    <Content Include="Areas\resource\img\mobile\location.png" />
     <Content Include="Areas\resource\img\mobile\logo.png" />
     <Content Include="Areas\resource\img\mobile\master\5000.png" />
     <Content Include="Areas\resource\img\mobile\master\6.png" />
@@ -616,7 +615,6 @@
     <Content Include="Content\icons\list.png" />
     <Content Include="Content\icons\login3.png" />
     <Content Include="Content\icons\logout.png" />
-    <Content Include="Content\icons\recharge.png" />
     <Content Include="Content\icons\refresh.png" />
     <Content Include="Content\icons\reportLoss.png" />
     <Content Include="Content\icons\reset.png" />
@@ -625,7 +623,6 @@
     <Content Include="Content\icons\search_r.png" />
     <Content Include="Content\icons\stock.png" />
     <Content Include="Content\icons\stop.png" />
-    <Content Include="Content\icons\tookeen.png" />
     <Content Include="Content\image\cheyinzi.jpg" />
     <Content Include="Content\image\cheyinzilogo.png" />
     <Content Include="Content\image\cheyinzi_qrcode.jpg" />
@@ -647,6 +644,8 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\AgentDepartment.js" />
     <Content Include="Scripts\app\controller\AgentDepartmentAudit.js" />
+    <Content Include="Scripts\app\controller\Article.js" />
+    <Content Include="Scripts\app\controller\Logistics.js" />
     <Content Include="Scripts\app\controller\Tag.js" />
     <Content Include="Scripts\app\controller\CarBitCoinMember.js" />
     <Content Include="Scripts\app\controller\CarBitCoinOrder.js" />
@@ -704,6 +703,8 @@
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentCategoryTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentTagModel.js" />
+    <Content Include="Scripts\app\model\BaseData\ArticleModel.js" />
+    <Content Include="Scripts\app\model\BaseData\LogisticsModel.js" />
     <Content Include="Scripts\app\model\BaseData\TagModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinOrderItemModel.js" />
@@ -779,6 +780,10 @@
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentCategoryTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentStore.js" />
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentTagStore.js" />
+    <Content Include="Scripts\app\store\BaseData\ArticleItemStore.js" />
+    <Content Include="Scripts\app\store\BaseData\ArticleStore.js" />
+    <Content Include="Scripts\app\store\BaseData\LogisticsStore.js" />
+    <Content Include="Scripts\app\store\BaseData\SalesmanStore.js" />
     <Content Include="Scripts\app\store\BaseData\TagStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinMemberStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinOrderItemStore.js" />
@@ -882,8 +887,15 @@
     <Content Include="Scripts\app\view\AgentDepartmentAudit\AgentDepartmentAuditEdit.js" />
     <Content Include="Scripts\app\view\AgentDepartmentAudit\AgentDepartmentAuditList.js" />
     <Content Include="Scripts\app\view\AgentDepartmentAudit\ManageUserAuditSelector.js" />
+    <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentChangeCategory.js" />
     <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentTagEdit.js" />
     <Content Include="Scripts\app\view\AgentDepartment\TagSelector.js" />
+    <Content Include="Scripts\app\view\Article\ArticleEdit.js" />
+    <Content Include="Scripts\app\view\Article\ArticleList.js" />
+    <Content Include="Scripts\app\view\Logistics\LogisticsDetails.js" />
+    <Content Include="Scripts\app\view\Logistics\LogisticsEdit.js" />
+    <Content Include="Scripts\app\view\Logistics\Logistics.js" />
+    <Content Include="Scripts\app\view\Logistics\SalesmanSelector.js" />
     <Content Include="Scripts\app\view\Tag\TagEdit.js" />
     <Content Include="Scripts\app\view\Tag\TagList.js" />
     <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentCategoryEdit.js" />
@@ -1170,6 +1182,7 @@
     <Content Include="Areas\Mobile\Views\Agent\ReimbursementCheck.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\MyInfo.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\PotentialClients.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\LogisticsManagement.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

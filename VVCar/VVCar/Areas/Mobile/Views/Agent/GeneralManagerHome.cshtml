@@ -5,9 +5,9 @@
 }
 
 <div id="generalmanagerhome">
-    <div class="toubu" v-if="IsGeneralManager">代理商-总经理</div>
-    <div class="toubu" v-if="IsSalesManger">代理商-销售经理</div>
-    <div class="toubu" v-if="IsLogistics">代理商-后勤</div>
+    <div class="toubu" v-if="ShowGeneralManagerTitle">代理商-总经理</div>
+    <div class="toubu" v-if="ShowSalesMangerTitle">代理商-销售经理</div>
+    <div class="toubu" v-if="ShowLogisticsTitle">代理商-后勤</div>
     <div class="touxiang">
         <div style="width:100%; float:left; border-bottom:1px solid #eee;">
             <img style="border-radius:80px;" src="@ViewBag.HeadImgUrl" class="touxiang_img">
@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <div class="touxiang">
+    <div class="touxiang" v-if="IsGeneralManager||IsSalesManger">
         <a class="bq_box" v-on:click="quickopenaccount">
             <div><img src="~/Areas/resource/img/mobile/master/yhqhz.png" style="width:25px;"></div>
             <span>快捷开户</span>
@@ -60,8 +60,8 @@
             </a>*@
     </div>
     @*<div class="bt_box">代理商管理端</div>*@
-    <div class="touxiang" style="margin-top:0px;">
-        <a class="bq_box" v-on:click="staffmanager">
+    <div class="touxiang" style="margin-top:0px;" v-if="IsGeneralManager||IsSalesManger">
+        <a class="bq_box" v-on:click="staffmanager" v-if="IsGeneralManager">
             <div><img src="~/Areas/resource/img/mobile/master/dygl.png" style="width:25px; margin-top:5px;"></div>
             <span>人员管理</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">{{UserInfo.StaffCount}}人</span>
@@ -86,7 +86,7 @@
             <span>我的客户</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">客户</span>
         </a>
-        <a class="bq_box" style="border-right:none;">
+        <a class="bq_box">
             <div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
             <span>我的业绩</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共{{UserInfo.TotalOpenAccountCount}}户</span>
@@ -115,10 +115,15 @@
             <span>报销审核</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">审核</span>
         </a>
-        <a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="salessatement">
+        <a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="salessatement" v-if="IsGeneralManager||IsSalesManger">
             <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:21px;"></div>
             <span>销售报表</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报表</span>
+        </a>
+        <a class="bq_box" style="border-bottom:none;" v-on:click="logisticsmanagement">
+            <div><img src="~/Areas/resource/img/mobile/master/hdgl.png" style="width:23px;"></div>
+            <span>物流管理</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">物流</span>
         </a>
     </div>
     @*<img src="~/Areas/resource/img/mobile/master/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">*@
@@ -183,6 +188,9 @@
                     IsGeneralManager: false,
                     IsSalesManger: false,
                     IsLogistics: false,
+                    ShowGeneralManagerTitle: false,
+                    ShowSalesMangerTitle: false,
+                    ShowLogisticsTitle: false,
                 },
                 methods: {
                     quickopenaccount: function (event) {
@@ -221,6 +229,9 @@
                     potentialclients: function (event) {
                         window.location.href = "/Mobile/Agent/PotentialClients?mch=" + mch;
                     },
+                    logisticsmanagement: function (event) {
+                        window.location.href = "/Mobile/Agent/LogisticsManagement?mch=" + mch;
+                    },
                 }
             });
 
@@ -239,11 +250,20 @@
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
                                 _viewModel.UserInfo = res.Data;
                                 _viewModel.IsGeneralManager = res.Data.IsGeneralManager;
-                                _viewModel.IsSalesManger = !res.Data.IsGeneralManager;
-                                if (res.Data.IsGeneralManager)
+                                _viewModel.IsSalesManger = res.Data.IsSalesManger;
+                                _viewModel.IsLogistics = res.Data.IsLogistics;
+                                if (res.Data.IsGeneralManager) {
                                     sessionStorage.setItem('isgeneralmanager', 'true');
-                                else
+                                    _viewModel.ShowGeneralManagerTitle = true;
+                                }
+                                else if (res.Data.IsSalesManger) {
                                     sessionStorage.setItem('isgeneralmanager', 'false');
+                                    _viewModel.ShowSalesMangerTitle = true;
+                                }
+                                else {
+                                    sessionStorage.setItem('isgeneralmanager', 'false');
+                                    _viewModel.ShowLogisticsTitle = true;
+                                }
                             }
                             else {
                                 window.location.href = "/Mobile/Agent?mch=" + mch;

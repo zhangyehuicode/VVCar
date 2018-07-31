@@ -124,7 +124,7 @@ namespace VVCar.BaseData.Domain.Services
         /// 获取销售人员名单
         /// </summary>
         /// <returns></returns>
-        List<User> GetSaleUser();
+        List<User> GetSaleUser(UserFilter filter, out int totalCount);
 
         /// <summary>
         /// 绑定手机号

@@ -46,6 +46,7 @@
 							fieldLabel: '客户类型',
 							name: 'Type',
 							editable: false,
+							allowBlank: false,
 							store: [
 								[0, '开发客户'],
 								[1, '意向客户'],
@@ -209,13 +210,14 @@
 						items: [{
 							xtype: 'filefield',
 							fieldLabel: '营业执照',
-							labelWidth: 60,
+							labelWidth: 30,
+							width: 200,
 							allowBlank: true,
 							buttonText: '选择图片',
 						}, {
 							xtype: 'button',
 							text: '上传',
-							margin: '5 60 0 5',
+							margin: '10 10 0 0',
 							action: 'uploadLicensePic',
 						}]
 					}, {
@@ -224,14 +226,32 @@
 						layout: 'hbox',
 						items: [{
 							xtype: 'filefield',
-							fieldLabel: '身份证(正)',
-							labelWidth: 70,
+							fieldLabel: '门店照片',
+							labelWidth: 30,
+							width: 200,
 							allowBlank: true,
 							buttonText: '选择图片',
 						}, {
 							xtype: 'button',
 							text: '上传',
-							margin: '5 60 0 5',
+							margin: '10 10 0 0',
+							action: 'uploadDepartmentPic',
+						}]
+					}, {
+						xtype: 'form',
+						border: false,
+						layout: 'hbox',
+						items: [{
+							xtype: 'filefield',
+							fieldLabel: '身份证正面',
+							labelWidth: 40,
+							width: 200,
+							allowBlank: true,
+							buttonText: '选择图片',
+						}, {
+							xtype: 'button',
+							text: '上传',
+							margin: '10 10 0 0',
 							action: 'uploadIDCardFrontPic',
 						}]
 					}, {
@@ -240,14 +260,15 @@
 						layout: 'hbox',
 						items: [{
 							xtype: 'filefield',
-							fieldLabel: '身份证(反)',
-							labelWidth: 70,
+							fieldLabel: '身份证反面',
+							labelWidth: 40,
+							width: 200,
 							allowBlank: true,
 							buttonText: '选择图片',
 						}, {
 							xtype: 'button',
 							text: '上传',
-							margin: '5 60 0 5',
+							margin: '10 10 0 0',
 							action: 'uploadIDCardBehindPic',
 						}]
 					}]
@@ -255,21 +276,35 @@
 					xtype: 'form',
 					layout: 'hbox',
 					items: [{
-						xtype: 'box',
-						name: 'ImgLicenseShow',
-						width: 200,
-						height: 290,
-						margin: '5 5 5 100',
-						autoEl: {
-							tag: 'img',
-							src: '',
-						},
+						xtype: 'form',
+						layout: 'hbox',
+						items: [{
+							xtype: 'box',
+							name: 'ImgLicenseShow',
+							width: 200,
+							height: 290,
+							margin: '5 5 5 50',
+							autoEl: {
+								tag: 'img',
+								src: '',
+							},
+						}, {
+							xtype: 'box',
+							name: 'ImgDepartmentShow',
+							width: 200,
+							height: 290,
+							margin: '5 5 5 50',
+							autoEl: {
+								tag: 'img',
+								src: '',
+							},
+						}]
 					}, {
 						xtype: 'box',
 						name: 'ImgIDCardFrontShow',
 						width: 200,
 						height: 290,
-						margin: '5 5 5 100',
+						margin: '5 5 5 80',
 						autoEl: {
 							tag: 'img',
 							src: '',
@@ -279,7 +314,7 @@
 						name: 'ImgIDCardBehindShow',
 						width: 200,
 						height: 290,
-						margin: '5 5 5 180',
+						margin: '5 5 5 50',
 						autoEl: {
 							tag: 'img',
 							src: '',
@@ -289,6 +324,11 @@
 					xtype: 'textfield',
 					name: 'BusinessLicenseImgUrl',
 					fieldLabel: '营业执照图片路径',
+					hidden: true,
+				}, {
+					xtype: 'textfield',
+					name: 'DepartmentImgUrl',
+					fieldLabel: '门店执照图片路径',
 					hidden: true,
 				}, {
 					xtype: 'textfield',

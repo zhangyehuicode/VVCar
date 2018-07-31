@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Enums;
 using YEF.Core.Dtos;
 
 namespace VVCar.Shop.Domain.Filters
@@ -50,6 +51,17 @@ namespace VVCar.Shop.Domain.Filters
         /// </summary>
         [Display(Name = "订单号/联系人/联系电话/收货地址/快递单号")]
         public string TNoLMPAddEN { get; set; }
+
+        /// <summary>
+        /// 订单状态
+        /// </summary>
+        public EOrderStatus? Status { get; set; }
+
+        /// <summary>
+        /// 是否只获取物流数据
+        /// </summary>
+        [Display(Name = "是否只获取物流数据")]
+        public bool IsLogistics { get; set; }
 
     }
 }

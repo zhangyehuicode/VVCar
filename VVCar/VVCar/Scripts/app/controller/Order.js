@@ -35,17 +35,20 @@
         var statusdesc = "";
         switch (record.data.Status) {
             case -1:
-                statusdesc = "未付款";
+                statusdesc = '付款不足';
                 break;
             case 0:
-                statusdesc = "未发货";
+                statusdesc = '未付款';
                 break;
             case 1:
-                statusdesc = "已发货";
+                statusdesc = '已付款未发货';
                 break;
             case 2:
-                statusdesc = "已完成";
-                break;
+                statusdesc = '已发货';
+				break;
+			case 3:
+				statusdesc = '已完成';
+				break;
         }
         win.down('textfield[name=Status]').setValue(statusdesc);
 

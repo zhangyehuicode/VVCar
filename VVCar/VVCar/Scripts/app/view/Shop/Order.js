@@ -7,7 +7,17 @@
     loadMask: true,
     closable: true,
     initComponent: function () {
-        var me = this;
+		var me = this;
+		var statusStore = Ext.create('Ext.data.Store', {
+			fields: ['Name', 'Value'],
+			data: [
+				{ 'Name': '未付款', 'Value': 0 },
+				{ 'Name': '已发货', 'Value': 2 },
+				{ 'Name': '已完成', 'Value': 3 },
+				{ 'Name': '已付款未发货', 'Value': 1 },
+				{ 'Name': '付款不足', 'Value': -1 },
+			]
+		});
         me.tbar = [{
             xtype: 'form',
             layout: 'column',
@@ -24,17 +34,29 @@
                 xtype: 'textfield',
                 name: 'TNoLMPAddEN',
                 fieldLabel: '关键字',
-                width: 275,
+                width: 280,
                 labelWidth: 60,
-                margin: '0 0 0 10',
+                margin: '5 5 5 10',
                 emptyText: '订单号/联系人/联系电话/收货地址/快递单号',
-            }, {
+			}, {
+				xtype: 'combobox',
+				name: 'Status',
+				margin: '5 5 5 5',
+				store: statusStore,
+				displayField: 'Name',
+				valueField: 'Value',
+				fieldLabel: '发货状态',
+				labelWidth: 60,
+				width: 200,
+				editable: false,
+				value: false,
+			}, {
                 action: 'search',
                 xtype: 'button',
                 text: '搜索',
                 iconCls: 'fa fa-search',
                 cls: 'submitBtn',
-                margin: '0 0 0 10'
+                margin: '5 5 5 10'
             }]
         }];
         me.columns = [
@@ -80,17 +102,20 @@
                         var record = grid.getStore().getAt(rowIndex);
                         this.fireEvent('orderdetailsClick', grid, record);
                     },
-                }, { scope: this }, {
-                    action: 'editItem',
-                    iconCls: 'x-fa fa-pencil',
-                    tooltip: '编辑',
-                    scope: this,
-                    margin: '10 10 10 10',
-                    handler: function (grid, rowIndex, colIndex) {
-                        var record = grid.getStore().getAt(rowIndex);
-                        this.fireEvent('editActionClick', grid, record);
-                    },
-                }, { scope: this }, {
+				},
+				{ scope: this },
+					//{
+                    //action: 'editItem',
+                    //iconCls: 'x-fa fa-pencil',
+                    //tooltip: '编辑',
+                    //scope: this,
+                    //margin: '10 10 10 10',
+                    //handler: function (grid, rowIndex, colIndex) {
+                    //    var record = grid.getStore().getAt(rowIndex);
+                    //    this.fireEvent('editActionClick', grid, record);
+                    //},
+					//}, { scope: this },
+					{
                     action: 'deleteItem',
                     iconCls: 'x-fa fa-close',
                     tooltip: '删除',

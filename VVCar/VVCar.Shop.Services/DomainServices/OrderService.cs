@@ -343,6 +343,11 @@ namespace VVCar.Shop.Services.DomainServices
             });
         }
 
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override bool Update(Order entity)
         {
             if (entity == null)
@@ -351,14 +356,142 @@ namespace VVCar.Shop.Services.DomainServices
             if (order == null)
                 return false;
             order.ExpressNumber = entity.ExpressNumber;
+            order.LogisticsCompany = entity.LogisticsCompany;
             order.Status = entity.Status;
+            order.RevisitDays = entity.RevisitDays;
+            order.RevisitTips = entity.RevisitTips;
+            order.RevisitStatus = entity.RevisitStatus;
+            order.UserID = entity.UserID;
+            order.ConsignerID = entity.ConsignerID;
+            order.DeliveryTips = entity.DeliveryTips;
+            if (entity.DeliveryDate.HasValue)
+                order.DeliveryDate = entity.DeliveryDate;
             order.LastUpdatedDate = DateTime.Now;
             order.LastUpdatedUserID = AppContext.CurrentSession.UserID;
             order.LastUpdatedUser = AppContext.CurrentSession.UserName;
             return Repository.Update(order) > 0;
         }
 
-        public IEnumerable<Order> Search(OrderFilter filter, out int totalCount)
+        /// <summary>
+        /// 发货
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public bool Delivery(Order entity)
+        {
+            if (entity == null)
+                throw new DomainException("参数错误");
+            if (string.IsNullOrEmpty(entity.ExpressNumber))
+                throw new DomainException("快递单号不能为空");
+            if (string.IsNullOrEmpty(entity.LogisticsCompany))
+                throw new DomainException("物流公司不能为空");
+            var order = Repository.GetByKey(entity.ID, false);
+            if (order == null)
+                throw new DomainException("订单不存在");
+            if (order.Status != EOrderStatus.PayUnshipped)
+            {
+                if (order.Status == EOrderStatus.Delivered)
+                    throw new DomainException("订单已发货");
+                if (order.Status == EOrderStatus.Finish)
+                    throw new DomainException("订单已完成");
+                if (order.Status == EOrderStatus.UnEnough)
+                    throw new DomainException("订单付款不足");
+                if (order.Status == EOrderStatus.UnPay)
+                    throw new DomainException("订单未付款");
+            }
+            if (!entity.ConsignerID.HasValue)
+                entity.ConsignerID = AppContext.CurrentSession.UserID;
+            entity.Status = EOrderStatus.Delivered;
+            entity.DeliveryDate = DateTime.Now;
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                Update(entity);
+                if(entity.UserID.HasValue)
+                    SendNotifyToSalesman(entity.ID);
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// 取消发货
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool AntiDelivery(Guid id)
+        {
+            var order = Repository.GetByKey(id, false);
+            if (order == null)
+                throw new DomainException("订单不存在");
+            if (order.Status != EOrderStatus.Delivered)
+            {
+                throw new DomainException("该订单未发货");
+            }
+            order.Status = EOrderStatus.PayUnshipped;
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                Update(order);
+                if (order.UserID.HasValue)
+                    SendNotifyToSalesman(id);
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// 发送通知消息
+        /// </summary>
+        /// <returns></returns>
+        void SendNotifyToSalesman(Guid id)
+        {
+            var order = Repository.GetByKey(id);
+            var user = UserRepo.GetByKey(order.UserID.Value);
+            if (user == null)
+                return;
+            if (user.OpenID == null)
+                return;
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = user.OpenID,
+                template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_DeliveryRemind),
+                url = "http://www.cheyinz.cn/Mobile/Agent/GeneralManagerHome?mch=" + AppContext.CurrentSession.MerchantCode,
+                data = new System.Dynamic.ExpandoObject()
+            };
+            if (order.Status == EOrderStatus.Delivered)
+                message.data.first = new WeChatTemplateMessageDto.MessageData("您的订单已经发货");
+            else
+                message.data.first = new WeChatTemplateMessageDto.MessageData("您的订单取消发货");
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateString());
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(AppContext.CurrentSession.MerchantName);
+            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(order.Code);
+            message.data.keyword4 = new WeChatTemplateMessageDto.MessageData(order.LogisticsCompany);
+            message.data.keyword5 = new WeChatTemplateMessageDto.MessageData(order.ExpressNumber);
+            if(order.Status == EOrderStatus.Delivered)
+                message.data.remark = new WeChatTemplateMessageDto.MessageData(order.DeliveryTips);
+            else
+                message.data.remark = new WeChatTemplateMessageDto.MessageData("请知悉");
+            WeChatService.SendWeChatNotifyAsync(message, AppContext.CurrentSession.MerchantCode);
+        }
+
+        /// <summary>
+        /// 查询 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<OrderDto> Search(OrderFilter filter, out int totalCount)
         {
             var queryable = Repository.GetInclude(t => t.OrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.OpenID))
@@ -375,10 +508,36 @@ namespace VVCar.Shop.Services.DomainServices
                 queryable = queryable.Where(t => t.ExpressNumber.Contains(filter.ExpressNumber));
             if (!string.IsNullOrEmpty(filter.TNoLMPAddEN))
                 queryable = queryable.Where(t => t.Code.Contains(filter.TNoLMPAddEN) || t.LinkMan.Contains(filter.TNoLMPAddEN) || t.Address.Contains(filter.TNoLMPAddEN) || t.Phone.Contains(filter.TNoLMPAddEN) || t.ExpressNumber.Contains(filter.TNoLMPAddEN));
+            if (filter.IsLogistics)
+                queryable = queryable.Where(t => t.Status == EOrderStatus.Delivered || t.Status == EOrderStatus.PayUnshipped);
+            if (filter.Status.HasValue)
+                queryable = queryable.Where(t => t.Status == filter.Status);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.OrderByDescending(t => t.CreatedDate).ToArray();
+            var orderDtos = queryable.OrderByDescending(t => t.CreatedDate).ToList().MapTo<List<OrderDto>>();
+            var removeOrders = new List<OrderDto>();
+            orderDtos.ForEach(t =>
+            {
+                if (t.ConsignerID.HasValue)
+                {
+                    var user = UserRepo.GetByKey(t.ConsignerID.Value);
+                    t.Consigner = user.Name;
+                }
+                if (t.UserID.HasValue)
+                {
+                    var user = UserRepo.GetByKey(t.UserID.Value);
+                    t.UserName = user.Name;
+                }
+                var goodsCount = t.OrderItemList.Count(item => item.ProductType == EProductType.Goods);
+                if (goodsCount < 1)
+                    removeOrders.Add(t);
+            });
+            removeOrders.ForEach(t =>
+            {
+                orderDtos.Remove(t);
+            });
+            return orderDtos;
         }
     }
 }

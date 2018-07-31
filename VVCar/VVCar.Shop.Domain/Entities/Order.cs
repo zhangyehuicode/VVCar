@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using YEF.Core.Data;
 using System.ComponentModel.DataAnnotations;
 using VVCar.Shop.Domain.Enums;
+using VVCar.BaseData.Domain.Entities;
 
 namespace VVCar.Shop.Domain.Entities
 {
@@ -132,6 +133,57 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "备注")]
         public string Remark { get; set; }
+
+        /// <summary>
+        /// 回访时间（天）
+        /// </summary>
+        [Display(Name = "回访时间（天）")]
+        public int RevisitDays { get; set; }
+
+        /// <summary>
+        /// 回访提示
+        /// </summary>
+        [Display(Name = "回访提示")]
+        public string RevisitTips { get; set; }
+
+        /// <summary>
+        /// 回访状态
+        /// </summary>
+        [Display(Name = "回访状态")]
+        public ERevisitStatus RevisitStatus { get; set; }
+
+        /// <summary>
+        /// 业务员ID
+        /// </summary>
+        [Display(Name = "业务员ID")]
+        public Guid? UserID { get; set; }
+
+        /// <summary>
+        /// 业务员
+        /// </summary>
+        public virtual User User { get; set; }
+
+        /// <summary>
+        /// 发货人ID
+        /// </summary>
+        public Guid? ConsignerID { get; set; }
+
+        /// <summary>
+        /// 发货人
+        /// </summary>
+        public virtual User Consigner { get; set; }
+
+        /// <summary>
+        /// 发货提醒（业务员）
+        /// </summary>
+        [Display(Name = "发货提醒（业务员）")]
+        public string DeliveryTips { get; set; }
+
+        /// <summary>
+        /// 发货时间
+        /// </summary>
+        [Display(Name ="发货时间")]
+        public DateTime? DeliveryDate { get; set; }
 
         /// <summary>
         /// 商城订单子项

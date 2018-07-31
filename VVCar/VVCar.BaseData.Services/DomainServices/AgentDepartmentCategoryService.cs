@@ -188,6 +188,11 @@ namespace VVCar.BaseData.Services.DomainServices
                     Code = t.Code,
                     Name = t.Name
                 }).ToList();
+            categories.Add(new IDCodeNameDto
+            {
+                Code = "ALL",
+                Name = "全部分类"
+            });
             return categories;
         }
 
