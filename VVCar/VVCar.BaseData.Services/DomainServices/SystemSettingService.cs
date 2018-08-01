@@ -103,6 +103,8 @@ namespace VVCar.BaseData.Services.DomainServices
                 if (!string.IsNullOrEmpty(filter.Name))
                     queryable = queryable.Where(t => t.Name == filter.Name);
             }
+            if (!string.IsNullOrEmpty(filter.MerchantCode))
+                queryable = queryable.Where(t => t.Merchant.Code.Contains(filter.MerchantCode));
             if (!string.IsNullOrEmpty(filter.MerchantName))
                 queryable = queryable.Where(t => t.Merchant.Name.Contains(filter.MerchantName));
             totalCount = queryable.Count();

@@ -154,6 +154,8 @@
                         sessionStorage.setItem('userName', data.UserName);
                         sessionStorage.setItem('companyCode', data.CompanyCode);
                         sessionStorage.setItem('userToken', data.UserToken);
+                        sessionStorage.setItem('isAgent', data.IsAgent);
+                        sessionStorage.setItem('isGeneralMerchant', data.IsGeneralMerchant);
                         window.location.href = "/";
                     } else {
                         $('.operationError').text(data.ErrorMsg).show();

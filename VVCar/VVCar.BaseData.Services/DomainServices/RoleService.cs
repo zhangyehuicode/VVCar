@@ -53,6 +53,8 @@ namespace VVCar.BaseData.Services.DomainServices
                 throw new DomainException("不允许删除销售经理角色");
             else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000006"))
                 throw new DomainException("不允许删除总经理角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000007"))
+                throw new DomainException("不允许删除后勤角色");
 
             role.IsDeleted = true;
             return this.Repository.Update(role) > 0;
@@ -78,6 +80,8 @@ namespace VVCar.BaseData.Services.DomainServices
                 throw new DomainException("不允许修改销售经理角色");
             else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000006"))
                 throw new DomainException("不允许修改总经理角色");
+            else if (role.ID == Guid.Parse("00000000-0000-0000-0000-000000000007"))
+                throw new DomainException("不允许修改后勤角色");
 
             role.Code = entity.Code;
             role.Name = entity.Name;

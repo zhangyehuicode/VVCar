@@ -20,6 +20,12 @@ namespace VVCar.BaseData.Domain.Filters
         public string Name { get; set; }
 
         /// <summary>
+        /// 商户号
+        /// </summary>
+        [Display(Name = "商户号")]
+        public string MerchantCode { get; set; }
+
+        /// <summary>
         /// 商户名称
         /// </summary>
         [Display(Name = "商户名称")]

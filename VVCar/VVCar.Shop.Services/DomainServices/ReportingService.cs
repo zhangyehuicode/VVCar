@@ -11,6 +11,7 @@ using YEF.Core;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.VIP.Domain.Entities;
+using VVCar.Shop.Domain.Enums;
 
 namespace VVCar.Shop.Services.DomainServices
 {
@@ -113,7 +114,7 @@ namespace VVCar.Shop.Services.DomainServices
                 result.Add(new TurnoverDto
                 {
                     Unit = starttime.Date.Day,
-                    Turnover = pickuporders.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault(),
+                    Turnover = pickuporders.GroupBy(g => 1).Select(t => t.Sum(s => s.ReceivedMoney)).FirstOrDefault(),
                 });
                 starttime = starttime.AddDays(1);
             }
@@ -139,7 +140,7 @@ namespace VVCar.Shop.Services.DomainServices
                 result.Add(new TurnoverDto
                 {
                     Unit = starttime.Date.Day,
-                    Turnover = orders.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault(),
+                    Turnover = orders.GroupBy(g => 1).Select(t => t.Sum(s => s.ReceivedMoney)).FirstOrDefault(),
                 });
                 starttime = starttime.AddDays(1);
             }
@@ -184,8 +185,8 @@ namespace VVCar.Shop.Services.DomainServices
             var pickuporderlist = PickUpOrderRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedDate >= starttime && t.CreatedDate < endtime).ToList();
             var orderlist = OrderRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedDate >= starttime && t.CreatedDate < endtime).ToList();
 
-            result.PickUpOrderTurnover = pickuporderlist.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
-            result.ShopTurnover = orderlist.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            result.PickUpOrderTurnover = pickuporderlist.GroupBy(g => 1).Select(t => t.Sum(s => s.ReceivedMoney)).FirstOrDefault();
+            result.ShopTurnover = orderlist.GroupBy(g => 1).Select(t => t.Sum(s => s.ReceivedMoney)).FirstOrDefault();
             result.TotalTurnover = result.PickUpOrderTurnover + result.ShopTurnover;
 
             return result;

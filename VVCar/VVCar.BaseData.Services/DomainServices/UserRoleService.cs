@@ -79,7 +79,7 @@ namespace VVCar.BaseData.Services.DomainServices
             if (filter == null || !filter.RoleID.HasValue)
                 throw new DomainException("查询参数错误");
             var result = new PagedResultDto<UserRole>();
-            var queryable = this.Repository.GetInclude(t => t.User).Where(t => t.RoleID == filter.RoleID).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = this.Repository.GetInclude(t => t.User).Where(t => t.RoleID == filter.RoleID).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && !t.User.IsHQCreate);
             if (AppContext.CurrentSession.UserID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
             {
                 var adminId = Guid.Parse("00000000-0000-0000-0000-000000000001");

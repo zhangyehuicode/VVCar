@@ -12,19 +12,27 @@
     </div>
     <div class="logininfocon">
         <div class="zcdl_box3">
-            <img src="~/Areas/resource/img/mobile/gr.png" style="width:16px; float:left; margin-top:19px;">
-            <input v-model="UserInfo.MobilePhoneNo" type="number" placeholder="请输入您的手机号" name="address" size="11" maxlength="11" style="color:#fff" class="zcdl_box4" oninput="if(value.length>11)value=value.slice(0,11)">
+            <img src="~/Areas/resource/img/mobile/phone.png" style="width:16px; float:left; margin-top:19px;">
+            <input v-model="UserInfo.MobilePhoneNo" type="number" placeholder="手机号码" name="address" size="11" maxlength="11" style="color:#fff" class="zcdl_box4" oninput="if(value.length>11)value=value.slice(0,11)">
             <a class="zcdl_text" v-on:click="sendSMS">发送验证码</a>
         </div>
         <div class="zcdl_box3" style="margin-top:inherit;">
             <img src="~/Areas/resource/img/mobile/yzm2.png" style="width:16px; float:left; margin-top:18px;">
-            <input v-model="UserInfo.VerificationCode" type="text" placeholder="请输入验证码" name="address" size="6" maxlength="6" style="color:#fff" class="zcdl_box4" oninput="if(value.length>6)value=value.slice(0,6)">
+            <input v-model="UserInfo.VerificationCode" type="text" placeholder="验证码" name="address" size="6" maxlength="6" style="color:#fff;width:85%;" class="zcdl_box4" oninput="if(value.length>6)value=value.slice(0,6)">
         </div>
         <div class="zcdl_box3" style="margin-top:inherit;">
-            <img src="~/Areas/resource/img/mobile/car.png" style="width:16px; float:left; margin-top:18px;">
-            <input v-model="UserInfo.PlateNumber" type="text" placeholder="请输入车牌号" maxlength="8" style="color:#fff" class="zcdl_box4" oninput="if(value.length>8)value=value.slice(0,8)">
+            <img src="~/Areas/resource/img/mobile/gr.png" style="width:16px; float:left; margin-top:18px;">
+            <input v-model="UserInfo.Name" type="text" placeholder="姓名" maxlength="50" style="color:#fff;width:85%;" class="zcdl_box4">
         </div>
-        <a class="zcdl_btn" v-on:click="register">注册</a>
+        <div class="zcdl_box3" style="margin-top:inherit;">
+            <img src="~/Areas/resource/img/mobile/departmentname.png" style="width:16px; float:left; margin-top:18px;">
+            <input v-model="UserInfo.DepartmentName" type="text" placeholder="门店名称" maxlength="50" style="color:#fff;width:85%;" class="zcdl_box4">
+        </div>
+        <div class="zcdl_box3" style="margin-top:inherit;">
+            <img src="~/Areas/resource/img/mobile/departmentaddress.png" style="width:16px; float:left; margin-top:18px;">
+            <input v-model="UserInfo.DepartmentAddress" type="text" placeholder="门店地址" maxlength="100" style="color:#fff;width:85%;" class="zcdl_box4">
+        </div>
+        <a class="zcdl_btn" style="margin-top:30px;" v-on:click="register">注册</a>
     </div>
 </div>
 
@@ -55,7 +63,7 @@
         .headerimgcon {
             width: 100%;
             text-align: center;
-            top: 50px;
+            top: 15px;
             position: absolute;
         }
 
@@ -70,7 +78,7 @@
 
         .logininfocon {
             position: absolute;
-            top: 165px;
+            top: 100px;
             width: 100%;
         }
 
@@ -185,7 +193,7 @@
                 return;
             }
             $.ajax({
-                url: '/AliyunSMS/Sms/SendSms?mobilePhoneNo=' + mobilephoneno + '&templateCode=SMS_119520024',//'/AliyunSMS/Sms/SendSms/' + mobilephoneno+'/SMS_119520024',
+                url: '/AliyunSMS/Sms/SendSms?mobilePhoneNo=' + mobilephoneno + '&templateCode=SMS_119520024',
                 type: 'GET',
                 beforeSend: function () {
                     $.showLoading();
@@ -231,15 +239,7 @@
                 $.alert('请先输入验证码');
                 return;
             }
-            if (_viewModel.UserInfo.PlateNumber == null || _viewModel.UserInfo.PlateNumber=='') {
-                $.alert('请先输入车牌号');
-                return;
-            }
-            if (_viewModel.UserInfo.PlateNumber.length != 7 && _viewModel.UserInfo.PlateNumber.length!=8) {
-                $.alert('请输入正确的车牌号');
-                return;
-            }
-            $.confirm('确认车牌号为 ' + _viewModel.UserInfo.PlateNumber + ' 吗？（注册后可在个人中心修改）', function () {
+            //$.confirm('确认注册？', function () {
             $.ajax({
                 url: '/AliyunSMS/Sms/CheckVerificationCode/' + mobilephoneno + '/' + verificationCode,
                 type: 'GET',
@@ -265,20 +265,35 @@
                     $.hideLoading();
                 }
                 });
-            });
+            //});
         }
 
         _viewModel = new Vue({
             el: '#loginreg',
             data: {
                 UserInfo: {
+                    Name:'',
                     MobilePhoneNo: '',
                     VerificationCode: '',
-                    PlateNumber:'',
+                    PlateNumber: '',
+                    DepartmentAddress: '',
+                    DepartmentName:'',
                 },
               },
             methods: {
                 register: function (event) {
+                    if (_viewModel.UserInfo.Name == null || _viewModel.UserInfo.Name == '') {
+                        $.alert('请先填写姓名');
+                        return;
+                    }
+                    if (_viewModel.UserInfo.DepartmentName == null || _viewModel.UserInfo.DepartmentName == '') {
+                        $.alert('请先填写门店名称');
+                        return;
+                    }
+                    if (_viewModel.UserInfo.DepartmentAddress == null || _viewModel.UserInfo.DepartmentAddress == '') {
+                        $.alert('请先填写门店地址');
+                        return;
+                    }
                     checkVerificationCode(this.UserInfo.MobilePhoneNo, this.UserInfo.VerificationCode, function (mobilePhoneNo) {
                             $.ajax({
                             url: '/api/Member/Register',
@@ -287,9 +302,11 @@
                             data: {
                                 WeChatOpenID: '@ViewBag.OpenId',
                                 MobilePhoneNo: mobilePhoneNo,
-                                Name:"@ViewBag.NickName",
+                                Name: _viewModel.UserInfo.Name,
                                 Password: '123456',
                                 PlateNumber: _viewModel.UserInfo.PlateNumber,
+                                DepartmentName: _viewModel.UserInfo.DepartmentName,
+                                DepartmentAddress: _viewModel.UserInfo.DepartmentAddress,
                             },
                             beforeSend: function () {
                                 //$.showLoading();

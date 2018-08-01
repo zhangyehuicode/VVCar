@@ -39,5 +39,15 @@ namespace VVCar.Models
         /// 错误信息
         /// </summary>
         public string ErrorMsg { get; set; }
+
+        /// <summary>
+        /// 是否代理商
+        /// </summary>
+        public string IsAgent { get; set; }
+
+        /// <summary>
+        /// 是否普通商户
+        /// </summary>
+        public string IsGeneralMerchant { get; set; }
     }
 }

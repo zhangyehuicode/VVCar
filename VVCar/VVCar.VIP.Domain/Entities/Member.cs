@@ -46,6 +46,18 @@ namespace VVCar.VIP.Domain.Entities
         public string Name { get; set; }
 
         /// <summary>
+        /// 门店名称
+        /// </summary>
+        [Display(Name = "门店名称")]
+        public string DepartmentName { get; set; }
+
+        /// <summary>
+        /// 门店地址
+        /// </summary>
+        [Display(Name = "门店地址")]
+        public string DepartmentAddress { get; set; }
+
+        /// <summary>
         /// 性别
         /// </summary>
         [Display(Name = "性别")]

@@ -168,6 +168,12 @@ namespace VVCar.BaseData.Domain.Entities
         public EDataSource DataSource { get; set; }
 
         /// <summary>
+        /// 是否总部创建
+        /// </summary>
+        [Display(Name = "是否总部创建")]
+        public bool IsHQCreate { get; set; }
+
+        /// <summary>
         /// 角色
         /// </summary>
         [Display(Name = "角色")]

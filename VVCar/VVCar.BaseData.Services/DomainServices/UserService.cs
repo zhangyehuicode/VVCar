@@ -381,7 +381,7 @@ namespace VVCar.BaseData.Services.DomainServices
         public PagedResultDto<User> QueryUser(Domain.Filters.UserFilter filter)
         {
             var result = new PagedResultDto<User>();
-            var queryable = this.Repository.GetQueryable(false).Where(p => !p.IsDeleted).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = this.Repository.GetQueryable(false).Where(p => !p.IsDeleted).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && !t.IsHQCreate);
             if (AppContext.CurrentSession.UserID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
             {
                 var adminId = Guid.Parse("00000000-0000-0000-0000-000000000001");

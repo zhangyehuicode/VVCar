@@ -43,6 +43,12 @@ namespace VVCar.VIP.Mapping
             this.Property(t => t.PhoneLocation)
                 .HasMaxLength(20);
 
+            this.Property(t => t.DepartmentName)
+                .HasMaxLength(50);
+
+            this.Property(t => t.DepartmentAddress)
+                .HasMaxLength(100);
+
             this.HasRequired(t => t.Card)
                 .WithMany()
                 .HasForeignKey(t => t.CardID);

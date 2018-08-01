@@ -134,6 +134,8 @@ namespace VVCar.Controllers
                     loginResult.UserCode = tokenObj["userCode"];
                     loginResult.UserName = tokenObj["userName"];
                     loginResult.CompanyCode = tokenObj["companyCode"];
+                    loginResult.IsAgent = tokenObj["isAgent"];
+                    loginResult.IsGeneralMerchant = tokenObj["isGeneralMerchant"];
                     loginResult.UserToken = string.Concat(tokenObj["token_type"], " ", tokenObj["access_token"]);
                 }
                 else

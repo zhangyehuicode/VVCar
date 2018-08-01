@@ -125,7 +125,7 @@
         </div>
         <div style="width:100%">
             <div class="reporttable" style="width:100%;">
-                <div class="reporttablecell">
+                <div class="reporttablecell" id="tookeencon">
                     <div class="quickoperation" style="background:#1ab394;color:#fff;cursor:pointer;" id="tookeen">
                         <div class="reporttable" style="float:left;margin-top:10px;margin-left:15px;">
                             <img class="iconimg" src="~/Content/icons/tookeen.png" />
@@ -184,6 +184,12 @@
     <script src="~/Content/js/macarons.js"></script>
     <script src="~/Scripts/ext/ext-all.js"></script>
     <script type="text/javascript">
+
+        var isAgent = sessionStorage.getItem('isAgent');
+        var isGeneralMerchant = sessionStorage.getItem('isGeneralMerchant');
+        isAgent = isAgent == 'true';
+        isGeneralMerchant = isGeneralMerchant == 'true';
+
         function generateEcharts(data) {
             if (data == null || data == '')
                 return;
@@ -294,6 +300,68 @@
                     }
                 ]
             };
+
+            if (!isGeneralMerchant) {
+                $('#tookeencon').hide();
+                option = {
+                    backgroundColor: '#fff',
+                    title: {
+                        text: '营业额',
+                        left: 'center',
+                        top: 20,
+                        textStyle: {
+                            color: '#ccc'
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999'
+                            }
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            dataView: { show: true, readOnly: false },
+                            magicType: { show: true, type: ['line', 'bar'] },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    legend: {
+                        data: ['商城营业额']
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: xAxisData,
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            name: '商城',
+                            min: 0,
+                            axisLabel: {
+                                formatter: '￥{value}'
+                            }
+                        },
+                    ],
+                    series: [
+                        {
+                            name: '商城营业额',
+                            type: 'bar',
+                            data: shopTurnover
+                        },
+                    ]
+                };
+            }
+
             var turnoverEcharts = echarts.init(document.getElementById('turnover'));
             turnoverEcharts.setOption(option);
 

@@ -92,6 +92,8 @@ namespace VVCar.Providers
             var companyCode = context.OwinContext.Get<string>(COMPANY_CODE);
             BaseData.Domain.Dtos.UserInfoDto loginUser = null;
             var mch = string.Empty;
+            var isAgent = false;
+            var isGeneralMerchant = false;
             try
             {
                 //当前环境为动态指定数据库时需要将CompanyCode写入到令牌中
@@ -124,6 +126,8 @@ namespace VVCar.Providers
                 if (merchant != null)
                 {
                     mch = merchant.Code;
+                    isAgent = merchant.IsAgent;
+                    isGeneralMerchant = merchant.IsGeneralMerchant;
                     var identity = new ClaimsIdentity();
                     identity.AddClaim(new Claim(YEF.Core.Security.ClaimTypes.MerchantCode, mch));
                     Thread.CurrentPrincipal = new ClaimsPrincipal(identity);
@@ -153,6 +157,8 @@ namespace VVCar.Providers
                 { "userCode", loginUser.Code },
                 { "userName", loginUser.Name },
                 { "companyCode", mch},
+                { "isAgent",isAgent?"true":"false"},
+                { "isGeneralMerchant",isGeneralMerchant?"true":"false"},
             });
             var ticket = new AuthenticationTicket(oAuthIdentity, props);
             context.Validated(ticket);

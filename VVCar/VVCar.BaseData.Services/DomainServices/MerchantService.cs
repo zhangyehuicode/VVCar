@@ -199,6 +199,7 @@ namespace VVCar.BaseData.Services.DomainServices
                             CreatedUser = AppContext.CurrentSession.UserName,
                             CreatedDate = DateTime.Now,
                             MerchantID = t.ID,
+                            IsHQCreate = true,
                         });
 
                         if (t.IsGeneralMerchant)
@@ -251,168 +252,17 @@ namespace VVCar.BaseData.Services.DomainServices
         {
             if (merchantId == null)
                 return false;
-            SystemSettingRepo.Add(new SystemSetting
-            {
-                ID = Util.NewID(),
-                Index = 1,
-                Name = SysSettingTypes.WXMsg_CouponWillExpire,
-                Caption = "优惠券即将过期微信通知消息模板",
-                DefaultValue = string.Empty,
-                SettingValue = string.Empty,
-                IsVisible = true,
-                IsAvailable = true,
-                Type = ESystemSettingType.Parameter,
-                CreatedUserID = AppContext.CurrentSession.UserID,
-                CreatedUser = AppContext.CurrentSession.UserName,
-                CreatedDate = DateTime.Now,
-                MerchantID = merchantId,
-            });
-            SystemSettingRepo.Add(new SystemSetting
-            {
-                ID = Util.NewID(),
-                Index = 2,
-                Name = SysSettingTypes.WXMsg_OrderSuccess,
-                Caption = "下单成功通知消息模板",
-                DefaultValue = string.Empty,
-                SettingValue = string.Empty,
-                IsVisible = true,
-                IsAvailable = true,
-                Type = ESystemSettingType.Parameter,
-                CreatedUserID = AppContext.CurrentSession.UserID,
-                CreatedUser = AppContext.CurrentSession.UserName,
-                CreatedDate = DateTime.Now,
-                MerchantID = merchantId,
-            });
-            SystemSettingRepo.Add(new SystemSetting
-            {
-                ID = Util.NewID(),
-                Index = 3,
-                Name = SysSettingTypes.WXMsg_ReceivedSuccess,
-                Caption = "礼品领取成功通知消息模板",
-                DefaultValue = string.Empty,
-                SettingValue = string.Empty,
-                IsVisible = true,
-                IsAvailable = true,
-                Type = ESystemSettingType.Parameter,
-                CreatedUserID = AppContext.CurrentSession.UserID,
-                CreatedUser = AppContext.CurrentSession.UserName,
-                CreatedDate = DateTime.Now,
-                MerchantID = merchantId,
-            });
-            SystemSettingRepo.Add(new SystemSetting
-            {
-                ID = Util.NewID(),
-                Index = 4,
-                Name = SysSettingTypes.WXMsg_AppointmentRemind,
-                Caption = "预约提醒通知消息模板",
-                DefaultValue = string.Empty,
-                SettingValue = string.Empty,
-                IsVisible = true,
-                IsAvailable = true,
-                Type = ESystemSettingType.Parameter,
-                CreatedUserID = AppContext.CurrentSession.UserID,
-                CreatedUser = AppContext.CurrentSession.UserName,
-                CreatedDate = DateTime.Now,
-                MerchantID = merchantId,
-            });
-            SystemSettingRepo.Add(new SystemSetting
-            {
-                ID = Util.NewID(),
-                Index = 5,
-                Name = SysSettingTypes.WXMsg_AppointmentSuccess,
-                Caption = "预约成功通知消息模板",
-                DefaultValue = string.Empty,
-                SettingValue = string.Empty,
-                IsVisible = true,
-                IsAvailable = true,
-                Type = ESystemSettingType.Parameter,
-                CreatedUserID = AppContext.CurrentSession.UserID,
-                CreatedUser = AppContext.CurrentSession.UserName,
-                CreatedDate = DateTime.Now,
-                MerchantID = merchantId,
-            });
-            SystemSettingRepo.Add(new SystemSetting
-            {
-                ID = Util.NewID(),
-                Index = 6,
-                Name = SysSettingTypes.WXMsg_VerificationSuccess,
-                Caption = "核销成功通知消息模板",
-                DefaultValue = string.Empty,
-                SettingValue = string.Empty,
-                IsVisible = true,
-                IsAvailable = true,
-                Type = ESystemSettingType.Parameter,
-                CreatedUserID = AppContext.CurrentSession.UserID,
-                CreatedUser = AppContext.CurrentSession.UserName,
-                CreatedDate = DateTime.Now,
-                MerchantID = merchantId,
-            });
-            SystemSettingRepo.Add(new SystemSetting
-            {
-                ID = Util.NewID(),
-                Index = 7,
-                Name = SysSettingTypes.WXMsg_ServiceExpiredRemind,
-                Caption = "服务到期提醒消息模板",
-                DefaultValue = string.Empty,
-                SettingValue = string.Empty,
-                IsVisible = true,
-                IsAvailable = true,
-                Type = ESystemSettingType.Parameter,
-                CreatedUserID = AppContext.CurrentSession.UserID,
-                CreatedUser = AppContext.CurrentSession.UserName,
-                CreatedDate = DateTime.Now,
-                MerchantID = merchantId,
-            });
-            SystemSettingRepo.Add(new SystemSetting
-            {
-                ID = Util.NewID(),
-                Index = 8,
-                Name = SysSettingTypes.WXMsg_OrderRemind,
-                Caption = "新订单提醒消息模板",
-                DefaultValue = string.Empty,
-                SettingValue = string.Empty,
-                IsVisible = true,
-                IsAvailable = true,
-                Type = ESystemSettingType.Parameter,
-                CreatedUserID = AppContext.CurrentSession.UserID,
-                CreatedUser = AppContext.CurrentSession.UserName,
-                CreatedDate = DateTime.Now,
-                MerchantID = merchantId,
-            });
-            GameSettingRepo.Add(new GameSetting
-            {
-                ID = Util.NewID(),
-                GameType = VIP.Domain.Enums.EGameType.AttractWheel,
-                PeriodDays = 0,
-                PeriodCounts = 0,
-                Limit = 0,
-                IsShare = false,
-                ShareTitle = "拓客转盘",
-                IsOrderShow = false,
-                StartTime = DateTime.Now,
-                EndTime = DateTime.Now,
-                CreatedUserID = AppContext.CurrentSession.UserID,
-                CreatedUser = AppContext.CurrentSession.UserName,
-                CreatedDate = DateTime.Now,
-                MerchantID = merchantId,
-            });
-            GameSettingRepo.Add(new GameSetting
-            {
-                ID = Util.NewID(),
-                GameType = VIP.Domain.Enums.EGameType.ActivityWheel,
-                PeriodDays = 0,
-                PeriodCounts = 0,
-                Limit = 0,
-                IsShare = false,
-                ShareTitle = "活动转盘",
-                IsOrderShow = false,
-                StartTime = DateTime.Now,
-                EndTime = DateTime.Now,
-                CreatedUserID = AppContext.CurrentSession.UserID,
-                CreatedUser = AppContext.CurrentSession.UserName,
-                CreatedDate = DateTime.Now,
-                MerchantID = merchantId,
-            });
+            SystemSettingRepo.Add(new SystemSetting { ID = Util.NewID(), Index = 1, Name = SysSettingTypes.WXMsg_CouponWillExpire, Caption = "优惠券即将过期微信通知消息模板", DefaultValue = string.Empty, SettingValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
+            SystemSettingRepo.Add(new SystemSetting { ID = Util.NewID(), Index = 2, Name = SysSettingTypes.WXMsg_OrderSuccess, Caption = "下单成功通知消息模板", DefaultValue = string.Empty, SettingValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
+            SystemSettingRepo.Add(new SystemSetting { ID = Util.NewID(), Index = 3, Name = SysSettingTypes.WXMsg_ReceivedSuccess, Caption = "礼品领取成功通知消息模板", DefaultValue = string.Empty, SettingValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
+            SystemSettingRepo.Add(new SystemSetting { ID = Util.NewID(), Index = 4, Name = SysSettingTypes.WXMsg_AppointmentRemind, Caption = "预约提醒通知消息模板", DefaultValue = string.Empty, SettingValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
+            SystemSettingRepo.Add(new SystemSetting { ID = Util.NewID(), Index = 5, Name = SysSettingTypes.WXMsg_AppointmentSuccess, Caption = "预约成功通知消息模板", DefaultValue = string.Empty, SettingValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
+            SystemSettingRepo.Add(new SystemSetting { ID = Util.NewID(), Index = 6, Name = SysSettingTypes.WXMsg_VerificationSuccess, Caption = "核销成功通知消息模板", DefaultValue = string.Empty, SettingValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
+            SystemSettingRepo.Add(new SystemSetting { ID = Util.NewID(), Index = 7, Name = SysSettingTypes.WXMsg_ServiceExpiredRemind, Caption = "服务到期提醒消息模板", DefaultValue = string.Empty, SettingValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
+            SystemSettingRepo.Add(new SystemSetting { ID = Util.NewID(), Index = 8, Name = SysSettingTypes.WXMsg_OrderRemind, Caption = "新订单提醒消息模板", DefaultValue = string.Empty, SettingValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
+            SystemSettingRepo.Add(new SystemSetting { ID = Util.NewID(), Index = 9, Name = SysSettingTypes.WXMsg_DeliveryRemind, Caption = "订单发货通知模板", DefaultValue = string.Empty, SettingValue = string.Empty, IsVisible = true, IsAvailable = true, Type = ESystemSettingType.Parameter, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
+            GameSettingRepo.Add(new GameSetting { ID = Util.NewID(), GameType = VIP.Domain.Enums.EGameType.AttractWheel, PeriodDays = 0, PeriodCounts = 0, Limit = 0, IsShare = false, ShareTitle = "拓客转盘", IsOrderShow = false, StartTime = DateTime.Now, EndTime = DateTime.Now, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
+            GameSettingRepo.Add(new GameSetting { ID = Util.NewID(), GameType = VIP.Domain.Enums.EGameType.ActivityWheel, PeriodDays = 0, PeriodCounts = 0, Limit = 0, IsShare = false, ShareTitle = "活动转盘", IsOrderShow = false, StartTime = DateTime.Now, EndTime = DateTime.Now, CreatedUserID = AppContext.CurrentSession.UserID, CreatedUser = AppContext.CurrentSession.UserName, CreatedDate = DateTime.Now, MerchantID = merchantId, });
             return true;
         }
 

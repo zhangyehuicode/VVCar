@@ -39,6 +39,12 @@
 			columnWidth: 1,
 			items: [{
 				xtype: 'textfield',
+				name: 'MerchantCode',
+				fieldLabel: '商户号',
+				labelWidth: 60,
+				margin: '0 0 0 5'
+			}, {
+				xtype: 'textfield',
 				name: 'MerchantName',
 				fieldLabel: '商户名称',
 				labelWidth: 60,

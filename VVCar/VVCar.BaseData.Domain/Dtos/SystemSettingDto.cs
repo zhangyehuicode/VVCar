@@ -9,6 +9,11 @@ namespace VVCar.BaseData.Domain.Dtos
     /// </summary>
     public class SystemSettingDto
     {
+        /// <summary>
+        /// 系统设置ID
+        /// </summary>
+        [Display(Name = "系统设置ID")]
+        public Guid ID { get; set; }
 
         /// <summary>
         /// 商户 Code

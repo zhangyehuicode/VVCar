@@ -48,5 +48,15 @@ namespace VVCar.VIP.Domain.Dtos
         /// 车牌号
         /// </summary>
         public string PlateNumber { get; set; }
+
+        /// <summary>
+        /// 门店名称
+        /// </summary>
+        public string DepartmentName { get; set; }
+
+        /// <summary>
+        /// 门店地址
+        /// </summary>
+        public string DepartmentAddress { get; set; }
     }
 }

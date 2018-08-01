@@ -460,6 +460,8 @@
     <Content Include="Areas\resource\img\mobile\defaultimg1.png" />
     <Content Include="Areas\resource\img\mobile\defaultimg2.png" />
     <Content Include="Areas\resource\img\mobile\defaultimg3.png" />
+    <Content Include="Areas\resource\img\mobile\departmentaddress.png" />
+    <Content Include="Areas\resource\img\mobile\departmentname.png" />
     <Content Include="Areas\resource\img\mobile\dfk.png" />
     <Content Include="Areas\resource\img\mobile\dols.png" />
     <Content Include="Areas\resource\img\mobile\dsh.png" />
@@ -523,6 +525,7 @@
     <Content Include="Areas\resource\img\mobile\nj.png" />
     <Content Include="Areas\resource\img\mobile\order.png" />
     <Content Include="Areas\resource\img\mobile\pass.png" />
+    <Content Include="Areas\resource\img\mobile\phone.png" />
     <Content Include="Areas\resource\img\mobile\plate.jpg" />
     <Content Include="Areas\resource\img\mobile\sc.png" />
     <Content Include="Areas\resource\img\mobile\scj.png" />
@@ -1183,6 +1186,7 @@
     <Content Include="Areas\Mobile\Views\Agent\MyInfo.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\PotentialClients.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\LogisticsManagement.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\AgentIndex.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />
