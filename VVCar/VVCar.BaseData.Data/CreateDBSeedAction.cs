@@ -3,6 +3,7 @@ using System.Data.Entity;
 using VVCar.BaseData.Domain;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Enums;
+using VVCar.VIP.Domain.Entities;
 using YEF.Core;
 using YEF.Core.Data;
 using YEF.Data.Initializer;
@@ -44,7 +45,7 @@ namespace VVCar.BaseData.Data
             SeedMakeCodeRule(context);
             //SeedMemberCardType(context);
             //SeedMemberGrade(context);
-            //SeedMemberGroup(context);
+            SeedMemberGroup(context);
             //SeedMemberCardTheme(context);
             //SeedCardThemeCategory(context);
         }
@@ -322,11 +323,11 @@ namespace VVCar.BaseData.Data
         //    memberGradeSet.Add(new MemberGrade { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Name = "默认等级", IsDefault = true, Level = 1, IsNeverExpires = true, CreatedUserID = Guid.Empty, CreatedUser = _systemUserName, CreatedDate = DateTime.Now });
         //}
 
-        //void SeedMemberGroup(DbContext context)
-        //{
-        //    var memberGroupSet = context.Set<MemberGroup>();
-        //    memberGroupSet.Add(new MemberGroup { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "000", Name = "普通会员", Index = -1 });
-        //}
+        void SeedMemberGroup(DbContext context)
+        {
+            var memberGroupSet = context.Set<MemberGroup>();
+            memberGroupSet.Add(new MemberGroup { ID = Guid.Parse("00000000-0000-0000-0000-000000000001"), Code = "000", Name = "普通会员", Index = -1, IsWholesalePrice = false, MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000000") });
+        }
 
         //void SeedMemberCardTheme(DbContext context)
         //{

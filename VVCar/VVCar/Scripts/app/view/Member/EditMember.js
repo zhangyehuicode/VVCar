@@ -7,27 +7,28 @@
         align: 'stretch',
         pack: 'start',
     },
-    width: 250,
+    width: 300,
     bodyPadding: 0,
     modal: true,
     initComponent: function () {
         var me = this;
         var statusStore = Ext.create("WX.store.DataDict.MemberCardStatusStore");
         var membergroupStore = Ext.create('WX.store.BaseData.MemberGroupStore');
+        membergroupStore.proxy.extraParams = { All: true };
         membergroupStore.load();
         me.items = [{
             xtype: "form",
             name: "MemberInfo",
-            layout: {
-                type: 'vbox',
-                align: 'stretch',
-                pack: 'start',
-            },
+            //layout: {
+            //    type: 'fit',
+            //    //align: 'stretch',
+            //    //pack: 'start',
+            //},
             border: false,
             frame: false,
             labelAlign: "left",
             buttonAlign: "right",
-            labelWidth: 120,
+            //labelWidth: 60,
             padding: 0,
             //autoWidth: true,
             autoScroll: true,
@@ -101,8 +102,8 @@
                 //},
                 border: false,
                 defaults: {
-                    margin: "5 20 0 0",
-                    labelWidth: 110,
+                    margin: "5 0 0 0",
+                    //labelWidth: 90,
                 },
                 items: [{
                     xtype: "container",
@@ -111,7 +112,7 @@
                         //labelWidth: 90,
                         fieldStyle: "font-size:14px;",
                         labelStyle: "width:70px;font-size:14px;",
-                        width: 200
+                        //width: 200
                     },
                     layout: "vbox",
                     items: [{
@@ -145,7 +146,7 @@
                         //labelWidth: 90,
                         fieldStyle: "font-size:14px;",
                         labelStyle: "width:70px;font-size:14px;",
-                        width: 200
+                        //width: 200
                     },
                     items: [{
                         xtype: "datefield",
@@ -166,10 +167,10 @@
                     layout: "vbox",
                     defaults: {
                         margin: "5 20 0 15",
-                        labelWidth: 110,
+                        //labelWidth: 110,
                         fieldStyle: "font-size:14px;",
                         labelStyle: "width:70px;font-size:14px;",
-                        width: 200
+                        //width: 200
                     },
                     items: [
                         //        {
@@ -188,10 +189,10 @@
                     xtype: "container",
                     defaults: {
                         margin: "5 20 0 15",
-                        labelWidth: 110,
+                        //labelWidth: 110,
                         fieldStyle: "font-size:14px;",
                         labelStyle: "width:70px;font-size:14px;",
-                        width: 200
+                        //width: 200
                     },
                     layout: "vbox",
                     items: [{
@@ -206,10 +207,10 @@
                     xtype: "container",
                     defaults: {
                         margin: "5 20 0 15",
-                        labelWidth: 110,
+                        //labelWidth: 110,
                         fieldStyle: "font-size:14px;",
                         labelStyle: "width:70px;font-size:14px;",
-                        width: 200
+                        //width: 200
                     },
                     layout: "vbox",
                     items: [{
@@ -224,17 +225,17 @@
                     layout: "vbox",
                     defaults: {
                         margin: "5 20 0 15",
-                        labelWidth: 110,
+                        //labelWidth: 110,
                         fieldStyle: "font-size:14px;",
                         labelStyle: "width:70px;font-size:14px;",
-                        width: 200
+                        //width: 200
                     },
                     items: [{
                         xtype: 'textfield',
                         name: 'Password',
                         fieldLabel: '核销密码',
                         inputType: 'password',
-                        width: 200,
+                        //width: 200,
                         allowBlank: true,
                     }]
                     //}, {

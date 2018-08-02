@@ -106,10 +106,14 @@ namespace VVCar.VIP.Services.DomainServices
 
         public IEnumerable<MemberGroup> Search(MemberGroupFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetQueryable(false).Where(t => t.ID != _defaultGroupID && t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = Repository.GetQueryable(false);
             var result = new List<MemberGroup>();
             if (filter != null)
             {
+                if (filter.All)
+                    queryable = queryable.Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID || t.ID == _defaultGroupID);
+                else
+                    queryable = queryable.Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ID != _defaultGroupID);
                 if (!string.IsNullOrEmpty(filter.Name))
                 {
                     queryable = queryable.Where(t => t.Name.Contains(filter.Name));

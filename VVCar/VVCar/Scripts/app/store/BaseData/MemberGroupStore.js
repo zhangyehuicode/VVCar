@@ -7,7 +7,7 @@
         type: 'rest',
         url: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberGroup',
         api: {
-            read: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberGroup/Search?All=false',
+            read: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberGroup/Search',
         },
     }
 });
