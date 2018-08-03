@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Enums;
+using VVCar.VIP.Domain.Filters;
 using YEF.Core.Data;
 using YEF.Core.Domain;
 using YEF.Core.Dtos;
@@ -13,14 +15,14 @@ namespace VVCar.VIP.Domain.Services
 {
     public interface IMemberCardService : IDomainService<IRepository<MemberCard>, MemberCard, Guid>
     {
-        //PagedResultDto<MemberCard> QueryData(MemberCardFilter filter);
+        PagedResultDto<MemberCard> QueryData(MemberCardFilter filter);
 
-        ///// <summary>
-        ///// 预生成
-        ///// </summary>
-        ///// <param name="filter"></param>
-        ///// <returns></returns>
-        //IEnumerable<MemberCard> PreGenerate(MemberCardFilter filter);
+        /// <summary>
+        /// 预生成
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        IEnumerable<MemberCard> PreGenerate(MemberCardFilter filter);
 
         ///// <summary>
         ///// 批量保存
@@ -29,19 +31,19 @@ namespace VVCar.VIP.Domain.Services
         ///// <returns></returns>
         //string BatchSave(IEnumerable<MemberCard> memberCards);
 
-        ///// <summary>
-        ///// 校验卡的有效性
-        ///// </summary>
-        ///// <param name="memberCard"></param>
-        ///// <returns></returns>
-        //bool VerifyCode(MemberCardFilter memberCard);
+        /// <summary>
+        /// 校验卡的有效性
+        /// </summary>
+        /// <param name="memberCard"></param>
+        /// <returns></returns>
+        bool VerifyCode(MemberCardFilter memberCard);
 
-        ///// <summary>
-        ///// 获取会员卡类型
-        ///// </summary>
-        ///// <param name="code"></param>
-        ///// <returns></returns>
-        //MemberCardTypeDto GetCardType(string code);
+        /// <summary>
+        /// 获取会员卡类型
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        MemberCardTypeDto GetCardType(string code);
 
         ///// <summary>
         ///// 校验是否可以激活
@@ -59,27 +61,27 @@ namespace VVCar.VIP.Domain.Services
         ///// <returns></returns>
         //bool Activate(MembercardActivateInfo info, EClientType clientType);
 
-        ///// <summary>
-        ///// 根据卡号或者手机号码获取卡信息
-        ///// </summary>
-        ///// <param name="number">会员卡号或者手机号码</param>
-        ///// <returns></returns>
-        //MemberCardDto GetCardInfoByNumber(string number);
+        /// <summary>
+        /// 根据卡号或者手机号码获取卡信息
+        /// </summary>
+        /// <param name="number">会员卡号或者手机号码</param>
+        /// <returns></returns>
+        MemberCardDto GetCardInfoByNumber(string number);
 
-        ///// <summary>
-        ///// 校验是否可以充值
-        ///// </summary>
-        ///// <param name="rechargeInfo"></param>
-        ///// <returns></returns>
-        //bool ValidateBeforeRecharge(RechargeInfoDto rechargeInfo);
+        /// <summary>
+        /// 校验是否可以充值
+        /// </summary>
+        /// <param name="rechargeInfo"></param>
+        /// <returns></returns>
+        bool ValidateBeforeRecharge(RechargeInfoDto rechargeInfo);
 
-        ///// <summary>
-        ///// 充值
-        ///// </summary>
-        ///// <param name="rechargeInfo">储值信息</param>
-        ///// <param name="tradeSource">交易来源</param>
-        ///// <returns></returns>
-        //CardTradeResultDto Recharge(RechargeInfoDto rechargeInfo, ETradeSource tradeSource);
+        /// <summary>
+        /// 充值
+        /// </summary>
+        /// <param name="rechargeInfo">储值信息</param>
+        /// <param name="tradeSource">交易来源</param>
+        /// <returns></returns>
+        CardTradeResultDto Recharge(RechargeInfoDto rechargeInfo, ETradeSource tradeSource);
 
         ///// <summary>
         ///// 校验是否可以交易
@@ -111,12 +113,12 @@ namespace VVCar.VIP.Domain.Services
         ///// <returns></returns>
         //MemberCard ChangeCard(Guid oldCardID, string newCardNumber, string verifyCode);
 
-        ///// <summary>
-        ///// 调整金额
-        ///// </summary>
-        ///// <param name="adjustBalanceDto"></param>
-        ///// <returns></returns>
-        //bool AdjustBalance(AdjustBalanceDto adjustBalanceDto);
+        /// <summary>
+        /// 调整金额
+        /// </summary>
+        /// <param name="adjustBalanceDto"></param>
+        /// <returns></returns>
+        bool AdjustBalance(AdjustBalanceDto adjustBalanceDto);
 
         ///// <summary>
         ///// 校验卡片是否有效

@@ -43,11 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\AddMemberParam.cs" />
+    <Compile Include="Dtos\AdjustBalanceDto.cs" />
     <Compile Include="Dtos\ArticleDto.cs" />
     <Compile Include="Dtos\BulkReceiveCouponDto.cs" />
     <Compile Include="Dtos\BuyGiftCardByPosDto.cs" />
     <Compile Include="Dtos\CardThemeCategoryMenu.cs" />
     <Compile Include="Dtos\CardThemeGroupDto.cs" />
+    <Compile Include="Dtos\CardTradeResultDto.cs" />
     <Compile Include="Dtos\ChangeMemberGroupDto.cs" />
     <Compile Include="Dtos\ChangePasswordDto.cs" />
     <Compile Include="Dtos\CheckCouponDto.cs" />
@@ -84,6 +86,7 @@
     <Compile Include="Dtos\NewUpdateRechargePlanDto.cs" />
     <Compile Include="Dtos\ReceiveCouponDto.cs" />
     <Compile Include="Dtos\ReceiveGameDto.cs" />
+    <Compile Include="Dtos\RechargeInfoDto.cs" />
     <Compile Include="Dtos\RechargePlanDto.cs" />
     <Compile Include="Dtos\RechargeTotalDataDto.cs" />
     <Compile Include="Dtos\ReimbursementDto.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="Entities\VerificationCode.cs" />
     <Compile Include="Entities\VerificationRecord.cs" />
     <Compile Include="Entities\VisitRecord.cs" />
+    <Compile Include="Enums\EAdjustType.cs" />
     <Compile Include="Enums\EApproveStatus.cs" />
     <Compile Include="Enums\EBusinessType.cs" />
     <Compile Include="Enums\ECardStatus.cs" />
@@ -189,6 +193,7 @@
     <Compile Include="Filters\GameSettingFilter.cs" />
     <Compile Include="Filters\GivenCouponFilter.cs" />
     <Compile Include="Filters\HistoryFilter.cs" />
+    <Compile Include="Filters\MemberCardFilter.cs" />
     <Compile Include="Filters\MemberCardThemeFilter.cs" />
     <Compile Include="Filters\MemberCardTypeFilter.cs" />
     <Compile Include="Filters\MemberFilter.cs" />

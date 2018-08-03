@@ -265,7 +265,7 @@ namespace VVCar.VIP.Services.DomainServices
                 if (filter.IsFromUserMember)
                 {
                     var memberIds = UserMemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).Select(t => t.MemberID).Distinct();
-                    queryable = queryable.Where(p=> !memberIds.Contains(p.ID));
+                    queryable = queryable.Where(p => !memberIds.Contains(p.ID));
                 }
                 if (filter.Status.HasValue)
                     queryable = queryable.Where(p => p.Card.Status == filter.Status.Value);
@@ -570,7 +570,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (string.IsNullOrEmpty(cardNumber))
                 return null;
-            return Repository.GetIncludes(false)//"OwnerGroup", "MemberGrade", "MemberGrade.GradeRights"
+            return Repository.GetIncludes(false, "MemberGroup")//"OwnerGroup", "MemberGrade", "MemberGrade.GradeRights"
                 .FirstOrDefault(t => t.CardNumber == cardNumber);
         }
 
@@ -583,7 +583,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (string.IsNullOrEmpty(mobilePhoneNo))
                 return null;
-            return this.Repository.GetIncludes(false)//"Card", "OwnerGroup", "MemberGrade", "MemberGrade.GradeRights"
+            return this.Repository.GetIncludes(false, "Card", "Card.CardType", "MemberGroup")//"Card", "OwnerGroup", "MemberGrade", "MemberGrade.GradeRights"
                 .FirstOrDefault(t => t.MobilePhoneNo == mobilePhoneNo);
         }
 

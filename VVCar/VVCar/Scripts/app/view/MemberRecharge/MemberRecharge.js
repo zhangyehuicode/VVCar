@@ -24,7 +24,7 @@
             },
             items: [{
                 xtype: 'displayfield',
-                value: '新增会员储值',
+                value: '会员储值',
                 fieldStyle: 'font-weight: bold; font-size: 22px',
                 margin: '0 0 20 0',
             }, {
@@ -75,8 +75,14 @@
                 anchor: '100%',
                 items: [{
                     xtype: 'textfield',
+                    fieldLabel: '出生年月',
+                    name: "Birthday",
+                    flex: 1,
+                }, {
+                    xtype: 'textfield',
                     fieldLabel: '卡片状态',
                     name: "CardStatus",
+                    margin: '0 0 0 10',
                     flex: 1,
                 }, {
                     xtype: 'textfield',
@@ -84,6 +90,7 @@
                     name: "CardType",
                     margin: '0 0 0 10',
                     flex: 1,
+                    hidden: true,
                 }]
             }, {
                 xtype: 'fieldcontainer',
@@ -93,12 +100,14 @@
                     fieldLabel: '出生年月',
                     name: "Birthday",
                     flex: 1,
+                    hidden: true,
                 }, {
                     xtype: 'textfield',
                     fieldLabel: '注册门店',
                     name: "CreatedDepartment",
                     margin: '0 0 0 10',
                     flex: 1,
+                    hidden: true,
                 }]
             }, {
                 xtype: 'fieldcontainer',
@@ -128,28 +137,6 @@
                     fieldStyle: 'font-weight: bold',
                 }, {
                     xtype: 'combobox',
-                    fieldLabel: '储值方案',
-                    name: 'RechargePlanID',
-                    flex: 1,
-                    margin: '0 0 0 10',
-                    queryMode: 'local',
-                    store: Ext.create('WX.store.BaseData.RechargePlanStore'),
-                    displayField: 'Name',
-                    valueField: 'ID',
-                    editable: false,
-                    forceSelection: true,
-                    allowBlank: false,
-                    readOnly: false,
-                    tabIndex: 2,
-                    labelStyle: 'font-weight: bold',
-                    fieldStyle: 'font-weight: bold',
-                }]
-            }, {
-                xtype: 'fieldcontainer',
-                layout: 'hbox',
-                anchor: '50%',
-                items: [{
-                    xtype: 'combobox',
                     fieldLabel: '支付方式',
                     name: 'PaymentType',
                     flex: 1,
@@ -164,8 +151,51 @@
                     tabIndex: 3,
                     labelStyle: 'font-weight: bold',
                     fieldStyle: 'font-weight: bold',
-                    margin: '0 5 8 0',
+                    //margin: '0 5 8 0',
+                    margin: '0 0 0 10',
+                }, {
+                    xtype: 'combobox',
+                    fieldLabel: '储值方案',
+                    name: 'RechargePlanID',
+                    flex: 1,
+                    margin: '0 0 0 10',
+                    queryMode: 'local',
+                    //store: Ext.create('WX.store.BaseData.RechargePlanStore'),
+                    displayField: 'Name',
+                    valueField: 'ID',
+                    editable: false,
+                    forceSelection: true,
+                    allowBlank: false,
+                    readOnly: false,
+                    tabIndex: 2,
+                    labelStyle: 'font-weight: bold',
+                    fieldStyle: 'font-weight: bold',
+                    hidden: true,
                 }]
+            }, {
+                xtype: 'fieldcontainer',
+                layout: 'hbox',
+                anchor: '50%',
+                items: [
+                    //{
+                    //    xtype: 'combobox',
+                    //    fieldLabel: '支付方式',
+                    //    name: 'PaymentType',
+                    //    flex: 1,
+                    //    queryMode: 'local',
+                    //    store: Ext.getStore('DataDict.PaymentTypeStore'),
+                    //    displayField: 'DictName',
+                    //    valueField: 'DictValue',
+                    //    editable: false,
+                    //    forceSelection: true,
+                    //    allowBlank: false,
+                    //    readOnly: false,
+                    //    tabIndex: 3,
+                    //    labelStyle: 'font-weight: bold',
+                    //    fieldStyle: 'font-weight: bold',
+                    //    margin: '0 5 8 0',
+                    //}
+                ]
             }, {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
@@ -174,24 +204,27 @@
                     fieldLabel: '本次储值金额',
                     name: "RechargeAmount",
                     flex: 1,
-                    labelWidth: 110,
+                    labelWidth: 85,
                     allowBlank: false,
-                    //readOnly: false,
+                    readOnly: false,
                     //tabIndex: 3,
                     labelStyle: 'font-weight: bold',
                     fieldStyle: 'font-weight: bold; font-size: 30px; height: 37px',
+                    minValue: 0,
                 }, {
                     xtype: 'numberfield',
                     fieldLabel: '赠送金额',
                     name: "GiveAmount",
                     margin: '0 0 0 10',
                     flex: 1,
-                    labelWidth: 110,
+                    labelWidth: 80,
                     allowBlank: false,
-                    //readOnly: false,
+                    readOnly: false,
                     //tabIndex: 4,
                     labelStyle: 'font-weight: bold',
                     fieldStyle: 'font-weight: bold; font-size: 30px; height: 37px',
+                    minValue: 0,
+                    value: 0,
                 }]
             }],
             buttons: [{

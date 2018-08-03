@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain;
+using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
 using VVCar.VIP.Domain;
+using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Enums;
+using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
 using YEF.Core;
 using YEF.Core.Data;
@@ -48,7 +52,90 @@ namespace VVCar.VIP.Services.DomainServices
             }
         }
 
+        IRepository<RechargeHistory> RechargeHistoryRepo { get => UnitOfWork.GetRepository<IRepository<RechargeHistory>>(); }
+
         IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
+
+        IRechargeHistoryService _rechargeHistoryService;
+
+        /// <summary>
+        /// 储值记录
+        /// </summary>
+        IRechargeHistoryService RechargeHistoryService
+        {
+            get
+            {
+                if (_rechargeHistoryService == null)
+                {
+                    _rechargeHistoryService = ServiceLocator.Instance.GetService<IRechargeHistoryService>();
+                }
+                return _rechargeHistoryService;
+            }
+        }
+
+        IRechargePlanService _rechargePlanService;
+
+        /// <summary>
+        /// 储值方案
+        /// </summary>
+        IRechargePlanService RechargePlanService
+        {
+            get
+            {
+                if (_rechargePlanService == null)
+                {
+                    _rechargePlanService = ServiceLocator.Instance.GetService<IRechargePlanService>();
+                }
+                return _rechargePlanService;
+            }
+        }
+
+        ISystemSettingService SystemSettingService
+        {
+            get { return ServiceLocator.Instance.GetService<ISystemSettingService>(); }
+        }
+
+        /// <summary>
+        /// 微信服务
+        /// </summary>
+        IWeChatService WeChatService
+        {
+            get { return ServiceLocator.Instance.GetService<IWeChatService>(); }
+        }
+
+        ITradeHistoryService _tradeHistoryService;
+
+        /// <summary>
+        /// 消费记录
+        /// </summary>
+        ITradeHistoryService TradeHistoryService
+        {
+            get
+            {
+                if (_tradeHistoryService == null)
+                {
+                    _tradeHistoryService = ServiceLocator.Instance.GetService<ITradeHistoryService>();
+                }
+                return _tradeHistoryService;
+            }
+        }
+
+        IMemberCardTypeService _memberCardTypeService;
+
+        /// <summary>
+        /// 卡片类型
+        /// </summary>
+        IMemberCardTypeService MemberCardTypeService
+        {
+            get
+            {
+                if (_memberCardTypeService == null)
+                {
+                    _memberCardTypeService = ServiceLocator.Instance.GetService<IMemberCardTypeService>();
+                }
+                return _memberCardTypeService;
+            }
+        }
 
         #region properties
 
@@ -102,57 +189,6 @@ namespace VVCar.VIP.Services.DomainServices
 
         //IMemberGroupService MemberGroupService => ServiceLocator.Instance.GetService<IMemberGroupService>();
 
-        //IRechargeHistoryService _rechargeHistoryService;
-
-        ///// <summary>
-        ///// 储值记录
-        ///// </summary>
-        //IRechargeHistoryService RechargeHistoryService
-        //{
-        //    get
-        //    {
-        //        if (_rechargeHistoryService == null)
-        //        {
-        //            _rechargeHistoryService = ServiceLocator.Instance.GetService<IRechargeHistoryService>();
-        //        }
-        //        return _rechargeHistoryService;
-        //    }
-        //}
-
-        //ITradeHistoryService _tradeHistoryService;
-
-        ///// <summary>
-        ///// 消费记录
-        ///// </summary>
-        //ITradeHistoryService TradeHistoryService
-        //{
-        //    get
-        //    {
-        //        if (_tradeHistoryService == null)
-        //        {
-        //            _tradeHistoryService = ServiceLocator.Instance.GetService<ITradeHistoryService>();
-        //        }
-        //        return _tradeHistoryService;
-        //    }
-        //}
-
-        //IRechargePlanService _rechargePlanService;
-
-        ///// <summary>
-        ///// 储值方案
-        ///// </summary>
-        //IRechargePlanService RechargePlanService
-        //{
-        //    get
-        //    {
-        //        if (_rechargePlanService == null)
-        //        {
-        //            _rechargePlanService = ServiceLocator.Instance.GetService<IRechargePlanService>();
-        //        }
-        //        return _rechargePlanService;
-        //    }
-        //}
-
         //IRepository<RechargePlan> RechargePlanRepo
         //{
         //    get { return UnitOfWork.GetRepository<IRepository<RechargePlan>>(); }
@@ -161,31 +197,6 @@ namespace VVCar.VIP.Services.DomainServices
         //IMemberGiftCardService MemberGiftCardService
         //{
         //    get { return ServiceLocator.Instance.GetService<IMemberGiftCardService>(); }
-        //}
-
-        //IMemberCardTypeService _memberCardTypeService;
-
-        ///// <summary>
-        ///// 卡片类型
-        ///// </summary>
-        //IMemberCardTypeService MemberCardTypeService
-        //{
-        //    get
-        //    {
-        //        if (_memberCardTypeService == null)
-        //        {
-        //            _memberCardTypeService = ServiceLocator.Instance.GetService<IMemberCardTypeService>();
-        //        }
-        //        return _memberCardTypeService;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 微信服务
-        ///// </summary>
-        //IWeChatService WeChatService
-        //{
-        //    get { return ServiceLocator.Instance.GetService<IWeChatService>(); }
         //}
 
         //#region SystemSettingService
@@ -262,6 +273,15 @@ namespace VVCar.VIP.Services.DomainServices
             return base.Update(memberCard);
         }
 
+        public override bool Delete(Guid key)
+        {
+            var entity = Repository.GetByKey(key);
+            if (entity == null)
+                throw new DomainException("数据不存在");
+            entity.IsDeleted = true;
+            return Repository.Update(entity) > 0;
+        }
+
         public bool ReportOrCancelLoss(string cardNumber, ECardStatus cardStatus)
         {
             var card = Repository.GetQueryable().Where(p => p.Code == cardNumber).FirstOrDefault();
@@ -321,127 +341,620 @@ namespace VVCar.VIP.Services.DomainServices
             return this.Add(newCard);
         }
 
+        /// <summary>
+        /// 校验是否可以充值
+        /// </summary>
+        /// <param name="rechargeInfo"></param>
+        /// <returns></returns>
+        public bool ValidateBeforeRecharge(RechargeInfoDto rechargeInfo)
+        {
+            if (rechargeInfo == null)
+            {
+                throw new DomainException("参数不正确");
+            }
+            if (rechargeInfo.RechargeAmount <= 0 || rechargeInfo.GiveAmount < 0)
+            {
+                throw new DomainException("金额错误");
+            }
+            if (!string.IsNullOrEmpty(rechargeInfo.OutTradeNo))//校验是否是重复充值回调
+            {
+                var sameOutTradeNoCount = RechargeHistoryService.Count(t => t.OutTradeNo == rechargeInfo.OutTradeNo);
+                if (sameOutTradeNoCount > 0)
+                {
+                    throw new DomainException(string.Format("{0}已经交易，重复回调。", rechargeInfo.OutTradeNo));
+                }
+            }
+            //var rechargePlan = RechargePlanService.Get(rechargeInfo.RechargePlanID);
+            //if (rechargePlan == null || rechargePlan.IsAvailable == false
+            //    || rechargePlan.EffectiveDate > DateTime.Now || rechargePlan.ExpiredDate < DateTime.Now)
+            //{
+            //    throw new DomainException("方案不存在或已失效，请重新选择");
+            //}
+            //if (rechargePlan.RechargeAmount != rechargeInfo.RechargeAmount
+            //    || rechargePlan.GiveAmount != rechargeInfo.GiveAmount)
+            //{
+            //    throw new DomainException("方案金额数据不正确");
+            //}
+            var card = this.Repository.GetInclude(t => t.CardType)
+                .Where(t => t.ID == rechargeInfo.CardID)
+                .FirstOrDefault();
+            if (card == null)
+            {
+                throw new DomainException("卡不存在");
+            }
+            //if (card.CardType != null && false == card.CardType.AllowRecharge)
+            //{
+            //    throw new DomainException("卡片不允许储值");
+            //}
+            //var tempCardBalance = card.CardBalance + (rechargeInfo.RechargeAmount + rechargeInfo.GiveAmount);
+            //if (card.CardType != null && card.CardType.MaxRecharge.HasValue && tempCardBalance > card.CardType.MaxRecharge)
+            //{
+            //    throw new DomainException("超过卡片储值余额上限");
+            //}
+            //var member = MemberService.GetMemberByCardNumber(card.Code);
+            //验证储值次数
+            //if (rechargePlan.MaxRechargeCount > 0)
+            //{
+            //    int count = 0;
+            //    if (member != null)
+            //    {
+            //        count = RechargeHistoryService.Count(p =>
+            //            (p.CardID == rechargeInfo.CardID || p.MemberID == member.ID)
+            //            && p.RechargePlanId == rechargePlan.ID);
+            //    }
+            //    else
+            //    {
+            //        count = RechargeHistoryService.Count(p => p.CardID == rechargeInfo.CardID && p.RechargePlanId == rechargePlan.ID);
+            //    }
+            //    if (count >= rechargePlan.MaxRechargeCount)
+            //        throw new DomainException(string.Format("方案“{0}”只允许单个会员储值{1}次", rechargePlan.Name, rechargePlan.MaxRechargeCount));
+            //}
+            return true;
+        }
+
+        /// <summary>
+        /// 充值
+        /// </summary>
+        /// <param name="rechargeInfo">储值信息</param>
+        /// <param name="tradeSource">交易来源</param>
+        /// <returns></returns>
+        public CardTradeResultDto Recharge(RechargeInfoDto rechargeInfo, ETradeSource tradeSource)
+        {
+            this.ValidateBeforeRecharge(rechargeInfo);
+            //var rechargePlan = RechargePlanService.Get(rechargeInfo.RechargePlanID);
+            var card = this.Repository.GetInclude(t => t.CardType)
+                .Where(t => t.ID == rechargeInfo.CardID)
+                .FirstOrDefault();
+            var member = MemberService.GetMemberByCardNumber(card.Code);
+            var result = new CardTradeResultDto()
+            {
+                CardNumber = card.Code,
+                CardType = card.CardType != null ? card.CardType.Name : string.Empty,
+                BeforeBalance = card.CardBalance
+            };
+            this.UnitOfWork.BeginTransaction();
+            try
+            {
+                card.CardBalance += (rechargeInfo.RechargeAmount + rechargeInfo.GiveAmount);
+                card.TotalRecharge += rechargeInfo.RechargeAmount;
+                card.TotalGive += rechargeInfo.GiveAmount;
+                this.Repository.Update(card);
+                var history = new RechargeHistory
+                {
+                    CardID = rechargeInfo.CardID,
+                    CardNumber = card.Code,
+                    CardBalance = card.CardBalance,
+                    TradeAmount = rechargeInfo.RechargeAmount,
+                    GiveAmount = rechargeInfo.GiveAmount,
+                    OutTradeNo = rechargeInfo.OutTradeNo,
+                    CreatedUser = rechargeInfo.OperateUser,
+                    PaymentType = rechargeInfo.PaymentType,
+                    TradeSource = tradeSource,
+                    //RechargePlanId = rechargePlan.ID,
+                    TradeDepartmentID = AppContext.CurrentSession.DepartmentID,
+                };
+                var lastrechargehistory = RechargeHistoryRepo.GetQueryable(false).OrderByDescending(t => t.CreatedDate).FirstOrDefault();
+                if (lastrechargehistory != null && lastrechargehistory.CreatedDate.Date != DateTime.Now.Date)
+                {
+                    MakeCodeRuleService.ResetCode(MakeCodeTypes.RechargeBill);
+                }
+                history.TradeNo = MakeCodeRuleService.GenerateCode(MakeCodeTypes.RechargeBill);
+                if (member != null)
+                {
+                    history.MemberID = member.ID;
+                    result.MemberName = member.Name;
+                }
+                if (card.CardTypeID != MemberCardTypes.GiftCard)
+                {
+                    RechargeHistoryService.Add(history);
+                }
+                this.UnitOfWork.CommitTransaction();
+                result.TradeNo = history.TradeNo;
+                result.TradeAmount = (rechargeInfo.RechargeAmount + rechargeInfo.GiveAmount);
+                result.AfterBalance = card.CardBalance;
+                result.TotalRecharge = card.TotalRecharge;
+                result.TotalConsume = card.TotalConsume;
+                if (card.CardTypeID != MemberCardTypes.GiftCard)
+                {
+                    RechargeNoticeToWeChat(rechargeInfo.RechargeAmount, member, result.AfterBalance);
+                    //if (member != null)
+                    //    MemberGradeService.UseMemberGradeRights(member.ID, false, rechargeInfo.RechargeAmount);
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                this.UnitOfWork.RollbackTransaction();
+                AppContext.Logger.Error("会员充值出现异常，", ex);
+                throw ex;
+            }
+        }
+
+        void RechargeNoticeToWeChat(decimal rechargeAmount, Member member, decimal afterBalance)
+        {
+            if (member == null || string.IsNullOrEmpty(member.WeChatOpenID))
+                return;
+            var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_MemberRecharge);
+            if (string.IsNullOrEmpty(templateId))
+                return;
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = member.WeChatOpenID,
+                template_id = templateId,
+                url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={AppContext.CurrentSession.MerchantCode}",
+                data = new System.Dynamic.ExpandoObject(),
+            };
+            message.data.first = new WeChatTemplateMessageDto.MessageData("您好，您的会员卡充值成功。");
+            message.data.accountType = new WeChatTemplateMessageDto.MessageData("会员卡号");
+            message.data.account = new WeChatTemplateMessageDto.MessageData(member.CardNumber);
+            message.data.amount = new WeChatTemplateMessageDto.MessageData(rechargeAmount.ToString("f") + "元", "#FF4040");
+            message.data.result = new WeChatTemplateMessageDto.MessageData("充值成功");
+            message.data.remark = new WeChatTemplateMessageDto.MessageData($"当前余额：{afterBalance.ToString("f")}元");
+            WeChatService.SendWeChatNotifyAsync(message);
+        }
+
+        /// <summary>
+        /// 获取会员卡类型
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public MemberCardTypeDto GetCardType(string code)
+        {
+            return Repository.GetQueryable(false)
+                .Where(t => t.Code == code)
+                .Select(t => new MemberCardTypeDto()
+                {
+                    Name = t.CardType != null ? t.CardType.Name : string.Empty,
+                    AllowStoreActivate = t.CardType != null ? t.CardType.AllowStoreActivate : true,
+                })
+                .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 校验会员卡的有效性
+        /// </summary>
+        /// <param name="memberCard"></param>
+        /// <returns></returns>
+        public bool VerifyCode(MemberCardFilter memberCard)
+        {
+            if (!string.IsNullOrEmpty(memberCard.MobilePhoneNo))
+            {
+                var existmobileno = this.MemberService.Exists(m => m.MobilePhoneNo == memberCard.MobilePhoneNo);
+                if (existmobileno)
+                {
+                    throw new DomainException("该手机号码已使用!");
+                }
+            }
+            return Repository.Exists(p => p.Code == memberCard.Code && p.VerifyCode == memberCard.VerifyCode);
+        }
+
+        /// <summary>
+        /// 根据卡号或者手机号码获取卡信息
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public MemberCardDto GetCardInfoByNumber(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+                return null;
+            var memberCard = this.Repository.GetInclude(t => t.CardType, false)
+                .Where(t => t.Code == number)
+                .FirstOrDefault();
+            Member member = null;
+            if (memberCard == null)
+            {
+                member = MemberService.GetMemberByMobilePhone(number);
+                if (member == null)
+                    return null;
+                memberCard = member.Card;
+            }
+            else
+            {
+                member = MemberService.GetMemberByCardNumber(number);
+            }
+            var cardInfo = new MemberCardDto
+            {
+                CardID = memberCard.ID,
+                CardNumber = memberCard.Code,
+                CardTypeID = memberCard.CardType != null ? memberCard.CardType.ID.ToString() : string.Empty,
+                CardType = memberCard.CardType != null ? memberCard.CardType.Name : string.Empty,
+                AllowDiscount = memberCard.CardType != null ? memberCard.CardType.AllowDiscount : true,
+                AllowRecharge = memberCard.CardType != null ? memberCard.CardType.AllowRecharge : true,
+                CardStatus = memberCard.Status.GetDescription(),
+                EffectiveDate = memberCard.EffectiveDate.HasValue ? memberCard.EffectiveDate.Value.ToDateString() : string.Empty,
+                //ExpiredDate = memberCard.ExpiredDate.HasValue ? memberCard.ExpiredDate.Value.ToDateString() : string.Empty,
+                CardBalance = memberCard.CardBalance,
+                VerifyCode = memberCard.VerifyCode,
+                IsVirtual = memberCard.IsVirtual,
+
+            };
+            if (memberCard.ExpiredDate.HasValue)
+            {
+                cardInfo.ExpiredDate = memberCard.ExpiredDate.Value.Date.AddDays(1).AddSeconds(-1).ToDateTimeString();
+            }
+            if (member != null)
+            {
+                cardInfo.MemberID = member.ID;
+                cardInfo.MemberName = member.Name;
+                cardInfo.MobilePhoneNo = member.MobilePhoneNo;
+                cardInfo.Birthday = member.Birthday.HasValue ? member.Birthday.Value.ToDateString() : string.Empty;
+                cardInfo.Sex = member.Sex.GetDescription();
+                cardInfo.MemberGroup = member.MemberGroup == null ? "普通会员" : member.MemberGroup.Name;
+                cardInfo.IsActivate = !string.IsNullOrEmpty(member.MobilePhoneNo);//&& !string.IsNullOrEmpty(member.WeChatOpenID);
+                cardInfo.MemberPoint = member.Point;
+                if (member.MemberGrade != null)
+                {
+                    cardInfo.MemberGrade = member.MemberGrade.Name;
+                    cardInfo.IsAllowPointPayment = member.MemberGrade.IsAllowPointPayment;
+                    cardInfo.PonitExchangeValue = member.MemberGrade.PonitExchangeValue;
+                    cardInfo.DiscountRate = member.MemberGrade.DiscountRate;
+                    //if (!member.MemberGrade.DiscountRate.HasValue)
+                    //{
+                    //    cardInfo.MemberDiscountRight = member.MemberGrade.GradeRights != null ? member.MemberGrade.GradeRights.Where(t => t.RightType == EGradeRightType.Discount).Select(t => new MemberPosRightDto
+                    //    {
+                    //        PosRightID = t.PosRightID,
+                    //        PosRightCode = t.PosRightCode,
+                    //        PosRightName = t.PosRightName,
+                    //    }).ToList() : null;
+                    //}
+                    //cardInfo.MemberProductRight = member.MemberGrade.GradeRights != null ? member.MemberGrade.GradeRights.Where(t => t.RightType == EGradeRightType.Product).Select(t => new MemberPosRightDto
+                    //{
+                    //    PosRightID = t.PosRightID,
+                    //    PosRightCode = t.PosRightCode,
+                    //    PosRightName = t.PosRightName,
+                    //}).ToList() : null;
+                }
+            }
+            //if (memberCard.CardTypeID.ToString() == "00000000-0000-0000-0000-000000000003")
+            //{
+            //    var FindMemberGiftCard = MemberGiftCarRepo.GetQueryableAllData(false).Where(t => t.GiftCardID == memberCard.ID).FirstOrDefault();
+            //    if (FindMemberGiftCard != null)
+            //    {
+            //        var MemberCardThemeID = FindMemberGiftCard.MemberCardThemeID;
+            //        var FindMemberCardTheme = MemberCardThemeRepo.GetQueryableAllData(true).Where(t => t.ID == MemberCardThemeID).FirstOrDefault();
+            //        if (FindMemberCardTheme != null)
+            //        {
+            //            var DataTimeList = new List<GiftCardUserTime>();
+            //            var CardThemeGroupID = FindMemberCardTheme.CardThemeGroupID;
+            //            var FindCardThemeGroupUseTime = CardThemeGroupUseTimeRepo.GetQueryableAllData(false).Where(t => t.TCardThemeGroupID == CardThemeGroupID).ToArray(); //时间
+            //            if (FindCardThemeGroupUseTime != null)
+            //            {
+            //                for (var i = 0; i < FindCardThemeGroupUseTime.Length; i++)
+            //                {
+            //                    DataTimeList.Add(new GiftCardUserTime
+            //                    {
+            //                        BeginTime = FindCardThemeGroupUseTime[i].BeginTime,
+            //                        EndTime = FindCardThemeGroupUseTime[i].EndTime,
+            //                    });
+            //                }
+            //            }
+            //            var FindCardThemeGroup = CardThemeGroupRepo.GetQueryableAllData(false).Where(t => t.ID == CardThemeGroupID).FirstOrDefault();
+            //            if (FindCardThemeGroup != null)
+            //            {
+            //                cardInfo.UserCode = FindCardThemeGroup.DepartmentCode;
+            //                cardInfo.UserGiftCardStartTime = FindCardThemeGroup.GiftCardStartTime;
+            //                cardInfo.UserGiftCardEndTime = FindCardThemeGroup.GiftCardEndTime;
+            //                cardInfo.UserIsAvailable = FindCardThemeGroup.IsAvailable;
+            //                cardInfo.UserTimeSlot = FindCardThemeGroup.TimeSlot;
+            //                cardInfo.UserWeek = FindCardThemeGroup.week;
+            //                cardInfo.IsNotFixationDate = FindCardThemeGroup.IsNotFixationDate;
+            //                cardInfo.EffectiveDaysOfAfterBuy = FindCardThemeGroup.EffectiveDaysOfAfterBuy;
+            //                cardInfo.EffectiveDays = FindCardThemeGroup.EffectiveDays;
+            //            }
+            //            cardInfo.GiftCardUserTimeList = DataTimeList;
+            //        }
+            //    }
+            //}
+            return cardInfo;
+        }
+
+        /// <summary>
+        /// 调整金额
+        /// </summary>
+        /// <param name="adjustBalanceDto"></param>
+        /// <returns></returns>
+        public bool AdjustBalance(AdjustBalanceDto adjustBalanceDto)
+        {
+            switch (adjustBalanceDto.AdjustType)
+            {
+                case EAdjustType.Decrease:
+                    return DecreaseBalance(adjustBalanceDto);
+
+                case EAdjustType.Increase:
+                    return IncreaseBalance(adjustBalanceDto);
+
+                default:
+                    throw new DomainException("请选择正确的调整类别！");
+            }
+        }
+
+        /// <summary>
+        /// 增加余额
+        /// </summary>
+        /// <param name="adjustBalanceDto"></param>
+        /// <returns></returns>
+        private bool IncreaseBalance(AdjustBalanceDto adjustBalanceDto)
+        {
+            var card = GetCardByNumber(adjustBalanceDto.CardNumber);
+            var member = MemberService.GetMemberByCardNumber(card.Code);
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                var addResult = RechargeHistoryService.Add(new RechargeHistory
+                {
+                    Card = null,
+                    CardBalance = card.CardBalance,
+                    CardID = card.ID,
+                    CardNumber = card.Code,
+                    CreatedDate = DateTime.Now,
+                    CreatedUser = AppContext.CurrentSession.UserName,
+                    CreatedUserID = AppContext.CurrentSession.UserID,
+                    DrawReceiptMoney = 0,
+                    DrawReceiptDepartment = null,
+                    DrawReceiptUser = null,
+                    DrawReceiptUserId = null,
+                    GiveAmount = adjustBalanceDto.AdjustBalance,
+                    HasDrawReceipt = false,
+                    ID = Util.NewID(),
+                    IsDeleted = false,
+                    Member = null,
+                    MemberID = member.ID,
+                    OutTradeNo = null,
+                    PaymentType = EPaymentType.AdjustBalance,
+                    RechargePlanId = null,
+                    Remark = adjustBalanceDto.AdjustMark,
+                    TradeAmount = 0,
+                    TradeDepartment = null,
+                    TradeDepartmentID = AppContext.CurrentSession.DepartmentID,
+                    TradeSource = ETradeSource.Portal,
+                    TradeNo = MakeCodeRuleService.GenerateCode(MakeCodeTypes.RechargeBill),
+                    BusinessType = EBusinessType.AdjustBalance
+                });
+
+                card.CardBalance += adjustBalanceDto.AdjustBalance;
+                card.TotalRecharge += adjustBalanceDto.AdjustBalance;
+                Repository.Update(card);
+                AdjustNoticeToWeChat(member.WeChatOpenID, true, adjustBalanceDto.AdjustBalance, card.CardBalance, adjustBalanceDto.AdjustMark);
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppContext.Logger.Error("MemberCardService.IncreaseBalance 发生异常。", ex);
+                UnitOfWork.RollbackTransaction();
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 扣减余额
+        /// </summary>
+        /// <param name="adjustBalanceDto"></param>
+        /// <returns></returns>
+        private bool DecreaseBalance(AdjustBalanceDto adjustBalanceDto)
+        {
+            var card = GetCardByNumber(adjustBalanceDto.CardNumber);
+            if (card.CardBalance < adjustBalanceDto.AdjustBalance)
+                throw new DomainException(string.Format("减少金额不能大于当前余额"));
+
+            var member = MemberService.GetMemberByCardNumber(card.Code);
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                TradeHistoryService.Add(new TradeHistory
+                {
+                    Card = null,
+                    CardBalance = card.CardBalance,
+                    CardID = card.ID,
+                    CardNumber = card.Code,
+                    CreatedDate = DateTime.Now,
+                    CreatedUser = AppContext.CurrentSession.UserName,
+                    CreatedUserID = AppContext.CurrentSession.UserID,
+                    ID = Util.NewID(),
+                    IsDeleted = false,
+                    Member = null,
+                    MemberID = member.ID,
+                    OutTradeNo = null,
+                    Remark = adjustBalanceDto.AdjustMark,
+                    TradeAmount = adjustBalanceDto.AdjustBalance,
+                    TradeDepartment = null,
+                    TradeDepartmentID = AppContext.CurrentSession.DepartmentID,
+                    TradeSource = ETradeSource.Portal,
+                    TradeNo = MakeCodeRuleService.GenerateCode(MakeCodeTypes.ConsumeBill),
+                    BusinessType = EBusinessType.AdjustBalance,
+                    ConsumeType = EConsumeType.CardBalance,
+                    UseBalanceAmount = adjustBalanceDto.AdjustBalance,
+                });
+
+                card.CardBalance -= adjustBalanceDto.AdjustBalance;
+                card.TotalConsume += adjustBalanceDto.AdjustBalance;
+                Repository.Update(card);
+                AdjustNoticeToWeChat(member.WeChatOpenID, false, adjustBalanceDto.AdjustBalance, card.CardBalance, adjustBalanceDto.AdjustMark);
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AppContext.Logger.Error("MemberCardService.DecreaseBalance 发生异常。", ex);
+                UnitOfWork.RollbackTransaction();
+                throw ex;
+            }
+        }
+
+        public MemberCard GetCardByNumber(string number)
+        {
+            if (string.IsNullOrEmpty(number))
+                return null;
+            //先查找会员卡号
+            var memberCard = this.Repository.GetQueryable(false)
+                .Where(t => t.Code == number)
+                .FirstOrDefault();
+            Member member = null;
+            if (memberCard == null) //如果通过卡号找不到信息，再通过手机号码查找
+            {
+                member = MemberService.GetMemberByMobilePhone(number);
+                if (member == null)
+                    throw new DomainException("找不到对应的会员卡");
+                memberCard = member.Card;
+            }
+            else
+            {
+                if (memberCard.ExpiredDate.HasValue)
+                {
+                    memberCard.ExpiredDate = memberCard.ExpiredDate.Value.Date.AddDays(1).AddSeconds(-1);
+                }
+            }
+            return memberCard;
+        }
+
+        /// <summary>
+        /// 发送微信调整通知
+        /// </summary>
+        /// <param name="weChatOpenID">接受的微信openID</param>
+        /// <param name="isIncrease">是否增加</param>
+        /// <param name="adjustAmount">调整金额</param>
+        /// <param name="afterBalance">卡内余额</param>
+        /// <param name="adjustRemark">调整原因</param>
+        private void AdjustNoticeToWeChat(string weChatOpenID, bool isIncrease, decimal adjustAmount, decimal afterBalance, string adjustRemark)
+        {
+            if (string.IsNullOrEmpty(weChatOpenID))
+                return;
+            var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_MemberAdjust);
+            if (string.IsNullOrEmpty(templateId))
+                return;
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = weChatOpenID,
+                template_id = templateId,
+                url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/PerCenter?mch={AppContext.CurrentSession.MerchantCode}",
+                data = new System.Dynamic.ExpandoObject(),
+            };
+            message.data.first = new WeChatTemplateMessageDto.MessageData("您的会员账户调整如下：");
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateTimeString());
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(isIncrease ? "增加" : "扣减");
+            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData($"{adjustAmount.ToString("f")}元", "#FF4040");
+            message.data.keyword4 = new WeChatTemplateMessageDto.MessageData($"{afterBalance.ToString("f")}元");
+            message.data.remark = new WeChatTemplateMessageDto.MessageData(adjustRemark);
+            WeChatService.SendWeChatNotifyAsync(message);
+        }
+
+        public PagedResultDto<MemberCard> QueryData(MemberCardFilter filter)
+        {
+            var result = new PagedResultDto<MemberCard>();
+            var queryable = Repository.GetQueryable(false);
+            if (filter == null || filter.All)
+            {
+                result.TotalCount = queryable.Count();
+                result.Items = queryable.ToArray();
+                return result;
+            }
+            if (!string.IsNullOrEmpty(filter.Code))
+            {
+                queryable = queryable.Where(p => p.Code.Contains(filter.Code));
+            }
+            if (filter.Codes != null && filter.Codes.Count > 0)
+            {
+                queryable = queryable.Where(p => filter.Codes.Contains(p.Code));
+            }
+            if (!string.IsNullOrEmpty(filter.StartCode))
+            {
+                queryable = queryable.Where(p => string.Compare(p.Code, filter.StartCode) >= 0);
+            }
+            if (!string.IsNullOrEmpty(filter.EndCode))
+            {
+                queryable = queryable.Where(p => string.Compare(p.Code, filter.EndCode) <= 0);
+            }
+            if (!string.IsNullOrEmpty(filter.BatchCode))
+            {
+                queryable = queryable.Where(p => p.BatchCode.Contains(filter.BatchCode));
+            }
+            //if (filter.MemberGroupID.HasValue)
+            //{
+            //    queryable = queryable.Where(t => t.MemberGroupID == filter.MemberGroupID);
+            //}
+            //if (filter.MemberGradeID.HasValue)
+            //    queryable = queryable.Where(t => t.MemberGradeID == filter.MemberGradeID);
+            if (filter.CardStatus.HasValue)
+                queryable = queryable.Where(p => p.Status == filter.CardStatus.Value);
+            if (filter.CardTypeID.HasValue)
+                queryable = queryable.Where(p => p.CardTypeID == filter.CardTypeID.Value);
+
+            result.TotalCount = queryable.Count();
+            if (filter.Start.HasValue && filter.Limit.HasValue)
+                queryable = queryable.OrderByDescending(p => p.Code).Skip(filter.Start.Value).Take(filter.Limit.Value);
+            var items = queryable.ToArray();
+            //items.ForEach(t =>
+            //{
+            //    if (t.MemberGroupID == null)
+            //    {
+            //        t.MemberGroupID = Guid.Empty;
+            //    }
+            //});
+            result.Items = items;
+            return result;
+        }
+
+        /// <summary>
+        /// 预生成
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        public IEnumerable<MemberCard> PreGenerate(MemberCardFilter filter)
+        {
+            ValidatePreGenerate(filter);
+            var rule = filter.GenerateRule.Trim(' ');
+            if (rule.Length != 4)
+                throw new DomainException("生成规则必须是四位");
+            if (RuleExists(rule))
+                throw new DomainException(string.Format("生成规则:{0} 已使用", rule));
+
+            var date = DateTime.Now;
+            var r = new Random();
+            var result = new List<MemberCard>();
+            for (int i = 1; i <= filter.Count.Value; i++)
+            {
+                result.Add(new MemberCard
+                {
+                    ID = Util.NewID(),
+                    BatchCode = filter.BatchCode,
+                    CardTypeID = filter.CardTypeID.Value,
+                    Code = GenerateCode(rule, i),
+                    CreatedDate = date,
+                    CreatedUser = AppContext.CurrentSession.UserName,
+                    CreatedUserID = AppContext.CurrentSession.UserID,
+                    EffectiveDate = date,
+                    //ExpiredDate = date.AddYears(100),
+                    Status = ECardStatus.UnActivate,
+                    VerifyCode = GenerateVerifyCode(r),
+                    CardBalance = filter.CardBalance.Value,
+                    //MemberGroupID = filter.MemberGroupID,
+                    //MemberGradeID = filter.MemberGradeID,
+                });
+            }
+            return result;
+        }
+
         #region public
-
-        ///// <summary>
-        ///// 调整金额
-        ///// </summary>
-        ///// <param name="adjustBalanceDto"></param>
-        ///// <returns></returns>
-        //public bool AdjustBalance(AdjustBalanceDto adjustBalanceDto)
-        //{
-        //    switch (adjustBalanceDto.AdjustType)
-        //    {
-        //        case EAdjustType.Decrease:
-        //            return DecreaseBalance(adjustBalanceDto);
-
-        //        case EAdjustType.Increase:
-        //            return IncreaseBalance(adjustBalanceDto);
-
-        //        default:
-        //            throw new DomainException("请选择正确的调整类别！");
-        //    }
-        //}
-
-        //public PagedResultDto<MemberCard> QueryData(MemberCardFilter filter)
-        //{
-        //    var result = new PagedResultDto<MemberCard>();
-        //    var queryable = Repository.GetQueryable(false);
-        //    if (filter == null || filter.All)
-        //    {
-        //        result.TotalCount = queryable.Count();
-        //        result.Items = queryable.ToArray();
-        //        return result;
-        //    }
-        //    if (!string.IsNullOrEmpty(filter.Code))
-        //    {
-        //        queryable = queryable.Where(p => p.Code.Contains(filter.Code));
-        //    }
-        //    if (filter.Codes != null && filter.Codes.Count > 0)
-        //    {
-        //        queryable = queryable.Where(p => filter.Codes.Contains(p.Code));
-        //    }
-        //    if (!string.IsNullOrEmpty(filter.StartCode))
-        //    {
-        //        queryable = queryable.Where(p => string.Compare(p.Code, filter.StartCode) >= 0);
-        //    }
-        //    if (!string.IsNullOrEmpty(filter.EndCode))
-        //    {
-        //        queryable = queryable.Where(p => string.Compare(p.Code, filter.EndCode) <= 0);
-        //    }
-        //    if (!string.IsNullOrEmpty(filter.BatchCode))
-        //    {
-        //        queryable = queryable.Where(p => p.BatchCode.Contains(filter.BatchCode));
-        //    }
-        //    if (filter.MemberGroupID.HasValue)
-        //    {
-        //        queryable = queryable.Where(t => t.MemberGroupID == filter.MemberGroupID);
-        //    }
-        //    if (filter.MemberGradeID.HasValue)
-        //        queryable = queryable.Where(t => t.MemberGradeID == filter.MemberGradeID);
-        //    if (filter.CardStatus.HasValue)
-        //        queryable = queryable.Where(p => p.Status == filter.CardStatus.Value);
-        //    if (filter.CardTypeID.HasValue)
-        //        queryable = queryable.Where(p => p.CardTypeID == filter.CardTypeID.Value);
-
-        //    result.TotalCount = queryable.Count();
-        //    if (filter.Start != null && filter.Limit != null)
-        //    {
-        //        queryable = queryable.OrderByDescending(p => p.Code)
-        //            .Skip(filter.Start.Value)
-        //            .Take(filter.Limit.Value);
-        //    }
-        //    var items = queryable.ToArray();
-        //    items.ForEach(t =>
-        //    {
-        //        if (t.MemberGroupID == null)
-        //        {
-        //            t.MemberGroupID = Guid.Empty;
-        //        }
-        //    });
-        //    result.Items = items;
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// 预生成
-        ///// </summary>
-        ///// <param name="filter"></param>
-        ///// <returns></returns>
-        //public IEnumerable<MemberCard> PreGenerate(MemberCardFilter filter)
-        //{
-        //    ValidatePreGenerate(filter);
-        //    var rule = filter.GenerateRule.Trim(' ');
-        //    if (rule.Length != 4)
-        //        throw new DomainException("生成规则必须是四位");
-        //    if (RuleExists(rule))
-        //        throw new DomainException(string.Format("生成规则:{0} 已使用", rule));
-
-        //    var date = DateTime.Now;
-        //    var r = new Random();
-        //    var result = new List<MemberCard>();
-        //    for (int i = 1; i <= filter.Count.Value; i++)
-        //    {
-        //        result.Add(new MemberCard
-        //        {
-        //            ID = Util.NewID(),
-        //            BatchCode = filter.BatchCode,
-        //            CardTypeID = filter.CardTypeID.Value,
-        //            Code = GenerateCode(rule, i),
-        //            CreatedDate = date,
-        //            CreatedUser = AppContext.CurrentSession.UserName,
-        //            CreatedUserID = AppContext.CurrentSession.UserID,
-        //            EffectiveDate = date,
-        //            //ExpiredDate = date.AddYears(100),
-        //            Status = ECardStatus.UnActivate,
-        //            VerifyCode = GenerateVerifyCode(r),
-        //            CardBalance = filter.CardBalance.Value,
-        //            MemberGroupID = filter.MemberGroupID,
-        //            MemberGradeID = filter.MemberGradeID,
-        //        });
-        //    }
-        //    return result;
-        //}
 
         ///// <summary>
         ///// 批量保存
@@ -516,41 +1029,6 @@ namespace VVCar.VIP.Services.DomainServices
         //        throw new DomainException(ex.Message);
         //    }
         //    return result;
-        //}
-
-        ///// <summary>
-        ///// 获取会员卡类型
-        ///// </summary>
-        ///// <param name="code"></param>
-        ///// <returns></returns>
-        //public MemberCardTypeDto GetCardType(string code)
-        //{
-        //    return Repository.GetQueryable(false)
-        //        .Where(t => t.Code == code)
-        //        .Select(t => new MemberCardTypeDto()
-        //        {
-        //            Name = t.CardType != null ? t.CardType.Name : string.Empty,
-        //            AllowStoreActivate = t.CardType != null ? t.CardType.AllowStoreActivate : true,
-        //        })
-        //        .FirstOrDefault();
-        //}
-
-        ///// <summary>
-        ///// 校验会员卡的有效性
-        ///// </summary>
-        ///// <param name="memberCard"></param>
-        ///// <returns></returns>
-        //public bool VerifyCode(MemberCardFilter memberCard)
-        //{
-        //    if (!string.IsNullOrEmpty(memberCard.MobilePhoneNo))
-        //    {
-        //        var existmobileno = this.MemberService.Exists(m => m.MobilePhoneNo == memberCard.MobilePhoneNo);
-        //        if (existmobileno)
-        //        {
-        //            throw new DomainException("该手机号码已使用!");
-        //        }
-        //    }
-        //    return Repository.Exists(p => p.Code == memberCard.Code && p.VerifyCode == memberCard.VerifyCode);
         //}
 
         ///// <summary>
@@ -913,322 +1391,6 @@ namespace VVCar.VIP.Services.DomainServices
         //        UnitOfWork.RollbackTransaction();
         //        throw new DomainException($"激活礼品卡失败,{e.Message}");
         //    }
-        //}
-
-        //public MemberCard GetCardByNumber(string number)
-        //{
-        //    if (string.IsNullOrEmpty(number))
-        //        return null;
-        //    //先查找会员卡号
-        //    var memberCard = this.Repository.GetQueryable(false)
-        //        .Where(t => t.Code == number)
-        //        .FirstOrDefault();
-        //    Member member = null;
-        //    if (memberCard == null) //如果通过卡号找不到信息，再通过手机号码查找
-        //    {
-        //        member = MemberService.GetMemberByMobilePhone(number);
-        //        if (member == null)
-        //            throw new DomainException("找不到对应的会员卡");
-        //        memberCard = member.Card;
-        //    }
-        //    else
-        //    {
-        //        if (memberCard.ExpiredDate.HasValue)
-        //        {
-        //            memberCard.ExpiredDate = memberCard.ExpiredDate.Value.Date.AddDays(1).AddSeconds(-1);
-        //        }
-        //    }
-        //    return memberCard;
-        //}
-
-        ///// <summary>
-        ///// 根据卡号或者手机号码获取卡信息
-        ///// </summary>
-        ///// <param name="number"></param>
-        ///// <returns></returns>
-        //public MemberCardDto GetCardInfoByNumber(string number)
-        //{
-        //    if (string.IsNullOrEmpty(number))
-        //        return null;
-        //    var memberCard = this.Repository.GetInclude(t => t.CardType, false)
-        //        .Where(t => t.Code == number)
-        //        .FirstOrDefault();
-        //    Member member = null;
-        //    if (memberCard == null)
-        //    {
-        //        member = MemberService.GetMemberByMobilePhone(number);
-        //        if (member == null)
-        //            return null;
-        //        memberCard = member.Card;
-        //    }
-        //    else
-        //    {
-        //        member = MemberService.GetMemberByCardNumber(number);
-        //    }
-        //    var cardInfo = new MemberCardDto
-        //    {
-        //        CardID = memberCard.ID,
-        //        CardNumber = memberCard.Code,
-        //        CardTypeID = memberCard.CardType != null ? memberCard.CardType.ID.ToString() : string.Empty,
-        //        CardType = memberCard.CardType != null ? memberCard.CardType.Name : string.Empty,
-        //        AllowDiscount = memberCard.CardType != null ? memberCard.CardType.AllowDiscount : true,
-        //        AllowRecharge = memberCard.CardType != null ? memberCard.CardType.AllowRecharge : true,
-        //        CardStatus = memberCard.Status.GetDescription(),
-        //        EffectiveDate = memberCard.EffectiveDate.HasValue ? memberCard.EffectiveDate.Value.ToDateString() : string.Empty,
-        //        //ExpiredDate = memberCard.ExpiredDate.HasValue ? memberCard.ExpiredDate.Value.ToDateString() : string.Empty,
-        //        CardBalance = memberCard.CardBalance,
-        //        VerifyCode = memberCard.VerifyCode,
-        //        IsVirtual = memberCard.IsVirtual,
-
-        //    };
-        //    if (memberCard.ExpiredDate.HasValue)
-        //    {
-        //        cardInfo.ExpiredDate = memberCard.ExpiredDate.Value.Date.AddDays(1).AddSeconds(-1).ToDateTimeString();
-        //    }
-        //    if (member != null)
-        //    {
-        //        cardInfo.MemberID = member.ID;
-        //        cardInfo.MemberName = member.Name;
-        //        cardInfo.MobilePhoneNo = member.MobilePhoneNo;
-        //        cardInfo.Birthday = member.Birthday.HasValue ? member.Birthday.Value.ToDateString() : string.Empty;
-        //        cardInfo.Sex = member.Sex.GetDescription();
-        //        cardInfo.MemberGroup = member.OwnerGroup == null ? "普通会员" : member.OwnerGroup.Name;
-        //        cardInfo.IsActivate = !string.IsNullOrEmpty(member.MobilePhoneNo) && !string.IsNullOrEmpty(member.WeChatOpenID);
-        //        cardInfo.MemberPoint = member.Point;
-        //        if (member.MemberGrade != null)
-        //        {
-        //            cardInfo.MemberGrade = member.MemberGrade.Name;
-        //            cardInfo.IsAllowPointPayment = member.MemberGrade.IsAllowPointPayment;
-        //            cardInfo.PonitExchangeValue = member.MemberGrade.PonitExchangeValue;
-        //            cardInfo.DiscountRate = member.MemberGrade.DiscountRate;
-        //            if (!member.MemberGrade.DiscountRate.HasValue)
-        //            {
-        //                cardInfo.MemberDiscountRight = member.MemberGrade.GradeRights != null ? member.MemberGrade.GradeRights.Where(t => t.RightType == EGradeRightType.Discount).Select(t => new MemberPosRightDto
-        //                {
-        //                    PosRightID = t.PosRightID,
-        //                    PosRightCode = t.PosRightCode,
-        //                    PosRightName = t.PosRightName,
-        //                }).ToList() : null;
-        //            }
-        //            cardInfo.MemberProductRight = member.MemberGrade.GradeRights != null ? member.MemberGrade.GradeRights.Where(t => t.RightType == EGradeRightType.Product).Select(t => new MemberPosRightDto
-        //            {
-        //                PosRightID = t.PosRightID,
-        //                PosRightCode = t.PosRightCode,
-        //                PosRightName = t.PosRightName,
-        //            }).ToList() : null;
-        //        }
-        //    }
-        //    if (memberCard.CardTypeID.ToString() == "00000000-0000-0000-0000-000000000003")
-        //    {
-
-        //        var FindMemberGiftCard = MemberGiftCarRepo.GetQueryableAllData(false).Where(t => t.GiftCardID == memberCard.ID).FirstOrDefault();
-        //        if (FindMemberGiftCard != null)
-        //        {
-        //            var MemberCardThemeID = FindMemberGiftCard.MemberCardThemeID;
-        //            var FindMemberCardTheme = MemberCardThemeRepo.GetQueryableAllData(true).Where(t => t.ID == MemberCardThemeID).FirstOrDefault();
-        //            if (FindMemberCardTheme != null)
-        //            {
-        //                var DataTimeList = new List<GiftCardUserTime>();
-        //                var CardThemeGroupID = FindMemberCardTheme.CardThemeGroupID;
-        //                var FindCardThemeGroupUseTime = CardThemeGroupUseTimeRepo.GetQueryableAllData(false).Where(t => t.TCardThemeGroupID == CardThemeGroupID).ToArray(); //时间
-        //                if (FindCardThemeGroupUseTime != null)
-        //                {
-        //                    for (var i = 0; i < FindCardThemeGroupUseTime.Length; i++)
-        //                    {
-        //                        DataTimeList.Add(new GiftCardUserTime
-        //                        {
-        //                            BeginTime = FindCardThemeGroupUseTime[i].BeginTime,
-        //                            EndTime = FindCardThemeGroupUseTime[i].EndTime,
-        //                        });
-        //                    }
-        //                }
-        //                var FindCardThemeGroup = CardThemeGroupRepo.GetQueryableAllData(false).Where(t => t.ID == CardThemeGroupID).FirstOrDefault();
-        //                if (FindCardThemeGroup != null)
-        //                {
-        //                    cardInfo.UserCode = FindCardThemeGroup.DepartmentCode;
-        //                    cardInfo.UserGiftCardStartTime = FindCardThemeGroup.GiftCardStartTime;
-        //                    cardInfo.UserGiftCardEndTime = FindCardThemeGroup.GiftCardEndTime;
-        //                    cardInfo.UserIsAvailable = FindCardThemeGroup.IsAvailable;
-        //                    cardInfo.UserTimeSlot = FindCardThemeGroup.TimeSlot;
-        //                    cardInfo.UserWeek = FindCardThemeGroup.week;
-        //                    cardInfo.IsNotFixationDate = FindCardThemeGroup.IsNotFixationDate;
-        //                    cardInfo.EffectiveDaysOfAfterBuy = FindCardThemeGroup.EffectiveDaysOfAfterBuy;
-        //                    cardInfo.EffectiveDays = FindCardThemeGroup.EffectiveDays;
-        //                }
-        //                cardInfo.GiftCardUserTimeList = DataTimeList;
-        //            }
-        //        }
-        //    }
-        //    return cardInfo;
-        //}
-
-        ///// <summary>
-        ///// 校验是否可以充值
-        ///// </summary>
-        ///// <param name="rechargeInfo"></param>
-        ///// <returns></returns>
-        //public bool ValidateBeforeRecharge(RechargeInfoDto rechargeInfo)
-        //{
-        //    if (rechargeInfo == null)
-        //    {
-        //        throw new DomainException("参数不正确");
-        //    }
-        //    if (rechargeInfo.RechargeAmount <= 0 || rechargeInfo.GiveAmount < 0)
-        //    {
-        //        throw new DomainException("金额错误");
-        //    }
-        //    if (!string.IsNullOrEmpty(rechargeInfo.OutTradeNo))//校验是否是重复充值回调
-        //    {
-        //        var sameOutTradeNoCount = RechargeHistoryService.Count(t => t.OutTradeNo == rechargeInfo.OutTradeNo);
-        //        if (sameOutTradeNoCount > 0)
-        //        {
-        //            throw new DomainException(string.Format("{0}已经交易，重复回调。", rechargeInfo.OutTradeNo));
-        //        }
-        //    }
-        //    var rechargePlan = RechargePlanService.Get(rechargeInfo.RechargePlanID);
-        //    if (rechargePlan == null || rechargePlan.IsAvailable == false
-        //        || rechargePlan.EffectiveDate > DateTime.Now || rechargePlan.ExpiredDate < DateTime.Now)
-        //    {
-        //        throw new DomainException("方案不存在或已失效，请重新选择");
-        //    }
-
-        //    if (rechargePlan.RechargeAmount != rechargeInfo.RechargeAmount
-        //        || rechargePlan.GiveAmount != rechargeInfo.GiveAmount)
-        //    {
-        //        throw new DomainException("方案金额数据不正确");
-        //    }
-        //    var card = this.Repository.GetInclude(t => t.CardType)
-        //        .Where(t => t.ID == rechargeInfo.CardID)
-        //        .FirstOrDefault();
-        //    if (card == null)
-        //    {
-        //        throw new DomainException("卡不存在");
-        //    }
-        //    if (card.CardType != null && false == card.CardType.AllowRecharge)
-        //    {
-        //        throw new DomainException("卡片不允许储值");
-        //    }
-        //    var tempCardBalance = card.CardBalance + (rechargeInfo.RechargeAmount + rechargeInfo.GiveAmount);
-        //    if (card.CardType != null && card.CardType.MaxRecharge.HasValue && tempCardBalance > card.CardType.MaxRecharge)
-        //    {
-        //        throw new DomainException("超过卡片储值余额上限");
-        //    }
-        //    var member = MemberService.GetMemberByCardNumber(card.Code);
-        //    //验证储值次数
-        //    if (rechargePlan.MaxRechargeCount > 0)
-        //    {
-        //        int count = 0;
-        //        if (member != null)
-        //        {
-        //            count = RechargeHistoryService.Count(p =>
-        //                (p.CardID == rechargeInfo.CardID || p.MemberID == member.ID)
-        //                && p.RechargePlanId == rechargePlan.ID);
-        //        }
-        //        else
-        //        {
-        //            count = RechargeHistoryService.Count(p => p.CardID == rechargeInfo.CardID && p.RechargePlanId == rechargePlan.ID);
-        //        }
-        //        if (count >= rechargePlan.MaxRechargeCount)
-        //            throw new DomainException(string.Format("方案“{0}”只允许单个会员储值{1}次", rechargePlan.Name, rechargePlan.MaxRechargeCount));
-        //    }
-        //    return true;
-        //}
-
-        ///// <summary>
-        ///// 充值
-        ///// </summary>
-        ///// <param name="rechargeInfo">储值信息</param>
-        ///// <param name="tradeSource">交易来源</param>
-        ///// <returns></returns>
-        //public CardTradeResultDto Recharge(RechargeInfoDto rechargeInfo, ETradeSource tradeSource)
-        //{
-        //    this.ValidateBeforeRecharge(rechargeInfo);
-        //    var rechargePlan = RechargePlanService.Get(rechargeInfo.RechargePlanID);
-        //    var card = this.Repository.GetInclude(t => t.CardType)
-        //        .Where(t => t.ID == rechargeInfo.CardID)
-        //        .FirstOrDefault();
-        //    var member = MemberService.GetMemberByCardNumber(card.Code);
-        //    var result = new CardTradeResultDto()
-        //    {
-        //        CardNumber = card.Code,
-        //        CardType = card.CardType != null ? card.CardType.Name : string.Empty,
-        //        BeforeBalance = card.CardBalance
-        //    };
-        //    this.UnitOfWork.BeginTransaction();
-        //    try
-        //    {
-        //        card.CardBalance += (rechargeInfo.RechargeAmount + rechargeInfo.GiveAmount);
-        //        card.TotalRecharge += rechargeInfo.RechargeAmount;
-        //        card.TotalGive += rechargeInfo.GiveAmount;
-        //        this.Repository.Update(card);
-        //        var history = new RechargeHistory
-        //        {
-        //            CardID = rechargeInfo.CardID,
-        //            CardNumber = card.Code,
-        //            CardBalance = card.CardBalance,
-        //            TradeAmount = rechargeInfo.RechargeAmount,
-        //            GiveAmount = rechargeInfo.GiveAmount,
-        //            OutTradeNo = rechargeInfo.OutTradeNo,
-        //            CreatedUser = rechargeInfo.OperateUser,
-        //            PaymentType = rechargeInfo.PaymentType,
-        //            TradeSource = tradeSource,
-        //            RechargePlanId = rechargePlan.ID,
-        //            TradeDepartmentID = AppContext.CurrentSession.DepartmentID,
-        //        };
-        //        history.TradeNo = MakeCodeRuleService.GenerateCode(MakeCodeTypes.RechargeBill);
-        //        if (member != null)
-        //        {
-        //            history.MemberID = member.ID;
-        //            result.MemberName = member.Name;
-        //        }
-        //        if (card.CardTypeID != MemberCardTypes.GiftCard)
-        //        {
-        //            RechargeHistoryService.Add(history);
-        //        }
-        //        this.UnitOfWork.CommitTransaction();
-        //        result.TradeNo = history.TradeNo;
-        //        result.TradeAmount = (rechargeInfo.RechargeAmount + rechargeInfo.GiveAmount);
-        //        result.AfterBalance = card.CardBalance;
-        //        result.TotalRecharge = card.TotalRecharge;
-        //        result.TotalConsume = card.TotalConsume;
-        //        if (card.CardTypeID != MemberCardTypes.GiftCard)
-        //        {
-        //            RechargeNoticeToWeChat(rechargeInfo.RechargeAmount, member, result.AfterBalance);
-        //            if (member != null)
-        //                MemberGradeService.UseMemberGradeRights(member.ID, false, rechargeInfo.RechargeAmount);
-        //        }
-        //        return result;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        this.UnitOfWork.RollbackTransaction();
-        //        AppContext.Logger.Error("MemberCardService.Recharge出现异常，", ex);
-        //        throw ex;
-        //    }
-        //}
-
-        //void RechargeNoticeToWeChat(decimal rechargeAmount, Member member, decimal afterBalance)
-        //{
-        //    if (member == null || string.IsNullOrEmpty(member.WeChatOpenID))
-        //        return;
-        //    var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_MemberRecharge);
-        //    var message = new WeChatTemplateMessageDto
-        //    {
-        //        touser = member.WeChatOpenID,
-        //        template_id = templateId,
-        //        url = string.Format("{0}/member/MainIndex.aspx?openid={1}&companyCode={2}",
-        //            AppContext.Settings.OnlinePayService,
-        //            member.WeChatOpenID,
-        //            AppContext.CurrentSession.CompanyCode),
-        //        data = new System.Dynamic.ExpandoObject(),
-        //    };
-        //    message.data.first = new WeChatTemplateMessageDto.MessageData("尊敬的会员，您的储值卡储值成功");
-        //    message.data.accountType = new WeChatTemplateMessageDto.MessageData("会员卡号");
-        //    message.data.account = new WeChatTemplateMessageDto.MessageData(member.CardNumber);
-        //    message.data.amount = new WeChatTemplateMessageDto.MessageData(rechargeAmount.ToString("f") + "元", "#FF4040");
-        //    message.data.result = new WeChatTemplateMessageDto.MessageData("充值成功");
-        //    message.data.remark = new WeChatTemplateMessageDto.MessageData($"当前余额：{afterBalance.ToString("f")}元");
-        //    WeChatService.SendWeChatNotifyAsync(message);
         //}
 
         ///// <summary>
@@ -1602,143 +1764,30 @@ namespace VVCar.VIP.Services.DomainServices
             return securityCode + cardCode;
         }
 
+        private void ValidatePreGenerate(MemberCardFilter filter)
+        {
+            if (filter == null
+               || filter.IsGenerate == null
+               || string.IsNullOrEmpty(filter.GenerateRule)
+               || string.IsNullOrEmpty(filter.BatchCode)
+               || filter.Count == null
+               || filter.CardTypeID == null
+               || filter.CardBalance == null)
+                throw new DomainException("参数不正确");
+
+            var cardType = MemberCardTypeService.Get(filter.CardTypeID.Value);
+
+            if (filter.CardTypeID == MemberCardTypes.GiftCard && filter.CardBalance > 0)
+                throw new DomainException("礼品卡不允许设置初始余额，请设置初始余额为零");
+
+            if (!cardType.AllowRecharge && filter.CardBalance > 0m && filter.CardTypeID != MemberCardTypes.GiftCard)
+                throw new DomainException(string.Format("卡片类型“{0}”不允许储值，请将初始余额设为零。", cardType.Name));
+
+            if (cardType.MaxRecharge.HasValue && cardType.MaxRecharge < filter.CardBalance.Value && filter.CardTypeID != MemberCardTypes.GiftCard)
+                throw new DomainException(string.Format("初始余额不应大于储值上限。卡片类型“{0}”的储值上限为{1:f}。", cardType.Name, cardType.MaxRecharge));
+        }
+
         #region private
-
-        ///// <summary>
-        ///// 增加余额
-        ///// </summary>
-        ///// <param name="adjustBalanceDto"></param>
-        ///// <returns></returns>
-        //private bool IncreaseBalance(AdjustBalanceDto adjustBalanceDto)
-        //{
-        //    var card = GetCardByNumber(adjustBalanceDto.CardNumber);
-        //    var member = MemberService.GetMemberByCardNumber(card.Code);
-        //    UnitOfWork.BeginTransaction();
-        //    try
-        //    {
-        //        var addResult = RechargeHistoryService.Add(new RechargeHistory
-        //        {
-        //            Card = null,
-        //            CardBalance = card.CardBalance,
-        //            CardID = card.ID,
-        //            CardNumber = card.Code,
-        //            CreatedDate = DateTime.Now,
-        //            CreatedUser = AppContext.CurrentSession.UserName,
-        //            CreatedUserID = AppContext.CurrentSession.UserID,
-        //            DrawReceiptMoney = 0,
-        //            DrawReceiptDepartment = null,
-        //            DrawReceiptUser = null,
-        //            DrawReceiptUserId = null,
-        //            GiveAmount = adjustBalanceDto.AdjustBalance,
-        //            HasDrawReceipt = false,
-        //            ID = Util.NewID(),
-        //            IsDeleted = false,
-        //            Member = null,
-        //            MemberID = member.ID,
-        //            OutTradeNo = null,
-        //            PaymentType = EPaymentType.AdjustBalance,
-        //            RechargePlanId = null,
-        //            Remark = adjustBalanceDto.AdjustMark,
-        //            TradeAmount = 0,
-        //            TradeDepartment = null,
-        //            TradeDepartmentID = AppContext.CurrentSession.DepartmentID,
-        //            TradeSource = ETradeSource.Portal,
-        //            TradeNo = MakeCodeRuleService.GenerateCode(MakeCodeTypes.RechargeBill),
-        //            BusinessType = EBusinessType.AdjustBalance
-        //        });
-
-        //        card.CardBalance += adjustBalanceDto.AdjustBalance;
-        //        card.TotalRecharge += adjustBalanceDto.AdjustBalance;
-        //        Repository.Update(card);
-        //        AdjustNoticeToWeChat(member.WeChatOpenID, true, adjustBalanceDto.AdjustBalance, card.CardBalance, adjustBalanceDto.AdjustMark);
-        //        UnitOfWork.CommitTransaction();
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AppContext.Logger.Error("MemberCardService.IncreaseBalance 发生异常。", ex);
-        //        UnitOfWork.RollbackTransaction();
-        //        throw ex;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 扣减余额
-        ///// </summary>
-        ///// <param name="adjustBalanceDto"></param>
-        ///// <returns></returns>
-        //private bool DecreaseBalance(AdjustBalanceDto adjustBalanceDto)
-        //{
-        //    var card = GetCardByNumber(adjustBalanceDto.CardNumber);
-        //    if (card.CardBalance < adjustBalanceDto.AdjustBalance)
-        //        throw new DomainException(string.Format("减少金额不能大于当前余额"));
-
-        //    var member = MemberService.GetMemberByCardNumber(card.Code);
-        //    UnitOfWork.BeginTransaction();
-        //    try
-        //    {
-        //        TradeHistoryService.Add(new TradeHistory
-        //        {
-        //            Card = null,
-        //            CardBalance = card.CardBalance,
-        //            CardID = card.ID,
-        //            CardNumber = card.Code,
-        //            CreatedDate = DateTime.Now,
-        //            CreatedUser = AppContext.CurrentSession.UserName,
-        //            CreatedUserID = AppContext.CurrentSession.UserID,
-        //            ID = Util.NewID(),
-        //            IsDeleted = false,
-        //            Member = null,
-        //            MemberID = member.ID,
-        //            OutTradeNo = null,
-        //            Remark = adjustBalanceDto.AdjustMark,
-        //            TradeAmount = adjustBalanceDto.AdjustBalance,
-        //            TradeDepartment = null,
-        //            TradeDepartmentID = AppContext.CurrentSession.DepartmentID,
-        //            TradeSource = ETradeSource.Portal,
-        //            TradeNo = MakeCodeRuleService.GenerateCode(MakeCodeTypes.ConsumeBill),
-        //            BusinessType = EBusinessType.AdjustBalance,
-        //            ConsumeType = EConsumeType.CardBalance,
-        //            UseBalanceAmount = adjustBalanceDto.AdjustBalance,
-        //        });
-
-        //        card.CardBalance -= adjustBalanceDto.AdjustBalance;
-        //        card.TotalConsume += adjustBalanceDto.AdjustBalance;
-        //        Repository.Update(card);
-        //        AdjustNoticeToWeChat(member.WeChatOpenID, false, adjustBalanceDto.AdjustBalance, card.CardBalance, adjustBalanceDto.AdjustMark);
-        //        UnitOfWork.CommitTransaction();
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AppContext.Logger.Error("MemberCardService.DecreaseBalance 发生异常。", ex);
-        //        UnitOfWork.RollbackTransaction();
-        //        throw ex;
-        //    }
-        //}
-
-        //private void ValidatePreGenerate(MemberCardFilter filter)
-        //{
-        //    if (filter == null
-        //       || filter.IsGenerate == null
-        //       || string.IsNullOrEmpty(filter.GenerateRule)
-        //       || string.IsNullOrEmpty(filter.BatchCode)
-        //       || filter.Count == null
-        //       || filter.CardTypeID == null
-        //       || filter.CardBalance == null)
-        //        throw new DomainException("参数不正确");
-
-        //    var cardType = MemberCardTypeService.Get(filter.CardTypeID.Value);
-
-        //    if (filter.CardTypeID == MemberCardTypes.GiftCard && filter.CardBalance > 0)
-        //        throw new DomainException("礼品卡不允许设置初始余额，请设置初始余额为零");
-
-        //    if (!cardType.AllowRecharge && filter.CardBalance > 0m && filter.CardTypeID != MemberCardTypes.GiftCard)
-        //        throw new DomainException(string.Format("卡片类型“{0}”不允许储值，请将初始余额设为零。", cardType.Name));
-
-        //    if (cardType.MaxRecharge.HasValue && cardType.MaxRecharge < filter.CardBalance.Value && filter.CardTypeID != MemberCardTypes.GiftCard)
-        //        throw new DomainException(string.Format("初始余额不应大于储值上限。卡片类型“{0}”的储值上限为{1:f}。", cardType.Name, cardType.MaxRecharge));
-        //}
 
         //void UpGradeNoticeToWeChat(Member member, UseMemberGradeRightsResult useMemberGradeRightsResult)
         //{
@@ -1848,38 +1897,6 @@ namespace VVCar.VIP.Services.DomainServices
         //        }
         //    }
         //    return true;
-        //}
-
-        ///// <summary>
-        ///// 发送微信调整通知
-        ///// </summary>
-        ///// <param name="weChatOpenID">接受的微信openID</param>
-        ///// <param name="isIncrease">是否增加</param>
-        ///// <param name="adjustAmount">调整金额</param>
-        ///// <param name="afterBalance">卡内余额</param>
-        ///// <param name="adjustRemark">调整原因</param>
-        //private void AdjustNoticeToWeChat(string weChatOpenID, bool isIncrease, decimal adjustAmount, decimal afterBalance, string adjustRemark)
-        //{
-        //    if (string.IsNullOrEmpty(weChatOpenID))
-        //        return;
-        //    var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_MemberAdjust);
-        //    var message = new WeChatTemplateMessageDto
-        //    {
-        //        touser = weChatOpenID,
-        //        template_id = templateId,
-        //        url = string.Format("{0}/member/MainIndex.aspx?openid={1}&companyCode={2}",
-        //            AppContext.Settings.OnlinePayService,
-        //            weChatOpenID,
-        //            AppContext.CurrentSession.CompanyCode),
-        //        data = new System.Dynamic.ExpandoObject(),
-        //    };
-        //    message.data.first = new WeChatTemplateMessageDto.MessageData("您的会员账户调整如下：");
-        //    message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateTimeString());
-        //    message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(adjustRemark);
-        //    message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(string.Format("{0}{1}元", isIncrease ? "增加" : "扣减", adjustAmount.ToString("f")), "#FF4040");
-        //    var remark = string.Format("当前余额：{0}元", afterBalance.ToString("f"));
-        //    message.data.remark = new WeChatTemplateMessageDto.MessageData(remark);
-        //    WeChatService.SendWeChatNotifyAsync(message);
         //}
 
         //public bool BatchModifyRemark(BatchModifyRemarkDto modifyInfo)

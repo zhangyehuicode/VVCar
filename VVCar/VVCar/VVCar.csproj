@@ -328,6 +328,7 @@
     <Compile Include="Controllers\VIP\GamePushMemberController.cs" />
     <Compile Include="Controllers\VIP\GameSettingController.cs" />
     <Compile Include="Controllers\VIP\GameCouponController.cs" />
+    <Compile Include="Controllers\VIP\MemberCardController.cs" />
     <Compile Include="Controllers\VIP\MemberCardTypeController.cs" />
     <Compile Include="Controllers\VIP\MemberController.cs" />
     <Compile Include="Controllers\VIP\MemberGradeController.cs" />

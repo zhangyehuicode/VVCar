@@ -15,6 +15,12 @@ namespace VVCar.VIP.Domain.Entities
     public class RechargeHistory : MemberHistoryEntity
     {
         /// <summary>
+        /// 储值金额（手动）
+        /// </summary>
+        [Display(Name = "储值金额（手动）")]
+        public decimal RechargeAmount { get; set; }
+
+        /// <summary>
         /// 赠送金额
         /// </summary>
         [Display(Name = "赠送金额")]

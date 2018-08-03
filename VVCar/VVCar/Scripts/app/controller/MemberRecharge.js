@@ -122,22 +122,22 @@ Ext.define('WX.controller.MemberRecharge', {
                 form.down('combobox[name=RechargePlanID]').setDisabled(false);
                 form.down('button[action=confirm]').setDisabled(false);
 
-                var rechargePlanStore = me.getCmbRechargePlan().store;
-                rechargePlanStore.getUsablePlans(function (response, opts) {
-                    var result = Ext.decode(response.responseText);
-                    if (result.IsSuccessful) {
-                        if (result.Data == null) {
-                            Ext.MessageBox.alert("提示", "没有可用的储值方案");
-                            return;
-                        }
-                        //rechargePlanStore.clearData();
-                        //rechargePlanStore.add(result.Data);
-                        rechargePlanStore.setData(result.Data);
-                        rechargePlanStore.commitChanges();
-                    } else {
-                        Ext.MessageBox.alert("提示", "获取储值方案失败, " + result.ErrorMessage);
-                    }
-                }, cardInfo.data.CardTypeID);
+                //var rechargePlanStore = me.getCmbRechargePlan().store;
+                //rechargePlanStore.getUsablePlans(function (response, opts) {
+                //    var result = Ext.decode(response.responseText);
+                //    if (result.IsSuccessful) {
+                //        if (result.Data == null) {
+                //            Ext.MessageBox.alert("提示", "没有可用的储值方案");
+                //            return;
+                //        }
+                //        //rechargePlanStore.clearData();
+                //        //rechargePlanStore.add(result.Data);
+                //        rechargePlanStore.setData(result.Data);
+                //        rechargePlanStore.commitChanges();
+                //    } else {
+                //        Ext.MessageBox.alert("提示", "获取储值方案失败, " + result.ErrorMessage);
+                //    }
+                //}, cardInfo.data.CardTypeID);
 
             } else {
                 e.stopPropagation();
