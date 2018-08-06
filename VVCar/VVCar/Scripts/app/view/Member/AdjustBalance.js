@@ -1,16 +1,16 @@
-﻿
-var adjustTypeStore = Ext.create("WX.store.DataDict.AdjustTypeDicStore");
-Ext.define("WX.view.Member.AdjustBalance", {
+﻿Ext.define("WX.view.Member.AdjustBalance", {
     extend: "Ext.window.Window",
     alias: "widget.AdjustBalance",
     layout: "fit",
-    title: "会员卡余额调整",
-    width: 400,
+    title: "会员余额调整",
+    width: 300,
     closeable: true,
     modal: true,
-    bodyPadding: 5,
+    bodyPadding: 0,
+    buttonAlign: 'center',
     initComponent: function () {
         var me = this;
+        var adjustTypeStore = Ext.create("WX.store.DataDict.AdjustTypeDicStore");
         me.items = [
             {
                 xtype: "form",
@@ -21,16 +21,17 @@ Ext.define("WX.view.Member.AdjustBalance", {
                 labelAlign: "left",
                 buttonAlign: "right",
                 labelWidth: 60,
-                padding: 5,
+                padding: 0,
                 autoWidth: true,
                 autoScroll: true,
                 columnWidth: 1,
+                trackResetOnLoad: true,
                 items: [
                     {
                         xtype: "textfield",
                         name: "CardNumber",
                         fieldLabel: "会员卡号",
-                        margin: "10 20 0 5",
+                        margin: "10 5 0 5",
                         allowBlank: false,
                         readOnly: true,
                         hidden: true,
@@ -41,13 +42,13 @@ Ext.define("WX.view.Member.AdjustBalance", {
                         valueField: "DictValue",
                         name: "AdjustType",
                         fieldLabel: "调整类别",
-                        margin: "10 20 0 5",
+                        margin: "10 5 0 5",
                         allowBlank: false
                     }, {
                         xtype: "numberfield",
                         name: "AdjustBalance",
                         fieldLabel: "调整金额",
-                        margin: "10 20 0 5",
+                        margin: "10 5 0 5",
                         minValue: 1,
                         allowDecimals: true,
                         decimalPrecision: 3,
@@ -55,39 +56,55 @@ Ext.define("WX.view.Member.AdjustBalance", {
                     }, {
                         xtype: "displayfield",
                         value: "调整说明：（微信通知）",
-                        margin: "10 20 0 0"
+                        margin: "5 0 0 5",
                     },
                     {
                         xtype: "textareafield",
                         name: "AdjustMark",
-                        margin: "0 0 0 0",
-                        width: 300,
+                        margin: "0 5 5 5",
+                        width: '100%',
                         allowBlank: false
                     }, {
-                        xtype: "container",
-                        layout: {
-                            type: "hbox",
-                            align: 'right'
-                        },
-                        items: [
-                            {
-                                align: "right",
-                                action: "save",
-                                margin: "5 5 5 0",
-                                xtype: "button",
-                                text: "保 存",
-                                dock: "bottom"
-                            }, {
-                                margin: "5 0 5 5",
-                                xtype: "button",
-                                text: "取 消",
-                                scope: me,
-                                handler: me.close
-                            }
-                        ]
+                        //xtype: "container",
+                        //layout: {
+                        //    type: "hbox",
+                        //    align: 'right'
+                        //},
+                        //items: [
+                        //    {
+                        //        align: "right",
+                        //        action: "save",
+                        //        margin: "5 5 5 0",
+                        //        xtype: "button",
+                        //        text: "保 存",
+                        //        dock: "bottom"
+                        //    }, {
+                        //        margin: "5 0 5 5",
+                        //        xtype: "button",
+                        //        text: "取 消",
+                        //        scope: me,
+                        //        handler: me.close
+                        //    }
+                        //]
                     }
                 ]
 
+            }
+        ];
+        me.buttons = [
+            {
+                align: "right",
+                action: "save",
+                margin: "5 5 5 0",
+                xtype: "button",
+                text: "保 存",
+                dock: "bottom"
+            }, {
+                margin: "5 0 5 5",
+                xtype: "button",
+                text: "取 消",
+                scope: me,
+                handler: me.close
             }
         ];
         me.callParent(arguments);

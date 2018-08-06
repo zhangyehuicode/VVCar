@@ -98,11 +98,11 @@ namespace VVCar.Controllers.VIP
                 new ExportInfo("CreatedDate", "储值时间"),
                 new ExportInfo("TradeDepartment", "储值门店"),
                 new ExportInfo("CreatedUser", "业务员"),
-                new ExportInfo("HasDrawReceipt", "是否开票"),
-                new ExportInfo("DrawReceiptMoney", "开票金额"),
-                new ExportInfo("DrawReceiptUser", "开票人"),
-                new ExportInfo("DrawReceiptDepartment", "开票门店"),
-                new ExportInfo("CardRemark", "卡片备注"),
+                //new ExportInfo("HasDrawReceipt", "是否开票"),
+                //new ExportInfo("DrawReceiptMoney", "开票金额"),
+                //new ExportInfo("DrawReceiptUser", "开票人"),
+                //new ExportInfo("DrawReceiptDepartment", "开票门店"),
+                //new ExportInfo("CardRemark", "卡片备注"),
             });
             return exportHelper.Export(entities.ToList(), "会员储值记录");
         }

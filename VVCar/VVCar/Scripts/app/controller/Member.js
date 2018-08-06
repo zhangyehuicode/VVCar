@@ -235,9 +235,14 @@
     },
     update: function (btn) {
         var me = this;
+        var win = btn.up("window");
         var form = btn.up("window").down("form[name=MemberInfo]");
         if (!form.isValid())
             return;
+        if (!form.isDirty()) {
+            win.close();
+            return;
+        }
         form.updateRecord();
         var entity = form.getRecord().data;
         var store = me.getStore();
@@ -249,11 +254,9 @@
                 return;
             }
             me.refreshMemberGroupTree();
-            Ext.MessageBox.alert("提示", "更新成功", function () {
-                btn.up("window").close();
-                store.reload();
-            });
-
+            store.commitChanges();
+            win.close();
+            Ext.MessageBox.alert("提示", "更新成功");
         }
         store.updateMember(entity, success);
     },
@@ -282,12 +285,15 @@
         //memberStore.getBaseInfo(record.data.ID, baseInfoCallback);
 
         //储值记录和消费记录
-        //var rechargeStore = win.down("grid[name=gridRecharge]").store;
-        //var consumeStore = win.down("grid[name=gridConsume]").store;
-        //Ext.apply(rechargeStore.proxy.extraParams, { CardNumber: record.data.CardNumber, Limit: 1000 });
-        //Ext.apply(consumeStore.proxy.extraParams, { CardNumber: record.data.CardNumber, Limit: 1000 });
-        //rechargeStore.load();
-        //consumeStore.load();
+        var rechargeStore = win.down("grid[name=gridRecharge]").store;
+        var consumeStore = win.down("grid[name=gridConsume]").store;
+        Ext.apply(rechargeStore.proxy.extraParams, { CardNumber: record.data.CardNumber, Limit: 1000 });
+        Ext.apply(consumeStore.proxy.extraParams, { CardNumber: record.data.CardNumber, Limit: 1000 });
+        rechargeStore.load();
+        consumeStore.load();
+        win.down("tabpanel[name=tabpanelExtraInfo]").show();
+        //win.down("panel[name=membercardinfo]").show();
+        //win.down("form[name=formExtraInfo]").show();
         win.show();
     },
     onMobilePhoneNoChange: function (txtField, newValue, oldValue, eOpts) {
@@ -342,7 +348,7 @@
             return;
         }
         var win = Ext.widget("AdjustBalance");
-        //win.down("textfield[name=CardNumber]").setValue(selectedItems[0].data.CardNumber);
+        win.down("textfield[name=CardNumber]").setValue(selectedItems[0].data.CardNumber);
         win.show();
     },
     showAdjustMemberPoint: function (btn) {
@@ -385,20 +391,19 @@
     },
     adjustBalance: function (btn) {
         var me = this;
-        var form = btn.up("form");
+        var win = btn.up("window");
+        var form = win.down('form').getForm();
         if (!form.isValid())
             return;
-
         if (!me.MemberCardStore) {
             me.MemberCardStore = Ext.create("WX.store.BaseData.MemberCardStore");
         }
-
         this.MemberCardStore.adjustBalance(form.getValues(), function (req, success, res) {
             if (success) {
                 var result = JSON.parse(res.responseText);
                 if (result.IsSuccessful) {
                     Ext.Msg.alert("提示", "操作成功");
-                    form.up("window").close();
+                    win.close();
                     me.getMember().getStore().reload();
                 } else {
                     Ext.Msg.alert("提示", "操作异常:" + result.ErrorMessage);

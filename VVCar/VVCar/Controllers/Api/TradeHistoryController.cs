@@ -90,7 +90,7 @@ namespace VVCar.Controllers.Api
             {
                 new ExportInfo("TradeNo", "交易流水号"),
                 new ExportInfo("CardNumber", "会员卡号"),
-                new ExportInfo("CardTypeDesc","卡片类型"),
+                //new ExportInfo("CardTypeDesc","卡片类型"),
                 new ExportInfo("MemberName", "会员姓名"),
                 new ExportInfo("TradeAmount", "消费金额"),
                 new ExportInfo("OutTradeNo", "外部订单号"),
@@ -101,7 +101,7 @@ namespace VVCar.Controllers.Api
                 new ExportInfo("TradeDepartment", "消费门店"),
                 new ExportInfo("CreatedUser", "业务员"),
                 new ExportInfo("BusinessType", "业务类型"),
-                new ExportInfo("CardRemark", "卡片备注"),
+                //new ExportInfo("CardRemark", "卡片备注"),
             });
             return exportHelper.Export(entities.ToList(), "会员消费记录");
         }

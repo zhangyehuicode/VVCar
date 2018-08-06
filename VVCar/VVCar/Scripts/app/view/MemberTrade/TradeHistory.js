@@ -75,20 +75,15 @@
                                     store: businessTypeStore,
                                     displayField: 'DictName',
                                     valueField: 'DictValue'
-                                }, {
-                                    xtype: 'combobox',
-                                    name: 'CardTypeID',
-                                    fieldLabel: '卡片类型',
-                                    store: memberCardTypeStore,
-                                    displayField: 'Name',
-                                    valueField: 'ID',
                                 },
-                            ]
-                        },
-                        {
-                            xtype: "container",
-                            layout: "hbox",
-                            items: [
+                                //{
+                                //    xtype: 'combobox',
+                                //    name: 'CardTypeID',
+                                //    fieldLabel: '卡片类型',
+                                //    store: memberCardTypeStore,
+                                //    displayField: 'Name',
+                                //    valueField: 'ID',
+                                //},
                                 {
                                     xtype: "datefield",
                                     name: "StartDate",
@@ -101,28 +96,8 @@
                                     fieldLabel: "结束时间",
                                     format: "Y-m-d",
                                     value: new Date()
-                                }, {
-                                    xtype: 'combobox',
-                                    fieldLabel: '消费门店',
-                                    name: 'TradeDepartmentID',
-                                    store: departmentStore,
-                                    displayField: 'Name',
-                                    valueField: 'ID',
-                                    //}, {
-                                    //    xtype: 'combobox',
-                                    //    name: 'ConsumeType',
-                                    //    fieldLabel: '消费类型',
-                                    //    store: consumeTypes,
-                                    //    displayField: 'DictName',
-                                    //    valueField: 'DictValue'
-                                }, {
-                                    xtype: 'textfield',
-                                    name: 'BatchCode',
-                                    fieldLabel: '批次代码',
-                                    width: 190,
-                                    labelWidth: 60,
-                                    margin: '0 0 0 5'
-                                }, {
+                                },
+                                {
                                     action: 'search',
                                     xtype: 'button',
                                     text: '搜 索',
@@ -135,16 +110,69 @@
                                     text: '导 出',
                                     iconCls: 'fa fa-download',
                                     margin: '0 0 0 10'
-                                }
+                                },
                             ]
-                        }
+                        },
+                        //{
+                        //    xtype: "container",
+                        //    layout: "hbox",
+                        //    items: [
+                        //        {
+                        //            xtype: "datefield",
+                        //            name: "StartDate",
+                        //            fieldLabel: "开始时间",
+                        //            format: "Y-m-d",
+                        //            value: new Date()
+                        //        }, {
+                        //            xtype: "datefield",
+                        //            name: "FinishDate",
+                        //            fieldLabel: "结束时间",
+                        //            format: "Y-m-d",
+                        //            value: new Date()
+                        //        }, {
+                        //            //    xtype: 'combobox',
+                        //            //    fieldLabel: '消费门店',
+                        //            //    name: 'TradeDepartmentID',
+                        //            //    store: departmentStore,
+                        //            //    displayField: 'Name',
+                        //            //    valueField: 'ID',
+                        //            //    //}, {
+                        //            //    //    xtype: 'combobox',
+                        //            //    //    name: 'ConsumeType',
+                        //            //    //    fieldLabel: '消费类型',
+                        //            //    //    store: consumeTypes,
+                        //            //    //    displayField: 'DictName',
+                        //            //    //    valueField: 'DictValue'
+                        //            //}, {
+                        //            //    xtype: 'textfield',
+                        //            //    name: 'BatchCode',
+                        //            //    fieldLabel: '批次代码',
+                        //            //    width: 190,
+                        //            //    labelWidth: 60,
+                        //            //    margin: '0 0 0 5'
+                        //        }, {
+                        //            action: 'search',
+                        //            xtype: 'button',
+                        //            text: '搜 索',
+                        //            iconCls: 'fa fa-search',
+                        //            cls: 'submitBtn',
+                        //            margin: '0 0 0 5'
+                        //        }, {
+                        //            action: 'export',
+                        //            xtype: 'button',
+                        //            text: '导 出',
+                        //            iconCls: 'fa fa-download',
+                        //            margin: '0 0 0 10'
+                        //        }
+                        //    ]
+                        //}
                     ]
                 }]
         }];
         this.columns = [
             { header: '交易流水号', dataIndex: 'TradeNo', flex: 1, },
             { header: '会员卡号', dataIndex: 'CardNumber', flex: 1, },
-            { header: '卡片类型', dataIndex: 'CardTypeDesc', flex: 1 },
+            //{ header: '卡片类型', dataIndex: 'CardTypeDesc', flex: 1 },
             { header: '会员姓名', dataIndex: 'MemberName', flex: 1, },
             { header: '消费金额', dataIndex: 'TradeAmount', flex: 1, },
             { header: '外部订单号', dataIndex: 'OutTradeNo', flex: 1, },
@@ -162,7 +190,7 @@
             { header: '消费门店', dataIndex: 'TradeDepartment', flex: 1, },
             { header: '业务员', dataIndex: 'CreatedUser', flex: 1, },
             { header: "业务类型", dataIndex: 'BusinessTypeDesc', flex: 1 },
-            { header: '卡片备注', dataIndex: 'CardRemark', flex: 1 }
+            //{ header: '卡片备注', dataIndex: 'CardRemark', flex: 1 }
         ];
         this.dockedItems = [{
             xtype: 'pagingtoolbar',

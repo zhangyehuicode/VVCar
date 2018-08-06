@@ -92,12 +92,12 @@ namespace VVCar.VIP.Services.DomainServices
             if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
             {
                 totalCount = queryable.Count();
-                pagedData = queryable.Skip(filter.Start.Value).Take(filter.Limit.Value)
-                    .MapTo<TradeHistoryDto>().ToArray();
+                pagedData = queryable.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList()
+                    .MapTo<List<TradeHistoryDto>>();
             }
             else
             {
-                pagedData = queryable.MapTo<TradeHistoryDto>().ToArray();
+                pagedData = queryable.ToList().MapTo<List<TradeHistoryDto>>();
                 totalCount = pagedData.Count();
             }
             return pagedData;

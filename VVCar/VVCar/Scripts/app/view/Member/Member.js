@@ -141,7 +141,8 @@
             ]
         }];
         var columns = [
-            { header: "会员卡号", dataIndex: "CardNumber", flex: 1 },
+            { header: "会员卡号", dataIndex: "CardNumber", width: 100 },
+            { header: "余额（元）", dataIndex: "CardBalance", width: 100, xtype: "numbercolumn" },
             //{ header: "卡片类型", dataIndex: "CardTypeDesc", flex: 1 },
             {
                 header: "分组", dataIndex: "MemberGroupID", flex: 1,
@@ -156,7 +157,7 @@
                     return "普通会员";
                 }
             },
-            { header: "姓名", dataIndex: "Name", flex: 1 },
+            { header: "姓名", dataIndex: "Name", width: 100 },
             {
                 header: "性别", dataIndex: "Sex", flex: 1,
                 renderer: function (value) {
@@ -168,16 +169,15 @@
                         return "未知";
                 }
             },
-            { header: "手机号码", dataIndex: "MobilePhoneNo", flex: 1 },
+            { header: "手机号码", dataIndex: "MobilePhoneNo", width: 120 },
             { header: "归属地", dataIndex: "PhoneLocation", flex: 1 },
-            { header: "车牌号", dataIndex: "PlateList", width: 150 },
+            { header: "车牌号", dataIndex: "PlateList", width: 100 },
             { header: "剩余积分", dataIndex: "Point", flex: 1 },
             { header: "会员状态", dataIndex: "Status", flex: 1 },
             { header: '保险到期时间', dataIndex: 'InsuranceExpirationDate', xtype: "datecolumn", format: 'Y-m-d H:i:s', flex: 1 },
             //{ header: "会员等级", dataIndex: "MemberGradeName", flex: 1 },
             //{ header: "所属门店", dataIndex: "OwnerDepartment", flex: 1 },
             { header: "注册时间", dataIndex: "CreatedDate", xtype: "datecolumn", format: "Y-m-d H:i:s", flex: 1 },
-            //{ header: "余额（元）", dataIndex: "CardBalance", flex: 1, xtype: "numbercolumn" },
             //{ header: "OpenId", dataIndex: "WeChatOpenID", flex: 1, },
         ];
         var bbar = [{
@@ -218,14 +218,14 @@
             iconCls: 'edit',
             permissionCode: 'Portal.BaseDataEdit'
         },
-        //{
-        //    action: 'adjustBalance',
-        //    xtype: 'button',
-        //    text: '余额调整',
-        //    scope: me,
-        //    iconCls: "adjust",
-        //    permissionCode: 'Member.Member.adjustBalance',
-        //},
+        {
+            action: 'adjustBalance',
+            xtype: 'button',
+            text: '余额调整',
+            scope: me,
+            iconCls: "adjust",
+            permissionCode: 'Member.Member.adjustBalance',
+        },
         {
             action: 'adjustMemberPoint',
             xtype: 'button',

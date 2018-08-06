@@ -80,7 +80,7 @@
                     flex: 1,
                 }, {
                     xtype: 'textfield',
-                    fieldLabel: '卡片状态',
+                    fieldLabel: '状态',
                     name: "CardStatus",
                     margin: '0 0 0 10',
                     flex: 1,
@@ -112,6 +112,7 @@
             }, {
                 xtype: 'fieldcontainer',
                 layout: 'hbox',
+                hidden: true,
                 items: [{
                     xtype: 'textfield',
                     fieldLabel: '生效日期',
@@ -130,7 +131,7 @@
                 layout: 'hbox',
                 items: [{
                     xtype: 'textfield',
-                    fieldLabel: '卡片余额',
+                    fieldLabel: '余额',
                     name: "CardBalance",
                     flex: 1,
                     labelStyle: 'font-weight: bold',
@@ -165,7 +166,7 @@
                     valueField: 'ID',
                     editable: false,
                     forceSelection: true,
-                    allowBlank: false,
+                    //allowBlank: false,
                     readOnly: false,
                     tabIndex: 2,
                     labelStyle: 'font-weight: bold',
@@ -246,12 +247,12 @@
             title: '储值历史纪录',
             store: Ext.create('WX.store.BaseData.RechargeHistoryStore'),
             margin: '20 0 0 0',
-            width: 550,
+            width: 630,
             hidden: true,
             columns: [
-                { header: '储值时间', dataIndex: 'CreatedDate', flex: 1, },
-                { header: '消费门店', dataIndex: 'TradeDepartment', flex: 1, },
-                { header: '业务员', dataIndex: 'CreatedUser', width: 80, },
+                { header: '储值时间', dataIndex: 'CreatedDate', width: 150, },
+                { header: '储值门店', dataIndex: 'TradeDepartment', flex: 1, },
+                { header: '业务员', dataIndex: 'CreatedUser', width: 100, },
                 { header: '储值金额', dataIndex: 'TradeAmount', width: 80, },
                 { header: '赠送金额', dataIndex: 'GiveAmount', width: 80, },
             ]
