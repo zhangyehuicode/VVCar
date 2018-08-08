@@ -27,6 +27,9 @@ namespace VVCar.VIP.Data.Mapping
             Property(t => t.ThumbMediaID)
                 .HasMaxLength(50);
 
+            Property(t => t.CoverPicUrl)
+                .HasMaxLength(50);
+
             Property(t => t.Author)
                 .HasMaxLength(20);
 

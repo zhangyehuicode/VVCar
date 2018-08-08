@@ -126,6 +126,8 @@ namespace VVCar.Shop.Services.DomainServices
             product.IsCombo = entity.IsCombo;
             product.CommissionRate = entity.CommissionRate;
             product.SalesmanCommissionRate = entity.SalesmanCommissionRate;
+            product.WholesaleCommissionRate = entity.WholesaleCommissionRate;
+            product.WholesaleConstructionCommissionRate = entity.WholesaleConstructionCommissionRate;
             product.IsCanPointExchange = entity.IsCanPointExchange;
             product.Unit = entity.Unit;
             product.GraphicIntroduction = entity.GraphicIntroduction;

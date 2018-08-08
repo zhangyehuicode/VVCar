@@ -317,6 +317,7 @@
     <Compile Include="Controllers\Shop\ShoppingCartItemController.cs" />
     <Compile Include="Controllers\Shop\StockRecordController.cs" />
     <Compile Include="Controllers\VIP\ArticleController.cs" />
+    <Compile Include="Controllers\VIP\ArticleItemController.cs" />
     <Compile Include="Controllers\VIP\CouponController.cs" />
     <Compile Include="Controllers\VIP\CouponPushController.cs" />
     <Compile Include="Controllers\VIP\CouponPushItemController.cs" />
@@ -707,6 +708,7 @@
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentCategoryTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentTagModel.js" />
+    <Content Include="Scripts\app\model\BaseData\ArticleItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\ArticleModel.js" />
     <Content Include="Scripts\app\model\BaseData\LogisticsModel.js" />
     <Content Include="Scripts\app\model\BaseData\TagModel.js" />
@@ -896,6 +898,7 @@
     <Content Include="Scripts\app\view\AgentDepartment\TagSelector.js" />
     <Content Include="Scripts\app\view\Article\ArticleEdit.js" />
     <Content Include="Scripts\app\view\Article\ArticleList.js" />
+    <Content Include="Scripts\app\view\Article\ArticleItemEdit.js" />
     <Content Include="Scripts\app\view\Logistics\LogisticsDetails.js" />
     <Content Include="Scripts\app\view\Logistics\LogisticsEdit.js" />
     <Content Include="Scripts\app\view\Logistics\Logistics.js" />

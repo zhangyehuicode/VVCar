@@ -46,6 +46,12 @@ namespace VVCar.VIP.Domain.Entities
         public bool IsShowCoverPic { get; set; } 
 
         /// <summary>
+        /// 封面图片路径
+        /// </summary>
+        [Display(Name = "封面图片路径")]
+        public string CoverPicUrl { get; set; }
+
+        /// <summary>
         /// 图文消息具体内容
         /// </summary>
         [Display(Name = "图文消息具体内容")]

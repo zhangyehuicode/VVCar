@@ -28,6 +28,9 @@
 			'Logistics button[action=antiDelivery]': {
 				click: me.antiDelivery
 			},
+			'Logistics button[action=revisitTips]': {
+				click: me.revisitTips
+			},
 			'Logistics': {
 				itemdblclick: me.edit,
 				editActionClick: me.edit,
@@ -90,7 +93,7 @@
 		var form = win.form.getForm();
 		var order = form.getValues();
 		var store = me.getLogistics().getStore();
-		store.delivery(order, 
+		store.delivery(order,
 			function success(response, request, c) {
 				var result = Ext.decode(c.responseText);
 				if (result.IsSuccessful) {
@@ -194,6 +197,44 @@
 						},
 						function failure(a, b, c) {
 							Ext.Msg.alert('提示', '取消发货失败!');
+						}
+					);
+				}
+			});
+		}
+	},
+	revisitTips: function () {
+		var me = this;
+		var store = me.getLogistics().getStore();
+		var selectedItems = me.getLogistics().getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '未选择数据');
+		} else if (selectedItems.length > 1) {
+			Ext.Msg.alert('提示', '一次只能选择一条数据');
+		} else {
+			if (selectedItems[0].data.Status != 2) {
+				Ext.Msg.alert('提示', '请选择已发货的数据!');
+				return;
+			}
+			if (selectedItems[0].data.RevisitStatus != 0) {
+				Ext.Msg.alert('提示', '请选择未回访的数据!');
+				return;
+			}
+			var id = selectedItems[0].data.ID;
+			Ext.Msg.confirm('询问', '确定要发送回访吗?', function (operational) {
+				if (operational == 'yes') {
+					store.revisitTips(id,
+						function success(response, request, c) {
+							var result = Ext.decode(c.responseText);
+							if (result.IsSuccessful) {
+								store.reload();
+								Ext.Msg.alert('提示', '发送回访成功!');
+							} else {
+								Ext.Msg.alert('提示', result.ErrorMessage);
+							}
+						},
+						function failure(a, b, c) {
+							Ext.Msg.alert('提示', '发送回访失败!');
 						}
 					);
 				}

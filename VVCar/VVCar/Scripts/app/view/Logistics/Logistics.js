@@ -71,7 +71,14 @@
 				scope: this,
 				iconCls: 'fa fa-close',
 				margin: '0 5 5 5',
-			}]
+				}, {
+				action: 'revisitTips',
+				xtype: 'button',
+				text: '手动回访',
+				scope: this,
+				iconCls: 'fa fa-close',
+				margin: '0 5 5 5',
+				}]
 		}];
 		me.columns = [
 			{ header: '序号', dataIndex: 'Index', width: 60 },
@@ -112,7 +119,8 @@
 			{ header: '物流公司', dataIndex: 'LogisticsCompany', flex: 1 },
 			{ header: '业务员', dataIndex: 'UserName', flex: 1 },
 			{ header: '发货员', dataIndex: 'Consigner', flex: 1 },
-			{ header: '创建时间', dataIndex: 'CreatedDate', xtype: 'datecolumn', format: 'Y-m-d H:i:s', width: 150 },
+			{ header: '发货时间', dataIndex: 'DeliveryDate', xtype: 'datecolumn', format: 'Y-m-d', width: 100 },
+			//{ header: '创建时间', dataIndex: 'CreatedDate', xtype: 'datecolumn', format: 'Y-m-d', width: 100 },
 			{
 				text: '操作',
 				xtype: 'actioncolumn',

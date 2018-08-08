@@ -58,5 +58,12 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="id"></param>
         /// <returns></returns>
         bool AntiDelivery(Guid id);
+
+        /// <summary>
+        /// 手动发送回执
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool RevisitTips(Guid id);
     }
 }

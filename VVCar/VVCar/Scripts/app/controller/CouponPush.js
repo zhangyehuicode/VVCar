@@ -122,6 +122,7 @@
 			CouponType: -1,
 			AproveStatus: 2,
 			Nature: 0,
+			HiddenExpirePutInDate: true,
 		}
 		store.limit = 10;
 		store.pageSize = 10;
@@ -146,6 +147,7 @@
 			CouponType: -1,
 			AproveStatus: 2,
 			Nature: 1,
+			HiddenExpirePutInDate: true,
 		}
 		store.limit = 10;
 		store.pageSize = 10;

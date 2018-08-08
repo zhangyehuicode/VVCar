@@ -143,7 +143,7 @@
 					allowBlank: false,
 					value: 0,
 				}, {
-					
+
 				}]
 			}, {
 				xtype: 'form',
@@ -177,6 +177,49 @@
 						width: 202,
 						name: 'SalesmanCommissionRate',
 						fieldLabel: '业务员抽成',
+						labelWidth: 70,
+						minValue: 0,
+						maxValue: 100,
+						allowBlank: false,
+						value: 0,
+					}, {
+						xtype: 'label',
+						text: '%（0~100）',
+						margin: '12 0 0 0',
+					}]
+				}]
+			}, {
+				xtype: 'form',
+				layout: 'hbox',
+				items: [{
+					xtype: 'form',
+					border: false,
+					layout: 'hbox',
+					margin: '0 10 5 0',
+					items: [{
+						xtype: 'numberfield',
+						width: 202,
+						name: 'WholesaleCommissionRate',
+						fieldLabel: '优惠价抽成',
+						minValue: 0,
+						maxValue: 100,
+						allowBlank: false,
+						value: 0,
+					}, {
+						xtype: 'label',
+						text: '%（0~100）',
+						margin: '12 0 0 0',
+					}]
+				}, {
+					xtype: 'form',
+					border: false,
+					layout: 'hbox',
+					margin: '0 10 5 0',
+					items: [{
+						xtype: 'numberfield',
+						width: 202,
+						name: 'WholesaleConstructionCommissionRate',
+						fieldLabel: '优惠价施工抽成',
 						labelWidth: 70,
 						minValue: 0,
 						maxValue: 100,

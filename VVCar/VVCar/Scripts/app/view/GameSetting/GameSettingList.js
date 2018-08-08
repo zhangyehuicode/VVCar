@@ -128,7 +128,7 @@
 			}],
 			columns: [
 				{ header: '卡券模板编号', dataIndex: 'TemplateCode', width: 110 },
-				{ header: '标题', dataIndex: 'Title', flex: 1 },
+				{ header: '标题', dataIndex: 'Title', width: 200 },
 				{
 					header: '卡券类型', dataIndex: 'Nature', width: 80,
 					renderer: function (value) {

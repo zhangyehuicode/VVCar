@@ -7,7 +7,7 @@
 		type: 'rest',
 		url: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponTemplate',
 		api: {
-			read: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponTemplate/GetValidCouponTemplateInfo',
+			read: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponTemplate/GetCouponTemplateInfo',
 		},
 	},
 });

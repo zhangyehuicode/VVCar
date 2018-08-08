@@ -24,6 +24,8 @@
 		{ name: "ProductType" },
 		{ name: "CommissionRate" },
 		{ name: "SalesmanCommissionRate" },
+		{ name: "WholesaleCommissionRate" },
+		{ name: "WholesaleConstructionCommissionRate" },
 		{ name: "IsCanPointExchange" },
 		{ name: "Unit" },
 		{ name: "Introduction" },

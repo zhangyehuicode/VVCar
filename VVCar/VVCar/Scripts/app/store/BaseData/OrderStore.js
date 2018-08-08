@@ -10,6 +10,7 @@
 			read: Ext.GlobalConfig.ApiDomainUrl + 'api/Order?All=false',
 			delivery: Ext.GlobalConfig.ApiDomainUrl + 'api/Order/Delivery',
 			antiDelivery: Ext.GlobalConfig.ApiDomainUrl + 'api/Order/AntiDelivery',
+			revisitTips: Ext.GlobalConfig.ApiDomainUrl + 'api/Order/RevisitTips',
 		},
 	},
 	adjustIndex: function (params, success, failure) {
@@ -38,4 +39,12 @@
 			callback: cb,
 		});
 	},
+	revisitTips: function (id, cb) {
+		Ext.Ajax.request({
+			ContentType: 'application/json',
+			method: 'GET',
+			url: this.proxy.api.revisitTips + '?id=' + id,
+			callback: cb,
+		})
+	}
 });

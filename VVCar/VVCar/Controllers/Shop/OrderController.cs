@@ -144,6 +144,20 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 手动回访
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet, Route("RevisitTips")]
+        public JsonActionResult<bool> RevisitTips(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return OrderService.RevisitTips(id);
+            });
+        }
+
+        /// <summary>
         /// 取消发货
         /// </summary>
         /// <param name="id"></param>

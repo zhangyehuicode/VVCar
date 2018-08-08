@@ -91,6 +91,16 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 上传图文消息封面图片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadArticle")]
+        public UploadFileResult UploadArticle()
+        {
+            return UploadAction("Pictures/Article");
+        }
+
+        /// <summary>
         /// 上传图文介绍图片
         /// </summary>
         /// <returns></returns>

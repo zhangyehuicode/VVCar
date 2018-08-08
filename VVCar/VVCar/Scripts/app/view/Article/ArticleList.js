@@ -76,10 +76,11 @@
 			}, {
 				xtype: 'grid',
 				name: 'gridArticleItem',
-				flex: 1,
+				flex: 4,
 				stripeRows: true,
 				store: articleItemStore,
 				selType: 'checkboxmodel',
+				title: '图文消息子项',
 				tbar: [{
 					action: 'addArticleItem',
 					xtype: 'button',

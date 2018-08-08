@@ -49,6 +49,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<OrderPaymentDetails> OrderPaymentDetailsRepo { get => UnitOfWork.GetRepository<IRepository<OrderPaymentDetails>>(); }
 
+        IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
+
         IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
 
         #endregion
@@ -451,6 +453,40 @@ namespace VVCar.Shop.Services.DomainServices
         }
 
         /// <summary>
+        /// 手动回执
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool RevisitTips(Guid id)
+        {
+            var order = Repository.GetByKey(id);
+            if (order == null)
+                throw new DomainException("订单不存在");
+            if (order.Status != EOrderStatus.Delivered)
+                throw new DomainException("订单为发货");
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                if (string.IsNullOrEmpty(order.OpenID))
+                    throw new DomainException("会员OpenID为空");
+                SendNotifyToMember(id);
+                order.RevisitStatus = ERevisitStatus.Revisited;
+                order.LastUpdatedDate = DateTime.Now;
+                order.LastUpdatedUser = AppContext.CurrentSession.UserName;
+                order.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+                Repository.Update(order);
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch(Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
+            }
+
+        }
+
+        /// <summary>
         /// 发送通知消息
         /// </summary>
         /// <returns></returns>
@@ -458,6 +494,7 @@ namespace VVCar.Shop.Services.DomainServices
         {
             var order = Repository.GetByKey(id);
             var user = UserRepo.GetByKey(order.UserID.Value);
+            var merchant = MerchantRepo.GetByKey(order.MerchantID);
             if (user == null)
                 return;
             if (user.OpenID == null)
@@ -466,7 +503,7 @@ namespace VVCar.Shop.Services.DomainServices
             {
                 touser = user.OpenID,
                 template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_DeliveryRemind),
-                url = "http://www.cheyinz.cn/Mobile/Agent/GeneralManagerHome?mch=" + AppContext.CurrentSession.MerchantCode,
+                url = "http://www.cheyinz.cn/Mobile/Agent/GeneralManagerHome?mch=" + merchant.Code,
                 data = new System.Dynamic.ExpandoObject()
             };
             if (order.Status == EOrderStatus.Delivered)
@@ -474,7 +511,7 @@ namespace VVCar.Shop.Services.DomainServices
             else
                 message.data.first = new WeChatTemplateMessageDto.MessageData("您的订单取消发货");
             message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateString());
-            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(AppContext.CurrentSession.MerchantName);
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(merchant.Name);
             message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(order.Code);
             message.data.keyword4 = new WeChatTemplateMessageDto.MessageData(order.LogisticsCompany);
             message.data.keyword5 = new WeChatTemplateMessageDto.MessageData(order.ExpressNumber);
@@ -482,7 +519,32 @@ namespace VVCar.Shop.Services.DomainServices
                 message.data.remark = new WeChatTemplateMessageDto.MessageData(order.DeliveryTips);
             else
                 message.data.remark = new WeChatTemplateMessageDto.MessageData("请知悉");
-            WeChatService.SendWeChatNotifyAsync(message, AppContext.CurrentSession.MerchantCode);
+            WeChatService.SendWeChatNotifyAsync(message, merchant.Code);
+        }
+
+        /// <summary>
+        /// 发送通知消息
+        /// </summary>
+        /// <returns></returns>
+        void SendNotifyToMember(Guid id)
+        {
+            var order = Repository.GetByKey(id);
+            var merchant = MerchantRepo.GetByKey(order.MerchantID);
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = order.OpenID,
+                template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_DeliveryRemind),
+                url = "http://www.cheyinz.cn/Mobile/Agent/GeneralManagerHome?mch=" + merchant.Code,
+                data = new System.Dynamic.ExpandoObject()
+            };
+            message.data.first = new WeChatTemplateMessageDto.MessageData("您的订单即将到货");
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateString());
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(merchant.Name);
+            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(order.Code);
+            message.data.keyword4 = new WeChatTemplateMessageDto.MessageData(order.LogisticsCompany);
+            message.data.keyword5 = new WeChatTemplateMessageDto.MessageData(order.ExpressNumber);
+            message.data.remark = new WeChatTemplateMessageDto.MessageData(order.RevisitTips);
+            WeChatService.SendWeChatNotifyAsync(message, merchant.Code);
         }
 
         /// <summary>

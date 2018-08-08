@@ -177,6 +177,7 @@
     <Compile Include="Enums\EVideoType.cs" />
     <Compile Include="Filters\AdjustMemberPointFilter.cs" />
     <Compile Include="Filters\ArticleFilter.cs" />
+    <Compile Include="Filters\ArticleItemFilter.cs" />
     <Compile Include="Filters\CardThemeCategoryFilter.cs" />
     <Compile Include="Filters\CardThemeGroupFilter.cs" />
     <Compile Include="Filters\CouponFilter.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="MakeCodeTypes.cs" />
     <Compile Include="MemberCardTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IArticleItemService.cs" />
     <Compile Include="Services\IArticleService.cs" />
     <Compile Include="Services\ICouponPushMemberService.cs" />
     <Compile Include="Services\IGameCouponRecordService.cs" />
