@@ -19,6 +19,7 @@ namespace VVCar.VIP.Services.DomainServices
         /// 发送微信通知
         /// </summary>
         /// <param name="message"></param>
+        /// <param name="companyCode"></param>
         public void SendWeChatNotify(WeChatTemplateMessageDto message, string companyCode = "")
         {
             if (string.IsNullOrEmpty(AppContext.Settings.WeChatIntegrationService))
@@ -58,6 +59,7 @@ namespace VVCar.VIP.Services.DomainServices
         /// 异步发送微信通知
         /// </summary>
         /// <param name="message"></param>
+        /// <param name="companyCode"></param>
         public void SendWeChatNotifyAsync(WeChatTemplateMessageDto message, string companyCode = "")
         {
             Task.Run(async () =>

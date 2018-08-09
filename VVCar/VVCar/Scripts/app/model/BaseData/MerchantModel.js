@@ -13,6 +13,7 @@
 		{ name: 'Email' },
 		{ name: 'WeChatOAPassword' },
 		{ name: 'MobilePhoneNo' },
+		{ name: 'WeChatQRCodeImgUrl' },
 		{ name: 'BusinessLicenseImgUrl' },
 		{ name: 'LegalPersonIDCardFrontImgUrl' },
 		{ name: 'LegalPersonIDCardBehindImgUrl' },

@@ -19,6 +19,13 @@ namespace VVCar.VIP.Domain.Services
     public partial interface IMemberService : IDomainService<IRepository<Member>, Member, Guid>
     {
         /// <summary>
+        /// 会员登录
+        /// </summary>
+        /// <param name="memberLoginDto"></param>
+        /// <returns></returns>
+        MemberCardDto MemberLogin(MemberLoginDto memberLoginDto);
+
+        /// <summary>
         /// 查询会员信息
         /// </summary>
         /// <param name="filter">The filter.</param>
@@ -58,7 +65,7 @@ namespace VVCar.VIP.Domain.Services
         /// </summary>
         /// <param name="openID"></param>
         /// <returns></returns>
-        MemberCardDto GetMemberInfoByWeChat(string openID);
+        MemberCardDto GetMemberInfoByWeChat(string openID, bool isagentdept = false);
 
         /// <summary>
         /// 获取顾客会员信息

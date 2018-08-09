@@ -32,11 +32,17 @@ namespace VVCar.VIP.Domain.Services
         IEnumerable<MemberGroup> Search(MemberGroupFilter filter, out int totalCount);
 
         /// <summary>
+        /// 获取精简结构数据
+        /// </summary>
+        /// <returns></returns>
+        IList<IDCodeNameDto> GetLiteData();
+
+        /// <summary>
         /// 获取树形数据
         /// </summary>
-        /// <param name="parentId"></param>
+        /// <param name="parentID"></param>
         /// <returns></returns>
-        IEnumerable<IDCodeNameDto> GetTreeData();
+        IEnumerable<MemberGroupTreeDto> GetTreeData(Guid? parentID);
 
         /// <summary>
         /// 获取树形数据包含会员信息

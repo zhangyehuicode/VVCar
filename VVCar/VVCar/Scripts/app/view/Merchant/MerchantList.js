@@ -131,6 +131,14 @@
 			{ header: '联系电话', dataIndex: 'MobilePhoneNo', width: 110 },
 			//{ header: '开户行', dataIndex: 'Bank', flex: 4 },
 			//{ header: '账号', dataIndex: 'BankCard', width: 170 },
+			//{
+			//	header: '二维码', dataIndex: 'WeChatQRCodeImgUrl', width: 80,
+			//	renderer: function (value) {
+			//		if (value != "" && value != null) {
+			//			return '<a href="' + value + '"download="' + value + '"><img src="' + value + '" style="width: 50px; height: 50px;" /></a>';
+			//		}
+			//	},
+			//},
 			{
 				header: '营业执照', dataIndex: 'BusinessLicenseImgUrl', width: 100,
 				renderer: function (value) {

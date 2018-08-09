@@ -12,6 +12,9 @@ namespace VVCar.VIP.Domain.Filters
     /// </summary>
     public class ArticleItemFilter : BasePageFilter
     {
-        
+        /// <summary>
+        /// 图文消息ID
+        /// </summary>
+        public Guid ArticleID { get; set; }   
     }
 }

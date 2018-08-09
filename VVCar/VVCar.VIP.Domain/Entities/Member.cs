@@ -185,6 +185,18 @@ namespace VVCar.VIP.Domain.Entities
         [Display(Name = "保险到期时间")]
         public DateTime? InsuranceExpirationDate { get; set; }
 
+        /// <summary>
+        /// 代理商门店（客户）ID
+        /// </summary>
+        [Display(Name = "代理商门店（客户）ID")]
+        public Guid? AgentDepartmentID { get; set; }
+
+        /// <summary>
+        /// 代理商门店（客户）
+        /// </summary>
+        [Display(Name = "代理商门店（客户）")]
+        public virtual AgentDepartment AgentDepartment { get; set; }
+
         ///// <summary>
         ///// 会员签到
         ///// </summary>

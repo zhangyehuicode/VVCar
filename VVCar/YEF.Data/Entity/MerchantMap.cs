@@ -39,6 +39,9 @@ namespace YEF.Data
             Property(t => t.MobilePhoneNo)
                 .HasMaxLength(11);
 
+            Property(t => t.WeChatQRCodeImgUrl)
+                .HasMaxLength(50);
+
             Property(t => t.BusinessLicenseImgUrl)
                 .HasMaxLength(50);
 

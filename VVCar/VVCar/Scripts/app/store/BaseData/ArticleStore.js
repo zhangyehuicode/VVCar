@@ -8,6 +8,7 @@
 		api: {
 			read: Ext.GlobalConfig.ApiDomainUrl + 'api/Article?All=false',
 			batchDelete: Ext.GlobalConfig.ApiDomainUrl + 'api/Article/BatchDelete',
+			batchHandArticle: Ext.GlobalConfig.ApiDomainUrl + 'api/Article/BatchHandArticle',
 		}
 	},
 	batchDelete: function (ids, cb) {
@@ -19,4 +20,13 @@
 			callback: cb
 		});
 	},
+	batchHandArticle: function (ids, cb) {
+		Ext.Ajax.request({
+			ContentType: 'application/json',
+			url: this.proxy.api.batchHandArticle,
+			method: 'POST',
+			jsonData: { IdList: ids },
+			callback: cb
+		})
+	}
 });

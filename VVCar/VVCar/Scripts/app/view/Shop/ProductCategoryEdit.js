@@ -25,7 +25,7 @@
                 store: parentProductCategorys,
                 queryMode: 'local',
                 displayField: 'Name',
-                valueField: 'ID',
+				valueField: 'ID',
                 emptyText: '请选择...',
                 blankText: '请选择所属类型',
                 tpl: Ext.create('Ext.XTemplate', '<tpl for=".">', '<div class="x-boundlist-item">{Code} - {Name}</div>', '</tpl>'),

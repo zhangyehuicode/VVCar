@@ -39,6 +39,12 @@ namespace VVCar.Shop.Domain.Entities
         public Guid? MemberID { get; set; }
 
         /// <summary>
+        /// 代理商门店（客户）ID
+        /// </summary>
+        [Display(Name = "代理商门店（客户）ID")]
+        public Guid? AgentDepartmentID { get; set; }
+
+        /// <summary>
         /// OpenID
         /// </summary>
         [Display(Name = "OpenID")]
@@ -79,6 +85,12 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "状态")]
         public EOrderStatus Status { get; set; }
+
+        /// <summary>
+        /// 订单来源
+        /// </summary>
+        [Display(Name = "订单来源")]
+        public EOrderSource Source { get; set; }
 
         /// <summary>
         /// 总金额
@@ -182,7 +194,7 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 发货时间
         /// </summary>
-        [Display(Name ="发货时间")]
+        [Display(Name = "发货时间")]
         public DateTime? DeliveryDate { get; set; }
 
         /// <summary>

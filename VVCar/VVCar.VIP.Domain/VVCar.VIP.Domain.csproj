@@ -69,6 +69,7 @@
     <Compile Include="Dtos\GamePushDto.cs" />
     <Compile Include="Dtos\GamePushItemDto.cs" />
     <Compile Include="Dtos\GamePushMemberDto.cs" />
+    <Compile Include="Dtos\GetMemberInfoByWeChatDto.cs" />
     <Compile Include="Dtos\GiftCardDtoOfOW.cs" />
     <Compile Include="Dtos\GiftCardReceiveDto.cs" />
     <Compile Include="Dtos\MemberBaseInfoDto.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Dtos\MemberGradeIntroDto.cs" />
     <Compile Include="Dtos\MemberGroupTreeDto.cs" />
     <Compile Include="Dtos\MemberLiteInfoDto.cs" />
+    <Compile Include="Dtos\MemberLoginDto.cs" />
     <Compile Include="Dtos\MemberRegisterDto.cs" />
     <Compile Include="Dtos\MemberRightDto.cs" />
     <Compile Include="Dtos\NewUpdateRechargePlanDto.cs" />
@@ -144,6 +146,7 @@
     <Compile Include="Entities\VisitRecord.cs" />
     <Compile Include="Enums\EAdjustType.cs" />
     <Compile Include="Enums\EApproveStatus.cs" />
+    <Compile Include="Enums\EArticlePushStatus.cs" />
     <Compile Include="Enums\EBusinessType.cs" />
     <Compile Include="Enums\ECardStatus.cs" />
     <Compile Include="Enums\EClientType.cs" />

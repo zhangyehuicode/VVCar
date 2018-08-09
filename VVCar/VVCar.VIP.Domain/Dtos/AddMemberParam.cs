@@ -9,6 +9,11 @@ namespace VVCar.VIP.Domain.Dtos
     public class AddMemberParam
     {
         /// <summary>
+        /// 会员分组ID
+        /// </summary>
+        public Guid? MemberGroupID { get; set; }
+
+        /// <summary>
         /// 姓名
         /// </summary>
         public string Name { get; set; }

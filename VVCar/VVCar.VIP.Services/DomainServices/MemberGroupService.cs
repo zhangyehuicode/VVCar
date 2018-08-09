@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Services;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
@@ -58,13 +59,26 @@ namespace VVCar.VIP.Services.DomainServices
             return true;
         }
 
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override MemberGroup Add(MemberGroup entity)
         {
             entity.ID = Util.NewID();
+            entity.CreatedUserID = AppContext.CurrentSession.UserID;
+            entity.CreatedUser = AppContext.CurrentSession.UserName;
+            entity.CreatedDate = DateTime.Now;
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override bool Update(MemberGroup entity)
         {
             if (entity == null)
@@ -81,10 +95,19 @@ namespace VVCar.VIP.Services.DomainServices
             membergroup.Name = entity.Name;
             membergroup.Code = entity.Code;
             membergroup.Index = entity.Index;
+            membergroup.ParentId = entity.ParentId;
             membergroup.IsWholesalePrice = entity.IsWholesalePrice;
+            membergroup.LastUpdateDate = DateTime.Now;
+            membergroup.LastUpdateUser = AppContext.CurrentSession.UserName;
+            membergroup.LastUpdateUserID = AppContext.CurrentSession.UserID;
             return base.Update(membergroup);
         }
 
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public override bool Delete(Guid key)
         {
             if (key == _defaultGroupID)
@@ -132,41 +155,66 @@ namespace VVCar.VIP.Services.DomainServices
             return result;
         }
 
-        public IEnumerable<IDCodeNameDto> GetTreeData()
+        /// <summary>
+        /// 获取树形数据
+        /// </summary>
+        /// <param name="parentID"></param>
+        /// <returns></returns>
+        public IEnumerable<MemberGroupTreeDto> GetTreeData(Guid? parentID)
         {
-            var groups = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID || t.ID == _defaultGroupID)
-                .OrderBy(t => t.Index)
-                .Select(t => new IDCodeNameDto
-                {
-                    ID = t.ID,
-                    Code = t.Code,
-                    Name = t.Name,
-                }).ToList();
-            var groupMember = MemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
-                .GroupBy(t => t.MemberGroupID)
-                .Select(group => new
-                {
-                    GroupID = group.Key,
-                    Count = group.Count()
-                }).ToDictionary(t => t.GroupID.GetValueOrDefault());
-            foreach (var group in groups)
+            var commenMemberID = Guid.Parse("00000000-0000-0000-0000-000000000000");
+            var deptRegions = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID || t.MerchantID == commenMemberID)
+                .MapTo<MemberGroup, MemberGroupTreeDto>()
+                .OrderBy(t => t.ParentId).ThenBy(t => t.Index)
+                .ToList();
+
+            //var groups = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID || t.ID == _defaultGroupID)
+            //    .OrderBy(t => t.Index)
+            //    .Select(t => new IDCodeNameDto
+            //    {
+            //        ID = t.ID,
+            //        Code = t.Code,
+            //        Name = t.Name,
+            //    }).ToList();
+            //var groupMember = MemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
+            //    .GroupBy(t => t.MemberGroupID)
+            //    .Select(group => new
+            //    {
+            //        GroupID = group.Key,
+            //        Count = group.Count()
+            //    }).ToDictionary(t => t.GroupID.GetValueOrDefault());
+            //foreach (var group in groups)
+            //{
+            //    if (groupMember.ContainsKey(group.ID))
+            //    {
+            //        group.Name = $"{group.Name}({groupMember[group.ID].Count})";
+            //    }
+            //    else
+            //    {
+            //        group.Name = $"{group.Name}(0)";
+            //    }
+            //}
+            //groups.Insert(0, new IDCodeNameDto
+            //{
+            //    ID = Guid.Empty,
+            //    Code = "ALL",
+            //    Name = $"全部会员({groupMember.Sum(g => g.Value.Count)})",
+            //});
+            return BuildTree(deptRegions, null);
+        }
+
+        IEnumerable<MemberGroupTreeDto> BuildTree(IList<MemberGroupTreeDto> sources, Guid? parentID)
+        {
+            var children = sources.Where(t => t.ParentId == parentID).ToList();
+            foreach (var child in children)
             {
-                if (groupMember.ContainsKey(group.ID))
-                {
-                    group.Name = $"{group.Name}({groupMember[group.ID].Count})";
-                }
-                else
-                {
-                    group.Name = $"{group.Name}(0)";
-                }
+                child.Children = BuildTree(sources, child.ID);
+                child.MemberNumbers = MemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.MemberGroupID == child.ID).Count();
+                child.Children.ForEach(t => child.MemberNumbers += t.MemberNumbers);
+                child.leaf = child.Children.Count() == 0;
+                child.expanded = false;
             }
-            groups.Insert(0, new IDCodeNameDto
-            {
-                ID = Guid.Empty,
-                Code = "ALL",
-                Name = $"全部会员({groupMember.Sum(g => g.Value.Count)})",
-            });
-            return groups;
+            return children;
         }
 
         public IEnumerable<MemberGroupTreeDto> GetTreeDataContainsMember(MemberGroupFilter filter)
@@ -207,6 +255,23 @@ namespace VVCar.VIP.Services.DomainServices
                 });
             });
             return result;
+        }
+
+        /// <summary>
+        /// 获取精简结构数据
+        /// </summary>
+        /// <returns></returns>
+        public IList<IDCodeNameDto> GetLiteData()
+        {
+            var categories = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
+                .OrderBy(t => t.Index)
+                .Select(t => new IDCodeNameDto
+                {
+                    ID = t.ID,
+                    Code = t.Code,
+                    Name = t.Name
+                }).ToList();
+            return categories;
         }
     }
 }

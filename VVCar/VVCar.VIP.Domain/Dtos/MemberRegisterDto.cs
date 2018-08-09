@@ -58,5 +58,10 @@ namespace VVCar.VIP.Domain.Dtos
         /// 门店地址
         /// </summary>
         public string DepartmentAddress { get; set; }
+
+        /// <summary>
+        /// 代理商门店（客户）ID
+        /// </summary>
+        public Guid? AgentDepartmentID { get; set; }
     }
 }

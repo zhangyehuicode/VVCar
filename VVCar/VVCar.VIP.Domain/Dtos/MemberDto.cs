@@ -165,5 +165,15 @@ namespace VVCar.VIP.Domain.Dtos
         /// 总消费
         /// </summary>
         public decimal TotalConsume { get; set; }
+
+        /// <summary>
+        /// 门店名称
+        /// </summary>
+        public string DepartmentName { get; set; }
+
+        /// <summary>
+        /// 门店地址
+        /// </summary>
+        public string DepartmentAddress { get; set; }
     }
 }

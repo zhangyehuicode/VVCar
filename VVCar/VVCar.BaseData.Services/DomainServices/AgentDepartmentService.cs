@@ -8,7 +8,9 @@ using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Enums;
 using VVCar.BaseData.Domain.Filters;
 using VVCar.BaseData.Domain.Services;
+using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
+using VVCar.VIP.Domain.Services;
 using YEF.Core;
 using YEF.Core.Data;
 using YEF.Core.Domain;
@@ -31,7 +33,21 @@ namespace VVCar.BaseData.Services.DomainServices
 
         IAgentDepartmentTagService AgentDepartmentTagService { get => ServiceLocator.Instance.GetService<IAgentDepartmentTagService>(); }
 
+        IMemberService MemberService { get => ServiceLocator.Instance.GetService<IMemberService>(); }
+
+        IRepository<Member> MemberRepo { get => ServiceLocator.Instance.GetService<IRepository<Member>>(); }
+
         #endregion
+
+        protected override bool DoValidate(AgentDepartment entity)
+        {
+            if (entity == null)
+                return false;
+            var exist = Repository.Exists(t => t.MobilePhoneNo == entity.MobilePhoneNo && t.ID != entity.ID && t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (exist)
+                throw new DomainException("相同手机号码的客户信息已存在");
+            return true;
+        }
 
         /// <summary>
         /// 新增
@@ -42,13 +58,36 @@ namespace VVCar.BaseData.Services.DomainServices
         {
             if (entity == null)
                 return null;
-            entity.ID = Util.NewID();
-            entity.IsHQ = false;
-            entity.CreatedDate = DateTime.Now;
-            entity.CreatedUserID = AppContext.CurrentSession.UserID;
-            entity.CreatedUser = AppContext.CurrentSession.UserName;
-            entity.MerchantID = AppContext.CurrentSession.MerchantID;
-            return base.Add(entity);
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                entity.ID = Util.NewID();
+                entity.IsHQ = false;
+                entity.CreatedDate = DateTime.Now;
+                entity.CreatedUserID = AppContext.CurrentSession.UserID;
+                entity.CreatedUser = AppContext.CurrentSession.UserName;
+                entity.MerchantID = AppContext.CurrentSession.MerchantID;
+                var result = base.Add(entity);
+                if (entity.Type == EAgentDepartmentType.Development)
+                {
+                    MemberRegister(new MemberRegisterDto
+                    {
+                        MobilePhoneNo = entity.MobilePhoneNo,
+                        Name = entity.LegalPerson,
+                        Password = entity.MobilePhoneNo,
+                        DepartmentName = entity.Name,
+                        DepartmentAddress = entity.CompanyAddress,
+                        AgentDepartmentID = entity.ID,
+                    });
+                }
+                UnitOfWork.CommitTransaction();
+                return result;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
+            }
         }
 
         /// <summary>
@@ -90,6 +129,11 @@ namespace VVCar.BaseData.Services.DomainServices
             }
         }
 
+        private void MemberRegister(MemberRegisterDto registerDto)
+        {
+            MemberService.Register(registerDto);
+        }
+
         /// <summary>
         /// 删除
         /// </summary>
@@ -100,11 +144,28 @@ namespace VVCar.BaseData.Services.DomainServices
             var entity = Repository.GetByKey(key);
             if (entity == null)
                 return false;
-            entity.IsDeleted = true;
-            entity.LastUpdatedDate = DateTime.Now;
-            entity.LastUpdatedUserID = AppContext.CurrentSession.UserID;
-            entity.LastUpdatedUser = AppContext.CurrentSession.UserName;
-            return Repository.Update(entity) > 0;
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                entity.IsDeleted = true;
+                entity.LastUpdatedDate = DateTime.Now;
+                entity.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+                entity.LastUpdatedUser = AppContext.CurrentSession.UserName;
+                Repository.Update(entity);
+                var member = MemberRepo.GetQueryable().Where(t => t.AgentDepartmentID == key).FirstOrDefault();
+                if (member != null)
+                {
+                    member.IsDeleted = true;
+                    MemberRepo.Update(member);
+                }
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
+            }
         }
 
         /// <summary>
@@ -121,39 +182,63 @@ namespace VVCar.BaseData.Services.DomainServices
                 return false;
             if (agentDepartment.ApproveStatus != EAgentDepartmentApproveStatus.Pedding)
                 throw new DomainException("已通过审核或导入的不能修改");
-            agentDepartment.Name = entity.Name;
-            if (entity.AgentDepartmentCategoryID != Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            UnitOfWork.BeginTransaction();
+            try
             {
-                agentDepartment.AgentDepartmentCategoryID = entity.AgentDepartmentCategoryID;
+                agentDepartment.Name = entity.Name;
+                if (entity.AgentDepartmentCategoryID != Guid.Parse("00000000-0000-0000-0000-000000000000"))
+                {
+                    agentDepartment.AgentDepartmentCategoryID = entity.AgentDepartmentCategoryID;
+                }
+                else
+                {
+                    agentDepartment.AgentDepartmentCategoryID = null;
+                }
+                agentDepartment.LegalPerson = entity.LegalPerson;
+                agentDepartment.IDNumber = entity.IDNumber;
+                agentDepartment.Email = entity.Email;
+                agentDepartment.WeChatOAPassword = entity.WeChatOAPassword;
+                agentDepartment.MobilePhoneNo = entity.MobilePhoneNo;
+                agentDepartment.BusinessLicenseImgUrl = entity.BusinessLicenseImgUrl;
+                agentDepartment.LegalPersonIDCardFrontImgUrl = entity.LegalPersonIDCardFrontImgUrl;
+                agentDepartment.LegalPersonIDCardBehindImgUrl = entity.LegalPersonIDCardBehindImgUrl;
+                agentDepartment.DepartmentImgUrl = entity.DepartmentImgUrl;
+                agentDepartment.CompanyAddress = entity.CompanyAddress;
+                agentDepartment.WeChatAppID = entity.WeChatAppID;
+                agentDepartment.WeChatAppSecret = entity.WeChatAppSecret;
+                agentDepartment.MeChatMchPassword = entity.MeChatMchPassword;
+                agentDepartment.WeChatMchID = entity.WeChatMchID;
+                agentDepartment.WeChatMchKey = entity.WeChatMchKey;
+                agentDepartment.Bank = entity.Bank;
+                agentDepartment.ApproveStatus = entity.ApproveStatus;
+                agentDepartment.Type = entity.Type;
+                agentDepartment.UserID = entity.UserID;
+                agentDepartment.BankCard = entity.BankCard;
+                agentDepartment.DataSource = entity.DataSource;
+                agentDepartment.LastUpdatedDate = DateTime.Now;
+                agentDepartment.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+                agentDepartment.LastUpdatedUser = AppContext.CurrentSession.UserName;
+                Repository.Update(agentDepartment);
+                if (entity.Type == EAgentDepartmentType.Development)
+                {
+                    MemberRegister(new MemberRegisterDto
+                    {
+                        MobilePhoneNo = entity.MobilePhoneNo,
+                        Name = entity.LegalPerson,
+                        Password = entity.MobilePhoneNo,
+                        DepartmentName = entity.Name,
+                        DepartmentAddress = entity.CompanyAddress,
+                        AgentDepartmentID = entity.ID,
+                    });
+                }
+                UnitOfWork.CommitTransaction();
+                return true;
             }
-            else {
-                agentDepartment.AgentDepartmentCategoryID = null;
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
             }
-            agentDepartment.LegalPerson = entity.LegalPerson;
-            agentDepartment.IDNumber = entity.IDNumber;
-            agentDepartment.Email = entity.Email;
-            agentDepartment.WeChatOAPassword = entity.WeChatOAPassword;
-            agentDepartment.MobilePhoneNo = entity.MobilePhoneNo;
-            agentDepartment.BusinessLicenseImgUrl = entity.BusinessLicenseImgUrl;
-            agentDepartment.LegalPersonIDCardFrontImgUrl = entity.LegalPersonIDCardFrontImgUrl;
-            agentDepartment.LegalPersonIDCardBehindImgUrl = entity.LegalPersonIDCardBehindImgUrl;
-            agentDepartment.DepartmentImgUrl = entity.DepartmentImgUrl;
-            agentDepartment.CompanyAddress = entity.CompanyAddress;
-            agentDepartment.WeChatAppID = entity.WeChatAppID;
-            agentDepartment.WeChatAppSecret = entity.WeChatAppSecret;
-            agentDepartment.MeChatMchPassword = entity.MeChatMchPassword;
-            agentDepartment.WeChatMchID = entity.WeChatMchID;
-            agentDepartment.WeChatMchKey = entity.WeChatMchKey;
-            agentDepartment.Bank = entity.Bank;
-            agentDepartment.ApproveStatus = entity.ApproveStatus;
-            agentDepartment.Type = entity.Type;
-            agentDepartment.UserID = entity.UserID;
-            agentDepartment.BankCard = entity.BankCard;
-            agentDepartment.DataSource = entity.DataSource;
-            agentDepartment.LastUpdatedDate = DateTime.Now;
-            agentDepartment.LastUpdatedUserID = AppContext.CurrentSession.UserID;
-            agentDepartment.LastUpdatedUser = AppContext.CurrentSession.UserName;
-            return Repository.Update(agentDepartment) > 0;
         }
 
         /// <summary>

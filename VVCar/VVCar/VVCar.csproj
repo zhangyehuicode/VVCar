@@ -711,6 +711,7 @@
     <Content Include="Scripts\app\model\BaseData\ArticleItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\ArticleModel.js" />
     <Content Include="Scripts\app\model\BaseData\LogisticsModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MemberGroupTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\TagModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinOrderItemModel.js" />
@@ -789,6 +790,7 @@
     <Content Include="Scripts\app\store\BaseData\ArticleItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\ArticleStore.js" />
     <Content Include="Scripts\app\store\BaseData\LogisticsStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MemberGroupLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\SalesmanStore.js" />
     <Content Include="Scripts\app\store\BaseData\TagStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinMemberStore.js" />
@@ -899,6 +901,9 @@
     <Content Include="Scripts\app\view\Article\ArticleEdit.js" />
     <Content Include="Scripts\app\view\Article\ArticleList.js" />
     <Content Include="Scripts\app\view\Article\ArticleItemEdit.js" />
+    <Content Include="Scripts\app\view\Combo\ComboEdit.js" />
+    <Content Include="Scripts\app\view\Combo\ComboList.js" />
+    <Content Include="Scripts\app\view\Combo\ProductSelector.js" />
     <Content Include="Scripts\app\view\Logistics\LogisticsDetails.js" />
     <Content Include="Scripts\app\view\Logistics\LogisticsEdit.js" />
     <Content Include="Scripts\app\view\Logistics\Logistics.js" />
@@ -922,9 +927,9 @@
     <Content Include="Scripts\app\view\CarBitCoin\CarBitCoinProductEdit.js" />
     <Content Include="Scripts\app\view\CarBitCoin\ChangeCategory.js" />
     <Content Include="Scripts\app\view\CarBitCoin\StockOutInEdit.js" />
-    <Content Include="Scripts\app\view\Combo\ComboEdit.js" />
-    <Content Include="Scripts\app\view\Combo\ComboList.js" />
-    <Content Include="Scripts\app\view\Combo\ProductSelector.js" />
+    <Content Include="Scripts\app\view\ConsumeReport\Combo\ComboEdit.js" />
+    <Content Include="Scripts\app\view\ConsumeReport\Combo\ComboList.js" />
+    <Content Include="Scripts\app\view\ConsumeReport\Combo\ProductSelector.js" />
     <Content Include="Scripts\app\view\ConsumeReport\ConsumeReport.js" />
     <Content Include="Scripts\app\view\CouponPush\CouponPushEdit.js" />
     <Content Include="Scripts\app\view\CouponPush\CouponPushItemEdit.js" />
@@ -961,9 +966,8 @@
     <Content Include="Scripts\app\view\MemberCard\ModifyCardRemark.js" />
     <Content Include="Scripts\app\view\MemberGrade\MemberGradeEdit.js" />
     <Content Include="Scripts\app\view\MemberGrade\MemberGradeList.js" />
-    <Content Include="Scripts\app\view\MemberGroup\MemberGroup.js" />
-    <Content Include="Scripts\app\view\MemberGroup\MemberGroupEdit.js" />
-    <Content Include="Scripts\app\view\MemberGroup\MemberGroupList.js" />
+    <Content Include="Scripts\app\view\Member\MemberGroupEdit.js" />
+    <Content Include="Scripts\app\view\Member\MemberGroupList.js" />
     <Content Include="Scripts\app\view\MemberPoint\MemberPoint.js" />
     <Content Include="Scripts\app\view\MemberRecharge\MemberRecharge.js" />
     <Content Include="Scripts\app\view\MemberRecharge\RechargeHistory.js" />
@@ -1191,6 +1195,7 @@
     <Content Include="Areas\Mobile\Views\Agent\PotentialClients.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\LogisticsManagement.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\AgentIndex.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\OrderManagement.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

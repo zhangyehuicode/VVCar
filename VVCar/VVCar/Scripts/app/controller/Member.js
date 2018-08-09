@@ -3,11 +3,16 @@
     requires: ['WX.store.BaseData.MemberStore', "WX.store.BaseData.RechargeHistoryStore", "WX.store.BaseData.MemberCardStore", "WX.store.DataDict.MemberCardStatusStore", "WX.store.DataDict.AdjustTypeDicStore",
         'WX.store.DataDict.SexStore', 'WX.store.BaseData.MemberGroupStore', 'WX.store.BaseData.MemberGroupTreeStore', 'WX.store.BaseData.MemberGradeStore', 'WX.store.DataDict.AdjustMemberPointTypeDicStore', 'WX.store.BaseData.TradeHistoryStore'],
     models: ['BaseData.MemberModel', "WX.model.BaseData.MemberBaseInfoModel", 'WX.model.BaseData.MemberGroupModel'],
-    views: ['Member.Member', "Member.EditMember", "Member.ChangeCard", "Member.AdjustBalance",
-        'MemberGroup.MemberGroup', 'MemberGroup.MemberGroupList', 'MemberGroup.MemberGroupEdit', 'Member.AdjustMemberPoint'],
+    views: ['Member.Member', "Member.EditMember", "Member.ChangeCard", "Member.AdjustBalance", 'Member.MemberGroupList', 'Member.MemberGroupEdit', 'Member.AdjustMemberPoint', 'Member.ChangeMemberGroup'],
     refs: [{
         ref: 'member',
-        selector: 'Member grid[name=gridMember]'
+        selector: 'Member grid'
+    }, {
+        ref: 'treegridMemberGroup',
+        selector: 'MemberGroupList treepanel[name=treegridMemberGroup]'
+    }, {
+        ref: 'treeMemberGroup',
+        selector: 'Member treepanel[name=treeMemberGroup]',
     }, {
         ref: 'winChangeCard',
         selector: 'ChangeCard'
@@ -15,14 +20,8 @@
         ref: 'formChangeCard',
         selector: 'ChangeCard form[name=formChangeCard]'
     }, {
-        ref: 'gridMemberGroup',
-        selector: 'MemberGroup'
-    }, {
         ref: 'memberGroupList',
         selector: 'MemberGroupList grid'
-    }, {
-        ref: 'btnChangeMemberGroup',
-        selector: 'Member button[name=btnChangeMemberGroup]'
     }],
     init: function () {
         var me = this;
@@ -70,8 +69,18 @@
             "Member button[action=adjustMemberPoint]": {
                 click: me.showAdjustMemberPoint
             },
+            "Member button[action=changeGroup]":
+                {
+                    click: me.changeMemberGroup
+                },
             'Member grid[name=gridMember]': {
                 selectionchange: me.onMemberSelectionchange,
+            },
+            'Member': {
+                afterrender: me.afterrender
+            },
+            'ChangeMemberGroup button[action=save]': {
+                click: me.saveMemberGroupChange
             },
             "EditMember button[action=save]": {
                 click: me.saveMember
@@ -88,12 +97,11 @@
             "AdjustMemberPoint button[action=save]": {
                 click: me.adjustMemberPointSave
             },
-            'MemberGroup button[action=editmembergroup]': {
-                click: me.editmembergroup
+            'Member button[action=manageMemberGroup]': {
+                click: me.manageMemberGroup
             },
-            'MemberGroup': {
-                afterrender: me.onMemberGroupAfterRender,
-                select: me.onGridMemberGroupSelect,
+            'Member treepanel[name=treeMemberGroup]': {
+                itemclick: me.ontreeMemberGroupItemClick
             },
             'MemberGroupList button[action=addgroup]': {
                 click: me.addgroup
@@ -217,7 +225,6 @@
             return;
         var entity = form.getValues();
         var store = me.getStore();
-
         function success(response) {
             response = JSON.parse(response.responseText);
             if (!response.IsSuccessful) {
@@ -225,7 +232,7 @@
                 return;
             }
             store.reload();
-            me.refreshMemberGroupTree();
+            //me.refreshMemberGroupTree();
             btn.up("window").close();
         }
 
@@ -246,15 +253,15 @@
         form.updateRecord();
         var entity = form.getRecord().data;
         var store = me.getStore();
-
         function success(response) {
             response = JSON.parse(response.responseText);
             if (!response.IsSuccessful) {
                 Ext.Msg.alert("提示", response.ErrorMessage);
                 return;
             }
-            me.refreshMemberGroupTree();
+            //me.refreshMemberGroupTree();
             store.commitChanges();
+            store.reload();
             win.close();
             Ext.MessageBox.alert("提示", "更新成功");
         }
@@ -363,31 +370,79 @@
         win.down("textfield[name=Point]").setValue(selectedItems[0].data.Point);
         win.show();
     },
-    changeMemberGroup: function (menuItem, e) {
-        var me = this;
-        var selectedItems = this.getMember().getSelectionModel().getSelection();
+    changeMemberGroup: function (btn) {
+        var gridDept = btn.up('grid');
+        var selectedItems = gridDept.getSelectionModel().getSelection();
         if (selectedItems.length < 1) {
-            Ext.Msg.alert("提示", "请选择需要操作的数据");
+            Ext.MessageBox.alert("提示", "请选择数据");
             return;
         }
-        var memberIDList = [];
-        for (var i = 0; i < selectedItems.length; i++) {
-            memberIDList.push(selectedItems[i].data.ID);
-        }
-        var store = me.getMember().getStore();
-        store.changeMemberGroup({
-            MemberIDList: memberIDList,
-            MemberGroupID: menuItem.MemberGroupID
-        }, function (response, opts) {
-            var result = Ext.decode(response.responseText);
-            if (result.IsSuccessful) {
-                Ext.Msg.alert("提示", "操作成功");
-                store.reload();
-                me.refreshMemberGroupTree();
-            } else {
-                Ext.Msg.alert("提示", "操作失败，" + result.ErrorMessage);
+        var selectedData = selectedItems[0].data;
+        var win = Ext.widget("ChangeMemberGroup");
+        win.form.getForm().actionMethod = 'PUT';
+        win.form.loadRecord(selectedItems[0]);
+        var cmbCurrentRegion = win.down('combo[name=CurrMemberGroup]');
+        var cmbDestRegion = win.down('combo[name=DestMemberGroup]');
+        //因为cmbCurrentRegion和cmbDestRegion绑定的store是同一对象，
+        //所以这里对cmbCurrentRegion的store做的修改也会影响到cmbDestRegion
+        cmbCurrentRegion.store.clearFilter();
+        cmbCurrentRegion.store.load({
+            params: {
+                All: true
             }
         });
+        cmbCurrentRegion.setValue(selectedData.MemberGroupID);
+        cmbDestRegion.setValue(selectedData.MemberGroupID);
+        win.show();
+    },
+    saveMemberGroupChange: function (btn) {
+        var me = this;
+        var win = btn.up('window');
+        var form = win.form.getForm();
+        var formValues = form.getValues();
+        var record = form.getRecord().data;
+        record.MemberGroupID = formValues.DestMemberGroup;
+        if (form.isValid()) {
+            var store = me.getMember().getStore();
+            var rr = store.getById(record.ID);
+            rr.MemberGroupID = record.MemberGroupID;
+            Ext.Msg.show({
+                msg: '正在请求数据, 请稍侯',
+                progressText: '正在请求数据',
+                width: 300,
+                wait: true,
+                waitConfig: {
+                    interval: 200
+                }
+            });
+            var url = Ext.GlobalConfig.ApiDomainUrl + 'api/Member';
+            var tms = rr.data;
+            Ext.Ajax.request({
+                url: url,
+                method: 'PUT',
+                clientValidation: true,
+                jsonData: Ext.JSON.encode(tms),
+                callback: function (options, success, response) {
+                    if (success) {
+                        Ext.MessageBox.hide();
+                        store.load();
+                        win.close();
+                        Ext.MessageBox.alert("操作成功", "更新成功");
+                    } else {
+                        Ext.MessageBox.hide();
+                        Ext.MessageBox.alert("失败，请重试", response.responseText);
+                    }
+                },
+                failure: function (response, options) {
+                    Ext.MessageBox.hide();
+                    Ext.MessageBox.alert("警告", "出现异常错误！请联系管理员！");
+                },
+                success: function (response, options) {
+                    Ext.MessageBox.hide();
+                }
+            });
+            this.hasUpdateDeptRegion = true;
+        }
     },
     adjustBalance: function (btn) {
         var me = this;
@@ -481,6 +536,7 @@
             Ext.Msg.alert('提示', '确定要导入数据吗?', function (optional) {
                 if (optional === 'ok') {
                     form.submit({
+                        getTreegridMemberGroup,
                         url: Ext.GlobalConfig.ApiDomainUrl + 'api/UploadFile/UploadMemberExcel',
                         waitMsg: '正在上传文件...',
                         headers: { 'Content-Type': 'multipart/form-data; charset=UTF-8' },
@@ -488,6 +544,7 @@
                         success: function (form, action) {
                             Ext.Msg.alert('提示', '上传文件成功');
                             store.importMember(action.result.FileName, store);
+                            store.reload();
                         },
                         failure: function (form, action) {
                             Ext.Msg.alert('提示', '上传文件失败, ' + action.result.errorMessage);
@@ -507,7 +564,7 @@
         var me = this;
         var filter = btn.up("form").getValues();
 
-        var treepanelselectionmodel = me.getGridMemberGroup().getSelectionModel().getSelection();
+        var treepanelselectionmodel = me.getTreeMemberGroup().getSelectionModel().getSelection();
         if (treepanelselectionmodel.length > 0) {
             filter.MemberGroupID = treepanelselectionmodel[0].data.ID;
         }
@@ -532,23 +589,15 @@
         var me = this;
         me.editgroupshow(record);
     },
-    editmembergroup: function (btn) {
+    manageMemberGroup: function (btn) {
         var win = Ext.widget('MemberGroupList');
-        win.down('grid').getStore().load();
+        win.setTitle('分类管理');
         win.show();
     },
     addgroup: function (btn) {
         var win = Ext.widget('MemberGroupEdit');
         win.form.getForm().actionMethod = 'POST';
         win.setTitle("新增分组");
-        var store = this.getMemberGroupList().getStore();
-        store.load(function (records, operation, success) {
-            if (success) {
-                if (records.length > 0) {
-                    win.down('numberfield[name=Index]').setValue(records[records.length - 1].data.Index + 1);
-                }
-            }
-        });
         win.show();
     },
     addgroupsave: function (btn) {
@@ -557,20 +606,27 @@
         var form = win.form.getForm();
         var formValues = form.getValues();
         if (form.isValid()) {
-            var myStore = me.getMemberGroupList().getStore();
+            var store = me.getTreegridMemberGroup().getStore();
+            var treeMemberGroupStore = me.getTreeMemberGroup().getStore();
             if (form.actionMethod == 'POST') {
-                myStore.create(formValues, {
-                    callback: function (records, operation, success) {
-                        if (!success) {
-                            Ext.MessageBox.alert("操作失败", operation.error);
-                            return;
-                        } else {
-                            myStore.add(records[0].data);
-                            myStore.commitChanges();
-                            Ext.MessageBox.alert("操作成功", "新增成功");
+                store.addMemberGroup(formValues, function (request, success, response) {
+                    if (response.timedout) {
+                        Ext.Msg.alert('提示', '操作超时');
+                        store.reload();
+                        return;
+                    }
+                    var result = JSON.parse(response.responseText);
+                    if (success) {
+                        if (result.IsSuccessful) {
+                            Ext.Msg.alert('提示', '操作成功');
                             win.close();
-                            me.refreshMemberGroupTree();
+                            store.reload();
+                            treeMemberGroupStore.load();
+                        } else {
+                            Ext.Msg.alert('提示', result.ErrorMessage);
                         }
+                    } else {
+                        Ext.Msg.alert('提示', result.Message);
                     }
                 });
             } else {
@@ -579,58 +635,84 @@
                     return;
                 }
                 form.updateRecord();
-                myStore.update({
-                    callback: function (records, operation, success) {
-                        if (!success) {
-                            Ext.MessageBox.alert("操作失败", operation.error);
-                            return;
-                        } else {
-                            Ext.MessageBox.alert("操作成功", "更新成功");
+                store.updateMemberGroup(formValues, function (request, success, response) {
+                    if (response.timedout) {
+                        Ext.Msg.alert('提示', '操作超时');
+                        store.reload();
+                        return;
+                    }
+                    var result = JSON.parse(response.responseText);
+                    if (success) {
+                        if (result.IsSuccessful) {
+                            Ext.Msg.alert('提示', '操作成功');
                             win.close();
-                            me.refreshMemberGroupTree();
+                            treeMemberGroupStore.load();
+                            store.reload();
+                        } else {
+                            Ext.Msg.alert('提示', result.ErrorMessage);
                         }
+                    } else {
+                        Ext.Msg.alert('提示', result.Message);
                     }
                 });
             }
+            this.hasUpdateDeptRegion = true;
         }
     },
     deletegroup: function (btn) {
-        var selectedItems = this.getMemberGroupList().getSelectionModel().getSelection();
+        var me = this;
+        var selectedItems = this.getTreegridMemberGroup().getSelectionModel().getSelection();
         if (selectedItems.length < 1) {
             Ext.MessageBox.alert("提示", "请先选择需要删除的分组");
             return;
         }
-        var me = this;
+        var ID = selectedItems[0].get('ID');
         Ext.MessageBox.confirm('询问', '您确定要删除吗?', function (opt) {
-            if (opt != 'yes') {
-                return;
-            }
-            Ext.Msg.wait('正在处理数据，请稍候……', '状态提示');
-            var myStore = me.getMemberGroupList().getStore();
-            myStore.remove(selectedItems[0]);
-            myStore.sync({
-                callback: function (batch, options) {
-                    Ext.Msg.hide();
-                    if (batch.hasException()) {
-                        Ext.MessageBox.alert("操作失败", batch.exceptions[0].error);
-                        myStore.rejectChanges();
-                    } else {
-                        Ext.MessageBox.alert("操作成功", "删除成功");
-                        me.refreshMemberGroupTree();
+            if (opt == 'yes') {
+                var store = me.getTreegridMemberGroup().getStore();
+                Ext.Msg.wait('正在处理数据，请稍候……', '状态提示');
+                store.deleteMemberGroup(ID, function (request, success, response) {
+                    if (response.timedout) {
+                        Ext.Msg.alert('提示', '操作超时');
+                        store.reload();
+                        return;
                     }
-                }
-            });
+                    var result = JSON.parse(response.responseText);
+                    if (success) {
+                        if (result.IsSuccessful && result.Data) {
+                            Ext.Msg.alert('提示', '操作成功').setStyle('z-index', '20000');
+                            store.reload();
+                            me.getTreeMemberGroup().getStore().load();
+                        } else {
+                            Ext.Msg.alert('提示', "操作失败" + result.ErrorMessage).setStyle('z-index', '20000');
+                        }
+                    } else {
+                        Ext.Msg.alert('提示', result.Message).setStyle('z-index', '20000');
+                    }
+                });
+            }
         });
     },
     editgroup: function (btn) {
         var me = this;
-        var grid = btn.up('grid');
-        var selectedrecord = grid.getSelectionModel().getSelection();
-        if (selectedrecord.length < 1) {
-            Ext.MessageBox.alert("提示", "请先选择需要修改的分组");
+        var selectedItems = me.getTreegridMemberGroup().getSelectionModel().getSelection();
+        if (selectedItems.length < 1) {
+            Ext.Msg.alert('提示', '请先选中需要编辑的数据');
             return;
         }
-        me.editgroupshow(selectedrecord[0]);
+        var win = Ext.widget('MemberGroupEdit');
+        win.form.loadRecord(selectedItems[0]);
+        win.form.getForm().actionMethod = 'PUT';
+        win.setTitle('修改分类');
+        win.show();
+        //var me = this;
+        //var grid = btn.up('grid');
+        //var selectedrecord = grid.getSelectionModel().getSelection();
+        //if (selectedrecord.length < 1) {
+        //	Ext.MessageBox.alert("提示", "请先选择需要修改的分组");
+        //	return;
+        //}
+        //me.editgroupshow(selectedrecord[0]);
     },
     editgroupshow: function (record) {
         var win = Ext.widget('MemberGroupEdit');
@@ -639,26 +721,23 @@
         win.setTitle("编辑分组");
         win.show();
     },
-    onMemberGroupAfterRender: function () {
-        this.refreshMemberGroupTree(true);
+    afterrender: function () {
+        var memberStore = this.getMember().getStore();
+        memberStore.load();
     },
-    onGridMemberGroupSelect: function (grid, record, index, eOpts) {
+    ontreeMemberGroupItemClick: function (tree, record, item) {
         var me = this;
-        var store = this.getMember().getStore();
+        var store = me.getMember().getStore();
         Ext.apply(store.proxy.extraParams, {
-            All: false,
-            MemberGroupID: record.data.ID,
+            All: false, MemberGroupID: record.data.ID
         });
-        store.currentPage = 1;
-        store.load();
+        store.loadPage(1);
     },
     refreshMemberGroupTree: function (firstTime) {
         var me = this;
-        var gridMemberGroup = me.getGridMemberGroup();
+        var gridMemberGroup = me.getTreeMemberGroup();
         gridMemberGroup.getStore().load({
             callback: function (records, operation, success) {
-                var menu = me.getBtnChangeMemberGroup().menu;
-                menu.removeAll();
                 if (records.length > 0) {
                     if (firstTime) {
                         gridMemberGroup.getSelectionModel().select(0);
@@ -667,12 +746,7 @@
                         memberGroup = records[i].data;
                         if (memberGroup.ID == '00000000-0000-0000-0000-000000000000')
                             continue;
-                        menu.add({
-                            text: memberGroup.Name,
-                            MemberGroupID: memberGroup.ID,
-                            handler: me.changeMemberGroup,
-                            scope: me,
-                        });
+
                     }
                 }
             }

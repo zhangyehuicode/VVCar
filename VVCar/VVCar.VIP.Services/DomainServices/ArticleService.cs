@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
+using VVCar.VIP.Domain.Enums;
 using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
 using YEF.Core;
@@ -47,6 +48,28 @@ namespace VVCar.VIP.Services.DomainServices
         }
 
         /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public override bool Update(Article entity)
+        {
+            if (entity == null)
+                return false;
+            var article = Repository.GetByKey(entity.ID);
+            if (article == null)
+                return false;
+            article.Code = entity.Code;
+            article.Name = entity.Name;
+            article.PushDate = entity.PushDate;
+            article.IsPushAllMembers = entity.IsPushAllMembers;
+            article.LastUpdateDate = DateTime.Now;
+            article.LastUpdateUser = AppContext.CurrentSession.UserName;
+            article.LastUpdateUserID = AppContext.CurrentSession.UserID;
+            return Repository.Update(article) > 0;
+        }
+
+        /// <summary>
         /// 批量删除
         /// </summary>
         /// <param name="ids"></param>
@@ -84,6 +107,25 @@ namespace VVCar.VIP.Services.DomainServices
         }
 
         /// <summary>
+        /// 手动批量推送
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public bool BatchHandArticle(Guid[] ids)
+        {
+            if (ids == null || ids.Length < 1)
+                throw new DomainException("参数不正确");
+            var notPushData = Repository.GetInclude(t => t.ArtitleItems, false).Where(t => ids.Contains(t.ID) && t.Status == EArticlePushStatus.NotPush).ToList();
+            if (notPushData.Count() < 1)
+                return true;
+            notPushData.ForEach(t =>
+            {
+
+            });
+            return true;
+        }
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>
@@ -94,6 +136,8 @@ namespace VVCar.VIP.Services.DomainServices
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.Name))
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
+            if (filter.Status.HasValue)
+                queryable = queryable.Where(t => t.Status == filter.Status);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);

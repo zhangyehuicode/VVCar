@@ -27,6 +27,18 @@ namespace VVCar.VIP.Domain.Dtos
         public string Name { get; set; }
 
         /// <summary>
+        /// 推送时间
+        /// </summary>
+        [Display(Name = "推送时间")]
+        public DateTime PushDate { get; set; }
+
+        /// <summary>
+        /// 是否推送所有会员
+        /// </summary>
+        [Display(Name = "是否推送所有会员")]
+        public bool IsPushAllMembers { get; set; }
+
+        /// <summary>
         /// 创建人
         /// </summary>
         [Display(Name = "创建人")]

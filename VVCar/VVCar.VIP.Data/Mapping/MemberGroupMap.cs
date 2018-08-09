@@ -21,6 +21,12 @@ namespace VVCar.VIP.Data.Mapping
             this.Property(t => t.Code)
                 .IsRequired()
                 .HasMaxLength(20);
+
+            this.Property(t => t.CreatedUser)
+                .HasMaxLength(20);
+
+            this.Property(t => t.LastUpdateUser)
+                .HasMaxLength(20);
         }
     }
 }

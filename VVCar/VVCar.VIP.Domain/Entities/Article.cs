@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.VIP.Domain.Enums;
 using YEF.Core.Data;
 
 namespace VVCar.VIP.Domain.Entities
@@ -32,6 +33,24 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "图文标题")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// 推送时间
+        /// </summary>
+        [Display(Name = "推送时间")]
+        public DateTime PushDate { get; set; } 
+
+        /// <summary>
+        /// 推送状态
+        /// </summary>
+        [Display(Name = "推送状态")]
+        public EArticlePushStatus Status { get; set; }
+
+        /// <summary>
+        /// 是否推送所有会员
+        /// </summary>
+        [Display(Name = "是否推送所有会员")]
+        public bool IsPushAllMembers { get; set; }
 
         /// <summary>
         /// 图文子项

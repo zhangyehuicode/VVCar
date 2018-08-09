@@ -122,18 +122,15 @@
 		var tree = Ext.ComponentQuery.query('treepanel[name=treeAgentDepartmentCategory]');
 		var selectedItems = tree[0].getView().getSelectionModel().getSelection();
 		//if (selectedItems.length > 0 && selectedItems[0].data.ID != '' && selectedItems[0].data.ID != null && selectedItems[0].data.ID != '00000000-0000-0000-0000-000000000001') {
-		if (selectedItems.length > 0 && selectedItems[0].data.ID != '' && selectedItems[0].data.ID != null) {
-			var win = Ext.widget('AgentDepartmentEdit');
-			if (selectedItems[0].data.ID != '00000000-0000-0000-0000-000000000001') {
-				win.down('textfield[name=AgentDepartmentCategoryID]').setValue(selectedItems[0].data.ID);
-			}
-			win.down('combobox[name=Type]').setValue(0);
-			win.form.getForm().actionMethod = 'POST';
-			win.setTitle('添加客户');
-			win.show();
-		} else {
-			Ext.Msg.alert('提示', '未选择分类');
+		//if (selectedItems.length > 0 && selectedItems[0].data.ID != '' && selectedItems[0].data.ID != null) {
+		var win = Ext.widget('AgentDepartmentEdit');
+		if (selectedItems.length > 0) { 
+			win.down('textfield[name=AgentDepartmentCategoryID]').setValue(selectedItems[0].data.ID);
 		}
+		win.down('combobox[name=Type]').setValue(0);
+		win.form.getForm().actionMethod = 'POST';
+		win.setTitle('添加客户');
+		win.show();
 	},
 	manageTag: function () {
 		var me = this;

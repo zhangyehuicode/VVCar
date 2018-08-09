@@ -70,6 +70,12 @@ namespace YEF.Core.Data
         public string MobilePhoneNo { get; set; }
 
         /// <summary>
+        /// 微信公众号二维码 图片地址
+        /// </summary>
+        [Display(Name = "微信公众号二维码 图片地址")]
+        public string WeChatQRCodeImgUrl { get; set; }
+
+        /// <summary>
         /// 营业执照 图片地址
         /// </summary>
         [Display(Name = "营业执照 图片地址")]

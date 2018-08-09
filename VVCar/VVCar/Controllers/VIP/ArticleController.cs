@@ -44,6 +44,20 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public JsonActionResult<bool> Update(Article entity)
+        {
+            return SafeExecute(() =>
+            {
+                return ArticleService.Update(entity);
+            });
+        }
+
+        /// <summary>
         /// 批量删除
         /// </summary>
         /// <param name="parameter"></param>
@@ -54,6 +68,20 @@ namespace VVCar.Controllers.VIP
             return SafeExecute(() =>
             {
                 return ArticleService.BatchDelete(parameter.IdList.ToArray());
+            });
+        }
+
+        /// <summary>
+        /// 手动批量推送图文消息
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpPost, Route("BatchHandArticle")]
+        public JsonActionResult<bool> BatchHandArticle(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return ArticleService.BatchHandArticle(parameter.IdList.ToArray());
             });
         }
 

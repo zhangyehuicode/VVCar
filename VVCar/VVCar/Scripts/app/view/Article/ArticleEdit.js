@@ -31,6 +31,28 @@
 				margin: '5 0 0 5',
 				maxLength: 18,
 				allowBlank: false,
+			}, {
+				xtype: 'combobox',
+				name: 'IsPushAllMembers',
+				store: yesNoDictStore,
+				displayField: 'DictName',
+				valueField: 'DictValue',
+				fieldLabel: '是否推送所有会员',
+				margin: '5 0 0 5',
+				labelWidth: 60,
+				editable: false,
+				allowBlank: false,
+			}, {
+				xtype: 'datefield',
+				name: 'PushDate',
+				fieldLabel: '推送时间',
+				margin: '5 0 0 5',
+				allowBlank: true,
+				minValue: new Date(),
+				format: 'Y-m-d',
+				editable: false,
+				allowBlank: false,
+				value: new Date()
 			}]
 		});
 		me.items = [me.form];

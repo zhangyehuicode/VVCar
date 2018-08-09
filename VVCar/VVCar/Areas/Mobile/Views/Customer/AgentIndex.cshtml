@@ -4,7 +4,7 @@
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<div class="main" id="loginreg">
+<div class="main" id="login">
     <img class="bgimg" src="~/Areas/resource/img/mobile/bg.jpg" />
     <div class="headerimgcon">
         <img class="headerimg" src="~/Areas/resource/img/mobile/logo.png" />
@@ -20,19 +20,19 @@
             <img src="~/Areas/resource/img/mobile/yzm2.png" style="width:16px; float:left; margin-top:18px;">
             <input v-model="UserInfo.VerificationCode" type="text" placeholder="验证码" name="address" size="6" maxlength="6" style="color:#fff;width:85%;" class="zcdl_box4" oninput="if(value.length>6)value=value.slice(0,6)">
         </div>
-        <div class="zcdl_box3" style="margin-top:inherit;">
-            <img src="~/Areas/resource/img/mobile/gr.png" style="width:16px; float:left; margin-top:18px;">
-            <input v-model="UserInfo.Name" type="text" placeholder="姓名" maxlength="50" style="color:#fff;width:85%;" class="zcdl_box4">
-        </div>
-        <div class="zcdl_box3" style="margin-top:inherit;">
-            <img src="~/Areas/resource/img/mobile/departmentname.png" style="width:16px; float:left; margin-top:18px;">
-            <input v-model="UserInfo.DepartmentName" type="text" placeholder="门店名称" maxlength="50" style="color:#fff;width:85%;" class="zcdl_box4">
-        </div>
-        <div class="zcdl_box3" style="margin-top:inherit;">
-            <img src="~/Areas/resource/img/mobile/departmentaddress.png" style="width:16px; float:left; margin-top:18px;">
-            <input v-model="UserInfo.DepartmentAddress" type="text" placeholder="门店地址" maxlength="100" style="color:#fff;width:85%;" class="zcdl_box4">
-        </div>
-        <a class="zcdl_btn" style="margin-top:30px;" v-on:click="register">注册</a>
+        @*<div class="zcdl_box3" style="margin-top:inherit;">
+                <img src="~/Areas/resource/img/mobile/gr.png" style="width:16px; float:left; margin-top:18px;">
+                <input v-model="UserInfo.Name" type="text" placeholder="姓名" maxlength="50" style="color:#fff;width:85%;" class="zcdl_box4">
+            </div>
+            <div class="zcdl_box3" style="margin-top:inherit;">
+                <img src="~/Areas/resource/img/mobile/departmentname.png" style="width:16px; float:left; margin-top:18px;">
+                <input v-model="UserInfo.DepartmentName" type="text" placeholder="门店名称" maxlength="50" style="color:#fff;width:85%;" class="zcdl_box4">
+            </div>
+            <div class="zcdl_box3" style="margin-top:inherit;">
+                <img src="~/Areas/resource/img/mobile/departmentaddress.png" style="width:16px; float:left; margin-top:18px;">
+                <input v-model="UserInfo.DepartmentAddress" type="text" placeholder="门店地址" maxlength="100" style="color:#fff;width:85%;" class="zcdl_box4">
+            </div>*@
+        <a class="zcdl_btn" style="margin-top:30px;" v-on:click="login">登录</a>
     </div>
 </div>
 
@@ -63,7 +63,7 @@
         .headerimgcon {
             width: 100%;
             text-align: center;
-            top: 15px;
+            top: 30px;
             position: absolute;
         }
 
@@ -78,7 +78,7 @@
 
         .logininfocon {
             position: absolute;
-            top: 100px;
+            top: 130px;
             width: 100%;
         }
 
@@ -148,7 +148,7 @@
             var mch = $.getUrlParam('mch');
             function init() {
                 $.ajax({
-                    url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                    url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId&isagentdept=true',
                     type: 'GET',
                     headers: { 'CompanyCode':mch },
                     beforeSend: function () {
@@ -239,7 +239,6 @@
                 $.alert('请先输入验证码');
                 return;
             }
-            //$.confirm('确认注册？', function () {
             $.ajax({
                 url: '/AliyunSMS/Sms/CheckVerificationCode/' + mobilephoneno + '/' + verificationCode,
                 type: 'GET',
@@ -265,11 +264,10 @@
                     $.hideLoading();
                 }
                 });
-            //});
         }
 
         _viewModel = new Vue({
-            el: '#loginreg',
+            el: '#login',
             data: {
                 UserInfo: {
                     Name:'',
@@ -277,54 +275,59 @@
                     VerificationCode: '',
                     PlateNumber: '',
                     DepartmentAddress: '',
-                    DepartmentName:'',
+                    DepartmentName: '',
                 },
               },
             methods: {
-                register: function (event) {
-                    if (_viewModel.UserInfo.Name == null || _viewModel.UserInfo.Name == '') {
-                        $.alert('请先填写姓名');
-                        return;
-                    }
-                    if (_viewModel.UserInfo.DepartmentName == null || _viewModel.UserInfo.DepartmentName == '') {
-                        $.alert('请先填写门店名称');
-                        return;
-                    }
-                    if (_viewModel.UserInfo.DepartmentAddress == null || _viewModel.UserInfo.DepartmentAddress == '') {
-                        $.alert('请先填写门店地址');
-                        return;
-                    }
+                login: function (event) {
+                    //if (_viewModel.UserInfo.Name == null || _viewModel.UserInfo.Name == '') {
+                    //    $.alert('请先填写姓名');
+                    //    return;
+                    //}
+                    //if (_viewModel.UserInfo.DepartmentName == null || _viewModel.UserInfo.DepartmentName == '') {
+                    //    $.alert('请先填写门店名称');
+                    //    return;
+                    //}
+                    //if (_viewModel.UserInfo.DepartmentAddress == null || _viewModel.UserInfo.DepartmentAddress == '') {
+                    //    $.alert('请先填写门店地址');
+                    //    return;
+                    //}
                     checkVerificationCode(this.UserInfo.MobilePhoneNo, this.UserInfo.VerificationCode, function (mobilePhoneNo) {
                             $.ajax({
-                            url: '/api/Member/Register',
+                            url: '/api/Member/MemberLogin',
                             type: 'POST',
                             headers: { "CompanyCode": mch },
                             data: {
                                 WeChatOpenID: '@ViewBag.OpenId',
                                 MobilePhoneNo: mobilePhoneNo,
-                                Name: _viewModel.UserInfo.Name,
-                                Password: '123456',
-                                PlateNumber: _viewModel.UserInfo.PlateNumber,
-                                DepartmentName: _viewModel.UserInfo.DepartmentName,
-                                DepartmentAddress: _viewModel.UserInfo.DepartmentAddress,
+                                IsAgentDeptLogin: true,
+                                //Name: _viewModel.UserInfo.Name,
+                                //Password: '123456',
+                                //PlateNumber: _viewModel.UserInfo.PlateNumber,
+                                //DepartmentName: _viewModel.UserInfo.DepartmentName,
+                                //DepartmentAddress: _viewModel.UserInfo.DepartmentAddress,
                             },
                             beforeSend: function () {
-                                //$.showLoading();
+                                $.showLoading();
                             },
                             success: function (res) {
-                                //$.hideLoading();
+                                $.hideLoading();
                                 if (res.IsSuccessful) {
-                                    $.toast('注册成功', function () {
+                                    //$.toast('登录成功', function () {
+                                    if (res.Data != null) {
+                                        sessionStorage.setItem('member', JSON.stringify(res.Data));
                                         window.location.href = "/Mobile/Customer/Home?mch=" + mch;
-                                    });
+                                    }
+                                    else
+                                        $.alert('登录失败');
+                                    //});
                                 }
                                 else {
                                     $.alert(res.ErrorMessage);
                                 }
                             },
                             error: function (res) {
-                                //$.hideLoading();
-                                //$.alert('注册失败');
+                                $.hideLoading();
                                 $.alert(JSON.stringify(res));
                             }
                         });

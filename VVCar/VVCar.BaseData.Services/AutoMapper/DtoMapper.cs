@@ -43,6 +43,7 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.iconCls, opt => opt.MapFrom(src => src.SysMenuIcon));
 
                 cfg.CreateMap<ProductCategory, ProductCategoryTreeDto>();
+                cfg.CreateMap<MemberGroup, MemberGroupTreeDto>();
                 cfg.CreateMap<AgentDepartmentCategory, AgentDepartmentCategoryTreeDto>();
 
                 cfg.CreateMap<CarBitCoinProductCategory, CarBitCoinProductCategoryTreeDto>();

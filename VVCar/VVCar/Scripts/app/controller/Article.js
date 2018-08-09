@@ -31,6 +31,19 @@
 			'ArticleList button[action=addArticleItem]': {
 				click: me.addArticleItem
 			},
+			'ArticleList button[action=delArticleItem]': {
+				click: me.delArticleItem
+			},
+			'ArticleList button[action=batchHandArticle]': {
+				click: me.batchHandArticle
+			},
+			'ArticleList grid[name=gridArticle]': {
+				select: me.gridArticleSelect,
+				itemdblclick: me.editArticle
+			},
+			'ArticleList grid[name=gridArticleItem]': {
+				itemdblclick: me.editArticleItem
+			},
 			'ArticleEdit button[action=save]': {
 				click: me.saveArticle
 			},
@@ -42,10 +55,64 @@
 			}
 		});
 	},
+	gridArticleSelect: function (grid, record, index, eOpts) {
+		var me = this;
+		var articleItemStore = me.getGridArticleItem().getStore();
+		Ext.apply(articleItemStore.proxy.extraParams, {
+			All: false,
+			ArticleID: record.data.ID
+		});
+		articleItemStore.reload();
+	},
 	addArticle: function () {
 		var win = Ext.widget('ArticleEdit');
 		win.form.getForm().actionMethod = 'POST';
-		win.setTitle('添加公告');
+		win.setTitle('添加图文消息');
+		win.show();
+	},
+	editArticle: function (grid, record) {
+		var win = Ext.widget('ArticleEdit');
+		win.form.loadRecord(record);
+		win.form.getForm().actionMethod = 'PUT';
+		win.setTitle('编辑图文消息');
+		win.show();
+	},
+	batchHandArticle: function (btn) {
+		var selectedItems = btn.up('grid').getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '请先选择要推送的数据!');
+			return;
+		}
+		Ext.Msg.confirm('提示', '确定要手动推送吗?', function (optional) {
+			if (optional === 'yes') {
+				var store = btn.up('grid').getStore();
+				var ids = [];
+				selectedItems.forEach(function (item) {
+					ids.push(item.data.ID);
+				});
+				store.batchHandArticle(ids,
+					function success(response, request, c) {
+						var ajaxResult = JSON.parse(c.responseText);
+						if (ajaxResult.IsSuccessful) {
+							store.reload();
+							Ext.Msg.alert('提示', '手动推送成功');
+						} else {
+							Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+					}
+				);
+			}
+
+		})
+	},
+	editArticleItem: function (grid, record) {
+		var win = Ext.widget('ArticleItemEdit');
+		win.form.loadRecord(record);
+		win.form.getForm().actionMethod = 'PUT';
+		win.setTitle('编辑图文消息子项');
 		win.show();
 	},
 	delArticle: function (btn) {
@@ -55,7 +122,7 @@
 			Ext.Msg.alert('提示', '请先选择要删除的数据');
 			return;
 		}
-		Ext.Msg.confirm('提示', '确定要删除公告吗?', function (optional) {
+		Ext.Msg.confirm('提示', '确定要删除图文消息吗?', function (optional) {
 			if (optional === 'yes') {
 				var store = btn.up('grid').getStore();
 				var ids = [];
@@ -83,11 +150,11 @@
 		var me = this;
 		var selectedItems = me.getGridArticle().getSelectionModel().getSelection();
 		if (selectedItems.length < 1) {
-			Ext.Msg.alert('提示', '请选择公告');
+			Ext.Msg.alert('提示', '请选择图文消息');
 			return;
 		}
 		if (selectedItems.length > 1) {
-			Ext.Msg.alert('提示', '一次只能选择一条公告');
+			Ext.Msg.alert('提示', '一次只能选择一条图文消息');
 			return;
 		}
 		var win = Ext.widget('ArticleItemEdit');
@@ -95,6 +162,37 @@
 		win.form.getForm().actionMethod = 'POST';
 		win.setTitle('添加公告子项');
 		win.show();
+	},
+	delArticleItem: function (btn) {
+		var selectedItems = btn.up('grid').getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.Msg.alert('提示', '请选择要删除的图文消息');
+			return;
+		}
+		var me = this;
+		Ext.Msg.confirm('询问', '您确定要删除吗', function (optional) {
+			if (optional == 'yes') {
+				var store = me.getGridArticleItem().getStore();
+				var ids = [];
+				selectedItems.forEach(function (item) {
+					ids.push(item.data.ID);
+				});
+				store.batchDelete(ids,
+					function success(response, request, c) {
+						var ajaxResult = JSON.parse(c.responseText);
+						if (ajaxResult.IsSuccessful) {
+							store.reload();
+							Ext.Msg.alert('提示', '删除成功');
+						} else {
+							Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+						}
+					},
+					function failure(a, b, c) {
+						Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+					}
+				);
+			}
+		});
 	},
 	saveArticle: function () {
 		var me = this;

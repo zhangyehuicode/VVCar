@@ -134,6 +134,16 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 微信公众号二维码图片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadQRCode")]
+        public UploadFileResult UploadQRCode()
+        {
+            return UploadAction("Pictures/QRCode");
+        }
+
+        /// <summary>
         /// 上传营业执照图片
         /// </summary>
         /// <returns></returns>

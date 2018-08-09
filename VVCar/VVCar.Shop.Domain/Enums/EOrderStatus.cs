@@ -13,6 +13,12 @@ namespace VVCar.Shop.Domain.Enums
     public enum EOrderStatus
     {
         /// <summary>
+        /// 挂账
+        /// </summary>
+        [Description("挂账")]
+        OnCredit = -2,
+
+        /// <summary>
         /// 付款不足
         /// </summary>
         [Description("付款不足")]

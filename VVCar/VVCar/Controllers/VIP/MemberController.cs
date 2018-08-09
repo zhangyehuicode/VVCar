@@ -143,11 +143,11 @@ namespace VVCar.Controllers.VIP
         /// <param name="openID"></param>
         /// <returns></returns>
         [HttpGet, Route("GetMemberInfoByWeChat"), AllowAnonymous]
-        public JsonActionResult<MemberCardDto> GetMemberInfoByWeChat(string openID)
+        public JsonActionResult<MemberCardDto> GetMemberInfoByWeChat([FromUri]GetMemberInfoByWeChatDto getMemberInfoByWeChatDto)
         {
             return SafeExecute(() =>
             {
-                return MemberService.GetMemberInfoByWeChat(openID);
+                return MemberService.GetMemberInfoByWeChat(getMemberInfoByWeChatDto.openID, getMemberInfoByWeChatDto.isagentdept);
             });
         }
 
@@ -485,6 +485,20 @@ namespace VVCar.Controllers.VIP
             return SafeExecute(() =>
             {
                 return MemberService.BatchManualAddMember(addparam);
+            });
+        }
+
+        /// <summary>
+        /// 会员登录
+        /// </summary>
+        /// <param name="memberLoginDto"></param>
+        /// <returns></returns>
+        [HttpPost, Route("MemberLogin"), AllowAnonymous]
+        public JsonActionResult<MemberCardDto> MemberLogin(MemberLoginDto memberLoginDto)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.MemberLogin(memberLoginDto);
             });
         }
     }

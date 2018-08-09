@@ -97,7 +97,6 @@
 				var response = JSON.parse(options.responseText);
 				if (response.IsSuccessful) {
 					Ext.Msg.alert('提示', '数据上传成功');
-					store.load();
 				} else {
 					Ext.Msg.alert('提示', response.ErrorMessage);
 				}

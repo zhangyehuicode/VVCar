@@ -4,6 +4,9 @@
 	fields: [
 		{ name: 'ID' },
 		{ name: 'Name' },
+		{ name: 'IsPushAllMembers' },
+		{ name: 'PushDate' },
+		{ name: 'Status' },
 		{ name: 'CreatedUser' },
 		{ name: 'CreatedDate' },
 	],

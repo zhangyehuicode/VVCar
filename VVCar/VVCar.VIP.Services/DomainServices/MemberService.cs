@@ -15,6 +15,7 @@ using YEF.Core.Dtos;
 using VVCar.VIP.Domain.Filters;
 using VVCar.Shop.Domain.Entities;
 using VVCar.BaseData.Domain.Entities;
+using VVCar.BaseData.Domain.Enums;
 
 namespace VVCar.VIP.Services.DomainServices
 {
@@ -319,6 +320,43 @@ namespace VVCar.VIP.Services.DomainServices
         }
 
         /// <summary>
+        /// 会员登录
+        /// </summary>
+        /// <param name="memberLoginDto"></param>
+        /// <returns></returns>
+        public MemberCardDto MemberLogin(MemberLoginDto memberLoginDto)
+        {
+            if (memberLoginDto == null)
+                return null;
+            var exist = this.Repository.GetInclude(t => t.AgentDepartment, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).FirstOrDefault(t => t.WeChatOpenID == memberLoginDto.WeChatOpenID);
+            if (exist != null)
+            {
+                if (memberLoginDto.IsAgentDeptLogin)
+                {
+                    if (!exist.AgentDepartmentID.HasValue || exist.AgentDepartment.Type != EAgentDepartmentType.Development)
+                        throw new DomainException("非商户客户");
+                }
+                return GetMemberInfoByWeChat(exist.WeChatOpenID);
+            }
+            var member = this.Repository.GetInclude(t => t.AgentDepartment).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).Where(t => t.MobilePhoneNo == memberLoginDto.MobilePhoneNo).FirstOrDefault();
+            if (member != null)
+            {
+                if (memberLoginDto.IsAgentDeptLogin)
+                {
+                    if (!member.AgentDepartmentID.HasValue || member.AgentDepartment.Type != EAgentDepartmentType.Development)
+                        throw new DomainException("非商户客户");
+                }
+                if (!string.IsNullOrEmpty(memberLoginDto.WeChatOpenID))
+                {
+                    member.WeChatOpenID = memberLoginDto.WeChatOpenID;
+                    Repository.Update(member);
+                }
+                return GetMemberInfoByWeChat(member.WeChatOpenID);
+            }
+            return null;
+        }
+
+        /// <summary>
         /// 会员注册，微信渠道
         /// </summary>
         /// <param name="registerDto"></param>
@@ -338,8 +376,13 @@ namespace VVCar.VIP.Services.DomainServices
             //    throw new DomainException("手机号码已绑定会员");
             if (member != null)
             {
-                member.WeChatOpenID = registerDto.WeChatOpenID;
+                if (!string.IsNullOrEmpty(registerDto.WeChatOpenID))
+                    member.WeChatOpenID = registerDto.WeChatOpenID;
                 member.Password = Util.EncryptPassword(member.CardNumber, registerDto.Password);
+                member.Name = registerDto.Name;
+                member.DepartmentName = registerDto.DepartmentName;
+                member.DepartmentAddress = registerDto.DepartmentAddress;
+                member.AgentDepartmentID = registerDto.AgentDepartmentID;
                 //member.MemberGradeID = registerDto.MemberGradeID;
                 Repository.Update(member);
                 return member.CardNumber;
@@ -473,6 +516,7 @@ namespace VVCar.VIP.Services.DomainServices
                 var memberCard = MemberCardService.GenerateVirtualCard();
                 var newMember = new Member
                 {
+                    MemberGroupID = param.MemberGroupID,
                     Name = param.Name,
                     Sex = param.Sex,
                     Birthday = param.Birthday,
@@ -729,15 +773,20 @@ namespace VVCar.VIP.Services.DomainServices
         /// </summary>
         /// <param name="openID"></param>
         /// <returns></returns>
-        public MemberCardDto GetMemberInfoByWeChat(string openID)
+        public MemberCardDto GetMemberInfoByWeChat(string openID, bool isagentdept = false)
         {
             if (string.IsNullOrEmpty(openID))
                 return null;
-            var member = this.Repository.GetIncludes(false, "Card")//, "OwnerGroup", "MemberGrade"
-                .FirstOrDefault(t => t.WeChatOpenID == openID);
+            var member = this.Repository.GetIncludes(false, "Card", "AgentDepartment")//, "OwnerGroup", "MemberGrade"
+                .FirstOrDefault(t => t.WeChatOpenID == openID && t.MerchantID == AppContext.CurrentSession.MerchantID);
 
             if (member == null)
                 return null;
+
+            if (isagentdept)
+                if (!member.AgentDepartmentID.HasValue || member.AgentDepartment.Type != EAgentDepartmentType.Development)
+                    throw new DomainException("非商户客户");
+
             //MemberGrade highGrade = null;
             //var limitDate = DateTime.Now;
             //if (member.MemberGrade != null)

@@ -4,10 +4,10 @@
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<div id="logisticsmanagement">
+<div id="ordermanagement">
     <div class="toubu">
         <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
-        物流管理
+        订单管理
         <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
     </div>
     <div class="touxiang">
@@ -15,26 +15,28 @@
             <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
             <div class="touxiang_div">
                 <span>{{User.Name}}</span>
-                <span style=" font-size:14px; color:#999;">物流：{{LogisticsCount}}条</span>
+                <span style=" font-size:14px; color:#999;">订单：{{LogisticsCount}}条</span>
             </div>
         </div>
     </div>
     <div class="kcd_box2">
         <form>
-            <input type="text" class="kcgl_input" style="color:#999" placeholder="请输入订单号" id="ordercode">
+            <input type="text" class="kcgl_input" style="color:#999" placeholder="请输入订单号/客户手机号码/客户姓名" id="ordercode">
         </form>
         <div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="search"></div>
+        <div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="showaddorder"></div>
     </div>
-    <div class="touxiang" v-for="Logistics in LogisticsList">
+    <div class="touxiang" v-for="Order in OrderList">
         <div class="kcgl_box">
             <div class="kcgl">订单号</div>
             <div class="kcgl2">
-                <span>{{Logistics.Code}}</span>
+                <span>{{Order.Code}}</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">订单状态</div>
             <div class="kcgl2">
+                <span style="color:#ff0c4c;" v-if="Logistics.Status==-2">挂账</span>
                 <span style="color:#ff0c4c;" v-if="Logistics.Status==-1">付款不足</span>
                 <span style="color:#ff0c4c;" v-if="Logistics.Status==0">未付款</span>
                 <span style="color:#51b3f0;" v-if="Logistics.Status==1">已付款未发货</span>
@@ -45,69 +47,69 @@
         <div class="kcgl_box">
             <div class="kcgl">快递单号</div>
             <div class="kcgl2">
-                <span>{{Logistics.ExpressNumber}}</span>
+                <span>{{Order.ExpressNumber}}</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">物流公司</div>
             <div class="kcgl2">
-                <span>{{Logistics.LogisticsCompany}}</span>
+                <span>{{Order.LogisticsCompany}}</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">收件人</div>
             <div class="kcgl2">
-                <span>{{Logistics.LinkMan}}</span>
+                <span>{{Order.LinkMan}}</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">联系电话</div>
             <div class="kcgl2">
-                <span>{{Logistics.Phone}}</span>
+                <span>{{Order.Phone}}</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">收货地址</div>
             <div class="kcgl2">
-                <span>{{Logistics.Address}}</span>
+                <span>{{Order.Address}}</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">业务员</div>
             <div class="kcgl2">
-                <span>{{Logistics.UserName}}</span>
+                <span>{{Order.UserName}}</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">发货人</div>
             <div class="kcgl2">
-                <span>{{Logistics.Consigner}}</span>
+                <span>{{Order.Consigner}}</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">回访时间</div>
             <div class="kcgl2">
-                <span v-if="Logistics.RevisitDays>0">{{Logistics.RevisitDays}}天后</span>
+                <span v-if="Logistics.RevisitDays>0">{{Order.RevisitDays}}天后</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">回访提示</div>
             <div class="kcgl2">
-                <span style="color:#ff0c4c;">{{Logistics.RevisitTips}}</span>
+                <span style="color:#ff0c4c;">{{Order.RevisitTips}}</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">回访状态</div>
             <div class="kcgl2">
-                <span style="color:#ff0c4c;" v-if="Logistics.RevisitStatus==0">未回访</span>
-                <span v-if="Logistics.RevisitStatus==1">已回访</span>
+                <span style="color:#ff0c4c;" v-if="Order.RevisitStatus==0">未回访</span>
+                <span v-if="Order.RevisitStatus==1">已回访</span>
             </div>
         </div>
         <div class="kcgl_box">
-            <div class="kcgl">发货清单</div>
+            <div class="kcgl">订单详情</div>
             <div class="kcgl2">
                 <span>
-                    <a style="background-color:#51b3f0;float:left; margin-left:10%; font-size:12px; width:70px;" v-on:click="orderitems(Logistics)">发货清单</a>
+                    <a style="background-color:#51b3f0;float:left; margin-left:10%; font-size:12px; width:70px;" v-on:click="orderitems(Order)">订单详情</a>
                 </span>
             </div>
         </div>
@@ -115,65 +117,55 @@
             <div class="kcgl">操作</div>
             <div class="kcgl2">
                 <span>
-                    <a style="background-color:#ff0c4c;float:left;margin:10px 3px;" v-on:click="showdelivery(Logistics)">发货</a>
-                    <a style="background-color:#51b3f0;float:left;width:65px;margin:10px 3px;" v-on:click="undelivery(Logistics)">取消发货</a>
-                    <a style="background-color:#51b3f0;float:left;width:70px;margin:10px 3px;" v-on:click="calllinkman(Logistics)">联系收件人</a>
+                    @*<a style="background-color:#ff0c4c;float:left;margin:10px 3px;" v-on:click="showdelivery(Logistics)">发货</a>
+                        <a style="background-color:#51b3f0;float:left;width:65px;margin:10px 3px;" v-on:click="undelivery(Logistics)">取消发货</a>*@
+                    <a style="background-color:#51b3f0;float:left;width:70px;margin:10px 3px;" v-on:click="calllinkman(Order)">联系收件人</a>
                 </span>
             </div>
         </div>
     </div>
     <div class="kcgl_box2"></div>
-    <div class="deliverymain">
+    <div class="addordermain">
         <div class="deliverycon">
             <div class="popcon">
                 <img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closedelivery" />
-                <div style="text-align:center;padding:5px 0 5px 0;">订单号：{{CurrentLogistics.Code}}</div>
                 <div class="quickoatable">
-                    <div class="quickoatablecell itemtitle">物流公司</div>
-                    <input class="quickoatablecell inputbottom" placeholder="物流公司" v-model:value="Logistics.LogisticsCompany" />
-                </div>
-                <div class="quickoatable">
-                    <div class="quickoatablecell itemtitle">快递单号</div>
-                    <input class="quickoatablecell inputbottom" placeholder="快递单号" v-model:value="Logistics.ExpressNumber" />
-                </div>
-                <div class="quickoatable">
-                    <div class="quickoatablecell itemtitle">回访时间</div>
+                    <div class="quickoatablecell itemtitle" style="vertical-align:middle;">客户</div>
                     <div class="quickoatablecell">
-                        <div class="quickoatable" style="width:200px;border:none;">
-                            <div class="quickoatablecell itemtitle" style="width:35px;padding:0 10px 0 0;">发货</div>
-                            <input type="number" class="quickoatablecell" style="width:80px;text-align:center;border:1px #ccc solid" placeholder="回访时间" v-model:value="Logistics.RevisitDays" />
-                            <div class="quickoatablecell itemtitle" style="width:35px;padding:0 25px 0 10px;">天后</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="quickoatable">
-                    <div class="quickoatablecell itemtitle" style="vertical-align:middle;">回访提示</div>
-                    <textarea class="quickoatablecell inputbottom" placeholder="回访提示" v-model:value="Logistics.RevisitTips"></textarea>
-                </div>
-                <div class="quickoatable">
-                    <div class="quickoatablecell itemtitle" style="vertical-align:middle;">业务员</div>
-                    <div class="quickoatablecell">
-                        <select class="kcd_input" style="width:80px;margin-top:0;" id="userroleselect">
-                            <option v-for="UserRole in UserRoleList" v-bind:value="UserRole.ID">{{UserRole.Name}}</option>
-                        </select>
-                        <select class="kcd_input" style="width:80px;margin-top:0;" id="userselect">
-                            <option v-for="User in UserList" v-bind:value="User.ID">{{User.Name}}</option>
+                        <select class="kcd_input" style="width:80px;margin-top:0;" id="agentdepartmentselect">
+                            <option v-for="AgentDepartment in AgentDepartmentList" v-bind:value="User.ID">{{AgentDepartment.Name}}</option>
                         </select>
                     </div>
                 </div>
                 <div class="quickoatable">
-                    <div class="quickoatablecell itemtitle" style="vertical-align:middle;">发货提醒</div>
-                    <textarea class="quickoatablecell inputbottom" placeholder="发货提醒" v-model:value="Logistics.DeliveryTips"></textarea>
+                    <div class="quickoatablecell itemtitle">联系人</div>
+                    <input class="quickoatablecell inputbottom" placeholder="联系人" v-model:value="Order.LinkMan" />
                 </div>
-                <div class="confirmdelivery" v-on:click="delivery">确认发货</div>
+                <div class="quickoatable">
+                    <div class="quickoatablecell itemtitle">联系电话</div>
+                    <input class="quickoatablecell inputbottom" placeholder="联系电话" v-model:value="Order.Phone" />
+                </div>
+                <div class="quickoatable">
+                    <div class="quickoatablecell itemtitle">收货地址</div>
+                    <input class="quickoatablecell inputbottom" placeholder="收货地址" v-model:value="Order.Address" />
+                </div>
+                <div class="quickoatable">
+                    <div class="quickoatablecell itemtitle">挂单</div>
+                    <input class="quickoatablecell" type="checkbox" />
+                </div>
+                <div class="quickoatable">
+                    <div class="quickoatablecell itemtitle">备注</div>
+                    <textarea class="quickoatablecell inputbottom" placeholder="备注" v-model:value="Order.Remark"></textarea>
+                </div>
+                <div class="confirmdelivery" v-on:click="delivery">确认订单</div>
             </div>
         </div>
     </div>
     <div class="orderitemsmain">
         <div class="deliverycon">
-            <div style="width:100%;text-align:center;padding:20px 0 10px 0;">发货清单</div>
+            <div style="width:100%;text-align:center;padding:20px 0 10px 0;">订单详情</div>
             <img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closeorderitems" />
-            <div class="kcgl_box" style="height:80px;" v-for="OrderItem in CurrentLogistics.OrderItemList" v-if="OrderItem.ProductType==1">
+            <div class="kcgl_box" style="height:80px;" v-for="OrderItem in CurrentOrder.OrderItemList" v-if="OrderItem.ProductType==1">
                 <div class="kcgl" style="width:30%;height:100%;">
                     <img class="productdetailsimg" v-bind:src=OrderItem.ImgUrl />
                 </div>
@@ -190,7 +182,7 @@
             position: absolute;
         }
 
-        .deliverymain {
+        .addordermain {
             position: absolute;
             top: 0;
             left: 0;
@@ -341,24 +333,32 @@
         var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
         var issalesmanger = sessionStorage.getItem('isgeneralmanager') == 'false';
         _viewModel = new Vue({
-            el: '#logisticsmanagement',
+            el: '#ordermanagement',
             data: {
                 User: {},
-                LogisticsList: [],
-                LogisticsCount: 0,
-                UserRoleList: [],
-                UserList: [],
-                Logistics: {
-                    ID:'',
+                OrderList: [],
+                OrderCount: 0,
+                AgentDepartmentList: [],
+                Order: {
+                    AgentDepartmentID:'',
+                    LinkMan: '',
+                    Phone:'',
+                    Address: 0,
+                    Status: '',
+                    Source:1,
+                    Remark:'',
                     UserID: '',
-                    ConsignerID:'',
-                    RevisitDays: 0,
-                    RevisitTips: '',
-                    DeliveryTips: '',
-                    LogisticsCompany:'',
-                    ExpressNumber:'',
+                    OrderItemList: [{
+                        GoodsID: '',
+                        ImgUrl: '',
+                        ProductName: '',
+                        ProductType: 1,
+                        Quantity: 0,
+                        PriceSale: 0,
+                        Money:0,
+                    }],
                 },
-                CurrentLogistics: {},
+                CurrentOrder: {},
             },
             methods: {
                 back: function (event) {
@@ -374,69 +374,34 @@
                     search();
                 },
                 orderitems: function (data, event) {
-                    _viewModel.CurrentLogistics = data;
+                    _viewModel.CurrentOrder = data;
                     $('.orderitemsmain').show();
                 },
                 closeorderitems: function (data, event) {
                     $('.orderitemsmain').hide();
                 },
-                showdelivery: function (data, event) {
-                    _viewModel.CurrentLogistics = data;
-                    $('.deliverymain').show();
+                showaddorder: function (event) {
+                    $('.addordermain').show();
                 },
-                delivery: function (data, event) {
+                addorder: function (data, event) {
                     if (data == null || data == '') {
                         $.alert('参数错误');
                         return;
                     }
-                    if (data.Status == -1) {
-                        $.alert('订单付款不足');
-                        return;
-                    }
-                    if (data.Status == 0) {
-                        $.alert('订单未付款');
-                        return;
-                    }
-                    if (data.Status == 2) {
-                        $.alert('订单已发货');
-                        return;
-                    }
-                    if (data.Status == 3) {
-                        $.alert('订单已完成');
-                        return;
-                    }
-                    if (_viewModel.Logistics == null || _viewModel.Logistics == '') {
+                    if (_viewModel.Order == null || _viewModel.Order == '') {
                         $.alert('参数错误');
                         return;
                     }
-                    _viewModel.Logistics.ID = _viewModel.CurrentLogistics.ID;
-                    if (_viewModel.Logistics.ID == null || _viewModel.Logistics.ID == '') {
-                        $.alert('参数错误');
-                        return;
-                    }
-                    if (_viewModel.Logistics.LogisticsCompany == null || _viewModel.Logistics.LogisticsCompany == '') {
-                        $.alert('请先填写物流公司');
-                        return;
-                    }
-                    if (_viewModel.Logistics.ExpressNumber == null || _viewModel.Logistics.ExpressNumber == '') {
-                        $.alert('请先填写快递单号');
-                        return;
-                    }
-                    _viewModel.Logistics.UserID = $('#userselect').val();
-                    $.confirm('确认发货？', function () {
-                        delivery();
-                    });
-                },
-                undelivery: function (data, event) {
-                    $.confirm('确定取消发货？', function () {
-                        undelivery(data.ID);
+                    _viewModel.Order.AgentDepartmentID = $('#agentdepartmentselect').val();
+                    $.confirm('确认添加？', function () {
+                        addorder();
                     });
                 },
                 calllinkman: function (data, event) {
                     window.location.href ="tel://"+ data.Phone;
                 },
-                closedelivery: function (data, event) {
-                    $('.deliverymain').hide();
+                closeaddorder: function (data, event) {
+                    $('.addordermain').hide();
                 },
             }
         });
@@ -463,7 +428,7 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 _viewModel.User = res.Data;
-                                _viewModel.Logistics.ConsignerID = res.Data.ID;
+                                _viewModel.Order.UserID = res.Data.ID;
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
                             }
                             else {
@@ -485,13 +450,13 @@
             } else {
                 var user = JSON.parse(user);
                 _viewModel.User = user;
-                _viewModel.Logistics.ConsignerID = user.ID;
+                _viewModel.Order.UserID = user.ID;
             }
 
             function search() {
                 var ordercode = $('#ordercode').val();
                 $.ajax({
-                    url: '/api/Order?IsLogistics=true&TradeNo=' + ordercode,
+                    url: '/api/Order?Keyword=' + ordercode,
                     type: 'GET',
                     headers: { 'CompanyCode': mch },
                     beforeSend: function () {
@@ -500,8 +465,8 @@
                     success: function (res) {
                         $.hideLoading();
                         if (res.IsSuccessful) {
-                            _viewModel.LogisticsList = res.Data;
-                            _viewModel.LogisticsCount = res.Data.length;
+                            _viewModel.Order = res.Data;
+                            _viewModel.OrderCount = res.Data.length;
                         } else {
                             $.alert(res.ErrorMessage);
                         }
@@ -513,40 +478,17 @@
             }
             search();
 
-            function getRole() {
-                $.ajax({
-                    url: '/api/Role?All=false',
-                    type: 'GET',
-                    headers: { 'CompanyCode': mch },
-                    success: function (res) {
-                        if (res.IsSuccessful) {
-                            _viewModel.UserRoleList = res.Data;
-                            if (res.Data != null && res.Data.length > 0)
-                                getUser(res.Data[0].ID);
-                        } else {
-                            $.alert(res.ErrorMessage);
-                        }
-                    },
-                    error: function () {
-                    }
-                });
-            }
-            getRole();
-
-            function getUser(roleid) {
+            function getAgentDepartment() {
                 if (roleid == null || roleid == '')
                     return;
                 $.ajax({
-                    url: '/api/UserRole?All=false&RoleID=' + roleid,
+                    url: '/api/AgentDepartment',
                     type: 'GET',
                     headers: { 'CompanyCode': mch },
                     success: function (res) {
                         if (res.IsSuccessful) {
-                            _viewModel.UserList = [];
                             if (res.Data != null) {
-                                for (var i = 0; i < res.Data.length; i++) {
-                                    _viewModel.UserList.push(res.Data[i].User);
-                                }
+                                _viewModel.AgentDepartmentList = res.Data;
                             }
                         } else {
                             $.alert(res.ErrorMessage);
@@ -557,19 +499,11 @@
                 });
             }
 
-            $('#userroleselect').change(function () {
-                var value = $(this).val();
-                getUser(value);
-            });
-
-            function delivery() {
-                //$.alert(JSON.stringify(_viewModel.Logistics));
-                //return;
-                console.log(JSON.stringify(_viewModel.Logistics));
+            function addorder() {
                 $.ajax({
-                    url: '/api/Order/DeliveryByWeChat',
+                    url: '/api/Order',
                     type: 'POST',
-                    data: _viewModel.Logistics,
+                    data: _viewModel.Order,
                     headers: { 'CompanyCode': mch },
                     beforeSend: function () {
                         $.showLoading();
@@ -577,38 +511,9 @@
                     success: function (res) {
                         $.hideLoading();
                         if (res.IsSuccessful) {
-                            if (res.Data) {
-                                $('.deliverymain').hide();
-                                $.toast('操作成功');
-                                search();
-                            }
-                        } else {
-                            $.alert(res.ErrorMessage);
-                        }
-                    },
-                    error: function () {
-                        $.hideLoading();
-                    }
-                });
-            }
-
-            function undelivery(id) {
-                if (id == null||id=='') {
-                    $.alert('参数错误');
-                    return;
-                }
-                $.ajax({
-                    url: '/api/Order/AntiDeliveryByWeChat?id=' + id,
-                    type: 'GET',
-                    headers: { 'CompanyCode': mch },
-                    beforeSend: function () {
-                        $.showLoading();
-                    },
-                    success: function (res) {
-                        $.hideLoading();
-                        if (res.IsSuccessful) {
-                            if (res.Data) {
-                                $.toast('操作成功');
+                            if (res.Data != null) {
+                                $('.addordermain').hide();
+                                $.toast('添加成功');
                                 search();
                             }
                         } else {

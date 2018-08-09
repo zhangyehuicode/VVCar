@@ -14,7 +14,7 @@
 		me.items = [{
 			xtype: 'grid',
 			name: 'gridArticle',
-			title: '公告',
+			title: '图文消息',
 			flex: 6,
 			height: '100%',
 			store: articleStore,
@@ -27,12 +27,12 @@
 			tbar: [{
 				action: 'addArticle',
 				xtype: 'button',
-				text: '添加公告',
+				text: '添加图文消息',
 				iconCls: 'x-fa fa-plus-circle',
 			}, {
 				action: 'delArticle',
 				xtype: 'button',
-				text: '删除公告',
+				text: '删除图文消息',
 				iconCls: 'x-fa fa-close',
 			}, {
 				xtype: 'form',
@@ -58,10 +58,40 @@
 					iconCls: 'fa fa-search',
 					cls: 'submitBtn',
 					margin: '0 0 0 5'
+				}, {
+					action: 'batchHandArticle',
+					xtype: 'button',
+					text: '手动推送',
+					scope: this,
+					iconCls: 'fa fa-arrow-up',
+					margin: '0 0 0 5'
 				}]
 			}],
 			columns: [
+
 				{ header: '标题', dataIndex: 'Name', flex: 1 },
+				{
+					header: '推送状态', dataIndex: 'Status', flex: 1,
+					renderer: function (value) {
+						if (value == 0)
+							return '<span><font>未推送</font></span>';
+						if (value == 1)
+							return '<span><font color="green">已推送</font></span>';
+						if (value == -1)
+							return '<span><font color="red">终止推送</font></span>';
+					}
+
+				},
+				{
+					header: '是否推送所有会员', dataIndex: 'IsPushAllMembers', flex: 1,
+					renderer: function (value) {
+						if (value == 0)
+							return '<span><font color="red">否</font></span>';
+						if (value == 1)
+							return '<span><font color="green">是</font></span>';
+					}
+				},
+				{ header: '推送时间', dataIndex: 'PushDate', flex: 1 },
 				{ header: '创建人', dataIndex: 'CreatedUser', flex: 1 },
 				{ header: '创建时间', dataIndex: 'CreatedDate', flex: 1 },
 			],
@@ -73,42 +103,42 @@
 			}
 		}, {
 			xtype: 'splitter',
+		}, {
+			xtype: 'grid',
+			name: 'gridArticleItem',
+			flex: 4,
+			stripeRows: true,
+			store: articleItemStore,
+			selType: 'checkboxmodel',
+			title: '图文消息子项',
+			tbar: [{
+				action: 'addArticleItem',
+				xtype: 'button',
+				text: '添加图文子项',
+				iconCls: 'x-fa fa-plus-circle',
+				margin: '5 5 5 5',
 			}, {
-				xtype: 'grid',
-				name: 'gridArticleItem',
-				flex: 4,
-				stripeRows: true,
+				action: 'delArticleItem',
+				xtype: 'button',
+				text: '删除图文子项',
+				iconCls: 'x-fa fa-plus-circle',
+				margin: '5 5 5 5',
+			}],
+			columns: [
+				{ header: '文章标题', dataIndex: 'Title', flex: 1 },
+				{ header: '作者', dataIndex: 'Author', flex: 1 },
+				{ header: '图文消息', dataIndex: 'Disgest', flex: 1 },
+				{ header: '是否显示封面', dataIndex: 'IsShowCoverPic', flex: 1 },
+				{ header: '主体内容', dataIndex: 'Content', flex: 1 },
+				{ header: '作者', dataIndex: 'CreatedUser' },
+				{ header: '创建时间', dataIndex: 'CreatedDate' },
+			],
+			bbar: {
+				xtype: 'pagingtoolbar',
 				store: articleItemStore,
-				selType: 'checkboxmodel',
-				title: '图文消息子项',
-				tbar: [{
-					action: 'addArticleItem',
-					xtype: 'button',
-					text: '添加图文子项',
-					iconCls: 'x-fa fa-plus-circle',
-					margin: '5 5 5 5',
-				}, {
-					action: 'delArticleItem',
-					xtype: 'button',
-					text: '删除图文子项',
-					iconCls: 'x-fa fa-plus-circle',
-					margin: '5 5 5 5',
-				}],
-				columns: [
-					{ header: '文章标题', dataIndex: 'Title', flex: 1 },
-					{ header: '作者', dataIndex: 'Author', flex: 1 },
-					{ header: '图文消息', dataIndex: 'Disgest', flex: 1 },
-					{ header: '是否显示封面', dataIndex: 'IsShowCoverPic', flex: 1 },
-					{ header: '主体内容', dataIndex: 'Content', flex: 1 },
-					{ header: '作者', dataIndex: 'CreatedUser' },
-					{ header: '创建时间', dataIndex: 'CreatedDate' },
-				],
-				bbar: {
-					xtype: 'pagingtoolbar',
-					store: articleItemStore,
-					dock: 'bottom',
-					displayInfo: true,
-				}
+				dock: 'bottom',
+				displayInfo: true,
+			}
 		}];
 		this.callParent();
 	}

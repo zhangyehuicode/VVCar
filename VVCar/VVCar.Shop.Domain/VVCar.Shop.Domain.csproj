@@ -95,6 +95,7 @@
     <Compile Include="Enums\ECarBitCoinProductType.cs" />
     <Compile Include="Enums\ECarBitCoinDistributionStatus.cs" />
     <Compile Include="Enums\ECarBitCoinRecordType.cs" />
+    <Compile Include="Enums\EOrderSource.cs" />
     <Compile Include="Enums\EOrderStatus.cs" />
     <Compile Include="Enums\EPayType.cs" />
     <Compile Include="Enums\EPickUpOrderStatus.cs" />

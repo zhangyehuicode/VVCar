@@ -22,7 +22,14 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="ids"></param>
         /// <returns></returns>
         bool BatchDelete(Guid[] ids);
-        
+
+        /// <summary>
+        /// 手动批量推送
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool BatchHandArticle(Guid[] ids);
+
         /// <summary>
         /// 查询
         /// </summary>

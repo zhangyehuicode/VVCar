@@ -73,11 +73,25 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 获取会员分类列表，用户会员分类选择下拉框
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("LiteData")]
+        public JsonActionResult<IList<IDCodeNameDto>> GetLiteData()
+        {
+            return SafeExecute(() =>
+            {
+                var categories = MemberGroupService.GetLiteData();
+                return categories;
+            });
+        }
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpGet, Route("Search")]
+        [HttpGet]
         public PagedActionResult<MemberGroup> Search([FromUri]MemberGroupFilter filter)
         {
             return SafeGetPagedData<MemberGroup>((result) =>
@@ -92,14 +106,15 @@ namespace VVCar.Controllers.VIP
         /// <summary>
         /// 获取树形结构数据
         /// </summary>
-        /// <param name="parentId"></param>
+        /// <param name="parentID"></param>
         /// <returns></returns>
-        [HttpGet, Route("TreeData")]
-        public JsonActionResult<IEnumerable<IDCodeNameDto>> GetTreeData()
+        [HttpGet, Route("GetTree")]
+        public TreeActionResult<MemberGroupTreeDto> GetTree(Guid? parentID)
         {
-            return SafeExecute(() =>
+            return SafeGetTreeData(() =>
             {
-                return MemberGroupService.GetTreeData();
+                var memberGroups = MemberGroupService.GetTreeData(parentID);
+                return memberGroups;
             });
         }
 
