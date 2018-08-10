@@ -151,7 +151,7 @@
                 { header: "余额（元）", dataIndex: "CardBalance", width: 100, xtype: "numbercolumn" },
                 //{ header: "卡片类型", dataIndex: "CardTypeDesc", flex: 1 },
                 {
-                    header: "分组", dataIndex: "MemberGroupID", flex: 1,
+                    header: "分组", dataIndex: "MemberGroupID", minWidth: 100, flex: 1,
                     renderer: function (value, cellmeta, record) {
                         if (value != null && value != '') {
                             var record = memberGroupStore.findRecord('ID', value);
@@ -163,9 +163,9 @@
                         return "普通会员";
                     }
                 },
-                { header: "姓名", dataIndex: "Name", width: 100 },
+                { header: "姓名", dataIndex: "Name", minWidth: 100, flex: 1 },
                 {
-                    header: "性别", dataIndex: "Sex", flex: 1,
+                    header: "性别", dataIndex: "Sex", width: 50,
                     renderer: function (value) {
                         if (value == 1)
                             return "男";
@@ -175,17 +175,17 @@
                             return "未知";
                     }
                 },
-                { header: "手机号码", dataIndex: "MobilePhoneNo", width: 120 },
-                { header: "归属地", dataIndex: "PhoneLocation", flex: 1 },
-                { header: "车牌号", dataIndex: "PlateList", width: 100, permissionCode: 'Member.Member.DepartmentColumn' },
-                { header: "门店名称", dataIndex: "DepartmentName", flex: 1, permissionCode: 'Member.Member.AgentColumn' },
-                { header: "门店地址", dataIndex: "DepartmentAddress", flex: 1, permissionCode: 'Member.Member.AgentColumn' },
-                { header: "剩余积分", dataIndex: "Point", flex: 1 },
-                { header: "会员状态", dataIndex: "Status", flex: 1, permissionCode: 'Member.Member.DepartmentColumn' },
-                { header: '保险到期时间', dataIndex: 'InsuranceExpirationDate', xtype: "datecolumn", format: 'Y-m-d H:i:s', flex: 1, permissionCode: 'Member.Member.DepartmentColumn' },
+                { header: "手机号码", dataIndex: "MobilePhoneNo", width: 110 },
+                { header: "归属地", dataIndex: "PhoneLocation", width: 80 },
+                { header: "车牌号", dataIndex: "PlateList", minWidth: 100, flex: 1, permissionCode: 'Member.Member.DepartmentColumn' },
+                { header: "门店名称", dataIndex: "DepartmentName", minWidth: 200, flex: 1, permissionCode: 'Member.Member.AgentColumn' },
+                { header: "门店地址", dataIndex: "DepartmentAddress", minWidth: 250, flex: 1, permissionCode: 'Member.Member.AgentColumn' },
+                { header: "剩余积分", dataIndex: "Point", width: 80 },
+                { header: "会员状态", dataIndex: "Status", width: 80, permissionCode: 'Member.Member.DepartmentColumn' },
+                { header: '保险到期时间', dataIndex: 'InsuranceExpirationDate', xtype: "datecolumn", format: 'Y-m-d H:i:s', width: 100, permissionCode: 'Member.Member.DepartmentColumn' },
                 //{ header: "会员等级", dataIndex: "MemberGradeName", flex: 1 },
                 //{ header: "所属门店", dataIndex: "OwnerDepartment", flex: 1 },
-                { header: "注册时间", dataIndex: "CreatedDate", xtype: "datecolumn", format: "Y-m-d H:i:s", flex: 1 },
+                { header: "注册时间", dataIndex: "CreatedDate", xtype: "datecolumn", format: "Y-m-d H:i:s", minWidth: 100 },
                 //{ header: "OpenId", dataIndex: "WeChatOpenID", flex: 1, },
             ],
             bbar: [{

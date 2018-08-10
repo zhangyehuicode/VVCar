@@ -256,6 +256,7 @@
 		if (form.isValid()) {
 			var store = me.getMerchantList().getStore();
 			if (form.actionMethod == 'POST') {
+				formValues.ExpireDate += ' 00:00:00';
 				store.create(formValues, {
 					callback: function (records, operation, success) {
 						if (!success) {
@@ -293,6 +294,8 @@
 	},
 	editMerchant: function (grid, record) {
 		var win = Ext.widget('MerchantEdit');
+		if (record.data.ExpireDate != null && record.data.ExpireDate !='')
+			record.data.ExpireDate = record.data.ExpireDate.substring(0, 10);
 		win.form.loadRecord(record);
 		win.down('box[name=ImgWeChatQRCodeShow]').autoEl.src = record.data.WeChatQRCodeImgUrl;
 		win.down('box[name=ImgLicenseShow]').autoEl.src = record.data.BusinessLicenseImgUrl;

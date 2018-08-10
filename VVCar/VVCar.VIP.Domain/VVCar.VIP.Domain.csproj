@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Dtos\AddMemberParam.cs" />
     <Compile Include="Dtos\AdjustBalanceDto.cs" />
+    <Compile Include="Dtos\AnnouncementPushMemberDto.cs" />
     <Compile Include="Dtos\ArticleDto.cs" />
     <Compile Include="Dtos\BulkReceiveCouponDto.cs" />
     <Compile Include="Dtos\BuyGiftCardByPosDto.cs" />
@@ -97,6 +98,8 @@
     <Compile Include="Dtos\UseMemberGradeRightsResult.cs" />
     <Compile Include="Dtos\VerifyCouponDto.cs" />
     <Compile Include="Dtos\WeChatTemplateMessageDto.cs" />
+    <Compile Include="Entities\Announcement.cs" />
+    <Compile Include="Entities\AnnouncementPushMember.cs" />
     <Compile Include="Entities\Article.cs" />
     <Compile Include="Entities\ArticleItem.cs" />
     <Compile Include="Entities\CardThemeCategory.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="Entities\VerificationCode.cs" />
     <Compile Include="Entities\VerificationRecord.cs" />
     <Compile Include="Entities\VisitRecord.cs" />
+    <Compile Include="Enums\EAnnouncementStatus.cs" />
     <Compile Include="Enums\EAdjustType.cs" />
     <Compile Include="Enums\EApproveStatus.cs" />
     <Compile Include="Enums\EArticlePushStatus.cs" />
@@ -179,6 +183,8 @@
     <Compile Include="Enums\EVerificationMode.cs" />
     <Compile Include="Enums\EVideoType.cs" />
     <Compile Include="Filters\AdjustMemberPointFilter.cs" />
+    <Compile Include="Filters\AnnouncementFilter.cs" />
+    <Compile Include="Filters\AnnouncementPushMemberFilter.cs" />
     <Compile Include="Filters\ArticleFilter.cs" />
     <Compile Include="Filters\ArticleItemFilter.cs" />
     <Compile Include="Filters\CardThemeCategoryFilter.cs" />
@@ -213,6 +219,8 @@
     <Compile Include="MakeCodeTypes.cs" />
     <Compile Include="MemberCardTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IAnnouncementPushMemberService.cs" />
+    <Compile Include="Services\IAnnouncementService.cs" />
     <Compile Include="Services\IArticleItemService.cs" />
     <Compile Include="Services\IArticleService.cs" />
     <Compile Include="Services\ICouponPushMemberService.cs" />

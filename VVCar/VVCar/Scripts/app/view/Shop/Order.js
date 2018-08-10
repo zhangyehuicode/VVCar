@@ -7,17 +7,18 @@
     loadMask: true,
     closable: true,
     initComponent: function () {
-		var me = this;
-		var statusStore = Ext.create('Ext.data.Store', {
-			fields: ['Name', 'Value'],
-			data: [
-				{ 'Name': '未付款', 'Value': 0 },
-				{ 'Name': '已发货', 'Value': 2 },
-				{ 'Name': '已完成', 'Value': 3 },
-				{ 'Name': '已付款未发货', 'Value': 1 },
-				{ 'Name': '付款不足', 'Value': -1 },
-			]
-		});
+        var me = this;
+        var statusStore = Ext.create('Ext.data.Store', {
+            fields: ['Name', 'Value'],
+            data: [
+                { 'Name': '未付款', 'Value': 0 },
+                { 'Name': '已发货', 'Value': 2 },
+                { 'Name': '已完成', 'Value': 3 },
+                { 'Name': '已付款未发货', 'Value': 1 },
+                { 'Name': '付款不足', 'Value': -1 },
+                { 'Name': '挂账', 'Value': -2 },
+            ]
+        });
         me.tbar = [{
             xtype: 'form',
             layout: 'column',
@@ -38,19 +39,19 @@
                 labelWidth: 60,
                 margin: '5 5 5 10',
                 emptyText: '订单号/联系人/联系电话/收货地址/快递单号',
-			}, {
-				xtype: 'combobox',
-				name: 'Status',
-				margin: '5 5 5 5',
-				store: statusStore,
-				displayField: 'Name',
-				valueField: 'Value',
-				fieldLabel: '发货状态',
-				labelWidth: 60,
-				width: 200,
-				editable: false,
-				value: false,
-			}, {
+            }, {
+                xtype: 'combobox',
+                name: 'Status',
+                margin: '5 5 5 5',
+                store: statusStore,
+                displayField: 'Name',
+                valueField: 'Value',
+                fieldLabel: '发货状态',
+                labelWidth: 60,
+                width: 200,
+                editable: false,
+                value: false,
+            }, {
                 action: 'search',
                 xtype: 'button',
                 text: '搜索',
@@ -72,15 +73,17 @@
                 header: '发货状态', dataIndex: 'Status', width: 100,
                 renderer: function (value) {
                     if (value == 2)
-                        return "已发货";
+                        return "<span style='color:green;'>已发货</span>";
                     else if (value == 1)
                         return "已付款未发货";
                     else if (value == 0)
-                        return "未付款";
+                        return "<span style='color:red;'>未付款</span>";
                     else if (value == 3)
-                        return "已完成";
+                        return "<span style='color:green;'>已完成</span>";
                     else if (value == -1)
-                        return "付款不足";
+                        return "<span style='color:red;'>付款不足</span>";
+                    else if (value == -2)
+                        return "<span style='color:red;'>挂账</span>";
                 }
             },
             { header: '快递单号', dataIndex: 'ExpressNumber', width: 180 },
@@ -102,20 +105,20 @@
                         var record = grid.getStore().getAt(rowIndex);
                         this.fireEvent('orderdetailsClick', grid, record);
                     },
-				},
-				{ scope: this },
-					//{
-                    //action: 'editItem',
-                    //iconCls: 'x-fa fa-pencil',
-                    //tooltip: '编辑',
-                    //scope: this,
-                    //margin: '10 10 10 10',
-                    //handler: function (grid, rowIndex, colIndex) {
-                    //    var record = grid.getStore().getAt(rowIndex);
-                    //    this.fireEvent('editActionClick', grid, record);
-                    //},
-					//}, { scope: this },
-					{
+                },
+                { scope: this },
+                //{
+                //action: 'editItem',
+                //iconCls: 'x-fa fa-pencil',
+                //tooltip: '编辑',
+                //scope: this,
+                //margin: '10 10 10 10',
+                //handler: function (grid, rowIndex, colIndex) {
+                //    var record = grid.getStore().getAt(rowIndex);
+                //    this.fireEvent('editActionClick', grid, record);
+                //},
+                //}, { scope: this },
+                {
                     action: 'deleteItem',
                     iconCls: 'x-fa fa-close',
                     tooltip: '删除',

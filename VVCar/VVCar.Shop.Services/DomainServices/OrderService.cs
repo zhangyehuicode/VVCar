@@ -137,6 +137,7 @@ namespace VVCar.Shop.Services.DomainServices
                 //if (cardItems.Count == entity.OrderItemList.Count)
                 //    entity.Status = EOrderStatus.Finish;
                 RecountMoney(entity);
+                RecountOrderItemMoney(entity);
                 result = base.Add(entity);
                 //try
                 //{
@@ -145,7 +146,8 @@ namespace VVCar.Shop.Services.DomainServices
                 //catch
                 //{
                 //}
-                ShoppingCartService.ClearShoppingCart(result.OpenID);
+                if (entity.Source == EOrderSource.Shop)
+                    ShoppingCartService.ClearShoppingCart(result.OpenID);
                 UnitOfWork.CommitTransaction();
             }
             catch (Exception e)
@@ -207,6 +209,16 @@ namespace VVCar.Shop.Services.DomainServices
                         ReceiveCoupons(couponTemplateIDs, entity.OpenID);
                 }
             }
+        }
+
+        private void RecountOrderItemMoney(Order order)
+        {
+            if (order == null || order.OrderItemList == null || order.OrderItemList.Count() < 1)
+                return;
+            order.OrderItemList.ForEach(t =>
+            {
+                t.Money = t.PriceSale * t.Quantity;
+            });
         }
 
         public bool RecountMoneySave(string code, bool isNotify = false)
@@ -409,7 +421,7 @@ namespace VVCar.Shop.Services.DomainServices
             try
             {
                 Update(entity);
-                if(entity.UserID.HasValue)
+                if (entity.UserID.HasValue)
                     SendNotifyToSalesman(entity.ID);
                 UnitOfWork.CommitTransaction();
                 return true;
@@ -478,7 +490,7 @@ namespace VVCar.Shop.Services.DomainServices
                 UnitOfWork.CommitTransaction();
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 UnitOfWork.RollbackTransaction();
                 throw e;
@@ -515,7 +527,7 @@ namespace VVCar.Shop.Services.DomainServices
             message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(order.Code);
             message.data.keyword4 = new WeChatTemplateMessageDto.MessageData(order.LogisticsCompany);
             message.data.keyword5 = new WeChatTemplateMessageDto.MessageData(order.ExpressNumber);
-            if(order.Status == EOrderStatus.Delivered)
+            if (order.Status == EOrderStatus.Delivered)
                 message.data.remark = new WeChatTemplateMessageDto.MessageData(order.DeliveryTips);
             else
                 message.data.remark = new WeChatTemplateMessageDto.MessageData("请知悉");
@@ -571,7 +583,7 @@ namespace VVCar.Shop.Services.DomainServices
             if (!string.IsNullOrEmpty(filter.TNoLMPAddEN))
                 queryable = queryable.Where(t => t.Code.Contains(filter.TNoLMPAddEN) || t.LinkMan.Contains(filter.TNoLMPAddEN) || t.Address.Contains(filter.TNoLMPAddEN) || t.Phone.Contains(filter.TNoLMPAddEN) || t.ExpressNumber.Contains(filter.TNoLMPAddEN));
             if (filter.IsLogistics)
-                queryable = queryable.Where(t => t.Status == EOrderStatus.Delivered || t.Status == EOrderStatus.PayUnshipped);
+                queryable = queryable.Where(t => t.Status == EOrderStatus.Delivered || t.Status == EOrderStatus.PayUnshipped || t.Status == EOrderStatus.OnCredit);
             if (filter.Status.HasValue)
                 queryable = queryable.Where(t => t.Status == filter.Status);
             totalCount = queryable.Count();

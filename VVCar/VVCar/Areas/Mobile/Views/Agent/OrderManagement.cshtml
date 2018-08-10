@@ -11,20 +11,20 @@
         <a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
     </div>
     <div class="touxiang">
-        <div style="width:100%; float:left; ">
+        <div style="width:100%;float:left; ">
             <img src="@ViewBag.HeadImgUrl" class="touxiang_img">
             <div class="touxiang_div">
                 <span>{{User.Name}}</span>
-                <span style=" font-size:14px; color:#999;">订单：{{LogisticsCount}}条</span>
+                <span style=" font-size:14px; color:#999;">订单：{{OrderCount}}条</span>
             </div>
         </div>
+        <div class="kcd_btn" style="position:absolute;top:80px;right:20px;" v-on:click="showaddorder">添加订单</div>
     </div>
     <div class="kcd_box2">
         <form>
-            <input type="text" class="kcgl_input" style="color:#999" placeholder="请输入订单号/客户手机号码/客户姓名" id="ordercode">
+            <input type="text" class="kcgl_input" style="color:#999;width:200px;" placeholder="订单号/手机号码/收件人" id="ordercode">
         </form>
         <div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="search"></div>
-        <div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="showaddorder"></div>
     </div>
     <div class="touxiang" v-for="Order in OrderList">
         <div class="kcgl_box">
@@ -36,24 +36,18 @@
         <div class="kcgl_box">
             <div class="kcgl">订单状态</div>
             <div class="kcgl2">
-                <span style="color:#ff0c4c;" v-if="Logistics.Status==-2">挂账</span>
-                <span style="color:#ff0c4c;" v-if="Logistics.Status==-1">付款不足</span>
-                <span style="color:#ff0c4c;" v-if="Logistics.Status==0">未付款</span>
-                <span style="color:#51b3f0;" v-if="Logistics.Status==1">已付款未发货</span>
-                <span style="color:#51b3f0;" v-if="Logistics.Status==2">已发货</span>
-                <span style="color:#51b3f0;" v-if="Logistics.Status==3">已完成</span>
+                <span style="color:#ff0c4c;" v-if="Order.Status==-2">挂账</span>
+                <span style="color:#ff0c4c;" v-if="Order.Status==-1">付款不足</span>
+                <span style="color:#ff0c4c;" v-if="Order.Status==0">未付款</span>
+                <span style="color:#51b3f0;" v-if="Order.Status==1">已付款未发货</span>
+                <span style="color:#51b3f0;" v-if="Order.Status==2">已发货</span>
+                <span style="color:#51b3f0;" v-if="Order.Status==3">已完成</span>
             </div>
         </div>
         <div class="kcgl_box">
             <div class="kcgl">快递单号</div>
             <div class="kcgl2">
                 <span>{{Order.ExpressNumber}}</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">物流公司</div>
-            <div class="kcgl2">
-                <span>{{Order.LogisticsCompany}}</span>
             </div>
         </div>
         <div class="kcgl_box">
@@ -66,6 +60,9 @@
             <div class="kcgl">联系电话</div>
             <div class="kcgl2">
                 <span>{{Order.Phone}}</span>
+                <span>
+                    <a style="background-color:#51b3f0;float:right; margin-right:10px; font-size:12px; width:35px;" v-on:click="calllinkman(Order)">呼叫</a>
+                </span>
             </div>
         </div>
         <div class="kcgl_box">
@@ -81,31 +78,6 @@
             </div>
         </div>
         <div class="kcgl_box">
-            <div class="kcgl">发货人</div>
-            <div class="kcgl2">
-                <span>{{Order.Consigner}}</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">回访时间</div>
-            <div class="kcgl2">
-                <span v-if="Logistics.RevisitDays>0">{{Order.RevisitDays}}天后</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">回访提示</div>
-            <div class="kcgl2">
-                <span style="color:#ff0c4c;">{{Order.RevisitTips}}</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
-            <div class="kcgl">回访状态</div>
-            <div class="kcgl2">
-                <span style="color:#ff0c4c;" v-if="Order.RevisitStatus==0">未回访</span>
-                <span v-if="Order.RevisitStatus==1">已回访</span>
-            </div>
-        </div>
-        <div class="kcgl_box">
             <div class="kcgl">订单详情</div>
             <div class="kcgl2">
                 <span>
@@ -113,27 +85,27 @@
                 </span>
             </div>
         </div>
-        <div class="kcgl_box" style="border:none;">
-            <div class="kcgl">操作</div>
-            <div class="kcgl2">
-                <span>
-                    @*<a style="background-color:#ff0c4c;float:left;margin:10px 3px;" v-on:click="showdelivery(Logistics)">发货</a>
-                        <a style="background-color:#51b3f0;float:left;width:65px;margin:10px 3px;" v-on:click="undelivery(Logistics)">取消发货</a>*@
-                    <a style="background-color:#51b3f0;float:left;width:70px;margin:10px 3px;" v-on:click="calllinkman(Order)">联系收件人</a>
-                </span>
-            </div>
-        </div>
+        @*<div class="kcgl_box" style="border:none;">
+                <div class="kcgl">操作</div>
+                <div class="kcgl2">
+                    <span>
+                        <a style="background-color:#51b3f0;float:left;width:70px;margin:10px 3px;" v-on:click="calllinkman(Order)">联系收件人</a>
+                    </span>
+                </div>
+            </div>*@
     </div>
     <div class="kcgl_box2"></div>
     <div class="addordermain">
         <div class="deliverycon">
             <div class="popcon">
-                <img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closedelivery" />
+                <img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closeaddorder" />
+                <div class="kcgl" style="width:100%;border:none;line-height:30px;">添加订单</div>
                 <div class="quickoatable">
                     <div class="quickoatablecell itemtitle" style="vertical-align:middle;">客户</div>
                     <div class="quickoatablecell">
-                        <select class="kcd_input" style="width:80px;margin-top:0;" id="agentdepartmentselect">
-                            <option v-for="AgentDepartment in AgentDepartmentList" v-bind:value="User.ID">{{AgentDepartment.Name}}</option>
+                        <select class="kcd_input" style="width:100px;margin:0;" id="agentdepartmentselect">
+                            <option value="-1">选择客户</option>
+                            <option v-for="AgentDepartment in AgentDepartmentList" v-bind:value="JSON.stringify(AgentDepartment)">{{AgentDepartment.Name}}</option>
                         </select>
                     </div>
                 </div>
@@ -147,17 +119,68 @@
                 </div>
                 <div class="quickoatable">
                     <div class="quickoatablecell itemtitle">收货地址</div>
-                    <input class="quickoatablecell inputbottom" placeholder="收货地址" v-model:value="Order.Address" />
+                    <textarea class="quickoatablecell inputbottom" placeholder="收货地址" v-model:value="Order.Address"></textarea>
                 </div>
                 <div class="quickoatable">
-                    <div class="quickoatablecell itemtitle">挂单</div>
-                    <input class="quickoatablecell" type="checkbox" />
+                    <div class="quickoatablecell itemtitle" style="vertical-align:middle;">挂单</div>
+                    <input class="quickoatablecell" type="checkbox" style="-webkit-appearance:checkbox;" id="oncredit" />
                 </div>
                 <div class="quickoatable">
                     <div class="quickoatablecell itemtitle">备注</div>
                     <textarea class="quickoatablecell inputbottom" placeholder="备注" v-model:value="Order.Remark"></textarea>
                 </div>
-                <div class="confirmdelivery" v-on:click="delivery">确认订单</div>
+                <div style="font-size:13px;color:#2d2d30;margin:5px 0;">产品选择</div>
+                <div class="kcd_box2" style="margin:0;width:100%;float:none;">
+                    <select class="kcd_input" id="productcategoryselect">
+                        <option v-for="ProductCategory in ProductCategoryList" v-bind:value="ProductCategory.ID">{{ProductCategory.Name}}</option>
+                    </select>
+                    <select class="kcd_input" id="productselect">
+                        <option v-for="Product in ProductList" v-bind:value="Product.ID">{{Product.Name}}</option>
+                    </select>
+                    <div class="kcd_btn" v-on:click="addproduct">增加</div>
+                </div>
+                @*<div class="quickoatable" style="padding-top:50px;" v-for="Product in CurrentProductList">
+                        <div class="quickoatablecell">
+                            <img class="selectproductimg" v-bind:src=Product.ImgUrl />
+                        </div>
+                        <div class="quickoatablecell">{{Product.Name}}</div>
+                        <input type="number" class="quickoatablecell" min="0" v-model:value="Product.Quantity" />
+                        <div class="quickoatablecell" v-bind:click="removeproduct(Product)">移除</div>
+                    </div>*@
+                <div class="selectproductcon" v-for="Product in CurrentProductList">
+                    <img class="closeimg" style="position:relative;float:right;margin-bottom:-20px;" src="~/Areas/resource/img/mobile/close.png" v-on:click="removeproduct(Product)" />
+                    <div class="ordermanagementtable">
+                        <div class="ordermanagementtablecell selectproducttitle">名称</div>
+                        <div class="ordermanagementtablecell" style="color:#51b3f0;">{{Product.Name}}</div>
+                    </div>
+                    <div class="ordermanagementtable">
+                        <div class="ordermanagementtablecell selectproducttitle">编码</div>
+                        <div class="ordermanagementtablecell">{{Product.Code}}</div>
+                    </div>
+                    <div class="ordermanagementtable">
+                        <div class="ordermanagementtablecell selectproducttitle">销售单价</div>
+                        <div class="ordermanagementtablecell">{{Product.PriceSale}}</div>
+                    </div>
+                    <div class="ordermanagementtable">
+                        <div class="ordermanagementtablecell selectproducttitle" style="vertical-align:middle;">图片</div>
+                        <div class="ordermanagementtablecell">
+                            <img class="productdetailsimg" v-bind:src=Product.ImgUrl />
+                        </div>
+                    </div>
+                    <div class="ordermanagementtable">
+                        <div class="ordermanagementtablecell selectproducttitle">数量</div>
+                        <div class="ordermanagementtablecell">
+                            <input type="number" style="border:1px solid #ccc;width:80px;height:30px;text-align:center;" min="1" v-model:value="Product.Quantity" />
+                        </div>
+                    </div>
+                    @*<div class="ordermanagementtable">
+                            <div class="ordermanagementtablecell selectproducttitle">操作</div>
+                            <div class="ordermanagementtablecell">
+                                <div class="removeproduct" v-on:click="removeproduct(Product)">删除</div>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="confirmdelivery" v-on:click="confirmorder">提交</div>
             </div>
         </div>
     </div>
@@ -178,7 +201,7 @@
 
 @section scripts{
     <style type="text/css">
-        #logisticsmanagement {
+        #ordermanagement {
             position: absolute;
         }
 
@@ -227,7 +250,7 @@
         }
 
         .itemtitle {
-            width: 110px;
+            width: 80px;
             color: #696969;
         }
 
@@ -246,13 +269,44 @@
             display: table-cell;
         }
 
+        .ordermanagementtable {
+            display: table;
+            width: 100%;
+            padding: 0 5px;
+            min-height: 35px;
+        }
+
+        .ordermanagementtablecell {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .selectproductcon {
+            padding: 5px 0;
+            width: 100%;
+            color: #696969;
+            box-shadow: 0 0 20px #f1f1f1;
+        }
+
         .confirmdelivery {
-            margin: 18px 20px 20px 20px;
+            margin: 18px 13px 20px 13px;
             background: #51b3f0;
             color: #fff;
             text-align: center;
             height: 40px;
             line-height: 40px;
+        }
+
+        .removeproduct {
+            background: #51b3f0;
+            color: #fff;
+            text-align: center;
+            width: 40px;
+            position: relative;
+            top: 5px;
+            right: 5px;
+            float: right;
+            border-radius: 3px;
         }
 
         input {
@@ -276,6 +330,15 @@
             height: 80px;
             border: 1px #ccc solid;
             width: 100%;
+        }
+
+        .selectproductimg {
+            width: 80px;
+            height: 60px;
+        }
+
+        .selectproducttitle {
+            width: 80px;
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
@@ -343,22 +406,18 @@
                     AgentDepartmentID:'',
                     LinkMan: '',
                     Phone:'',
-                    Address: 0,
-                    Status: '',
+                    Address: '',
+                    Status: 0,
                     Source:1,
                     Remark:'',
                     UserID: '',
-                    OrderItemList: [{
-                        GoodsID: '',
-                        ImgUrl: '',
-                        ProductName: '',
-                        ProductType: 1,
-                        Quantity: 0,
-                        PriceSale: 0,
-                        Money:0,
-                    }],
+                    OrderItemList: [],
                 },
                 CurrentOrder: {},
+                ProductCategoryList: [],
+                ProductList: [],
+                CurrentProduct: {},
+                CurrentProductList:[],
             },
             methods: {
                 back: function (event) {
@@ -381,6 +440,20 @@
                     $('.orderitemsmain').hide();
                 },
                 showaddorder: function (event) {
+                    _viewModel.CurrentProductList = [];
+                    _viewModel.Order = {
+                        AgentDepartmentID: '',
+                        LinkMan: '',
+                        Phone: '',
+                        Address: '',
+                        Status: 0,
+                        Source: 1,
+                        Remark: '',
+                        UserID: '',
+                        OrderItemList: [],
+                    };
+                    $('#oncredit')[0].checked = false;
+                    $('#agentdepartmentselect').val(-1);
                     $('.addordermain').show();
                 },
                 addorder: function (data, event) {
@@ -403,6 +476,78 @@
                 closeaddorder: function (data, event) {
                     $('.addordermain').hide();
                 },
+                addproduct: function (event) {
+                    var addflag = true;
+                    for (var i = 0; i < _viewModel.CurrentProductList.length; i++) {
+                        if (_viewModel.CurrentProductList[i].ID == _viewModel.CurrentProduct.ID) {
+                            addflag = false;
+                        }
+                    }
+                    if (addflag) {
+                        var currentProduct=$.extend(true, {}, _viewModel.CurrentProduct);
+                            currentProduct.Quantity = 1;
+                        _viewModel.CurrentProductList.push(currentProduct);
+                    }
+                },
+                removeproduct: function (data, event) {
+                    if (data == null)
+                        return;
+                    var index = -1;
+                    for (var i = 0; i < _viewModel.CurrentProductList.length; i++) {
+                        if (_viewModel.CurrentProductList[i].ID == data.ID) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index != -1)
+                        _viewModel.CurrentProductList.splice(index, 1);
+                },
+                confirmorder: function (event) {
+                    if (_viewModel.Order.AgentDepartmentID == null || _viewModel.Order.AgentDepartmentID == '') {
+                        $.alert('请先选择客户');
+                        return;
+                    }
+                    if (_viewModel.Order.LinkMan == null || _viewModel.Order.LinkMan == '') {
+                        $.alert('请先填写联系人');
+                        return;
+                    }
+                    if (_viewModel.Order.Phone == null || _viewModel.Order.Phone == '') {
+                        $.alert('请先填写联系电话');
+                        return;
+                    }
+                    if (_viewModel.Order.Address == null || _viewModel.Order.Address == '') {
+                        $.alert('请先填写收货地址');
+                        return;
+                    }
+                    if (_viewModel.CurrentProductList == null || _viewModel.CurrentProductList.length < 1) {
+                        $.alert('请先选择产品');
+                        return;
+                    }
+                    _viewModel.Order.OrderItemList = [];
+                    for (var i = 0; i < _viewModel.CurrentProductList.length; i++) {
+                        var product= _viewModel.CurrentProductList[i];
+                        var orderitem = {
+                            GoodsID: product.ID,
+                            ImgUrl: product.ImgUrl,
+                            ProductName: product.Name,
+                            ProductType: 1,
+                            Quantity: product.Quantity,
+                            PriceSale: product.PriceSale,
+                            //Money:0,
+                        }
+                        _viewModel.Order.OrderItemList.push(orderitem);
+                    }
+                    if ($('#oncredit')[0].checked) {
+                        _viewModel.Order.Status = -2;
+                    } else {
+                        _viewModel.Order.Status = 0;
+                    }
+                    _viewModel.Order.UserID = _viewModel.User.ID;
+                    //$.alert(JSON.stringify(_viewModel.Order));
+                    $.confirm('确认提交？', function () {
+                        addorder();
+                    });
+                }
             }
         });
 
@@ -456,7 +601,7 @@
             function search() {
                 var ordercode = $('#ordercode').val();
                 $.ajax({
-                    url: '/api/Order?Keyword=' + ordercode,
+                    url: '/api/Order?TNoLMPAddEN=' + ordercode,
                     type: 'GET',
                     headers: { 'CompanyCode': mch },
                     beforeSend: function () {
@@ -465,7 +610,7 @@
                     success: function (res) {
                         $.hideLoading();
                         if (res.IsSuccessful) {
-                            _viewModel.Order = res.Data;
+                            _viewModel.OrderList = res.Data;
                             _viewModel.OrderCount = res.Data.length;
                         } else {
                             $.alert(res.ErrorMessage);
@@ -479,8 +624,6 @@
             search();
 
             function getAgentDepartment() {
-                if (roleid == null || roleid == '')
-                    return;
                 $.ajax({
                     url: '/api/AgentDepartment',
                     type: 'GET',
@@ -498,8 +641,11 @@
                     }
                 });
             }
+            getAgentDepartment();
 
             function addorder() {
+                if (_viewModel.Order == null)
+                    return;
                 $.ajax({
                     url: '/api/Order',
                     type: 'POST',
@@ -525,6 +671,86 @@
                     }
                 });
             }
+
+            function getProductCategory() {
+                $.ajax({
+                    url: '/api/ProductCategory?IsFromStockManager=true',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.ProductCategoryList = res.Data;
+                            if (res.Data != null && res.Data.length > 0) {
+                                _viewModel.ProductList = res.Data[0].SubProducts;
+                                if (_viewModel.ProductList != null && _viewModel.ProductList.length > 0) {
+                                    _viewModel.CurrentProduct = _viewModel.ProductList[0];
+                                }
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getProductCategory();
+
+            $('#productcategoryselect').change(function () {
+                var value = $(this).val();
+                for (var i = 0; i < _viewModel.ProductCategoryList.length; i++) {
+                    if (_viewModel.ProductCategoryList[i].ID == value) {
+                        _viewModel.ProductList = _viewModel.ProductCategoryList[i].SubProducts;
+                        if (_viewModel.ProductList != null && _viewModel.ProductList.length > 0) {
+                            _viewModel.CurrentProduct = _viewModel.ProductList[0];
+                        }
+                        break;
+                    }
+                }
+            });
+
+            $('#productselect').change(function () {
+                var value = $(this).val();
+                for (var i = 0; i < _viewModel.ProductList.length; i++) {
+                    if (_viewModel.ProductList[i].ID == value) {
+                        _viewModel.CurrentProduct = _viewModel.ProductList[i];
+                        break;
+                    }
+                }
+            });
+
+            $('#agentdepartmentselect').change(function () {
+                var value = $(this).val();
+                if (value == null || value == '')
+                    return;
+                if (value == -1) {
+                    _viewModel.Order = {
+                        AgentDepartmentID: '',
+                        LinkMan: '',
+                        Phone: '',
+                        Address: '',
+                        Status: 0,
+                        Source: 1,
+                        Remark: '',
+                        UserID: '',
+                        OrderItemList: [],
+                    };
+                    return;
+                }
+                var data = JSON.parse(value);
+                if (data != null) {
+                    _viewModel.Order.AgentDepartmentID = data.ID;
+                    _viewModel.Order.LinkMan = data.LegalPerson;
+                    _viewModel.Order.Phone = data.MobilePhoneNo;
+                    _viewModel.Order.Address = data.CompanyAddress;
+                    //_viewModel.Order.UserID = data.UserID;
+                }
+            });
 
         });
     </script>

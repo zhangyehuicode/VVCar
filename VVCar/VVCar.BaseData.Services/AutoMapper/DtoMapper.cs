@@ -135,6 +135,10 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Member.Name))
                 .ForMember(dest => dest.MobilePhoneNo, opt => opt.MapFrom(src => src.Member.MobilePhoneNo));
 
+                cfg.CreateMap<AnnouncementPushMember, AnnouncementPushMemberDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Member.Name))
+                .ForMember(dest => dest.MobilePhoneNo, opt => opt.MapFrom(src => src.Member.MobilePhoneNo));
+
                 cfg.CreateMap<GamePushMember, GamePushMemberDto>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Member.Name))
                 .ForMember(dest => dest.MobilePhoneNo, opt => opt.MapFrom(src => src.Member.MobilePhoneNo));

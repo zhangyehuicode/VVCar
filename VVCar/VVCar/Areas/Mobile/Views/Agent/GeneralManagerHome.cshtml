@@ -126,6 +126,13 @@
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">物流</span>
         </a>
     </div>
+    <div class="touxiang" style="margin-top:0px;">
+        <a class="bq_box" v-on:click="ordermanagement" v-if="IsGeneralManager||IsSalesManger">
+            <div><img src="~/Areas/resource/img/mobile/master/yhqhz.png" style="width:25px; margin-top:5px;"></div>
+            <span>订单管理</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">订单</span>
+        </a>
+    </div>
     @*<img src="~/Areas/resource/img/mobile/master/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">*@
 </div>
 
@@ -232,6 +239,9 @@
                     logisticsmanagement: function (event) {
                         window.location.href = "/Mobile/Agent/LogisticsManagement?mch=" + mch;
                     },
+                    ordermanagement: function () {
+                        window.location.href = "/Mobile/Agent/OrderManagement?mch=" + mch;
+                    }
                 }
             });
 

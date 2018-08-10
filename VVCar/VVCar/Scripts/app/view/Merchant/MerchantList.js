@@ -165,6 +165,38 @@
 			},
 			{ header: '公司地址', dataIndex: 'CompanyAddress', flex: 2 },
 			{
+				header: '认证到期', dataIndex: 'ExpireDate', width: 100,
+				renderer: function (value) {
+					if (value == null || value == '')
+						return '未知';
+					var now = new Date();
+					var expireDate = new Date(value);
+					//var year = value.substring(0, 4);
+					//var month = value.substring(5, 7) < 10 ? value.substring(6, 7) : value.substring(5, 7);
+					//var day = value.substring(8, 10) < 10 ? value.substring(9, 10) : value.substring(8, 10);
+					var year = expireDate.getFullYear();
+					var month = expireDate.getMonth() + 1;
+					var day = expireDate.getDate();
+					if (now.getFullYear() == year) {
+						if ((now.getMonth() + 1) == month) {
+							if ((now.getDate()) < day) {
+								return '<span><font color="green">' + year + '-' + month + '-' + day + '</color></span>';
+							} else {
+								return '<span><font color="red">' + year + '-' + month + '-' + day + '</color></span>';
+							}
+						} else if ((now.getMonth() + 1) < month) {
+							return '<span><font color="green">' + year + '-' + month + '-' + day + '</color></span>';
+						} else {
+							return '<span><font color="red">' + year + '-' + month + '-' + day + '</color></span>';
+						}
+					} else if (now.getFullYear() < year) {
+						return '<span><font color="green">' + year + '-' + month + '-' + day + '</color></span>';
+					} else {
+						return '<span><font color="red">' + year + '-' + month + '-' + day + '</color></span>';
+					}
+				}
+			},
+			{
 				header: '创建时间', dataIndex: 'CreatedDate', width: 100,
 				renderer: Ext.util.Format.dateRenderer('Y-m-d'),
 			},

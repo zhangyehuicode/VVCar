@@ -148,6 +148,12 @@ namespace YEF.Core.Data
         public EMerchantStatus Status { get; set; }
 
         /// <summary>
+        /// 微信公众号认证到期时间
+        /// </summary>
+        [Display(Name = "微信公众号认证到期时间")]
+        public DateTime? ExpireDate { get; set; }
+
+        /// <summary>
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]

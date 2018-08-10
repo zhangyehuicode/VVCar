@@ -157,17 +157,28 @@
 				}, {
 					xtype: 'form',
 					layout: 'hbox',
-					width: 300,
 					items: [{
 						xtype: "checkboxgroup",
 						fieldLabel: "商户性质",
 						id: 'merchantType',
+						width: 300,
 						labelWidth: 70,
 						columns: 2,
 						items: [
 							{ boxLabel: '代理商', name: 'IsAgent', inputValue: 1 },
 							{ boxLabel: '普通商户', name: 'IsGeneralMerchant', inputValue: 2 },
 						]
+					}, {
+						xtype: 'datefield',
+						name: 'ExpireDate',
+						fieldLabel: '认证到期',
+						margin: '5 5 5 10',
+						allowBlank: true,
+						minValue: new Date(),
+						format: 'Y-m-d',
+						editable: false,
+						allowBlank: true,
+						value: new Date()
 					}]
 				}, {
 					xtype: 'form',

@@ -79,7 +79,7 @@
 	},
 	save: function (btn) {
 		var me = this;
-		var win = me.getGridUserMember();
+		var grid = me.getGridUserMember();
 
 		var selectedMemberItems = btn.up('grid').getSelectionModel().getSelection();
 		if (selectedMemberItems.length < 1) {
@@ -98,13 +98,13 @@
 		selectedMemberItems.forEach(function (item) {
 			userMember.push({ UserID: userId, MemberID: item.data.ID });
 		});
-		var store = win.getStore();
+		var store = grid.getStore();
 		store.batchAdd(userMember, function (response, opts) {
 			var ajaxResult = JSON.parse(response.responseText);
 			if (ajaxResult.Data == true) {
 				Ext.Msg.alert('提示', '新增成功');
 				btn.up('grid').getStore().reload();
-				win.close();
+				grid.up('window').close();
 				store.reload();
 				return;
 			} else {

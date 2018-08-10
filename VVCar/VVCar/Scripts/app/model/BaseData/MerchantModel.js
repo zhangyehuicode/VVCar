@@ -26,6 +26,7 @@
 		{ name: 'Bank' },
 		{ name: 'BankCard' },
 		{ name: 'DataSource' },
+		{ name: 'ExpireDate' },
 		{ name: 'CreatedDate' },
 	]
 });

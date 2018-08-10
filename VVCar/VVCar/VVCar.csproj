@@ -316,6 +316,8 @@
     <Compile Include="Controllers\Shop\ShoppingCartController.cs" />
     <Compile Include="Controllers\Shop\ShoppingCartItemController.cs" />
     <Compile Include="Controllers\Shop\StockRecordController.cs" />
+    <Compile Include="Controllers\VIP\AnnouncementController.cs" />
+    <Compile Include="Controllers\VIP\AnnouncementPushMemberController.cs" />
     <Compile Include="Controllers\VIP\ArticleController.cs" />
     <Compile Include="Controllers\VIP\ArticleItemController.cs" />
     <Compile Include="Controllers\VIP\CouponController.cs" />
@@ -649,6 +651,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\AgentDepartment.js" />
     <Content Include="Scripts\app\controller\AgentDepartmentAudit.js" />
+    <Content Include="Scripts\app\controller\Announcement.js" />
     <Content Include="Scripts\app\controller\Article.js" />
     <Content Include="Scripts\app\controller\Logistics.js" />
     <Content Include="Scripts\app\controller\Tag.js" />
@@ -708,6 +711,8 @@
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentCategoryTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentTagModel.js" />
+    <Content Include="Scripts\app\model\BaseData\AnnouncementModel.js" />
+    <Content Include="Scripts\app\model\BaseData\AnnouncementPushMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\ArticleItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\ArticleModel.js" />
     <Content Include="Scripts\app\model\BaseData\LogisticsModel.js" />
@@ -787,6 +792,8 @@
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentCategoryTreeStore.js" />
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentStore.js" />
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentTagStore.js" />
+    <Content Include="Scripts\app\store\BaseData\AnnouncementPushMemberStore.js" />
+    <Content Include="Scripts\app\store\BaseData\AnnouncementStore.js" />
     <Content Include="Scripts\app\store\BaseData\ArticleItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\ArticleStore.js" />
     <Content Include="Scripts\app\store\BaseData\LogisticsStore.js" />
@@ -898,6 +905,8 @@
     <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentChangeCategory.js" />
     <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentTagEdit.js" />
     <Content Include="Scripts\app\view\AgentDepartment\TagSelector.js" />
+    <Content Include="Scripts\app\view\Announcement\AnnouncementEdit.js" />
+    <Content Include="Scripts\app\view\Announcement\AnnouncementList.js" />
     <Content Include="Scripts\app\view\Article\ArticleEdit.js" />
     <Content Include="Scripts\app\view\Article\ArticleList.js" />
     <Content Include="Scripts\app\view\Article\ArticleItemEdit.js" />

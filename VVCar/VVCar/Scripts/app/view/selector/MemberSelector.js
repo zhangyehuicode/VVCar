@@ -3,7 +3,8 @@
     alias: 'widget.MemberSelector',
     title: '选择会员',
     layout: 'fit',
-    width: 600,
+	width: 600,
+	height: 530,
     bodyPadding: 5,
     modal: true,
     initComponent: function() {

@@ -131,7 +131,10 @@
 				{ header: '是否显示封面', dataIndex: 'IsShowCoverPic', flex: 1 },
 				{ header: '主体内容', dataIndex: 'Content', flex: 1 },
 				{ header: '作者', dataIndex: 'CreatedUser' },
-				{ header: '创建时间', dataIndex: 'CreatedDate' },
+				{
+					header: '创建时间', dataIndex: 'CreatedDate',
+					renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+				},
 			],
 			bbar: {
 				xtype: 'pagingtoolbar',
