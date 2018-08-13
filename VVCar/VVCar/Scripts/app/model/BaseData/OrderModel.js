@@ -15,6 +15,7 @@
 		{ name: 'RevisitDate' },
 		{ name: 'RevisitTips'},
 		{ name: 'RevisitStatus' },
+		{ name: 'IsRevisit' },
 		{ name: 'DeliveryTips'},
 		{ name: 'DeliveryDate' },
     ]

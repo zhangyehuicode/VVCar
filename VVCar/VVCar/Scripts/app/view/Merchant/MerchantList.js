@@ -197,6 +197,10 @@
 				}
 			},
 			{
+				header: '激活时间', dataIndex: 'ActivateDate', width: 100,
+				renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+			},
+			{
 				header: '创建时间', dataIndex: 'CreatedDate', width: 100,
 				renderer: Ext.util.Format.dateRenderer('Y-m-d'),
 			},

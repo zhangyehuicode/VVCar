@@ -18,39 +18,56 @@
     }],
     init: function () {
         var me = this;
-        me.control({
-            'Logistics button[action=search]': {
-                click: me.search
-            },
-            'Logistics button[action=delivery]': {
-                click: me.delivery
-            },
-            'Logistics button[action=antiDelivery]': {
-                click: me.antiDelivery
-            },
-            'Logistics button[action=revisitTips]': {
-                click: me.revisitTips
-            },
-            'Logistics': {
-                itemdblclick: me.edit,
-                editActionClick: me.edit,
-                deleteActionClick: me.deleteOrder,
-                logisticsdetailsClick: me.logisticsdetailsClick,
-            },
-            'LogisticsEdit button[action=selectSalesman]': {
-                click: me.selectSalesman
-            },
-            'LogisticsEdit button[action=save]': {
-                click: me.save
-            },
-            'SalesmanSelector grid[name=salesmanList]': {
-                itemdblclick: me.choosseSalesman
-            },
-            'SalesmanSelector button[action=search]': {
-                click: me.searchSalesman
-            }
+		me.control({
+			'Logistics button[action=search]': {
+				click: me.search
+			},
+			'Logistics button[action=delivery]': {
+				click: me.delivery
+			},
+			'Logistics button[action=antiDelivery]': {
+				click: me.antiDelivery
+			},
+			'Logistics button[action=revisitTips]': {
+				click: me.revisitTips
+			},
+			'Logistics': {
+				itemdblclick: me.edit,
+				editActionClick: me.edit,
+				deleteActionClick: me.deleteOrder,
+				logisticsdetailsClick: me.logisticsdetailsClick,
+			},
+			'LogisticsEdit button[action=selectSalesman]': {
+				click: me.selectSalesman
+			},
+			'LogisticsEdit button[action=save]': {
+				click: me.save
+			},
+			'LogisticsEdit combobox[name=IsRevisit]': {
+				change: me.isRevisitChange
+			},
+			'SalesmanSelector grid[name=salesmanList]': {
+				itemdblclick: me.choosseSalesman
+			},
+			'SalesmanSelector button[action=search]': {
+				click: me.searchSalesman
+			},
         });
-    },
+	},
+	isRevisitChange: function (com, newValue, oldValue, eOpts) {
+		var me = this;
+		var win = com.up('window');
+		if (win.form.getForm().actionMethod == 'POST')
+		{
+			if (newValue == true) {
+				win.down('numberfield[name=RevisitDays]').setDisabled(false);
+				win.down('textareafield[name=RevisitTips]').setDisabled(false);
+			} else {
+				win.down('numberfield[name=RevisitDays]').setValue(0).setDisabled(true);
+				win.down('textareafield[name=RevisitTips]').setValue(null).setDisabled(true);
+			}
+		}
+	},
     logisticsdetailsClick: function (grid, record) {
         var win = Ext.widget("LogisticsDetails");
         win.form.loadRecord(record);
@@ -83,7 +100,14 @@
     edit: function (grid, record) {
         var win = Ext.widget("LogisticsEdit");
         win.form.loadRecord(record);
-        win.form.getForm().actionMethod = 'POST';
+		win.form.getForm().actionMethod = 'POST';
+		if (record.data.IsRevisit == true) {
+			win.down('numberfield[name=RevisitDays]').setDisabled(false);
+			win.down('textareafield[name=RevisitTips]').setDisabled(false);
+		} else {
+			win.down('numberfield[name=RevisitDays]').setDisabled(true);
+			win.down('textareafield[name=RevisitTips]').setDisabled(true);
+		}
         win.setTitle('发货');
         win.show();
     },

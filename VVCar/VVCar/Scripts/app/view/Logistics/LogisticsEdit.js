@@ -18,6 +18,7 @@
 				{ 'Name': '付款不足', 'Value': -1 },
 			]
 		});
+		var yesNoDictStore = Ext.create('WX.store.DataDict.YesNoTypeStore');
 		me.form = Ext.create('Ext.form.Panel', {
 			border: false,
 			trackResetOnLoad: true,
@@ -39,6 +40,15 @@
 				maxLength: 50,
 				allowBlank: false,
 			}, {
+				xtype: 'combobox',
+				margin: '5 5 5 0',
+				name: 'IsRevisit',
+				store: yesNoDictStore,
+				displayField: 'DictName',
+				valueField: 'DictValue',
+				fieldLabel: '是否回访',
+				value: false,
+			}, {
 				xtype: 'form',
 				layout: 'hbox',
 				margin: '5 5 5 0',
@@ -48,6 +58,7 @@
 					fieldLabel: '回访时间',
 					minValue: 0,
 					allowBlank: false,
+					value: 0,
 				}, {
 					margin: '5 5 5 5',
 					xtype: 'label',
@@ -59,6 +70,7 @@
 				fieldLabel: '回访提示',
 				maxLength: 50,
 				allowBlank: true,
+				disabled: true,
 				}, {
 					xtype: 'textareafield',
 					name: 'DeliveryTips',

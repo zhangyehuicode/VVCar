@@ -147,6 +147,12 @@ namespace VVCar.Shop.Domain.Entities
         public string Remark { get; set; }
 
         /// <summary>
+        /// 是否需要回访
+        /// </summary>
+        [Display(Name = "是否需要回访")]
+        public bool IsRevisit { get; set; }
+
+        /// <summary>
         /// 回访时间（天）
         /// </summary>
         [Display(Name = "回访时间（天）")]

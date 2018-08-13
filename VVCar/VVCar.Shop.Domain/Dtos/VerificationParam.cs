@@ -24,6 +24,11 @@ namespace VVCar.Shop.Domain.Dtos
         public List<string> CouponCodes { get; set; }
 
         /// <summary>
+        /// 会员卡号
+        /// </summary>
+        public List<string> MemberCardNumbers { get; set; }
+
+        /// <summary>
         ///  核销方式
         /// </summary>
         public EVerificationMode VerificationMode { get; set; }

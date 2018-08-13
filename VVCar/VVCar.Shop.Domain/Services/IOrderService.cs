@@ -65,5 +65,11 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="id"></param>
         /// <returns></returns>
         bool RevisitTips(Guid id);
+
+        /// <summary>
+        /// 发送回执任务
+        /// </summary>
+        /// <returns></returns>
+        bool RevisitTipsTask();
     }
 }

@@ -24,6 +24,17 @@
                 </div>
                 <div class="deletebtn">删除</div>
             </div>*@
+        <div class="slide-box hykb_box" style="padding:10px 0" v-for="MemberCard in MemberCardList">
+            <div class="shop_box4 hykb_box2" style="width:100%;display:table;">
+                <div style="display:table-cell;width:120px;"><img class="couponimg" src="~/Areas/resource/img/mobile/defaultimg1.png"></div>
+                <div class="hykb_text" style="display:table-cell;vertical-align:middle;">储值卡</div>
+                <div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text">{{MemberCard.CardNumber}}</div>
+                <div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text">￥{{MemberCard.CardBalance}}</div>
+            </div>
+            <div class="shop_box4">
+                <div class="deletebtn" v-on:click="deletemembercard(MemberCard)">删除</div>
+            </div>
+        </div>
         <div class="slide-box hykb_box" style="padding:10px 0" v-for="Coupon in CouponList">
             <div class="shop_box4 hykb_box2" style="width:100%;display:table;" v-on:click="couponInfo(Coupon)">
                 <div style="display:table-cell;width:120px;"><img class="couponimg" v-bind:src=Coupon.CoverImage></div>
@@ -155,9 +166,11 @@
                 el: '#couponverification',
                 data: {
                     CouponList: [],
+                    MemberCardList:[],
                     VerificationParam: {
                         PickUpOrderID: pickuporder.ID,
                         CouponCodes: [],
+                        MemberCardNumbers:[],
                         DepartmentID: '',
                         StaffID: '',
                         StaffName:'',
@@ -186,7 +199,15 @@
                             scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
                             success: function (res) {
                                 var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                                getCouponInfo(result);
+                                if (result != null) {
+                                    if (result.length > 30) {
+                                        getMemberCardInfo(result);
+                                    } else {
+                                        getCouponInfo(result);
+                                    }
+                                } else {
+                                    $.alert('扫描结果为空');
+                                }
                             }
                         });
                     },
@@ -197,19 +218,22 @@
                         window.location.href = "/Coupon/CouponInfo?frommycoupon=true&ctid=" + data.TemplateID + '&mch=' + mch + '&showuse=false';
                     },
                     confirmverification: function (event) {
-                        if (_viewModel.CouponList.length < 1) {
+                        if (_viewModel.CouponList.length < 1 && _viewModel.MemberCardList.length<1) {
                             $.alert('请先扫描卡券二维码');
                             return;
                         }
                         $.confirm('确认核销？', function () {
-                            if (_viewModel.CouponList == null || _viewModel.CouponList.length < 1 || _viewModel.VerificationParam.PickUpOrderID == null || _viewModel.VerificationParam.PickUpOrderID == '') {
+                            if (((_viewModel.CouponList == null || _viewModel.CouponList.length < 1) && (_viewModel.MemberCardList == null || _viewModel.MemberCardList.length < 1)) || _viewModel.VerificationParam.PickUpOrderID == null || _viewModel.VerificationParam.PickUpOrderID == '') {
                                 $.alert("参数错误");
                                 return;
                             }
                             for (var i = 0; i < _viewModel.CouponList.length; i++) {
                                 _viewModel.VerificationParam.CouponCodes.push(_viewModel.CouponList[i].CouponCode);
                             }
-                            if (_viewModel.VerificationParam.CouponCodes == null || _viewModel.VerificationParam.CouponCodes.length < 1) {
+                            for (var i = 0; i < _viewModel.MemberCardList.length; i++) {
+                                _viewModel.VerificationParam.MemberCardNumbers.push(_viewModel.MemberCardList[i].CardNumber);
+                            }
+                            if ((_viewModel.VerificationParam.MemberCardNumbers == null || _viewModel.VerificationParam.MemberCardNumbers.length < 1) && (_viewModel.VerificationParam.CouponCodes == null || _viewModel.VerificationParam.CouponCodes.length < 1)) {
                                 $.alert('参数错误');
                                 return;
                             }
@@ -230,6 +254,19 @@
                         if (index != -1)
                             _viewModel.CouponList.splice(index, 1);
                     },
+                    deletemembercard: function (data,event) {
+                        if (data == null)
+                            return;
+                        var index = -1;
+                        for (var i = 0; i < _viewModel.MemberCardList.length; i++) {
+                            if (_viewModel.MemberCardList[i].ID == data.ID) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        if (index != -1)
+                            _viewModel.MemberCardList.splice(index, 1);
+                    }
             }
         });
 
@@ -306,6 +343,33 @@
                 });
             }
 
+            function getMemberCardInfo(cardnumber) {
+                if (cardnumber == null || cardnumber == '') {
+                    $.alert('参数错误');
+                    return;
+                }
+                $.ajax({
+                    url: '/api/MemberCard/GetCardByNumber/' + cardnumber,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.MemberCardList.push(res.Data);
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
 
             function verification(data) {
                 if (data == null || data == '')

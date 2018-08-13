@@ -102,7 +102,18 @@
                 }
             },
             { header: '回访时间', dataIndex: 'RevisitDays', width: 90 },
-            {
+			{
+				header: '是否回访', dataIndex: 'IsRevisit', width: 80,
+				renderer: function (value) {
+					if (value == false) {
+						return '<span><font color="red">否</font></span>';
+					}
+					if (value == true) {
+						return '<span><font color="green">是</font></span>';
+					}
+				}
+			},
+			{
                 header: '回访状态', dataIndex: 'RevisitStatus', width: 80,
                 renderer: function (value) {
                     if (value == 0) {

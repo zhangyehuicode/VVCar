@@ -48,6 +48,11 @@
         <a v-on:click="mycoupon" style="width:50% !important;" id="coupontab">我的优惠券</a>
     </div>
     <div class="hykb_box" id="card" style="display:none;">
+        <div class="hykb_box2" style="margin-left:3%; margin-top:15px;" v-on:click="membercard">
+            <a><img class="cardimg" src="~/Areas/resource/img/mobile/defaultimg1.png"></a>
+            <span class=" hykb_text">储值卡</span>
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text">{{Member.CardBalance}}</span>
+        </div>
         <div class="hykb_box2" style="margin-left:3%; margin-top:15px;" v-for="Card in CardList" v-on:click="couponInfo(Card)">
             <a><img class="cardimg" v-bind:src=Card.CoverImage></a>
             <span class=" hykb_text">{{Card.Title}}</span>
@@ -64,10 +69,21 @@
         </div>
     </div>
     <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+    <div class="membercardbac" v-on:click="hidemembercardqrcode($event)">
+        <div class="membercardcon">
+            <div class="cardtitle">No.{{Member.CardNumber}}</div>
+            <div class="cardqrcode" id="cardqrcode"></div>
+            <div class="cardtitle">祝您生活愉快！</div>
+        </div>
+    </div>
 </div>
 
 @section scripts{
     <style type="text/css">
+        #membercard {
+            position: absolute;
+        }
+
         .cardimg {
             height: 190px;
         }
@@ -81,11 +97,44 @@
             color: #2d2d30 !important;
             border: none !important;
         }
+
+        .membercardbac {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+        }
+
+        .membercardcon {
+            /*position: absolute;
+            top: 80px;*/
+            /*width: 100px;
+            height: 130px;*/
+            background: #fff;
+            border-radius: 5px;
+            margin: 150px auto;
+            width: 210px;
+        }
+
+        .cardtitle {
+            font-size: 15px;
+            margin: 5px 0 5px 13px;
+        }
+
+        .cardqrcode {
+            padding: 5px;
+            /*width: 100px;
+            height: 100px;*/
+        }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
     <script type="text/javascript">
         function wxConfig() {
             $.ajax({
@@ -142,7 +191,7 @@
                         Points: 0,
                         TotalConsume: 0,
                     },
-                    Member: {}
+                    Member: { CardNumber: '00000001', CardBalance:100}
                 },
                 methods: {
                     back: function (event) {
@@ -185,6 +234,37 @@
                         sessionStorage.setItem('couponId', data.CouponID);
                         window.location.href = "/Coupon/CouponInfo?frommycoupon=true&ctid=" + data.TemplateID + '&mch=' + mch;
                     },
+                    membercard: function (event) {
+                        $.ajax({
+                            url: '/Mobile/Customer/GetTimeSpan',
+                            type: 'GET',
+                            success: function (res) {
+                                if (res != null && res != '') {
+                                    jQuery('#cardqrcode').qrcode({
+                                        render: "canvas", //也可以替换为table
+                                        width: 200,
+                                        height: 200,
+                                        //foreground: "#efcb47",
+                                        //background: "#FFF",
+                                        text: _viewModel.Member.CardNumber + '.' + res,
+                                    });
+                                    $('.membercardbac').show();
+                                    console.log(_viewModel.Member.CardNumber + '.' + res);
+                                } else {
+                                    $.alert('二维码生成失败');
+                                }
+                            },
+                            error: function () {
+                                $.alert('二维码生成失败');
+                            }
+                        });
+                    },
+                    hidemembercardqrcode: function (event) {
+                        if ($(event.target).hasClass('membercardbac')) {
+                            $('.membercardbac').hide();
+                            $('#cardqrcode').html("");
+                        }
+                    },
                 }
             });
 
@@ -218,7 +298,7 @@
                         }
                     });
                 }
-                init();
+                //init();
             } else {
                 member = JSON.parse(member);
                 _viewModel.Member = member;

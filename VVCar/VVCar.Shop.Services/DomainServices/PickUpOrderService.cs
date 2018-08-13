@@ -276,138 +276,154 @@ namespace VVCar.Shop.Services.DomainServices
             UnitOfWork.BeginTransaction();
             try
             {
-                if (param == null || param.PickUpOrderID == null || param.CouponCodes == null || param.CouponCodes.Count < 1)
+                if (param == null || param.PickUpOrderID == null || ((param.CouponCodes == null || param.CouponCodes.Count < 1) && (param.MemberCardNumbers == null || param.MemberCardNumbers.Count < 1)))
                     throw new DomainException("参数错误");
                 var order = Repository.GetInclude(t => t.PickUpOrderItemList).Where(t => t.ID == param.PickUpOrderID).FirstOrDefault();
                 if (order == null)
                     throw new DomainException("订单不存在");
-                var now = DateTime.Now;
-                var coupons = CouponRepo.GetInclude(t => t.Template, false).Where(t => param.CouponCodes.Contains(t.CouponCode) && t.EffectiveDate <= now && t.ExpiredDate > now && t.Status == ECouponStatus.Default).ToList();
-                if (coupons == null || coupons.Count < 1)
-                    throw new DomainException("卡券已失效");
-                var orderitemcodes = order.PickUpOrderItemList.Select(t => t.ProductCode).ToList();
-                if (orderitemcodes == null || orderitemcodes.Count < 1)
-                    throw new DomainException("服务信息为空");
-                var verificationcoupons = new List<Coupon>();
-                var verificationcards = new List<Coupon>();
-                var discountCoupons = coupons.Where(t => t.Template.CouponType == ECouponType.Discount).OrderBy(t => t.Template.CouponValue).ToList();
-                if (discountCoupons != null && discountCoupons.Count > 0)
+                var noVerificationCoupons = false;
+                if (param.CouponCodes != null && param.CouponCodes.Count > 0)
                 {
-                    discountCoupons.ForEach(t =>
+                    var now = DateTime.Now;
+                    var coupons = CouponRepo.GetInclude(t => t.Template, false).Where(t => param.CouponCodes.Contains(t.CouponCode) && t.EffectiveDate <= now && t.ExpiredDate > now && t.Status == ECouponStatus.Default).ToList();
+                    if (coupons == null || coupons.Count < 1)
+                        throw new DomainException("卡券已失效");
+                    var orderitemcodes = order.PickUpOrderItemList.Select(t => t.ProductCode).ToList();
+                    if (orderitemcodes == null || orderitemcodes.Count < 1)
+                        throw new DomainException("服务信息为空");
+                    var verificationcoupons = new List<Coupon>();
+                    var verificationcards = new List<Coupon>();
+                    var discountCoupons = coupons.Where(t => t.Template.CouponType == ECouponType.Discount).OrderBy(t => t.Template.CouponValue).ToList();
+                    if (discountCoupons != null && discountCoupons.Count > 0)
                     {
-                        if (t.Template.Nature == ENature.Coupon)
+                        discountCoupons.ForEach(t =>
                         {
-                            var discountcodes = new List<string>();
-                            var undiscountcodes = new List<string>();
-                            if (!string.IsNullOrEmpty(t.Template.IncludeProducts))
+                            if (t.Template.Nature == ENature.Coupon)
                             {
-                                orderitemcodes.ForEach(item =>
+                                var discountcodes = new List<string>();
+                                var undiscountcodes = new List<string>();
+                                if (!string.IsNullOrEmpty(t.Template.IncludeProducts))
                                 {
-                                    if (t.Template.IncludeProducts.Contains(item))
+                                    orderitemcodes.ForEach(item =>
                                     {
-                                        discountcodes.Add(item);
-                                    }
-                                });
-                            }
-                            else if (!string.IsNullOrEmpty(t.Template.ExcludeProducts))
-                            {
-                                orderitemcodes.ForEach(item =>
+                                        if (t.Template.IncludeProducts.Contains(item))
+                                        {
+                                            discountcodes.Add(item);
+                                        }
+                                    });
+                                }
+                                else if (!string.IsNullOrEmpty(t.Template.ExcludeProducts))
                                 {
-                                    if (t.Template.ExcludeProducts.Contains(item))
+                                    orderitemcodes.ForEach(item =>
                                     {
-                                        undiscountcodes.Add(item);
-                                    }
-                                });
-                                discountcodes = orderitemcodes.Except(undiscountcodes).ToList();
+                                        if (t.Template.ExcludeProducts.Contains(item))
+                                        {
+                                            undiscountcodes.Add(item);
+                                        }
+                                    });
+                                    discountcodes = orderitemcodes.Except(undiscountcodes).ToList();
+                                }
+                                else
+                                {
+                                    discountcodes = orderitemcodes;
+                                }
+                                var discountpickuporderitems = order.PickUpOrderItemList.Where(item => discountcodes.Contains(item.ProductCode)).ToList();
+                                var applyres = ApplyDiscount(discountpickuporderitems, t, order, param);
+                                if (applyres != null)
+                                    verificationcoupons.Add(applyres);
                             }
                             else
                             {
-                                discountcodes = orderitemcodes;
+                                var applycard = ApplyCardDiscount(t, order, param);
+                                if (applycard != null)
+                                    verificationcards.Add(applycard);
                             }
-                            var discountpickuporderitems = order.PickUpOrderItemList.Where(item => discountcodes.Contains(item.ProductCode)).ToList();
-                            var applyres = ApplyDiscount(discountpickuporderitems, t, order, param);
-                            if (applyres != null)
-                                verificationcoupons.Add(applyres);
-                        }
-                        else
-                        {
-                            var applycard = ApplyCardDiscount(t, order, param);
-                            if (applycard != null)
-                                verificationcards.Add(applycard);
-                        }
-                    });
-                }
-                var memberCardVoucherInfo = new List<MemberCardVoucherInfo>();
-                var voucherCoupons = coupons.Where(t => t.Template.CouponType != ECouponType.Discount).OrderBy(t => t.Template.CouponValue).ToList();
-                if (voucherCoupons != null && voucherCoupons.Count > 0)
-                {
-                    voucherCoupons.ForEach(t =>
+                        });
+                    }
+                    var memberCardVoucherInfo = new List<MemberCardVoucherInfo>();
+                    var voucherCoupons = coupons.Where(t => t.Template.CouponType != ECouponType.Discount).OrderBy(t => t.Template.CouponValue).ToList();
+                    if (voucherCoupons != null && voucherCoupons.Count > 0)
                     {
-                        if (t.Template.Nature == ENature.Coupon)
+                        voucherCoupons.ForEach(t =>
                         {
-                            var vouchercodes = new List<string>();
-                            var unvouchercodes = new List<string>();
-                            if (!string.IsNullOrEmpty(t.Template.IncludeProducts))
+                            if (t.Template.Nature == ENature.Coupon)
                             {
-                                orderitemcodes.ForEach(item =>
+                                var vouchercodes = new List<string>();
+                                var unvouchercodes = new List<string>();
+                                if (!string.IsNullOrEmpty(t.Template.IncludeProducts))
                                 {
-                                    if (t.Template.IncludeProducts.Contains(item))
+                                    orderitemcodes.ForEach(item =>
                                     {
-                                        vouchercodes.Add(item);
-                                    }
-                                });
-                            }
-                            else if (!string.IsNullOrEmpty(t.Template.ExcludeProducts))
-                            {
-                                orderitemcodes.ForEach(item =>
+                                        if (t.Template.IncludeProducts.Contains(item))
+                                        {
+                                            vouchercodes.Add(item);
+                                        }
+                                    });
+                                }
+                                else if (!string.IsNullOrEmpty(t.Template.ExcludeProducts))
                                 {
-                                    if (t.Template.ExcludeProducts.Contains(item))
+                                    orderitemcodes.ForEach(item =>
                                     {
-                                        unvouchercodes.Add(item);
-                                    }
-                                });
-                                vouchercodes = orderitemcodes.Except(unvouchercodes).ToList();
+                                        if (t.Template.ExcludeProducts.Contains(item))
+                                        {
+                                            unvouchercodes.Add(item);
+                                        }
+                                    });
+                                    vouchercodes = orderitemcodes.Except(unvouchercodes).ToList();
+                                }
+                                else
+                                {
+                                    vouchercodes = orderitemcodes;
+                                }
+                                var voucherpickuporderitems = order.PickUpOrderItemList.Where(item => vouchercodes.Contains(item.ProductCode)).ToList();
+                                var applyres = ApplyVoucher(voucherpickuporderitems, t, order, param, memberCardVoucherInfo);
+                                if (applyres != null)
+                                    verificationcoupons.Add(applyres);
                             }
                             else
                             {
-                                vouchercodes = orderitemcodes;
+                                var applycard = ApplyCardVoucher(t, order, param);
+                                if (applycard != null)
+                                    verificationcards.Add(applycard);
                             }
-                            var voucherpickuporderitems = order.PickUpOrderItemList.Where(item => vouchercodes.Contains(item.ProductCode)).ToList();
-                            var applyres = ApplyVoucher(voucherpickuporderitems, t, order, param, memberCardVoucherInfo);
-                            if (applyres != null)
-                                verificationcoupons.Add(applyres);
-                        }
-                        else
-                        {
-                            var applycard = ApplyCardVoucher(t, order, param);
-                            if (applycard != null)
-                                verificationcards.Add(applycard);
-                        }
-                    });
-                }
-                if (verificationcoupons.Count > 0)
-                {
-                    //券核销
-                    CouponService.VerifyCoupon(new VerifyCouponDto
+                        });
+                    }
+                    if (verificationcoupons.Count > 0)
                     {
-                        CouponCodes = verificationcoupons.Where(t => t.Template.Nature == ENature.Coupon).Select(t => t.CouponCode).ToList(),
-                        VerificationMode = VIP.Domain.Enums.EVerificationMode.ScanCode,
-                        DepartmentCode = param.DepartmentCode,
-                        DepartmentID = param.DepartmentID,
-                        MemberCardVoucherInfoList = memberCardVoucherInfo,
-                        ConsumeMoney = order.Money,
-                    });
+                        //券核销
+                        CouponService.VerifyCoupon(new VerifyCouponDto
+                        {
+                            CouponCodes = verificationcoupons.Where(t => t.Template.Nature == ENature.Coupon).Select(t => t.CouponCode).ToList(),
+                            VerificationMode = VIP.Domain.Enums.EVerificationMode.ScanCode,
+                            DepartmentCode = param.DepartmentCode,
+                            DepartmentID = param.DepartmentID,
+                            MemberCardVoucherInfoList = memberCardVoucherInfo,
+                            ConsumeMoney = order.Money,
+                        });
+                    }
+                    if (verificationcoupons.Count > 0 || verificationcards.Count > 0)
+                    {
+                        RecountMoney(order);
+                        PickUpOrderItemRepo.UpdateRange(order.PickUpOrderItemList);
+                        Repository.Update(order);
+                        //return true;
+                    }
+                    else
+                    {
+                        noVerificationCoupons = true;
+                        //throw new DomainException("没有可以核销对应服务的卡券");
+                    }
                 }
-                if (verificationcoupons.Count > 0 || verificationcards.Count > 0)
+                if (param.MemberCardNumbers != null && param.MemberCardNumbers.Count > 0)
                 {
-                    RecountMoney(order);
-                    PickUpOrderItemRepo.UpdateRange(order.PickUpOrderItemList);
-                    Repository.Update(order);
-                    UnitOfWork.CommitTransaction();
-                    return true;
+
                 }
-                else
-                    throw new DomainException("没有可以核销对应服务的卡券");
+                else if (noVerificationCoupons)
+                {
+                    throw new DomainException("没有可以核销的卡券");
+                }
+                UnitOfWork.CommitTransaction();
+                return true;
             }
             catch (Exception e)
             {

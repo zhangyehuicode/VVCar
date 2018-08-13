@@ -46,6 +46,14 @@ namespace VVCar.Controllers.Api
             }
         }
 
+        IOrderService OrderService
+        {
+            get
+            {
+                return ServiceLocator.Instance.GetService<IOrderService>();
+            }
+        }
+
         IServicePeriodService ServicePeriodService
         {
             get
@@ -59,6 +67,14 @@ namespace VVCar.Controllers.Api
             get
             {
                 return ServiceLocator.Instance.GetService<ICarBitCoinDistributionService>();
+            }
+        }
+
+        IGamePushService GamePushService
+        {
+            get
+            {
+                return ServiceLocator.Instance.GetService<IGamePushService>();
             }
         }
 
@@ -103,6 +119,32 @@ namespace VVCar.Controllers.Api
             return SafeExecute(() =>
             {
                 return CouponPushService.CouponPushTask();
+            });
+        }
+
+        /// <summary>
+        /// 回执发送
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("RevisitTips"), AllowAnonymous]
+        public JsonActionResult<bool> RevisitTips()
+        {
+            return SafeExecute(() =>
+            {
+                return OrderService.RevisitTipsTask();
+            });
+        }
+
+        /// <summary>
+        /// 游戏推送
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GamePush"), AllowAnonymous]
+        public JsonActionResult<bool> GamePush()
+        {
+            return SafeExecute(() =>
+            {
+                return GamePushService.GamePushTask();
             });
         }
 

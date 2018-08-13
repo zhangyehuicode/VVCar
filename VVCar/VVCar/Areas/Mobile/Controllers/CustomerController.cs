@@ -643,5 +643,15 @@ namespace VVCar.Areas.Mobile.Controllers
             ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
             return View();
         }
+
+        /// <summary>
+        /// 获取时间戳
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetTimeSpan")]
+        public string GetTimeSpan()
+        {
+            return new TimeSpan(DateTime.Now.Ticks).ToString();
+        }
     }
 }

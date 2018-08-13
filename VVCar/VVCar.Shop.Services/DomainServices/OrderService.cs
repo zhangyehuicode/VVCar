@@ -155,7 +155,15 @@ namespace VVCar.Shop.Services.DomainServices
                 UnitOfWork.RollbackTransaction();
                 throw new DomainException(e.Message);
             }
-
+            try
+            {
+                if (result.Status == EOrderStatus.OnCredit || result.Status == EOrderStatus.PayUnshipped)
+                    SendDeliveryNotify(result);
+            }
+            catch (Exception e)
+            {
+                AppContext.Logger.Error(e);
+            }
             return result;
         }
 
@@ -358,6 +366,63 @@ namespace VVCar.Shop.Services.DomainServices
         }
 
         /// <summary>
+        /// 发送订单待发货提醒
+        /// </summary>
+        /// <param name="order"></param>
+        private void SendDeliveryNotify(Order order)
+        {
+            if (order == null || order.OrderItemList == null || order.OrderItemList.Count < 1)
+                return;
+            var users = UserRepo.GetInclude(t => t.UserRoles, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.OpenID != null && t.OpenID != "").ToList();
+            if (users == null || users.Count < 1)
+                return;
+            var notifyusers = new List<User>();
+            users.ForEach(t =>
+            {
+                if (t.UserRoles != null && t.UserRoles.Count() > 0)
+                {
+                    if (t.UserRoles.ToList().Exists(r => r.RoleID == Guid.Parse("00000000-0000-0000-0000-000000000007")))
+                    {
+                        notifyusers.Add(t);
+                    }
+                }
+            });
+            if (notifyusers == null || notifyusers.Count < 1)
+                return;
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = "",
+                template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_DeliveryNotify),
+                url = $"{AppContext.Settings.SiteDomain}/Mobile/Agent/GeneralManagerHome?mch={AppContext.CurrentSession.MerchantCode}",
+                data = new System.Dynamic.ExpandoObject(),
+            };
+            var productNames = string.Empty;
+            var cardItems = order.OrderItemList.Where(t => t.ProductType == EProductType.Goods).ToList();
+            if (cardItems == null || cardItems.Count < 1)
+                return;
+            cardItems.ForEach(t =>
+            {
+                if (string.IsNullOrEmpty(productNames))
+                    productNames += t.ProductName;
+                else
+                    productNames += $"、{t.ProductName}";
+            });
+
+            message.data.first = new WeChatTemplateMessageDto.MessageData("您有一个新的待发货订单");
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(order.Code);
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(order.Money.ToString("0.00"));
+            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData($"{order.LinkMan}({order.Phone})");
+            message.data.keyword4 = new WeChatTemplateMessageDto.MessageData(order.Status.GetDescription());
+            message.data.remark = new WeChatTemplateMessageDto.MessageData($"订单项：{productNames}。点击查看订单详情，请及时发货");
+
+            notifyusers.ForEach(t =>
+            {
+                message.touser = t.OpenID;
+                WeChatService.SendWeChatNotifyAsync(message);
+            });
+        }
+
+        /// <summary>
         /// 更新
         /// </summary>
         /// <param name="entity"></param>
@@ -372,6 +437,7 @@ namespace VVCar.Shop.Services.DomainServices
             order.ExpressNumber = entity.ExpressNumber;
             order.LogisticsCompany = entity.LogisticsCompany;
             order.Status = entity.Status;
+            order.IsRevisit = entity.IsRevisit;
             order.RevisitDays = entity.RevisitDays;
             order.RevisitTips = entity.RevisitTips;
             order.RevisitStatus = entity.RevisitStatus;
@@ -499,39 +565,63 @@ namespace VVCar.Shop.Services.DomainServices
         }
 
         /// <summary>
+        /// 定时发送回执
+        /// </summary>
+        /// <returns></returns>
+        public bool RevisitTipsTask()
+        {
+            var startTime = DateTime.Now.Date;
+            var endTime = startTime.AddDays(1);
+            var orderList = Repository.GetQueryable(false)
+                .Where(t => t.IsRevisit == true && t.Status == EOrderStatus.Delivered)
+                .Where(t => t.DeliveryDate.HasValue && t.DeliveryDate.Value.AddDays(t.RevisitDays) >= startTime && t.DeliveryDate.Value.AddDays(t.RevisitDays) < endTime && t.RevisitStatus == ERevisitStatus.UnRevisit).ToList();
+            orderList.ForEach(t =>
+            {
+                SendNotifyToSalesman(t.ID);
+            });
+            return true;
+        }
+
+        /// <summary>
         /// 发送通知消息
         /// </summary>
         /// <returns></returns>
         void SendNotifyToSalesman(Guid id)
         {
-            var order = Repository.GetByKey(id);
-            var user = UserRepo.GetByKey(order.UserID.Value);
-            var merchant = MerchantRepo.GetByKey(order.MerchantID);
-            if (user == null)
-                return;
-            if (user.OpenID == null)
-                return;
-            var message = new WeChatTemplateMessageDto
+            try
             {
-                touser = user.OpenID,
-                template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_DeliveryRemind),
-                url = "http://www.cheyinz.cn/Mobile/Agent/GeneralManagerHome?mch=" + merchant.Code,
-                data = new System.Dynamic.ExpandoObject()
-            };
-            if (order.Status == EOrderStatus.Delivered)
-                message.data.first = new WeChatTemplateMessageDto.MessageData("您的订单已经发货");
-            else
-                message.data.first = new WeChatTemplateMessageDto.MessageData("您的订单取消发货");
-            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateString());
-            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(merchant.Name);
-            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(order.Code);
-            message.data.keyword4 = new WeChatTemplateMessageDto.MessageData(order.LogisticsCompany);
-            message.data.keyword5 = new WeChatTemplateMessageDto.MessageData(order.ExpressNumber);
-            if (order.Status == EOrderStatus.Delivered)
-                message.data.remark = new WeChatTemplateMessageDto.MessageData(order.DeliveryTips);
-            else
-                message.data.remark = new WeChatTemplateMessageDto.MessageData("请知悉");
-            WeChatService.SendWeChatNotifyAsync(message, merchant.Code);
+                var order = Repository.GetByKey(id);
+                var user = UserRepo.GetByKey(order.UserID.Value);
+                var merchant = MerchantRepo.GetByKey(order.MerchantID);
+                if (user == null)
+                    return;
+                if (user.OpenID == null)
+                    return;
+                var message = new WeChatTemplateMessageDto
+                {
+                    touser = user.OpenID,
+                    template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_DeliveryRemind),
+                    url = "http://www.cheyinz.cn/Mobile/Agent/GeneralManagerHome?mch=" + merchant.Code,
+                    data = new System.Dynamic.ExpandoObject()
+                };
+                if (order.Status == EOrderStatus.Delivered)
+                    message.data.first = new WeChatTemplateMessageDto.MessageData("您的订单已经发货");
+                else
+                    message.data.first = new WeChatTemplateMessageDto.MessageData("您的订单取消发货");
+                message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateString());
+                message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(merchant.Name);
+                message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(order.Code);
+                message.data.keyword4 = new WeChatTemplateMessageDto.MessageData(order.LogisticsCompany);
+                message.data.keyword5 = new WeChatTemplateMessageDto.MessageData(order.ExpressNumber);
+                if (order.Status == EOrderStatus.Delivered)
+                    message.data.remark = new WeChatTemplateMessageDto.MessageData(order.DeliveryTips);
+                else
+                    message.data.remark = new WeChatTemplateMessageDto.MessageData("请知悉");
+                WeChatService.SendWeChatNotifyAsync(message, merchant.Code);
+            }
+            catch (Exception e) {
+                AppContext.Logger.Error(e);
+            }
         }
 
         /// <summary>

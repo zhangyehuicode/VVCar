@@ -127,10 +127,23 @@ namespace VVCar.Controllers.VIP
         /// <param name="number">会员卡号或者手机号码</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetCardByNumber/{number}")]
+        [Route("GetCardByNumber/{number}"), AllowAnonymous]
         public JsonActionResult<MemberCardDto> GetCardByNumber(string number)
         {
-            return SafeExecute(() => MemberCardService.GetCardInfoByNumber(number));
+            return SafeExecute(() =>
+            {
+                if (string.IsNullOrEmpty(number))
+                    throw new DomainException("参数错误");
+                if (number.Length > 30)
+                {
+                    var timespan = new TimeSpan(long.Parse(number.Substring(9)));
+                    var minutes = (new TimeSpan(DateTime.Now.Ticks) - timespan).Minutes;
+                    if (minutes >= 2)
+                        throw new DomainException("二维码已过期");
+                    number = number.Substring(0, 8);
+                }
+                return MemberCardService.GetCardInfoByNumber(number);
+            });
         }
 
         /// <summary>

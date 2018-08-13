@@ -154,6 +154,12 @@ namespace YEF.Core.Data
         public DateTime? ExpireDate { get; set; }
 
         /// <summary>
+        /// 激活时间
+        /// </summary>
+        [Display(Name = "激活时间")]
+        public DateTime? ActivateDate { get; set; }
+
+        /// <summary>
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]

@@ -114,6 +114,11 @@ namespace VVCar.Shop.Domain.Dtos
         public string RevisitTips{ get; set; }
 
         /// <summary>
+        /// 是否回访
+        /// </summary>
+        public bool IsRevisit { get; set; }
+
+        /// <summary>
         /// 回访状态
         /// </summary>
         public ERevisitStatus RevisitStatus { get; set; }
