@@ -2,16 +2,20 @@
 	extend: 'Ext.window.Window',
 	alias: 'widget.AgentDepartmentEdit',
 	title: '编辑代理商门店信息',
-	layout: 'fit',
-	width: 1100,
+	//layout: 'fit',
+	width: 1150,
+	height: 700,
 	bodyPadding: 5,
 	modal: true,
+	autoScoll: true,
+	bodyStyle:'overflow-y: auto; overflow-x: hidden;',
 	initComponent: function () {
 		var me = this;
 		var yesNoDictStore = Ext.create('WX.store.DataDict.YesNoTypeStore');
 		me.form = Ext.create('Ext.form.Panel', {
 			border: false,
 			trackResetOnLoad: true,
+			width: 1100,
 			fieldDefaults: {
 				labelAlign: 'left',
 				labelWidth: 80,
@@ -40,6 +44,7 @@
 					}, {
 						xtype: 'form',
 						layout: 'hbox',
+						margin: '5 0 0 0',
 						items: [{
 							xtype: 'combobox',
 							margin: '5 5 5 10',

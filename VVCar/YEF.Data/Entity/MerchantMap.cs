@@ -45,6 +45,9 @@ namespace YEF.Data
             Property(t => t.BusinessLicenseImgUrl)
                 .HasMaxLength(50);
 
+            Property(t => t.DepartmentImgUrl)
+                .HasMaxLength(50);
+
             Property(t => t.LegalPersonIDCardFrontImgUrl)
                 .HasMaxLength(50);
 

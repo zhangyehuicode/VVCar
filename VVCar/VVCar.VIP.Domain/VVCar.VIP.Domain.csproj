@@ -54,6 +54,7 @@
     <Compile Include="Dtos\ChangeMemberGroupDto.cs" />
     <Compile Include="Dtos\ChangePasswordDto.cs" />
     <Compile Include="Dtos\CheckCouponDto.cs" />
+    <Compile Include="Dtos\ConsumeInfoDto.cs" />
     <Compile Include="Dtos\CouponApplyStoreDto.cs" />
     <Compile Include="Dtos\CouponBaseInfoDto.cs" />
     <Compile Include="Dtos\CouponDto.cs" />

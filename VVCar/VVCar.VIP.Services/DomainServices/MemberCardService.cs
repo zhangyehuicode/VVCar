@@ -954,6 +954,193 @@ namespace VVCar.VIP.Services.DomainServices
             return result;
         }
 
+        /// <summary>
+        /// 校验是否可以交易
+        /// </summary>
+        /// <param name="consumeInfo"></param>
+        /// <returns></returns>
+        public (bool Result, MemberCard CardInfo, Member MemberInfo) ValidateConsume(ConsumeInfoDto consumeInfo)
+        {
+            if (consumeInfo == null)
+            {
+                throw new DomainException("参数不正确");
+            }
+            var card = this.Repository.GetQueryable()
+                .Where(t => t.Code == consumeInfo.CardNumber)
+                .FirstOrDefault();
+            if (card == null)
+            {
+                throw new DomainException("卡不存在");
+            }
+            if (card.Status != ECardStatus.Activated)
+            {
+                throw new DomainException(string.Format("卡片状态为 {0}, 不允许消费", card.Status.GetDescription()));
+            }
+            if (!card.EffectiveDate.HasValue || card.EffectiveDate.Value.Date > DateTime.Today)
+            {
+                throw new DomainException("卡片尚未生效");
+            }
+            if (card.ExpiredDate.HasValue && card.ExpiredDate.Value.Date < DateTime.Today)
+            {
+                throw new DomainException("卡片已过期, 截止日期：" + card.ExpiredDate.Value.ToDateString());
+            }
+            //if (consumeInfo.IsDiscount && !card.CardType.AllowDiscount)
+            //{
+            //    throw new DomainException("该卡不允许打折");
+            //}
+            if (card.CardBalance < consumeInfo.UseBalanceAmount)
+            {
+                throw new DomainException("余额不足");
+            }
+            var member = MemberRepo.GetInclude(t => t.MemberGroup).Where(m => m.CardNumber == card.Code).FirstOrDefault();
+            if (member == null && card.CardTypeID != MemberCardTypes.GiftCard)
+            {
+                throw new DomainException("会员不存在");
+            }
+            if (member != null && member.Point < consumeInfo.UseMemberPoint)
+                throw new DomainException("积分不足");
+            //if (consumeInfo.UseBalanceAmount > 0 || !string.IsNullOrEmpty(consumeInfo.MemberPassword))
+            //{
+            //    if (card.CardTypeID == MemberCardTypes.GiftCard)
+            //    {
+            //        if (!string.IsNullOrEmpty(consumeInfo.MemberPassword) && !consumeInfo.MemberPassword.Equals(card.VerifyCode))
+            //            throw new DomainException("验证码不正确");
+            //    }
+            //    else
+            //    {
+            //        var tradePassword = Util.EncryptPassword(card.Code, consumeInfo.MemberPassword);
+            //        if (!tradePassword.Equals(member.Password))
+            //        {
+            //            throw new DomainException("密码不正确");
+            //        }
+            //    }
+            //}
+            return (true, card, member);
+        }
+
+        /// <summary>
+        /// 消费
+        /// </summary>
+        /// <param name="consumeInfo"></param>
+        /// <param name="tradeSource"></param>
+        /// <returns></returns>
+        public CardTradeResultDto Consume(ConsumeInfoDto consumeInfo, ETradeSource tradeSource)
+        {
+            var validateResult = ValidateConsume(consumeInfo);
+            if (validateResult.Result == false)
+                throw new DomainException("会员卡余额消费校验失败");
+            var card = validateResult.CardInfo;
+            var member = validateResult.MemberInfo;
+            var tradeAmount = consumeInfo.TradeAmount;//consumeInfo.IsGiftCard ? consumeInfo.UseGiftCardBalanceAmount : (consumeInfo.UseBalanceAmount > 0 ? consumeInfo.UseBalanceAmount : consumeInfo.TradeAmount);
+            var result = new CardTradeResultDto
+            {
+                CardNumber = card.Code,
+                CardType = card.CardType != null ? card.CardType.Name : string.Empty,
+                BeforeBalance = card.CardBalance,
+                AfterBalance = consumeInfo.IsGiftCard ? card.CardBalance - consumeInfo.UseGiftCardBalanceAmount : card.CardBalance - consumeInfo.UseBalanceAmount,
+                MemberName = member?.Name,
+                TradeAmount = tradeAmount,
+                MemberGroup = member?.MemberGroup?.Name
+            };
+            this.UnitOfWork.BeginTransaction();
+            try
+            {
+                if (consumeInfo.UseBalanceAmount > 0 && !consumeInfo.IsGiftCard)
+                {
+                    card.CardBalance -= consumeInfo.UseBalanceAmount;
+                    card.TotalConsume += consumeInfo.UseBalanceAmount;
+                    this.Repository.Update(card);
+                }
+                else if (consumeInfo.UseGiftCardBalanceAmount > 0 && consumeInfo.IsGiftCard)
+                {
+                    card.CardBalance -= consumeInfo.UseGiftCardBalanceAmount;
+                    card.TotalConsume += consumeInfo.UseGiftCardBalanceAmount;
+                    this.Repository.Update(card);
+                }
+                var history = new TradeHistory();
+
+                if (consumeInfo.UseMemberPoint > 0)
+                {
+                    MemberService.AdjustMemberPoint(member.ID, EMemberPointType.PosDeductionUse, -1 * consumeInfo.UseMemberPoint, consumeInfo.OutTradeNo);
+                }
+                history = new TradeHistory
+                {
+                    CardID = card.ID,
+                    CardNumber = card.Code,
+                    CardBalance = card.CardBalance,
+                    TradeAmount = tradeAmount,
+                    OutTradeNo = consumeInfo.OutTradeNo,
+                    CreatedUser = consumeInfo.OperateUser,
+                    TradeSource = tradeSource,
+                    TradeNo = MakeCodeRuleService.GenerateCode(MakeCodeTypes.ConsumeBill),
+                    MemberID = member?.ID,
+                    ConsumeType = consumeInfo.UseBalanceAmount > 0 ? EConsumeType.CardBalance : EConsumeType.Discount,
+                    UseBalanceAmount = consumeInfo.IsGiftCard ? consumeInfo.UseGiftCardBalanceAmount : consumeInfo.UseBalanceAmount,
+                    MemberGradeID = member?.MemberGradeID,
+                };
+                TradeHistoryService.Add(history);
+
+                if (member != null && !member.OwnerDepartmentID.HasValue)
+                {
+                    member.OwnerDepartmentID = AppContext.CurrentSession.DepartmentID;
+                    MemberService.Update(member);
+                }
+
+                this.UnitOfWork.CommitTransaction();
+                result.TradeNo = history.TradeNo;
+                result.AfterBalance = card.CardBalance;
+                result.TotalRecharge = card.TotalRecharge;
+                result.TotalConsume = card.TotalConsume;
+
+                //var useMemberPointPaymentFinishOrder = false;
+                //if (card.CardTypeID != MemberCardTypes.GiftCard)
+                //{
+                //    var previewUsePointPaymentResult = MemberService.PreviewUsePointPayment(card.Code, tradeAmount);
+                //    useMemberPointPaymentFinishOrder = previewUsePointPaymentResult.ExchangeMoney >= tradeAmount;
+                //}
+                //if (consumeInfo.UseBalanceAmount == consumeInfo.TradeAmount || consumeInfo.UseGiftCardBalanceAmount == consumeInfo.TradeAmount || useMemberPointPaymentFinishOrder)
+                //if (consumeInfo.IsCheckOut)
+                //{
+                //    if (card.CardTypeID != MemberCardTypes.GiftCard)
+                //    {
+                //        consumeInfo.PaymentDetail = $"余额支付{consumeInfo.UseBalanceAmount.ToString("0.##")}元";
+                //    }
+                //    else
+                //    {
+                //        if (consumeInfo.UseGiftCardBalanceAmount > 0 && consumeInfo.UseGiftCardBalanceAmount != consumeInfo.TradeAmount)
+                //            consumeInfo.PaymentDetail = $"礼品卡支付{consumeInfo.UseGiftCardBalanceAmount.ToString("0.##")}元";
+                //        else
+                //            consumeInfo.PaymentDetail = "礼品卡支付";
+                //    }
+                //    if (consumeInfo.UseMemberPoint > 0)
+                //        consumeInfo.PaymentDetail += $",积分抵扣{consumeInfo.UseMemberPoint}";
+
+                //    if (card.CardTypeID != MemberCardTypes.GiftCard)
+                //    {
+                //        var useMemberGradeRightsResult = MemberGradeService.UseMemberGradeRights(member.ID, true, consumeInfo.TradeAmount);
+                //        ConsumeNoticeToWeChat(consumeInfo.TradeAmount, member, result.AfterBalance, consumeInfo.PaymentDetail, consumeInfo.UseBalanceAmount > 0, useMemberGradeRightsResult.GiftPoint);
+                //        if (useMemberGradeRightsResult.IsUpGrade)
+                //            UpGradeNoticeToWeChat(member, useMemberGradeRightsResult);
+                //    }
+                //    else
+                //    {
+                //        var memberGiftCard = MemberGiftCardRepo.GetQueryable(false).Where(t => t.GiftCardID == card.ID).FirstOrDefault();
+                //        if (memberGiftCard != null)
+                //            ConsumeNoticeToWeChat(consumeInfo.TradeAmount, new Member { WeChatOpenID = memberGiftCard.OpenID }, result.AfterBalance, consumeInfo.PaymentDetail, consumeInfo.UseGiftCardBalanceAmount > 0, 0, true);
+                //    }
+                //}
+                if (consumeInfo.UseBalanceAmount > 0)
+                    ConsumeNoticeToWeChat(consumeInfo.UseBalanceAmount, member, result.AfterBalance, consumeInfo.PaymentDetail, consumeInfo.UseBalanceAmount > 0, 0);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                AppContext.Logger.Error(ex);
+                this.UnitOfWork.RollbackTransaction();
+                throw ex;
+            }
+        }
+
         #region public
 
         ///// <summary>
@@ -1403,190 +1590,6 @@ namespace VVCar.VIP.Services.DomainServices
         //    return ValidateConsume(consumeInfo).Result;
         //}
 
-        ///// <summary>
-        ///// 校验是否可以交易
-        ///// </summary>
-        ///// <param name="consumeInfo"></param>
-        ///// <returns></returns>
-        //public (bool Result, MemberCard CardInfo, Member MemberInfo) ValidateConsume(ConsumeInfoDto consumeInfo)
-        //{
-        //    if (consumeInfo == null)
-        //    {
-        //        throw new DomainException("参数不正确");
-        //    }
-        //    var card = this.Repository.GetQueryable()
-        //        .Where(t => t.Code == consumeInfo.CardNumber)
-        //        .FirstOrDefault();
-        //    if (card == null)
-        //    {
-        //        throw new DomainException("卡不存在");
-        //    }
-        //    if (card.Status != ECardStatus.Activated)
-        //    {
-        //        throw new DomainException(string.Format("卡片状态为 {0}, 不允许消费", card.Status.GetDescription()));
-        //    }
-        //    if (!card.EffectiveDate.HasValue || card.EffectiveDate.Value.Date > DateTime.Today)
-        //    {
-        //        throw new DomainException("卡片尚未生效");
-        //    }
-        //    if (card.ExpiredDate.HasValue && card.ExpiredDate.Value.Date < DateTime.Today)
-        //    {
-        //        throw new DomainException("卡片已过期, 截止日期：" + card.ExpiredDate.Value.ToDateString());
-        //    }
-        //    //if (consumeInfo.IsDiscount && !card.CardType.AllowDiscount)
-        //    //{
-        //    //    throw new DomainException("该卡不允许打折");
-        //    //}
-        //    if (card.CardBalance < consumeInfo.UseBalanceAmount)
-        //    {
-        //        throw new DomainException("余额不足");
-        //    }
-        //    var member = MemberRepo.GetInclude(t => t.OwnerGroup).Where(m => m.CardNumber == card.Code).FirstOrDefault();
-        //    if (member == null && card.CardTypeID != MemberCardTypes.GiftCard)
-        //    {
-        //        throw new DomainException("会员身份不存在，请重新激活");
-        //    }
-        //    if (member != null && member.Point < consumeInfo.UseMemberPoint)
-        //        throw new DomainException("积分不足");
-        //    if (consumeInfo.UseBalanceAmount > 0 || !string.IsNullOrEmpty(consumeInfo.MemberPassword))
-        //    {
-        //        if (card.CardTypeID == MemberCardTypes.GiftCard)
-        //        {
-        //            if (!string.IsNullOrEmpty(consumeInfo.MemberPassword) && !consumeInfo.MemberPassword.Equals(card.VerifyCode))
-        //                throw new DomainException("验证码不正确");
-        //        }
-        //        else
-        //        {
-        //            var tradePassword = Util.EncryptPassword(card.Code, consumeInfo.MemberPassword);
-        //            if (!tradePassword.Equals(member.Password))
-        //            {
-        //                throw new DomainException("密码不正确");
-        //            }
-        //        }
-        //    }
-        //    return (true, card, member);
-        //}
-
-        ///// <summary>
-        ///// 消费
-        ///// </summary>
-        ///// <param name="consumeInfo"></param>
-        ///// <returns></returns>
-        //public CardTradeResultDto Consume(ConsumeInfoDto consumeInfo, ETradeSource tradeSource)
-        //{
-        //    var validateResult = ValidateConsume(consumeInfo);
-        //    if (validateResult.Result == false)
-        //        throw new DomainException("校验失败");
-        //    var card = validateResult.CardInfo;
-        //    var member = validateResult.MemberInfo;
-        //    var tradeAmount = consumeInfo.TradeAmount;//consumeInfo.IsGiftCard ? consumeInfo.UseGiftCardBalanceAmount : (consumeInfo.UseBalanceAmount > 0 ? consumeInfo.UseBalanceAmount : consumeInfo.TradeAmount);
-        //    var result = new CardTradeResultDto
-        //    {
-        //        CardNumber = card.Code,
-        //        CardType = card.CardType != null ? card.CardType.Name : string.Empty,
-        //        BeforeBalance = card.CardBalance,
-        //        AfterBalance = consumeInfo.IsGiftCard ? card.CardBalance - consumeInfo.UseGiftCardBalanceAmount : card.CardBalance - consumeInfo.UseBalanceAmount,
-        //        MemberName = member?.Name,
-        //        TradeAmount = tradeAmount,
-        //        MemberGroup = member?.OwnerGroup?.Name
-        //    };
-        //    this.UnitOfWork.BeginTransaction();
-        //    try
-        //    {
-        //        if (consumeInfo.UseBalanceAmount > 0 && !consumeInfo.IsGiftCard)
-        //        {
-        //            card.CardBalance -= consumeInfo.UseBalanceAmount;
-        //            card.TotalConsume += consumeInfo.UseBalanceAmount;
-        //            this.Repository.Update(card);
-        //        }
-        //        else if (consumeInfo.UseGiftCardBalanceAmount > 0 && consumeInfo.IsGiftCard)
-        //        {
-        //            card.CardBalance -= consumeInfo.UseGiftCardBalanceAmount;
-        //            card.TotalConsume += consumeInfo.UseGiftCardBalanceAmount;
-        //            this.Repository.Update(card);
-        //        }
-        //        var history = new TradeHistory();
-
-        //        if (consumeInfo.UseMemberPoint > 0)
-        //        {
-        //            MemberService.AdjustMemberPoint(member.ID, EMemberPointType.PosDeductionUse, -1 * consumeInfo.UseMemberPoint, consumeInfo.OutTradeNo);
-        //        }
-        //        history = new TradeHistory
-        //        {
-        //            CardID = card.ID,
-        //            CardNumber = card.Code,
-        //            CardBalance = card.CardBalance,
-        //            TradeAmount = tradeAmount,
-        //            OutTradeNo = consumeInfo.OutTradeNo,
-        //            CreatedUser = consumeInfo.OperateUser,
-        //            TradeSource = tradeSource,
-        //            TradeNo = MakeCodeRuleService.GenerateCode(MakeCodeTypes.ConsumeBill),
-        //            MemberID = member?.ID,
-        //            ConsumeType = consumeInfo.UseBalanceAmount > 0 ? EConsumeType.CardBalance : EConsumeType.Discount,
-        //            UseBalanceAmount = consumeInfo.IsGiftCard ? consumeInfo.UseGiftCardBalanceAmount : consumeInfo.UseBalanceAmount,
-        //            MemberGradeID = member?.MemberGradeID,
-        //        };
-        //        TradeHistoryService.Add(history);
-
-        //        if (member != null && !member.OwnerDepartmentID.HasValue)
-        //        {
-        //            member.OwnerDepartmentID = AppContext.CurrentSession.DepartmentID;
-        //            MemberService.Update(member);
-        //        }
-
-        //        this.UnitOfWork.CommitTransaction();
-        //        result.TradeNo = history.TradeNo;
-        //        result.AfterBalance = card.CardBalance;
-        //        result.TotalRecharge = card.TotalRecharge;
-        //        result.TotalConsume = card.TotalConsume;
-
-        //        //var useMemberPointPaymentFinishOrder = false;
-        //        //if (card.CardTypeID != MemberCardTypes.GiftCard)
-        //        //{
-        //        //    var previewUsePointPaymentResult = MemberService.PreviewUsePointPayment(card.Code, tradeAmount);
-        //        //    useMemberPointPaymentFinishOrder = previewUsePointPaymentResult.ExchangeMoney >= tradeAmount;
-        //        //}
-        //        //if (consumeInfo.UseBalanceAmount == consumeInfo.TradeAmount || consumeInfo.UseGiftCardBalanceAmount == consumeInfo.TradeAmount || useMemberPointPaymentFinishOrder)
-        //        if (consumeInfo.IsCheckOut)
-        //        {
-        //            if (card.CardTypeID != MemberCardTypes.GiftCard)
-        //            {
-        //                consumeInfo.PaymentDetail = $"余额支付{consumeInfo.UseBalanceAmount.ToString("0.##")}元";
-        //            }
-        //            else
-        //            {
-        //                if (consumeInfo.UseGiftCardBalanceAmount > 0 && consumeInfo.UseGiftCardBalanceAmount != consumeInfo.TradeAmount)
-        //                    consumeInfo.PaymentDetail = $"礼品卡支付{consumeInfo.UseGiftCardBalanceAmount.ToString("0.##")}元";
-        //                else
-        //                    consumeInfo.PaymentDetail = "礼品卡支付";
-        //            }
-        //            if (consumeInfo.UseMemberPoint > 0)
-        //                consumeInfo.PaymentDetail += $",积分抵扣{consumeInfo.UseMemberPoint}";
-
-        //            if (card.CardTypeID != MemberCardTypes.GiftCard)
-        //            {
-        //                var useMemberGradeRightsResult = MemberGradeService.UseMemberGradeRights(member.ID, true, consumeInfo.TradeAmount);
-        //                ConsumeNoticeToWeChat(consumeInfo.TradeAmount, member, result.AfterBalance, consumeInfo.PaymentDetail, consumeInfo.UseBalanceAmount > 0, useMemberGradeRightsResult.GiftPoint);
-        //                if (useMemberGradeRightsResult.IsUpGrade)
-        //                    UpGradeNoticeToWeChat(member, useMemberGradeRightsResult);
-        //            }
-        //            else
-        //            {
-        //                var memberGiftCard = MemberGiftCardRepo.GetQueryable(false).Where(t => t.GiftCardID == card.ID).FirstOrDefault();
-        //                if (memberGiftCard != null)
-        //                    ConsumeNoticeToWeChat(consumeInfo.TradeAmount, new Member { WeChatOpenID = memberGiftCard.OpenID }, result.AfterBalance, consumeInfo.PaymentDetail, consumeInfo.UseGiftCardBalanceAmount > 0, 0, true);
-        //            }
-        //        }
-        //        return result;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AppContext.Logger.Error("MemberCardService.Consume 发生异常。", ex);
-        //        this.UnitOfWork.RollbackTransaction();
-        //        throw ex;
-        //    }
-        //}
-
         //public List<CardTradeResultDto> ConsumeByBatchCard(List<ConsumeInfoDto> consumeInfoList, ETradeSource tradeSource)
         //{
         //    var result = new List<CardTradeResultDto>();
@@ -1787,6 +1790,64 @@ namespace VVCar.VIP.Services.DomainServices
                 throw new DomainException(string.Format("初始余额不应大于储值上限。卡片类型“{0}”的储值上限为{1:f}。", cardType.Name, cardType.MaxRecharge));
         }
 
+        /// <summary>
+        /// 发送微信消费通知
+        /// </summary>
+        /// <param name="tradeAmount">交易金额</param>
+        /// <param name="member">会员信息</param>
+        /// <param name="afterBalance">卡片余额</param>
+        /// <param name="paymentType">支付方式</param>
+        /// <param name="showBalance">显示余额</param>
+        /// <param name="giftPoint">显示余额</param>
+        /// <param name="isGiftCard">显示余额</param>
+        void ConsumeNoticeToWeChat(decimal tradeAmount, Member member, decimal afterBalance, string paymentType, bool showBalance, int giftPoint, bool isGiftCard = false)
+        {
+            if (member == null || string.IsNullOrEmpty(member.WeChatOpenID))
+                return;
+            var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_MemberConsume);
+            //var message = new WeChatTemplateMessageDto
+            //{
+            //    touser = member.WeChatOpenID,
+            //    template_id = templateId,
+            //    url = string.Format("{0}/member/MainIndex.aspx?openid={1}&companyCode={2}",
+            //        AppContext.Settings.OnlinePayService,
+            //        member.WeChatOpenID,
+            //        AppContext.CurrentSession.CompanyCode),
+            //    data = new System.Dynamic.ExpandoObject(),
+            //};
+            //if (!isGiftCard)
+            //    message.data.first = new WeChatTemplateMessageDto.MessageData("尊敬的会员，您本次的消费信息如下：");
+            //else
+            //    message.data.first = new WeChatTemplateMessageDto.MessageData("您本次的礼品卡消费信息如下：");
+            //message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(AppContext.CurrentSession.DepartmentName);
+            //message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(tradeAmount.ToString("f") + "元", "#FF4040");
+            //message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(paymentType);
+            //message.data.keyword4 = new WeChatTemplateMessageDto.MessageData($"{giftPoint}（累计积分：{member.Point}）");
+            //message.data.keyword5 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateTimeString());
+            //var remark = $"当前余额：{afterBalance.ToString("f")}元";//showBalance ? string.Empty : $"当前余额：{afterBalance.ToString("f")}元";
+            //message.data.remark = new WeChatTemplateMessageDto.MessageData(remark);
+            //WeChatService.SendWeChatNotifyAsync(message);
+
+            //var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_VerificationSuccess);
+            if (string.IsNullOrEmpty(templateId))
+                return;
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = member.WeChatOpenID,
+                template_id = templateId,
+                url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={AppContext.CurrentSession.CompanyCode}",
+                data = new System.Dynamic.ExpandoObject(),
+            };
+            message.data.productType = new WeChatTemplateMessageDto.MessageData("储值卡号");
+            message.data.name = new WeChatTemplateMessageDto.MessageData(member.CardNumber);
+            message.data.accountType = new WeChatTemplateMessageDto.MessageData("金额");
+            message.data.account = new WeChatTemplateMessageDto.MessageData(tradeAmount.ToString("f") + "元", "#FF4040");
+            message.data.time = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            var remark = $"当前余额：{afterBalance.ToString("f")}元";
+            message.data.remark = new WeChatTemplateMessageDto.MessageData(remark);
+            WeChatService.SendWeChatNotifyAsync(message);
+        }
+
         #region private
 
         //void UpGradeNoticeToWeChat(Member member, UseMemberGradeRightsResult useMemberGradeRightsResult)
@@ -1809,43 +1870,6 @@ namespace VVCar.VIP.Services.DomainServices
         //    message.data.first = new WeChatTemplateMessageDto.MessageData($"您已成功升级为{useMemberGradeRightsResult.UpGradeName}!");
         //    message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateTimeString());
         //    message.data.keyword2 = new WeChatTemplateMessageDto.MessageData("点击'详情'查看您的会员特权~");//useMemberGradeRightsResult.GradeRightsDesc
-        //    WeChatService.SendWeChatNotifyAsync(message);
-        //}
-
-        ///// <summary>
-        ///// 发送微信消费通知
-        ///// </summary>
-        ///// <param name="tradeAmount">交易金额</param>
-        ///// <param name="member">会员信息</param>
-        ///// <param name="afterBalance">卡片余额</param>
-        ///// <param name="paymentType">支付方式</param>
-        ///// <param name="showBalance">显示余额</param>
-        //void ConsumeNoticeToWeChat(decimal tradeAmount, Member member, decimal afterBalance, string paymentType, bool showBalance, int giftPoint, bool isGiftCard = false)
-        //{
-        //    if (member == null || string.IsNullOrEmpty(member.WeChatOpenID))
-        //        return;
-        //    var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_MemberConsume);
-        //    var message = new WeChatTemplateMessageDto
-        //    {
-        //        touser = member.WeChatOpenID,
-        //        template_id = templateId,
-        //        url = string.Format("{0}/member/MainIndex.aspx?openid={1}&companyCode={2}",
-        //            AppContext.Settings.OnlinePayService,
-        //            member.WeChatOpenID,
-        //            AppContext.CurrentSession.CompanyCode),
-        //        data = new System.Dynamic.ExpandoObject(),
-        //    };
-        //    if (!isGiftCard)
-        //        message.data.first = new WeChatTemplateMessageDto.MessageData("尊敬的会员，您本次的消费信息如下：");
-        //    else
-        //        message.data.first = new WeChatTemplateMessageDto.MessageData("您本次的礼品卡消费信息如下：");
-        //    message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(AppContext.CurrentSession.DepartmentName);
-        //    message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(tradeAmount.ToString("f") + "元", "#FF4040");
-        //    message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(paymentType);
-        //    message.data.keyword4 = new WeChatTemplateMessageDto.MessageData($"{giftPoint}（累计积分：{member.Point}）");
-        //    message.data.keyword5 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateTimeString());
-        //    var remark = $"当前余额：{afterBalance.ToString("f")}元";//showBalance ? string.Empty : $"当前余额：{afterBalance.ToString("f")}元";
-        //    message.data.remark = new WeChatTemplateMessageDto.MessageData(remark);
         //    WeChatService.SendWeChatNotifyAsync(message);
         //}
 

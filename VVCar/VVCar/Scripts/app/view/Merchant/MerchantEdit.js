@@ -2,14 +2,18 @@
 	extend: 'Ext.window.Window',
 	alias: 'widget.MerchantEdit',
 	title: '编辑商户信息',
-	layout: 'fit',
-	width: 1100,
+	//layout: 'fit',
+	width: 1150,
+	height: 700,
 	bodyPadding: 5,
 	modal: true,
+	autoScroll: true,
+	bodyStyle: 'overflow-y: auto; overflow-x: hidden;',
 	initComponent: function () {
 		var me = this;
 		var yesNoDictStore = Ext.create('WX.store.DataDict.YesNoTypeStore');
 		me.form = Ext.create('Ext.form.Panel', {
+			width: 1100,
 			border: false,
 			trackResetOnLoad: true,
 			fieldDefaults: {
@@ -198,7 +202,7 @@
 							xtype: 'button',
 							text: '上传',
 							action: 'uploadQRCodePic',
-							margin: '30 5 5 5',
+							margin: '30 20 5 5',
 						}, {
 							xtype: 'box',
 							name: 'ImgWeChatQRCodeShow',
@@ -222,13 +226,14 @@
 						items: [{
 							xtype: 'filefield',
 							fieldLabel: '营业执照',
-							labelWidth: 60,
+							labelWidth: 30,
+							width: 200,
 							allowBlank: true,
 							buttonText: '选择图片',
 						}, {
 							xtype: 'button',
 							text: '上传',
-							margin: '5 60 0 5',
+							margin: '10 10 0 0',
 							action: 'uploadLicensePic',
 						}]
 					}, {
@@ -237,14 +242,32 @@
 						layout: 'hbox',
 						items: [{
 							xtype: 'filefield',
-							fieldLabel: '身份证(正)',
-							labelWidth: 70,
+							fieldLabel: '门店照片',
+							labelWidth: 30,
+							width: 200,
 							allowBlank: true,
 							buttonText: '选择图片',
 						}, {
 							xtype: 'button',
 							text: '上传',
-							margin: '5 60 0 5',
+							margin: '10 10 0 0',
+							action: 'uploadDepartmentPic',
+						}]
+					}, {
+						xtype: 'form',
+						border: false,
+						layout: 'hbox',
+						items: [{
+							xtype: 'filefield',
+							fieldLabel: '身份证正面',
+							labelWidth: 40,
+							width: 200,
+							allowBlank: true,
+							buttonText: '选择图片',
+						}, {
+							xtype: 'button',
+							text: '上传',
+							margin: '10 10 0 0',
 							action: 'uploadIDCardFrontPic',
 						}]
 					}, {
@@ -253,14 +276,15 @@
 						layout: 'hbox',
 						items: [{
 							xtype: 'filefield',
-							fieldLabel: '身份证(反)',
-							labelWidth: 70,
+							fieldLabel: '身份证反面',
+							labelWidth: 40,
+							width: 200,
 							allowBlank: true,
 							buttonText: '选择图片',
 						}, {
 							xtype: 'button',
 							text: '上传',
-							margin: '5 60 0 5',
+							margin: '10 10 0 0',
 							action: 'uploadIDCardBehindPic',
 						}]
 					}]
@@ -272,17 +296,27 @@
 						name: 'ImgLicenseShow',
 						width: 200,
 						height: 290,
-						margin: '5 5 5 100',
+						margin: '5 5 5 50',
 						autoEl: {
 							tag: 'img',
 							src: '',
 						},
 					}, {
 						xtype: 'box',
+						name: 'ImgDepartmentShow',
+						width: 200,
+						height: 290,
+						margin: '5 5 5 50',
+						autoEl: {
+							tag: 'img',
+							src: '',
+						}
+					}, {
+						xtype: 'box',
 						name: 'ImgIDCardFrontShow',
 						width: 200,
 						height: 290,
-						margin: '5 5 5 100',
+						margin: '5 5 5 80',
 						autoEl: {
 							tag: 'img',
 							src: '',
@@ -292,7 +326,7 @@
 						name: 'ImgIDCardBehindShow',
 						width: 200,
 						height: 290,
-						margin: '5 5 5 180',
+						margin: '5 5 5 50',
 						autoEl: {
 							tag: 'img',
 							src: '',
@@ -302,6 +336,11 @@
 					xtype: 'textfield',
 					name: 'WeChatQRCodeImgUrl',
 					fieldLabel: '公众号二维码路径',
+					hidden: true,
+				}, {
+					xtype: 'textfield',
+					name: 'DepartmentImgUrl',
+					fieldLabel: '门店执照图片路径',
 					hidden: true,
 				}, {
 					xtype: 'textfield',

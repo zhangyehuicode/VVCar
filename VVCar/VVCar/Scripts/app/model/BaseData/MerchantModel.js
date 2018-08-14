@@ -15,6 +15,7 @@
 		{ name: 'MobilePhoneNo' },
 		{ name: 'WeChatQRCodeImgUrl' },
 		{ name: 'BusinessLicenseImgUrl' },
+		{ name: 'DepartmentImgUrl' },
 		{ name: 'LegalPersonIDCardFrontImgUrl' },
 		{ name: 'LegalPersonIDCardBehindImgUrl' },
 		{ name: 'CompanyAddress' },

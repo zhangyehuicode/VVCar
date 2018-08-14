@@ -35,6 +35,8 @@ namespace VVCar.BaseData.Services.DomainServices
 
         IMemberService MemberService { get => ServiceLocator.Instance.GetService<IMemberService>(); }
 
+        IMerchantService MerchantService { get => ServiceLocator.Instance.GetService<IMerchantService>(); }
+
         IRepository<Member> MemberRepo { get => ServiceLocator.Instance.GetService<IRepository<Member>>(); }
 
         #endregion
@@ -321,14 +323,45 @@ namespace VVCar.BaseData.Services.DomainServices
             }
             if (agentDepartmentList.Count < 1)
                 return true;
-            agentDepartmentList.ForEach(t =>
+
+            UnitOfWork.BeginTransaction();
+            try
             {
-                t.ApproveStatus = EAgentDepartmentApproveStatus.Imported;
-                t.LastUpdatedUserID = AppContext.CurrentSession.UserID;
-                t.LastUpdatedUser = AppContext.CurrentSession.UserName;
-                t.LastUpdatedDate = DateTime.Now;
-            });
-            return Repository.UpdateRange(agentDepartmentList) > 0;
+                agentDepartmentList.ForEach(t =>
+                {
+                    t.ApproveStatus = EAgentDepartmentApproveStatus.Imported;
+                    t.LastUpdatedUserID = AppContext.CurrentSession.UserID;
+                    t.LastUpdatedUser = AppContext.CurrentSession.UserName;
+                    t.LastUpdatedDate = DateTime.Now;
+                    var merchant = new Merchant();
+                    merchant.Name = t.Name;
+                    merchant.LegalPerson = t.LegalPerson;
+                    merchant.IDNumber = t.IDNumber;
+                    merchant.Email = t.Email;
+                    merchant.WeChatOAPassword = t.WeChatOAPassword;
+                    merchant.MobilePhoneNo = t.MobilePhoneNo;
+                    merchant.BusinessLicenseImgUrl = t.BusinessLicenseImgUrl;
+                    merchant.DepartmentImgUrl = t.DepartmentImgUrl;
+                    merchant.LegalPersonIDCardFrontImgUrl = t.LegalPersonIDCardFrontImgUrl;
+                    merchant.LegalPersonIDCardBehindImgUrl = t.LegalPersonIDCardBehindImgUrl;
+                    merchant.CompanyAddress = t.CompanyAddress;
+                    merchant.WeChatAppSecret = t.WeChatAppSecret;
+                    merchant.WeChatMchID = t.WeChatMchID;
+                    merchant.WeChatMchKey = t.WeChatMchKey;
+                    merchant.MeChatMchPassword = t.MeChatMchPassword;
+                    merchant.Bank = t.Bank;
+                    merchant.BankCard = t.BankCard;
+                    MerchantService.Add(merchant);
+                    Repository.Update(t);
+                });
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch(Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw e;
+            }
         }
 
         /// <summary>

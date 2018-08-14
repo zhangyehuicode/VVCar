@@ -62,6 +62,10 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<Product> ProductRepo { get => UnitOfWork.GetRepository<IRepository<Product>>(); }
 
+        IRepository<MemberCard> MemberCardRepo { get => UnitOfWork.GetRepository<IRepository<MemberCard>>(); }
+
+        IMemberCardService MemberCardService { get => ServiceLocator.Instance.GetService<IMemberCardService>(); }
+
         #endregion
 
         public string GetTradeNo()
@@ -401,27 +405,33 @@ namespace VVCar.Shop.Services.DomainServices
                             ConsumeMoney = order.Money,
                         });
                     }
-                    if (verificationcoupons.Count > 0 || verificationcards.Count > 0)
-                    {
-                        RecountMoney(order);
-                        PickUpOrderItemRepo.UpdateRange(order.PickUpOrderItemList);
-                        Repository.Update(order);
-                        //return true;
-                    }
-                    else
-                    {
+                    //if (verificationcoupons.Count > 0 || verificationcards.Count > 0)
+                    //{
+                    //    //RecountMoney(order);
+                    //    //PickUpOrderItemRepo.UpdateRange(order.PickUpOrderItemList);
+                    //    //Repository.Update(order);
+                    //    //return true;
+                    //}
+                    //else
+                    //{
+                    //    noVerificationCoupons = true;
+                    //    //throw new DomainException("没有可以核销对应服务的卡券");
+                    //}
+                    if (verificationcoupons.Count < 1 && verificationcards.Count < 1)
                         noVerificationCoupons = true;
-                        //throw new DomainException("没有可以核销对应服务的卡券");
-                    }
                 }
+                var usedcard = 0;
                 if (param.MemberCardNumbers != null && param.MemberCardNumbers.Count > 0)
                 {
-
+                    usedcard = ApplyMemberCard(order, param);
                 }
-                else if (noVerificationCoupons)
+                if (noVerificationCoupons && usedcard < 1)
                 {
                     throw new DomainException("没有可以核销的卡券");
                 }
+                RecountMoney(order);
+                PickUpOrderItemRepo.UpdateRange(order.PickUpOrderItemList);
+                Repository.Update(order);
                 UnitOfWork.CommitTransaction();
                 return true;
             }
@@ -727,6 +737,66 @@ namespace VVCar.Shop.Services.DomainServices
             }
             else
                 return null;
+        }
+
+        private int ApplyMemberCard(PickUpOrder pickUpOrder, VerificationParam param)
+        {
+            if (pickUpOrder == null || pickUpOrder.PickUpOrderItemList == null || pickUpOrder.PickUpOrderItemList.Count < 1 || param == null || param.MemberCardNumbers == null || param.MemberCardNumbers.Count() < 1)
+                return 0;
+            var usedcard = 0;
+            foreach (var cardnumber in param.MemberCardNumbers)
+            {
+                var card = MemberCardRepo.GetQueryable(false).Where(t => t.Code == cardnumber).FirstOrDefault();
+                if (card == null)
+                    continue;
+                decimal deductionMoney = 0;
+                decimal totalMoney = 0;
+                pickUpOrder.PickUpOrderItemList.ForEach(t =>
+                {
+                    totalMoney += t.Quantity * t.PriceSale;
+                });
+                decimal paymoney = 0;
+                var paymentdetails = PickUpOrderPaymentDetailsRepo.GetQueryable(false).Where(t => t.PickUpOrderCode == pickUpOrder.Code).ToList();
+                if (paymentdetails != null && paymentdetails.Count > 0)
+                {
+                    paymentdetails.ForEach(t =>
+                    {
+                        paymoney += t.PayMoney;
+                    });
+                }
+                var stillowemoney = totalMoney - paymoney;
+                if (stillowemoney <= 0)
+                    break;
+                if (stillowemoney >= card.CardBalance)
+                {
+                    deductionMoney = card.CardBalance;
+                }
+                else
+                {
+                    deductionMoney = stillowemoney;
+                }
+                var cardTradeResult = MemberCardService.Consume(new ConsumeInfoDto
+                {
+                    CardNumber = cardnumber,
+                    OutTradeNo = pickUpOrder.Code,
+                    TradeAmount = deductionMoney,
+                    UseBalanceAmount = deductionMoney,
+                    OperateUser = param.StaffName,
+                }, ETradeSource.WeChat);
+                PickUpOrderPaymentDetailsService.Add(new PickUpOrderPaymentDetails
+                {
+                    PickUpOrderID = pickUpOrder.ID,
+                    PickUpOrderCode = pickUpOrder.Code,
+                    PayType = EPayType.ValueCard,
+                    PayMoney = deductionMoney,
+                    PayInfo = $"类型:储值卡,卡号:{cardnumber},抵扣金额:{deductionMoney}",
+                    MemberInfo = cardTradeResult.MemberName,
+                    StaffID = param.StaffID,
+                    StaffName = param.StaffName,
+                });
+                usedcard++;
+            }
+            return usedcard;
         }
 
         /// <summary>

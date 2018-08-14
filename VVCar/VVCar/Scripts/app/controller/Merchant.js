@@ -36,6 +36,9 @@
 			'MerchantEdit button[action=uploadQRCodePic]': {
 				click: me.uploadQRCodePic
 			},
+			'MerchantEdit button[action=uploadDepartmentPic]': {
+				click: me.uploadDepartmentPic
+			},
 			'MerchantEdit button[action=uploadLicensePic]': {
 				click: me.uploadLicensePic
 			},
@@ -185,6 +188,28 @@
 			});
 		}
 	},
+	uploadDepartmentPic: function (btn) {
+		var form = btn.up('form').getForm();
+		var win = btn.up('window');
+		if (form.isValid()) {
+			form.submit({
+				url: '/api/UploadFile/UploadDepartment',
+				waitMsg: '正在上传...',
+				success: function (fp, o) {
+					if (o.result.success) {
+						Ext.Msg.alert('提示', '上传成功');
+						win.down('textfield[name=DepartmentImgUrl]').setValue(o.result.FileUrl);
+						win.down('box[name=ImgDepartmentShow]').el.dom.src = o.result.FileUrl;
+					} else {
+						Ext.Msg.alert('提示', o.result.errorMessage);
+					}
+				},
+				failure: function (fp, o) {
+					Ext.Msg.alert('提示', o.result.errorMessage);
+				}
+			});
+		}
+	},
 	uploadIDCardFrontPic: function (btn) {
 		var form = btn.up('form').getForm();
 		var win = btn.up('window');
@@ -299,6 +324,7 @@
 		win.form.loadRecord(record);
 		win.down('box[name=ImgWeChatQRCodeShow]').autoEl.src = record.data.WeChatQRCodeImgUrl;
 		win.down('box[name=ImgLicenseShow]').autoEl.src = record.data.BusinessLicenseImgUrl;
+		win.down('box[name=ImgDepartmentShow]').autoEl.src = record.data.DepartmentImgUrl;
 		win.down('box[name=ImgIDCardFrontShow]').autoEl.src = record.data.LegalPersonIDCardFrontImgUrl;
 		win.down('box[name=ImgIDCardBehindShow]').autoEl.src = record.data.LegalPersonIDCardBehindImgUrl;
 		win.form.getForm().actionMethod = 'PUT';

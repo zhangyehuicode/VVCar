@@ -82,6 +82,12 @@ namespace YEF.Core.Data
         public string BusinessLicenseImgUrl { get; set; }
 
         /// <summary>
+        /// 门店照片 图片地址
+        /// </summary>
+        [Display(Name = "门店照片 图片地址")]
+        public string DepartmentImgUrl { get; set; }
+
+        /// <summary>
         /// 法人身份证正面 图片地址
         /// </summary>
         [Display(Name = "法人身份证正面 图片地址")]

@@ -136,6 +136,7 @@ namespace VVCar.BaseData.Services.DomainServices
             merchant.MobilePhoneNo = entity.MobilePhoneNo;
             merchant.WeChatQRCodeImgUrl = entity.WeChatQRCodeImgUrl;
             merchant.BusinessLicenseImgUrl = entity.BusinessLicenseImgUrl;
+            merchant.DepartmentImgUrl = entity.DepartmentImgUrl;
             merchant.LegalPersonIDCardFrontImgUrl = entity.LegalPersonIDCardFrontImgUrl;
             merchant.LegalPersonIDCardBehindImgUrl = entity.LegalPersonIDCardBehindImgUrl;
             merchant.CompanyAddress = entity.CompanyAddress;

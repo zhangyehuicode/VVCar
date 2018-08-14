@@ -90,13 +90,13 @@ namespace VVCar.VIP.Domain.Services
         ///// <returns></returns>
         //bool ValidateBeforeConsume(ConsumeInfoDto consumeInfo);
 
-        ///// <summary>
-        ///// 消费交易
-        ///// </summary>
-        ///// <param name="consumeInfo">交易信息</param>
-        ///// <param name="tradeSource">交易来源</param>
-        ///// <returns></returns>
-        //CardTradeResultDto Consume(ConsumeInfoDto consumeInfo, ETradeSource tradeSource);
+        /// <summary>
+        /// 消费交易
+        /// </summary>
+        /// <param name="consumeInfo">交易信息</param>
+        /// <param name="tradeSource">交易来源</param>
+        /// <returns></returns>
+        CardTradeResultDto Consume(ConsumeInfoDto consumeInfo, ETradeSource tradeSource);
 
         /// <summary>
         /// 生成虚拟微信会员卡

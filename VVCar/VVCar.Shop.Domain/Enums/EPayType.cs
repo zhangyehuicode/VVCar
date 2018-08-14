@@ -47,5 +47,11 @@ namespace VVCar.Shop.Domain.Enums
         /// </summary>
         [Description("车比特")]
         CarBitCoin = 5,
+
+        /// <summary>
+        /// 储值卡
+        /// </summary>
+        [Description("储值卡")]
+        ValueCard = 6,
     }
 }

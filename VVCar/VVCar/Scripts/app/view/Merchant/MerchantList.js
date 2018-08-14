@@ -92,7 +92,7 @@
 		];
 		me.columns = [
 			{ header: '商户号', dataIndex: 'Code', width: 90 },
-			{ header: '名称', dataIndex: 'Name', width: 150 },
+			{ header: '名称', dataIndex: 'Name', width: 160 },
 			{
 				header: '代理商', dataIndex: 'IsAgent', width: 70,
 				renderer: function (value) {
@@ -127,7 +127,7 @@
 			},
 			{ header: '注册邮箱', dataIndex: 'Email', width: 140 },
 			{ header: '法人(负责人)', dataIndex: 'LegalPerson', width: 100 },
-			{ header: '法人身份证编号', dataIndex: 'IDNumber', width: 150 },
+			//{ header: '法人身份证编号', dataIndex: 'IDNumber', width: 150 },
 			{ header: '联系电话', dataIndex: 'MobilePhoneNo', width: 110 },
 			//{ header: '开户行', dataIndex: 'Bank', flex: 4 },
 			//{ header: '账号', dataIndex: 'BankCard', width: 170 },
@@ -141,6 +141,14 @@
 			//},
 			{
 				header: '营业执照', dataIndex: 'BusinessLicenseImgUrl', width: 100,
+				renderer: function (value) {
+					if (value != "" && value != null) {
+						return '<a href="' + value + '"download="' + value + '"><img src="' + value + '" style="width: 80px; height: 50px;" /></a>';
+					}
+				},
+			},
+			{
+				header: '门店照片', dataIndex: 'DepartmentImgUrl', width: 100,
 				renderer: function (value) {
 					if (value != "" && value != null) {
 						return '<a href="' + value + '"download="' + value + '"><img src="' + value + '" style="width: 80px; height: 50px;" /></a>';
