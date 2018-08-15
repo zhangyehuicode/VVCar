@@ -28,8 +28,8 @@
             <div class="shop_box4 hykb_box2" style="width:100%;display:table;">
                 <div style="display:table-cell;width:120px;"><img class="couponimg" src="~/Areas/resource/img/mobile/defaultimg1.png"></div>
                 <div class="hykb_text" style="display:table-cell;vertical-align:middle;">储值卡</div>
-                <div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text">{{MemberCard.CardNumber}}</div>
-                <div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text">￥{{MemberCard.CardBalance}}</div>
+                <div style="display:table-cell;width:80px;vertical-align:middle;" class="hykb_text">{{MemberCard.CardNumber}}</div>
+                <div style="display:table-cell;width:80px;color:#ff0c4b;vertical-align:middle;" class="hykb_text">￥{{MemberCard.CardBalance}}</div>
             </div>
             <div class="shop_box4">
                 <div class="deletebtn" v-on:click="deletemembercard(MemberCard)">删除</div>
@@ -40,7 +40,7 @@
                 <div style="display:table-cell;width:120px;"><img class="couponimg" v-bind:src=Coupon.CoverImage></div>
                 <div class="hykb_text" style="display:table-cell;vertical-align:middle;">{{Coupon.Title}}</div>
                 @*<div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text" v-if="Coupon.CouponType!=3">抵用</div>*@
-                <div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text" v-if="Coupon.CouponType==3">{{Coupon.CouponValue}}{{Coupon.CouponValueUnit}}</div>
+                <div style="display:table-cell;width:80px; color:#ff0c4b;vertical-align:middle;" class="hykb_text">{{Coupon.CouponValue}}{{Coupon.CouponValueUnit}}</div>@*v-if="Coupon.CouponType==3"*@
             </div>
             <div class="shop_box4">
                 <div class="deletebtn" v-on:click="deletecoupon">删除</div>
@@ -200,7 +200,7 @@
                             success: function (res) {
                                 var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
                                 if (result != null) {
-                                    if (result.length > 30) {
+                                    if (result.length > 20) {
                                         getMemberCardInfo(result);
                                     } else {
                                         getCouponInfo(result);
@@ -349,7 +349,7 @@
                     return;
                 }
                 $.ajax({
-                    url: '/api/MemberCard/GetCardByNumber/' + cardnumber,
+                    url: '/api/MemberCard/GetCardByNumber?number=' + cardnumber,
                     type: 'GET',
                     headers: { 'CompanyCode': mch },
                     beforeSend: function () {
@@ -359,14 +359,23 @@
                         $.hideLoading();
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
-                                _viewModel.MemberCardList.push(res.Data);
+                                var hasvalue = false;
+                                for (var i = 0; i<_viewModel.MemberCardList.length; i++) {
+                                    if (_viewModel.MemberCardList[i].CardNumber == res.Data.CardNumber) {
+                                        hasvalue = true;
+                                        break;
+                                    }
+                                }
+                                if (!hasvalue)
+                                       _viewModel.MemberCardList.push(res.Data);
                             }
                         } else {
                             $.alert(res.ErrorMessage);
                         }
                     },
-                    error: function () {
+                    error: function (res) {
                         $.hideLoading();
+                        $.alert(JSON.stringify(res));
                     }
                 });
             }

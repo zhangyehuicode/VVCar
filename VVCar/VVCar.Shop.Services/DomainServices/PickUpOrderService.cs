@@ -775,6 +775,8 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     deductionMoney = stillowemoney;
                 }
+                if (deductionMoney <= 0)
+                    break;
                 var cardTradeResult = MemberCardService.Consume(new ConsumeInfoDto
                 {
                     CardNumber = cardnumber,

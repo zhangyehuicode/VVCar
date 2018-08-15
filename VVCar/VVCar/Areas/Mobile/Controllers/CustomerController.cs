@@ -651,7 +651,7 @@ namespace VVCar.Areas.Mobile.Controllers
         [HttpGet, Route("GetTimeSpan")]
         public string GetTimeSpan()
         {
-            return new TimeSpan(DateTime.Now.Ticks).ToString();
+            return DateTime.Now.Ticks.ToString();
         }
     }
 }

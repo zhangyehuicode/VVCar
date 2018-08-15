@@ -51,7 +51,7 @@
         <div class="hykb_box2" style="margin-left:3%; margin-top:15px;" v-on:click="membercard">
             <a><img class="cardimg" src="~/Areas/resource/img/mobile/defaultimg1.png"></a>
             <span class=" hykb_text">储值卡</span>
-            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text">{{Member.CardBalance}}</span>
+            <span style=" float:right; margin-right:3%; color:#ff0c4b;" class="hykb_text">￥{{Member.CardBalance}}</span>
         </div>
         <div class="hykb_box2" style="margin-left:3%; margin-top:15px;" v-for="Card in CardList" v-on:click="couponInfo(Card)">
             <a><img class="cardimg" v-bind:src=Card.CoverImage></a>
@@ -73,7 +73,7 @@
         <div class="membercardcon">
             <div class="cardtitle">No.{{Member.CardNumber}}</div>
             <div class="cardqrcode" id="cardqrcode"></div>
-            <div class="cardtitle">祝您生活愉快！</div>
+            <div class="qrcodetips">二维码两分钟内有效</div>
         </div>
     </div>
 </div>
@@ -116,18 +116,29 @@
             background: #fff;
             border-radius: 5px;
             margin: 150px auto;
-            width: 210px;
+            width: 240px;
         }
 
         .cardtitle {
             font-size: 15px;
-            margin: 5px 0 5px 13px;
+            margin: 5px 13px 5px 13px;
+            border-bottom: 1px solid #ccc;
+            height: 35px;
+            line-height: 35px;
+        }
+
+        .qrcodetips {
+            font-size: 13px;
+            margin: 5px 13px 5px 13px;
+            height: 30px;
+            line-height: 30px;
         }
 
         .cardqrcode {
             padding: 5px;
-            /*width: 100px;
-            height: 100px;*/
+            border-bottom: 1px solid #ccc;
+            margin: 5px auto;
+            text-align: center;
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
@@ -137,9 +148,10 @@
     <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
     <script type="text/javascript">
         function wxConfig() {
+            var mch = $.getUrlParam('mch');
             $.ajax({
                 type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=VVCar&url=" + document.URL,
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
                 datatype: "json",
                 success: function (data) {
                     if (data.IsSuccessful) {
@@ -246,10 +258,9 @@
                                         height: 200,
                                         //foreground: "#efcb47",
                                         //background: "#FFF",
-                                        text: _viewModel.Member.CardNumber + '.' + res,
+                                        text: _viewModel.Member.CardNumber + '+' + res,
                                     });
                                     $('.membercardbac').show();
-                                    console.log(_viewModel.Member.CardNumber + '.' + res);
                                 } else {
                                     $.alert('二维码生成失败');
                                 }
@@ -298,7 +309,7 @@
                         }
                     });
                 }
-                //init();
+                init();
             } else {
                 member = JSON.parse(member);
                 _viewModel.Member = member;
