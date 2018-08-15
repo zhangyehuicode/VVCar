@@ -326,6 +326,21 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 获取卡券适用商品信息
+        /// </summary>
+        /// <param name="templateID"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetCouponApplyProductInfo"), AllowAnonymous]
+        public PagedActionResult<CouponApplyProductDto> GetCouponApplyProductInfo(Guid templateID)
+        {
+            return SafeGetPagedData<CouponApplyProductDto>((result) =>
+            {
+                result.Data = CouponService.GetCouponApplyProductInfo(templateID);
+                result.TotalCount = result.Data.Count();
+            });
+        }
+
+        /// <summary>
         /// 获取用户可用卡券
         /// </summary>
         /// <param name="userOpenID"></param>

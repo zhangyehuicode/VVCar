@@ -126,6 +126,15 @@ namespace VVCar.Areas.Coupon.Controllers
         }
 
         /// <summary>
+        /// 适用商品列表
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CouponProduct()
+        {
+            return View();
+        }
+
+        /// <summary>
         /// 使用优惠券
         /// </summary>
         /// <param name="couponid"></param>

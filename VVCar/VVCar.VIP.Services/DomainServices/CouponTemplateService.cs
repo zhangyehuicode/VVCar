@@ -239,7 +239,7 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 queryable = queryable.Where(t => t.Nature == (ENature)filter.Nature);
             }
-            if(filter.IsStockholderCard.HasValue)
+            if (filter.IsStockholderCard.HasValue)
             {
                 queryable = queryable.Where(t => t.IsStockholderCard == filter.IsStockholderCard);
             }
@@ -315,6 +315,7 @@ namespace VVCar.VIP.Services.DomainServices
                 ConsumePointRate = c.ConsumePointRate,
                 DiscountRate = c.DiscountRate,
                 PriceSale = c.PriceSale,
+                IsApplyAllProduct = c.IsApplyAllProduct,
             }).ToArray();
             return result.OrderByDescending(t => t.CreatedDate);
         }
@@ -631,7 +632,7 @@ namespace VVCar.VIP.Services.DomainServices
                 throw new DomainException("参数错误");
             if (consumePointRate < 0 || consumePointRate > 100)
                 throw new DomainException("返佣比例参数必须在0到100之间");
-            if(discountRate < 0 || discountRate > 100)
+            if (discountRate < 0 || discountRate > 100)
                 throw new DomainException("折扣系数参数必须在0到100之间");
             var entity = Repository.GetByKey(id);
             if (entity == null)

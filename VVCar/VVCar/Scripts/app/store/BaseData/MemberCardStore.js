@@ -12,7 +12,7 @@
             exportMemberCard: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberCard/exportMemberCard',
             verifyCode: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberCard/verifyCode',
             activate: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberCard/activate',
-            getCardByNumber: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberCard/GetCardByNumber/',
+            getCardByNumber: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberCard/GetCardByNumber',
             recharge: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberCard/Recharge/',
             consume: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberCard/Consume/',
             adjustBalance: Ext.GlobalConfig.ApiDomainUrl + 'api/MemberCard/adjustBalance/',
@@ -78,7 +78,7 @@
     getCardByNumber: function (cardNumber, success, failure) {
         Ext.Ajax.request({
             method: "GET",
-            url: this.proxy.api.getCardByNumber + cardNumber,
+            url: this.proxy.api.getCardByNumber + '?number=' + cardNumber,
             success: success,
             failure: failure
         });

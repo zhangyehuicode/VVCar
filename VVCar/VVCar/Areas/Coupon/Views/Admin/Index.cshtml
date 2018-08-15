@@ -351,17 +351,17 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">适用范围 (选填)</label>
+                                    <label class="col-md-2 control-label">适用范围</label>
                                     <div class="col-md-5">
                                         <div>
-                                            <div class="radio-inline">
+                                            <div class="radio-inline" style="padding:0;">
                                                 <label>
-                                                    <input type="radio" name="goods" id="suitgoods" />适用商品
+                                                    <input type="checkbox" id="suitgoods" />适用所有商品
                                                 </label>
                                             </div>
-                                            <a id="selectsuitgoods" hidden="hidden" style="cursor:pointer;" data-toggle="modal" data-target="#suitgoodsmodal">选择商品</a>
+                                            <a id="selectsuitgoods" style="cursor:pointer;" data-toggle="modal" data-target="#suitgoodsmodal">选择适用商品</a>
                                         </div>
-                                        <div>
+                                        <div style="display:none;">
                                             <div class="radio-inline">
                                                 <label>
                                                     <input type="radio" name="goods" id="unsuitgoods" />不适用商品
@@ -1327,7 +1327,7 @@
                                     }
                                 }
                                 if (me.ModifyCouponTemplate().IncludeProducts != null && me.ModifyCouponTemplate().IncludeProducts.length > 0) {
-                                    $('#suitgoods').attr('checked', true);
+                                    //$('#suitgoods').attr('checked', true);
                                     $('#selectsuitgoods').show();
                                     var modifysutiproducts = []
                                     if (me.ModifyCouponTemplate().IncludeProducts != null) {
@@ -1348,6 +1348,8 @@
                                             }
                                         }
                                     }
+                                } else {
+                                    $('#selectsuitgoods').hide();
                                 }
                                 var isFiexedEffectPeriod = me.ModifyCouponTemplate().IsFiexedEffectPeriod ? 'true' : 'false';
                                 me.BaseInfo().IsFiexedEffectPeriod(isFiexedEffectPeriod);
@@ -1495,6 +1497,9 @@
                                             }
                                         }
                                     }
+                                }
+                                if (me.ModifyCouponTemplate().IsApplyAllProduct) {
+                                    $('#suitgoods')[0].checked = true;
                                 }
                                 if (me.ModifyCouponTemplate().OperationTips != null) {
                                     me.BaseInfo().OperationTips(me.ModifyCouponTemplate().OperationTips);
@@ -1929,6 +1934,20 @@
                                 //    }
                                 //});
                                 //return;
+                            } else if (!$('#suitgoods')[0].checked && $('#suitproductselected').find('button').length < 1) {
+                                bootbox.dialog({
+                                    title: '提示',
+                                    message: '请选择适用商品',
+                                    size: 'small',
+                                    buttons: {
+                                        Ok: {
+                                            label: '确定',
+                                            callback: function () {
+                                            }
+                                        }
+                                    }
+                                });
+                                return;
                             } else if (window._rootModel.BaseInfo().IsFiexedEffectPeriod() == null || window._rootModel.BaseInfo().IsFiexedEffectPeriod() == '' || (window._rootModel.BaseInfo().IsFiexedEffectPeriod() == 'true' && (window._rootModel.BaseInfo().EffectiveDate() == '' || window._rootModel.BaseInfo().ExpiredDate() == ''))) {
                                 bootbox.dialog({
                                     title: '提示',
@@ -2137,6 +2156,7 @@
                                     IsDeductionFirst: $('#DeductionFirst')[0].checked,
                                     ConsumePointRate: window._rootModel.BaseInfo().ConsumePointRate(),
                                     PriceSale: window._rootModel.BaseInfo().PriceSale(),
+                                    IsApplyAllProduct: $('#suitgoods')[0].checked,
                                 };
                                 var url = '/api/CouponTemplate/';
                                 var confirmcallback = function () {
@@ -2230,9 +2250,15 @@
                         });
 
                         $('#suitgoods').click(function () {
-                            $('#selectunsuitgoods').hide();
-                            $('#selectsuitgoods').show();
-                            $('#unsuitproductselected').html('');
+                            if ($(this)[0].checked) {
+                                $('#selectsuitgoods').hide();
+                                $('#suitproductselected').html('');
+                                $('#suitproductlist').find('button').show();
+                            } else {
+                                $('#selectsuitgoods').show();
+                            }
+                            //$('#selectunsuitgoods').hide();
+                            //$('#unsuitproductselected').html('');
                         });
                         $('#unsuitgoods').click(function () {
                             $('#selectsuitgoods').hide();

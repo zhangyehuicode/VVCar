@@ -157,6 +157,11 @@ namespace VVCar.VIP.Domain.Dtos
         }
 
         /// <summary>
+        /// 是否适用所有产品
+        /// </summary>
+        public bool IsApplyAllProduct { get; set; }
+
+        /// <summary>
         ///  适用商品编码，以,分隔
         /// </summary>
         public string IncludeProducts { get; set; }

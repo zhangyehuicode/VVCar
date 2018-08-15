@@ -816,6 +816,33 @@ namespace VVCar.VIP.Services.DomainServices
         }
 
         /// <summary>
+        /// 获取卡券适用商品信息
+        /// </summary>
+        /// <param name="templateID"></param>
+        /// <returns></returns>
+        /// <exception cref="DomainException">优惠券不存在</exception>
+        public IEnumerable<CouponApplyProductDto> GetCouponApplyProductInfo(Guid templateID)
+        {
+            var couponTemplate = this.CouponTemplateRepo.GetQueryable(false).FirstOrDefault(t => t.ID == templateID);
+            if (couponTemplate == null)
+            {
+                throw new DomainException("优惠券不存在");
+            }
+            var productQueryable = ProductRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (!couponTemplate.IsApplyAllProduct && !string.IsNullOrEmpty(couponTemplate.IncludeProducts))
+            {
+                var productCodes = couponTemplate.IncludeProducts.Split(',');
+                productQueryable = productQueryable.Where(p => productCodes.Contains(p.Code));
+            }
+            return productQueryable.Select(d => new CouponApplyProductDto
+            {
+                Name = d.Name,
+                Code = d.Code,
+                ImgUrl = d.ImgUrl,
+            }).ToArray();
+        }
+
+        /// <summary>
         /// 检查优惠券是否有效
         /// </summary>
         /// <param name="checkDto"></param>

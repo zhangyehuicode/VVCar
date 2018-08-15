@@ -77,6 +77,13 @@ namespace VVCar.VIP.Domain.Services
         IEnumerable<CouponApplyStoreDto> GetCouponApplyStoreInfo(Guid templateID);
 
         /// <summary>
+        /// 获取卡券适用商品信息
+        /// </summary>
+        /// <param name="templateID"></param>
+        /// <returns></returns>
+        IEnumerable<CouponApplyProductDto> GetCouponApplyProductInfo(Guid templateID);
+
+        /// <summary>
         /// 核销优惠券
         /// </summary>
         /// <param name="verifyDto">核销优惠券DTO</param>

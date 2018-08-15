@@ -134,7 +134,7 @@ namespace VVCar.Controllers.VIP
             {
                 if (string.IsNullOrEmpty(number))
                     throw new DomainException("参数错误");
-                if (number.Length > 8)
+                if (number.Length > 11)
                 {
                     var timespan = new TimeSpan(long.Parse(number.Substring(9)));
                     var minutes = (new TimeSpan(DateTime.Now.Ticks) - timespan).Minutes;

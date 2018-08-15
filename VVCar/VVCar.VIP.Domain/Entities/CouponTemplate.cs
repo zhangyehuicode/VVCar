@@ -89,6 +89,12 @@ namespace VVCar.VIP.Domain.Entities
         public bool IsExclusive { get; set; }
 
         /// <summary>
+        /// 是否适用所有产品
+        /// </summary>
+        [Display(Name = "是否适用所有产品")]
+        public bool IsApplyAllProduct { get; set; }
+
+        /// <summary>
         ///  适用商品编码，以,分隔
         /// </summary>
         [Display(Name = "适用商品")]

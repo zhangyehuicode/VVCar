@@ -79,6 +79,10 @@
                 <td class="content" data-bind="text:(CouponTemp().IsMinConsumeLimit?'满'+CouponTemp().MinConsume+'元可用':'')+(CouponTemp().IsExclusive?'不与其他优惠共享':'')"></td>
             </tr>
             <tr>
+                <td class="details-content">适用所有商品</td>
+                <td class="content" data-bind="text:CouponTemp().IsApplyAllProduct?'是':'否'"></td>
+            </tr>
+            <tr>
                 <td class="details-content">适用商品</td>
                 <td class="content" data-bind="text:CouponTemp().IncludeProductNames"></td>
             </tr>

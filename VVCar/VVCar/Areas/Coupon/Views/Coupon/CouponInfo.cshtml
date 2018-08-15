@@ -81,6 +81,8 @@
                     <!--/ko-->
                 </div>
                 <div class="coupon-detail-item list-item-link" data-bind="click: gotoCouponStore">适用门店</div>
+                <div class="coupon-detail-item list-item-link" data-bind="click: gotoCouponProduct,visible:!CouponInfo().IsApplyAllProduct&&CouponInfo().Nature==0">适用商品</div>
+                <div class="coupon-detail-item" data-bind="visible:CouponInfo().IsApplyAllProduct&&CouponInfo().Nature==0">适用所有商品</div>
             </div>
         </div>
     }
@@ -204,6 +206,9 @@
 
             self.gotoCouponStore = function () {
                 window.location.href = "/Coupon/CouponStore?ctid=" + self.CouponInfo().TemplateID;
+            };
+            self.gotoCouponProduct = function () {
+                window.location.href = "/Coupon/CouponProduct?ctid=" + self.CouponInfo().TemplateID;
             };
 
             self.WxGiveData=ko.observable(null);
