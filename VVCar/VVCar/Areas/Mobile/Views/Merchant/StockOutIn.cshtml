@@ -240,7 +240,8 @@
                         if (res.IsSuccessful) {
                             if (res.Data) {
                                 $.toast('操作成功', function () {
-                                    window.location.href = "/Mobile/Merchant/StockManager?mch=" + mch;
+									//window.location.href = "/Mobile/Merchant/StockManager?mch=" + mch;
+									history.back(-1);
                                 });
                             } else {
                                 $.alert('操作失败，请重试');

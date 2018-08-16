@@ -73,7 +73,7 @@
             <span>我的报销</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报销</span>
         </a>
-        <a class="bq_box" style=" border-right:none;border-bottom:none;" v-on:click="">
+        <a class="bq_box" style=" border-right:none;border-bottom:none;" v-on:click="toolsmanagement">
             <div><img src="~/Areas/resource/img/mobile/master/hdgl.png" style="width:23px;"></div>
             <span>工具/耗材</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">领取</span>
@@ -187,7 +187,10 @@
                 },
                 myinfo: function (event) {
                     window.location.href = "/Mobile/Merchant/MyInfo?mch=" + mch;
-                },
+				},
+				toolsmanagement: function (event) {
+					window.location.href = "/Mobile/Merchant/ToolsManagement?mch=" + mch;
+				},
                 reimbursement: function (event) {
                     window.location.href = "/Mobile/Agent/Reimbursement?mch=" + mch;
                 },
@@ -196,7 +199,7 @@
                 },
                 logisticsmanagement: function (event) {
                     window.location.href = "/Mobile/Agent/LogisticsManagement?mch=" + mch;
-                },
+				},
             }
         });
 

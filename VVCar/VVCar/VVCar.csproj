@@ -1205,6 +1205,8 @@
     <Content Include="Areas\Mobile\Views\Agent\LogisticsManagement.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\AgentIndex.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\OrderManagement.cshtml" />
+    <Content Include="Areas\Mobile\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\ToolsManagement.cshtml" />
     <Content Include="Areas\Coupon\Views\Coupon\CouponProduct.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

@@ -58,5 +58,11 @@ namespace VVCar.Shop.Domain.Filters
         /// </summary>
         [Display(Name = "是否套餐")]
         public bool? IsCombo { get; set; }
+
+        /// <summary>
+        /// 是否员工内部领取
+        /// </summary>
+        [Display(Name = "是否员工内部领取")]
+        public bool? IsInternaCollection { get; set; }
     }
 }

@@ -1,0 +1,227 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+<div id="toolsmanagement">
+	<div class="toubu">
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px;float:left;margin-left:3%;margin-top:18px;" /></a>
+		工具/耗材
+		<a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px;float:right;margin-right:3%;margin-top:18px;" /></a>
+	</div>
+	<div class="touxiang">
+		<div style="width: 100%; float: left;">
+			<img src="@ViewBag.HeadImgUrl" class="touxiang_img" />
+			<div class="touxiang_div">
+				<span>{{User.Name}}</span>
+				<span>工具/耗材：{{ProductCount}}条</span>
+			</div>
+		</div>
+	</div>
+	<div class="kcd_box2">
+		<form>
+			<input type="text" class="kcgl_input" style="color: #999" placeholder="请输入工具编号或名称" id="toolcodename"/>
+		</form>
+		<div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="search"></div>
+	</div>
+	<div class="touxiang" v-for="Product in ProductList">
+		<div class="kcgl_box">
+			<div class="kcgl">工具编码</div>
+			<div class="kcgl2">
+				<span>{{Product.Code}}</span>
+			</div>
+		</div>
+		<div class="kcgl_box">
+			<div class="kcgl">工具名称</div>
+			<div class="kcgl2">
+				<span>{{Product.Name}}</span>
+			</div>
+		</div>
+		<div class="kcgl_box">
+			<div class="kcgl">库存</div>
+			<div class="kcgl2">
+				<span style="color:#ff0c4c;">{{Product.Stock}}</span>
+			</div>
+		</div>
+		<div class="kcgl_box">
+			<div class="kcgl">记录查询</div>
+			<div class="kcgl2">
+				<span>
+					<a style="background-color:#51b3f0;float:left;margin-left:10%;font-size:12px;width:70px;" v-on:click="stockinrecord(Product)">入库记录</a>
+					<a style="float:left;font-size:12px;width:70px;background-color:#51b3f0;" v-on:click="stockoutrecord(Product)">出库记录</a>
+				</span>
+			</div>
+		</div>
+		<div class="kcgl_box" style="border:none">
+			<div class="kcgl">操作</div>
+			<div class="kcgl2">
+				<span>
+					<a style="background-color:#ff0c4c;float:left;margin-left:10%;width:16%;" v-on:click="stockin(Product)">入库</a>
+					<a style="background-color:#51b3f0;float:left;width:16%;" v-on:click="stockout(Product)">出库</a>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section scripts{
+	<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+	<link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript">
+		function wxConfig() {
+			var mch = $.getUrlParam('mch');
+			$.ajax({
+				type: "POST",
+				url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+				datatype: 'json',
+				success: function (data) {
+					if (data.IsSuccessful) {
+						var temp = data.Data;
+						wx.config({
+							debug: false,
+							appId: temp.appId,
+							timestamp: temp.timestamp,
+							nonceStr: temp.nonceStr,
+							signature: temp.signature,
+							jsApiList: [
+								'checkJsApi',
+								'onMenuShareTimeline',
+								'onMenuShareAppMessage',
+								'onMenuShareQQ',
+								'onMenuShareWeibo',
+								'hideOptionMenu',
+								'hideAllNonBaseMenuItem',
+								'showMenuItems',
+								'closeWindow',
+								'scanQRCode',
+							]
+						});
+						wx.ready(function () {
+							wx.hideAllNonBaseMenuItem();
+						});
+					} else {
+					}
+				},
+				complete: function (xmlHttpRequest, textStatus) {
+				},
+				error: function (xmlHttpRequest, textStatus) {
+				}
+			});
+		};
+		wxConfig();
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			var mch = $.getUrlParam('mch');
+			var user = sessionStorage.getItem('user');
+			var _ismaster = sessionStorage.getItem('ismaster');
+			if (_ismaster == true) {
+				$('.title').text('店长工作终端');
+			} else {
+				$('.title').text('店员工作终端');
+			}
+			_viewModel = new Vue({
+				el: '#toolsmanagement',
+				data: {
+					User: {},
+					ProductList: [],
+					ProductCount: 0,
+				},
+				methods: {
+					back: function (event) {
+						history.back(-1);
+					},
+					home: function (event) {
+						if (_ismaster == true) {
+							window.location.href = '/Mobile/Merchant/MasterHome?mch=' + mch;
+						} else {
+							window.location.href = '/Mobile/Merchant/StaffHome?mch=' + mch;
+						}
+					},
+					search: function (event) {
+						search();
+					},
+					stockin: function (data, event) {
+						sessionStorage.setItem('stockout', 'false');
+						sessionStorage.setItem('product', JSON.stringify(data));
+						window.location.href = '/Mobile/Merchant/StockOutIn?mch=' + mch;
+					},
+					stockout: function (data, event) {
+						sessionStorage.setItem('stockout', 'true');
+						sessionStorage.setItem('product', JSON.stringify(data));
+						window.location.href = '/Mobile/Merchant/StockOutIn?mch=' + mch;
+					},
+					stockinrecord: function (data, event) {
+						sessionStorage.setItem('stockout', 'false');
+						sessionStorage.setItem('product', JSON.stringify(data));
+						window.location.href = '/Mobile/Merchant/StockRecord?mch=' + mch;
+					},
+					stockoutrecord: function (data, event) {
+						sessionStorage.setItem('stockout', 'true');
+						sessionStorage.setItem('product', JSON.stringify(data));
+						window.location.href = '/Mobile/Merchant/StockRecord?mch=' + mch;
+					},
+				}
+			});
+
+			var userdata = {
+				OpenID: '@ViewBag.OpenId',
+				IsManager: false,
+			};
+
+			function getUserByOpenId() {
+				$.ajax({
+					url: 'api/User/GetUserByOpenID',
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					data: userdata,
+					success: function (res) {
+						if (res.IsSuccessful) {
+							if (res.Data != null) {
+								_viewModel.User = res.Data;
+								sessionStorage.setItem('user', JSON.stringify(res.Data));
+							}
+							else {
+								_viewModel.home();
+							}
+						}
+					},
+					error: function () {
+						_viewModel.home();
+					}
+				});
+			}
+			
+			if (user == null || user == '') {
+				getUserByOpenId();
+			} else {
+				var user = JSON.parse(user);
+				_viewModel.User = user;
+			}
+
+			function search() {
+				var toolnamecode = $('#toolcodename').val();
+				$.ajax({
+					url: '/api/Product?IsInternaCollection=true&NameCode=' + toolnamecode,
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.showLoading();
+					},
+					success: function (res) {
+						$.hideLoading();
+						if (res.IsSuccessful) {
+							_viewModel.ProductList = res.Data;
+							_viewModel.ProductCount = res.Data.length;
+						}
+					}
+				})
+			}
+			search();
+		});
+	</script>
+}
+

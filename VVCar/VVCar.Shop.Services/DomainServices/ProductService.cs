@@ -147,6 +147,12 @@ namespace VVCar.Shop.Services.DomainServices
             return Repository.Update(entity) > 0;
         }
 
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
         public IEnumerable<Product> Search(ProductFilter filter, out int totalCount)
         {
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
@@ -164,6 +170,8 @@ namespace VVCar.Shop.Services.DomainServices
                 queryable = queryable.Where(t => t.ProductType == filter.ProductType.Value);
             if (filter.IsCombo.HasValue)
                 queryable = queryable.Where(t => t.IsCombo == filter.IsCombo.Value);
+            if (filter.IsInternaCollection.HasValue)
+                queryable = queryable.Where(t => t.IsInternaCollection == filter.IsInternaCollection.Value);
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderBy(t => t.Index).Skip(filter.Start.Value).Take(filter.Limit.Value);

@@ -143,7 +143,8 @@ namespace VVCar.Common
 
         private string ExportTempUrl(string fileName)
         {
-            var exportUrl = string.Format("http://{0}:{1}/export/{2}", HttpContext.Current.Request.Url.Host,
+            var schema = HttpContext.Current.Request.Url.ToString().Split(':');
+            var exportUrl = string.Format("{0}://{1}:{2}/export/{3}", schema[0], HttpContext.Current.Request.Url.Host,
                 HttpContext.Current.Request.Url.Port, fileName);
             return exportUrl;
         }
