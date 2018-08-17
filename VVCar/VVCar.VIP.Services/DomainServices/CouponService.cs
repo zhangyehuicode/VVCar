@@ -712,10 +712,10 @@ namespace VVCar.VIP.Services.DomainServices
             couponInfo.EffectiveDate = couponTemplate.GetEffectiveDate();
             couponInfo.ExpiredDate = couponTemplate.GetExpiredDate();
             couponInfo.CouponTemplateUseTimes = couponUseTime.ToArray();
-            if (!string.IsNullOrEmpty(couponInfo.CoverImage))
-            {
-                couponInfo.CoverImage = string.Concat(AppContext.Settings.SiteDomain, couponInfo.CoverImage);
-            }
+            //if (!string.IsNullOrEmpty(couponInfo.CoverImage))
+            //{
+            //    couponInfo.CoverImage = string.Concat(AppContext.Settings.SiteDomain, couponInfo.CoverImage);
+            //}
             var coupon = Repository.GetQueryable(false).FirstOrDefault(t => t.TemplateID == templateID && t.OwnerOpenID == openId && t.Status == ECouponStatus.Default);
             if (coupon != null)
             {
