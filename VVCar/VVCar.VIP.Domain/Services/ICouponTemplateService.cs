@@ -116,5 +116,12 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="discountRate"></param>
         /// <returns></returns>
         bool SetConsumePointRateAndDiscountRate(Guid id, decimal consumePointRate, decimal discountRate);
+
+        /// <summary>
+        /// 小程序卡券设置
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool PutInApplet(Guid id);
     }
 }

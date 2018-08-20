@@ -50,21 +50,7 @@
 		var formValues = form.getValues();
 		if (form.isValid()) {
 			var store = me.getStockholderCardList().getStore();
-			if (form.actionMethod == 'POST') {
-				store.create(formValues, {
-					callback: function (records, operation, success) {
-						if (!success) {
-							Ext.MessageBox.alert('提示', operation.error);
-							return;
-						} else {
-							couponPushStore.add(records[0].data);
-							couponPushStore.commitChanges();
-							Ext.MessageBox.alert('提示', '新增成功');
-							win.close();
-						}
-					}
-				});
-			} else {
+			if (form.actionMethod == 'GET') {
 				if (!form.isDirty()) {
 					win.close();
 					return;
@@ -74,7 +60,7 @@
 					var response = JSON.parse(res.responseText);
 					if (response.IsSuccessful) {
 						win.close();
-						Ext.Msg.alert('提示', '更新成功');
+						Ext.Msg.alert('提示', '新增成功');
 						store.reload();
 					} else {
 						Ext.Msg.alert('提示', response.ErrorMessage);
@@ -82,7 +68,6 @@
 				});
 			}
 		}
-		Ext.Msg.alert('提示', '保存');
 	},
 	selectCard: function () {
 		var win = Ext.widget('StockholderCardSelector');

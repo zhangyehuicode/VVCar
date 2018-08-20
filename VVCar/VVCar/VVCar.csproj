@@ -652,6 +652,7 @@
     <Content Include="Scripts\app\controller\AgentDepartment.js" />
     <Content Include="Scripts\app\controller\AgentDepartmentAudit.js" />
     <Content Include="Scripts\app\controller\Announcement.js" />
+    <Content Include="Scripts\app\controller\AppletCard.js" />
     <Content Include="Scripts\app\controller\Article.js" />
     <Content Include="Scripts\app\controller\Logistics.js" />
     <Content Include="Scripts\app\controller\Tag.js" />
@@ -907,6 +908,9 @@
     <Content Include="Scripts\app\view\AgentDepartment\TagSelector.js" />
     <Content Include="Scripts\app\view\Announcement\AnnouncementEdit.js" />
     <Content Include="Scripts\app\view\Announcement\AnnouncementList.js" />
+    <Content Include="Scripts\app\view\AppletCard\AppletCardEdit.js" />
+    <Content Include="Scripts\app\view\AppletCard\AppletCardList.js" />
+    <Content Include="Scripts\app\view\AppletCard\AppletCardSelector.js" />
     <Content Include="Scripts\app\view\Article\ArticleEdit.js" />
     <Content Include="Scripts\app\view\Article\ArticleList.js" />
     <Content Include="Scripts\app\view\Article\ArticleItemEdit.js" />

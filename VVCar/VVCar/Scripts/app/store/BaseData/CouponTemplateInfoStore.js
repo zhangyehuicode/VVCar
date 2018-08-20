@@ -13,6 +13,7 @@ Ext.define('WX.store.BaseData.CouponTemplateInfoStore', {
 			getCouponTemplateDto: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponTemplate/GetCouponTemplateDto',
 			setConsumePointRate: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponTemplate/SetConsumePointRate',
 			setConsumePointRateAndDiscountRate: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponTemplate/SetConsumePointRateAndDiscountRate',
+			putInApplet: Ext.GlobalConfig.ApiDomainUrl + 'api/CouponTemplate/PutInApplet',
 		},
 	},
 	getCouponTemplateDto: function (id, cb) {
@@ -42,4 +43,13 @@ Ext.define('WX.store.BaseData.CouponTemplateInfoStore', {
 			callback: cb
 		});
 	},
+	putInApplet(id, cb) {
+		Ext.Ajax.request({
+			method: "GET",
+			timeout: 300000,
+			url: this.proxy.api.putInApplet + '?id=' + id,
+			// jsonData: entities,
+			callback: cb
+		});
+	}
 });

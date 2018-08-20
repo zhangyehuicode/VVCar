@@ -53,7 +53,7 @@
 						fieldLabel: '消费返佣比例',
 						minValue: 0,
 						maxValue: 100,
-						allowBlank: true,
+						allowBlank: false,
 					}, {
 						xtype: 'label',
 						text: '% (0~100)',
@@ -69,7 +69,7 @@
 						fieldLabel: '折扣系数',
 						minValue: 0,
 						maxValue: 100,
-						allowBlank: true,
+						allowBlank: false,
 					}, {
 						xtype: 'label',
 						text: '% (0~100)',

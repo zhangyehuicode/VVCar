@@ -323,6 +323,11 @@ namespace VVCar.VIP.Domain.Entities
         public DateTime? ApprovedDate { get; set; }
 
         /// <summary>
+        /// 是否在小程序中显示
+        /// </summary>
+        public bool IsPutApplet { get; set; }
+
+        /// <summary>
         ///是否在微信领券中心显示(是否上架)
         /// </summary>
         [Display(Name = "是否在微信领券中心显示(是否上架)")]

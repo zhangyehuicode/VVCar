@@ -203,6 +203,10 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 queryable = queryable.Where(c => c.Title.Contains(filter.Title));
             }
+            if(filter.IsPutApplet.HasValue)
+            {
+                queryable = queryable.Where(c => c.IsPutApplet == filter.IsPutApplet.Value);
+            }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
             {
@@ -242,6 +246,10 @@ namespace VVCar.VIP.Services.DomainServices
             if (filter.IsStockholderCard.HasValue)
             {
                 queryable = queryable.Where(t => t.IsStockholderCard == filter.IsStockholderCard);
+            }
+            if (filter.IsPutApplet.HasValue)
+            {
+                queryable = queryable.Where(t => t.IsPutApplet == filter.IsPutApplet);
             }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
@@ -640,6 +648,20 @@ namespace VVCar.VIP.Services.DomainServices
             entity.IsStockholderCard = true;
             entity.ConsumePointRate = consumePointRate;
             entity.DiscountRate = discountRate;
+            return Repository.Update(entity) > 0;
+        }
+
+        /// <summary>
+        /// 小程序卡券设置
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool PutInApplet(Guid id)
+        {
+            if (id == null)
+                throw new DomainException("参数错误");
+            var entity = Repository.GetByKey(id);
+            entity.IsPutApplet = true;
             return Repository.Update(entity) > 0;
         }
     }

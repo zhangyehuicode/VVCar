@@ -56,5 +56,10 @@ namespace VVCar.VIP.Domain.Filters
         /// 是否是股东卡
         /// </summary>
         public bool? IsStockholderCard { get; set; }
+
+        /// <summary>
+        /// 是否在小程序中显示
+        /// </summary>
+        public bool? IsPutApplet { get; set; }
     }
 }

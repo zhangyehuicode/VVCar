@@ -352,5 +352,19 @@ namespace VVCar.Controllers.VIP
                 return CouponTemplateService.SetConsumePointRateAndDiscountRate(id, consumePointRate, discountRate);
             });
         }
+
+        /// <summary>
+        /// 小程序卡券设置
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet, Route("PutInApplet")]
+        public JsonActionResult<bool> PutInApplet(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponTemplateService.PutInApplet(id);
+            });
+        }
     }
 }
