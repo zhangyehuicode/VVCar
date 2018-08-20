@@ -19,6 +19,11 @@ namespace VVCar.VIP.Domain.Dtos
         public string WeChatOpenID { get; set; }
 
         /// <summary>
+        /// 小程序OpenID
+        /// </summary>
+        public string MinProOpenID { get; set; }
+
+        /// <summary>
         /// 手机号码
         /// </summary>
         [Required]

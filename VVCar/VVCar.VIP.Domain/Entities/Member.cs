@@ -88,6 +88,12 @@ namespace VVCar.VIP.Domain.Entities
         public string WeChatOpenID { get; set; }
 
         /// <summary>
+        /// 小程序OpenID
+        /// </summary>
+        [Display(Name = "小程序OpenID")]
+        public string MinProOpenID { get; set; }
+
+        /// <summary>
         /// 会员积分
         /// </summary>
         [Display(Name = "会员积分")]

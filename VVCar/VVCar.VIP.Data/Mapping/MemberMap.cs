@@ -31,6 +31,9 @@ namespace VVCar.VIP.Mapping
             this.Property(t => t.WeChatOpenID)
                 .HasMaxLength(36);
 
+            this.Property(t => t.MinProOpenID)
+                .HasMaxLength(36);
+
             this.Property(t => t.CreatedUser)
                 .HasMaxLength(20);
 
