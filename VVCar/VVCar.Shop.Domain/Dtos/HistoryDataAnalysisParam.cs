@@ -20,5 +20,10 @@ namespace VVCar.Shop.Domain.Dtos
         /// OpenID
         /// </summary>
         public string OpenID { get; set; }
+
+        /// <summary>
+        /// 车牌号
+        /// </summary>
+        public List<string> PlateNumberList { get; set; }
     }
 }

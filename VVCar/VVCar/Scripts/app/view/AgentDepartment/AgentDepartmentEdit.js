@@ -4,7 +4,7 @@
 	title: '编辑代理商门店信息',
 	//layout: 'fit',
 	width: 1150,
-	height: 700,
+	height: 500,
 	bodyPadding: 5,
 	modal: true,
 	autoScoll: true,

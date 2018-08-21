@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using VVCar.VIP.Domain.Entities;
+using VVCar.VIP.Domain.Enums;
 using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
 using YEF.Core;
@@ -15,6 +16,16 @@ namespace VVCar.VIP.Services.DomainServices
     /// </summary>
     public class SuperClassService : DomainServiceBase<IRepository<SuperClass>, SuperClass, Guid>, ISuperClassService
     {
+
+        /// <summary>
+        /// ctor
+        /// </summary>
+        public SuperClassService()
+        {
+        }
+
+        IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
+
         /// <summary>
         /// 新增
         /// </summary>
@@ -87,7 +98,25 @@ namespace VVCar.VIP.Services.DomainServices
             if (!string.IsNullOrEmpty(filter.Name))
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
             if (filter.VideoType.HasValue)
+            {
                 queryable = queryable.Where(t => t.VideoType == filter.VideoType);
+                if(filter.VideoType.Value == EVideoType.Agent)
+                {
+                    var merchant = MerchantRepo.GetByKey(AppContext.CurrentSession.MerchantID);
+                    if (merchant.IsAgent && merchant.IsGeneralMerchant)
+                    {
+                        queryable = queryable.Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID || t.MerchantID == merchant.MerchantID);
+                    }
+                    else if (merchant.IsAgent)
+                    {
+                        queryable = queryable.Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID );
+                    }
+                    else
+                    {
+                        queryable = queryable.Where(t => t.MerchantID == merchant.MerchantID);
+                    }
+                }
+            }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);

@@ -172,7 +172,7 @@
             </div>
         </div>
         <div style="padding-top:30px;">
-            <div class="reporttable widthfill">
+            <div class="reporttable widthfill" id="statementcon">
                 <div class="reporttablecell" style="height:480px;width:50%;padding:5px;" id="turnover"></div>
                 <div class="reporttablecell" style="height:480px;width:50%;padding:5px;" id="member"></div>
             </div>
@@ -183,6 +183,12 @@
     <script src="~/Content/js/dark.js"></script>
     <script src="~/Content/js/macarons.js"></script>
     <script src="~/Scripts/ext/ext-all.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var clientHeight = document.documentElement.clientHeight;
+            $('#statementcon').find('div').height(clientHeight * 0.5);
+        });
+    </script>
     <script type="text/javascript">
 
         var isAgent = sessionStorage.getItem('isAgent');

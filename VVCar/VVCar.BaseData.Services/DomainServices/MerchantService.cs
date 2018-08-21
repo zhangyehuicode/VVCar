@@ -95,7 +95,10 @@ namespace VVCar.BaseData.Services.DomainServices
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
-            entity.MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000001");
+            if (entity.MerchantID == null)
+            {
+                entity.MerchantID = Guid.Parse("00000000-0000-0000-0000-000000000001");
+            }
             return base.Add(entity);
         }
 
@@ -168,6 +171,9 @@ namespace VVCar.BaseData.Services.DomainServices
             var merchantList = this.Repository.GetQueryable(true).Where(t => ids.Contains(t.ID)).ToList();
             if (merchantList == null || merchantList.Count() < 1)
                 throw new DomainException("数据不存在");
+            var exist = merchantList.Exists(t => !t.IsGeneralMerchant && !t.IsAgent);
+            if (exist)
+                throw new DomainException("请选择商户性质");
             UnitOfWork.BeginTransaction();
             try
             {

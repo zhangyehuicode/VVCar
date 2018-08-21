@@ -344,6 +344,10 @@ namespace VVCar.Shop.Services.DomainServices
                         var memberPlateNumberList = member.MemberPlateList.Select(t => t.PlateNumber).ToList();
                         pickuporderQueryable = pickuporderQueryable.Where(t => memberPlateNumberList.Contains(t.PlateNumber));
                     }
+                    if (param.PlateNumberList != null && param.PlateNumberList.Count() > 0)
+                    {
+                        pickuporderQueryable = pickuporderQueryable.Where(t => param.PlateNumberList.Contains(t.PlateNumber));
+                    }
                 }
 
                 var pickuporderList = pickuporderQueryable.ToList();

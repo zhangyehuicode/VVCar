@@ -351,6 +351,7 @@ namespace VVCar.BaseData.Services.DomainServices
                     merchant.MeChatMchPassword = t.MeChatMchPassword;
                     merchant.Bank = t.Bank;
                     merchant.BankCard = t.BankCard;
+                    merchant.MerchantID = t.MerchantID;
                     MerchantService.Add(merchant);
                     Repository.Update(t);
                 });

@@ -3,7 +3,7 @@
     requires: ['WX.store.BaseData.MemberStore', "WX.store.BaseData.RechargeHistoryStore", "WX.store.BaseData.MemberCardStore", "WX.store.DataDict.MemberCardStatusStore", "WX.store.DataDict.AdjustTypeDicStore",
         'WX.store.DataDict.SexStore', 'WX.store.BaseData.MemberGroupStore', 'WX.store.BaseData.MemberGroupTreeStore', 'WX.store.BaseData.MemberGradeStore', 'WX.store.DataDict.AdjustMemberPointTypeDicStore', 'WX.store.BaseData.TradeHistoryStore'],
     models: ['BaseData.MemberModel', "WX.model.BaseData.MemberBaseInfoModel", 'WX.model.BaseData.MemberGroupModel'],
-    views: ['Member.Member', "Member.EditMember", "Member.ChangeCard", "Member.AdjustBalance", 'Member.MemberGroupList', 'Member.MemberGroupEdit', 'Member.AdjustMemberPoint', 'Member.ChangeMemberGroup'],
+    views: ['Member.Member', "Member.EditMember", "Member.ChangeCard", "Member.AdjustBalance", 'Member.MemberGroupList', 'Member.MemberGroupEdit', 'Member.AdjustMemberPoint', 'Member.ChangeMemberGroup', 'Member.MemberDetail'],
     refs: [{
         ref: 'member',
         selector: 'Member grid'
@@ -26,19 +26,22 @@
     init: function () {
         var me = this;
         me.memberCardStore = Ext.create("WX.store.BaseData.MemberCardStore");
-        me.control({
-            "Member button[action=search]": {
-                click: me.search
-            },
-            "Member button[action=importMemberTemplate]": {
-                click: me.importMemberTemplate
-            },
-            "Member filefield[name=importMember]": {
-                change: me.importMember
-            },
-            "Member button[action=export]": {
-                click: me.exportMember
-            },
+		me.control({
+			"Member button[action=search]": {
+				click: me.search
+			},
+			"Member button[action=importMemberTemplate]": {
+				click: me.importMemberTemplate
+			},
+			"Member filefield[name=importMember]": {
+				change: me.importMember
+			},
+			"Member button[action=export]": {
+				click: me.exportMember
+			},
+			'Member button[action=detail]': {
+				click: me.detail
+			},
             "Member button[action=addMember]": {
                 click: me.showAddMember
             },
@@ -70,11 +73,12 @@
                 click: me.showAdjustMemberPoint
             },
             "Member button[action=changeGroup]":
-                {
-                    click: me.changeMemberGroup
-                },
+            {
+                click: me.changeMemberGroup
+            },
             'Member grid[name=gridMember]': {
-                selectionchange: me.onMemberSelectionchange,
+				selectionchange: me.onMemberSelectionchange,
+				itemdblclick: me.showMemberDetail
             },
             'Member': {
                 afterrender: me.afterrender
@@ -119,7 +123,20 @@
                 click: me.addgroupsave
             },
         });
-    },
+	},
+	detail: function () {
+		var selectedItems = this.getMember().getSelectionModel().getSelection();
+		if (selectedItems.length != 1) {
+			Ext.Msg.alert("提示", "请选择一条数据");
+			return;
+		}
+		this.showMemberDetail(null, selectedItems[0]);
+	},
+	showMemberDetail: function (grid, record) {
+		var win = Ext.widget("MemberDetail");
+		win.form.loadRecord(record);
+		win.show();
+	},
     getStore: function () {
         return this.getMember().getStore();
     },

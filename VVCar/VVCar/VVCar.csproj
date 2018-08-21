@@ -921,6 +921,7 @@
     <Content Include="Scripts\app\view\Logistics\LogisticsEdit.js" />
     <Content Include="Scripts\app\view\Logistics\Logistics.js" />
     <Content Include="Scripts\app\view\Logistics\SalesmanSelector.js" />
+    <Content Include="Scripts\app\view\Member\MemberDetail.js" />
     <Content Include="Scripts\app\view\Tag\TagEdit.js" />
     <Content Include="Scripts\app\view\Tag\TagList.js" />
     <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentCategoryEdit.js" />

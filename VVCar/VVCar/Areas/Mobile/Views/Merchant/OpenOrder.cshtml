@@ -597,6 +597,9 @@
                 $.ajax({
                     url: '/api/Product/GetHistoryAnalysisData',
                     type: 'GET',
+                    data: {
+                        PlateNumberList: [platenum]
+                    },
                     headers: { 'CompanyCode': mch },
                     success: function (res) {
                         if (res.IsSuccessful) {

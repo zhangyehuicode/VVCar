@@ -122,7 +122,14 @@
                     cls: "submitBtn",
                     margin: "0 0 0 5",
                     //permissionCode: 'Portal.BaseDataEdit'
-                }, {
+				}, {
+					action: "detail",
+					xtype: "button",
+					text: "详 情",
+					cls: "submitBtn",
+					margin: "0 0 0 5",
+					//permissionCode: 'Portal.BaseDataEdit'
+				}, {
                     action: 'importMemberTemplate',
                     xtype: 'button',
                     margin: "0 0 0 25",
@@ -147,45 +154,45 @@
                 }]
             }],
             columns: [
-                { header: "会员卡号", dataIndex: "CardNumber", width: 100 },
-                { header: "余额（元）", dataIndex: "CardBalance", width: 100, xtype: "numbercolumn" },
+                { header: "会员卡号", dataIndex: "CardNumber", width: 80 },
+                { header: "姓名", dataIndex: "Name", minWidth: 80, flex: 1 },
+                { header: "余额/元", dataIndex: "CardBalance", width: 70, xtype: "numbercolumn" },
+                { header: "手机号码", dataIndex: "MobilePhoneNo", width: 105 },
+                //{ header: "归属地", dataIndex: "PhoneLocation", width: 80 },
+                //{ header: "剩余积分", dataIndex: "Point", width: 80 },
                 //{ header: "卡片类型", dataIndex: "CardTypeDesc", flex: 1 },
-                {
-                    header: "分组", dataIndex: "MemberGroupID", minWidth: 100, flex: 1,
-                    renderer: function (value, cellmeta, record) {
-                        if (value != null && value != '') {
-                            var record = memberGroupStore.findRecord('ID', value);
-                            if (record != null) {
-                                return record.data.Name;
-                            }
-                            return "普通会员";
-                        }
-                        return "普通会员";
-                    }
-                },
-                { header: "姓名", dataIndex: "Name", minWidth: 100, flex: 1 },
-                {
-                    header: "性别", dataIndex: "Sex", width: 50,
-                    renderer: function (value) {
-                        if (value == 1)
-                            return "男";
-                        else if (value == 2)
-                            return "女";
-                        else
-                            return "未知";
-                    }
-                },
-                { header: "手机号码", dataIndex: "MobilePhoneNo", width: 110 },
-                { header: "归属地", dataIndex: "PhoneLocation", width: 80 },
-                { header: "车牌号", dataIndex: "PlateList", minWidth: 100, flex: 1, permissionCode: 'Member.Member.DepartmentColumn' },
-                { header: "门店名称", dataIndex: "DepartmentName", minWidth: 200, flex: 1, permissionCode: 'Member.Member.AgentColumn' },
-                { header: "门店地址", dataIndex: "DepartmentAddress", minWidth: 250, flex: 1, permissionCode: 'Member.Member.AgentColumn' },
-                { header: "剩余积分", dataIndex: "Point", width: 80 },
-                { header: "会员状态", dataIndex: "Status", width: 80, permissionCode: 'Member.Member.DepartmentColumn' },
-                { header: '保险到期时间', dataIndex: 'InsuranceExpirationDate', xtype: "datecolumn", format: 'Y-m-d H:i:s', width: 100, permissionCode: 'Member.Member.DepartmentColumn' },
+                //{
+                //    header: "分组", dataIndex: "MemberGroupID", minWidth: 80, flex: 1,
+                //    renderer: function (value, cellmeta, record) {
+                //        if (value != null && value != '') {
+                //            var record = memberGroupStore.findRecord('ID', value);
+                //            if (record != null) {
+                //                return record.data.Name;
+                //            }
+                //            return "普通会员";
+                //        }
+                //        return "普通会员";
+                //    }
+                //},
+                //{
+                //    header: "性别", dataIndex: "Sex", width: 50,
+                //    renderer: function (value) {
+                //        if (value == 1)
+                //            return "男";
+                //        else if (value == 2)
+                //            return "女";
+                //        else
+                //            return "未知";
+                //    }
+                //},
+                { header: "车牌号", dataIndex: "PlateList", minWidth: 80, flex: 1, permissionCode: 'Member.Member.DepartmentColumn' },
+                { header: "门店名称", dataIndex: "DepartmentName", minWidth: 100, flex: 1, permissionCode: 'Member.Member.AgentColumn' },
+                { header: "门店地址", dataIndex: "DepartmentAddress", minWidth: 100, flex: 1, permissionCode: 'Member.Member.AgentColumn' },
+                { header: "会员状态", dataIndex: "Status", width: 75, permissionCode: 'Member.Member.DepartmentColumn' },
+                { header: '保险到期', dataIndex: 'InsuranceExpirationDate', xtype: "datecolumn", format: 'Y-m-d', width: 90, permissionCode: 'Member.Member.DepartmentColumn' },
                 //{ header: "会员等级", dataIndex: "MemberGradeName", flex: 1 },
                 //{ header: "所属门店", dataIndex: "OwnerDepartment", flex: 1 },
-                { header: "注册时间", dataIndex: "CreatedDate", xtype: "datecolumn", format: "Y-m-d H:i:s", minWidth: 100 },
+                { header: "注册时间", dataIndex: "CreatedDate", xtype: "datecolumn", format: "Y-m-d", minWidth: 90 },
                 //{ header: "OpenId", dataIndex: "WeChatOpenID", flex: 1, },
             ],
             bbar: [{
