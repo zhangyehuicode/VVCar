@@ -1,0 +1,196 @@
+﻿@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+<div id="superclassmanagement">
+	<div class="toubu">
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px;float:left;margin-left:3%;margin-top:18px;"></a>
+		超能课堂
+		<a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px;float:right;margin-right:3%;margin-top:18px;"></a>
+	</div>
+	<div class="touxiang">
+		<div style="width:100%;float:left;">
+			<img src="@ViewBag.HeadImgUrl" class="touxiang_img" />
+			<div class="touxiang_div">
+				<span>{{User.Name}}</span>
+				<span style="font-size:14px;color: #999;">视频:{{SuperClassCount}}条</span>
+			</div>
+		</div>
+	</div>
+	<div class="kcd_box2">
+		<form>
+			<input type="text" class="kcgl_input" style="color:#999" placeholder="请输入课程名称" id="name">
+		</form>
+		<div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px;padding-top:10px;" v-on:click="search"></div>
+	</div>
+	<div class="touxiang" v-for="SuperClass in SuperClassList">
+		<div class="kcgl_box">
+			<div class="kcgl">课程名称</div>
+			<div class="kcgl2">
+				<span>{{SuperClass.Name}}</span>
+			</div>
+			<div class="kcgl_box">
+				<span><video v-bind:src=SuperClass.VideoUrl width=200 height=100 controls></video></span>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section scripts{
+	<style>
+		#superclassmanagement {
+			position: absolute;
+		}
+	</style>
+	<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+	<link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript">
+		function wxConfig() {
+			var mch = $.getUrlParam('mch');
+			$.ajax({
+				type: "POST",
+				url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+				datatype: "json",
+				success: function (data) {
+					if (data.IsSuccessful) {
+						var temp = data.Data;
+						wx.config({
+							debug: false,
+							appId: temp.appId,
+							timestamp: temp.timestamp,
+							nonceStr: temp.nonceStr,
+							signature: temp.signature,
+							jsApiList: [
+								'checkJsApi',
+								'onMenuShareTimeline',
+								'onMenuShareAppMessage',
+								'onMenuShareQQ',
+								'onMenuShareWeibo',
+								'hideOptionMenu',
+								'hideAllNonBaseMenuItem',
+								'showMenuItems',
+								'closeWindow',
+								'scanQRCode',
+							]
+						});
+						wx.ready(function () {
+							wx.hideAllNonBaseMenuItem();
+						});
+					} else {
+					}
+				},
+				complete: function (xmlHttpRequest, textStatus) {
+				},
+				error: function (xmlHttpRequest, textStatus) {
+				}
+			});
+		};
+		wxConfig();
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			var mch = $.getUrlParam('mch');
+			var user = sessionStorage.getItem("user");
+			var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
+			var issalesmanager = sessionStorage.getItem('isgeneralmanager') == 'false';
+			var ismaster = sessionStorage.getItem('ismaster') == 'true';
+			_viewModel = new Vue({
+				el: '#superclassmanagement',
+				data: {
+					User: {},
+					SuperClassList: [],
+					SuperClassCount: 0,
+				},
+				methods: {
+					back: function (event) {
+						history.back(-1);
+					},
+					home: function (event) {
+						if (isgeneralmanager || issalesmanager)
+							window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+						else if (ismaster)
+							window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+						else
+							window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+					},
+					search: function (event) {
+						search();
+					}
+				}
+			});
+
+			var userdata = {
+				OpenID: '@ViewBag.OpenId',
+				IsManager: false,
+			};
+			if (isgeneralmanager || issalesmanager) {
+				userdata = {
+					OpenID: '@ViewBag.OpenId',
+					IsGeneralManager: isgeneralmanager,
+					IsSalesManager: !isgeneralmanager,
+				};
+			}
+
+			function getUserByOpenId() {
+				$.ajax({
+					url: '/api/User/GetUserByOpenID',
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					data: userdata,
+					success: function (res) {
+						if (res.IsSuccessful) {
+							if (res.Data != null) {
+								_viewModel.User = res.Data;
+								sessionStorage.setItem('user', JSON.stringify(res.Data));
+							} else {
+								_viewModel.home();
+							}
+						} else {
+							$.alert(res.ErrorMessage);
+							_viewModel.home();
+						}
+					},
+					error: function () {
+						_viewModel.home();
+					}
+				});
+			}
+			if (user == null || user == '') {
+				getUserByOpenId();
+			} else {
+				var user = JSON.parse(user);
+				_viewModel.User = user;
+			}
+
+			function search() {
+				var name = $('#name').val();
+				$.ajax({
+					url: '/api/SuperClass?Name=' + name,
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.showLoading();
+					},
+					success: function (res) {
+						$.hideLoading();
+						if (res.IsSuccessful) {
+							_viewModel.SuperClassList = res.Data;
+							_viewModel.SuperClassCount = res.Data.length;
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					},
+					error: function () {
+						$.hideLoading();
+					}
+				});
+			}
+			search();
+		})
+	</script>
+
+}
+

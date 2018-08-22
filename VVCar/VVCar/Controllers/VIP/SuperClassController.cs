@@ -72,7 +72,7 @@ namespace VVCar.Controllers.VIP
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public PagedActionResult<SuperClass> Search([FromUri]SuperClassFilter filter)
         {
             return SafeGetPagedData<SuperClass>((result) =>

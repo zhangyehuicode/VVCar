@@ -109,30 +109,35 @@
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">库存</span>
         </a>
     </div>
-    <div class="touxiang" style="margin-top:0px;">
-        <a class="bq_box" v-on:click="reimbursementcheck" v-if="IsGeneralManager">
-            <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:25px; margin-top:5px;"></div>
-            <span>报销审核</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">审核</span>
-        </a>
-        <a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="salessatement" v-if="IsGeneralManager||IsSalesManger">
-            <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:21px;"></div>
-            <span>销售报表</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报表</span>
-        </a>
-        <a class="bq_box" style="border-bottom:none;" v-on:click="logisticsmanagement">
-            <div><img src="~/Areas/resource/img/mobile/master/hdgl.png" style="width:23px;"></div>
-            <span>物流管理</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">物流</span>
-        </a>
-    </div>
-    <div class="touxiang" style="margin-top:0px;">
-        <a class="bq_box" v-on:click="ordermanagement" v-if="IsGeneralManager||IsSalesManger">
-            <div><img src="~/Areas/resource/img/mobile/master/yhqhz.png" style="width:25px; margin-top:5px;"></div>
-            <span>订单管理</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">订单</span>
-        </a>
-    </div>
+	<div class="touxiang" style="margin-top:0px;">
+		<a class="bq_box" v-on:click="reimbursementcheck" v-if="IsGeneralManager">
+			<div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:25px; margin-top:5px;"></div>
+			<span>报销审核</span>
+			<span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">审核</span>
+		</a>
+		<a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="salessatement" v-if="IsGeneralManager||IsSalesManger">
+			<div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:21px;"></div>
+			<span>销售报表</span>
+			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报表</span>
+		</a>
+		<a class="bq_box" style="border-bottom:none;" v-on:click="logisticsmanagement">
+			<div><img src="~/Areas/resource/img/mobile/master/hdgl.png" style="width:23px;"></div>
+			<span>物流管理</span>
+			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">物流</span>
+		</a>
+	</div>
+	<div class="touxiang" style="margin-top:0px;">
+		<a class="bq_box" v-on:click="ordermanagement" v-if="IsGeneralManager||IsSalesManger">
+			<div><img src="~/Areas/resource/img/mobile/master/yhqhz.png" style="width:25px; margin-top:5px;"></div>
+			<span>订单管理</span>
+			<span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">订单</span>
+		</a>
+		<a class="bq_box" style="border-bottom:none;" v-on:click="superclassmanagement">
+			<div><img src="~/Areas/resource/img/mobile/master/class.png" style="width:23px;"></div>
+			<span>超能课堂</span>
+			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">课堂</span>
+		</a>
+	</div>
     @*<img src="~/Areas/resource/img/mobile/master/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">*@
 </div>
 
@@ -241,7 +246,10 @@
                     },
                     ordermanagement: function () {
                         window.location.href = "/Mobile/Agent/OrderManagement?mch=" + mch;
-                    }
+					},
+					superclassmanagement: function (event) {
+						window.location.href = "/Mobile/Agent/SuperClassManagement?mch=" + mch;
+					}
                 }
             });
 

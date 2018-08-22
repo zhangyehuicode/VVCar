@@ -498,6 +498,7 @@
     <Content Include="Areas\resource\img\mobile\master\5000.png" />
     <Content Include="Areas\resource\img\mobile\master\6.png" />
     <Content Include="Areas\resource\img\mobile\master\cbgl.png" />
+    <Content Include="Areas\resource\img\mobile\master\class.png" />
     <Content Include="Areas\resource\img\mobile\master\czt.png" />
     <Content Include="Areas\resource\img\mobile\master\daodile.png" />
     <Content Include="Areas\resource\img\mobile\master\dygl.png" />
@@ -1213,6 +1214,7 @@
     <Content Include="Areas\Mobile\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\ToolsManagement.cshtml" />
     <Content Include="Areas\Coupon\Views\Coupon\CouponProduct.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\SuperClassManagement.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

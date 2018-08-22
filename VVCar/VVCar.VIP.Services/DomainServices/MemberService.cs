@@ -365,7 +365,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (registerDto == null)
                 return string.Empty;
-            var exist = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).FirstOrDefault(t => t.WeChatOpenID == registerDto.WeChatOpenID || t.MinProOpenID == registerDto.MinProOpenID);
+            var exist = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).FirstOrDefault(t => (t.WeChatOpenID != null && t.WeChatOpenID != "" && t.WeChatOpenID == registerDto.WeChatOpenID) || (t.MinProOpenID != null && t.MinProOpenID != "" && t.MinProOpenID == registerDto.MinProOpenID));
             if (exist != null)
             {
                 //throw new DomainException("微信已绑定会员");
@@ -780,7 +780,7 @@ namespace VVCar.VIP.Services.DomainServices
             if (string.IsNullOrEmpty(openID))
                 return null;
             var member = this.Repository.GetIncludes(false, "Card", "AgentDepartment")//, "OwnerGroup", "MemberGrade"
-                .FirstOrDefault(t => (t.WeChatOpenID == openID || t.MinProOpenID == openID) && t.MerchantID == AppContext.CurrentSession.MerchantID);
+                .FirstOrDefault(t => ((t.WeChatOpenID != null && t.WeChatOpenID != "" && t.WeChatOpenID == openID) || (t.MinProOpenID != null && t.MinProOpenID != "" && t.MinProOpenID == openID)) && t.MerchantID == AppContext.CurrentSession.MerchantID);
 
             if (member == null)
                 return null;

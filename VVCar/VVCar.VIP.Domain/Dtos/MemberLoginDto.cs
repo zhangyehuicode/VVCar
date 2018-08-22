@@ -27,6 +27,11 @@ namespace VVCar.VIP.Domain.Dtos
         public string WeChatOpenID { get; set; }
 
         /// <summary>
+        /// 小程序OpenID
+        /// </summary>
+        public string MinProOpenID { get; set; }
+
+        /// <summary>
         /// 是否代理商门店登录
         /// </summary>
         public bool IsAgentDeptLogin { get; set; }

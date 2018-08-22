@@ -313,6 +313,8 @@ namespace VVCar.BaseData.Services.DomainServices
             var queryable = Repository.GetQueryable(false);
             if (filter.Status.HasValue)
                 queryable = queryable.Where(t => t.Status == filter.Status.Value);
+            if (filter.IsAgent.HasValue)
+                queryable = queryable.Where(t => t.IsAgent == filter.IsAgent.Value);
             if (filter.ID.HasValue)
                 queryable = queryable.Where(t => t.ID == filter.ID.Value);
             if (!string.IsNullOrEmpty(filter.Code))

@@ -32,7 +32,7 @@ namespace VVCar.BaseData.Domain.Filters
         /// 是否代理商
         /// </summary>
         [Display(Name = "是否代理商")]
-        public bool IsAgent { get; set; }
+        public bool? IsAgent { get; set; }
 
         /// <summary>
         /// 商户状态

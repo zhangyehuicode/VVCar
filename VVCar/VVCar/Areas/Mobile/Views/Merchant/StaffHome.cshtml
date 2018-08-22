@@ -79,13 +79,18 @@
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">领取</span>
         </a>
     </div>
-    <div class="touxiang" style="margin-top:0px;">
-        <a class="bq_box" v-on:click="logisticsmanagement">
-            <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:25px; margin-top:5px;"></div>
-            <span>物流管理</span>
-            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">物流</span>
-        </a>
-    </div>
+	<div class="touxiang" style="margin-top:0px;">
+		<a class="bq_box" v-on:click="logisticsmanagement">
+			<div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:25px; margin-top:5px;"></div>
+			<span>物流管理</span>
+			<span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">物流</span>
+		</a>
+		<a class="bq_box" v-on:click="superclassmanagement">
+			<div><img src="~/Areas/resource/img/mobile/master/class.png" style="width:25px; margin-top:5px;"></div>
+			<span>超能课堂</span>
+			<span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">课堂</span>
+		</a>
+	</div>
     <div class="touxiang">
         <div class="pm_box">
             <div class="pm_text">业绩排名</div>
@@ -200,6 +205,9 @@
                 logisticsmanagement: function (event) {
                     window.location.href = "/Mobile/Agent/LogisticsManagement?mch=" + mch;
 				},
+				superclassmanagement: function (event) {
+					window.location.href = "/Mobile/Agent/SuperClassManagement?mch=" + mch;
+				}
             }
         });
 

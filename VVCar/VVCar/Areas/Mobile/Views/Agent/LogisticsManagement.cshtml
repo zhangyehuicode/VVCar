@@ -339,7 +339,8 @@
         var mch = $.getUrlParam('mch');
         var user = sessionStorage.getItem('user');
         var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
-        var issalesmanger = sessionStorage.getItem('isgeneralmanager') == 'false';
+		var issalesmanger = sessionStorage.getItem('isgeneralmanager') == 'false';
+		var ismaster = sessionStorage.getItem('ismaster') == 'true';
         _viewModel = new Vue({
             el: '#logisticsmanagement',
             data: {
@@ -365,10 +366,12 @@
                     history.back(-1);
                 },
                 home: function (event) {
-                    if (isgeneralmanager || issalesmanger)
-                        window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
-                    else
-                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+					if (isgeneralmanager || issalesmanger)
+						window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+					else if (ismaster)
+						window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+					else
+						window.location.href = "/Mobile/Merchant/StaffHome?mcg=" + mch;
                 },
                 search: function (event) {
                     search();
@@ -449,7 +452,7 @@
                 userdata = {
                     OpenID: '@ViewBag.OpenId',
                     IsGeneralManager: isgeneralmanager,
-                    IsSalesManger: !isgeneralmanager,
+					IsSalesManger: !isgeneralmanager,
                 };
             }
 
