@@ -126,7 +126,7 @@ namespace VVCar.VIP.Domain.Services
         /// </summary>
         /// <param name="registerDto"></param>
         /// <returns></returns>
-        string Register(MemberRegisterDto registerDto);
+        MemberCardDto Register(MemberRegisterDto registerDto);
 
         /// <summary>
         /// 重置密码，将密码重置为123456

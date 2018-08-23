@@ -59,7 +59,7 @@ namespace VVCar.Controllers.VIP
         /// <param name="registerDto">The register dto.</param>
         /// <returns></returns>
         [HttpPost, Route("Register"), AllowAnonymous]
-        public JsonActionResult<string> Register(MemberRegisterDto registerDto)
+        public JsonActionResult<MemberCardDto> Register(MemberRegisterDto registerDto)
         {
             return SafeExecute(() =>
             {

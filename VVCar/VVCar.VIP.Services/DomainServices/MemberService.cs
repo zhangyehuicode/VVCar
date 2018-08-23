@@ -361,15 +361,18 @@ namespace VVCar.VIP.Services.DomainServices
         /// </summary>
         /// <param name="registerDto"></param>
         /// <returns></returns>
-        public string Register(MemberRegisterDto registerDto)
+        public MemberCardDto Register(MemberRegisterDto registerDto)
         {
             if (registerDto == null)
-                return string.Empty;
+                return null;
             var exist = this.Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).FirstOrDefault(t => (t.WeChatOpenID != null && t.WeChatOpenID != "" && t.WeChatOpenID == registerDto.WeChatOpenID) || (t.MinProOpenID != null && t.MinProOpenID != "" && t.MinProOpenID == registerDto.MinProOpenID));
             if (exist != null)
             {
                 //throw new DomainException("微信已绑定会员");
-                return exist.CardNumber;
+                //return exist.CardNumber;
+                if (!string.IsNullOrEmpty(exist.WeChatOpenID))
+                    return GetMemberInfoByWeChat(exist.WeChatOpenID);
+                return GetMemberInfoByWeChat(exist.MinProOpenID);
             }
             var member = this.Repository.GetQueryable().Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).Where(t => t.MobilePhoneNo == registerDto.MobilePhoneNo).FirstOrDefault();
             //if (exist)
@@ -387,7 +390,10 @@ namespace VVCar.VIP.Services.DomainServices
                 member.AgentDepartmentID = registerDto.AgentDepartmentID;
                 //member.MemberGradeID = registerDto.MemberGradeID;
                 Repository.Update(member);
-                return member.CardNumber;
+                //return member.CardNumber;
+                if (!string.IsNullOrEmpty(member.WeChatOpenID))
+                    return GetMemberInfoByWeChat(member.WeChatOpenID);
+                return GetMemberInfoByWeChat(member.MinProOpenID);
             }
             else
             {
@@ -429,7 +435,10 @@ namespace VVCar.VIP.Services.DomainServices
                     //    AppContext.Logger.Error($"会员注册送积分操作失败,{ex.Message}");
                     //}
 
-                    return newMember.CardNumber;
+                    //return newMember.CardNumber;
+                    if (!string.IsNullOrEmpty(newMember.WeChatOpenID))
+                        return GetMemberInfoByWeChat(newMember.WeChatOpenID);
+                    return GetMemberInfoByWeChat(newMember.MinProOpenID);
                 }
                 catch (Exception ex)
                 {
