@@ -23,6 +23,9 @@ namespace VVCar.VIP.Data.Mapping
             Property(t => t.OwnerOpenID)
                 .HasMaxLength(50);
 
+            Property(t => t.MinProOpenID)
+                .HasMaxLength(50);
+
             Property(t => t.OwnerNickName)
                 .HasMaxLength(100);
 

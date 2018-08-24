@@ -79,6 +79,11 @@ namespace VVCar.VIP.Domain.Entities
         public string OwnerOpenID { get; set; }
 
         /// <summary>
+        /// 小程序OpenID
+        /// </summary>
+        public string MinProOpenID { get; set; }
+
+        /// <summary>
         /// 领取人昵称
         /// </summary>
         [Display(Name = "领取人昵称")]

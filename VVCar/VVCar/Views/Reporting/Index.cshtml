@@ -61,7 +61,7 @@
         }
 
         .quickoperation {
-            width: 220px;
+            width: 200px;
             height: 70px;
             border-radius: 3px;
             font-size: 20px;
@@ -166,6 +166,17 @@
                         <div class="reporttable" style="float:right;margin-top:10px;margin-right:15px;">
                             <div style="font-size:8px;">出/入库</div>
                             <div style="margin-top:5px;">出/入库</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reporttablecell">
+                    <div class="quickoperation" style="background:#eecb49;color:#fff;cursor:pointer;" id="minpro">
+                        <div class="reporttable" style="float:left;margin-top:10px;margin-left:15px;">
+                            <img class="iconimg" src="~/Content/icons/minpro.png" />
+                        </div>
+                        <div class="reporttable" style="float:right;margin-top:10px;margin-right:15px;">
+                            <div style="font-size:8px;">小程序</div>
+                            <div style="margin-top:5px;">小程序卡券</div>
                         </div>
                     </div>
                 </div>
@@ -444,6 +455,10 @@
 
         $('#recharge').click(function () {
             navigate('MemberRecharge', 'MemberRecharge', '会员储值');
+        });
+
+        $('#minpro').click(function () {
+            navigate('AppletCard', 'AppletCardList', '小程序卡券');
         });
 
         function navigate(cname, mname, text) {

@@ -93,7 +93,7 @@
 				{ header: '标题', dataIndex: 'Title', flex: 1 },
 				{ header: '项目名称', dataIndex: 'Name', flex: 1 },
 				{
-					header: '推送时间', dataINdex: 'PushDate', width: 100,
+					header: '推送时间', dataIndex: 'PushDate', width: 100,
 					renderer: Ext.util.Format.dateRenderer('Y-m-d'),
 				},
 				{

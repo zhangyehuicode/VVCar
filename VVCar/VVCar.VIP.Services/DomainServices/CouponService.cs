@@ -317,16 +317,16 @@ namespace VVCar.VIP.Services.DomainServices
 
         public IEnumerable<Coupon> ReceiveCouponsAtcion(ReceiveCouponDto receiveCouponDto, bool sendNotify = false)
         {
-            if (receiveCouponDto == null || string.IsNullOrEmpty(receiveCouponDto.ReceiveOpenID)
+            if (receiveCouponDto == null || (string.IsNullOrEmpty(receiveCouponDto.ReceiveOpenID) && string.IsNullOrEmpty(receiveCouponDto.MinProOpenID))
                 || receiveCouponDto.CouponTemplateIDs == null || receiveCouponDto.CouponTemplateIDs.Count == 0)
             {
                 if (receiveCouponDto == null)
                 {
                     AppContext.Logger.Error("参数为null");
                 }
-                if (receiveCouponDto != null && string.IsNullOrEmpty(receiveCouponDto.ReceiveOpenID))
+                if (receiveCouponDto != null && string.IsNullOrEmpty(receiveCouponDto.ReceiveOpenID) && string.IsNullOrEmpty(receiveCouponDto.MinProOpenID))
                 {
-                    AppContext.Logger.Error("ReceiveOpenID为null");
+                    AppContext.Logger.Error("ReceiveOpenID&MinProOpenID为null");
                 }
                 if (receiveCouponDto != null && receiveCouponDto.CouponTemplateIDs == null)
                 {
@@ -368,7 +368,7 @@ namespace VVCar.VIP.Services.DomainServices
             try
             {
                 var receivedCoupons = Repository.GetQueryable(false)
-                    .Where(t => t.OwnerOpenID == receiveCouponDto.ReceiveOpenID && receiveCouponDto.CouponTemplateIDs.Contains(t.TemplateID))
+                    .Where(t => (t.OwnerOpenID == receiveCouponDto.ReceiveOpenID || t.MinProOpenID == receiveCouponDto.MinProOpenID) && receiveCouponDto.CouponTemplateIDs.Contains(t.TemplateID))
                     .GroupBy(t => t.TemplateID)
                     .ToDictionary(group => group.Key, group => group.Count());
 
@@ -442,6 +442,7 @@ namespace VVCar.VIP.Services.DomainServices
                         EffectiveDate = template.GetEffectiveDate(),
                         ExpiredDate = template.GetExpiredDate(),
                         OwnerOpenID = receiveCouponDto.ReceiveOpenID,
+                        MinProOpenID = receiveCouponDto.MinProOpenID,
                         OwnerNickName = receiveCouponDto.NickName,
                         OwnerHeadImgUrl = receiveCouponDto.HeadImgUrl,
                         OwnerPhoneNo = receiveCouponDto.MobilePhoneNo,
@@ -741,10 +742,10 @@ namespace VVCar.VIP.Services.DomainServices
                 throw new DomainException("优惠券不存在");
             }
             var couponInfo = coupon.Template.MapTo<CouponFullInfoDto>();
-            if (!string.IsNullOrEmpty(couponInfo.CoverImage))
-            {
-                couponInfo.CoverImage = string.Concat(AppContext.Settings.SiteDomain, couponInfo.CoverImage);
-            }
+            //if (!string.IsNullOrEmpty(couponInfo.CoverImage))
+            //{
+            //    couponInfo.CoverImage = string.Concat(AppContext.Settings.SiteDomain, couponInfo.CoverImage);
+            //}
             couponInfo.CouponID = coupon.ID;
             couponInfo.CouponCode = coupon.CouponCode;
             couponInfo.TemplateID = coupon.TemplateID;

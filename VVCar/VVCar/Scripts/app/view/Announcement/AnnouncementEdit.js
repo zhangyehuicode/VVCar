@@ -50,14 +50,14 @@
 				maxLength: 20,
 				allowBlank: false,
 			}, {
-				xtype: 'textfield',
+				xtype: 'textareafield',
 				name: 'Content',
 				fieldLabel: '详细内容',
 				margin: '5 0 0 5',
 				maxLength: 20,
 				allowBlank: false,
 			}, {
-				xtype: 'textfield',
+				xtype: 'textareafield',
 				name: 'Remark',
 				fieldLabel: '备注',
 				margin: '5 0 0 5',

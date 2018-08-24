@@ -72,6 +72,16 @@ namespace VVCar.VIP.Domain.Dtos
         public Guid? MemberID { get; set; }
 
         /// <summary>
+        /// 微信OpenID
+        /// </summary>
+        public string WeChatOpenID { get; set; }
+
+        /// <summary>
+        /// 小程序OpenID
+        /// </summary>
+        public string MinProOpenID { get; set; }
+
+        /// <summary>
         /// 会员姓名
         /// </summary>
         public string MemberName { get; set; }

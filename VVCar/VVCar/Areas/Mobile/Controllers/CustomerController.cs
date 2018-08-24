@@ -571,6 +571,11 @@ namespace VVCar.Areas.Mobile.Controllers
             {
                 return Content("参数错误");
             }
+            var gameType = Request["GameType"];
+            if (string.IsNullOrEmpty(gameType))
+            {
+                return Content("参数错误");
+            }
             var openId = TempData["openid"] as string;
 #if DEBUG
             openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
@@ -580,8 +585,10 @@ namespace VVCar.Areas.Mobile.Controllers
                 return RedirectToAction("Auth", new { redirectTo = Server.UrlEncode(Request.Url.AbsoluteUri), mch = companyCode });
             }
             ViewBag.OpenId = openId;
+            ViewBag.GameType = gameType.Equals("0") ? 0 : 1;
             ViewBag.NickName = TempData["nickname"] as string;
             ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.CompanyCode = companyCode;
             ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
             return View();
         }

@@ -203,7 +203,7 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 queryable = queryable.Where(c => c.Title.Contains(filter.Title));
             }
-            if(filter.IsPutApplet.HasValue)
+            if (filter.IsPutApplet.HasValue)
             {
                 queryable = queryable.Where(c => c.IsPutApplet == filter.IsPutApplet.Value);
             }
@@ -583,6 +583,16 @@ namespace VVCar.VIP.Services.DomainServices
         {
             var now = DateTime.Now;
             return Repository.GetQueryable(false).Where(t => t.IsPutaway && t.PutawayTime < now && t.SoldOutTime > now && t.ApproveStatus == EApproveStatus.Delivered && (!t.IsFiexedEffectPeriod || (t.EffectiveDate < now && t.ExpiredDate > now)) && t.PutInStartDate < now && t.PutInEndDate > now && t.IsAvailable && t.Nature == ENature.Coupon).ToList();
+        }
+
+        /// <summary>
+        /// 获取小程序领券中心优惠券
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<CouponTemplate> GetCenterCouponTemplateOfMinPro()
+        {
+            var now = DateTime.Now;
+            return Repository.GetQueryable(false).Where(t => t.IsPutaway && t.PutawayTime < now && t.SoldOutTime > now && t.ApproveStatus == EApproveStatus.Delivered && (!t.IsFiexedEffectPeriod || (t.EffectiveDate < now && t.ExpiredDate > now)) && t.PutInStartDate < now && t.PutInEndDate > now && t.IsAvailable && t.Nature == ENature.Coupon && t.IsPutApplet).ToList();
         }
 
         /// <summary>

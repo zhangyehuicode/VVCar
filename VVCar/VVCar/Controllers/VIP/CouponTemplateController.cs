@@ -295,6 +295,20 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 获取小程序领券中心优惠券
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetCenterCouponTemplateOfMinPro"), AllowAnonymous]
+        public PagedActionResult<CouponTemplate> GetCenterCouponTemplateOfMinPro()
+        {
+            return SafeGetPagedData<CouponTemplate>((result) =>
+            {
+                var data = CouponTemplateService.GetCenterCouponTemplateOfMinPro();
+                result.Data = data;
+            });
+        }
+
+        /// <summary>
         /// 获取游戏抽奖优惠券
         /// </summary>
         /// <returns></returns>

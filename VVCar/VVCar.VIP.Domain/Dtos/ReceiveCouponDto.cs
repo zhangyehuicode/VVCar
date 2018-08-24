@@ -27,6 +27,11 @@ namespace VVCar.VIP.Domain.Dtos
         public string ReceiveOpenID { get; set; }
 
         /// <summary>
+        /// 小程序OpenID
+        /// </summary>
+        public string MinProOpenID { get; set; }
+
+        /// <summary>
         /// 赠送者OpenID
         /// </summary>
         public string GivenOpenID { get; set; }

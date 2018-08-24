@@ -839,6 +839,8 @@ namespace VVCar.VIP.Services.DomainServices
                 IsNotOpen = false,//member.MemberGrade != null ? member.MemberGrade.IsNotOpen : false,
                 Plate = "",
                 CardCount = cardCount,
+                WeChatOpenID = member.WeChatOpenID,
+                MinProOpenID = member.MinProOpenID,
                 //ConsumeAmountOfReachNextGrade = consumeAmountOfReachNextGrade,
                 //ConsumeCountOfReachNextGrade = consumeCountOfReachNextGrade,
                 //ConsumeAmountOfCurrentGrade = consumeAmountOfCurrentGrade,

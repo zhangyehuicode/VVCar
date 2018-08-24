@@ -452,6 +452,7 @@
     <Content Include="Areas\resource\img\mobile\carbitcoinicon.png" />
     <Content Include="Areas\resource\img\mobile\carcoinicon.png" />
     <Content Include="Areas\resource\img\mobile\carcoinimg.png" />
+    <Content Include="Areas\resource\img\mobile\cardbag.png" />
     <Content Include="Areas\resource\img\mobile\cb.png" />
     <Content Include="Areas\resource\img\mobile\cbc.png" />
     <Content Include="Areas\resource\img\mobile\cbcbac.jpg" />
@@ -474,6 +475,7 @@
     <Content Include="Areas\resource\img\mobile\fx.png" />
     <Content Include="Areas\resource\img\mobile\fxk.png" />
     <Content Include="Areas\resource\img\mobile\fxk2.png" />
+    <Content Include="Areas\resource\img\mobile\gamebg.jpg" />
     <Content Include="Areas\resource\img\mobile\goldmedal.png" />
     <Content Include="Areas\resource\img\mobile\gr.png" />
     <Content Include="Areas\resource\img\mobile\gwc.png" />
@@ -526,8 +528,11 @@
     <Content Include="Areas\resource\img\mobile\master\yybb.png" />
     <Content Include="Areas\resource\img\mobile\master\yzm2.png" />
     <Content Include="Areas\resource\img\mobile\master\zk.png" />
+    <Content Include="Areas\resource\img\mobile\music.png" />
     <Content Include="Areas\resource\img\mobile\my.png" />
     <Content Include="Areas\resource\img\mobile\nj.png" />
+    <Content Include="Areas\resource\img\mobile\ic.png" />
+    <Content Include="Areas\resource\img\mobile\ic1.png" />
     <Content Include="Areas\resource\img\mobile\order.png" />
     <Content Include="Areas\resource\img\mobile\pass.png" />
     <Content Include="Areas\resource\img\mobile\phone.png" />
@@ -557,6 +562,7 @@
     <Content Include="Areas\resource\img\mobile\staff\yhqhz.png" />
     <Content Include="Areas\resource\img\mobile\staff\zk.png" />
     <Content Include="Areas\resource\img\mobile\store.png" />
+    <Content Include="Areas\resource\img\mobile\tk.png" />
     <Content Include="Areas\resource\img\mobile\touxiang.png" />
     <Content Include="Areas\resource\img\mobile\ture.png" />
     <Content Include="Areas\resource\img\mobile\tyre.png" />
@@ -583,6 +589,7 @@
     <Content Include="Areas\resource\js\jquery.tmpl.js" />
     <Content Include="Areas\resource\js\mobile\touchwipe.js" />
     <Content Include="Areas\resource\voice\cbc.wav" />
+    <Content Include="Areas\resource\voice\game.mp3" />
     <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -623,6 +630,7 @@
     <Content Include="Content\icons\list.png" />
     <Content Include="Content\icons\login3.png" />
     <Content Include="Content\icons\logout.png" />
+    <Content Include="Content\icons\minpro.png" />
     <Content Include="Content\icons\refresh.png" />
     <Content Include="Content\icons\reportLoss.png" />
     <Content Include="Content\icons\reset.png" />

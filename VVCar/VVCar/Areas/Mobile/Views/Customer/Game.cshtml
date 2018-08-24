@@ -1,191 +1,471 @@
-﻿
-@{
-    ViewBag.Title = "";
-    Layout = null;
+﻿@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>转盘游戏</title>
-    <link href="~/Areas/resource/css/mobile/GB-css3-wheel.css" rel="stylesheet" />
-    <link rel="stylesheet" href="http://icono-49d6.kxcdn.com/icono.min.css">
-    <style>
+<div class="typo" id="wrapper" style="padding-top:20px;">
+	<header>
+		<div class="right" onclick="playMusic()">
+			<img class="rotation" src="~/Areas/resource/img/mobile/music.png" />
+		</div>
+	</header>
+	<img src="~/Areas/resource/img/mobile/gamebg.jpg" style="width:100%;height:100%;position:absolute;z-index:-1;top:0px;left:0px;" />
+	<section class="gb-wheel-container" id="gbWheel">
+		<div class="gb-wheel-content gb-wheel-run">
+			<ul class="gb-wheel-line"></ul>
+			<div class="gb-wheel-list"></div>
+		</div>
+		<a href="javascript:;" class="gb-wheel-btn" id="gbLottery">抽奖</a>
+	</section>
+	<div id="tk" class="tk">
+		<img class="tkimg" src="~/Areas/resource/img/mobile/tk.png" />
+		<img id="close" class="close" src="~/Areas/resource/img/mobile/close.png" />
+		<div class="result"></div>
+		<img id="receive" class="receive" src="~/Areas/resource/img/mobile/ic.png" />
+		<img id="cardbag" class="cardbag" src="~/Areas/resource/img/mobile/cardbag.png" style="display:none" />
+	</div>
+</div>
 
-        .wrapper {
-            padding: 20px 40px;
-        }
+@section scripts{
+	<link href="~/Areas/resource/css/mobile/GB-css3-wheel.css" rel="stylesheet" />
+	<link rel="stylesheet" href="http://icono-49d6.kxcdn.com/icono.min.css">
+	<style>
+		.wrapper {
+			padding: 20px 40px;
+		}
 
-        .fork-github {
-            position: fixed;
-            right: -100px;
-            top: 45px;
-            z-index: 9999;
-            padding: 2px 100px;
-            font-size: 12px;
-            background-color: #444;
-            border: 1px solid #000;
-            -webkit-transform: rotate(45deg);
-            -ms-transform: rotate(45deg);
-            transform: rotate(45deg);
-            text-align: center;
-        }
+		.fork-github {
+			position: fixed;
+			right: -100px;
+			top: 45px;
+			z-index: 9999;
+			padding: 2px 100px;
+			font-size: 12px;
+			background-color: #444;
+			border: 1px solid #000;
+			-webkit-transform: rotate(45deg);
+			-ms-transform: rotate(45deg);
+			transform: rotate(45deg);
+			text-align: center;
+		}
 
-            .fork-github a {
-                color: #fff;
-            }
-    </style>
-</head>
-<body ontouchstart>
+			.fork-github a {
+				color: #fff;
+			}
+	</style>
+	<script type="text/javascript">
+		function wxConfig() {
+			var mch = $.getUrlParam('mch');
+			$.ajax({
+				type: "POST",
+				url: url + "/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + encodeURIComponent(document.URL.split('#')[0]),
+				datatype: "json",
+				success: function (data) {
+					if (data.IsSuccessful) {
+						var temp = data.Data;
+						wx.config({
+							debug: false,
+							appId: temp.appId,
+							timestamp: temp.timestamp,
+							nonceStr: temp.nonceStr,
+							signature: temp.signature,
+							jsApiList: [
+								'checkJsApi',
+								'onMenuShareTimeline',
+								'onMenuShareAppMessage',
+								'onMenuShareQQ',
+								'onMenuShareWeibo',
+								'hideOptionMenu',
+								'hideAllNonBaseMenuItem',
+								'showMenuItems',
+								'closeWindow',
+								'scanQRCode',
+							]
+						});
+						wx.ready(function () {
+							wx.hideAllNonBaseMenuItem();
+						});
+					} else {
+
+					}
+				},
+				complete: function (xmlHttpRequest, textStatus) {
+				},
+				error: function (xmlHttpRequest, textStatus) {
+				}
+			});
+		};
+	</script>
+	<script type="text/javascript">
+		var url = 'http://cheyinz.cn/';
+		var gameMusic = new Audio();
+		var len = 0;
+		var temp = 0;
+		var speed = 4;
+		var awards = [];
+		var couponid = '';
+		var musicUrl = '/Areas/resource/voice/game.mp3';
+		gameMusic.src = musicUrl;
+		gameMusic.loop = true;
+		function playMusic() {
+			if (gameMusic.paused) {
+				gameMusic.play();
+				$('.right img').addClass('rotation');
+			} else {
+				gameMusic.pause();
+				$('.right img').removeClass('rotation');
+			}
+		};
+		setTimeout(function () {
+			playMusic();
+		}, 1000);
+		function gameConfig() {
+			$.ajax({
+				url: url + '/api/GameSetting?GameType=' + @ViewBag.GameType,
+				type: 'GET',
+				headers: { 'CompanyCode': '@ViewBag.CompanyCode' },
+				beforeSend: function () {
+					$.showLoading();
+				},
+				success: function (res) {
+					$.hideLoading();
+					if (res.IsSuccessful) {
+						if (res.Data != null) {
+							var record = res.Data[0];
+							if (record.IsShare) {
+								wxConfig();
+							}
+							var gameCoupons = record.GameCoupons;
+							if (gameCoupons == null || gameCoupons.length < 1) {
+								$.alert('没有配置游戏卡券');
+								return;
+							}
+							for (var index in gameCoupons) {
+								awards.push({ 'index': index, 'text': gameCoupons[index].CouponTemplate.Title, 'name': 'washcard48.png', 'couponid': gameCoupons[index].CouponTemplateID });
+							}
+							awards.push({ 'index': gameCoupons.length, 'text': '未中奖', 'name': 'washcard48.png', 'couponid': 'null' });
+							len = awards.length;
+							init(awards);
+						} else {
+							$.alert('没有配置数据');
+						}
+					} else {
+						$.alert(res.ErrorMessage);
+					}
+				},
+				error: function (e) {
+					$.hideLoading();
+					$.alert(e.error);
+				}
+			});
+			function init(awards) {
+				var gbWheel = document.getElementById('gbWheel');
+				var lineList = gbWheel.querySelector('ul.gb-wheel-line');
+				var itemList = gbWheel.querySelector('.gb-wheel-list');
+				var lineListHtml = [];
+				var itemListHtml = [];
+
+				function preTransform() {
+					var cssPrefix,
+						vendors = {
+							'': '',
+							Webkit: 'webkit',
+							Moz: '',
+							O: 'o',
+							ms: 'ms'
+						},
+						testEle = document.createElement('p'),
+						cssSupport = {};
+
+					// 嗅探特性
+					Object.keys(vendors).some(function (vendor) {
+						if (testEle.style[vendor + (vendor ? 'T' : 't') + 'ransform'] !== undefined) {
+							cssPrefix = vendor ? '-' + vendor.toLowerCase() + '-' : '';
+							return true;
+						}
+					});
+
+					function normalizeCss(name) {
+						name = name.toLowerCase();
+						return cssPrefix ? cssPrefix + name : name;
+					}
+
+					cssSupport = {
+						transform: normalizeCss('Transform'),
+					}
+
+					return cssSupport.transform;
+				};
+				var transform = preTransform();
+				var fraction = 1.0 / awards.length;
+				awards.forEach(function (v, i, a) {
+					// 分隔线
+					lineListHtml.push('<li class="gb-wheel-litem" style="' + transform + ': rotate(' + (i * fraction + fraction / 2) + 'turn)"></li>');
+
+					// 奖项
+					itemListHtml.push('<div class="gb-wheel-item">');
+					itemListHtml.push('<div class="gb-wheel-icontent" style="' + transform + ': rotate(' + (i * fraction) + 'turn)">');
+					itemListHtml.push('<p class="gb-wheel-iicon">');
+					//itemListHtml.push('<i class="'+v.name+'"></i>');
+					itemListHtml.push('<img src="' + v.name + '"/>');
+					itemListHtml.push('</p>');
+					itemListHtml.push('<p class="gb-wheel-itext">');
+					itemListHtml.push(v.text);
+					itemListHtml.push('</p>');
+					itemListHtml.push('</div>');
+					itemListHtml.push('</div>');
+				});
+				lineList.innerHTML = lineListHtml.join('');
+				itemList.innerHTML = itemListHtml.join('');
+			}
+		};
+		gameConfig();
+
+		document.getElementById('gbLottery').onclick = function () {
+			validateGameSetting();
+		};
+
+		document.getElementById('close').onclick = function () {
+			document.getElementById('tk').style.zIndex = -10;
+			document.getElementById('tk').style.display = 'none';
+		}
+
+		document.getElementById('receive').onclick = function () {
+			$.ajax({
+				url: url + '/api/Coupon/ReceiveCoupon',
+				type: 'POST',
+				headers: { 'CompanyCode': '@ViewBag.CompanyCode' },
+				data: {
+					ReceiveOpenID: '@ViewBag.OpenId',
+					NickName: '@ViewBag.NickName',
+					HeadImgUrl: '@ViewBag.HeadImgUrl',
+					CouponTemplateIDs: [couponid],
+					ReceiveChannel: '转盘游戏',
+					SendNotify: true,
+				},
+				beforeSend: function () {
+					$.showLoading();
+				},
+				success: function (res) {
+					$.hideLoading();
+					if (res.IsSuccessful) {
+						if (res.Data != null) {
+							receiveGameCoupon();
+							document.getElementById('tk').querySelector('.result').innerHTML = '已经成功领取';
+						} else {
+							document.getElementById('tk').querySelector('.result').innerHTML = '领券失败!';
+						}
+					} else {
+						document.getElementById('tk').querySelector('.result').innerHTML = res.ErrorMessage;
+						$.alert(res.ErrorMessage);
+					}
+				}
+			});
+		};
+
+		document.getElementById('cardbag').onclick = function () {
+			$.alert('hello');
+			window.location.href = url + '/Mobile/Customer/MemberCard?mch=@ViewBag.CompanyCode';
+		};
+
+		function receiveGameCoupon() {
+			OutTradeNo = $.getUrlParam('OutTradeNo');
+			$.ajax({
+				url: url + '/api/GameCouponRecord',
+				type: 'POST',
+				headers: { 'CompanyCode': '@ViewBag.CompanyCode' },
+				data: {
+					GameType: '@ViewBag.GameType',
+					ReceiveOpenID: '@ViewBag.OpenId',
+					NickName: '@ViewBag.NickName',
+					ReceiveCount: '1',
+					CouponTemplateID: couponid,
+					CouponTitle: text,
+					OutTradeNo: OutTradeNo,
+				},
+				beforesend: function () {
+					$.showLoading();
+				},
+				success: function (res) {
+					$.hideLoading();
+				},
+				error: function (e) {
+					$.hideLoading();
+				}
+			});
+		}
+
+		function validateGameSetting() {
+			$.ajax({
+				url: url + '/api/GameCouponRecord/ValidateGameSetting?GameType=' + @ViewBag.GameType + '&ReceiveOpenID=' + '@ViewBag.OpenId',
+				type: 'GET',
+				headers: { 'CompanyCode': '@ViewBag.CompanyCode'},
+				beforeSend: function () {
+					$.showLoading();
+				},
+				success: function (res) {
+					$.hideLoading();
+					if (res.IsSuccessful) {
+						if (res.Data != null) {
+							if (res.Data) {
+								var random = randomFrom(1, len);
+								temp += 360 / len * random + 360 * speed;
+								gbWheel.querySelector('.gb-wheel-content').style.transform = 'rotate(-' + temp + 'deg)';
+								gbWheel.querySelector('.gb-wheel-content').addEventListener('transitionend', callback);
+							} else {
+								$.alert(res.ErrorMessage);
+							}
+						} else {
+							$.alert('加载数据失败');
+						}
+					} else {
+						$.alert(res.ErrorMessage);
+					}
+				}
+
+			});
+		};
+
+		function randomFrom(lowerValue, upperValue){
+			return Math.floor(Math.random() * (upperValue - lowerValue + 1) + lowerValue);
+		};
+
+		function callback() {
+			var num = (temp / 360).toString().split('.');
+			var index = 0;
+			if (num.length == 2) {
+				index = Math.round(('0.' + num[1]) * awards.length);
+			} else {
+				index = 0;
+			}
+			for (var award in awards) {
+				if (awards[award]["index"] == index) {
+					text = awards[award]["text"];
+					couponid = awards[award]["couponid"];
+				}
+			}
+			if (text == '未中奖') {
+				document.getElementById('tk').querySelector('.result').innerHTML = '很遗憾未中奖';
+				document.getElementById('tk').style.display = 'block';
+				document.getElementById('tk').style.zIndex = 450;
+				document.getElementById('receive').style.display = "none";
+				document.getElementById('cardbag').style.display = "inline-block";
+			} else {
+				document.getElementById('tk').querySelector('.result').innerHTML = '恭喜你抽到了' + text;
+				document.getElementById('tk').style.display = 'block';
+				document.getElementById('tk').style.zIndex = 450;
+				document.getElementById('receive').style.display = "inline-block";
+				document.getElementById('cardbag').style.display = "none";
+			}
+		};
+	</script>
+}
 
 
 
-    <div class="typo" id="wrapper" style="padding-top:80px;">
+@*<script>
+		(function () {
+			// 奖品配置
+			var awards = [
+				{ 'index': 0, 'text': '洗车卡', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
+				{ 'index': 1, 'text': '现金', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
+				{ 'index': 2, 'text': '洗车券', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
+				{ 'index': 3, 'text': '谢谢惠顾', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
+				{ 'index': 4, 'text': '镀金券', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
+				{ 'index': 5, 'text': '洗车券', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
+				{ 'index': 6, 'text': '镀金券', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
+				{ 'index': 7, 'text': '洗车券', 'name': '/Areas/resource/img/mobile/icon_coupon.png' }
+			],
+				len = awards.length,
+				turnNum = 1 / len;  // 文字旋转 turn 值
 
-        <section class="gb-wheel-container" id="gbWheel">
-            <div class="gb-wheel-content gb-wheel-run">
-                <ul class="gb-wheel-line">
-                    <li class="gb-wheel-litem" style="transform: rotate(0.08333333333333333turn)"></li>
-                    <li class="gb-wheel-litem" style="transform: rotate(0.25turn)"></li>
-                    <li class="gb-wheel-litem" style="transform: rotate(0.41666666666666663turn)"></li>
-                    <li class="gb-wheel-litem" style="transform: rotate(0.5833333333333334turn)"></li>
-                    <li class="gb-wheel-litem" style="transform: rotate(0.75turn)"></li>
-                    <li class="gb-wheel-litem" style="transform: rotate(0.9166666666666666turn)"></li>
-                </ul>
-                <div class="gb-wheel-list">
-                    <div class="gb-wheel-item">
-                        <p class="gb-wheel-icontent" style="transform: rotate(0turn)">0</p>
-                    </div>
-                    <div class="gb-wheel-item">
-                        <p class="gb-wheel-icontent" style="transform: rotate(0.16666666666666666turn)">1</p>
-                    </div>
-                    <div class="gb-wheel-item">
-                        <p class="gb-wheel-icontent" style="transform: rotate(0.3333333333333333turn)">2</p>
-                    </div>
-                    <div class="gb-wheel-item">
-                        <p class="gb-wheel-icontent" style="transform: rotate(0.5turn)">3</p>
-                    </div>
-                    <div class="gb-wheel-item">
-                        <p class="gb-wheel-icontent" style="transform: rotate(0.6666666666666666turn)">4</p>
-                    </div>
-                    <div class="gb-wheel-item">
-                        <p class="gb-wheel-icontent" style="transform: rotate(0.8333333333333333turn)">5</p>
-                    </div>
-                </div>
-            </div>
-            <a href="javascript:;" class="gb-wheel-btn" id="gbLottery">抽奖</a>
-        </section>
+			var gbWheel = document.getElementById('gbWheel'),
+				lineList = gbWheel.querySelector('ul.gb-wheel-line'),
+				itemList = gbWheel.querySelector('.gb-wheel-list'),
+				lineListHtml = [],
+				itemListHtml = [];
 
-    </div>
+			var transform = preTransform();
 
-    <script>
-        (function () {
+			awards.forEach(function (v, i, a) {
+				// 分隔线
+				lineListHtml.push('<li class="gb-wheel-litem" style="' + transform + ': rotate(' + (i * turnNum + turnNum / 2) + 'turn)"></li>');
 
-            // 奖品配置
-            var awards = [
-                { 'index': 0, 'text': '洗车卡', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
-                { 'index': 1, 'text': '现金', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
-                { 'index': 2, 'text': '洗车券', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
-                { 'index': 3, 'text': '谢谢惠顾', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
-                { 'index': 4, 'text': '镀金券', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
-                { 'index': 5, 'text': '洗车券', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
-                { 'index': 6, 'text': '镀金券', 'name': '/Areas/resource/img/mobile/icon_coupon.png' },
-                { 'index': 7, 'text': '洗车券', 'name': '/Areas/resource/img/mobile/icon_coupon.png' }
-            ],
-                len = awards.length,
-                turnNum = 1 / len;  // 文字旋转 turn 值
+				// 奖项
+				itemListHtml.push('<div class="gb-wheel-item">');
+				itemListHtml.push('<div class="gb-wheel-icontent" style="' + transform + ': rotate(' + (i * turnNum) + 'turn)">');
+				itemListHtml.push('<p class="gb-wheel-iicon">');
+				//itemListHtml.push('<i class="'+v.name+'"></i>');
+				itemListHtml.push('<img src="' + v.name + '"/>');
+				itemListHtml.push('</p>');
+				itemListHtml.push('<p class="gb-wheel-itext">');
+				itemListHtml.push(v.text);
+				itemListHtml.push('</p>');
+				itemListHtml.push('</div>');
+				itemListHtml.push('</div>');
+			});
 
-            var gbWheel = $('gbWheel'),
-                lineList = gbWheel.querySelector('ul.gb-wheel-line'),
-                itemList = gbWheel.querySelector('.gb-wheel-list'),
-                lineListHtml = [],
-                itemListHtml = [];
+			lineList.innerHTML = lineListHtml.join('');
+			itemList.innerHTML = itemListHtml.join('');
 
-            var transform = preTransform();
+			function $(id) {
+				return document.getElementById(id);
+			};
 
-            awards.forEach(function (v, i, a) {
-                // 分隔线
-                lineListHtml.push('<li class="gb-wheel-litem" style="' + transform + ': rotate(' + (i * turnNum + turnNum / 2) + 'turn)"></li>');
+			//获取指定区间范围随机数，包括lowerValue和upperValue
+			function randomFrom(lowerValue, upperValue) {
+				return Math.floor(Math.random() * (upperValue - lowerValue + 1) + lowerValue);
+			}
 
-                // 奖项
-                itemListHtml.push('<div class="gb-wheel-item">');
-                itemListHtml.push('<div class="gb-wheel-icontent" style="' + transform + ': rotate(' + (i * turnNum) + 'turn)">');
-                itemListHtml.push('<p class="gb-wheel-iicon">');
-                //itemListHtml.push('<i class="'+v.name+'"></i>');
-                itemListHtml.push('<img src="' + v.name + '"/>');
-                itemListHtml.push('</p>');
-                itemListHtml.push('<p class="gb-wheel-itext">');
-                itemListHtml.push(v.text);
-                itemListHtml.push('</p>');
-                itemListHtml.push('</div>');
-                itemListHtml.push('</div>');
-            });
+			// 旋转
+			var i = 0;
+			var speed = 4;
+			var temp = 0;
+			$('gbLottery').onclick = function () {
+				i += 1;
+				var ram = randomFrom(1, len);
+				temp += 360 / len * ram + 360 * speed;
+				//alert(ram);
+				gbWheel.querySelector('.gb-wheel-content').style[transform] = 'rotate(' + temp + 'deg)';
+			}
 
-            lineList.innerHTML = lineListHtml.join('');
-            itemList.innerHTML = itemListHtml.join('');
+			// console.log(preTransform());
 
-            function $(id) {
-                return document.getElementById(id);
-            };
+			// transform兼容
+			function preTransform() {
+				var cssPrefix,
+					vendors = {
+						'': '',
+						Webkit: 'webkit',
+						Moz: '',
+						O: 'o',
+						ms: 'ms'
+					},
+					testEle = document.createElement('p'),
+					cssSupport = {};
 
-            //获取指定区间范围随机数，包括lowerValue和upperValue
-            function randomFrom(lowerValue, upperValue) {
-                return Math.floor(Math.random() * (upperValue - lowerValue + 1) + lowerValue);
-            }
+				// 嗅探特性
+				Object.keys(vendors).some(function (vendor) {
+					if (testEle.style[vendor + (vendor ? 'T' : 't') + 'ransform'] !== undefined) {
+						cssPrefix = vendor ? '-' + vendor.toLowerCase() + '-' : '';
+						return true;
+					}
+				});
 
-            // 旋转
-            var i = 0;
-            var speed = 4;
-            var temp = 0;
-            $('gbLottery').onclick = function () {
-                i += 1;
-                var ram = randomFrom(1, len);
-                temp += 360 / len * ram + 360 * speed;
-                //alert(ram);
-                gbWheel.querySelector('.gb-wheel-content').style[transform] = 'rotate(' + temp + 'deg)';
-            }
+				function normalizeCss(name) {
+					name = name.toLowerCase();
+					return cssPrefix ? cssPrefix + name : name;
+				}
 
-            // console.log(preTransform());
+				cssSupport = {
+					transform: normalizeCss('Transform'),
+				}
 
-            // transform兼容
-            function preTransform() {
-                var cssPrefix,
-                    vendors = {
-                        '': '',
-                        Webkit: 'webkit',
-                        Moz: '',
-                        O: 'o',
-                        ms: 'ms'
-                    },
-                    testEle = document.createElement('p'),
-                    cssSupport = {};
+				return cssSupport.transform;
+			}
 
-                // 嗅探特性
-                Object.keys(vendors).some(function (vendor) {
-                    if (testEle.style[vendor + (vendor ? 'T' : 't') + 'ransform'] !== undefined) {
-                        cssPrefix = vendor ? '-' + vendor.toLowerCase() + '-' : '';
-                        return true;
-                    }
-                });
+		}());
+	</script>*@
 
-                function normalizeCss(name) {
-                    name = name.toLowerCase();
-                    return cssPrefix ? cssPrefix + name : name;
-                }
 
-                cssSupport = {
-                    transform: normalizeCss('Transform'),
-                }
 
-                return cssSupport.transform;
-            }
-
-        }());
-
-    </script>
-</body>
-</html>

@@ -116,6 +116,7 @@ namespace VVCar.VIP.Services.DomainServices
             notPushData.ForEach(t =>
             {
                 t.Status = EAnnouncementStatus.Pushed;
+                t.PushDate = DateTime.Now;
                 t.LastUpdateDate = DateTime.Now;
                 t.LastUpdateUser = AppContext.CurrentSession.UserName;
                 t.LastUpdateUserID = AppContext.CurrentSession.UserID;

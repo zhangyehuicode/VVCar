@@ -87,6 +87,12 @@ namespace VVCar.VIP.Domain.Services
         IEnumerable<CouponTemplate> GetCenterCouponTemplate();
 
         /// <summary>
+        /// 获取小程序领券中心优惠券
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<CouponTemplate> GetCenterCouponTemplateOfMinPro();
+
+        /// <summary>
         /// 获取游戏抽奖优惠券
         /// </summary>
         /// <returns></returns>
