@@ -184,5 +184,32 @@ namespace VVCar.Controllers.Api
                 return DepartmentService.GetDepartmentLiteData();
             });
         }
+
+        /// <summary>
+        /// 设置门店位置信息
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost, Route("SetDepartmentLocation"), AllowAnonymous]
+        public JsonActionResult<bool> SetDepartmentLocation(DepartmentLocationDto param)
+        {
+            return SafeExecute(() =>
+            {
+                return DepartmentService.SetDepartmentLocation(param);
+            });
+        }
+
+        /// <summary>
+        /// 获取门店地理位置
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetDepartmentLocation"), AllowAnonymous]
+        public JsonActionResult<DepartmentLocationDto> GetDepartmentLocation()
+        {
+            return SafeExecute(() =>
+            {
+                return DepartmentService.GetDepartmentLocation();
+            });
+        }
     }
 }

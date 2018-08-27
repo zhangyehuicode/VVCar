@@ -1,0 +1,344 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="departmentlocation" class="main">
+    <div class="toubu">
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+        <div class="title">门店地理位置</div>
+        <a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+    </div>
+    <div class="contentcon">
+        <div class="quickoatable" style="border:none;padding:10px 0 0 0;" v-on:click="getLocation">
+            <div class="quickoatablecell" style="width:20px;text-align:center;">
+                <img class="locationimg" src="~/Areas/resource/img/mobile/location.png" />
+            </div>
+            <div class="quickoatablecell" style="color:#51b3f0;">获取地理位置</div>
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle">经度</div>
+            <input type="number" class="quickoatablecell inputbottom" placeholder="经度" v-model:value="DepartmentLocation.Longitude" />
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle">纬度</div>
+            <input type="number" class="quickoatablecell inputbottom" placeholder="纬度" v-model:value="DepartmentLocation.Latitude" />
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle">位置名称</div>
+            <textarea class="quickoatablecell inputbottom" placeholder="位置名称（门店名称）" v-model:value="DepartmentLocation.LocationName"></textarea>
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle">超链接（非必填）</div>
+            <textarea class="quickoatablecell inputbottom" placeholder="在查看位置界面底部显示的超链接,可点击跳转" v-model:value="DepartmentLocation.InfoUrl"></textarea>
+        </div>
+    </div>
+    <div class="confirmbtn" v-on:click="confirm">保存</div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .main {
+            font-size: 15px;
+        }
+
+        .contentcon {
+            margin: 0px 20px;
+            background: #fff;
+        }
+
+        .quickoatable {
+            display: table;
+            width: 100%;
+            padding: 10px 0;
+            border-bottom: 1px #ccc solid;
+        }
+
+        .quickoatablecell {
+            display: table-cell;
+        }
+
+        .widthfill {
+            width: 100%;
+        }
+
+        .tips {
+            position: relative;
+            top: -250px;
+            left: 0;
+            right: 0;
+            color: #999;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .itemtitle {
+            width: 110px;
+            color: #696969;
+        }
+
+        input {
+            width: 100%;
+            border: none;
+            height: 30px;
+        }
+
+        .inputbottom {
+            font-size: 15px;
+        }
+
+        .confirmbtn {
+            margin: 30px 20px 25px 20px;
+            background: #51b3f0;
+            color: #fff;
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        textarea {
+            width: 100%;
+            border: 1px #ccc solid;
+            height: 80px;
+            box-shadow: 0px 0px 0px rgba(0,0,0,0);
+            -webkit-appearance: none;
+        }
+
+        .locationimg {
+            width: 16px;
+            vertical-align: middle;
+            margin-top: -3px;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                                'getLocation',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+            var mch = $.getUrlParam('mch');
+            var isgeneralmanager = sessionStorage.getItem('isgeneralmanager');
+            if (isgeneralmanager != null && isgeneralmanager != '')
+                isgeneralmanager = isgeneralmanager == 'true';
+            else
+                isgeneralmanager = false;
+            var ismaster = sessionStorage.getItem('ismaster');
+            _viewModel = new Vue({
+                el: '#departmentlocation',
+                data: {
+                    UserInfo: {},
+                    DepartmentLocation: {
+                        Longitude: '',
+                        Latitude: '',
+                        LocationName: '',
+                        InfoUrl: '',
+                        UpdateUserID: '',
+                        UpdateUser:'',
+                    },
+                },
+                methods: {
+                    back: function (event) {
+                        history.back(-1);
+                    },
+                    home: function (event) {
+                        if (ismaster != null) {
+                            if (ismaster=='true')
+                                window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                            else
+                                window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+                        }
+                        else
+                            window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+                    },
+                    confirm: function (event) {
+                        $.confirm('确认提交？', function () {
+                            confirm(_viewModel.DepartmentLocation);
+                        });
+                    },
+                    getLocation: function () {
+                        wx.getLocation({
+                            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                            success: function (res) {
+                                _viewModel.DepartmentLocation.Latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                                _viewModel.DepartmentLocation.Longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                                var speed = res.speed; // 速度，以米/每秒计
+                                var accuracy = res.accuracy; // 位置精度
+                            }
+                        });
+                    }
+                }
+        });
+
+        var userdata = {
+              OpenID: '@ViewBag.OpenId',
+              IsGeneralManager: isgeneralmanager,
+              IsSalesManger: !isgeneralmanager,
+        };
+        if (ismaster != null && ismaster != '') {
+            if (ismaster=='true')
+                 userdata = {
+                    OpenID: '@ViewBag.OpenId',
+                    IsManager: true,
+                 };
+            else
+                 userdata = {
+                    OpenID: '@ViewBag.OpenId',
+                    IsManager: false,
+                 };
+        }
+
+              function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: userdata,
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                                _viewModel.UserInfo = res.Data;
+                                _viewModel.DepartmentLocation.UpdateUserID = res.Data.ID;
+                                _viewModel.DepartmentLocation.UpdateUser= res.Data.Name;
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            getUserByOpenId();
+
+        function checkdata(data) {
+                if (data == null || data == '' || data.UpdateUserID == null || data.UpdateUserID == '') {
+                    $.alert('参数错误');
+                    return false;
+                }
+                if (data.Longitude == null || data.Longitude == '') {
+                    $.alert('请填写经度');
+                    return false;
+                }
+                if (data.Latitude == null || data.Latitude == '') {
+                    $.alert('请填写纬度');
+                    return false;
+                }
+                if (data.LocationName == null || data.LocationName == '') {
+                    $.alert('请填写位置名称');
+                    return false;
+            }
+            data.Longitude = data.Longitude.toString();
+            data.Latitude = data.Latitude.toString();
+                return true;
+            }
+
+        function confirm(data) {
+            if (data == null || data == '')
+                return;
+            if (!checkdata(data))
+                return;
+            //$.alert(JSON.stringify(data));
+            //return;
+            $.ajax({
+                url: '/api/Department/SetDepartmentLocation',
+                type: 'POST',
+                data: data,
+                headers: {'CompanyCode': mch },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data) {
+                            $.toast("保存成功");
+                            _viewModel.home();
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                    $.hideLoading();
+                }
+            });
+        }
+
+        function getDepartmentLocation() {
+            $.ajax({
+                url: '/api/Department/GetDepartmentLocation',
+                type: 'GET',
+                headers: { 'CompanyCode': mch },
+                beforeSend: function () {
+                },
+                success: function (res) {
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            _viewModel.DepartmentLocation.Longitude = res.Data.Longitude;
+                            _viewModel.DepartmentLocation.Latitude = res.Data.Latitude;
+                            _viewModel.DepartmentLocation.LocationName = res.Data.LocationName;
+                            _viewModel.DepartmentLocation.InfoUrl = res.Data.InfoUrl;
+                        }
+                    } else {
+                        $.alert(res.ErrorMessage);
+                    }
+                },
+                error: function () {
+                }
+            });
+        }
+        getDepartmentLocation();
+
+    </script>
+}

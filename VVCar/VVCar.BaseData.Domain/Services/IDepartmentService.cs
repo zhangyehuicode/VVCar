@@ -66,5 +66,18 @@ namespace VVCar.BaseData.Domain.Services
         /// </summary>
         /// <returns></returns>
         DepartmentLiteDto GetDepartmentLiteData(string deptCode);
+
+        /// <summary>
+        /// 设置门店位置信息
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        bool SetDepartmentLocation(DepartmentLocationDto param);
+
+        /// <summary>
+        /// 获取门店地理位置
+        /// </summary>
+        /// <returns></returns>
+        DepartmentLocationDto GetDepartmentLocation();
     }
 }

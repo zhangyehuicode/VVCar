@@ -1223,6 +1223,7 @@
     <Content Include="Areas\Mobile\Views\Merchant\ToolsManagement.cshtml" />
     <Content Include="Areas\Coupon\Views\Coupon\CouponProduct.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\SuperClassManagement.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\DepartmentLocation.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

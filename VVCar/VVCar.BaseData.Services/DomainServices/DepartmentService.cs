@@ -32,6 +32,9 @@ namespace VVCar.BaseData.Services.DomainServices
                 return _UserService;
             }
         }
+
+        IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
+
         #endregion
 
         #region methods
@@ -292,6 +295,56 @@ namespace VVCar.BaseData.Services.DomainServices
                 .Where(d => d.Code == deptCode)
                 .MapTo<DepartmentLiteDto>()
                 .FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 设置门店位置信息
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public bool SetDepartmentLocation(DepartmentLocationDto param)
+        {
+            if (param == null)
+                return false;
+            var merchantid = AppContext.CurrentSession.MerchantID;
+            if (merchantid == null)
+                return false;
+            var department = Repository.GetQueryable().FirstOrDefault(t => t.MerchantID == merchantid);
+            if (department == null)
+                return false;
+            AppContext.Logger.Info($"Longitude:{param.Longitude},Latitude:{param.Latitude}");
+            department.Longitude = param.Longitude;
+            department.Latitude = param.Latitude;
+            department.LocationName = param.LocationName;
+            department.InfoUrl = param.InfoUrl;
+            department.LastUpdateDate = DateTime.Now;
+            department.LastUpdateUser = param.UpdateUser;
+            department.LastUpdateUserID = param.UpdateUserID;
+            return Repository.Update(department) > 0;
+        }
+
+        /// <summary>
+        /// 获取门店地理位置
+        /// </summary>
+        /// <returns></returns>
+        public DepartmentLocationDto GetDepartmentLocation()
+        {
+            var merchantid = AppContext.CurrentSession.MerchantID;
+            if (merchantid == null)
+                return null;
+            var department = Repository.GetQueryable().FirstOrDefault(t => t.MerchantID == merchantid);
+            if (department != null)
+            {
+                return new DepartmentLocationDto
+                {
+                    Longitude = department.Longitude,
+                    Latitude = department.Latitude,
+                    LocationName = department.LocationName,
+                    InfoUrl = department.InfoUrl,
+
+                };
+            }
+            return null;
         }
 
         #endregion

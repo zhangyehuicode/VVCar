@@ -6,52 +6,17 @@
 	width: 600,
 	height: 500,
 	bodyPadding: 5,
-	autoShow: false,
 	modal: true,
-	buttonAlign: 'center',
 	initComponent: function () {
 		var me = this;
 		var couponTemplateInfoStore = Ext.create('WX.store.BaseData.CouponTemplateInfoStore');
-		me.items = [{
-			xtype: 'grid',
+		me.grid = Ext.create('Ext.grid.Panel', {
 			name: 'appletCardList',
-			stripeRows: true,
-			loadMask: true,
+			flex: 1, 
+			emptyText: '没有数据',
 			store: couponTemplateInfoStore,
-			tbar: {
-				xtype: 'form',
-				layout: 'column',
-				border: false,
-				frame: false,
-				labelAlign: 'left',
-				buttonAlign: 'right',
-				labelWidth: 100,
-				padding: 5,
-				autoWidth: true,
-				autoScroll: true,
-				columnWidth: 1,
-				items: [{
-					name: 'TemplateCode',
-					xtype: 'textfield',
-					fieldLabel: '编号',
-					width: 170,
-					labelWidth: 60,
-					margin: '0 0 0 5',
-				}, {
-					name: 'Title',
-					xtype: 'textfield',
-					fieldLabel: '标题',
-					width: 170,
-					labelWidth: 60,
-					margin: '0 0 0 5',
-				}, {
-					action: 'search',
-					xtype: 'button',
-					text: '搜索',
-					iconCls: 'submitBtn',
-					margin: '0 0 0 5',
-				}]
-			},
+			stripeRows: true,
+			selModel: Ext.create('Ext.selection.CheckboxModel', { model: 'SIMPLE', mode: 'single' }),
 			columns: [
 				{ header: '编号', dataIndex: 'TemplateCode', flex: 1 },
 				{ header: '优惠类型', dataIndex: 'CouponTypeName', flex: 1 },
@@ -61,7 +26,19 @@
 				xtype: 'pagingtoolbar',
 				displayInfo: true
 			}
-		}]
+		});
+		me.items = [me.grid];
+		me.buttons = [{
+			text: '保存',
+			action: 'save',
+			cls: 'submitBtn',
+			scope: me
+		},
+		{
+			text: '取消',
+			scope: me,
+			handler: me.close
+		}];
 		me.callParent(arguments);
 	}
 });

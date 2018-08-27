@@ -17,7 +17,7 @@
 			{
 				action: 'addAppletCard',
 				xtype: 'button',
-				text: '新增小程序卡券',
+				text: '新增小程序领券中心卡券',
 				scope: this,
 				iconCls: 'fa fa-plus-circle',
 			},

@@ -53,6 +53,12 @@ namespace VVCar.BaseData.Data.Mapping
 
             this.Property(t => t.LastUpdateUser)
                 .HasMaxLength(20);
+
+            this.Property(t => t.LocationName)
+                .HasMaxLength(50);
+
+            this.Property(t => t.InfoUrl)
+                .HasMaxLength(50);
         }
     }
 }

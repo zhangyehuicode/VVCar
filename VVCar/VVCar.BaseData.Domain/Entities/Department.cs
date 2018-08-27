@@ -115,5 +115,29 @@ namespace VVCar.BaseData.Domain.Entities
         /// </summary>
         [Display(Name = "数据来源")]
         public EDataSource DataSource { get; set; }
+
+        /// <summary>
+        ///经度
+        /// </summary>
+        [Display(Name = "经度")]
+        public double Longitude { get; set; }
+
+        /// <summary>
+        /// 纬度
+        /// </summary>
+        [Display(Name = "纬度")]
+        public double Latitude { get; set; }
+
+        /// <summary>
+        /// 位置名
+        /// </summary>
+        [Display(Name = "位置名")]
+        public string LocationName { get; set; }
+
+        /// <summary>
+        /// 在查看位置界面底部显示的超链接,可点击跳转
+        /// </summary>
+        [Display(Name = "在查看位置界面底部显示的超链接,可点击跳转")]
+        public string InfoUrl { get; set; }
     }
 }
