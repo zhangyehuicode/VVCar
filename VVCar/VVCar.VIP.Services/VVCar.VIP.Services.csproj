@@ -78,6 +78,7 @@
     <Compile Include="DomainServices\CouponTemplateService.cs" />
     <Compile Include="DomainServices\CouponTemplateStockService.cs" />
     <Compile Include="DomainServices\CouponTemplateUseTimeService.cs" />
+    <Compile Include="DomainServices\CrowdOrderService.cs" />
     <Compile Include="DomainServices\GameCouponRecordService.cs" />
     <Compile Include="DomainServices\GameCouponService.cs" />
     <Compile Include="DomainServices\GamePushItemService.cs" />

@@ -326,6 +326,7 @@
     <Compile Include="Controllers\VIP\CouponPushItemController.cs" />
     <Compile Include="Controllers\VIP\CouponPushMemberController.cs" />
     <Compile Include="Controllers\VIP\CouponTemplateController.cs" />
+    <Compile Include="Controllers\VIP\CrowdOrderController.cs" />
     <Compile Include="Controllers\VIP\GameCouponRecordController.cs" />
     <Compile Include="Controllers\VIP\GamePushController.cs" />
     <Compile Include="Controllers\VIP\GamePushItemController.cs" />
@@ -664,6 +665,7 @@
     <Content Include="Scripts\app\controller\Announcement.js" />
     <Content Include="Scripts\app\controller\AppletCard.js" />
     <Content Include="Scripts\app\controller\Article.js" />
+    <Content Include="Scripts\app\controller\CrowdOrder.js" />
     <Content Include="Scripts\app\controller\Logistics.js" />
     <Content Include="Scripts\app\controller\Tag.js" />
     <Content Include="Scripts\app\controller\CarBitCoinMember.js" />
@@ -726,6 +728,7 @@
     <Content Include="Scripts\app\model\BaseData\AnnouncementPushMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\ArticleItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\ArticleModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CrowdOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\LogisticsModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberGroupTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\TagModel.js" />
@@ -807,6 +810,7 @@
     <Content Include="Scripts\app\store\BaseData\AnnouncementStore.js" />
     <Content Include="Scripts\app\store\BaseData\ArticleItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\ArticleStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CrowdOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\LogisticsStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberGroupLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\SalesmanStore.js" />
@@ -927,6 +931,9 @@
     <Content Include="Scripts\app\view\Combo\ComboEdit.js" />
     <Content Include="Scripts\app\view\Combo\ComboList.js" />
     <Content Include="Scripts\app\view\Combo\ProductSelector.js" />
+    <Content Include="Scripts\app\view\CrowdOrder\CrowdOrderEdit.js" />
+    <Content Include="Scripts\app\view\CrowdOrder\CrowdOrderList.js" />
+    <Content Include="Scripts\app\view\CrowdOrder\ProductSelector.js" />
     <Content Include="Scripts\app\view\Logistics\LogisticsDetails.js" />
     <Content Include="Scripts\app\view\Logistics\LogisticsEdit.js" />
     <Content Include="Scripts\app\view\Logistics\Logistics.js" />

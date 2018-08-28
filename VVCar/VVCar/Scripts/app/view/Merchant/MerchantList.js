@@ -59,8 +59,19 @@
 					labelWidth: 70,
 					margin: '0 0 0 5',
 					store: [
-						[0, '否'],
-						[1, '是'],
+						[false, '否'],
+						[true, '是'],
+					]
+				}, {
+					xtype: 'combobox',
+					fieldLabel: '是否普通商户',
+					name: 'IsGeneralMerchant',
+					width: 190,
+					labelWidth: 85,
+					margin: '0 0 0 5',
+					store: [
+						[false, '否'],
+						[true, '是'],
 					]
 				}, {
 					xtype: 'combobox',

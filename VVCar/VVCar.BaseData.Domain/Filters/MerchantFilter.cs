@@ -35,6 +35,12 @@ namespace VVCar.BaseData.Domain.Filters
         public bool? IsAgent { get; set; }
 
         /// <summary>
+        /// 是否普通商户
+        /// </summary>
+        [Display(Name = "是否普通商户")]
+        public bool? IsGeneralMerchant { get; set; }
+
+        /// <summary>
         /// 商户状态
         /// </summary>
         [Display(Name = "商户状态")]
