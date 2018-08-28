@@ -315,6 +315,7 @@ namespace VVCar.BaseData.Services.DomainServices
             AppContext.Logger.Info($"Longitude:{param.Longitude},Latitude:{param.Latitude}");
             department.Longitude = param.Longitude;
             department.Latitude = param.Latitude;
+            department.Address = param.Address;
             department.LocationName = param.LocationName;
             department.InfoUrl = param.InfoUrl;
             department.LastUpdateDate = DateTime.Now;
@@ -341,7 +342,7 @@ namespace VVCar.BaseData.Services.DomainServices
                     Latitude = department.Latitude,
                     LocationName = department.LocationName,
                     InfoUrl = department.InfoUrl,
-
+                    Address = department.Address,
                 };
             }
             return null;

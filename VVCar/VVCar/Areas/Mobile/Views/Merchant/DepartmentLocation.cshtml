@@ -15,7 +15,13 @@
             <div class="quickoatablecell" style="width:20px;text-align:center;">
                 <img class="locationimg" src="~/Areas/resource/img/mobile/location.png" />
             </div>
-            <div class="quickoatablecell" style="color:#51b3f0;">获取地理位置</div>
+            <div class="quickoatablecell" style="color:#51b3f0;">选择地理位置</div>
+        </div>
+        <div class="quickoatable" style="border:none;padding:10px 0 0 0;" v-on:click="openLocation">
+            <div class="quickoatablecell" style="width:20px;text-align:center;">
+                <img class="locationimg" src="~/Areas/resource/img/mobile/location.png" />
+            </div>
+            <div class="quickoatablecell" style="color:#51b3f0;">查看地理位置</div>
         </div>
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle">经度</div>
@@ -24,6 +30,10 @@
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle">纬度</div>
             <input type="number" class="quickoatablecell inputbottom" placeholder="纬度" v-model:value="DepartmentLocation.Latitude" />
+        </div>
+        <div class="quickoatable">
+            <div class="quickoatablecell itemtitle">地址</div>
+            <textarea class="quickoatablecell inputbottom" placeholder="地址" v-model:value="DepartmentLocation.Address"></textarea>
         </div>
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle">位置名称</div>
@@ -36,6 +46,7 @@
     </div>
     <div class="confirmbtn" v-on:click="confirm">保存</div>
 </div>
+<iframe class="map" frameborder=0 src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=H62BZ-YWXK6-R4NSF-EW4RW-NZBR7-47FKG&referer=vvcar"></iframe>
 
 @section scripts{
     <style type="text/css">
@@ -110,11 +121,37 @@
             vertical-align: middle;
             margin-top: -3px;
         }
+
+        .map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
     <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script>
+        window.addEventListener('message', function (event) {
+            // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
+            var loc = event.data;
+            if (loc && loc.module == 'locationPicker') {//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
+                console.log('location', loc);
+                //$.alert(JSON.stringify(loc));//loc.cityname
+                _viewModel.DepartmentLocation.Longitude = loc.latlng.lng;
+                _viewModel.DepartmentLocation.Latitude = loc.latlng.lat;
+                _viewModel.DepartmentLocation.LocationName = loc.poiname;
+                _viewModel.DepartmentLocation.Address = loc.poiaddress;
+                $('.map').hide();
+            }
+        }, false);
+    </script>
     <script type="text/javascript">
         function wxConfig() {
             var mch = $.getUrlParam('mch');
@@ -143,6 +180,7 @@
                                 'closeWindow',
                                 'scanQRCode',
                                 'getLocation',
+                                'openLocation',
                             ]
                         });
                         wx.ready(function () {
@@ -177,7 +215,8 @@
                         LocationName: '',
                         InfoUrl: '',
                         UpdateUserID: '',
-                        UpdateUser:'',
+                        UpdateUser: '',
+                        Address:'',
                     },
                 },
                 methods: {
@@ -200,14 +239,25 @@
                         });
                     },
                     getLocation: function () {
-                        wx.getLocation({
-                            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-                            success: function (res) {
-                                _viewModel.DepartmentLocation.Latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-                                _viewModel.DepartmentLocation.Longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-                                var speed = res.speed; // 速度，以米/每秒计
-                                var accuracy = res.accuracy; // 位置精度
-                            }
+                        //wx.getLocation({
+                        //    type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                        //    success: function (res) {
+                        //        _viewModel.DepartmentLocation.Latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                        //        _viewModel.DepartmentLocation.Longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                        //        var speed = res.speed; // 速度，以米/每秒计
+                        //        var accuracy = res.accuracy; // 位置精度
+                        //    }
+                        //});
+                        $('.map').show();
+                    },
+                    openLocation: function () {
+                        wx.openLocation({
+                            latitude: _viewModel.DepartmentLocation.Latitude, // 纬度，浮点数，范围为90 ~ -90
+                            longitude: _viewModel.DepartmentLocation.Longitude, // 经度，浮点数，范围为180 ~ -180。
+                            name: _viewModel.DepartmentLocation.LocationName, // 位置名
+                            address: _viewModel.DepartmentLocation.Address, // 地址详情说明
+                            scale: 14, // 地图缩放级别,整形值,范围从1~28。默认为最大
+                            infoUrl: _viewModel.DepartmentLocation.InfoUrl // 在查看位置界面底部显示的超链接,可点击跳转
                         });
                     }
                 }
@@ -273,7 +323,11 @@
                 if (data.Latitude == null || data.Latitude == '') {
                     $.alert('请填写纬度');
                     return false;
-                }
+            }
+            if (data.Address == null || data.Address == '') {
+                $.alert('请填写地址');
+                return false;
+            }
                 if (data.LocationName == null || data.LocationName == '') {
                     $.alert('请填写位置名称');
                     return false;
@@ -288,8 +342,6 @@
                 return;
             if (!checkdata(data))
                 return;
-            //$.alert(JSON.stringify(data));
-            //return;
             $.ajax({
                 url: '/api/Department/SetDepartmentLocation',
                 type: 'POST',
@@ -329,6 +381,7 @@
                             _viewModel.DepartmentLocation.Latitude = res.Data.Latitude;
                             _viewModel.DepartmentLocation.LocationName = res.Data.LocationName;
                             _viewModel.DepartmentLocation.InfoUrl = res.Data.InfoUrl;
+                            _viewModel.DepartmentLocation.Address = res.Data.Address;
                         }
                     } else {
                         $.alert(res.ErrorMessage);

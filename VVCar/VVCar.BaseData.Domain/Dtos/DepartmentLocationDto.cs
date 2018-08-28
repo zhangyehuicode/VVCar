@@ -26,6 +26,12 @@ namespace VVCar.BaseData.Domain.Dtos
         public double Latitude { get; set; }
 
         /// <summary>
+        /// 地址
+        /// </summary>
+        [Display(Name = "地址")]
+        public string Address { get; set; }
+
+        /// <summary>
         /// 位置名
         /// </summary>
         [Display(Name = "位置名")]

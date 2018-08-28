@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="container">
+</div>
+
+@section scripts{
+    <style type="text/css">
+        #container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+    @*<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+        <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />*@
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                                'getLocation',
+                                'openLocation',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        _viewModel = new Vue({
+            el: '#container',
+            data: {
+                CurrentLatitude: 39.914850,
+                CurrentLongitude: 116.403765,
+            },
+            methods: {}
+        });
+        function init() {
+            if (wx.getlocation) {
+                wx.getlocation({
+                    type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openlocation用的火星坐标，可传入'gcj02'
+                    success: function (res) {
+                        _viewModel.CurrentLatitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                        _viewModel.CurrentLongitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                        var speed = res.speed; // 速度，以米/每秒计
+                        var accuracy = res.accuracy; // 位置精度
+                    }
+                });
+            }
+            var center = new qq.maps.LatLng(_viewModel.CurrentLatitude, _viewModel.CurrentLongitude);
+            var map = new qq.maps.Map(document.getElementById("container"), {
+                center: center,
+                zoom: 11
+            });
+            var scaleControl = new qq.maps.ScaleControl({
+                align: qq.maps.ALIGN.BOTTOM_LEFT,
+                margin: qq.maps.Size(85, 15),
+                map: map
+            });
+            //var zoomLevelControl = new qq.maps.Control({
+            //    content: '缩放级别:' + map.getZoom(),
+            //    align: qq.maps.ALIGN.TOP,
+            //    map: map
+            //});
+            var marker = new qq.maps.Marker({
+                position: center,
+                map: map,
+                content: '文本标注'
+            });
+            var anchor = new qq.maps.Point(0, 39),
+                size = new qq.maps.Size(42, 68),
+                origin = new qq.maps.Point(0, 0),
+                markerIcon = new qq.maps.MarkerImage(
+                    "https://lbs.qq.com/doc/img/nilt.png",
+                    size,
+                    origin,
+                    anchor
+                );
+            //marker.setIcon(markerIcon);
+            //添加到提示窗
+            var info = new qq.maps.InfoWindow({
+                map: map
+            });
+            qq.maps.event.addListener(marker, 'click', function () {
+                info.open();
+                info.setContent('<div style="text-align:center;white-space:nowrap;' +
+                    'margin:10px;">单击标记</div>');
+                info.setPosition(center);
+            });
+            marker.setDraggable(true);
+            //var polyline = new qq.maps.Polyline({
+            //    path: [
+            //        new qq.maps.LatLng(39.910, 116.399),
+            //        new qq.maps.LatLng(39.920, 116.399),
+            //        new qq.maps.LatLng(39.930, 116.399)
+            //    ],
+            //    strokeColor: '#000000',
+            //    strokeWeight: 10,
+            //    map
+            //});
+            //var polygon = new qq.maps.Polygon({
+            //    path: [
+            //        new qq.maps.LatLng(39.910, 116.399),
+            //        new qq.maps.LatLng(39.920, 116.405),
+            //        new qq.maps.LatLng(39.940, 116.430)
+            //    ],
+            //    map: map
+            //});
+            //var cirle = new qq.maps.Circle({
+            //    center: new qq.maps.LatLng(39.920, 116.405),
+            //    radius: 20000,
+            //    map: map
+            //});
+        }
+        init();
+    </script>
+}

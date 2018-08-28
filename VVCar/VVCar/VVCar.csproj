@@ -265,6 +265,7 @@
     <Compile Include="Areas\Mobile\Controllers\AgentController.cs" />
     <Compile Include="Areas\Mobile\Controllers\CarBitcoinController.cs" />
     <Compile Include="Areas\Mobile\Controllers\CustomerController.cs" />
+    <Compile Include="Areas\Mobile\Controllers\MapController.cs" />
     <Compile Include="Areas\Mobile\Controllers\MerchantController.cs" />
     <Compile Include="Areas\Mobile\MobileAreaRegistration.cs" />
     <Compile Include="Common\ExportHelper.cs" />
@@ -1224,6 +1225,7 @@
     <Content Include="Areas\Coupon\Views\Coupon\CouponProduct.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\SuperClassManagement.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\DepartmentLocation.cshtml" />
+    <Content Include="Areas\Mobile\Views\Map\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />
