@@ -358,7 +358,7 @@ namespace VVCar.BaseData.Services.DomainServices
                 UnitOfWork.CommitTransaction();
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 UnitOfWork.RollbackTransaction();
                 throw e;
@@ -398,6 +398,10 @@ namespace VVCar.BaseData.Services.DomainServices
                 queryable = queryable.Where(t => t.ID == filter.AgentDepartmentID.Value);
             if (filter.UserID.HasValue)
                 queryable = queryable.Where(t => t.UserID == filter.UserID.Value);
+            if (AppContext.CurrentSession.MerchantID == Guid.Parse("00000000-0000-0000-0000-000000000001") && AppContext.CurrentSession.UserID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
+            {
+                queryable = queryable.Where(t => t.CreatedUserID == AppContext.CurrentSession.UserID || t.UserID == AppContext.CurrentSession.UserID);
+            }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);

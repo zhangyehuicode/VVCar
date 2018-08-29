@@ -4,155 +4,195 @@
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<div id="container">
+<div id="mapcon">
+    <div id="map"></div>
+    <img class="path-img" src="~/Areas/resource/img/mobile/path.png" v-on:click="path" />
+    <div class="location-btn" v-on:click="getCurrentLocation">获取当前位置</div>
 </div>
 
 @section scripts{
     <style type="text/css">
-        #container {
+        #map {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
         }
+
+        .path-img {
+            position: absolute;
+            right: 20px;
+            bottom: 60px;
+        }
+
+        .location-btn {
+            font-size: 13px;
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            color: #4847fd;
+        }
     </style>
-    @*<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
-        <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />*@
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp"></script>
     <script type="text/javascript">
-        function wxConfig() {
+        $(function () {
             var mch = $.getUrlParam('mch');
-            $.ajax({
-                type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
-                datatype: "json",
-                success: function (data) {
-                    if (data.IsSuccessful) {
-                        var temp = data.Data;
-                        wx.config({
-                            debug: false,
-                            appId: temp.appId,
-                            timestamp: temp.timestamp,
-                            nonceStr: temp.nonceStr,
-                            signature: temp.signature,
-                            jsApiList: [
-                                'checkJsApi',
-                                'onMenuShareTimeline',
-                                'onMenuShareAppMessage',
-                                'onMenuShareQQ',
-                                'onMenuShareWeibo',
-                                'hideOptionMenu',
-                                'hideAllNonBaseMenuItem',
-                                'showMenuItems',
-                                'closeWindow',
-                                'scanQRCode',
-                                'getLocation',
-                                'openLocation',
-                            ]
+
+            _viewModel = new Vue({
+                el: '#mapcon',
+                data: {
+                    DepartmendLocations: [],
+                    CurrentLatitude: 24.471472,//39.914850,
+                    CurrentLongitude: 118.129829,//116.403765,
+                    CurrentLocation: {},
+                },
+                methods: {
+                    path: function (event) {
+                        if (_viewModel.CurrentLocation == null || _viewModel.CurrentLocation == {} || _viewModel.CurrentLocation == "" || _viewModel.CurrentLocation.LocationName == null || _viewModel.CurrentLocation.LocationName == "") {
+                            $.alert('请先点击选中一个地点');
+                            return;
+                        }
+                        window.location.href = "https://apis.map.qq.com/tools/routeplan/eword=" + _viewModel.CurrentLocation.LocationName + "&epointx=" + _viewModel.CurrentLocation.Longitude + "&epointy=" + _viewModel.CurrentLocation.Latitude + "?referer=vvcar&key=H62BZ-YWXK6-R4NSF-EW4RW-NZBR7-47FKG";
+                    },
+                    getCurrentLocation: function () {
+                        wx.getLocation({
+                            type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                            success: function (res) {
+                                _viewModel.CurrentLatitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                                _viewModel.CurrentLongitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                                var speed = res.speed; // 速度，以米/每秒计
+                                var accuracy = res.accuracy; // 位置精度
+                                getDepartmentLocations();
+                            }
                         });
-                        wx.ready(function () {
-                            wx.hideAllNonBaseMenuItem();
-                        });
-                    } else {
                     }
-                },
-                complete: function (xmlHttpRequest, textStatus) {
-                },
-                error: function (xmlHttpRequest, textStatus) {
                 }
             });
-        };
-        wxConfig();
-    </script>
-    <script type="text/javascript">
-        _viewModel = new Vue({
-            el: '#container',
-            data: {
-                CurrentLatitude: 39.914850,
-                CurrentLongitude: 116.403765,
-            },
-            methods: {}
-        });
-        function init() {
-            if (wx.getlocation) {
-                wx.getlocation({
-                    type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openlocation用的火星坐标，可传入'gcj02'
+
+            function wxConfig() {
+                $.ajax({
+                    type: "POST",
+                    url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                    datatype: "json",
+                    success: function (data) {
+                        if (data.IsSuccessful) {
+                            var temp = data.Data;
+                            wx.config({
+                                debug: false,
+                                appId: temp.appId,
+                                timestamp: temp.timestamp,
+                                nonceStr: temp.nonceStr,
+                                signature: temp.signature,
+                                jsApiList: [
+                                    'checkJsApi',
+                                    'onMenuShareTimeline',
+                                    'onMenuShareAppMessage',
+                                    'onMenuShareQQ',
+                                    'onMenuShareWeibo',
+                                    'hideOptionMenu',
+                                    'hideAllNonBaseMenuItem',
+                                    'showMenuItems',
+                                    'closeWindow',
+                                    'scanQRCode',
+                                    'getLocation',
+                                    'openLocation',
+                                ]
+                            });
+                            wx.ready(function () {
+                                wx.hideAllNonBaseMenuItem();
+                                wx.getLocation({
+                                    type: 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                                    success: function (res) {
+                                        _viewModel.CurrentLatitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                                        _viewModel.CurrentLongitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                                        var speed = res.speed; // 速度，以米/每秒计
+                                        var accuracy = res.accuracy; // 位置精度
+                                        getDepartmentLocations();
+                                    }
+                                });
+                            });
+                        } else {
+                        }
+                    },
+                    complete: function (xmlHttpRequest, textStatus) {
+                    },
+                    error: function (xmlHttpRequest, textStatus) {
+                    }
+                });
+            };
+            wxConfig();
+
+            function getDepartmentLocations() {
+                $.ajax({
+                    url: '/api/Department/GetDepartmentLocations',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
                     success: function (res) {
-                        _viewModel.CurrentLatitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-                        _viewModel.CurrentLongitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-                        var speed = res.speed; // 速度，以米/每秒计
-                        var accuracy = res.accuracy; // 位置精度
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.DepartmendLocations = res.Data;
+                                initMap();
+                            }
+                        }
+                    },
+                    error: function () {
                     }
                 });
             }
-            var center = new qq.maps.LatLng(_viewModel.CurrentLatitude, _viewModel.CurrentLongitude);
-            var map = new qq.maps.Map(document.getElementById("container"), {
-                center: center,
-                zoom: 11
-            });
-            var scaleControl = new qq.maps.ScaleControl({
-                align: qq.maps.ALIGN.BOTTOM_LEFT,
-                margin: qq.maps.Size(85, 15),
-                map: map
-            });
-            //var zoomLevelControl = new qq.maps.Control({
-            //    content: '缩放级别:' + map.getZoom(),
-            //    align: qq.maps.ALIGN.TOP,
-            //    map: map
-            //});
-            var marker = new qq.maps.Marker({
-                position: center,
-                map: map,
-                content: '文本标注'
-            });
-            var anchor = new qq.maps.Point(0, 39),
-                size = new qq.maps.Size(42, 68),
-                origin = new qq.maps.Point(0, 0),
-                markerIcon = new qq.maps.MarkerImage(
-                    "https://lbs.qq.com/doc/img/nilt.png",
-                    size,
-                    origin,
-                    anchor
-                );
-            //marker.setIcon(markerIcon);
-            //添加到提示窗
-            var info = new qq.maps.InfoWindow({
-                map: map
-            });
-            qq.maps.event.addListener(marker, 'click', function () {
-                info.open();
-                info.setContent('<div style="text-align:center;white-space:nowrap;' +
-                    'margin:10px;">单击标记</div>');
-                info.setPosition(center);
-            });
-            marker.setDraggable(true);
-            //var polyline = new qq.maps.Polyline({
-            //    path: [
-            //        new qq.maps.LatLng(39.910, 116.399),
-            //        new qq.maps.LatLng(39.920, 116.399),
-            //        new qq.maps.LatLng(39.930, 116.399)
-            //    ],
-            //    strokeColor: '#000000',
-            //    strokeWeight: 10,
-            //    map
-            //});
-            //var polygon = new qq.maps.Polygon({
-            //    path: [
-            //        new qq.maps.LatLng(39.910, 116.399),
-            //        new qq.maps.LatLng(39.920, 116.405),
-            //        new qq.maps.LatLng(39.940, 116.430)
-            //    ],
-            //    map: map
-            //});
-            //var cirle = new qq.maps.Circle({
-            //    center: new qq.maps.LatLng(39.920, 116.405),
-            //    radius: 20000,
-            //    map: map
-            //});
-        }
-        init();
+
+            function initMap() {
+                var center = new qq.maps.LatLng(_viewModel.CurrentLatitude, _viewModel.CurrentLongitude);
+                var map = new qq.maps.Map(document.getElementById("map"), {
+                    center: center,
+                    zoom: 13,
+                    zoomControl: true,
+                    zoomControlOptions: {
+                        //设置缩放控件样式为默认的缩放控件。会根据地图尺寸的大小和其他因素自动调整样式
+                        //style: qq.maps.ZoomControlStyle.DEFAULT
+                        //设置缩放控件样式为标准的缩放控件。包含放大、缩小和滑块
+                        style: qq.maps.ZoomControlStyle.LARGE
+                        //设置缩放控件样式为仅包含放大缩小两个按钮
+                        //style: qq.maps.ZoomControlStyle.SMALL
+                    },
+                    mapTypeControlOptions: {
+                        //设置控件的地图类型ID，ROADMAP显示普通街道地图，SATELLITE显示卫星图像，HYBRID显示卫星图像上的主要街道透明层
+                        mapTypeIds: [
+                            qq.maps.MapTypeId.ROADMAP,
+                            qq.maps.MapTypeId.SATELLITE,
+                            qq.maps.MapTypeId.HYBRID
+                        ],
+                        //设置控件位置相对上方中间位置对齐
+                        position: qq.maps.ControlPosition.TOP_CENTER
+                    }
+                });
+                var info = new qq.maps.InfoWindow({
+                    map: map
+                });
+                initMarker(map, info);
+            }
+
+            function initMarker(map, info) {
+                var locations = _viewModel.DepartmendLocations;
+                for (var i = 0; i < locations.length; i++) {
+                    var position = new qq.maps.LatLng(locations[i].Latitude, locations[i].Longitude);
+                    var marker = new qq.maps.Marker({
+                        position: position,
+                        map: map,
+                        location: locations[i]
+                    });
+                    qq.maps.event.addListener(marker, 'click', function () {
+                        _viewModel.CurrentLocation = marker.location;
+                        info.open();
+                        info.setContent('<div style="font-size:13px;text-align:center;white-space:nowrap;' +
+                            'margin:0px;">' + marker.location.LocationName + '</div><div style="font-size:10px;text-align:center;white-space:nowrap;' +
+                            'margin:0px;">' + marker.location.Address + '</div>');
+                        info.setPosition(marker.position);
+                    });
+                }
+            }
+        });
     </script>
 }

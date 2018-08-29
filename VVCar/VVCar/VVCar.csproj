@@ -537,6 +537,7 @@
     <Content Include="Areas\resource\img\mobile\ic1.png" />
     <Content Include="Areas\resource\img\mobile\order.png" />
     <Content Include="Areas\resource\img\mobile\pass.png" />
+    <Content Include="Areas\resource\img\mobile\path.png" />
     <Content Include="Areas\resource\img\mobile\phone.png" />
     <Content Include="Areas\resource\img\mobile\plate.jpg" />
     <Content Include="Areas\resource\img\mobile\sc.png" />

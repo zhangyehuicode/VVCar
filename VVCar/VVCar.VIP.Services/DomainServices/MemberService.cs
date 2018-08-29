@@ -96,6 +96,8 @@ namespace VVCar.VIP.Services.DomainServices
 
         IRepository<UserMember> UserMemberRepo { get => UnitOfWork.GetRepository<IRepository<UserMember>>(); }
 
+        IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
+
         #endregion
 
         #region propertiesTemp
@@ -283,6 +285,18 @@ namespace VVCar.VIP.Services.DomainServices
                 //{
                 //    queryable = queryable.Where(t => t.MemberGradeID == filter.MemberGradeID);
                 //}
+            }
+            if (AppContext.CurrentSession.MerchantID == Guid.Parse("00000000-0000-0000-0000-000000000001") && AppContext.CurrentSession.UserID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
+            {
+                var currentuser = UserRepo.GetByKey(AppContext.CurrentSession.UserID, false);
+                if (currentuser != null)
+                {
+                    queryable = queryable.Where(t => t.MobilePhoneNo == currentuser.MobilePhoneNo || t.CreatedUserID == AppContext.CurrentSession.UserID);
+                }
+                else
+                {
+                    queryable = queryable.Where(t => t.CreatedUserID == AppContext.CurrentSession.UserID);
+                }
             }
             queryable = queryable.OrderByDescending(t => t.CreatedDate);
             if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)

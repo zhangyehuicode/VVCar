@@ -75,12 +75,38 @@ namespace VVCar.Common
         }
 
         /// <summary>
-        /// 导入模板
+        /// 会员导入模板
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="sheetName"></param>
         /// <returns></returns>
         public string ImportMemberTemplate(string sheetName = "会员导入模板")
+        {
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            _book = book;
+            ISheet sheet = book.CreateSheet(sheetName);
+            if (OnSheetCreated != null)
+                OnSheetCreated(sheet);
+
+            FillHead(sheet);
+            using (var ms = new MemoryStream())
+            {
+                book.Write(ms);
+                var fileName = sheetName + ".xls";
+                using (var fs = new FileStream(ExportTempPath(fileName), FileMode.Create))
+                {
+                    book.Write(fs);
+                }
+                return ExportTempUrl(fileName);
+            }
+        }
+
+        /// <summary>
+        /// 模板
+        /// </summary>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        public string ImportTemplate(string sheetName = "模板")
         {
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             _book = book;

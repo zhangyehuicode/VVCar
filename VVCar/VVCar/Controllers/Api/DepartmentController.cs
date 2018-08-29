@@ -211,5 +211,19 @@ namespace VVCar.Controllers.Api
                 return DepartmentService.GetDepartmentLocation();
             });
         }
+
+        /// <summary>
+        /// 获取所有门店地理位置
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetDepartmentLocations"), AllowAnonymous]
+        public PagedActionResult<DepartmentLocationDto> GetDepartmentLocations()
+        {
+            return SafeGetPagedData<DepartmentLocationDto>((result) =>
+            {
+                result.Data = DepartmentService.GetDepartmentLocations();
+                result.TotalCount = result.Data.Count();
+            });
+        }
     }
 }

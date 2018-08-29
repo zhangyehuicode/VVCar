@@ -333,7 +333,7 @@ namespace VVCar.BaseData.Services.DomainServices
             var merchantid = AppContext.CurrentSession.MerchantID;
             if (merchantid == null)
                 return null;
-            var department = Repository.GetQueryable().FirstOrDefault(t => t.MerchantID == merchantid);
+            var department = Repository.GetQueryable(false).FirstOrDefault(t => t.MerchantID == merchantid);
             if (department != null)
             {
                 return new DepartmentLocationDto
@@ -346,6 +346,31 @@ namespace VVCar.BaseData.Services.DomainServices
                 };
             }
             return null;
+        }
+
+        /// <summary>
+        /// 获取所有门店地理位置
+        /// </summary>
+        /// <returns></returns>
+        public List<DepartmentLocationDto> GetDepartmentLocations()
+        {
+            var result = new List<DepartmentLocationDto>();
+            var departments = Repository.GetQueryable(false).Where(t => t.LocationName != null && t.LocationName != "").ToList();
+            if (departments != null && departments.Count > 0)
+            {
+                departments.ForEach(d =>
+                {
+                    result.Add(new DepartmentLocationDto
+                    {
+                        Longitude = d.Longitude,
+                        Latitude = d.Latitude,
+                        LocationName = d.LocationName,
+                        InfoUrl = d.InfoUrl,
+                        Address = d.Address,
+                    });
+                });
+            }
+            return result;
         }
 
         #endregion

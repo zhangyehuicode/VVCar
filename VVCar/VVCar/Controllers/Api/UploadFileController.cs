@@ -18,7 +18,7 @@ namespace VVCar.Controllers.Api
     [RoutePrefix("api/UploadFile"), AllowAnonymous]
     public class UploadFileController : ApiController
     {
-        static int _maxSizeLength = 1024 * 1024 * 10;
+        static int _maxSizeLength = 1024 * 1024 * 20;
 
         /// <summary>
         /// 上传卡券图片
@@ -222,6 +222,16 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 上传消费记录数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadConsumeHistoryExcel")]
+        public UploadFileResult UploadConsumeHistoryExcel()
+        {
+            return UploadAction(Path.Combine(AppContext.PathInfo.AppDataPath, "Upload/Excel/ConsumeHistory"));
+        }
+
+        /// <summary>
         /// 上传报销单
         /// </summary>
         /// <returns></returns>
@@ -230,6 +240,7 @@ namespace VVCar.Controllers.Api
         {
             return UploadAction("Pictures/Reimbursement");
         }
+
 
         private UploadFileResult UploadAction(string targetDirPath)
         {
@@ -253,7 +264,7 @@ namespace VVCar.Controllers.Api
                 }
                 if (file.ContentLength > _maxSizeLength)
                 {
-                    result.errorMessage = "不允许上传超过 10M 的文件";
+                    result.errorMessage = "不允许上传超过 20M 的文件";
                     return result;
                 }
                 var fileName = string.Concat(DateTime.Now.ToString("yyyyMMddHHmmssfff"), Path.GetExtension(file.FileName));

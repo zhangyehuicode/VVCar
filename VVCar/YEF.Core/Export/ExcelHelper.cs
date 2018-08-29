@@ -73,8 +73,7 @@ namespace YEF.Core.Export
                     var cellValue = row.GetCell(fieldInfo.Index);
                     if (!fieldInfo.AllowNullValue && (cellValue == null || string.IsNullOrEmpty(cellValue.ToString())))
                         throw new Exception(string.Format("第{0}行“{1}”不能为空", j + 1, fieldInfo.DisplayName));
-
-                    string cellValueStr = cellValue.ToString();
+                    string cellValueStr = (null != cellValue ? cellValue.ToString() : null);
                     if (prop.PropertyType == typeof(int))
                     {
                         int temp;
@@ -85,9 +84,16 @@ namespace YEF.Core.Export
                     else if (prop.PropertyType == typeof(decimal))
                     {
                         decimal temp;
-                        if (!decimal.TryParse(cellValueStr, out temp))
-                            throw new Exception(string.Format("第{0}行“{1}”应为{2}类型", j + 1, fieldInfo.DisplayName, "整数"));
-                        prop.SetValue(entity, temp, null);
+                        if (fieldInfo.AllowNullValue && (cellValue == null || string.IsNullOrEmpty(cellValue.ToString())))
+                        {
+                            prop.SetValue(entity, null);
+                        }
+                        else
+                        {
+                            if (!decimal.TryParse(cellValueStr, out temp))
+                                throw new Exception(string.Format("第{0}行“{1}”应为{2}类型", j + 1, fieldInfo.DisplayName, "数字"));
+                            prop.SetValue(entity, temp, null);
+                        }
                     }
                     else if (prop.PropertyType == typeof(DateTime))
                     {
@@ -100,10 +106,17 @@ namespace YEF.Core.Export
                     else if (prop.PropertyType == typeof(DateTime?))
                     {
                         DateTime temp;
-                        cellValueStr = cellValue.DateCellValue.ToString();
-                        if (!DateTime.TryParse(cellValueStr, out temp))
-                            throw new Exception(string.Format("第{0}行“{1}”应为{2}类型", j + 1, fieldInfo.DisplayName, "时间"));
-                        prop.SetValue(entity, temp, null);
+                        if (fieldInfo.AllowNullValue && (cellValue == null || string.IsNullOrEmpty(cellValue.ToString())))
+                        {
+                            prop.SetValue(entity, null);
+                        }
+                        else
+                        {
+                            cellValueStr = cellValue.DateCellValue.ToString();
+                            if (!DateTime.TryParse(cellValueStr, out temp))
+                                throw new Exception(string.Format("第{0}行“{1}”应为{2}类型", j + 1, fieldInfo.DisplayName, "时间"));
+                            prop.SetValue(entity, temp, null);
+                        }
                     }
                     else if (prop.PropertyType == typeof(bool))
                     {

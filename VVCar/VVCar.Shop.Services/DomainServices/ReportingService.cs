@@ -47,6 +47,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<AgentDepartment> AgentDepartmentRepo { get => ServiceLocator.Instance.GetService<IRepository<AgentDepartment>>(); }
 
+        IRepository<ConsumeHistory> ConsumeHistoryRepo { get => ServiceLocator.Instance.GetService<IRepository<ConsumeHistory>>(); }
+
         #endregion
 
         /// <summary>
@@ -464,6 +466,7 @@ namespace VVCar.Shop.Services.DomainServices
 
             var pickUpOrderQueryable = PickUpOrderRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             var orderQueryable = OrderRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var consumeHistoryQueryable = ConsumeHistoryRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
 
             var memberQueryable = MemberRepo.GetInclude(t => t.MemberPlateList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
 
@@ -492,6 +495,27 @@ namespace VVCar.Shop.Services.DomainServices
                     TradeMoney = t.Money,
                     Source = EHistorySource.ShopOrder,
                     CreatedDate = t.CreatedDate,
+                });
+            });
+
+            consumeHistoryQueryable.ToList().ForEach(t =>
+            {
+                result.Add(new ConsumeHistoryDto {
+                    Name = t.Name,
+                    PlateNumber = t.PlateNumber,
+                    TradeNo = t.TradeNo,
+                    MobilePhoneNo = t.MobilePhoneNo,
+                    Consumption = t.Consumption,
+                    TradeCount = t.TradeCount,
+                    Unit = t.Unit,
+                    Price = t.Price,
+                    TradeMoney = t.TradeMoney,
+                    BasePrice = t.BasePrice,
+                    GrossProfit = t.GrossProfit,
+                    Remark = t.Remark,
+                    DepartmentName = t.DepartmentName,
+                    Source = EHistorySource.HistoryData,
+                    CreatedDate = t.CreatedDate
                 });
             });
 
@@ -561,6 +585,32 @@ namespace VVCar.Shop.Services.DomainServices
             result.TotalOpenAccountCount = agentdepartmentlist.Count();
 
             return result;
+        }
+
+        /// <summary>
+        /// 批量导入
+        /// </summary>
+        /// <param name="consumeHistories"></param>
+        /// <returns></returns>
+        public bool ImportConsumeHistoryData(IEnumerable<ConsumeHistory> consumeHistories)
+        {
+            var index = 1;
+            consumeHistories.ForEach(t =>
+            {
+                var consumeHistoryList = ConsumeHistoryRepo.GetQueryable(false)
+                    .Where(m => m.Name == t.Name && m.PlateNumber == t.PlateNumber && m.TradeNo == t.TradeNo && m.MobilePhoneNo == t.MobilePhoneNo)
+                    .Where(m => m.Consumption == t.Consumption && m.TradeCount == t.TradeCount && m.Price == t.Price && t.TradeMoney == t.TradeMoney)
+                    .Where(m => m.BasePrice == t.BasePrice && m.GrossProfit == t.GrossProfit && m.Remark == t.Remark && m.DepartmentName == t.DepartmentName)
+                    .Where(m => m.CreatedDate == t.CreatedDate).ToList();
+                if(consumeHistoryList.Count()>0)
+                    throw new DomainException("批量导入会员失败" + "第" + index + "行数据已存在.");
+                t.ID = Util.NewID();
+                t.MerchantID = AppContext.CurrentSession.MerchantID;
+                t.CreatedUserID = AppContext.CurrentSession.UserID;
+                t.CreatedUser = AppContext.CurrentSession.UserName;
+                index++;
+            });
+            return ConsumeHistoryRepo.AddRange(consumeHistories).Count() > 0;
         }
     }
 }

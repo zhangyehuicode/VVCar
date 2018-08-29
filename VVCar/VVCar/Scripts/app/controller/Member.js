@@ -548,7 +548,6 @@
         var me = this;
         var store = me.getMember().getStore();
         var form = filefield.up('form').getForm();
-        Ext.Msg.alert('tip', Ext.GlobalConfig.ApiDomainUrl + 'aaaa');
         if (form.isValid()) {
             Ext.Msg.alert('提示', '确定要导入数据吗?', function (optional) {
                 if (optional === 'ok') {

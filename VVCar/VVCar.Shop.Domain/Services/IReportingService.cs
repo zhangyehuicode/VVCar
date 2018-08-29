@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.Shop.Domain.Dtos;
+using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using YEF.Core;
 
@@ -79,5 +80,12 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="date"></param>
         /// <returns></returns>
         MonthOpenAccountPerformanceDto GetMonthOpenAccountPerformance(DateTime date);
+
+        /// <summary>
+        /// 导入消费历史记录
+        /// </summary>
+        /// <param name="consumeHistories"></param>
+        /// <returns></returns>
+        bool ImportConsumeHistoryData(IEnumerable<ConsumeHistory> consumeHistories);
     }
 }

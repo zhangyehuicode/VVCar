@@ -1,110 +1,110 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using YEF.Core.Data;
 
-namespace VVCar.Shop.Domain.Dtos
+namespace VVCar.Shop.Domain.Entities
 {
     /// <summary>
-    /// 消费历史Dto
+    /// 历史消费记录
     /// </summary>
-    public class ConsumeHistoryDto
+    public class ConsumeHistory : EntityBase
     {
         /// <summary>
-        /// 姓名
+        /// 客户名称
         /// </summary>
+        [Display(Name = "客户名称")]
         public string Name { get; set; }
-
-        /// <summary>
-        /// 手机号码
-        /// </summary>
-        public string MobilePhoneNo { get; set; }
 
         /// <summary>
         /// 车牌号
         /// </summary>
+        [Display(Name = "车牌号")]
         public string PlateNumber { get; set; }
 
         /// <summary>
-        /// 交易单号
+        /// 单据编号
         /// </summary>
+        [Display(Name = "单据编号")]
         public string TradeNo { get; set; }
+
+        /// <summary>
+        /// 电话号码
+        /// </summary>
+        [Display(Name ="电话号码")]
+        public string MobilePhoneNo { get; set; }
 
         /// <summary>
         /// 消费项目
         /// </summary>
+        [Display(Name = "消费项目")]
         public string Consumption { get; set; }
 
         /// <summary>
         /// 消费数量
         /// </summary>
-        public decimal TradeCount{ get; set; }
+        [Display(Name = "消费数量")]
+        public decimal TradeCount { get; set; }
 
         /// <summary>
         /// 单位
         /// </summary>
+        [Display(Name = "单位")]
         public string Unit { get; set; }
 
         /// <summary>
         /// 单价
         /// </summary>
+        [Display(Name = "单价")]
         public decimal Price { get; set; }
 
         /// <summary>
-        /// 交易金额
+        /// 金额
         /// </summary>
+        [Display(Name = "金额")]
         public decimal TradeMoney { get; set; }
 
         /// <summary>
         /// 商品成本
         /// </summary>
+        [Display(Name = "商品成本")]
         public decimal BasePrice { get; set; }
 
         /// <summary>
         /// 毛利
         /// </summary>
+        [Display(Name = "毛利")]
         public decimal GrossProfit { get; set; }
-
+        
         /// <summary>
         /// 备注
         /// </summary>
+        [Display(Name = "备注")]
         public string Remark { get; set; }
 
         /// <summary>
-        /// 门店名称
+        /// 门店
         /// </summary>
+        [Display(Name = "门店")]
         public string DepartmentName { get; set; }
 
         /// <summary>
-        /// 类型
+        /// 消费时间
         /// </summary>
-        public EHistorySource? Source { get; set; }
-
-        /// <summary>
-        /// 交易时间
-        /// </summary>
+        [Display(Name = "消费时间")]
         public DateTime? CreatedDate { get; set; }
-    }
-
-    /// <summary>
-    /// 消费历史数据来源
-    /// </summary>
-    public enum EHistorySource
-    {
-        /// <summary>
-        /// 接车单
-        /// </summary>
-        PickUpOrder = 0,
 
         /// <summary>
-        /// 商城订单
+        /// 创建人ID
         /// </summary>
-        ShopOrder = 1,
+        [Display(Name = "创建人ID")]
+        public Guid CreatedUserID { get; set; }
 
         /// <summary>
-        /// 历史导入数据
+        /// 创建人名称
         /// </summary>
-        HistoryData = 2,
+        [Display(Name = "创建人名称")]
+        public string CreatedUser { get; set; }
+
+
     }
 }

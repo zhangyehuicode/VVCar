@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using VVCar.Common;
 using VVCar.Shop.Domain.Dtos;
+using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
@@ -181,7 +183,7 @@ namespace VVCar.Controllers.Shop
                     new ExportInfo("ProductName","产品名称"),
                     new ExportInfo("ProductCode","产品编码"),
                     new ExportInfo("Quantity","销售数量"),
-                    new ExportInfo("Unit","单位"    ),
+                    new ExportInfo("Unit","单位"),
                     new ExportInfo("Money","销售总额"),
                 });
                 return exporter.Export(data.ToList(), "零售产品汇总统计");
@@ -310,6 +312,76 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 消费历史记录导入模板
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("ImportConsumeHistoryDataTemplate")]
+        public JsonActionResult<string> ImportConsumeHistoryDataTemplate()
+        {
+            return SafeExecute(() =>
+            {
+                var templateData = new List<ConsumeHistory>();
+                var exportInfos = new[]
+                 {
+                    new ExportInfo("Name", "客户名称"),
+                    new ExportInfo("PlateNumber", "车牌号码"),
+                    new ExportInfo("TradeNo", "单据编号"),
+                    new ExportInfo("MobilePhoneNo", "电话号码"),
+                    new ExportInfo("Consumption", "消费项目"),
+                    new ExportInfo("TradeCount", "交易数量"),
+                    new ExportInfo("Unit", "单位"),
+                    new ExportInfo("Price", "单价"),
+                    new ExportInfo("TradeMoney", "金额"),
+                    new ExportInfo("BasePrice", "商品成本"),
+                    new ExportInfo("GrossProfit", "毛利"),
+                    new ExportInfo("Remark", "备注"),
+                    new ExportInfo("DepartmentName", "门店"),
+                    new ExportInfo("CreatedDate", "消费时间"),
+
+                };
+                var eh = new ExportHelper(exportInfos);
+                return eh.ImportTemplate("消费历史记录导入模板");
+            });
+        }
+
+        /// <summary>
+        /// 消费记录导入
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ImportConsumeHistoryData")]
+        public JsonActionResult<bool> ImportConsumeHistoryData(string fileName)
+        {
+            return SafeExecute(() =>
+            {
+                var targetDir = Path.Combine(AppContext.PathInfo.AppDataPath, "Upload/Excel/ConsumeHistory");
+                string targetPath = Path.Combine(targetDir, fileName);
+
+                var excelFieldInfos = new[]
+                {
+                    new ExcelFieldInfo(0, "Name", "客户名称", true),
+                    new ExcelFieldInfo(1, "PlateNumber", "车牌号码", true),
+                    new ExcelFieldInfo(2, "TradeNo", "单据编号", true),
+                    new ExcelFieldInfo(3, "MobilePhoneNo", "电话号码", true),
+                    new ExcelFieldInfo(4, "Consumption", "消费项目", true),
+                    new ExcelFieldInfo(5, "TradeCount", "消费数量", true),
+                    new ExcelFieldInfo(6, "Unit", "单位", true),
+                    new ExcelFieldInfo(7, "Price", "单价", true),
+                    new ExcelFieldInfo(8, "TradeMoney", "金额", true),
+                    new ExcelFieldInfo(9, "BasePrice", "商品成本", true),
+                    new ExcelFieldInfo(10, "GrossProfit", "毛利", true),
+                    new ExcelFieldInfo(11, "Remark", "备注", true),
+                    new ExcelFieldInfo(12, "DepartmentName", "门店", true),
+                    new ExcelFieldInfo(13, "CreatedDate", "消费时间", true)
+                };
+                var data = ExcelHelper.ImportFromExcel<ConsumeHistory>(targetPath, excelFieldInfos);
+                if (data == null || data.Count < 1)
+                    throw new DomainException("没有可以导入的数据");
+                return ReportingService.ImportConsumeHistoryData(data);
+            });
+        }
+
+        /// <summary>
         /// 获取消费记录
         /// </summary>
         /// <param name="filter"></param>
@@ -358,12 +430,19 @@ namespace VVCar.Controllers.Shop
                 consumeHistoryDto.CreatedDate = null;
                 var exporter = new ExportHelper(new[]
                 {
+                    new ExportInfo("TradeNo","交易单号"),
                     new ExportInfo("Name", "姓名"),
                     new ExportInfo("MobilePhoneNo","手机号"),
                     new ExportInfo("PlateNumber","车牌号"),
-                    new ExportInfo("TradeNo","交易单号"),
+                    new ExportInfo("Consumption", "消费项目"),
+                    new ExportInfo("TradeCount", "消费数量"),
+                    new ExportInfo("Unit", "单位"),
+                    new ExportInfo("Price", "单价"),
                     new ExportInfo("TradeMoney","交易金额"),
                     new ExportInfo("Source","交易类型"),
+                    new ExportInfo("BasePrice", "商品成本"),
+                    new ExportInfo("GrossProfit", "毛利"),
+                    new ExportInfo("Remark", "备注"),
                     new ExportInfo("CreatedDate","交易时间"),
                 });
                 (data as List<ConsumeHistoryDto>).Add(consumeHistoryDto);
