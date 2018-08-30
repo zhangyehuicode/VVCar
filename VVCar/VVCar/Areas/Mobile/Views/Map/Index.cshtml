@@ -21,6 +21,7 @@
         }
 
         .path-img {
+            width: 48px;
             position: absolute;
             right: 20px;
             bottom: 60px;
@@ -181,15 +182,16 @@
                     var marker = new qq.maps.Marker({
                         position: position,
                         map: map,
-                        location: locations[i]
+                        location: locations[i],
                     });
-                    qq.maps.event.addListener(marker, 'click', function () {
-                        _viewModel.CurrentLocation = marker.location;
+                    qq.maps.event.addListener(marker, 'click', function (event) {
+                        var self = event.target;
+                        _viewModel.CurrentLocation = self.location;
                         info.open();
                         info.setContent('<div style="font-size:13px;text-align:center;white-space:nowrap;' +
-                            'margin:0px;">' + marker.location.LocationName + '</div><div style="font-size:10px;text-align:center;white-space:nowrap;' +
-                            'margin:0px;">' + marker.location.Address + '</div>');
-                        info.setPosition(marker.position);
+                            'margin:0px;">' + self.location.LocationName + '</div><div style="font-size:10px;text-align:center;white-space:nowrap;' +
+                            'margin:0px;">' + self.location.Address + '</div>');
+                        info.setPosition(self.position);
                     });
                 }
             }

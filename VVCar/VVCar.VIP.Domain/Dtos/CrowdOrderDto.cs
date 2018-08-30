@@ -33,6 +33,21 @@ namespace VVCar.VIP.Domain.Dtos
         public string ProductName { get; set; }
 
         /// <summary>
+        /// 销售单价
+        /// </summary>
+        public decimal PriceSale { get; set; }
+
+        /// <summary>
+        /// 库存
+        /// </summary>
+        public int Stock { get; set; }
+
+        /// <summary>
+        /// 图片
+        /// </summary>
+        public string ImgUrl { get; set; }
+
+        /// <summary>
         /// 拼单人数
         /// </summary>
         public int PeopleCount { get; set; }

@@ -90,7 +90,7 @@
 		var win = Ext.widget('ProductSelector');
 		var store = win.down('grid').getStore();
 		store.proxy.extraParams = {
-			ProductType: 0
+			ProductType: 1
 		};
 		store.load();
 		win.show();

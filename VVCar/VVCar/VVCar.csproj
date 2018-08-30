@@ -483,6 +483,7 @@
     <Content Include="Areas\resource\img\mobile\gwc.png" />
     <Content Include="Areas\resource\img\mobile\gwc2.png" />
     <Content Include="Areas\resource\img\mobile\home.png" />
+    <Content Include="Areas\resource\img\mobile\homeselected.png" />
     <Content Include="Areas\resource\img\mobile\horsepowericon.png" />
     <Content Include="Areas\resource\img\mobile\hot.png" />
     <Content Include="Areas\resource\img\mobile\hy.png" />
@@ -498,6 +499,8 @@
     <Content Include="Areas\resource\img\mobile\kf.png" />
     <Content Include="Areas\resource\img\mobile\kuang.png" />
     <Content Include="Areas\resource\img\mobile\kuangselected.png" />
+    <Content Include="Areas\resource\img\mobile\location.png" />
+    <Content Include="Areas\resource\img\mobile\locationselected.png" />
     <Content Include="Areas\resource\img\mobile\logo.png" />
     <Content Include="Areas\resource\img\mobile\master\5000.png" />
     <Content Include="Areas\resource\img\mobile\master\6.png" />
@@ -1234,6 +1237,8 @@
     <Content Include="Areas\Mobile\Views\Agent\SuperClassManagement.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\DepartmentLocation.cshtml" />
     <Content Include="Areas\Mobile\Views\Map\Index.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\Home.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\CrowdOrderDetails.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

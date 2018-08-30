@@ -51,7 +51,7 @@
 		Ext.Ajax.request({
 			method: 'GET',
 			url: this.proxy.api.importConsumeHistoryData + "?fileName=" + filename,
-			timeout: 120000,
+			timeout: 480000,
 			success: function (options, request) {
 				var response = JSON.parse(options.responseText);
 				if (response.IsSuccessful) {
@@ -59,7 +59,6 @@
 					Ext.Msg.hide();
 				} else {
 					Ext.Msg.alert('提示', response.ErrorMessage);
-					Ext.Msg.hide();
 				}
 			},
 			failure: function (response, opts) {

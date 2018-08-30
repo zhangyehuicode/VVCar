@@ -87,5 +87,18 @@ namespace VVCar.Controllers.VIP
                 result.TotalCount = totalCount;
             });
         }
+
+        /// <summary>
+        /// 获取拼单数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetCrowdOrders"), AllowAnonymous]
+        public PagedActionResult<CrowdOrderDto> GetCrowdOrders()
+        {
+            return SafeGetPagedData<CrowdOrderDto>((result) =>
+            {
+                result.Data = CrowdOrderService.GetCrowdOrders();
+            });
+        }
     }
 }

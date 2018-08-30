@@ -30,5 +30,11 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<CrowdOrderDto> Search(CrowdOrderFilter filter, out int totalCount);
+
+        /// <summary>
+        /// 获取拼单数据
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<CrowdOrderDto> GetCrowdOrders();
     }
 }

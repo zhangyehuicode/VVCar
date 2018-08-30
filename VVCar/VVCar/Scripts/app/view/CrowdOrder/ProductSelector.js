@@ -50,13 +50,15 @@
 					action: 'search',
 					xtype: 'button',
 					text: '搜索',
-					iconCls: 'submitBtn',
 					margin: '0 0 0 5',
 				}]
 			},
 			columns: [
 				{ header: '产品编号', dataIndex: 'Code', flex: 1 },
 				{ header: '产品名称', dataIndex: 'Name', flex: 1 },
+				{ header: '原单价', dataIndex: 'BasePrice', flex: 1 },
+				{ header: '销售单价', dataIndex: 'PriceSale', flex: 1 },
+				{ header: '库存', dataIndex: 'Stock', flex: 1 },
 			],
 			bbar: {
 				xtype: 'pagingtoolbar',

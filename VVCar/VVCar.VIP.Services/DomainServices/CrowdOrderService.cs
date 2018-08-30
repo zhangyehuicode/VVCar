@@ -94,7 +94,7 @@ namespace VVCar.VIP.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<CrowdOrderDto> Search(CrowdOrderFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = Repository.GetInclude(t => t.Product, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.Name))
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
             if (filter.IsAvailable.HasValue)
@@ -103,7 +103,17 @@ namespace VVCar.VIP.Services.DomainServices
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
             return queryable.MapTo<CrowdOrderDto>().ToArray();
+        }
 
+        /// <summary>
+        /// 获取拼单数据
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<CrowdOrderDto> GetCrowdOrders()
+        {
+            var now = DateTime.Now;
+            var queryable = Repository.GetInclude(t => t.Product, false).Where(t => t.IsAvailable && t.PutawayTime <= now && t.SoleOutTime > now && t.Product.Stock > 0 && t.PeopleCount > 0);
+            return queryable.MapTo<CrowdOrderDto>().ToArray();
         }
     }
 }

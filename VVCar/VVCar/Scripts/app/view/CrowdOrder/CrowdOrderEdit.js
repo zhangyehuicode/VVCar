@@ -5,6 +5,7 @@
 	name: 'CrowdOrderEdit',
 	layout: 'fit',
 	width: 250,
+	modal: true,
 	initComponent: function () {
 		var me = this;
 		var yesNoDictStore = Ext.create('WX.store.DataDict.YesNoTypeStore');
@@ -50,6 +51,14 @@
 					name: 'Name',
 					fieldLabel: '拼单名称',
 					allowBlank: false,
+				}, {
+					xtype: 'numberfield',
+					margin: '5 10 5 5',
+					name: 'Price',
+					fieldLabel: '拼单价格',
+					minValue: 0,
+					allowBlank: false,
+					value: 0,
 				}, {
 					xtype: 'combobox',
 					margin: '5 10 5 5',
