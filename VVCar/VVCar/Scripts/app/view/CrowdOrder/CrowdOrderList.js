@@ -54,7 +54,7 @@
         me.columnLines = true;
         me.columns = [
             { header: '拼单标题', dataIndex: 'Name', flex: 1 },
-            { header: '产品', dataIndex: 'ProductName', flex: 1 },
+            { header: '产品', dataIndex: 'CarBitCoinProductName', flex: 1 },
             { header: '库存', dataIndex: 'Stock', width: 80 },
             { header: '销售单价', dataIndex: 'PriceSale', flex: 1 },
             { header: '拼单价格', dataIndex: 'Price', flex: 1 },

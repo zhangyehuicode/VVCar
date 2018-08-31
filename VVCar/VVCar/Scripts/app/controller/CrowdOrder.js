@@ -2,7 +2,7 @@
 	extend: 'Ext.app.Controller',
 	requires: ['WX.store.BaseData.CrowdOrderStore'],
 	models: ['BaseData.CrowdOrderModel'],
-	views: ['CrowdOrder.CrowdOrderList', 'CrowdOrder.CrowdOrderEdit', 'CrowdOrder.ProductSelector'],
+	views: ['CrowdOrder.CrowdOrderList', 'CrowdOrder.CrowdOrderEdit', 'CrowdOrder.CarBitCoinProductSelector'],
 	refs: [{
 		ref: 'crowdOrderList',
 		selector: 'CrowdOrderList'
@@ -10,8 +10,8 @@
 		ref: 'crowdOrderEdit',
 		selector: 'CrowdOrderEdit'
 	}, {
-		ref: 'productSelector',
-		selector: 'ProductSelector'
+		ref: 'carBitCoinProductSelector',
+		selector: 'carBitCoinProductSelector'
 	}],
 	init: function () {
 		var me = this;
@@ -34,7 +34,7 @@
 			'CrowdOrderEdit button[action=save]': {
 				click: me.save
 			},
-			'ProductSelector grid[name=productList]': {
+			'CarBitCoinProductSelector grid[name=carBitCoinProductList]': {
 				itemdblclick: me.chooseProduct
 			}
 		});
@@ -87,18 +87,18 @@
 		});
 	},
 	selectProduct: function () {
-		var win = Ext.widget('ProductSelector');
+		var win = Ext.widget('CarBitCoinProductSelector');
 		var store = win.down('grid').getStore();
 		store.proxy.extraParams = {
-			ProductType: 1
+			CarBitCoinProductType: 1
 		};
 		store.load();
 		win.show();
 	},
 	chooseProduct: function (grid, record) {
 		var win = Ext.ComponentQuery.query('window[name=CrowdOrderEdit]')[0];
-		win.down('textfield[name=ProductID]').setValue(record.data.ID);
-		win.down('textfield[name=ProductName]').setValue(record.data.Name);
+		win.down('textfield[name=CarBitCoinProductID]').setValue(record.data.ID);
+		win.down('textfield[name=CarBitCoinProductName]').setValue(record.data.Name);
 		grid.up('window').close();
 	},
 	save: function () {

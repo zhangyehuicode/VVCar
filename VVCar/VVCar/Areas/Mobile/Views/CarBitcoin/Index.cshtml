@@ -391,7 +391,13 @@
                         window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
                 },
                 nearby: function () {
-                    window.location.href = "/Mobile/Map?mch=" + mch;
+                    if (this.IsMember) {
+                        window.location.href = "/Mobile/Map?mch=" + mch;
+                    } else {
+                        $.confirm('请先注册', function () {
+                            window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                        });
+                    }
                 },
                 home: function () {
                     window.location.href = "/Mobile/CarBitcoin/Home?mch=" + mch;

@@ -53,7 +53,7 @@ namespace VVCar.VIP.Services.DomainServices
                 return false;
             crowdOrder.Name = entity.Name;
             crowdOrder.Price = entity.Price;
-            crowdOrder.ProductID = entity.ProductID;
+            crowdOrder.CarBitCoinProductID = entity.CarBitCoinProductID;
             crowdOrder.PeopleCount = entity.PeopleCount;
             crowdOrder.IsAvailable = entity.IsAvailable;
             crowdOrder.PutawayTime = entity.PutawayTime;
@@ -94,7 +94,7 @@ namespace VVCar.VIP.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<CrowdOrderDto> Search(CrowdOrderFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetInclude(t => t.Product, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = Repository.GetInclude(t => t.CarBitCoinProduct, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.Name))
                 queryable = queryable.Where(t => t.Name.Contains(filter.Name));
             if (filter.IsAvailable.HasValue)
@@ -112,7 +112,7 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<CrowdOrderDto> GetCrowdOrders()
         {
             var now = DateTime.Now;
-            var queryable = Repository.GetInclude(t => t.Product, false).Where(t => t.IsAvailable && t.PutawayTime <= now && t.SoleOutTime > now && t.Product.Stock > 0 && t.PeopleCount > 0);
+            var queryable = Repository.GetInclude(t => t.CarBitCoinProduct, false).Where(t => t.IsAvailable && t.PutawayTime <= now && t.SoleOutTime > now && t.CarBitCoinProduct.Stock > 0 && t.PeopleCount > 0);
             return queryable.MapTo<CrowdOrderDto>().ToArray();
         }
     }

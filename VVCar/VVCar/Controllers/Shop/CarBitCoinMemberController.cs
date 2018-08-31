@@ -31,7 +31,7 @@ namespace VVCar.Controllers.Shop
         /// <param name="entity"></param>
         /// <returns></returns>
         [HttpPost, Route("Register"), AllowAnonymous]
-        public JsonActionResult<CarBitCoinMember> Register(CarBitCoinMember entity)
+        public JsonActionResult<CarBitCoinMember> Register(CarBitCoinMemberRegister entity)
         {
             return SafeExecute(() =>
             {

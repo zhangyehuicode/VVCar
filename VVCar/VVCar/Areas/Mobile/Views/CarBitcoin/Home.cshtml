@@ -91,7 +91,7 @@
         }
 
         .crowdorder-con {
-            margin: 10px 10px 0 10px;
+            margin: 13px 10px 0 10px;
             background: #fff;
         }
 
@@ -197,7 +197,13 @@
                         window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
                 },
                 nearby: function () {
-                    window.location.href = "/Mobile/Map?mch=" + mch;
+                    if (this.IsMember) {
+                        window.location.href = "/Mobile/Map?mch=" + mch;
+                    } else {
+                        $.confirm('请先注册', function () {
+                            window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                        });
+                    }
                 },
                 wk: function (event) {
                     window.location.href = "/Mobile/CarBitcoin?mch=" + mch;

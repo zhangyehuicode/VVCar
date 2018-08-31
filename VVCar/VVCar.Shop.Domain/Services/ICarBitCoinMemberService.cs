@@ -19,7 +19,7 @@ namespace VVCar.Shop.Domain.Services
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        CarBitCoinMember Register(CarBitCoinMember entity);
+        CarBitCoinMember Register(CarBitCoinMemberRegister entity);
 
         /// <summary>
         /// 获取车比特会员通过OpenID

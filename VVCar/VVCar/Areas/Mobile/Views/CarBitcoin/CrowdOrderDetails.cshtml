@@ -5,20 +5,23 @@
 }
 
 <div id="crowdorderdetails">
+    <img class="return-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back" />
     <div class="main">
         <div class="crowdorder-con">
             <div>
                 <img class="crowdorder-img" v-bind:src=CrowdOrder.ImgUrl />
             </div>
-            <div class="cbctable width-fill crowdorder-price-con">
+            <div class="cbctable crowdorder-price-con width-fill">
                 <div class="cbctablecell crowdorder-price"><span style="font-size:13px;">￥</span>{{CrowdOrder.Price}}</div>
                 <div class="cbctablecell crowdorder-pricesale">￥{{CrowdOrder.PriceSale}}</div>
-                <div class="cbctablecell crowdorder-count">已拼666件</div>
+                @*<div class="cbctablecell crowdorder-count">已拼666件</div>*@
             </div>
-            <div class="width-fill crowdorder-name">{{CrowdOrder.Name}}</div>
+            <div class="crowdorder-name">{{CrowdOrder.Name}}</div>
         </div>
+        <div class="peoplecount-con">需<span style="color:#e02d28;margin:0 3px;">{{CrowdOrder.PeopleCount}}</span>人参与</div>
+        <div class="crowdorderrules-con">规则：发起拼单后，在我的拼单里面，选择一个已发起的拼单右上角转发分享，每新注册一个爱保养会员，拼单人数加一，直到满足拼单人数，所有参与这次拼单的会员均可享受拼单价格并获得立即下单购买资格。</div>
     </div>
-    <div class="bottomactioncon" v-on:click="Crowdordering">
+    <div class="bottomactioncon" v-on:click="crowdordering">
         <div>￥{{CrowdOrder.Price}}</div>
         <div>发起拼单</div>
     </div>
@@ -73,17 +76,18 @@
 
         .crowdorder-name {
             font-size: 15px;
-            margin: 5px 10px;
+            padding: 0px 13px 10px 13px;
         }
 
         .crowdorder-price-con {
-            margin: 0 10px 5px 10px;
+            margin: 0 0px 5px 0px;
         }
 
         .crowdorder-price {
-            font-size: 18px;
+            font-size: 23px;
             color: #e80c1c;
             width: 60px;
+            padding: 0 10px 0 13px;
         }
 
         .crowdorder-pricesale {
@@ -96,7 +100,35 @@
             font-size: 13px;
             color: #a8a8a8;
             float: right;
-            margin-right: 25px;
+            margin-right: 13px;
+        }
+
+        .peoplecount-con {
+            height: 30px;
+            line-height: 30px;
+            padding: 5px 13px;
+            background: #fff;
+            font-size: 15px;
+            margin-top: 3px;
+            letter-spacing: 1px;
+        }
+
+        .crowdorderrules-con {
+            padding: 10px 13px;
+            background: #fff;
+            font-size: 13px;
+            margin-top: 3px;
+            letter-spacing: 1px;
+            color: #58585a;
+        }
+
+        .return-img {
+            width: 33px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1;
+            opacity: 0.5;
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
@@ -152,14 +184,20 @@
         var crowdorder = sessionStorage.getItem('crowdorder');
         if (crowdorder == null || crowdorder == '')
             return;
-        console.log(crowdorder);
         crowdorder = JSON.parse(crowdorder);
-        _viewModel = new Vue({
-            el: '#crowdorderdetails',
-            data: {
-                MyInfo: {},
-                CrowdOrder: {},
-                IsMember: false,
+            _viewModel = new Vue({
+                el: '#crowdorderdetails',
+                data: {
+                    MyInfo: {},
+                    CrowdOrder: {},
+                    IsMember: false,
+                    CrowdOrderRecord: {
+                        CarBitCoinMemberID: '',
+                        CrowdOrderID: crowdorder.ID,
+                        CrowdOrderRecordItemList: [{
+                            CarBitCoinMemberID: '',
+                        }]
+                    }
             },
             methods: {
                 register: function (event) {
@@ -167,8 +205,19 @@
                         window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
                 },
                 crowdordering: function (event) {
-                    $.alert('发起拼单');
-                }
+                    if (this.IsMember) {
+                        $.confirm('确认发起拼单？', function () {
+                            addCrowdOrderRecord();
+                        });
+                    } else {
+                        $.confirm('请先注册', function () {
+                            window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                        });
+                    }
+                },
+                back: function (event) {
+                    history.back(-1);
+                },
             }
         });
         _viewModel.CrowdOrder = crowdorder;
@@ -186,6 +235,8 @@
                             if (res.Data.length > 0) {
                                 _viewModel.MyInfo = res.Data[0];
                                 _viewModel.IsMember = true;
+                                _viewModel.CrowdOrderRecord.CarBitCoinMemberID = res.Data[0].ID;
+                                _viewModel.CrowdOrderRecord.CrowdOrderRecordItemList[0].CarBitCoinMemberID = res.Data[0].ID;
                             }
                         }
                     } else {
@@ -196,7 +247,39 @@
                 }
             });
         }
-        getCarBitCoinMember();
+            getCarBitCoinMember();
+
+            function addCrowdOrderRecord() {
+                //$.alert(JSON.stringify(_viewModel.CrowdOrderRecord));
+                //return;
+                $.ajax({
+                    url: '/api/CrowdOrderRecord',
+                    type: 'POST',
+                    data: _viewModel.CrowdOrderRecord,
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                $.toast('发起成功', function () {
+                                    sessionStorage.setItem('crowdorder', JSON.stringify(res.Data));
+                                    window.location.href = "/Mobile/CarBitCoin/MyCrowdOrderDetails?mch=" + mch + "&isadd=true&corid=" + res.Data.ID;
+                                    //window.location.href = "/Mobile/CarBitcoin/Home?mch=" + mch;
+                                });
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
         });
     </script>
 }

@@ -1,6 +1,6 @@
-﻿Ext.define('WX.view.CrowdOrder.ProductSelector', {
+﻿Ext.define('WX.view.CrowdOrder.CarBitCoinProductSelector', {
 	extend: 'Ext.window.Window',
-	alias: 'widget.ProductSelector',
+	alias: 'widget.CarBitCoinProductSelector',
 	title: '选择产品',
 	layout: 'fit',
 	width: 600,
@@ -11,11 +11,11 @@
 	buttonAlign: 'center',
 	initComponent: function () {
 		var me = this;
-		var productStore = Ext.create('WX.store.BaseData.ProductStore');
+		var productStore = Ext.create('WX.store.BaseData.CarBitCoinProductStore');
 		productStore.load();
 		me.items = [{
 			xtype: 'grid',
-			name: 'productList',
+			name: 'carBitCoinProductList',
 			stripeRows: true,
 			loadMask: true,
 			store: productStore,

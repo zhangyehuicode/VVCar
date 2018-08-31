@@ -25,12 +25,12 @@ namespace VVCar.VIP.Domain.Dtos
         /// <summary>
         /// 产品ID
         /// </summary>
-        public Guid ProductID { get; set; }
+        public Guid CarBitCoinProductID { get; set; }
 
         /// <summary>
         /// 产品名称
         /// </summary>
-        public string ProductName { get; set; }
+        public string CarBitCoinProductName { get; set; }
 
         /// <summary>
         /// 销售单价

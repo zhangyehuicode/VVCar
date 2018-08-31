@@ -198,10 +198,21 @@ namespace VVCar.BaseData.Services
                     .ForMember(dest => dest.CardTypeDesc, opt => opt.MapFrom(src => src.Card.CardType.Name));
 
                 cfg.CreateMap<CrowdOrder, CrowdOrderDto>()
-                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
-                .ForMember(dest => dest.PriceSale, opt => opt.MapFrom(src => src.Product.PriceSale))
-                .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Product.Stock))
-                .ForMember(dest => dest.ImgUrl, opt => opt.MapFrom(src => src.Product.ImgUrl));
+                .ForMember(dest => dest.CarBitCoinProductName, opt => opt.MapFrom(src => src.CarBitCoinProduct.Name))
+                .ForMember(dest => dest.PriceSale, opt => opt.MapFrom(src => src.CarBitCoinProduct.PriceSale))
+                .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.CarBitCoinProduct.Stock))
+                .ForMember(dest => dest.ImgUrl, opt => opt.MapFrom(src => src.CarBitCoinProduct.ImgUrl));
+
+                cfg.CreateMap<CrowdOrderRecord, CrowdOrderRecordDto>()
+                .ForMember(dest => dest.ProductID, opt => opt.MapFrom(src => src.CrowdOrder.CarBitCoinProductID))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.CrowdOrder.CarBitCoinProduct.Name))
+                .ForMember(dest => dest.PriceSale, opt => opt.MapFrom(src => src.CrowdOrder.CarBitCoinProduct.PriceSale))
+                .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.CrowdOrder.CarBitCoinProduct.Stock))
+                .ForMember(dest => dest.ImgUrl, opt => opt.MapFrom(src => src.CrowdOrder.CarBitCoinProduct.ImgUrl))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.CrowdOrder.Name))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.CrowdOrder.Price))
+                .ForMember(dest => dest.PeopleCount, opt => opt.MapFrom(src => src.CrowdOrder.PeopleCount))
+                .ForMember(dest => dest.CarBitCoinProduct, opt => opt.MapFrom(src => src.CrowdOrder.CarBitCoinProduct));
             });//Mapper.CreateMap<Member, MemberDto>()//    //.ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType.Name))//    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))//    .ForMember(dest => dest.CardBalance, opt => opt.MapFrom(src => src.Card.CardBalance))//    .ForMember(dest => dest.EffectiveDate, opt => opt.MapFrom(src => src.Card.EffectiveDate))//    .ForMember(dest => dest.ExpiredDate, opt => opt.MapFrom(src => src.Card.ExpiredDate))//    .ForMember(dest => dest.OwnerDepartment, opt => opt.MapFrom(src => src.OwnerDepartment.Name))//    .ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))//    .ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))//    .ForMember(dest => dest.CardType, opt => opt.MapFrom(src => src.Card.CardType))//    .ForMember(dest => dest.Point, opt => opt.MapFrom(src => src.Point));//Mapper.CreateMap<Member, MemberLiteInfoDto>()//    .ForMember(dest => dest.CardStatus, opt => opt.MapFrom(src => src.Card.Status))//    .ForMember(dest => dest.CardBalance, opt => opt.MapFrom(src => src.Card.CardBalance))//    .ForMember(dest => dest.MemberGroup, opt => opt.MapFrom(src => src.OwnerGroup.Name))//    .ForMember(dest => dest.MemberGradeName, opt => opt.MapFrom(src => src.MemberGrade.Name))//    .ForMember(dest => dest.CardTypeID, opt => opt.MapFrom(src => src.Card.CardTypeID));//Mapper.CreateMap<Member, MemberNanoInfoDto>();//Mapper.CreateMap<MemberCardType, MemberCardTypeDto>();//Mapper.CreateMap<Department, DepartmentLiteDto>();//Mapper.CreateMap<MemberCard, MemberCardExportDto>();//Mapper.CreateMap<ChatUserModel, WeChatFans>()//    .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.city))//    .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.country))//    .ForMember(dest => dest.HeadImgUrl, opt => opt.MapFrom(src => src.headimgurl))//    .ForMember(dest => dest.NickName, opt => opt.MapFrom(src => src.nickname))//    .ForMember(dest => dest.OpenID, opt => opt.MapFrom(src => src.openid))//    .ForMember(dest => dest.Province, opt => opt.MapFrom(src => src.province))//    .ForMember(dest => dest.Sex, opt => opt.MapFrom(src => src.sex))//    .ForMember(dest => dest.SubscribeTime, opt => opt.MapFrom(src => src.SubscribeTime));//Mapper.CreateMap<WeChatFans, WeChatFansDto>();//Mapper.CreateMap<NewUpdateRechargePlanDto, RechargePlan>();//Mapper.CreateMap<MemberCard, MemberCardThemeDto>();//Mapper.CreateMap<CardThemeGroup, CardThemeGroupDto>()//    .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.CardThemeCategory.Name))//    .ForMember(dest => dest.CardThemeCategoryID, opt => opt.MapFrom(src => src.CardThemeCategory.ID))//    .ForMember(dest => dest.CategoryGrade, opt => opt.MapFrom(src => src.CardThemeCategory.Grade));
 
         /// <summary>

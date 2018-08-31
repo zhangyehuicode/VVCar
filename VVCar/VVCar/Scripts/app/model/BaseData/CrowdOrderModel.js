@@ -4,8 +4,8 @@
     fields: [
         { name: 'ID' },
         { name: 'Name' },
-        { name: 'ProductID' },
-        { name: 'ProductName' },
+        { name: 'CarBitCoinProductID' },
+        { name: 'CarBitCoinProductName' },
         { name: 'PriceSale' },
         { name: 'Stock' },
         { name: 'Price' },

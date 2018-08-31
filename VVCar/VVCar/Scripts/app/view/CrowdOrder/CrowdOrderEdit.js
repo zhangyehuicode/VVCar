@@ -26,7 +26,7 @@
 				padding: '0 0 5 0',
 				items: [{
 					xtype: 'textfield',
-					name: 'ProductName',
+					name: 'CarBitCoinProductName',
 					fieldLabel: '产品',
 					readOnly: true,
 					allowBlank: false,
@@ -39,7 +39,7 @@
 				}]
 			}, {
 				xtype: 'textfield',
-				name: 'ProductID',
+				name: 'CarBitCoinProductID',
 				fieldLabel: '产品ID',
 				hidden: true,
 			}, {

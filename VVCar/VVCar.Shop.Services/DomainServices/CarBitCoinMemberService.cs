@@ -12,6 +12,7 @@ using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
 using VVCar.VIP.Domain.Entities;
+using VVCar.VIP.Domain.Services;
 using YEF.Core;
 using YEF.Core.Data;
 using YEF.Core.Domain;
@@ -41,6 +42,8 @@ namespace VVCar.Shop.Services.DomainServices
         IRepository<CarBitCoinMember> CarBitCoinMemberRepo { get => UnitOfWork.GetRepository<IRepository<CarBitCoinMember>>(); }
 
         IRepository<CarBitCoinMemberEngine> CarBitCoinMemberEngineRepo { get => UnitOfWork.GetRepository<IRepository<CarBitCoinMemberEngine>>(); }
+
+        ICrowdOrderRecordService CrowdOrderRecordService { get => ServiceLocator.Instance.GetService<ICrowdOrderRecordService>(); }
 
         #endregion
 
@@ -89,11 +92,18 @@ namespace VVCar.Shop.Services.DomainServices
             return Repository.Update(entity) > 0;
         }
 
-        public CarBitCoinMember Register(CarBitCoinMember entity)
+        public CarBitCoinMember Register(CarBitCoinMemberRegister param)
         {
-            if (entity == null)
+            if (param == null)
                 return null;
-            var member = Repository.GetQueryable(false).FirstOrDefault(t => t.MobilePhoneNo == entity.MobilePhoneNo);
+            var entity = new CarBitCoinMember
+            {
+                Name = param.Name,
+                MobilePhoneNo = param.MobilePhoneNo,
+                OpenID = param.OpenID,
+                Sex = param.Sex,
+            };
+            var member = Repository.GetQueryable(false).FirstOrDefault(t => t.MobilePhoneNo == param.MobilePhoneNo);
             if (member != null)
             {
                 entity.ID = member.ID;
@@ -102,14 +112,25 @@ namespace VVCar.Shop.Services.DomainServices
             }
             var result = Add(new CarBitCoinMember
             {
-                Name = entity.Name,
-                MobilePhoneNo = entity.MobilePhoneNo,
-                Sex = entity.Sex,
-                OpenID = entity.OpenID,
+                Name = param.Name,
+                MobilePhoneNo = param.MobilePhoneNo,
+                Sex = param.Sex,
+                OpenID = param.OpenID,
                 Horsepower = 60,
                 //Horsepower = CalculateHorsepower(entity.MobilePhoneNo),
             });
             CarBitCoinDistributionService.DistributionCarBitCoin(result.ID);
+            if (param.CrowdOrderRecordID.HasValue)
+            {
+                try
+                {
+                    CrowdOrderRecordService.JoinCrowdOrderRecord(param.CrowdOrderRecordID.Value, result.ID);
+                }
+                catch (Exception e)
+                {
+                    AppContext.Logger.Error($"车比特会员注册，加入拼单出现异常，{e.Message}");
+                }
+            }
             return result;
         }
 

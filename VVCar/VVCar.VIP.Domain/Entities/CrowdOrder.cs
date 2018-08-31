@@ -14,12 +14,12 @@ namespace VVCar.VIP.Domain.Entities
         /// 产品ID
         /// </summary>
         [Display(Name = "产品ID")]
-        public Guid ProductID { get; set; }
+        public Guid CarBitCoinProductID { get; set; }
 
         /// <summary>
         /// 产品
         /// </summary>
-        public virtual Product Product { get; set; }
+        public virtual CarBitCoinProduct CarBitCoinProduct { get; set; }
 
         /// <summary>
         /// 拼单名称

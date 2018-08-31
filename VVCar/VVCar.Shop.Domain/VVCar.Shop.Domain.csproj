@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dtos\AdjustIndexParam.cs" />
+    <Compile Include="Dtos\CarBitCoinMemberRegister.cs" />
     <Compile Include="Dtos\CarBitCoinProductCategoryLiteDto.cs" />
     <Compile Include="Dtos\CarBitCoinProductCategoryTreeDto.cs" />
     <Compile Include="Dtos\CarBitCoinProductDto.cs" />

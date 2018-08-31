@@ -60,6 +60,15 @@
                     <img style="width:20px;margin-top:5px;" src="~/Areas/resource/img/mobile/arrowr.png" />
                 </div>
             </div>
+            <div class="cbctable actioncon" v-on:click="mycrowdorder">
+                <div class="cbctablecell actioncell actionleftcon">
+                    <img class="actionimg" src="~/Areas/resource/img/mobile/order.png" />
+                </div>
+                <div class="cbctablecell actiontitle actioncell">我的拼单</div>
+                <div class="cbctablecell actioncell actionrightcon">
+                    <img style="width:20px;margin-top:5px;" src="~/Areas/resource/img/mobile/arrowr.png" />
+                </div>
+            </div>
             <div class="cbctable actioncon" v-on:click="myorder">
                 <div class="cbctablecell actioncell actionleftcon">
                     <img class="actionimg" src="~/Areas/resource/img/mobile/order.png" />
@@ -381,10 +390,19 @@
                          $.alert("敬请期待!");
                      },
                      nearby: function () {
-                         window.location.href = "/Mobile/Map?mch=" + mch;
+                         if (this.IsRegister) {
+                             window.location.href = "/Mobile/Map?mch=" + mch;
+                         } else {
+                             $.confirm('请先注册', function () {
+                                 window.location.href = "/Mobile/CarBitcoin/Register?mch=" + mch;
+                             });
+                         }
                      },
                      home: function () {
                          window.location.href = "/Mobile/CarBitcoin/Home?mch=" + mch;
+                     },
+                     mycrowdorder: function () {
+                         window.location.href = "/Mobile/CarBitcoin/MyCrowdOrder?mch=" + mch;
                      }
                  }
              });

@@ -163,6 +163,7 @@
     </script>
     <script type="text/javascript">
         var mch = $.getUrlParam('mch');
+        var coid = $.getUrlParam('coid');
 
         if ('@ViewBag.HeadImgUrl' != '' && '@ViewBag.HeadImgUrl' != null) {
             $('.headerimg').attr('src','@ViewBag.HeadImgUrl');
@@ -268,15 +269,24 @@
             methods: {
                 register: function (event) {
                     checkVerificationCode(this.UserInfo.MobilePhoneNo, this.UserInfo.VerificationCode, function (mobilePhoneNo) {
-                            $.ajax({
-                            url: '/api/CarBitCoinMember/Register',
-                            type: 'POST',
-                            headers: { "CompanyCode": mch },
-                            data: {
+                        var data={
                                 OpenID: '@ViewBag.OpenId',
                                 MobilePhoneNo: mobilePhoneNo,
                                 Name:"@ViewBag.NickName",
-                            },
+                            };
+                        if (coid != null && coid != '') {
+                            data = {
+                                OpenID: '@ViewBag.OpenId',
+                                MobilePhoneNo: mobilePhoneNo,
+                                Name: "@ViewBag.NickName",
+                                CrowdOrderRecordID: coid,
+                            };
+                        }
+                        $.ajax({
+                            url: '/api/CarBitCoinMember/Register',
+                            type: 'POST',
+                            headers: { "CompanyCode": mch },
+                            data: data,
                             beforeSend: function () {
                                 //$.showLoading();
                             },

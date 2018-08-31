@@ -327,6 +327,7 @@
     <Compile Include="Controllers\VIP\CouponPushMemberController.cs" />
     <Compile Include="Controllers\VIP\CouponTemplateController.cs" />
     <Compile Include="Controllers\VIP\CrowdOrderController.cs" />
+    <Compile Include="Controllers\VIP\CrowdOrderRecordController.cs" />
     <Compile Include="Controllers\VIP\GameCouponRecordController.cs" />
     <Compile Include="Controllers\VIP\GamePushController.cs" />
     <Compile Include="Controllers\VIP\GamePushItemController.cs" />
@@ -543,6 +544,7 @@
     <Content Include="Areas\resource\img\mobile\path.png" />
     <Content Include="Areas\resource\img\mobile\phone.png" />
     <Content Include="Areas\resource\img\mobile\plate.jpg" />
+    <Content Include="Areas\resource\img\mobile\return-circle.png" />
     <Content Include="Areas\resource\img\mobile\sc.png" />
     <Content Include="Areas\resource\img\mobile\scj.png" />
     <Content Include="Areas\resource\img\mobile\shop.png" />
@@ -937,7 +939,7 @@
     <Content Include="Scripts\app\view\Combo\ProductSelector.js" />
     <Content Include="Scripts\app\view\CrowdOrder\CrowdOrderEdit.js" />
     <Content Include="Scripts\app\view\CrowdOrder\CrowdOrderList.js" />
-    <Content Include="Scripts\app\view\CrowdOrder\ProductSelector.js" />
+    <Content Include="Scripts\app\view\CrowdOrder\CarBitCoinProductSelector.js" />
     <Content Include="Scripts\app\view\Logistics\LogisticsDetails.js" />
     <Content Include="Scripts\app\view\Logistics\LogisticsEdit.js" />
     <Content Include="Scripts\app\view\Logistics\Logistics.js" />
@@ -1239,6 +1241,8 @@
     <Content Include="Areas\Mobile\Views\Map\Index.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\Home.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\CrowdOrderDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\MyCrowdOrder.cshtml" />
+    <Content Include="Areas\Mobile\Views\CarBitcoin\MyCrowdOrderDetails.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

@@ -69,6 +69,7 @@
     <Compile Include="Dtos\CouponReportDto.cs" />
     <Compile Include="Dtos\CouponTemplateDto.cs" />
     <Compile Include="Dtos\CrowdOrderDto.cs" />
+    <Compile Include="Dtos\CrowdOrderRecordDto.cs" />
     <Compile Include="Dtos\GameCouponDto.cs" />
     <Compile Include="Dtos\GamePushDto.cs" />
     <Compile Include="Dtos\GamePushItemDto.cs" />
@@ -119,6 +120,8 @@
     <Compile Include="Entities\CouponTemplateStock.cs" />
     <Compile Include="Entities\CouponTemplateUseTime.cs" />
     <Compile Include="Entities\CrowdOrder.cs" />
+    <Compile Include="Entities\CrowdOrderRecord.cs" />
+    <Compile Include="Entities\CrowdOrderRecordItem.cs" />
     <Compile Include="Entities\GameCoupon.cs" />
     <Compile Include="Entities\GameCouponRecord.cs" />
     <Compile Include="Entities\GamePush.cs" />
@@ -199,6 +202,7 @@
     <Compile Include="Filters\CouponReportFilter.cs" />
     <Compile Include="Filters\CouponTemplateFilter.cs" />
     <Compile Include="Filters\CrowdOrderFilter.cs" />
+    <Compile Include="Filters\CrowdOrderRecordFilter.cs" />
     <Compile Include="Filters\GameCouponFilter.cs" />
     <Compile Include="Filters\CouponPushFilter.cs" />
     <Compile Include="Filters\GameCouponRecordFilter.cs" />
@@ -229,6 +233,7 @@
     <Compile Include="Services\IArticleItemService.cs" />
     <Compile Include="Services\IArticleService.cs" />
     <Compile Include="Services\ICouponPushMemberService.cs" />
+    <Compile Include="Services\ICrowdOrderRecordService.cs" />
     <Compile Include="Services\ICrowdOrderService.cs" />
     <Compile Include="Services\IGameCouponRecordService.cs" />
     <Compile Include="Services\IGamePushItemService.cs" />
