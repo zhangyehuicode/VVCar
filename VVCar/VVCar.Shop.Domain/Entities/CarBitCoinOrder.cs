@@ -128,6 +128,12 @@ namespace VVCar.Shop.Domain.Entities
         public string Remark { get; set; }
 
         /// <summary>
+        /// 拼单记录ID
+        /// </summary>
+        [Display(Name = "拼单记录ID")]
+        public Guid? CrowdOrderRecordID { get; set; }
+
+        /// <summary>
         /// 商城订单子项
         /// </summary>
         public ICollection<CarBitCoinOrderItem> CarBitCoinOrderItemList { get; set; }

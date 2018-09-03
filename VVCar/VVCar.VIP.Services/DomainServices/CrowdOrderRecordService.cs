@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain;
+using VVCar.BaseData.Domain.Services;
+using VVCar.BaseData.Services.DomainServices;
+using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
@@ -28,6 +32,12 @@ namespace VVCar.VIP.Services.DomainServices
         #region properties
 
         IRepository<CrowdOrderRecordItem> CrowdOrderRecordItemRepo { get => UnitOfWork.GetRepository<IRepository<CrowdOrderRecordItem>>(); }
+
+        ISystemSettingService SystemSettingService { get => ServiceLocator.Instance.GetService<ISystemSettingService>(); }
+
+        IWeChatService WeChatService { get => ServiceLocator.Instance.GetService<IWeChatService>(); }
+
+        IRepository<CarBitCoinOrder> CarBitCoinOrderRepo { get => UnitOfWork.GetRepository<IRepository<CarBitCoinOrder>>(); }
 
         #endregion
 
@@ -76,10 +86,12 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 queryable = queryable.OrderBy(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
             }
-            var result = queryable.MapTo<CrowdOrderRecordDto>();
+            var result = queryable.MapTo<CrowdOrderRecordDto>().ToArray();
             result.ForEach(t =>
             {
                 t.IsCanBuy = t.JoinPeople >= t.PeopleCount;
+                if (filter.CarBitCoinMemberID.HasValue)
+                    t.IsOrdered = CarBitCoinOrderRepo.Exists(o => o.CrowdOrderRecordID == t.ID && o.MemberID == filter.CarBitCoinMemberID);
             });
             return result;
         }
@@ -97,7 +109,7 @@ namespace VVCar.VIP.Services.DomainServices
                 AppContext.Logger.Error("JoinCrowdOrderRecord:加入拼单，参数错误");
                 return false;
             }
-            var crowdOrderRecord = Repository.GetByKey(crowdOrderRecordID);
+            var crowdOrderRecord = Repository.GetIncludes(false, "CarBitCoinMember", "CrowdOrder", "CrowdOrder.CarBitCoinProduct").FirstOrDefault(t => t.ID == crowdOrderRecordID);
             if (crowdOrderRecord == null)
             {
                 AppContext.Logger.Error("JoinCrowdOrderRecord:加入拼单，拼单记录不存在");
@@ -124,7 +136,44 @@ namespace VVCar.VIP.Services.DomainServices
                 AppContext.Logger.Error($"JoinCrowdOrderRecord:加入拼单出现异常，{e.Message}");
                 return false;
             }
+            if (crowdOrderRecord.JoinPeople >= crowdOrderRecord.CrowdOrder.PeopleCount)
+            {
+                CrowdOrderSuccessNotify(crowdOrderRecord);
+            }
             return true;
+        }
+
+        /// <summary>
+        /// 发送拼单成功提醒
+        /// </summary>
+        /// <param name="crowdOrderRecord"></param>
+        void CrowdOrderSuccessNotify(CrowdOrderRecord crowdOrderRecord)
+        {
+            try
+            {
+                if (crowdOrderRecord == null || crowdOrderRecord.CarBitCoinMember == null || string.IsNullOrEmpty(crowdOrderRecord.CarBitCoinMember.OpenID))
+                    return;
+                var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_CrowdOrderSuccess);
+                if (string.IsNullOrEmpty(templateId))
+                    return;
+                var message = new WeChatTemplateMessageDto
+                {
+                    touser = crowdOrderRecord.CarBitCoinMember.OpenID,
+                    template_id = templateId,
+                    url = $"{AppContext.Settings.SiteDomain}/Mobile/CarBitcoin/MyCrowdOrderDetails?mch={AppContext.CurrentSession.MerchantCode}&coid={crowdOrderRecord.ID}",
+                    data = new System.Dynamic.ExpandoObject(),
+                };
+                message.data.first = new WeChatTemplateMessageDto.MessageData("拼单成功");
+                message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(crowdOrderRecord.CrowdOrder.CarBitCoinProduct.Name);
+                message.data.keyword2 = new WeChatTemplateMessageDto.MessageData("");
+                message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(crowdOrderRecord.CrowdOrder.CreatedDate.ToString("yyyy-MM-dd"));
+                message.data.remark = new WeChatTemplateMessageDto.MessageData("立即下单");
+                WeChatService.SendWeChatNotifyAsync(message);
+            }
+            catch (Exception e)
+            {
+                AppContext.Logger.Error($"发送拼单成功提醒异常，{e.Message}");
+            }
         }
     }
 }

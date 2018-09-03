@@ -650,6 +650,7 @@
     <Content Include="Content\image\cheyinzi.jpg" />
     <Content Include="Content\image\cheyinzilogo.png" />
     <Content Include="Content\image\cheyinzi_qrcode.jpg" />
+    <Content Include="Content\image\mrtarotlogo.png" />
     <Content Include="Content\jquery-fileupload\css\jquery.fileupload-noscript.css" />
     <Content Include="Content\jquery-fileupload\css\jquery.fileupload-ui-noscript.css" />
     <Content Include="Content\jquery-fileupload\css\jquery.fileupload-ui.css" />
@@ -665,6 +666,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="mrtarotfavicon.ico" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\AgentDepartment.js" />
     <Content Include="Scripts\app\controller\AgentDepartmentAudit.js" />
@@ -945,6 +947,7 @@
     <Content Include="Scripts\app\view\Logistics\Logistics.js" />
     <Content Include="Scripts\app\view\Logistics\SalesmanSelector.js" />
     <Content Include="Scripts\app\view\Member\MemberDetail.js" />
+    <Content Include="Scripts\app\view\SystemSetting\SystemSettingEdit.js" />
     <Content Include="Scripts\app\view\Tag\TagEdit.js" />
     <Content Include="Scripts\app\view\Tag\TagList.js" />
     <Content Include="Scripts\app\view\AgentDepartment\AgentDepartmentCategoryEdit.js" />

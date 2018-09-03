@@ -98,6 +98,11 @@ namespace VVCar.VIP.Domain.Dtos
         public bool IsCanBuy { get; set; }
 
         /// <summary>
+        /// 是否已下单
+        /// </summary>
+        public bool IsOrdered { get; set; }
+
+        /// <summary>
         /// 发起拼单记录子项
         /// </summary>
         public List<CrowdOrderRecordItem> CrowdOrderRecordItemList { get; set; }

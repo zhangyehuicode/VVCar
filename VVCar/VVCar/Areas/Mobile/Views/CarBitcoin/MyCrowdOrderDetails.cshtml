@@ -20,9 +20,13 @@
         </div>
         <div class="peoplecount-con">已有<span style="color:#e02d28;margin:0 3px;">{{CrowdOrder.JoinPeople}}</span>人参与<span style="font-size:13px;">（需<span style="color:#e02d28;">{{CrowdOrder.PeopleCount}}</span>人参与）</span></div>
     </div>
-    <div class="bottomactioncon" v-on:click="buy">
+    <div class="bottomactioncon" v-on:click="buy" v-if="!CrowdOrder.IsOrdered">
         <div>￥{{CrowdOrder.Price}}</div>
         <div>立即下单</div>
+    </div>
+    <div class="bottomactioncon" v-if="CrowdOrder.IsOrdered">
+        <div>￥{{CrowdOrder.Price}}</div>
+        <div>已下单</div>
     </div>
 </div>
 
@@ -140,7 +144,7 @@
             var coid = $.getUrlParam('coid');
             var isadd = $.getUrlParam('isadd') == 'true';
             if (isadd) {
-                $.alert('点击右上角分享朋友/朋友圈/群，注册新会员增加拼单人数！');
+                $.alert('点击右上角分享朋友/朋友圈，开始拼单！');
             }
             var corid = $.getUrlParam('corid');
         var crowdorder = sessionStorage.getItem('crowdorder');
@@ -167,6 +171,8 @@
                         $.confirm('立即下单', function () {
                             _viewModel.CrowdOrder.CarBitCoinProduct.PriceSale = _viewModel.CrowdOrder.Price;
                             sessionStorage.setItem('product', JSON.stringify(_viewModel.CrowdOrder.CarBitCoinProduct));
+                            sessionStorage.setItem('isfromcod', 'true');
+                            sessionStorage.setItem('corid', _viewModel.CrowdOrder.ID);
                             window.location.href = "/Mobile/CarBitCoin/ProductDetails?mch=" + mch;
                         });
                     } else {
@@ -216,8 +222,10 @@
                                 _viewModel.MyInfo = res.Data[0];
                                 _viewModel.IsMember = true;
                                 if (coid != null && coid != "" && crowdorder != null && crowdorder != '') {
-                                    sessionStorage.setItem('crowdorder', JSON.stringify(crowdorder));
-                                    window.location.href = "/Mobile/CarBitcoin/CrowdOrderDetails?mch=" + mch;
+                                    //sessionStorage.setItem('crowdorder', JSON.stringify(crowdorder));
+                                    //window.location.href = "/Mobile/CarBitcoin/CrowdOrderDetails?mch=" + mch;
+                                } else if (crowdorder == null||crowdorder == ''){
+                                    window.location.href = "/Mobile/CarBitcoin/Home?mch=" + mch;
                                 }
                             } else {
                                 if (coid != null && coid != "") {
@@ -247,7 +255,7 @@
             } else if (coid != null && coid != "") {
                 getmyorder(coid);
             } else {
-                getCarBitCoinMember();
+                getCarBitCoinMember(crowdorder);
             }
 
             function wxConfig() {
@@ -287,8 +295,16 @@
                                     success: function (res) {
                                     }
                                 });
+                                wx.onMenuShareTimeline({
+                                    title: "【爱保养】" + _viewModel.CrowdOrder.Name, // 分享标题
+                                    link: document.URL + '&coid=' + _viewModel.CrowdOrder.ID, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                                    imgUrl: document.location.origin + _viewModel.CrowdOrder.ImgUrl, // 分享图标
+                                    success: function () {
+                                        // 用户点击了分享后执行的回调函数
+                                    }
+                                });
                             });
-                        } else {
+                            } else {
                         }
                     },
                     complete: function (xmlHttpRequest, textStatus) {

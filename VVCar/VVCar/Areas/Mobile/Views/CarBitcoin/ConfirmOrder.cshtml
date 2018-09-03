@@ -39,7 +39,7 @@
             <div class="gwc_text2" v-if="!IsAllEngine">车比特支付<input type="checkbox" name="paytype" style="float:right;width:13px; height:13px; margin-top:15px;"></div>*@
         <div class="gwc_text2" style="border-bottom:none;">合计<span style="float:right; color:#ff0c4b; font-size:18px;">￥{{TotalMoney}}</span></div>
         <div class="gwc_box4" v-on:click="pay" style="margin-top:15px;">微信支付</div>
-        <div class="gwc_box4" v-on:click="" style="margin-top:0px;" v-if="!IsAllEngine">车比特支付</div>
+        @*<div class="gwc_box4" v-on:click="" style="margin-top:0px;" v-if="!IsAllEngine">车比特支付</div>*@
     </div>
 </div>
 
@@ -130,6 +130,7 @@
                         Money: 0,
                         CarBitCoins: 0,
                         Remark: '',
+                        CrowdOrderRecordID:'',
                         CarBitCoinOrderItemList: [],
                 },
                 IsAllEngine: true,
@@ -304,6 +305,11 @@
                 _payBillViewModel.Body = body;
                 _payBillViewModel.Order.Money = totalMoney;
                 _payBillViewModel.Order.CarBitCoinOrderItemList = orderitemlist;
+            }
+
+            var corid = sessionStorage.getItem('corid');
+            if (corid != null && corid != '') {
+                _payBillViewModel.Order.CrowdOrderRecordID = corid;
             }
 
             function init() {

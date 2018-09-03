@@ -36,6 +36,20 @@ namespace VVCar.Controllers.Api
         #endregion
 
         /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonActionResult<SystemSetting> Add(SystemSetting entity)
+        {
+            return SafeExecute(() =>
+            {
+                return SysSettingService.Add(entity);
+            });
+        }
+
+        /// <summary>
         /// 修改设置值
         /// </summary>
         /// <param name="setting">系统设置</param>
@@ -46,7 +60,21 @@ namespace VVCar.Controllers.Api
             return SafeExecute(() =>
             {
 
-                return SysSettingService.UpdateSetting(setting.ID, setting.SettingValue);
+                return SysSettingService.UpdateSetting(setting.ID, setting.Name, setting.SettingValue);
+            });
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public JsonActionResult<bool> Delete(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return SysSettingService.Delete(id);
             });
         }
 

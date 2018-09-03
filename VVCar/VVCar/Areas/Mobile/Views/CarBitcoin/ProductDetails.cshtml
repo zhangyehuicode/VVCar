@@ -16,7 +16,7 @@
     </div>
     <div class="sp_text2" style="border:none;">
         ￥{{TotalMoney}}
-        <div style="float:right;display:table;">
+        <div style="float:right;display:table;" v-if="ShowQuantity">
             <div style="display:table-cell;height:25px;" v-on:click="subtract" v-if="Quantity>0">
                 <img class="addsubimg" style="display:table-cell;" src="~/Areas/resource/img/mobile/jian.png" />
             </div>
@@ -143,12 +143,15 @@
         }
         product = JSON.parse(product);
 
+            var isfromcod= sessionStorage.getItem('isfromcod')=='true';
+
         _viewModel = new Vue({
             el: '#productdetails',
             data: {
                 Product: product,
                 Quantity: 1,
                 TotalMoney: product.PriceSale,
+                ShowQuantity: !isfromcod,
             },
             methods: {
                 back: function (event) {

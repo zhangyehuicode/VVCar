@@ -100,5 +100,10 @@ namespace VVCar.BaseData.Domain
         /// 订单待发货提醒模板
         /// </summary>
         public const string WXMsg_DeliveryNotify = "WXMsg_DeliveryNotify";
+
+        /// <summary>
+        /// 拼单成功提醒模板
+        /// </summary>
+        public const string WXMsg_CrowdOrderSuccess = "WXMsg_CrowdOrderSuccess";
     }
 }

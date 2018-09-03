@@ -116,14 +116,16 @@
                         name: 'WeChatAppID',
                         fieldLabel: '公众号AppID',
                         maxLength: 50,
-                        allowBlank: true,
+						allowBlank: true,
+						hidden: true,
                     }, {
                         xtype: 'textfield',
                         margin: '5 5 5 10',
                         name: 'WeChatAppSecret',
                         fieldLabel: '公众号Secret',
                         maxLength: 50,
-                        allowBlank: true,
+						allowBlank: true,
+						hidden: true,
                     }]
                 }, {
                     xtype: 'form',
@@ -134,14 +136,16 @@
                         name: 'WeChatMchID',
                         fieldLabel: '微信商户号',
                         maxLength: 20,
-                        allowBlank: true,
+						allowBlank: true,
+						hidden: true,
                     }, {
                         xtype: 'textfield',
                         margin: '5 8 5 10',
                         name: 'WeChatMchKey',
                         fieldLabel: '微信商户Key',
                         maxLength: 50,
-                        allowBlank: true,
+						allowBlank: true,
+						hidden: true,
                     }]
                 }, {
                     xtype: 'form',
@@ -152,16 +156,16 @@
                         name: 'WeChatOAPassword',
                         fieldLabel: '微信公众平台登录密码',
                         emptyText: '微信公众平台登录密码',
-                        maxLength: 20,
-
+						maxLength: 20,
+						hidden: true,
                     }, {
                         xtype: 'textfield',
                         margin: '5 5 5 10',
                         name: 'MeChatMchPassword',
                         fieldLabel: '微信商户平台操作密码',
                         emptyText: '微信商户平台操作密码',
-                        maxLength: 20,
-
+						maxLength: 20,
+						hidden: true,
                     }]
                 }, {
                     xtype: 'form',

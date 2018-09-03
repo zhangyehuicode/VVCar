@@ -6,6 +6,7 @@
 	stripeRows: true,
 	loadMask: true,
 	closable: true,
+	viewConfig: { enableTextSelection: true },
 	initComponent: function () {
 		var me = this;
 		me.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -40,7 +41,7 @@
 			items: [{
 				xtype: 'textfield',
 				name: 'MerchantCode',
-				fieldLabel: '商户号',
+				fieldLabel: '商户编号',
 				labelWidth: 60,
 				margin: '0 0 0 5'
 			}, {
@@ -56,15 +57,42 @@
 				iconCls: 'fa fa-search',
 				cls: 'submitBtn',
 				margin: '0 0 0 5'
-			}]
+			}, {
+				action: 'addSystemSetting',
+				xtype: 'button',
+				text: '新增',
+				iconCls: 'fa fa-plus-circle',
+				margin: '0 0 0 5'
+				}]
 		}];
 		me.columnLines = true;
 		me.plugins = [me.rowEditing];
 		me.columns = [
 			{ header: '商户编号', dataIndex: 'MerchantCode', width: 200 },
 			{ header: '商户名称', dataIndex: 'MerchantName', width: 200 },
-			{ header: '名称', dataIndex: 'Caption', width: 200, },
-			{ header: '值', dataIndex: 'SettingValue', flex: 1, editor: { xtype: 'textfield', allowBlank: true } }
+			{ header: '模版名称', dataIndex: 'Caption', width: 200, },
+			{ header: '模板编码', dataIndex: 'Name', width: 200, editor: { xtype: 'textfield', allowBlank: false } },
+			{ header: '模板数值', dataIndex: 'SettingValue', flex: 1, editor: { xtype: 'textfield', allowBlank: true } },
+			{
+				text: '操作',
+				xtype: 'actioncolumn',
+				width: 100,
+				sortable: false,
+				menuDisabled: true,
+				height: 30,
+				align: 'center',
+				items: [{
+					action: 'deleteItem',
+					iconCls: 'x-fa fa-close',
+					tooltip: '删除',
+					scope: this,
+					margin: '10 10 10 10',
+					handler: function (grid, rowIndex, colIndex) {
+						var record = grid.getStore().getAt(rowIndex);
+						this.fireEvent('deleteActionClick', grid, record);
+					}
+				}]
+			}
 		];
 		me.dockedItems = [{
 			xtype: "pagingtoolbar",

@@ -27,43 +27,71 @@ namespace VVCar.BaseData.Services.DomainServices
 
         #region methods
 
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override SystemSetting Add(SystemSetting entity)
         {
             if (entity == null)
                 return null;
             entity.ID = Util.NewID();
+            entity.Index = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Type == entity.Type).Select(t => t.Index).Max() + 1;
+            entity.MerchantID = entity.MerchantID;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
             entity.CreatedDate = DateTime.Now;
-            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
         }
 
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public override bool Delete(Guid key)
         {
             var entity = Repository.Get(p => p.ID == key);
             if (entity == null)
                 throw new DomainException("数据不存或已删除");
             entity.IsDeleted = true;
+            entity.LastUpdateDate = DateTime.Now;
+            entity.LastUpdateUserID = AppContext.CurrentSession.UserID;
+            entity.LastUpdateUser = AppContext.CurrentSession.UserName;
             return base.Update(entity);
         }
 
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public override bool Update(SystemSetting entity)
         {
             if (entity == null)
                 return false;
-            return UpdateSetting(entity.ID, entity.SettingValue);
+            return UpdateSetting(entity.ID, entity.Name, entity.SettingValue);
         }
 
         #endregion
 
         #region ISystemSettingService 成员
 
-        public bool UpdateSetting(Guid settingID, string settingValue)
+
+        /// <summary>
+        /// 更新模板编号和模板值
+        /// </summary>
+        /// <param name="settingID"></param>
+        /// <param name="name"></param>
+        /// <param name="settingValue"></param>
+        /// <returns></returns>
+        public bool UpdateSetting(Guid settingID, string name, string settingValue)
         {
             var setting = this.Repository.GetByKey(settingID);
             if (setting == null)
                 throw new DomainException("修改失败，记录不存在。");
+            setting.Name = name;
             setting.SettingValue = settingValue;
             setting.LastUpdateUserID = AppContext.CurrentSession.UserID;
             setting.LastUpdateUser = AppContext.CurrentSession.UserName;

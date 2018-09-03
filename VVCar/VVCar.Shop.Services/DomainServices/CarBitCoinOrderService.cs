@@ -48,6 +48,18 @@ namespace VVCar.Shop.Services.DomainServices
 
         #endregion
 
+        protected override bool DoValidate(CarBitCoinOrder entity)
+        {
+            if (entity == null)
+                return false;
+            var exist = Repository.Exists(t => t.ID != entity.ID && entity.CrowdOrderRecordID != null && entity.MemberID != null && t.CrowdOrderRecordID == entity.CrowdOrderRecordID && t.MemberID == entity.MemberID);
+            if (exist)
+            {
+                throw new DomainException("已下单");
+            }
+            return true;
+        }
+
         public override bool Delete(Guid key)
         {
             var entity = Repository.GetByKey(key);

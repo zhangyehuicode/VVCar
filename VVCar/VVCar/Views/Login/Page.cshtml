@@ -92,6 +92,16 @@
     @Scripts.Render("~/bundles/jquerycookie")
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script type="text/javascript">
+        var changeIcon = function () {
+            var link = document.createElement("link");
+            link.href = "mrtarotfavicon.ico";
+            link.rel = "shortcut icon";
+            document.head.appendChild(link);
+            $('.logo').attr('src', '/Content/image/mrtarotlogo.png');
+        };
+        setTimeout(changeIcon, 3000);
+    </script>
+    <script type="text/javascript">
         var _viewModel = new Vue({
             el: '#vuecon',
             data: {
