@@ -14,7 +14,9 @@
 </head>
 <body>
     <div id="vuecon" class="main">
-        <img class="logo" src="~/Content/image/cheyinzilogo.png" />
+        <div class="logo-con">
+            <img class="logo" src="~/Content/image/cheyinzilogo.png" />
+        </div>
         <div class="systemtitle">@ViewBag.Title</div>
         <input class="merchantcode" placeholder="商户号" type="text" v-model="MerchantCode" />
         <input class="username" placeholder="用户名" type="text" v-model="UserName" />
@@ -28,8 +30,12 @@
     <style type="text/css">
         .logo {
             width: 100px;
-            height: 100px;
             margin-bottom: 20px;
+        }
+
+        .logo-con {
+            height: 100px;
+            text-align: center;
         }
 
         body {
@@ -92,14 +98,15 @@
     @Scripts.Render("~/bundles/jquerycookie")
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script type="text/javascript">
-        var changeIcon = function () {
-            var link = document.createElement("link");
-            link.href = "mrtarotfavicon.ico";
-            link.rel = "shortcut icon";
-            document.head.appendChild(link);
-            $('.logo').attr('src', '/Content/image/mrtarotlogo.png');
-        };
-        setTimeout(changeIcon, 3000);
+        $(function () {
+            if (@ViewBag.IsMrTarot) {
+                var link = document.createElement("link");
+                link.href = "/mrtarotfavicon.ico";
+                link.rel = "shortcut icon";
+                document.head.appendChild(link);
+                $('.logo').attr('src', '/Content/image/mrtarotlogo.png');
+            }
+        });
     </script>
     <script type="text/javascript">
         var _viewModel = new Vue({

@@ -33,6 +33,11 @@ namespace VVCar.BaseData.Domain.Entities
         public string Name { get; set; }
 
         /// <summary>
+        /// 模板名称 
+        /// </summary>
+        public string TemplateName { get; set; }
+
+        /// <summary>
         /// 标题
         /// </summary>
         [Display(Name = "标题")]

@@ -20,10 +20,12 @@ namespace VVCar.BaseData.Domain.Services
         /// 更新设置值
         /// </summary>
         /// <param name="settingID"></param>
+        /// <param name="caption"></param>
         /// <param name="name"></param>
+        /// <param name="templateName"></param>
         /// <param name="settingValue"></param>
         /// <returns></returns>
-        bool UpdateSetting(Guid settingID, string name, string settingValue);
+        bool UpdateSetting(Guid settingID, string caption, string name, string templateName, string settingValue);
 
         /// <summary>
         /// 获取设置值

@@ -71,7 +71,7 @@ namespace VVCar.BaseData.Services.DomainServices
         {
             if (entity == null)
                 return false;
-            return UpdateSetting(entity.ID, entity.Name, entity.SettingValue);
+            return UpdateSetting(entity.ID, entity.Caption, entity.Name, entity.TemplateName, entity.SettingValue);
         }
 
         #endregion
@@ -83,15 +83,19 @@ namespace VVCar.BaseData.Services.DomainServices
         /// 更新模板编号和模板值
         /// </summary>
         /// <param name="settingID"></param>
+        /// <param name="caption"></param>
         /// <param name="name"></param>
+        /// <param name="templateName"></param>
         /// <param name="settingValue"></param>
         /// <returns></returns>
-        public bool UpdateSetting(Guid settingID, string name, string settingValue)
+        public bool UpdateSetting(Guid settingID, string caption, string name, string templateName, string settingValue)
         {
             var setting = this.Repository.GetByKey(settingID);
             if (setting == null)
                 throw new DomainException("修改失败，记录不存在。");
             setting.Name = name;
+            setting.Caption = caption;
+            setting.TemplateName = templateName;
             setting.SettingValue = settingValue;
             setting.LastUpdateUserID = AppContext.CurrentSession.UserID;
             setting.LastUpdateUser = AppContext.CurrentSession.UserName;

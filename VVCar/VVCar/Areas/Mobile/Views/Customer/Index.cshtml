@@ -167,6 +167,7 @@
     </script>
     <script type="text/javascript">
         var mch = $.getUrlParam('mch');
+        var mid = sessionStorage.getItem('mid');
 
         if ('@ViewBag.HeadImgUrl' != '' && '@ViewBag.HeadImgUrl' != null) {
             $('.headerimg').attr('src','@ViewBag.HeadImgUrl');
@@ -290,6 +291,7 @@
                                 Name:"@ViewBag.NickName",
                                 Password: '123456',
                                 PlateNumber: _viewModel.UserInfo.PlateNumber,
+                                ParentMemberID: mid,
                             },
                             beforeSend: function () {
                                 //$.showLoading();

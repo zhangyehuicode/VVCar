@@ -52,7 +52,7 @@ namespace VVCar.Controllers.Api
         /// <summary>
         /// 修改设置值
         /// </summary>
-        /// <param name="setting">系统设置</param>
+        /// <param name="setting"></param>
         /// <returns></returns>
         [HttpPut]
         public JsonActionResult<bool> Update(SystemSetting setting)
@@ -60,7 +60,7 @@ namespace VVCar.Controllers.Api
             return SafeExecute(() =>
             {
 
-                return SysSettingService.UpdateSetting(setting.ID, setting.Name, setting.SettingValue);
+                return SysSettingService.UpdateSetting(setting.ID, setting.Caption, setting.Name, setting.TemplateName, setting.SettingValue);
             });
         }
 

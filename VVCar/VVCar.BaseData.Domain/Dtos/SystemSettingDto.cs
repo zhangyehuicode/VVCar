@@ -52,6 +52,12 @@ namespace VVCar.BaseData.Domain.Dtos
         public string Caption { get; set; }
 
         /// <summary>
+        /// 模板标题
+        /// </summary>
+        [Display(Name = "模板标题")]
+        public string TemplateName { get; set; }
+
+        /// <summary>
         /// 默认值
         /// </summary>
         [Display(Name = "默认值")]

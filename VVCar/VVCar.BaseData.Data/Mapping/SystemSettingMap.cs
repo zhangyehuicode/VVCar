@@ -23,6 +23,9 @@ namespace VVCar.BaseData.Data.Mapping
             this.Property(t => t.Caption)
                 .HasMaxLength(50);
 
+            this.Property(t => t.TemplateName)
+                .HasMaxLength(50);
+
             this.Property(t => t.DefaultValue)
                 .HasMaxLength(100);
 

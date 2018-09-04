@@ -133,8 +133,8 @@
                             } else {
                                 self.ShowGetBtn(false);
                                 self.CouponInfo().CouponID = data.Data;
-                                if(self.WxGiveData()!=null){
-                                    self.WxGiveData().link = window.location.origin + window.location.pathname + '?source=give&couponid=' + self.CouponInfo().CouponID + '&givenopenid=@ViewBag.openid&ctid=' + _couponTemplateId + '&mch=' + _mchCode;
+                                if (self.WxGiveData() != null) {
+                                    self.WxGiveData().link = window.location.origin + window.location.pathname + '?source=give&couponid=' + self.CouponInfo().CouponID + '&givenopenid=@ViewBag.openid&ctid=' + _couponTemplateId + '&mch=' + _mchCode + '&mid=' + _member.MemberID;
                                 }
                                 //$('#receiveCoupon').addClass('ty-action-use').text('立即使用');
                                 $('#receiveCoupon').hide();
@@ -145,7 +145,7 @@
                                         title: self.WxGiveData().title,
                                         desc: self.WxGiveData().desc,
                                         link: self.WxGiveData().link,
-                                        imgUrl: self.WxGiveData().imgUrl,
+                                        imgUrl: window.location.origin + self.WxGiveData().imgUrl,
                                         success: function (res) {
                                             //shareSuccess();
                                             wx.closeWindow();
@@ -235,21 +235,21 @@
                 var _WxShareData = {
                     title: self.CouponInfo().Title,
                     desc: self.CouponInfo().SubTitle,
-                    link: window.location.origin + window.location.pathname + '?source=share&ctid=' + _couponTemplateId + '&mch=' + _mchCode,
-                    imgUrl: self.CouponInfo().CoverImage,
+                    link: window.location.origin + window.location.pathname + '?source=share&ctid=' + _couponTemplateId + '&mch=' + _mchCode + '&mid=' + _member.MemberID,
+                    imgUrl: window.location.origin + self.CouponInfo().CoverImage,
                 };
 
-                var givelink = window.location.origin + window.location.pathname + '?source=share&ctid=' + _couponTemplateId + '&mch=' + _mchCode;
+                var givelink = window.location.origin + window.location.pathname + '?source=share&ctid=' + _couponTemplateId + '&mch=' + _mchCode + '&mid=' + _member.MemberID;
 
                 if(self.CouponInfo().CanGiveToPeople){
-                    givelink = window.location.origin + window.location.pathname + '?source=give&couponid=' + self.CouponInfo().CouponID + '&givenopenid=@ViewBag.openid&ctid=' + _couponTemplateId + '&mch=' + _mchCode;
+                    givelink = window.location.origin + window.location.pathname + '?source=give&couponid=' + self.CouponInfo().CouponID + '&givenopenid=@ViewBag.openid&ctid=' + _couponTemplateId + '&mch=' + _mchCode + '&mid=' + _member.MemberID;
                 }
 
                 var _WxGiveData = {
                     title: self.CouponInfo().Title,
                     desc: self.CouponInfo().SubTitle,
                     link: givelink,
-                    imgUrl: self.CouponInfo().CoverImage,
+                    imgUrl: window.location.origin + self.CouponInfo().CoverImage,
                 };
 
                 self.WxGiveData(_WxGiveData);
@@ -303,7 +303,7 @@
                             //        wx.closeWindow();
                             //    });
                             //} else {
-                                wx.closeWindow();
+                                //wx.closeWindow();
                             //}
                         }
                     });
@@ -402,11 +402,16 @@
         var subscribe = '@ViewBag.subscribe';
         var _mchCode = '';
         var _couponTemplateId = '';
-        var _givenOpenID='';
+        var _givenOpenID = '';
+        var _member = {};
 
         var _givenOpenID=$.getUrlParam('givenopenid');
         var _couponid=$.getUrlParam('couponid');
-        var _source=$.getUrlParam('source');
+        var _source = $.getUrlParam('source');
+        var _mid = $.getUrlParam('mid');
+        if (_mid != null && _mid != "") {
+            sessionStorage.setItem('mid', _mid);
+        }
         var _isfromgiven=false;
         if(_source!=null&&_source!=''&&_couponid!=null&&_couponid!=''&&_givenOpenID!=null&&_givenOpenID!=''){
             _isfromgiven=true;
@@ -424,6 +429,39 @@
         if (showuse == 'false') {
             $('#operationbtncon').hide();
         }
+
+          function init() {
+                $.ajax({
+                    url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.openid',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                _member = res.Data;
+                            } else {
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                    },
+                    error: function (res) {
+                        $.hideLoading();
+                        $.alert(JSON.stringify(res), function () {
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        });
+                    }
+                });
+            }
+            init();
+
     </script>
 }
 

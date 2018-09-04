@@ -203,6 +203,12 @@ namespace VVCar.VIP.Domain.Entities
         [Display(Name = "代理商门店（客户）")]
         public virtual AgentDepartment AgentDepartment { get; set; }
 
+        /// <summary>
+        /// 父级会员ID
+        /// </summary>
+        [Display(Name = "父级会员ID")]
+        public Guid? ParentMemberID { get; set; }
+
         ///// <summary>
         ///// 会员签到
         ///// </summary>

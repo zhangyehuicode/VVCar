@@ -70,8 +70,9 @@
 		me.columns = [
 			{ header: '商户编号', dataIndex: 'MerchantCode', width: 200 },
 			{ header: '商户名称', dataIndex: 'MerchantName', width: 200 },
-			{ header: '模版名称', dataIndex: 'Caption', width: 200, },
+			{ header: '模版名称', dataIndex: 'Caption', width: 200, editor: { xtype: 'textfield', allowBlank: false } },
 			{ header: '模板编码', dataIndex: 'Name', width: 200, editor: { xtype: 'textfield', allowBlank: false } },
+			{ header: '模板标题(公众号)', dataIndex: 'TemplateName', width: 200, editor: { xtype: 'textfield', allowBlank: true } },
 			{ header: '模板数值', dataIndex: 'SettingValue', flex: 1, editor: { xtype: 'textfield', allowBlank: true } },
 			{
 				text: '操作',

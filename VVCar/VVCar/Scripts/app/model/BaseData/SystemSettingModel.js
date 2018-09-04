@@ -7,6 +7,7 @@
 		{ name: 'MerchantName' },
 		{ name: 'Index' },
 		{ name: 'Name' },
+		{ name: 'TemplateName' },
 		{ name: 'Type' },
 		{ name: 'Caption' },
 		{ name: 'DefaultValue' },

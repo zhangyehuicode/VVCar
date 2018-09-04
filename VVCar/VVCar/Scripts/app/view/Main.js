@@ -84,7 +84,7 @@
         var footerPanel = Ext.create('Ext.Component', {
             region: 'south',
             padding: 5,
-            html: '<div class="copyright">Copyright © 车因子 2018</div>',
+            html: '<div class="copyright">Copyright © ' + _hqName + ' ' + _currentYear + '</div>',
         });
 
         this.items = [headerPanel, {

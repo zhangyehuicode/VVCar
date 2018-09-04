@@ -143,8 +143,9 @@ namespace VVCar.Shop.Services.DomainServices
                 //{
                 //    MemberService.AdjustMemberPoint(result.OpenID, EMemberPointType.MemberConsume, (double)result.Money);
                 //}
-                //catch
+                //catch (Exception e)
                 //{
+                //    AppContext.Logger.Error($"商城下单增加会员积分出现异常，{e.Message}");
                 //}
                 if (entity.Source == EOrderSource.Shop)
                     ShoppingCartService.ClearShoppingCart(result.OpenID);
@@ -215,6 +216,14 @@ namespace VVCar.Shop.Services.DomainServices
                     var couponTemplateIDs = cardItems.Select(t => t.GoodsID).ToList();
                     if (couponTemplateIDs != null && couponTemplateIDs.Count > 0)
                         ReceiveCoupons(couponTemplateIDs, entity.OpenID);
+                    try
+                    {
+                        MemberService.AdjustMemberPoint(entity.OpenID, EMemberPointType.MemberConsume, (double)entity.Money);
+                    }
+                    catch (Exception e)
+                    {
+                        AppContext.Logger.Error($"商城下单增加会员积分出现异常，{e.Message}");
+                    }
                 }
             }
         }
@@ -619,7 +628,8 @@ namespace VVCar.Shop.Services.DomainServices
                     message.data.remark = new WeChatTemplateMessageDto.MessageData("请知悉");
                 WeChatService.SendWeChatNotifyAsync(message, merchant.Code);
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 AppContext.Logger.Error(e);
             }
         }
