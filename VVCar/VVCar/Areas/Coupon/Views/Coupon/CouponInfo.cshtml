@@ -434,7 +434,7 @@
                 $.ajax({
                     url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.openid',
                     type: 'GET',
-                    headers: { 'CompanyCode': mch },
+                    headers: { 'CompanyCode': _mchCode },
                     beforeSend: function () {
                         $.showLoading();
                     },

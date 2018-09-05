@@ -198,6 +198,24 @@ namespace VVCar.VIP.Domain.Entities
         public Guid? AgentDepartmentID { get; set; }
 
         /// <summary>
+        /// 是否是股东
+        /// </summary>
+        [Display(Name = "是否是股东")]
+        public bool IsStockholder { get; set; }
+
+        /// <summary>
+        /// 股东折扣系数
+        /// </summary>
+        [Display(Name = "股东卡折扣系数")]
+        public decimal DiscountRate { get; set; }
+
+        /// <summary>
+        /// 消费返积分比例(返回积分=抵用总额*比例)
+        /// </summary>
+        [Display(Name= "消费返积分比例(返回积分=抵用总额*比例)")]
+        public decimal ConsumePointRate { get; set; }
+
+        /// <summary>
         /// 代理商门店（客户）
         /// </summary>
         [Display(Name = "代理商门店（客户）")]

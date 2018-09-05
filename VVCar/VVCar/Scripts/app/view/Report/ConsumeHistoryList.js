@@ -33,7 +33,7 @@
 					items: [{
 						xtype: 'textfield',
 						name: 'Name',
-						labelWidth: 45,
+						labelWidth: 30,
 						fieldLabel: '姓名',
 					}, {
 						xtype: 'textfield',

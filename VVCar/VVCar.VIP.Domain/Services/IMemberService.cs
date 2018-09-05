@@ -290,5 +290,21 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="members"></param>
         /// <returns></returns>
         bool ImportMember(IEnumerable<AddMemberParam> members);
+
+        /// <summary>
+        /// 设置股东分红
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="consumePointRate"></param>
+        /// <param name="discountRate"></param>
+        /// <returns></returns>
+        bool SetStockholder(Guid id, decimal consumePointRate, decimal discountRate);
+
+        /// <summary>
+        /// 取消股东分红
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool CancelStockholder(Guid id);
     }
 }

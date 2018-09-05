@@ -258,6 +258,8 @@ namespace VVCar.VIP.Services.DomainServices
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter != null)
             {
+                if (filter.IsStockholder.HasValue)
+                    queryable = queryable.Where(p => p.IsStockholder == filter.IsStockholder.Value);
                 if (!string.IsNullOrEmpty(filter.MobilePhoneNo))
                     queryable = queryable.Where(p => p.MobilePhoneNo.Contains(filter.MobilePhoneNo));
                 if (!string.IsNullOrEmpty(filter.Keyword))
@@ -1078,6 +1080,50 @@ namespace VVCar.VIP.Services.DomainServices
             memberList.ForEach(t => t.MemberGroupID = memberGroupID);
             Repository.Update(memberList);
             return true;
+        }
+
+        /// <summary>
+        /// 设置股东分红
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="consumePointRate"></param>
+        /// <param name="discountRate"></param>
+        /// <returns></returns>
+        public bool SetStockholder(Guid id, decimal consumePointRate, decimal discountRate)
+        {
+            if (id == null)
+                throw new DomainException("参数错误");
+            if (consumePointRate < 0 || consumePointRate > 100)
+                throw new DomainException("返佣比例参数必须在0到100之间");
+            if(discountRate<0|| discountRate>100)
+                throw new DomainException("折扣系数参数必须在0到100之间");
+            var entity = Repository.GetByKey(id);
+            entity.IsStockholder = true;
+            entity.ConsumePointRate = consumePointRate;
+            entity.DiscountRate = discountRate;
+            entity.LastUpdateDate = DateTime.Now;
+            entity.LastUpdateUserID = AppContext.CurrentSession.UserID;
+            entity.LastUpdateUser = AppContext.CurrentSession.UserName;
+            return Repository.Update(entity) > 0;
+        }
+
+        /// <summary>
+        /// 取消股东分红
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool CancelStockholder(Guid id)
+        {
+            if (id == null)
+                throw new DomainException("参数错误");
+            var entity = Repository.GetByKey(id);
+            entity.IsStockholder = false;
+            entity.ConsumePointRate = 0;
+            entity.DiscountRate = 0;
+            entity.LastUpdateDate = DateTime.Now;
+            entity.LastUpdateUserID = AppContext.CurrentSession.UserID;
+            entity.LastUpdateUser = AppContext.CurrentSession.UserName;
+            return Repository.Update(entity) > 0;
         }
 
         #endregion

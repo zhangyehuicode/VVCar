@@ -42,5 +42,10 @@ namespace VVCar.Shop.Domain.Filters
         /// 产品类别
         /// </summary>
         public EProductType? ProductType { get; set; }
+
+        /// <summary>
+        /// 是否畅销
+        /// </summary>
+        public bool? IsSaleWell { get; set; }
     }
 }

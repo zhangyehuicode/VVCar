@@ -1,0 +1,171 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="tookeen">
+    <div class="top_box">
+        <div class="top_box_text">会员注册</div>
+        <a><img id="backimg" src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
+        <a class="top_box2"></a>
+        <a><img id="homeimg" src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;"></a>
+    </div>
+    <div class="qrcode-con">
+        <div id="qrcode"></div>
+        <div class="tips">扫描二维码注册会员，或右上角分享朋友/朋友圈</div>
+    </div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .qrcode-con {
+            padding-top: 45%;
+            width: 100%;
+            text-align: center;
+        }
+
+        .tips {
+            margin: 10px 13px;
+            text-align: center;
+            font-size: 15px;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#tookeen',
+            data: {
+                MyInfo: {},
+            },
+            methods: {
+            }
+        });
+
+            var member = sessionStorage.getItem('member');
+             function init() {
+                    $.ajax({
+                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                        type: 'GET',
+                        headers: { 'CompanyCode': mch },
+                        beforeSend: function () {
+                            $.showLoading();
+                        },
+                        success: function (res) {
+                            $.hideLoading();
+                            if (res.IsSuccessful) {
+                                if (res.Data != null) {
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                    _viewModel.MyInfo = res.Data;
+                                    var registerpath = window.location.origin + '/Mobile/Customer?mch=' + mch + '&mid=' + _viewModel.MyInfo.MemberID;
+                                    $('#qrcode').qrcode({
+                                        render: "canvas", //也可以替换为table
+                                        width: 200,
+                                        height: 200,
+                                        //foreground: "#efcb47",
+                                        //background: "#FFF",
+                                        text: registerpath,
+                                    });
+                                } else {
+                                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                                }
+                            } else {
+                                $.alert(res.ErrorMessage);
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        },
+                        error: function () {
+                            $.hideLoading();
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                    });
+                }
+            if (member == null || member == '') {
+                init();
+            } else {
+                _viewModel.MyInfo = JSON.parse(member);
+                var registerpath = window.location.origin + '/Mobile/Customer?mch=' + mch + '&mid=' + _viewModel.MyInfo.MemberID;
+                $('#qrcode').qrcode({
+                    render: "canvas", //也可以替换为table
+                    width: 200,
+                    height: 200,
+                    //foreground: "#efcb47",
+                    //background: "#FFF",
+                    text: registerpath,
+                });
+            }
+
+            function wxConfig() {
+                $.ajax({
+                    type: "POST",
+                    url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                    datatype: "json",
+                    success: function (data) {
+                        if (data.IsSuccessful) {
+                            var temp = data.Data;
+                            wx.config({
+                                debug: false,
+                                appId: temp.appId,
+                                timestamp: temp.timestamp,
+                                nonceStr: temp.nonceStr,
+                                signature: temp.signature,
+                                jsApiList: [
+                                    'checkJsApi',
+                                    'onMenuShareTimeline',
+                                    'onMenuShareAppMessage',
+                                    'onMenuShareQQ',
+                                    'onMenuShareWeibo',
+                                    'hideOptionMenu',
+                                    'hideAllNonBaseMenuItem',
+                                    'showMenuItems',
+                                    'closeWindow',
+                                    'scanQRCode',
+                                ]
+                            });
+                            wx.ready(function () {
+                                //wx.hideAllNonBaseMenuItem();
+                                wx.onMenuShareTimeline({
+                                    title: '会员注册',
+                                    link: window.location.origin + '/Mobile/Customer?mch=' + mch + '&mid=' + _viewModel.MyInfo.MemberID,
+                                    imgUrl: window.location.origin + '/Areas/resource/img/mobile/defaultimg3.png',
+                                    success: function (res) {
+                                    }
+                                });
+                                wx.onMenuShareAppMessage({
+                                    title: '会员注册',
+                                    desc: '',
+                                    link: window.location.origin + '/Mobile/Customer?mch=' + mch + '&mid=' + _viewModel.MyInfo.MemberID,
+                                    imgUrl: window.location.origin + '/Areas/resource/img/mobile/defaultimg3.png',
+                                    success: function (res) {
+                                    }
+                                });
+                            });
+                        } else {
+                        }
+                    },
+                    complete: function (xmlHttpRequest, textStatus) {
+                    },
+                    error: function (xmlHttpRequest, textStatus) {
+                    }
+                });
+            };
+            wxConfig();
+
+            $("#backimg").click(function () {
+                history.back(-1);
+            });
+
+            $("#homeimg").click(function () {
+                window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+            });
+
+        });
+    </script>
+}

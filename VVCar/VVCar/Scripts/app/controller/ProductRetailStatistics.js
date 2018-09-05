@@ -13,13 +13,43 @@
 			'ProductRetailStatisticsList button[action=search]': {
 				click: me.search
 			},
+			'ProductRetailStatisticsList button[action=searchSellWell]': {
+				click: me.searchSellWell
+			},
+			'ProductRetailStatisticsList button[action=searchUnsalable]': {
+				click: me.searchUnsalable
+			},
 			'ProductRetailStatisticsList button[action=reset]': {
 				click: me.reset
 			},
 			'ProductRetailStatisticsList button[action=export]': {
 				click: me.export
-			}
+			},
 		});
+	},
+	searchSellWell: function (btn) {
+		var me = this;
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			queryValues.IsSaleWell = true;
+			var store = me.getProductRetailStatisticsList().getStore();
+			store.proxy.extraParams = queryValues;
+			store.load();
+		} else {
+			Ext.Msg.alert('提示', '请输入过滤条件');
+		}
+	},
+	searchUnsalable: function (btn) {
+		var me = this;
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			queryValues.IsSaleWell = false;
+			var store = me.getProductRetailStatisticsList().getStore();
+			store.proxy.extraParams = queryValues;
+			store.load();
+		} else {
+			Ext.Msg.alert('提示', '请输入过滤条件');
+		}
 	},
 	search: function (btn) {
 		var me = this;

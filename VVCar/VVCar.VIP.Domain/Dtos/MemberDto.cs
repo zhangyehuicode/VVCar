@@ -175,5 +175,20 @@ namespace VVCar.VIP.Domain.Dtos
         /// 门店地址
         /// </summary>
         public string DepartmentAddress { get; set; }
+
+        /// <summary>
+        /// 是否是股东
+        /// </summary>
+        public bool IsStockholder { get; set; }
+
+        /// <summary>
+        /// 股东折扣系数
+        /// </summary>
+        public decimal DiscountRate { get; set; }
+
+        /// <summary>
+        /// 消费返积分比例(返回积分=抵用总额*比例)
+        /// </summary>
+        public decimal ConsumePointRate { get; set; }
     }
 }

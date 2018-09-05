@@ -33,6 +33,9 @@
         { name: "CardTypeDesc" },
         { name: "WeChatOpenID" },
         { name: "DepartmentName" },
-        { name: "DepartmentAddress" },
+		{ name: "DepartmentAddress" },
+		{ name: "IsStockholder" },
+		{ name: "DiscountRate" },
+		{ name: "ConsumePointRate" },
     ]
 });

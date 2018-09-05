@@ -1246,6 +1246,7 @@
     <Content Include="Areas\Mobile\Views\CarBitcoin\CrowdOrderDetails.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\MyCrowdOrder.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\MyCrowdOrderDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\TooKeen.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

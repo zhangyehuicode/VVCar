@@ -660,5 +660,31 @@ namespace VVCar.Areas.Mobile.Controllers
         {
             return DateTime.Now.Ticks.ToString();
         }
+
+        /// <summary>
+        /// 拓客
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TooKeen()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            if (string.IsNullOrEmpty(openId))
+            {
+                return RedirectToAction("Auth", new { redirectTo = Server.UrlEncode(Request.Url.AbsoluteUri), mch = companyCode });
+            }
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
     }
 }

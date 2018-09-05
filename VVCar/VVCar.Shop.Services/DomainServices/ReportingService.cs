@@ -452,6 +452,13 @@ namespace VVCar.Shop.Services.DomainServices
                     result = result.Where(t => t.ProductCode.Contains(filter.ProductCode)).ToList();
                 if (!string.IsNullOrEmpty(filter.ProductCodeName))
                     result = result.Where(t => t.ProductCode.Contains(filter.ProductCodeName) || t.ProductName.Contains(filter.ProductCodeName)).ToList();
+                if (filter.IsSaleWell.HasValue)
+                {
+                    if (filter.IsSaleWell.Value)
+                        result = result.Take(5).ToList();
+                    else
+                        result = result.OrderBy(t => t.Quantity).Take(5).ToList();
+                }
                 totalCount = result.Count();
                 if (filter.Start.HasValue && filter.Limit.HasValue)
                     result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();

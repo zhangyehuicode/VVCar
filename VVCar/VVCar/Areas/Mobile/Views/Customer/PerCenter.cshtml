@@ -86,21 +86,27 @@
             <span style="font-size:15px; color:#2d2d30;">我的客服</span><br>
             <span style="font-size:13px; color:#999;">专属客服</span><br><br>
         </a>
+        <a class="user2" v-on:click="memberregister">
+            <div class="user3">
+                <img src="~/Areas/resource/img/mobile/dd.png" style="width:100%;">
+            </div>
+            <span style="font-size:15px; color:#2d2d30;">会员注册</span><br>
+            <span style="font-size:13px; color:#999;">二维码</span><br><br>
+        </a>
     </div>
     <div class="x-slide" id="j-image-box">
         <ul>
             <li style="display:block;">
-                <a hidefocus="true"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg1.png" alt="车因子" title=""></a>
+                <a hidefocus="true"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg1.png" alt="" title=""></a>
             </li>
             <li style="display:none;">
-                <a hidefocus="true"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg2.png" alt="车因子" title=""></a>
+                <a hidefocus="true"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg2.png" alt="" title=""></a>
             </li>
             <li style="display:none;">
-                <a hidefocus="true"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg3.png" alt="车因子" title=""></a>
+                <a hidefocus="true"><img class="banner bannerbg" src="~/Areas/resource/img/mobile/defaultimg3.png" alt="" title=""></a>
             </li>
         </ul>
     </div>
-    <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6" style="position:relative;top:225px;padding-bottom:20px;">
 </div>
 
 @section scripts{
@@ -125,7 +131,7 @@
             width: 100%;
             margin: 0 auto;
             position: relative;
-            top: 456px;
+            top: 596px;
         }
 
             .x-slide li {
@@ -168,49 +174,6 @@
     <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-    <script type="text/javascript">
-        function wxConfig() {
-            var mch = $.getUrlParam('mch');
-            $.ajax({
-                type: "POST",
-                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
-                datatype: "json",
-                success: function (data) {
-                    if (data.IsSuccessful) {
-                        var temp = data.Data;
-                        wx.config({
-                            debug: false,
-                            appId: temp.appId,
-                            timestamp: temp.timestamp,
-                            nonceStr: temp.nonceStr,
-                            signature: temp.signature,
-                            jsApiList: [
-                                'checkJsApi',
-                                'onMenuShareTimeline',
-                                'onMenuShareAppMessage',
-                                'onMenuShareQQ',
-                                'onMenuShareWeibo',
-                                'hideOptionMenu',
-                                'hideAllNonBaseMenuItem',
-                                'showMenuItems',
-                                'closeWindow',
-                                'scanQRCode',
-                            ]
-                        });
-                        wx.ready(function () {
-                            wx.hideAllNonBaseMenuItem();
-                        });
-                    } else {
-                    }
-                },
-                complete: function (xmlHttpRequest, textStatus) {
-                },
-                error: function (xmlHttpRequest, textStatus) {
-                }
-            });
-        };
-        wxConfig();
-    </script>
     <script type="text/javascript">
         $(function () {
 
@@ -267,6 +230,9 @@
                     verificationcodeset: function (event) {
                         window.location.href = "/Mobile/Customer/VerificationCodeSet?mch=" + mch;
                     },
+                    memberregister: function (event) {
+                        window.location.href = "/Mobile/Customer/TooKeen?mch=" + mch;
+                    },
             }
         });
 
@@ -304,6 +270,62 @@
             } else {
                 _viewModel.MyInfo = JSON.parse(member);
             }
+
+            function wxConfig() {
+                $.ajax({
+                    type: "POST",
+                    url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                    datatype: "json",
+                    success: function (data) {
+                        if (data.IsSuccessful) {
+                            var temp = data.Data;
+                            wx.config({
+                                debug: false,
+                                appId: temp.appId,
+                                timestamp: temp.timestamp,
+                                nonceStr: temp.nonceStr,
+                                signature: temp.signature,
+                                jsApiList: [
+                                    'checkJsApi',
+                                    'onMenuShareTimeline',
+                                    'onMenuShareAppMessage',
+                                    'onMenuShareQQ',
+                                    'onMenuShareWeibo',
+                                    'hideOptionMenu',
+                                    'hideAllNonBaseMenuItem',
+                                    'showMenuItems',
+                                    'closeWindow',
+                                    'scanQRCode',
+                                ]
+                            });
+                            wx.ready(function () {
+                                //wx.hideAllNonBaseMenuItem();
+                                wx.onMenuShareTimeline({
+                                    title: '会员注册',
+                                    link: window.location.origin + '/Mobile/Customer?mch=' + mch + '&mid=' + _viewModel.MyInfo.MemberID,
+                                    imgUrl: window.location.origin + '/Areas/resource/img/mobile/defaultimg3.png',
+                                    success: function (res) {
+                                    }
+                                });
+                                wx.onMenuShareAppMessage({
+                                    title: '会员注册',
+                                    desc: '',
+                                    link: window.location.origin + '/Mobile/Customer?mch=' + mch + '&mid=' + _viewModel.MyInfo.MemberID,
+                                    imgUrl: window.location.origin + '/Areas/resource/img/mobile/defaultimg3.png',
+                                    success: function (res) {
+                                    }
+                                });
+                            });
+                        } else {
+                        }
+                    },
+                    complete: function (xmlHttpRequest, textStatus) {
+                    },
+                    error: function (xmlHttpRequest, textStatus) {
+                    }
+                });
+            };
+            wxConfig();
 
             var banner = {
                 init: function () {

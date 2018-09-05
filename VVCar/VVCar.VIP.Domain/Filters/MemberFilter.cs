@@ -44,6 +44,11 @@ namespace VVCar.VIP.Domain.Filters
         public Guid? MemberGradeID { get; set; }
 
         /// <summary>
+        /// 是否是股东
+        /// </summary>
+        public bool? IsStockholder { get; set; }
+
+        /// <summary>
         /// 是否来自后台客户分配请求
         /// </summary>
         public bool IsFromUserMember { get; set; }

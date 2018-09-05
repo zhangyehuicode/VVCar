@@ -25,21 +25,23 @@
 			'StockholderCardEdit button[action=save]': {
 				click: me.save
 			},
-			'StockholderCardEdit button[action=selectCard]': {
-				click: me.selectCard
+			'StockholderCardEdit button[action=selectMember]': {
+				click: me.selectMember
 			},
 			'StockholderCardSelector grid[name=stockholderCardList]': {
-				itemdblclick: me.chooseCard
+				itemdblclick: me.chooseMember
 			},
 			'StockholderCardList': {
-				edit: me.stockholderCardEdit
+				edit: me.stockholderCardEdit,
+				afterrender: me.afterrender,
+				deleteActionClick: me.deleteStockholder
 			}
 		});
 	},
 	addStockholderCard: function () {
 		var me = this;
 		var win = Ext.widget('StockholderCardEdit');
-		win.setTitle('新增股东卡');
+		win.setTitle('新增股东');
 		win.form.getForm().actionMethod = 'GET';
 		win.show();
 	},
@@ -56,7 +58,7 @@
 					return;
 				}
 				form.updateRecord();
-				store.setConsumePointRateAndDiscountRate(formValues.ID, formValues.ConsumePointRate, formValues.DiscountRate, function (req, success, res) {
+				store.setStockholder(formValues.ID, formValues.ConsumePointRate, formValues.DiscountRate, function (req, success, res) {
 					var response = JSON.parse(res.responseText);
 					if (response.IsSuccessful) {
 						win.close();
@@ -69,22 +71,20 @@
 			}
 		}
 	},
-	selectCard: function () {
+	selectMember: function () {
 		var win = Ext.widget('StockholderCardSelector');
 		var store = win.down('grid').getStore();
 		store.proxy.extraParams = {
-			CouponType: -1,
-			AproveStatus: - 2,
-			Nature: 1,
-			IsStockholderCard: false
+			IsStockholder: false,
+			All: true,
 		};
 		store.load();
 		win.show();
 	},
-	chooseCard: function (grid, record) {
+	chooseMember: function (grid, record) {
 		var win = Ext.ComponentQuery.query('window[name=StockholderCardEdit]')[0];
 		win.down('textfield[name=ID]').setValue(record.data.ID);
-		win.down('textfield[name=Title]').setValue(record.data.Title);
+		win.down('textfield[name=Name]').setValue(record.data.Name);
 		grid.up('window').close();
 	},
 	stockholderCardEdit: function (editor, context, eOpts) {
@@ -104,7 +104,7 @@
 		} else {
 			if (!context.record.dirty)
 				return;
-			context.store.setConsumePointRateAndDiscountRate(context.record.data.ID, context.record.data.ConsumePointRate, context.record.data.DiscountRate, function (req, success, res) {
+			context.store.setStockholder(context.record.data.ID, context.record.data.ConsumePointRate, context.record.data.DiscountRate, function (req, success, res) {
 				var response = JSON.parse(res.responseText);
 				if (response.IsSuccessful) {
 					Ext.Msg.alert('提示', '更新成功');
@@ -115,4 +115,31 @@
 			});
 		}
 	},
+	deleteStockholder: function (grid, record) {
+		var me = this;
+		var store = me.getStockholderCardList().getStore();
+		Ext.Msg.confirm('询问', '确定要删除吗？', function (opt) {
+			if (opt === 'yes') {
+				store.cancelStockholder(record.data.ID,  function (req, success, res) {
+					var response = JSON.parse(res.responseText);
+					if (response.IsSuccessful) {
+						Ext.Msg.alert('提示', '删除成功');
+						store.reload();
+					} else {
+						Ext.Msg.alert('提示', response.ErrorMessage);
+					}
+				});
+			}
+		});
+	},
+	afterrender: function () {
+		var me = this;
+		var store = me.getStockholderCardList().getStore();
+		var params = {
+			IsStockholder: true,
+			All: true,
+		};
+		Ext.apply(store.proxy.extraParams, params);
+		store.load();
+	}
 });

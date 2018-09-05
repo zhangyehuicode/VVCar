@@ -501,5 +501,35 @@ namespace VVCar.Controllers.VIP
                 return MemberService.MemberLogin(memberLoginDto);
             });
         }
+
+        /// <summary>
+        /// 设置股东分红
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="consumePointRate"></param>
+        /// <param name="discountRate"></param>
+        /// <returns></returns>
+        [HttpGet, Route("SetStockholder")]
+        public JsonActionResult<bool> SetStockholder(Guid id, decimal consumePointRate, decimal discountRate)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.SetStockholder(id, consumePointRate, discountRate);
+            });
+        }
+
+        /// <summary>
+        /// 取消股东分红
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet, Route("CancelStockholder")]
+        public JsonActionResult<bool> CancelStockholder(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberService.CancelStockholder(id);
+            });
+        }
     }
 }

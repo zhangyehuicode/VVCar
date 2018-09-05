@@ -23,6 +23,8 @@
 			adjustMemberPoint: Ext.GlobalConfig.ApiDomainUrl + "api/Member/AdjustMemberPoint",
 			manualAddMember: Ext.GlobalConfig.ApiDomainUrl + "api/Member/ManualAddMember",
 			batchDelete: Ext.GlobalConfig.ApiDomainUrl + "api/Member/BatchDelete",
+			setStockholder: Ext.GlobalConfig.ApiDomainUrl + "api/Member/SetStockholder",
+			cancelStockholder: Ext.GlobalConfig.ApiDomainUrl + "api/Member/CancelStockholder",
 		},
 	},
 	failure: function (response) {
@@ -179,4 +181,22 @@
 			callback: cb
 		});
 	},
+	setStockholder(id, consumePointRate, discountRate, cb) {
+		Ext.Ajax.request({
+			method: "GET",
+			timeout: 300000,
+			url: this.proxy.api.setStockholder + '?id=' + id + '&consumePointRate=' + consumePointRate + '&discountRate=' + discountRate,
+			// jsonData: entities,
+			callback: cb
+		});
+	},
+	cancelStockholder(id, cb) {
+		Ext.Ajax.request({
+			method: "GET",
+			timeout: 300000,
+			url: this.proxy.api.cancelStockholder + '?id=' + id,
+			// jsonData: entities,
+			callback: cb
+		});
+	}
 });

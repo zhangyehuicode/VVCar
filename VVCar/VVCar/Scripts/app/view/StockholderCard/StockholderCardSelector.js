@@ -1,7 +1,7 @@
 ﻿Ext.define('WX.view.StockholderCard.StockholderCardSelector', {
 	extend: 'Ext.window.Window',
 	alias: 'widget.StockholderCardSelector',
-	title: '选择会员卡',
+	title: '选择会员',
 	layout: 'fit',
 	width: 600,
 	height: 500,
@@ -11,13 +11,13 @@
 	buttonAlign: 'center',
 	initComponent: function () {
 		var me = this;
-		var couponTemplateInfoStore = Ext.create('WX.store.BaseData.CouponTemplateInfoStore');
+		var memberStore = Ext.create('WX.store.BaseData.MemberStore');
 		me.items = [{
 			xtype: 'grid',
 			name: 'stockholderCardList',
 			stripeRows: true,
 			loadMask: true,
-			store: couponTemplateInfoStore,
+			store: memberStore,
 			tbar: {
 				xtype: 'form',
 				layout: 'column',
@@ -31,20 +31,14 @@
 				autoScroll: true,
 				columnWidth: 1,
 				items: [{
-					name: 'TemplateCode',
 					xtype: 'textfield',
-					fieldLabel: '编号',
-					width: 170,
+					name: 'Keyword',
+					fieldLabel: '关键字',
 					labelWidth: 60,
-					margin: '0 0 0 5',
-				}, {
-					name: 'Title',
-					xtype: 'textfield',
-					fieldLabel: '标题',
-					width: 170,
-					labelWidth: 60,
-					margin: '0 0 0 5',
-				}, {
+					width: 240,
+					emptyText: '电话/姓名',
+					margin: "0 0 0 5"
+				},{
 					action: 'search',
 					xtype: 'button',
 					text: '搜索',
@@ -53,9 +47,11 @@
 				}]
 			},
 			columns: [
-				{ header: '编号', dataIndex: 'TemplateCode', flex: 1 },
-				{ header: '优惠类型', dataIndex: 'CouponTypeName', flex: 1 },
-				{ header: '标题', dataIndex: 'Title', flex: 1 },
+				{ header: "会员卡号", dataIndex: "CardNumber", width: 80 },
+				{ header: "姓名", dataIndex: "Name", minWidth: 80, flex: 1 },
+				{ header: "手机号码", dataIndex: "MobilePhoneNo", width: 105 },
+				{ header: "车牌号", dataIndex: "PlateList", minWidth: 80, flex: 1, permissionCode: 'Member.Member.DepartmentColumn' },
+				{ header: "注册时间", dataIndex: "CreatedDate", xtype: "datecolumn", format: "Y-m-d", minWidth: 90 },
 			],
 			bbar: {
 				xtype: 'pagingtoolbar',

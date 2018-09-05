@@ -34,7 +34,7 @@ namespace VVCar.Controllers
             ViewBag.HQName = "车因子";
             if (host == "www.mrtarot.cn")
             {
-                ViewBag.Title = "塔罗先生管理系统";
+                ViewBag.Title = "塔罗先生智慧管理系统";
                 ViewBag.IsMrTarot = true;
                 ViewBag.HQName = "塔罗先生";
             }

@@ -142,7 +142,7 @@ namespace VVCar.BaseData.Services.DomainServices
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            var systemSettingDtoList = queryable.OrderBy(t=>t.Caption).MapTo<SystemSettingDto>().ToList();
+            var systemSettingDtoList = queryable.OrderBy(t=>t.Merchant.Code).MapTo<SystemSettingDto>().ToList();
             systemSettingDtoList.ForEach(s => s.SettingValue = s.SettingValue ?? s.DefaultValue);
             return systemSettingDtoList;
         }

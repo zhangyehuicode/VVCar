@@ -2,7 +2,7 @@
 	extend: 'Ext.window.Window',
 	alias: 'widget.StockholderCardEdit',
 	name: 'StockholderCardEdit',
-	title: '编辑股东卡',
+	title: '编辑股东',
 	layout: 'fit',
 	width: 380,
 	initComponent: function () {
@@ -24,12 +24,12 @@
 				padding: '0 0 5 0',
 				items: [{
 					xtype: 'textfield',
-					name: 'Title',
-					fieldLabel: '会员卡',
+					name: 'Name',
+					fieldLabel: '会员',
 					readOnly: true,
 					allowBlank: false,
 				}, {
-					action: 'selectCard',
+					action: 'selectMember',
 					xtype: 'button',
 					text: '查找',
 					cls: 'submitBtn',
@@ -38,7 +38,7 @@
 			}, {
 				xtype: 'textfield',
 				name: 'ID',
-				fieldLabel: '会员卡ID',
+				fieldLabel: '会员ID',
 				hidden: true,
 			}, {
 				xtype: 'form',
