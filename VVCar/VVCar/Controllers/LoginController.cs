@@ -32,7 +32,7 @@ namespace VVCar.Controllers
             var host = HttpContext.Request.Url.Host;
             ViewBag.IsMrTarot = false;
             ViewBag.HQName = "车因子";
-            if (host == "www.mrtarot.cn")
+            if (host.Contains("cheyinzi"))//mrtarot
             {
                 ViewBag.Title = "塔罗先生智慧管理系统";
                 ViewBag.IsMrTarot = true;

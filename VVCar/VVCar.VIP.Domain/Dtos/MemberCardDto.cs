@@ -255,6 +255,11 @@ namespace VVCar.VIP.Domain.Dtos
         /// 当前等级消费次数占比（/达到下一等级消费次数）
         /// </summary>
         public decimal CurrentConsumeCountRate { get; set; }
+
+        /// <summary>
+        /// 是否批发价会员
+        /// </summary>
+        public bool IsWholesalePrice { get; set; }
     }
 
     public class GiftCardUserTime

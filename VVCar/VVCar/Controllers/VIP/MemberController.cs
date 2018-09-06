@@ -531,5 +531,19 @@ namespace VVCar.Controllers.VIP
                 return MemberService.CancelStockholder(id);
             });
         }
+
+        /// <summary>
+        /// 获取我的会员
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetMyMembers"), AllowAnonymous]
+        public PagedActionResult<Member> GetMyMembers(Guid id)
+        {
+            return SafeGetPagedData<Member>((result) =>
+            {
+                result.Data = MemberService.GetMyMembers(id);
+            });
+        }
     }
 }

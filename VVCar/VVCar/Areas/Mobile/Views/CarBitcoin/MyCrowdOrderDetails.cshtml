@@ -143,7 +143,7 @@
             var mch = $.getUrlParam('mch');
             var coid = $.getUrlParam('coid');
             var isadd = $.getUrlParam('isadd') == 'true';
-            if (isadd) {
+            if (isadd && (coid == null || coid=='')) {
                 $.alert('点击右上角分享朋友/朋友圈，开始拼单！');
             }
             var corid = $.getUrlParam('corid');
@@ -180,8 +180,9 @@
                     }
                 }
             }
-        });
-        _viewModel.CrowdOrder = crowdorder;
+            });
+        if (crowdorder != null && crowdorder != '')
+            _viewModel.CrowdOrder = crowdorder;
 
             function getmyorder(id) {
                 $.ajax({
@@ -222,8 +223,8 @@
                                 _viewModel.MyInfo = res.Data[0];
                                 _viewModel.IsMember = true;
                                 if (coid != null && coid != "" && crowdorder != null && crowdorder != '') {
-                                    //sessionStorage.setItem('crowdorder', JSON.stringify(crowdorder));
-                                    //window.location.href = "/Mobile/CarBitcoin/CrowdOrderDetails?mch=" + mch;
+                                    sessionStorage.setItem('crowdorder', JSON.stringify(crowdorder));
+                                    window.location.href = "/Mobile/CarBitcoin/CrowdOrderDetails?mch=" + mch;
                                 } else if (crowdorder == null||crowdorder == ''){
                                     window.location.href = "/Mobile/CarBitcoin/Home?mch=" + mch;
                                 }
@@ -261,7 +262,7 @@
             function wxConfig() {
                 $.ajax({
                     type: "POST",
-                    url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                    url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + encodeURIComponent(document.URL),
                     datatype: "json",
                     success: function (data) {
                         if (data.IsSuccessful) {
@@ -287,9 +288,10 @@
                             });
                             wx.ready(function () {
                                 //wx.hideAllNonBaseMenuItem();
+                                console.log('ready');
                                 wx.onMenuShareAppMessage({
                                     title: "【爱保养】"+_viewModel.CrowdOrder.Name,
-                                    desc: '拼单助力！注册即享优惠！',
+                                    desc: '拼单助力！注册即享低价！',
                                     link: document.URL + '&coid=' + _viewModel.CrowdOrder.ID,
                                     imgUrl: document.location.origin + _viewModel.CrowdOrder.ImgUrl,
                                     success: function (res) {

@@ -93,6 +93,13 @@
             <span style="font-size:15px; color:#2d2d30;">会员注册</span><br>
             <span style="font-size:13px; color:#999;">二维码</span><br><br>
         </a>
+        <a class="user2" v-on:click="mymember">
+            <div class="user3">
+                <img src="~/Areas/resource/img/mobile/hy.png" style="width:90%;">
+            </div>
+            <span style="font-size:15px; color:#2d2d30;">我的会员</span><br>
+            <span style="font-size:13px; color:#999;">会员</span><br><br>
+        </a>
     </div>
     <div class="x-slide" id="j-image-box">
         <ul>
@@ -232,6 +239,9 @@
                     },
                     memberregister: function (event) {
                         window.location.href = "/Mobile/Customer/TooKeen?mch=" + mch;
+                    },
+                    mymember: function (event) {
+                        window.location.href = "/Mobile/Customer/MyMember?mch=" + mch;
                     },
             }
         });

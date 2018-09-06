@@ -463,6 +463,7 @@
     <Content Include="Areas\resource\img\mobile\close.png" />
     <Content Include="Areas\resource\img\mobile\coppermedal.png" />
     <Content Include="Areas\resource\img\mobile\cph.png" />
+    <Content Include="Areas\resource\img\mobile\crowdorder.png" />
     <Content Include="Areas\resource\img\mobile\daodile.png" />
     <Content Include="Areas\resource\img\mobile\dd.png" />
     <Content Include="Areas\resource\img\mobile\defaultimg1.png" />
@@ -1247,6 +1248,8 @@
     <Content Include="Areas\Mobile\Views\CarBitcoin\MyCrowdOrder.cshtml" />
     <Content Include="Areas\Mobile\Views\CarBitcoin\MyCrowdOrderDetails.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\TooKeen.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MyMember.cshtml" />
+    <Content Include="Areas\Mobile\Views\Agent\GroundCourse.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

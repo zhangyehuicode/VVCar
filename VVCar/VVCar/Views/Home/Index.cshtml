@@ -10,5 +10,11 @@
         function navigateLink(link, title) {
             Ext.getApplication().navigateLink(link, title);
         }
+        if ('@ViewBag.IsMrTarot' == 'True') {
+                var link = document.createElement("link");
+                link.href = "/mrtarotfavicon.ico";
+                link.rel = "shortcut icon";
+                document.head.appendChild(link);
+        }
     </script>
 }

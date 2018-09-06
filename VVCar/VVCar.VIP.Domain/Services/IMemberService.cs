@@ -306,5 +306,12 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="id"></param>
         /// <returns></returns>
         bool CancelStockholder(Guid id);
+
+        /// <summary>
+        /// 获取我的会员
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        IEnumerable<Member> GetMyMembers(Guid id);
     }
 }

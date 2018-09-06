@@ -49,6 +49,10 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<ConsumeHistory> ConsumeHistoryRepo { get => ServiceLocator.Instance.GetService<IRepository<ConsumeHistory>>(); }
 
+        IRepository<PickUpOrderTaskDistribution> PickUpOrderTaskDistributionRepo { get=> ServiceLocator.Instance.GetService<IRepository<PickUpOrderTaskDistribution>>(); }
+
+        IRepository<UserMember> UserMemberRepo { get => ServiceLocator.Instance.GetService<IRepository<UserMember>>(); }
+
         #endregion
 
         /// <summary>
@@ -312,6 +316,108 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
                 result = result.OrderByDescending(t => t.CurrentPerformance).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             return result.OrderByDescending(t => t.CurrentPerformance).ToList();
+        }
+
+        /// <summary>
+        /// 员工业绩统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<StaffPerformance> StaffPerformanceStatistics1(StaffPerformanceFilter filter, ref int totalCount)
+        {
+            var result = new List<StaffPerformance>();
+            var userQueryable = UserRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (filter != null && !string.IsNullOrEmpty(filter.StaffName))
+                userQueryable = userQueryable.Where(t => t.Name.Contains(filter.StaffName));
+            var users = userQueryable.ToList();
+            if(users != null && users.Count > 0)
+            {
+                var now = DateTime.Now;
+                var monthStartTime = new DateTime(now.Year, now.Month, 1);
+                var nextMonthStartTime = monthStartTime.AddMonths(1);
+                //接车单
+                var pickUpOrderTaskDistributionQueryable = PickUpOrderTaskDistributionRepo.GetInclude(t=>t.PickUpOrder, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PickUpOrder.Status == EPickUpOrderStatus.Payed);
+                var currentPickupOrderQueryable = pickUpOrderTaskDistributionQueryable;
+                var monthPickupOrderQueryable = pickUpOrderTaskDistributionQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
+
+                //商城
+                var orderQueryable = OrderRepo.GetInclude(t=> t.OrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && (t.Status == EOrderStatus.PayUnshipped || t.Status == EOrderStatus.Delivered || t.Status == EOrderStatus.Finish || t.Status == EOrderStatus.PayUnshipped));
+                var currentOrderQueryable = orderQueryable;
+                var monthOrderQueryable = orderQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
+
+                if(filter != null)
+                {
+                    if (filter.StartDate.HasValue)
+                    {
+                        currentPickupOrderQueryable = currentPickupOrderQueryable.Where(t => t.CreatedDate >= filter.StartDate.Value);
+                        currentOrderQueryable = currentOrderQueryable.Where(t => t.CreatedDate >= filter.StartDate.Value);
+                    }
+                    if (filter.EndDate.HasValue)
+                    {
+                        currentPickupOrderQueryable = currentPickupOrderQueryable.Where(t => t.CreatedDate < filter.EndDate.Value);
+                        currentOrderQueryable = currentOrderQueryable.Where(t => t.CreatedDate < filter.EndDate.Value);
+                    }
+                }
+                users.ForEach(user =>
+                {
+                    //接车单
+                    var userPickupOrderList = pickUpOrderTaskDistributionQueryable.Where(t => t.UserID == user.ID).ToList();
+                    var userMonthPickupOrderList = monthPickupOrderQueryable.Where(t => t.UserID == user.ID).ToList();
+                    var userCurrentPickupOrderList = currentPickupOrderQueryable.Where(t => t.UserID == user.ID).ToList();
+
+                    var staffPerformance = new StaffPerformance();
+
+                    staffPerformance.TotalPerformance = userPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.TotalMoney)).FirstOrDefault();
+                    staffPerformance.MonthPerformance = userMonthPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.TotalMoney)).FirstOrDefault();
+                    staffPerformance.CurrentPerformance = userCurrentPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.TotalMoney)).FirstOrDefault();
+
+                    staffPerformance.CustomerServiceCount = userPickupOrderList.Count();
+                    staffPerformance.MonthCustomerServiceCount = userMonthPickupOrderList.Count();
+                    staffPerformance.CurrentCustomerServiceCount = userCurrentPickupOrderList.Count();
+
+                    staffPerformance.TotalCommission = userPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Commission + s.SalesmanCommission)).FirstOrDefault();
+                    staffPerformance.MonthCommission = userMonthPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Commission + s.SalesmanCommission)).FirstOrDefault();
+                    staffPerformance.CurrentCommission = userCurrentPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Commission + s.SalesmanCommission)).FirstOrDefault();
+
+                    //商城
+                    var memberIDs = UserMemberRepo.GetQueryable(false).Where(t=> t.MerchantID == AppContext.CurrentSession.MerchantID && t.UserID == user.ID).Select(t=> t.MemberID).ToList();
+                    var userOrderList = orderQueryable.Where(t => t.UserID == user.ID || memberIDs.Contains(t.MemberID.Value)).ToList();
+                    var userMonthOrderList = monthOrderQueryable.Where(t => t.UserID == user.ID || memberIDs.Contains(t.MemberID.Value)).ToList();
+                    var userCurrentOrderList = currentOrderQueryable.Where(t => t.UserID == user.ID || memberIDs.Contains(t.MemberID.Value)).ToList();
+
+                    staffPerformance.TotalPerformance += userOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+                    staffPerformance.MonthPerformance += userMonthOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+                    staffPerformance.CurrentPerformance += userCurrentOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+
+                    userOrderList.Select(t => t.OrderItemList).ForEach(t => 
+                    {
+                        staffPerformance.TotalCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Commission)).FirstOrDefault();
+                    });
+                    userMonthOrderList.Select(t => t.OrderItemList).ForEach(t =>
+                    {
+                        staffPerformance.MonthCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Commission)).FirstOrDefault();
+                    });
+
+                    staffPerformance.BasicSalary = user.BasicSalary;
+                    staffPerformance.Subsidy = 0;
+
+                    staffPerformance.StaffID = user.ID;
+                    staffPerformance.StaffName = user.Name;
+                    staffPerformance.StaffCode = user.Code;
+
+                    staffPerformance.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
+                    staffPerformance.MonthOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
+
+                    result.Add(staffPerformance);
+
+                });
+            }
+            totalCount = result.Count();
+            if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
+                result = result.OrderByDescending(t => t.CurrentPerformance).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
+            return result.OrderByDescending(t => t.CurrentPerformance).ToList();
+
         }
 
         /// <summary>

@@ -79,13 +79,11 @@
 					xtype: 'button',
 					action: 'searchSellWell',
 					text: '畅销',
-					cls: 'submitBtn',
 					margin: '0 0 0 5',
 				}, {
 					xtype: 'button',
 					action: 'searchUnsalable',
 					text: '滞销',
-					cls: 'submitBtn',
 					margin: '0 0 0 5',
 				}, {
 					xtype: 'button',

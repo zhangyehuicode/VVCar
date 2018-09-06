@@ -79,5 +79,17 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "兑换积分")]
         public int Points { get; set; }
+
+        /// <summary>
+        /// 抽成比例
+        /// </summary>
+        [Display(Name = "抽成比例")]
+        public decimal CommissionRate { get; set; }
+
+        /// <summary>
+        /// 抽成
+        /// </summary>
+        [Display(Name = "抽成")]
+        public decimal Commission { get; set; }
     }
 }

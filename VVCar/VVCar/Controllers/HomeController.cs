@@ -11,7 +11,19 @@ namespace VVCar.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = AppContext.Settings.SystemTitle;
+            var host = HttpContext.Request.Url.Host;
+            ViewBag.IsMrTarot = false;
+            ViewBag.HQName = "车因子";
+            if (host.Contains("cheyinzi"))//mrtarot
+            {
+                ViewBag.Title = "塔罗先生智慧管理系统";
+                ViewBag.IsMrTarot = true;
+                ViewBag.HQName = "塔罗先生";
+            }
+            else
+            {
+                ViewBag.Title = AppContext.Settings.SystemTitle;
+            }
             return View();
         }
     }

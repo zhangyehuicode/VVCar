@@ -15,7 +15,7 @@
 <body>
     <div id="vuecon" class="main">
         <div class="logo-con">
-            <img class="logo" src="~/Content/image/cheyinzilogo.png" />
+            <img class="logo" />
         </div>
         <div class="systemtitle">@ViewBag.Title</div>
         <input class="merchantcode" placeholder="商户号" type="text" v-model="MerchantCode" />
@@ -99,12 +99,14 @@
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script type="text/javascript">
         $(function () {
-            if (@ViewBag.IsMrTarot) {
+            if ('@ViewBag.IsMrTarot' == 'True') {
                 var link = document.createElement("link");
                 link.href = "/mrtarotfavicon.ico";
                 link.rel = "shortcut icon";
                 document.head.appendChild(link);
                 $('.logo').attr('src', '/Content/image/mrtarotlogo.png');
+            } else {
+                $('.logo').attr('src', '/Content/image/cheyinzilogo.png');
             }
         });
     </script>

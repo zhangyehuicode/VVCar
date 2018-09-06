@@ -1,0 +1,163 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div style="background-color:#f8f9fe;" id="mymember">
+    <div class="top_box">
+        <div class="top_box_text">我的会员</div>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
+        <a class="top_box2"></a>
+        <a v-on:click="home"><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="home"></a>
+    </div>
+    <div class="hxjl_box2" style="text-align:center;">
+        <div class="hxjl_box3" style="border-bottom:1px solid #eee;">
+            <div class="hxjl_box4" style="width:50%;">
+                <span class="hxjl_text2">会员名称</span>
+            </div>
+            <div class="hxjl_box4" style="width:50%;">
+                <span class="hxjl_text2" style="text-align:center;">注册时间</span>
+            </div>
+        </div>
+        <div class="hxjl_box3" style="border-bottom:1px solid #eee;" v-for="Member in MemberList">
+            <div class="hxjl_box4" style="width:50%;">
+                <span class="hxjl_text2">{{Member.Name}}</span>
+            </div>
+            <div class="hxjl_box4" style="width:50%;">
+                <span class="hxjl_text2" style="text-align:center;">{{Member.CreatedDate}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#mymember',
+            data: {
+                MyInfo: {},
+                MemberList: [],
+            },
+            methods: {
+                home: function (event) {
+                    window.location.href = "/Mobile/Customer/Home?mch=" + mch;
+                },
+                back: function (event) {
+                    history.back(-1);
+                },
+            }
+        });
+
+            var member = sessionStorage.getItem('member');
+             function init() {
+                    $.ajax({
+                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                        type: 'GET',
+                        headers: { 'CompanyCode': mch },
+                        beforeSend: function () {
+                            $.showLoading();
+                        },
+                        success: function (res) {
+                            $.hideLoading();
+                            if (res.IsSuccessful) {
+                                if (res.Data != null) {
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                    _viewModel.MyInfo = res.Data;
+                                    getMyMembers();
+                                } else {
+                                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                                }
+                            } else {
+                                $.alert(res.ErrorMessage);
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        },
+                        error: function () {
+                            $.hideLoading();
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                    });
+                }
+            if (member == null || member == '') {
+                init();
+            } else {
+                _viewModel.MyInfo = JSON.parse(member);
+                getMyMembers();
+            }
+
+            function getMyMembers() {
+                $.ajax({
+                    url: '/api/Member/GetMyMembers?id=' + _viewModel.MyInfo.MemberID,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.MemberList = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
+        });
+    </script>
+}

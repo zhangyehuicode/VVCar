@@ -804,7 +804,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (string.IsNullOrEmpty(openID))
                 return null;
-            var member = this.Repository.GetIncludes(false, "Card", "AgentDepartment")//, "OwnerGroup", "MemberGrade"
+            var member = this.Repository.GetIncludes(false, "Card", "AgentDepartment", "MemberGroup")//, "OwnerGroup", "MemberGrade"
                 .FirstOrDefault(t => ((t.WeChatOpenID != null && t.WeChatOpenID != "" && t.WeChatOpenID == openID) || (t.MinProOpenID != null && t.MinProOpenID != "" && t.MinProOpenID == openID)) && t.MerchantID == AppContext.CurrentSession.MerchantID);
 
             if (member == null)
@@ -857,6 +857,7 @@ namespace VVCar.VIP.Services.DomainServices
                 CardCount = cardCount,
                 WeChatOpenID = member.WeChatOpenID,
                 MinProOpenID = member.MinProOpenID,
+                IsWholesalePrice = member.MemberGroup != null ? member.MemberGroup.IsWholesalePrice : false,
                 //ConsumeAmountOfReachNextGrade = consumeAmountOfReachNextGrade,
                 //ConsumeCountOfReachNextGrade = consumeCountOfReachNextGrade,
                 //ConsumeAmountOfCurrentGrade = consumeAmountOfCurrentGrade,
@@ -1095,7 +1096,7 @@ namespace VVCar.VIP.Services.DomainServices
                 throw new DomainException("参数错误");
             if (consumePointRate < 0 || consumePointRate > 100)
                 throw new DomainException("返佣比例参数必须在0到100之间");
-            if(discountRate<0|| discountRate>100)
+            if (discountRate < 0 || discountRate > 100)
                 throw new DomainException("折扣系数参数必须在0到100之间");
             var entity = Repository.GetByKey(id);
             entity.IsStockholder = true;
@@ -1124,6 +1125,16 @@ namespace VVCar.VIP.Services.DomainServices
             entity.LastUpdateUserID = AppContext.CurrentSession.UserID;
             entity.LastUpdateUser = AppContext.CurrentSession.UserName;
             return Repository.Update(entity) > 0;
+        }
+
+        /// <summary>
+        /// 获取我的会员
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IEnumerable<Member> GetMyMembers(Guid id)
+        {
+            return Repository.GetQueryable(false).Where(t => t.ParentMemberID == id).ToArray();
         }
 
         #endregion

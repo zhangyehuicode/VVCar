@@ -16,7 +16,7 @@
 		Ext.Ajax.request({
 			ContentType: 'application/json',
 			url: this.proxy.api.batchDelete,
-			method: 'POST',
+			method: 'DELETE',
 			jsonData: { IdList: ids },
 			callback: cb
 		});

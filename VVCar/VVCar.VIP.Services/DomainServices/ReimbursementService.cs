@@ -82,6 +82,10 @@ namespace VVCar.VIP.Services.DomainServices
                 throw new DomainException("数据不存在");
             reimbursementList.ForEach(t =>
             {
+                if (t.CreatedUserID != AppContext.CurrentSession.UserID)
+                    throw new DomainException("不允许删除其他人的数据!");
+                if (t.Status == EReimbursementApproveStatus.Approved)
+                    throw new DomainException("已审核的数据不允许删除!");
                 t.IsDeleted = true;
             });
             return Repository.UpdateRange(reimbursementList) > 0;
