@@ -210,9 +210,9 @@ namespace VVCar.VIP.Domain.Entities
         public decimal DiscountRate { get; set; }
 
         /// <summary>
-        /// 消费返积分比例(返回积分=抵用总额*比例)
+        /// 消费返额度比例(返回额度=下级会员消费*比例)
         /// </summary>
-        [Display(Name= "消费返积分比例(返回积分=抵用总额*比例)")]
+        [Display(Name = "消费返额度比例(返回额度=下级会员消费*比例)")]
         public decimal ConsumePointRate { get; set; }
 
         /// <summary>

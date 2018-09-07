@@ -97,6 +97,7 @@
     <Compile Include="Dtos\RechargePlanDto.cs" />
     <Compile Include="Dtos\RechargeTotalDataDto.cs" />
     <Compile Include="Dtos\ReimbursementDto.cs" />
+    <Compile Include="Dtos\StockholderDividendDto.cs" />
     <Compile Include="Dtos\TradeHistoryDto.cs" />
     <Compile Include="Dtos\UpdateMemberDto.cs" />
     <Compile Include="Dtos\UseMemberGradeRightsResult.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Entities\Recruitment.cs" />
     <Compile Include="Entities\Reimbursement.cs" />
     <Compile Include="Entities\SalesActivityRecord.cs" />
+    <Compile Include="Entities\StockholderDividend.cs" />
     <Compile Include="Entities\SuperClass.cs" />
     <Compile Include="Entities\TradeHistory.cs" />
     <Compile Include="Entities\VerificationCode.cs" />
@@ -185,6 +187,8 @@
     <Compile Include="Enums\ERecruitSex.cs" />
     <Compile Include="Enums\EReimbursementApproveStatus.cs" />
     <Compile Include="Enums\ESalesActivityType.cs" />
+    <Compile Include="Enums\EStockholderDividendSource.cs" />
+    <Compile Include="Enums\ETradeOrderType.cs" />
     <Compile Include="Enums\ETradeSource.cs" />
     <Compile Include="Enums\EUseTimeType.cs" />
     <Compile Include="Enums\EVerificationMode.cs" />
@@ -224,6 +228,7 @@
     <Compile Include="Filters\RecruitmentFilter.cs" />
     <Compile Include="Filters\ReimbursementFilter.cs" />
     <Compile Include="Filters\SearchCardThemeGroupFilter.cs" />
+    <Compile Include="Filters\StockholderDividendFilter.cs" />
     <Compile Include="Filters\SuperClassFilter.cs" />
     <Compile Include="MakeCodeTypes.cs" />
     <Compile Include="MemberCardTypes.cs" />
@@ -264,6 +269,7 @@
     <Compile Include="Services\IRechargePlanService.cs" />
     <Compile Include="Services\IRecruitmentService.cs" />
     <Compile Include="Services\IReimbursementService.cs" />
+    <Compile Include="Services\IStockholderDividendService.cs" />
     <Compile Include="Services\ISuperClassService.cs" />
     <Compile Include="Services\ITradeHistoryService.cs" />
     <Compile Include="Services\IVerificationRecordService.cs" />

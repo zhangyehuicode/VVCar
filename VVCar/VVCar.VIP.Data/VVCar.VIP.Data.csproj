@@ -93,6 +93,7 @@
     <Compile Include="Mapping\RecruitmentMap.cs" />
     <Compile Include="Mapping\ReimbursementMap.cs" />
     <Compile Include="Mapping\SalesActivityRecordMap.cs" />
+    <Compile Include="Mapping\StockholderDividendMap.cs" />
     <Compile Include="Mapping\SuperClassMap.cs" />
     <Compile Include="Mapping\TradeHistoryMap.cs" />
     <Compile Include="Mapping\VerificationCodeMap.cs" />

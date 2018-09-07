@@ -344,6 +344,7 @@
     <Compile Include="Controllers\VIP\RechargePlanController.cs" />
     <Compile Include="Controllers\VIP\RecruitmentController.cs" />
     <Compile Include="Controllers\VIP\ReimbursementController.cs" />
+    <Compile Include="Controllers\VIP\StockholderDividendController.cs" />
     <Compile Include="Controllers\VIP\SuperClassController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

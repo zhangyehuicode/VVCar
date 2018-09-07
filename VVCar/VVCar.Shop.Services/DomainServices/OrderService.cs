@@ -13,6 +13,7 @@ using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
 using VVCar.VIP.Domain.Dtos;
+using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Enums;
 using VVCar.VIP.Domain.Services;
 using YEF.Core;
@@ -52,6 +53,8 @@ namespace VVCar.Shop.Services.DomainServices
         IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
 
         IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
+
+        IRepository<StockholderDividend> StockholderDividendRepo { get => UnitOfWork.GetRepository<IRepository<StockholderDividend>>(); }
 
         #endregion
 
@@ -247,6 +250,41 @@ namespace VVCar.Shop.Services.DomainServices
                 return false;
             RecountMoney(entity, isNotify);
             return Repository.Update(entity) > 0;
+        }
+
+        private bool StockholderDividendAction(Order order)
+        {
+            if (order == null)
+                return false;
+            var member = MemberService.GetMemberInfoByWeChat(order.OpenID);
+            if (member == null)
+                return false;
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                StockholderDividendRepo.Add(new StockholderDividend
+                {
+                    ID = Util.NewID(),
+                    MemberID = order.MemberID.Value,
+                    SubMemberID = order.MemberID.Value,
+                    ConsumePointRate = 0,
+                    Money = order.Money,
+                    Dividend = order.Money * 0,
+                    Source = EStockholderDividendSource.MemberConsume,
+                    TradeOrderID = order.ID,
+                    OrderType = ETradeOrderType.Order,
+                    TradeNo = order.Code,
+                    CreatedDate = DateTime.Now,
+                });
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                AppContext.Logger.Error($"商城订单会员消费添加股东返拥记录出现异常，{e.Message}");
+                return false;
+            }
         }
 
         private bool StockOut(List<OrderItem> orderItemList)
