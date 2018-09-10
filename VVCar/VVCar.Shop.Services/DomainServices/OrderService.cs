@@ -227,6 +227,7 @@ namespace VVCar.Shop.Services.DomainServices
                     {
                         AppContext.Logger.Error($"商城下单增加会员积分出现异常，{e.Message}");
                     }
+                    StockholderDividendAction(entity);
                 }
             }
         }
@@ -252,29 +253,35 @@ namespace VVCar.Shop.Services.DomainServices
             return Repository.Update(entity) > 0;
         }
 
+        /// <summary>
+        /// 添加股东分红记录
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         private bool StockholderDividendAction(Order order)
         {
-            if (order == null)
-                return false;
-            var member = MemberService.GetMemberInfoByWeChat(order.OpenID);
-            if (member == null)
-                return false;
             UnitOfWork.BeginTransaction();
             try
             {
+                if (order == null || order.Money <= 0 || string.IsNullOrEmpty(order.OpenID))
+                    return false;
+                var member = MemberService.GetMemberInfoByWeChat(order.OpenID);
+                if (member == null || !member.IsStockholder || member.MemberID == null || member.ParentMemberID == null || member.ConsumePointRate <= 0)
+                    return false;
                 StockholderDividendRepo.Add(new StockholderDividend
                 {
                     ID = Util.NewID(),
-                    MemberID = order.MemberID.Value,
-                    SubMemberID = order.MemberID.Value,
-                    ConsumePointRate = 0,
+                    MemberID = member.ParentMemberID.Value,
+                    SubMemberID = member.MemberID.Value,
+                    ConsumePointRate = member.ConsumePointRate,
                     Money = order.Money,
-                    Dividend = order.Money * 0,
+                    Dividend = order.Money * member.ConsumePointRate / 100,
                     Source = EStockholderDividendSource.MemberConsume,
                     TradeOrderID = order.ID,
                     OrderType = ETradeOrderType.Order,
                     TradeNo = order.Code,
                     CreatedDate = DateTime.Now,
+                    MerchantID = AppContext.CurrentSession.MerchantID,
                 });
                 UnitOfWork.CommitTransaction();
                 return true;

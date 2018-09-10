@@ -1251,6 +1251,7 @@
     <Content Include="Areas\Mobile\Views\Customer\TooKeen.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\MyMember.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\GroundCourse.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MyDividend.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

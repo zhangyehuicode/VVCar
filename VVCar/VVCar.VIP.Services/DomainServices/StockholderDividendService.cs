@@ -19,6 +19,12 @@ namespace VVCar.VIP.Services.DomainServices
         {
         }
 
+        #region properties
+
+        IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
+
+        #endregion
+
         public override StockholderDividend Add(StockholderDividend entity)
         {
             if (entity == null)
@@ -43,7 +49,14 @@ namespace VVCar.VIP.Services.DomainServices
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.OrderByDescending(t => t.CreatedDate).MapTo<StockholderDividendDto>().ToArray();
+            var result = queryable.OrderByDescending(t => t.CreatedDate).MapTo<StockholderDividendDto>().ToArray();
+            result.ForEach(t =>
+            {
+                var member = MemberRepo.GetByKey(t.SubMemberID, false);
+                if (member != null)
+                    t.SubMemberName = member.Name;
+            });
+            return result;
         }
     }
 }

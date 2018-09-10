@@ -260,6 +260,21 @@ namespace VVCar.VIP.Domain.Dtos
         /// 是否批发价会员
         /// </summary>
         public bool IsWholesalePrice { get; set; }
+
+        /// <summary>
+        /// 消费返额度比例(返回额度=下级会员消费*比例)
+        /// </summary>
+        public decimal ConsumePointRate { get; set; }
+
+        /// <summary>
+        /// 父级会员ID
+        /// </summary>
+        public Guid? ParentMemberID { get; set; }
+
+        /// <summary>
+        /// 是否是股东
+        /// </summary>
+        public bool IsStockholder { get; set; }
     }
 
     public class GiftCardUserTime

@@ -100,6 +100,13 @@
             <span style="font-size:15px; color:#2d2d30;">我的会员</span><br>
             <span style="font-size:13px; color:#999;">会员</span><br><br>
         </a>
+        <a class="user2" style="width:33.4%; border-right:none;" v-on:click="mydividend">
+            <div class="user3">
+                <img src="~/Areas/resource/img/mobile/jf.png" style="width:100%;">
+            </div>
+            <span style="font-size:15px; color:#2d2d30;">我的分红</span><br>
+            <span style="font-size:13px; color:#999;">分红</span><br><br>
+        </a>
     </div>
     <div class="x-slide" id="j-image-box">
         <ul>
@@ -242,6 +249,9 @@
                     },
                     mymember: function (event) {
                         window.location.href = "/Mobile/Customer/MyMember?mch=" + mch;
+                    },
+                    mydividend: function (event) {
+                        window.location.href = "/Mobile/Customer/MyDividend?mch=" + mch;
                     },
             }
         });
