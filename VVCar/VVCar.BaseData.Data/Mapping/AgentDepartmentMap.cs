@@ -74,6 +74,9 @@ namespace VVCar.BaseData.Data.Mapping
 
             Property(t => t.BankCard)
                 .HasMaxLength(32);
+
+            Property(t => t.LocationName)
+                .HasMaxLength(50);
         }
     }
 }

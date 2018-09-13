@@ -83,6 +83,9 @@ namespace YEF.Data
             Property(t => t.BankCard)
                 .IsRequired()
                 .HasMaxLength(32);
+
+            Property(t => t.LocationName)
+                .HasMaxLength(50);
         }
     }
 }

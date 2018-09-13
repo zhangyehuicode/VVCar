@@ -26,7 +26,7 @@
         <div class="quickoatable">
             <div class="quickoatablecell itemtitle" style="vertical-align:middle;">
                 公司地址
-                <img class="locationimg" src="~/Areas/resource/img/mobile/location.png" />
+                <img class="locationimg" src="~/Areas/resource/img/mobile/location.png" v-on:click="deptlocationmap" />
             </div>
             <textarea class="quickoatablecell inputbottom" placeholder="公司地址" v-model:value="AgentDepartment.CompanyAddress"></textarea>
         </div>
@@ -66,9 +66,21 @@
         </div>
     </div>
 </div>
+<iframe class="map" frameborder=0 src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=H62BZ-YWXK6-R4NSF-EW4RW-NZBR7-47FKG&referer=vvcar"></iframe>
 
 @section scripts{
     <style type="text/css">
+        .map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
         .main {
             font-size: 15px;
             position: absolute;
@@ -586,6 +598,21 @@
 
         });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ////////});
     </script>
+    <script>
+        window.addEventListener('message', function (event) {
+            // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
+            var loc = event.data;
+            if (loc && loc.module == 'locationPicker') {//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
+                //console.log('location', loc);
+                //$.alert(JSON.stringify(loc));//loc.cityname
+                _viewModel.AgentDepartment.Longitude = loc.latlng.lng;
+                _viewModel.AgentDepartment.Latitude = loc.latlng.lat;
+                _viewModel.AgentDepartment.LocationName = loc.poiname;
+                _viewModel.AgentDepartment.CompanyAddress = loc.poiaddress;
+                $('.map').hide();
+            }
+        }, false);
+    </script>
     <script type="text/javascript">
             var mch = $.getUrlParam('mch');
             var isgeneralmanager = sessionStorage.getItem('isgeneralmanager');
@@ -614,7 +641,10 @@
                         Bank: '',
                         BankCard: '',
                         Type: 1,
-                        TagList:[],
+                        TagList: [],
+                        Longitude:0,
+                        Latitude: 0,
+                        LocationName:'',
                     },
                     TagList:[] ,//[{ Name: '好人' }, { Name: '专业' }, { Name: '认真' }, { Name: '牛人' }],
                 },
@@ -657,6 +687,9 @@
                     closetag: function (event) {
                         $('.tagmain').hide();
                     },
+                    deptlocationmap: function (event) {
+                        $('.map').show();
+                    }
                 }
             });
 

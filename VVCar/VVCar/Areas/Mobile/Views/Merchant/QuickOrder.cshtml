@@ -298,10 +298,14 @@
                 },
                 openorder: function (event) {
                     var platenum = '';
-                    var numinput = $('.platenum').find('input');
+					var numinput = $('.platenum').find('input:Visible');
                     for (var i = 0; i < numinput.length; i++) {
                         platenum += $(numinput[i]).val();
-                    }
+					}
+					if (platenum.length != numinput.length) {
+						$.alert('车牌号不能为' + platenum.length + '位');
+						return;
+					}
                     sessionStorage.setItem('platenum', platenum);
                     window.location.href = "/Mobile/Merchant/OpenOrder?mch=" + mch;
                 },
@@ -363,15 +367,16 @@
             });
 
 			$('.kjkd_select').on('change input', function (e) {
+				if ($(this).val().trim() == '') {
+					$(this).val('');
+					return;
+				}
 				var myReg = /^[\u4e00-\u9fa5]+$/;
 				if ($(this).attr('id') == 'province') {
 					if (myReg.test($(this).val())) {
 						$(this).next('.kjkd_select').focus();
 					}
 				} else {
-					if ($(this).val() == '') {
-						return;
-					}
 					if (myReg.test($(this).val())) {
 						$.alert('必须为字母或数字');
 						$(this).val('');
@@ -388,8 +393,8 @@
 					$('.greenplate').html('绿牌');
 					$('.kjkd_select').css('width', '9%');
 				} else {
-					$('#greennum').hide().val('');
 					$('.greenplate').css('background-color', 'blue');
+					$('#greennum').hide();
 					$('.greenplate').html('蓝牌');
 					$('.kjkd_select').css('width', '11%');
 				}

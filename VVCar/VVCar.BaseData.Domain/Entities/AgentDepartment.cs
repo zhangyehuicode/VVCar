@@ -204,5 +204,23 @@ namespace VVCar.BaseData.Domain.Entities
         /// 代理商
         /// </summary>
         public virtual Merchant Merchant { get; set; }
+
+        /// <summary>
+        ///经度
+        /// </summary>
+        [Display(Name = "经度")]
+        public double Longitude { get; set; }
+
+        /// <summary>
+        /// 纬度
+        /// </summary>
+        [Display(Name = "纬度")]
+        public double Latitude { get; set; }
+
+        /// <summary>
+        /// 位置名
+        /// </summary>
+        [Display(Name = "位置名")]
+        public string LocationName { get; set; }
     }
 }

@@ -352,6 +352,9 @@ namespace VVCar.BaseData.Services.DomainServices
                     merchant.Bank = t.Bank;
                     merchant.BankCard = t.BankCard;
                     merchant.MerchantID = t.MerchantID;
+                    merchant.Longitude = t.Longitude;
+                    merchant.Latitude = t.Latitude;
+                    merchant.LocationName = t.LocationName;
                     MerchantService.Add(merchant);
                     Repository.Update(t);
                 });

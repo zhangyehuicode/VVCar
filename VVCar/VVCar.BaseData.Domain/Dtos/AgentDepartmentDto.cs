@@ -231,5 +231,23 @@ namespace VVCar.BaseData.Domain.Dtos
         /// </summary>
         [Display(Name = "客户标签")]
         public List<TagDto> TagList { get; set; }
+
+        /// <summary>
+        ///经度
+        /// </summary>
+        [Display(Name = "经度")]
+        public double Longitude { get; set; }
+
+        /// <summary>
+        /// 纬度
+        /// </summary>
+        [Display(Name = "纬度")]
+        public double Latitude { get; set; }
+
+        /// <summary>
+        /// 位置名
+        /// </summary>
+        [Display(Name = "位置名")]
+        public string LocationName { get; set; }
     }
 }
