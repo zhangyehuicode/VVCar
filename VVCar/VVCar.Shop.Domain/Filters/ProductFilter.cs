@@ -64,5 +64,11 @@ namespace VVCar.Shop.Domain.Filters
         /// </summary>
         [Display(Name = "是否员工内部领取")]
         public bool? IsInternaCollection { get; set; }
+
+        /// <summary>
+        /// 是否获取滞销产品
+        /// </summary>
+        [Display(Name = "是否获取滞销产品")]
+        public bool? IsUnsaleProduct { get; set; }
     }
 }

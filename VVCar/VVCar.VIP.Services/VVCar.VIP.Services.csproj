@@ -64,6 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoMapper\DtoMapper.cs" />
+    <Compile Include="DomainServices\AdvisementBrowseHistoryService.cs" />
+    <Compile Include="DomainServices\AdvisementSettingService.cs" />
     <Compile Include="DomainServices\AnnouncementPushMemberService.cs" />
     <Compile Include="DomainServices\AnnouncementService.cs" />
     <Compile Include="DomainServices\ArticleItemService.cs" />

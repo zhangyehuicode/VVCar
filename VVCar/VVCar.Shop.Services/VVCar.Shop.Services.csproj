@@ -70,6 +70,8 @@
     <Compile Include="DomainServices\ShoppingCartItemService.cs" />
     <Compile Include="DomainServices\ShoppingCartService.cs" />
     <Compile Include="DomainServices\StockRecordService.cs" />
+    <Compile Include="DomainServices\UnsaleProductSettingItemService.cs" />
+    <Compile Include="DomainServices\UnsaleProductSettingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

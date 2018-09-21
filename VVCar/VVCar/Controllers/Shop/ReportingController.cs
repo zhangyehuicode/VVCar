@@ -108,6 +108,36 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 滞销产品提醒
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("UnsaleProductNotify")]
+        public PagedActionResult<ProductRetailStatisticsDto> UnsaleProductNotify([FromUri]ProductRetailStatisticsFilter filter)
+        {
+            return SafeGetPagedData<ProductRetailStatisticsDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = ReportingService.UnsaleProductNotify(filter, ref totalCount);
+                var sum_quantity = 0;
+                decimal sum_money = 0;
+                var productRetailStatisticsList = data.ToList();
+                foreach (var productRetailStatistics in productRetailStatisticsList)
+                {
+                    sum_quantity += productRetailStatistics.Quantity;
+                    sum_money += productRetailStatistics.Money;
+                }
+                ProductRetailStatisticsDto productRetailStatisticsDto = new ProductRetailStatisticsDto();
+                productRetailStatisticsDto.ProductName = "合计:";
+                productRetailStatisticsDto.ProductCode = "";
+                productRetailStatisticsDto.Quantity = sum_quantity;
+                productRetailStatisticsDto.Money = sum_money;
+                (data as List<ProductRetailStatisticsDto>).Add(productRetailStatisticsDto);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
         /// 员工业绩统计
         /// </summary>
         /// <param name="filter"></param>

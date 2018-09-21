@@ -48,6 +48,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
 
+        IRepository<UnsaleProductSettingItem> UnsaleProductSettingItemRepo { get => UnitOfWork.GetRepository<IRepository<UnsaleProductSettingItem>>(); }
+
         #endregion
 
         protected override bool DoValidate(Product entity)
@@ -172,6 +174,12 @@ namespace VVCar.Shop.Services.DomainServices
                 queryable = queryable.Where(t => t.IsCombo == filter.IsCombo.Value);
             if (filter.IsInternaCollection.HasValue)
                 queryable = queryable.Where(t => t.IsInternaCollection == filter.IsInternaCollection.Value);
+            if (filter.IsUnsaleProduct.HasValue)
+            {
+                var productIDs = UnsaleProductSettingItemRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).Select(t=>t.ProductID).Distinct().ToList();
+                if (productIDs != null && productIDs.Count() > 0)
+                    queryable = queryable.Where(t => !productIDs.Contains(t.ID));
+            }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderBy(t => t.Index).Skip(filter.Start.Value).Take(filter.Limit.Value);

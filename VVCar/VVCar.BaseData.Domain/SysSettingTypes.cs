@@ -105,5 +105,10 @@ namespace VVCar.BaseData.Domain
         /// 拼单成功提醒模板
         /// </summary>
         public const string WXMsg_CrowdOrderSuccess = "WXMsg_CrowdOrderSuccess";
+
+        /// <summary>
+        /// 滞销产品通知模板
+        /// </summary>
+        public const string WXMsg_UnsaleProductNotify = "WXMsg_UnsaleProductNotify";
     }
 }

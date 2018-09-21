@@ -317,6 +317,10 @@
     <Compile Include="Controllers\Shop\ShoppingCartController.cs" />
     <Compile Include="Controllers\Shop\ShoppingCartItemController.cs" />
     <Compile Include="Controllers\Shop\StockRecordController.cs" />
+    <Compile Include="Controllers\Shop\UnsaleProductSettingController.cs" />
+    <Compile Include="Controllers\Shop\UnsaleProductSettingItemController.cs" />
+    <Compile Include="Controllers\VIP\AdvisementBrowseHistoryController.cs" />
+    <Compile Include="Controllers\VIP\AdvisementSettingController.cs" />
     <Compile Include="Controllers\VIP\AnnouncementController.cs" />
     <Compile Include="Controllers\VIP\AnnouncementPushMemberController.cs" />
     <Compile Include="Controllers\VIP\ArticleController.cs" />
@@ -670,6 +674,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="mrtarotfavicon.ico" />
     <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\controller\AdvisementBrowseHistory.js" />
+    <Content Include="Scripts\app\controller\AdvisementSetting.js" />
     <Content Include="Scripts\app\controller\AgentDepartment.js" />
     <Content Include="Scripts\app\controller\AgentDepartmentAudit.js" />
     <Content Include="Scripts\app\controller\Announcement.js" />
@@ -725,10 +731,13 @@
     <Content Include="Scripts\app\controller\SuperClass.js" />
     <Content Include="Scripts\app\controller\SysMenu.js" />
     <Content Include="Scripts\app\controller\SystemSetting.js" />
+    <Content Include="Scripts\app\controller\UnsaleProductSetting.js" />
     <Content Include="Scripts\app\controller\User.js" />
     <Content Include="Scripts\app\controller\UserMember.js" />
     <Content Include="Scripts\app\controller\UserRole.js" />
     <Content Include="Scripts\app\controller\WeChatFans.js" />
+    <Content Include="Scripts\app\model\BaseData\AdvisementBrowseHistoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\AdvisementSettingModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentAuditModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentCategoryModel.js" />
     <Content Include="Scripts\app\model\BaseData\AgentDepartmentCategoryTreeModel.js" />
@@ -803,6 +812,8 @@
     <Content Include="Scripts\app\model\BaseData\SysNavMenuModel.js" />
     <Content Include="Scripts\app\model\BaseData\SystemSettingModel.js" />
     <Content Include="Scripts\app\model\BaseData\TradeHistoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\UnsaleProductSettingItemModel.js" />
+    <Content Include="Scripts\app\model\BaseData\UnsaleProductSettingModel.js" />
     <Content Include="Scripts\app\model\BaseData\UserMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\UserModel.js" />
     <Content Include="Scripts\app\model\BaseData\UserRoleModel.js" />
@@ -811,6 +822,8 @@
     <Content Include="Scripts\app\model\BaseData\WeChatFansTagModel.js" />
     <Content Include="Scripts\app\model\DataDict\DataDictModel.js" />
     <Content Include="Scripts\app\model\DataDict\DataDictTypeModel.js" />
+    <Content Include="Scripts\app\store\BaseData\AdvisementBrowseHistoryStore.js" />
+    <Content Include="Scripts\app\store\BaseData\AdvisementSettingStore.js" />
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentAuditStore.js" />
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentCategoryLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\AgentDepartmentCategoryTreeStore.js" />
@@ -889,6 +902,8 @@
     <Content Include="Scripts\app\store\BaseData\SysNavMenuStore.js" />
     <Content Include="Scripts\app\store\BaseData\SystemSettingStore.js" />
     <Content Include="Scripts\app\store\BaseData\TradeHistoryStore.js" />
+    <Content Include="Scripts\app\store\BaseData\UnsaleProductSettingItemStore.js" />
+    <Content Include="Scripts\app\store\BaseData\UnsaleProductSettingStore.js" />
     <Content Include="Scripts\app\store\BaseData\UserMemberStore.js" />
     <Content Include="Scripts\app\store\BaseData\UserRoleStore.js" />
     <Content Include="Scripts\app\store\BaseData\UserStore.js" />
@@ -944,6 +959,9 @@
     <Content Include="Scripts\app\view\CrowdOrder\CrowdOrderEdit.js" />
     <Content Include="Scripts\app\view\CrowdOrder\CrowdOrderList.js" />
     <Content Include="Scripts\app\view\CrowdOrder\CarBitCoinProductSelector.js" />
+    <Content Include="Scripts\app\view\CustomerFinder\AdvisementBrowseHistoryList.js" />
+    <Content Include="Scripts\app\view\CustomerFinder\AdvisementSettingEdit.js" />
+    <Content Include="Scripts\app\view\CustomerFinder\AdvisementSettingList.js" />
     <Content Include="Scripts\app\view\Logistics\LogisticsDetails.js" />
     <Content Include="Scripts\app\view\Logistics\LogisticsEdit.js" />
     <Content Include="Scripts\app\view\Logistics\Logistics.js" />
@@ -1079,6 +1097,9 @@
     <Content Include="Scripts\app\view\SysMenu\SysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenuTreeComboBox.js" />
     <Content Include="Scripts\app\view\SystemSetting\SystemSetting.js" />
+    <Content Include="Scripts\app\view\UnsaleProductSetting\UnsaleProductSelector.js" />
+    <Content Include="Scripts\app\view\UnsaleProductSetting\UnsaleProductSettingEdit.js" />
+    <Content Include="Scripts\app\view\UnsaleProductSetting\UnsaleProductSettingList.js" />
     <Content Include="Scripts\app\view\UserMember\UserMember.js" />
     <Content Include="Scripts\app\view\UserMember\UserMemberSelector.js" />
     <Content Include="Scripts\app\view\UserRole\UserRole.js" />
@@ -1252,6 +1273,8 @@
     <Content Include="Areas\Mobile\Views\Customer\MyMember.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\GroundCourse.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\MyDividend.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\Advisement.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\AdvisementDetail.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

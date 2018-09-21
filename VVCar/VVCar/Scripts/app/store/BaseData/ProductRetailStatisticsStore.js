@@ -9,6 +9,7 @@
 		api: {
 			read: Ext.GlobalConfig.ApiDomainUrl + 'api/Reporting/ProductRetailStatistics?All=false',
 			export: Ext.GlobalConfig.ApiDomainUrl + 'api/Reporting/ExportProductRetailStatistics?All=false',
+			unsaleNotify: Ext.GlobalConfig.ApiDomainUrl + 'api/Reporting/UnsaleProductNotify?All=false',
 		},
 	},
 	export: function (p, cb) {
@@ -18,5 +19,14 @@
 			params: p,
 			callback: cb
 		});
+	},
+	unsaleNotify: function (params, success, failure) {
+		Ext.Ajax.request({
+			method: 'GET',
+			url: this.proxy.api.unsaleNotify,
+			params: params,
+			success: success,
+			failure: failure,
+		})
 	},
 });

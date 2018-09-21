@@ -19,6 +19,9 @@
 			'ProductRetailStatisticsList button[action=searchUnsalable]': {
 				click: me.searchUnsalable
 			},
+			'ProductRetailStatisticsList button[action=unsaleNotify]': {
+				click: me.unsaleNotify
+			},
 			'ProductRetailStatisticsList button[action=reset]': {
 				click: me.reset
 			},
@@ -44,12 +47,41 @@
 		var queryValues = btn.up('form').getValues();
 		if (queryValues != null) {
 			queryValues.IsSaleWell = false;
+			if (queryValues.StartDate == '' && queryValues.EndDate == '') {
+				Ext.Msg.alert('提示', '请选择开始时间和结束时间!');
+				return;
+			}
 			var store = me.getProductRetailStatisticsList().getStore();
 			store.proxy.extraParams = queryValues;
 			store.load();
 		} else {
 			Ext.Msg.alert('提示', '请输入过滤条件');
 		}
+	},
+	unsaleNotify: function (btn) {
+		var me = this;
+		var queryValues = btn.up('form').getValues();
+		queryValues.IsSaleWell = false;
+		var store = me.getProductRetailStatisticsList().getStore();
+		Ext.Msg.confirm('询问', '确定要发送滞销通知吗?', function (operational) {
+			if (operational === 'yes') {
+				function success(response) {
+					Ext.Msg.hide();
+					response = JSON.parse(response.responseText);
+					if (!response.IsSuccessful) {
+						Ext.Msg.alert('提示', response.ErrorMessage);
+						return;
+					}
+					store.proxy.extraParams = queryValues;
+					store.load();
+				};
+				function failure(response) {
+					Ext.Msg.hide();
+					Ext.Msg.alert('提示', response.responseText);
+				};
+				store.unsaleNotify(queryValues, success, failure);
+			}
+		});
 	},
 	search: function (btn) {
 		var me = this;

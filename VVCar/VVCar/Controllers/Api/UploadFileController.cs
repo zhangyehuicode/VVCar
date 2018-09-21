@@ -91,6 +91,16 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 上传寻客侠封面图片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadAdvisementImg")]
+        public UploadFileResult UploadAdvisementImg()
+        {
+            return UploadAction("Pictures/AdvisementSetting");
+        }
+
+        /// <summary>
         /// 上传图文消息封面图片
         /// </summary>
         /// <returns></returns>

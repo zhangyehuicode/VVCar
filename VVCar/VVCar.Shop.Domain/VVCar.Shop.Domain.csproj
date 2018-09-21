@@ -64,6 +64,8 @@
     <Compile Include="Dtos\ServicePeriodDto.cs" />
     <Compile Include="Dtos\StockRecordDto.cs" />
     <Compile Include="Dtos\TurnoverReportingDto.cs" />
+    <Compile Include="Dtos\UnsaleProductSettingDto.cs" />
+    <Compile Include="Dtos\UnsaleProductSettingItemDto.cs" />
     <Compile Include="Dtos\VerificationParam.cs" />
     <Compile Include="Entities\Appointment.cs" />
     <Compile Include="Entities\CarBitCoinDistribution.cs" />
@@ -91,6 +93,8 @@
     <Compile Include="Entities\ShoppingCart.cs" />
     <Compile Include="Entities\ShoppingCartItem.cs" />
     <Compile Include="Entities\StockRecord.cs" />
+    <Compile Include="Entities\UnsaleProductSetting.cs" />
+    <Compile Include="Entities\UnsaleProductSettingItem.cs" />
     <Compile Include="Enums\EAdjustDirection.cs" />
     <Compile Include="Enums\EAppointmentStatus.cs" />
     <Compile Include="Enums\ECarBitCoinMemberEngineSource.cs" />
@@ -127,6 +131,8 @@
     <Compile Include="Filters\ShoppingCartFilter.cs" />
     <Compile Include="Filters\StaffPerformanceFilter.cs" />
     <Compile Include="Filters\StockRecordFilter.cs" />
+    <Compile Include="Filters\UnsaleProductSettingFilter.cs" />
+    <Compile Include="Filters\UnsaleProductSettingItemFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IAppointmentService.cs" />
     <Compile Include="Services\ICarBitCoinDistributionService.cs" />
@@ -152,6 +158,8 @@
     <Compile Include="Services\IShoppingCartItemService.cs" />
     <Compile Include="Services\IShoppingCartService.cs" />
     <Compile Include="Services\IStockRecordService.cs" />
+    <Compile Include="Services\IUnsaleProductSettingItemService.cs" />
+    <Compile Include="Services\IUnsaleProductSettingService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

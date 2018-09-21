@@ -12,6 +12,10 @@ using VVCar.BaseData.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.VIP.Domain.Entities;
 using VVCar.Shop.Domain.Enums;
+using VVCar.VIP.Domain.Dtos;
+using VVCar.BaseData.Domain.Services;
+using VVCar.BaseData.Domain;
+using VVCar.VIP.Domain.Services;
 
 namespace VVCar.Shop.Services.DomainServices
 {
@@ -49,9 +53,17 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<ConsumeHistory> ConsumeHistoryRepo { get => ServiceLocator.Instance.GetService<IRepository<ConsumeHistory>>(); }
 
-        IRepository<PickUpOrderTaskDistribution> PickUpOrderTaskDistributionRepo { get=> ServiceLocator.Instance.GetService<IRepository<PickUpOrderTaskDistribution>>(); }
+        IRepository<PickUpOrderTaskDistribution> PickUpOrderTaskDistributionRepo { get => ServiceLocator.Instance.GetService<IRepository<PickUpOrderTaskDistribution>>(); }
 
         IRepository<UserMember> UserMemberRepo { get => ServiceLocator.Instance.GetService<IRepository<UserMember>>(); }
+
+        IRepository<UnsaleProductSettingItem> UnsaleProductSettingItemRepo { get => ServiceLocator.Instance.GetService<IRepository<UnsaleProductSettingItem>>(); }
+
+        IRepository<Merchant> MerchantRepo{ get => ServiceLocator.Instance.GetService<IRepository<Merchant>>(); }
+
+        IWeChatService WeChatService { get => ServiceLocator.Instance.GetService<IWeChatService>(); }
+
+        ISystemSettingService SystemSettingService { get => ServiceLocator.Instance.GetService<ISystemSettingService>(); }
 
         #endregion
 
@@ -331,22 +343,22 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter != null && !string.IsNullOrEmpty(filter.StaffName))
                 userQueryable = userQueryable.Where(t => t.Name.Contains(filter.StaffName));
             var users = userQueryable.ToList();
-            if(users != null && users.Count > 0)
+            if (users != null && users.Count > 0)
             {
                 var now = DateTime.Now;
                 var monthStartTime = new DateTime(now.Year, now.Month, 1);
                 var nextMonthStartTime = monthStartTime.AddMonths(1);
                 //接车单
-                var pickUpOrderTaskDistributionQueryable = PickUpOrderTaskDistributionRepo.GetInclude(t=>t.PickUpOrder, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PickUpOrder.Status == EPickUpOrderStatus.Payed);
+                var pickUpOrderTaskDistributionQueryable = PickUpOrderTaskDistributionRepo.GetInclude(t => t.PickUpOrder, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PickUpOrder.Status == EPickUpOrderStatus.Payed);
                 var currentPickupOrderQueryable = pickUpOrderTaskDistributionQueryable;
                 var monthPickupOrderQueryable = pickUpOrderTaskDistributionQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
 
                 //商城
-                var orderQueryable = OrderRepo.GetInclude(t=> t.OrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && (t.Status == EOrderStatus.PayUnshipped || t.Status == EOrderStatus.Delivered || t.Status == EOrderStatus.Finish || t.Status == EOrderStatus.PayUnshipped));
+                var orderQueryable = OrderRepo.GetInclude(t => t.OrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && (t.Status == EOrderStatus.PayUnshipped || t.Status == EOrderStatus.Delivered || t.Status == EOrderStatus.Finish || t.Status == EOrderStatus.PayUnshipped));
                 var currentOrderQueryable = orderQueryable;
                 var monthOrderQueryable = orderQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
 
-                if(filter != null)
+                if (filter != null)
                 {
                     if (filter.StartDate.HasValue)
                     {
@@ -381,7 +393,7 @@ namespace VVCar.Shop.Services.DomainServices
                     staffPerformance.CurrentCommission = userCurrentPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Commission + s.SalesmanCommission)).FirstOrDefault();
 
                     //商城
-                    var memberIDs = UserMemberRepo.GetQueryable(false).Where(t=> t.MerchantID == AppContext.CurrentSession.MerchantID && t.UserID == user.ID).Select(t=> t.MemberID).ToList();
+                    var memberIDs = UserMemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.UserID == user.ID).Select(t => t.MemberID).ToList();
                     var userOrderList = orderQueryable.Where(t => t.UserID == user.ID || memberIDs.Contains(t.MemberID.Value)).ToList();
                     var userMonthOrderList = monthOrderQueryable.Where(t => t.UserID == user.ID || memberIDs.Contains(t.MemberID.Value)).ToList();
                     var userCurrentOrderList = currentOrderQueryable.Where(t => t.UserID == user.ID || memberIDs.Contains(t.MemberID.Value)).ToList();
@@ -390,7 +402,7 @@ namespace VVCar.Shop.Services.DomainServices
                     staffPerformance.MonthPerformance += userMonthOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
                     staffPerformance.CurrentPerformance += userCurrentOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
 
-                    userOrderList.Select(t => t.OrderItemList).ForEach(t => 
+                    userOrderList.Select(t => t.OrderItemList).ForEach(t =>
                     {
                         staffPerformance.TotalCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Commission)).FirstOrDefault();
                     });
@@ -476,6 +488,12 @@ namespace VVCar.Shop.Services.DomainServices
             return result.OrderByDescending(t => t.CurrentDepartmentNumber);
         }
 
+        /// <summary>
+        /// 零售产品汇总统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
         public IEnumerable<ProductRetailStatisticsDto> ProductRetailStatistics(ProductRetailStatisticsFilter filter, ref int totalCount)
         {
             var result = new List<ProductRetailStatisticsDto>();
@@ -560,17 +578,92 @@ namespace VVCar.Shop.Services.DomainServices
                     result = result.Where(t => t.ProductCode.Contains(filter.ProductCodeName) || t.ProductName.Contains(filter.ProductCodeName)).ToList();
                 if (filter.IsSaleWell.HasValue)
                 {
+                    if (!(filter.StartDate.HasValue && filter.EndDate.HasValue))
+                    {
+                        throw new DomainException("参数错误");
+                    }
+                    var days = (filter.EndDate.Value - filter.StartDate.Value).Days;
                     if (filter.IsSaleWell.Value)
+                    {
                         result = result.Take(5).ToList();
+                    }
                     else
-                        result = result.OrderBy(t => t.Quantity).Take(5).ToList();
+                    {
+                        IList<ProductRetailStatisticsDto> removeData = new List<ProductRetailStatisticsDto>();
+                        foreach (var t in result)
+                        {
+                            var unsaleProductSettingItem = UnsaleProductSettingItemRepo.GetInclude(p => p.UnsaleProductSetting, false).Where(p => p.MerchantID == AppContext.CurrentSession.MerchantID && p.UnsaleProductSetting.IsAvailable == true && p.ProductID == t.ProductID).FirstOrDefault();
+                            if (unsaleProductSettingItem != null) {
+                                var quantitiesUnit = unsaleProductSettingItem.UnsaleProductSetting.Quantities * 1.0 / unsaleProductSettingItem.UnsaleProductSetting.PeriodDays;
+                                var performenceUnit = unsaleProductSettingItem.UnsaleProductSetting.Performence / unsaleProductSettingItem.UnsaleProductSetting.PeriodDays;
+                                if ((t.Quantity * 1.0 / days) > quantitiesUnit || (t.Money / days) > performenceUnit)
+                                {
+                                    removeData.Add(t);
+                                }
+                            } else
+                            {
+                                removeData.Add(t);
+                            }
+                        }
+                        removeData.ForEach(t =>
+                        {
+                            result.Remove(t);
+                        });
+                        result = result.OrderBy(t => t.Quantity).ToList();
+                    }
                 }
                 totalCount = result.Count();
                 if (filter.Start.HasValue && filter.Limit.HasValue)
                     result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             }
-
             return result;
+        }
+
+        /// <summary>
+        /// 滞销产品通知
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ProductRetailStatisticsDto> UnsaleProductNotify(ProductRetailStatisticsFilter filter, ref int totalCount)
+        {
+            if (!(filter.StartDate.HasValue && filter.EndDate.HasValue))
+            {
+                throw new DomainException("开始和结束时间必须选择");
+            }
+            var title = filter.StartDate + "~" + filter.EndDate + " 滞销产品状况如下";
+            IEnumerable<ProductRetailStatisticsDto> result = ProductRetailStatistics(filter, ref totalCount);
+            var count = result.Count();
+            var userList = UserRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.DepartmentID).ToList();
+            userList.ForEach(t =>
+            {
+                var message = new WeChatTemplateMessageDto
+                {
+                    touser = t.OpenID,
+                    template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_UnsaleProductNotify),
+                    url = "http://cheyinz.cn",
+                    data = new System.Dynamic.ExpandoObject()
+                };
+                message.data.first = new WeChatTemplateMessageDto.MessageData(title);
+                message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateString());
+                message.data.keyword2 = new WeChatTemplateMessageDto.MessageData("滞销产品总数：" + result.Count());
+                message.data.remark = new WeChatTemplateMessageDto.MessageData("明细请点击详情");
+                //WeChatService.SendWeChatNotifyAsync(message, AppContext.CurrentSession.MerchantCode);
+            });
+            return result;
+        }
+
+        /// <summary>
+        /// 滞销产品通知定时
+        /// </summary>
+        /// <returns></returns>
+        public bool UnsaleProductProductNotify()
+        {
+            var endDate = DateTime.Now;
+            var merchantList = MerchantRepo.GetQueryable(false).ToList();
+            merchantList.ForEach(t=>
+            {
+
+            });
+            return true;
         }
 
         public IEnumerable<ConsumeHistoryDto> GetConsumeHistory(ConsumeHistoryFilter filter, ref int totalCount)
@@ -613,7 +706,8 @@ namespace VVCar.Shop.Services.DomainServices
 
             consumeHistoryQueryable.ToList().ForEach(t =>
             {
-                result.Add(new ConsumeHistoryDto {
+                result.Add(new ConsumeHistoryDto
+                {
                     Name = t.Name,
                     PlateNumber = t.PlateNumber,
                     TradeNo = t.TradeNo,
@@ -715,7 +809,7 @@ namespace VVCar.Shop.Services.DomainServices
                     .Where(m => m.Consumption == t.Consumption && m.TradeCount == t.TradeCount && m.Price == t.Price && t.TradeMoney == t.TradeMoney)
                     .Where(m => m.BasePrice == t.BasePrice && m.GrossProfit == t.GrossProfit && m.Remark == t.Remark && m.DepartmentName == t.DepartmentName)
                     .Where(m => m.CreatedDate == t.CreatedDate).ToList();
-                if(consumeHistoryList.Count()>0)
+                if (consumeHistoryList.Count() > 0)
                     throw new DomainException("批量导入会员失败" + "第" + index + "行数据已存在.");
                 t.ID = Util.NewID();
                 t.MerchantID = AppContext.CurrentSession.MerchantID;

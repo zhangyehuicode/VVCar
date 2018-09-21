@@ -78,6 +78,14 @@ namespace VVCar.Controllers.Api
             }
         }
 
+        IReportingService ReportingService
+        {
+            get
+            {
+                return ServiceLocator.Instance.GetService<IReportingService>();
+            }
+        }
+
         ///// <summary>
         ///// 微信粉丝 领域服务
         ///// </summary>
@@ -171,6 +179,14 @@ namespace VVCar.Controllers.Api
             return SafeExecute(() =>
             {
                 return CarBitCoinDistributionService.DistributionCarBitCoin(null);
+            });
+        }
+
+        public JsonActionResult<bool> UnsaleProductNotify()
+        {
+            return SafeExecute(() =>
+            {
+                return ReportingService.UnsaleProductProductNotify();
             });
         }
 
