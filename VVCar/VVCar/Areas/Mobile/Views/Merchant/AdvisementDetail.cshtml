@@ -18,9 +18,6 @@
 		</div>
 		<div class="content">
 		</div>
-		<div>
-			@ViewBag.OpenId
-		</div>
 	</div>
 </div>
 
@@ -68,17 +65,16 @@
 							var advisement = JSON.parse(sessionStorage.getItem('advisement'));
 							wx.onMenuShareTimeline({
 								title: advisement.Title,
-								link: window.location.origin + '/Mobile/Merchant/Advisement?mch=' + mch + '&adid=' + advisement.ID,
+								link: window.location.origin + '/Mobile/Merchant/AdvisementDetail?mch=' + mch + '&adid=' + advisement.ID,
 								success: function (res) {
 
 								}
 							});
 
-							wx.o
-							nMenuShareAppMessage({
+							wx.onMenuShareAppMessage({
 								title: advisement.Title,
 								desc: '',
-								link: window.location.origin + '/Mobile/Merchant/Advisement?mch=' + mch + '&adid=' + advisement.ID,
+								link: window.location.origin + '/Mobile/Merchant/AdvisementDetail?mch=' + mch + '&adid=' + advisement.ID,
 								imgUrl: window.location.origin + advisement.ImgUrl,
 								success: function (res) {
 
@@ -183,6 +179,7 @@
 									advisement = res.Data[0];
 									_viewModel.Title = advisement.Title;
 									$('.content').append(advisement.Content);
+									sessionStorage.setItem('advisement', advisement);
 								}
 							} else {
 								$.alert(res.ErrorMessage);

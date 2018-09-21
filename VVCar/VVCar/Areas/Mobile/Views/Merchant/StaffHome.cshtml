@@ -90,6 +90,11 @@
 			<span>超能课堂</span>
 			<span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">课堂</span>
 		</a>
+		<a class="bq_box" v-on:click="customerfinder">
+			<div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:25px;"/></div>
+			<span>寻客侠</span>
+			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">分享广告</span>
+		</a>
 	</div>
     <div class="touxiang">
         <div class="pm_box">
@@ -207,6 +212,9 @@
 				},
 				superclassmanagement: function (event) {
 					window.location.href = "/Mobile/Agent/SuperClassManagement?mch=" + mch;
+				},
+				customerfinder: function (event) {
+					window.location.href = "/Mobile/Merchant/Advisement?mch=" + mch;
 				}
             }
         });
