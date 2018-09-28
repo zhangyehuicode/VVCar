@@ -582,7 +582,7 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<CouponTemplate> GetCenterCouponTemplate()
         {
             var now = DateTime.Now;
-            return Repository.GetQueryable(false).Where(t => t.IsPutaway && t.PutawayTime < now && t.SoldOutTime > now && t.ApproveStatus == EApproveStatus.Delivered && (!t.IsFiexedEffectPeriod || (t.EffectiveDate < now && t.ExpiredDate > now)) && t.PutInStartDate < now && t.PutInEndDate > now && t.IsAvailable && t.Nature == ENature.Coupon).ToList();
+            return Repository.GetQueryable(false).Where(t =>t.MerchantID == AppContext.CurrentSession.MerchantID && t.IsPutaway && t.PutawayTime < now && t.SoldOutTime > now && t.ApproveStatus == EApproveStatus.Delivered && (!t.IsFiexedEffectPeriod || (t.EffectiveDate < now && t.ExpiredDate > now)) && t.PutInStartDate < now && t.PutInEndDate > now && t.IsAvailable && t.Nature == ENature.Coupon).ToList();
         }
 
         /// <summary>

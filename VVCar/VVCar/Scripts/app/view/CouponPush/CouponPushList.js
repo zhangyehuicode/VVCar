@@ -174,6 +174,12 @@
 						text: '删除卡券',
 						iconCls: 'x-fa fa-close',
 						margin: '5 5 5 5',
+					}, {
+						action: 'fleshCouponPushItem',
+						xtype: 'button',
+						text: '刷新',
+						iconCls: 'x-fa fa-flash',
+						margin: '5 5 5 5',
 					}
 				],
 				columns: [
@@ -216,6 +222,12 @@
 						xtype: 'button',
 						text: '删除推送会员',
 						iconCls: 'x-fa fa-close',
+						margin: '5 5 5 5',
+					}, {
+						action: 'fleshCouponPushMember',
+						xtype: 'button',
+						text: '刷新',
+						iconCls: 'x-fa fa-flash',
 						margin: '5 5 5 5',
 					}
 				],

@@ -20,6 +20,14 @@
 				{ header: '模板编号', dataIndex: 'TemplateCode', flex: 1 },
                 { header: '卡券类型', dataIndex: 'CouponTypeName', flex: 1 },
 				{ header: '标题', dataIndex: 'Title', flex: 1 },
+				{
+					header: '投放开始时间', dataIndex: 'PutInStartDate', flex: 1,
+					renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+				},
+				{
+					header: '投放结束时间', dataIndex: 'PutInEndDate', flex: 1,
+					renderer: Ext.util.Format.dateRenderer('Y-m-d'),
+				},
             ],
             bbar: {
                 xtype: 'pagingtoolbar',

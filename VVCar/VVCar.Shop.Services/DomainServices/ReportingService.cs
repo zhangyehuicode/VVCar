@@ -59,7 +59,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<UnsaleProductSettingItem> UnsaleProductSettingItemRepo { get => ServiceLocator.Instance.GetService<IRepository<UnsaleProductSettingItem>>(); }
 
-        IRepository<Merchant> MerchantRepo{ get => ServiceLocator.Instance.GetService<IRepository<Merchant>>(); }
+        IRepository<Merchant> MerchantRepo { get => ServiceLocator.Instance.GetService<IRepository<Merchant>>(); }
 
         IWeChatService WeChatService { get => ServiceLocator.Instance.GetService<IWeChatService>(); }
 
@@ -593,14 +593,16 @@ namespace VVCar.Shop.Services.DomainServices
                         foreach (var t in result)
                         {
                             var unsaleProductSettingItem = UnsaleProductSettingItemRepo.GetInclude(p => p.UnsaleProductSetting, false).Where(p => p.MerchantID == AppContext.CurrentSession.MerchantID && p.UnsaleProductSetting.IsAvailable == true && p.ProductID == t.ProductID).FirstOrDefault();
-                            if (unsaleProductSettingItem != null) {
+                            if (unsaleProductSettingItem != null)
+                            {
                                 var quantitiesUnit = unsaleProductSettingItem.UnsaleProductSetting.Quantities * 1.0 / unsaleProductSettingItem.UnsaleProductSetting.PeriodDays;
                                 var performenceUnit = unsaleProductSettingItem.UnsaleProductSetting.Performence / unsaleProductSettingItem.UnsaleProductSetting.PeriodDays;
                                 if ((t.Quantity * 1.0 / days) > quantitiesUnit || (t.Money / days) > performenceUnit)
                                 {
                                     removeData.Add(t);
                                 }
-                            } else
+                            }
+                            else
                             {
                                 removeData.Add(t);
                             }
@@ -616,6 +618,236 @@ namespace VVCar.Shop.Services.DomainServices
                 if (filter.Start.HasValue && filter.Limit.HasValue)
                     result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             }
+            return result;
+        }
+
+        /// <summary>
+        /// 数据分析
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<DataAnalyseDto> DataAnalyse(DataAnalyseFilter filter, ref int totalCount)
+        {
+            var result = new List<DataAnalyseDto>();
+            var memberQueryable = MemberRepo.GetInclude(t => t.MemberPlateList, false);
+            var orderItemQueryable = OrderItemRepo.GetQueryable(false).Where(m => m.MerchantID == AppContext.CurrentSession.MerchantID);
+            var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetInclude(m => m.Product, false).Where(m => m.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (!string.IsNullOrEmpty(filter.NickName))
+                memberQueryable = memberQueryable.Where(t => t.Name.Contains(filter.NickName));
+
+            var now = DateTime.Now;
+            var previousYear = now.AddMonths(-12);
+            var previousMonth = now.AddMonths(-1);
+            var previousThreeMonth = now.AddMonths(-3);
+
+            //新会员分析
+            if (filter.TimeSelect.HasValue)
+            {
+                if (filter.TimeSelect.Value == ETimeSelect.ByDay)
+                {
+                    var yesteday = now.AddDays(-1);
+                    memberQueryable = memberQueryable.Where(t => t.CreatedDate > yesteday && t.CreatedDate < now);
+                }
+                if (filter.TimeSelect.Value == ETimeSelect.ByMonth)
+                {
+                    var monthStartTime = new DateTime(now.Year, now.Month, 1);
+                    var nextMonthStartTime = monthStartTime.AddMonths(1);
+                    memberQueryable = memberQueryable.Where(t => t.CreatedDate > monthStartTime && t.CreatedDate < nextMonthStartTime);
+                }
+            }
+
+
+            var memberList = memberQueryable.ToList();
+            memberList.ForEach(t =>
+            {
+                var dataAnalyse = new DataAnalyseDto();
+                dataAnalyse.MemberID = t.ID;
+                dataAnalyse.MemberName = t.Name;
+                dataAnalyse.MemberMobilePhone = t.MobilePhoneNo;
+                orderItemQueryable = orderItemQueryable.Where(m => m.Order.MemberID == m.ID);
+                string plateList = "";
+                t.MemberPlateList.ForEach(p =>
+                {
+                    plateList += p.PlateNumber + "|";
+                });
+                pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(m => plateList.Contains(m.PickUpOrder.PlateNumber));
+
+                //会员类型分析
+                if (filter.MemberType.HasValue)
+                {
+                    orderItemQueryable = orderItemQueryable.Where(m => m.Order.CreatedDate >= previousYear && m.Order.CreatedDate < now);
+                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(m => m.PickUpOrder.CreatedDate >= previousYear && m.PickUpOrder.CreatedDate < now);
+                }
+
+                //会员忠诚度分析
+                if (filter.LoyalMember.HasValue)
+                {
+                    orderItemQueryable = orderItemQueryable.Where(m => m.Order.CreatedDate >= previousMonth && m.Order.CreatedDate < now);
+                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(m => m.PickUpOrder.CreatedDate >= previousMonth && m.PickUpOrder.CreatedDate < now);
+                }
+
+                if (filter.LoseMember.HasValue)
+                {
+                    orderItemQueryable = orderItemQueryable.Where(m => m.Order.CreatedDate >= previousThreeMonth && m.Order.CreatedDate < now);
+                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(m => m.PickUpOrder.CreatedDate >= previousThreeMonth && m.PickUpOrder.CreatedDate < now);
+                }
+
+                var orderItemList = orderItemQueryable.Where(m => m.ProductType != EProductType.MemberCard).ToList();
+                var orderItemGroup = orderItemList.GroupBy(g => g.GoodsID).Select(m => new
+                {
+                    ProductID = m.Key,
+                    Quantity = m.Sum(s => s.Quantity),
+                    ProductName = m.FirstOrDefault() != null ? m.FirstOrDefault().ProductName : "",
+                    ProductCode = "",
+                    ProductType = m.FirstOrDefault() != null ? m.FirstOrDefault().ProductType : EProductType.Goods,
+                    Money = m.Sum(s => s.Money),
+                }).ToList();
+
+                var pickUpOrderList = pickUpOrderItemQueryable.Where(m => m.PickUpOrder.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+                var pickUpOrderGroup = pickUpOrderList.GroupBy(g => g.ProductID).Select(m => new
+                {
+                    ProductID = m.Key,
+                    Quantity = m.Sum(s => s.Quantity),
+                    ProductName = m.FirstOrDefault() != null ? m.FirstOrDefault().ProductName : "",
+                    ProductCode = m.FirstOrDefault() != null ? m.FirstOrDefault().ProductCode : "",
+                    ProductType = m.FirstOrDefault() != null ? m.FirstOrDefault().Product.ProductType : EProductType.Goods,
+                    Money = m.Sum(s => s.Money),
+                }).ToList();
+
+                orderItemGroup.AddRange(pickUpOrderGroup);
+                var productQueryable = ProductRepo.GetInclude(p => p.ProductCategory, false);
+                orderItemGroup.ForEach(m =>
+                {
+                    var dataAnalyseItem = new DataAnalyseItemDto();
+                    dataAnalyseItem.ProductID = m.ProductID;
+                    dataAnalyseItem.ProductName = m.ProductName;
+                    dataAnalyseItem.TotalQuantity = m.Quantity;
+                    dataAnalyseItem.TotalMoney = m.Money;
+                    dataAnalyse.TotalQuantity += m.Quantity;
+                    dataAnalyse.TotalMoney += m.Money;
+                    dataAnalyse.dataAnalyseItemDtos.Add(dataAnalyseItem);
+                });
+                
+                //新增会员过滤
+                if (filter.TimeSelect.HasValue)
+                {
+                    result.Add(dataAnalyse);
+                }
+
+                //会员类型过滤
+                if (filter.MemberType.HasValue)
+                {
+                    if (filter.MemberType.Value == EMemberType.NomalMember)
+                    {
+                        if (dataAnalyse.TotalMoney < 2000)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if (filter.MemberType.Value == EMemberType.SilverMember)
+                    {
+                        if (dataAnalyse.TotalMoney >= 2000 && dataAnalyse.TotalMoney < 5000)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if (filter.MemberType.Value == EMemberType.GoldMember)
+                    {
+                        if (dataAnalyse.TotalMoney >= 5000 && dataAnalyse.TotalMoney < 10000)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if (filter.MemberType.Value == EMemberType.PlatinumMember)
+                    {
+                        if (dataAnalyse.TotalMoney >= 10000)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                }
+
+                //会员忠诚度
+                if (filter.LoyalMember.HasValue)
+                {
+                    if(filter.LoyalMember.Value == ELoyalMember.NoLoyal)
+                    {
+                        if (dataAnalyse.TotalQuantity < 1)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if(filter.LoyalMember.Value == ELoyalMember.LessLoyal)
+                    {
+                        if(dataAnalyse.TotalQuantity>=1&& dataAnalyse.TotalQuantity < 3)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if(filter.LoyalMember.Value == ELoyalMember.NomalLoyal)
+                    {
+                        if(dataAnalyse.TotalQuantity>=3 && dataAnalyse.TotalQuantity < 5)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if(filter.LoyalMember.Value == ELoyalMember.GoodLoyal)
+                    {
+                        if (dataAnalyse.TotalQuantity >= 5 && dataAnalyse.TotalQuantity < 8)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if (filter.LoyalMember.Value == ELoyalMember.AbsoluteLoyalty)
+                    {
+                        if (dataAnalyse.TotalQuantity >= 8)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                }
+
+                //会员流失率
+                if (filter.LoseMember.HasValue)
+                {
+                    if(filter.LoseMember.Value == ELoseMember.NoLose)
+                    {
+                        if(dataAnalyse.TotalQuantity >= 8&& dataAnalyse.TotalQuantity < 10)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if(filter.LoseMember.Value == ELoseMember.LightLose)
+                    {
+                        if(dataAnalyse.TotalQuantity >= 5&&dataAnalyse.TotalQuantity < 8)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if(filter.LoseMember.Value == ELoseMember.HeavyLose)
+                    {
+                        if (dataAnalyse.TotalQuantity >= 3 && dataAnalyse.TotalQuantity < 5)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if (filter.LoseMember.Value == ELoseMember.SeverLose)
+                    {
+                        if (dataAnalyse.TotalQuantity >= 1 && dataAnalyse.TotalQuantity < 3)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                    else if (filter.LoseMember.Value == ELoseMember.AbsoluteLose)
+                    {
+                        if (dataAnalyse.TotalQuantity < 1)
+                        {
+                            result.Add(dataAnalyse);
+                        }
+                    }
+                }
+            });
             return result;
         }
 
@@ -659,7 +891,7 @@ namespace VVCar.Shop.Services.DomainServices
         {
             var endDate = DateTime.Now;
             var merchantList = MerchantRepo.GetQueryable(false).ToList();
-            merchantList.ForEach(t=>
+            merchantList.ForEach(t =>
             {
 
             });

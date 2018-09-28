@@ -430,37 +430,37 @@
             $('#operationbtncon').hide();
         }
 
-          function init() {
-                $.ajax({
-                    url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.openid',
-                    type: 'GET',
-                    headers: { 'CompanyCode': _mchCode },
-                    beforeSend: function () {
-                        $.showLoading();
-                    },
-                    success: function (res) {
-                        $.hideLoading();
-                        if (res.IsSuccessful) {
-                            if (res.Data != null) {
-                                sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                _member = res.Data;
-                            } else {
-                                window.location.href = "/Mobile/Customer?mch=" + mch;
-                            }
+        function init() {
+            $.ajax({
+                url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.openid',
+                type: 'GET',
+                headers: { 'CompanyCode': _mchCode },
+                beforeSend: function () {
+                    $.showLoading();
+                },
+                success: function (res) {
+                    $.hideLoading();
+                    if (res.IsSuccessful) {
+                        if (res.Data != null) {
+                            sessionStorage.setItem('member', JSON.stringify(res.Data));
+                            _member = res.Data;
                         } else {
-                            $.alert(res.ErrorMessage);
                             window.location.href = "/Mobile/Customer?mch=" + mch;
                         }
-                    },
-                    error: function (res) {
-                        $.hideLoading();
-                        $.alert(JSON.stringify(res), function () {
-                            window.location.href = "/Mobile/Customer?mch=" + mch;
-                        });
+                    } else {
+                        $.alert(res.ErrorMessage);
+                        window.location.href = "/Mobile/Customer?mch=" + mch;
                     }
-                });
-            }
-            init();
+                },
+                error: function (res) {
+                    $.hideLoading();
+                    $.alert(JSON.stringify(res), function () {
+                        window.location.href = "/Mobile/Customer?mch=" + mch;
+                    });
+                }
+            });
+        }
+        init();
 
     </script>
 }

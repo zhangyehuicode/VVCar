@@ -283,11 +283,26 @@ namespace VVCar.VIP.Services.DomainServices
                     else
                         queryable = queryable.Where(t => t.MemberGroupID == filter.MemberGroupID.Value);
                 }
+                if (filter.ForMonth.HasValue)
+                {
+                    var now = DateTime.Now;
+                    var monthStartTime = new DateTime(now.Year, now.Month, 1);
+                    var nextMonthStartTime = monthStartTime.AddMonths(1);
+                    queryable = queryable.Where(t=> t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
+
+                }
+                if (filter.ForDay.HasValue)
+                {
+                    var now = DateTime.Now;
+                    var yesteday = now.AddDays(-1);
+                    queryable = queryable.Where(t=> t.CreatedDate>=yesteday && t.CreatedDate < now);
+                }
                 //if (filter.MemberGradeID.HasValue)
                 //{
                 //    queryable = queryable.Where(t => t.MemberGradeID == filter.MemberGradeID);
                 //}
             }
+
             if (AppContext.CurrentSession.MerchantID == Guid.Parse("00000000-0000-0000-0000-000000000001") && AppContext.CurrentSession.UserID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
             {
                 var currentuser = UserRepo.GetByKey(AppContext.CurrentSession.UserID, false);
@@ -300,6 +315,8 @@ namespace VVCar.VIP.Services.DomainServices
                     queryable = queryable.Where(t => t.CreatedUserID == AppContext.CurrentSession.UserID);
                 }
             }
+
+
             queryable = queryable.OrderByDescending(t => t.CreatedDate);
             if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
             {

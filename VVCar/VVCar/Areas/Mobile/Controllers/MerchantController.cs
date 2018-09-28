@@ -444,6 +444,73 @@ namespace VVCar.Areas.Mobile.Controllers
         }
 
         /// <summary>
+        /// 数据分析导航
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AnalyseIndex()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
+
+        /// <summary>
+        /// 数据分析
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Analyse()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+        }
+
+        /// <summary>
+        /// 数据分析子项
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AnalyseDetail()
+        {
+            var companyCode = Request["mch"];
+            if (string.IsNullOrEmpty(companyCode))
+            {
+                return Content("参数错误");
+            }
+            var openId = TempData["openid"] as string;
+#if DEBUG
+            openId = "oI4ee0sGQu_E2tkp7OUdU2ADzR0U";
+#endif
+            ViewBag.OpenId = openId;
+            ViewBag.NickName = TempData["nickname"] as string;
+            ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
+            ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
+            return View();
+
+        }
+
+        /// <summary>
         /// 扫码优惠
         /// </summary>
         /// <returns></returns>

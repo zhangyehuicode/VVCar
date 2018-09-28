@@ -511,12 +511,15 @@
     <Content Include="Areas\resource\img\mobile\logo.png" />
     <Content Include="Areas\resource\img\mobile\master\5000.png" />
     <Content Include="Areas\resource\img\mobile\master\6.png" />
+    <Content Include="Areas\resource\img\mobile\master\ad.png" />
+    <Content Include="Areas\resource\img\mobile\master\analyse.png" />
     <Content Include="Areas\resource\img\mobile\master\cbgl.png" />
     <Content Include="Areas\resource\img\mobile\master\class.png" />
     <Content Include="Areas\resource\img\mobile\master\czt.png" />
     <Content Include="Areas\resource\img\mobile\master\daodile.png" />
     <Content Include="Areas\resource\img\mobile\master\dygl.png" />
     <Content Include="Areas\resource\img\mobile\master\fhj.png" />
+    <Content Include="Areas\resource\img\mobile\master\fhjright.png" />
     <Content Include="Areas\resource\img\mobile\master\fwxmgl.png" />
     <Content Include="Areas\resource\img\mobile\master\gr.png" />
     <Content Include="Areas\resource\img\mobile\master\hdgl.png" />
@@ -559,6 +562,8 @@
     <Content Include="Areas\resource\img\mobile\sportcar.png" />
     <Content Include="Areas\resource\img\mobile\ss.png" />
     <Content Include="Areas\resource\img\mobile\staff\6.png" />
+    <Content Include="Areas\resource\img\mobile\staff\ad.png" />
+    <Content Include="Areas\resource\img\mobile\staff\analyse.png" />
     <Content Include="Areas\resource\img\mobile\staff\czt.png" />
     <Content Include="Areas\resource\img\mobile\staff\daodile.png" />
     <Content Include="Areas\resource\img\mobile\staff\fhj.png" />
@@ -1275,6 +1280,9 @@
     <Content Include="Areas\Mobile\Views\Customer\MyDividend.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\Advisement.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\AdvisementDetail.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\AnalyseIndex.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\Analyse.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\AnalyseDetail.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

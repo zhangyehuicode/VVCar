@@ -63,9 +63,14 @@
 		</a>
 		<a class="bq_box" v-on:click="customerfinder">
 			@*border-bottom:none;*@
-			<div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:25px;"></div>
+			<div><img src="~/Areas/resource/img/mobile/master/ad.png" style="width:25px;"></div>
 			<span>寻客侠</span>
 			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">分享广告</span>
+		</a>
+		<a class="bq_box" v-on:click="analyseindex">
+			<div><img src="~/Areas/resource/img/mobile/master/analyse.png" style="width:40px;"/></div>
+			<span>数据分析</span>
+			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">数据分析</span>
 		</a>
 	</div>
     <div class="bt_box">店长管理端</div>
@@ -195,6 +200,9 @@
 					},
 					customerfinder: function (event) {
 						window.location.href = "/Mobile/Merchant/Advisement?mch=" + mch;
+					},
+					analyseindex: function (event) {
+						window.location.href = "/Mobile/Merchant/AnalyseIndex?mch=" + mch;
 					},
                     scancodediscounts: function (event) {
                         window.location.href = "/Mobile/Merchant/ScanCodeDiscounts?mch=" + mch;

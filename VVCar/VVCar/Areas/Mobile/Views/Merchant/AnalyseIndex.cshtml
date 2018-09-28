@@ -1,0 +1,177 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="analyseindex" style="background-color:#f8f9fe;">
+	<div class="toubu">
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px;float:left;margin-left:3%;margin-top:18px;"></a>
+		<div class="title" style="color:#fff;background:#51b3f0;">数据分析</div>
+		<a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px;float:right;margin-right:3%;margin-top:-36px;" /></a>
+	</div>
+
+	<div class="item"></div>
+	<div class="item" v-on:click="newcustomer">
+		<img src="~/Areas/resource/img/mobile/master/newcustomer.png" style="width:25px;float:left;margin-left:10px;">
+		<span style="font-size:15px;padding-left:20px;padding-bottom:10px;">新客户分析</span>
+		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-right:10px;margin-top:10px;">
+	</div>
+	<div class="item" v-on:click="membertype">
+		<img src="~/Areas/resource/img/mobile/master/membertype.png" style="width:25px;float:left;margin-left:10px;">
+		<span style="font-size:15px;padding-left:20px;padding-bottom:10px;">会员类型分析</span>
+		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-right:10px;margin-top:10px;">
+	</div>
+	<div class="item" v-on:click="bigmember">
+		<img src="~/Areas/resource/img/mobile/master/bigmember.png" style="width:25px;float:left;margin-left:10px;">
+		<span style="font-size:15px;padding-left:20px;padding-bottom:10px;">大客户分析</span>
+		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-right:10px;margin-top:10px;">
+	</div>
+	<div class="item" v-on:click="loyalmember">
+		<img src="~/Areas/resource/img/mobile/master/loyalmember.png" style="width:25px;float:left;margin-left:10px;">
+		<span style="font-size:15px;padding-left:20px;padding-bottom:10px;">忠诚客户分析</span>
+		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-right:10px;margin-top:10px;">
+	</div>
+	<div class="item" v-on:click="losemember">
+		<img src="~/Areas/resource/img/mobile/master/losemember.png" style="width:30px;float:left;margin-left:5px;">
+		<span style="font-size:15px;padding-left:20px;padding-bottom:10px;">流失客户分析</span>
+		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-right:10px;margin-top:10px;">
+	</div>
+
+</div>
+
+@section scripts{
+	<style type="text/css">
+		.item {
+			height: 50px;
+			padding-top: 10px;
+		}
+	</style>
+	<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+	<link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script type="text/javascript">
+		function wxConfig() {
+			var mch = $.getUrlParam('mch');
+			$.ajax({
+				type: "POST",
+				url: "http://wwww.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+				datatype: "json",
+				success: function (data) {
+					if (data.IsSuccessful) {
+						var temp = data.Data;
+						wx.config({
+							debug: false,
+							appId: temp.appId,
+							timestamp: temp.timestamp,
+							nonceStr: temp.nonceStr,
+							signature: temp.signature,
+							jsApiList: [
+								'checkJsApi',
+								'onMenuShareTimeline',
+								'onMenuShareAppMessage',
+								'onMenuShareQQ',
+								'onMenuShareWeibo',
+								'hideOptionMenu',
+								'hideAllNonBaseMenuItem',
+								'showMenuItems',
+								'closeWindow',
+								'scanQRCode',
+							]
+						});
+						wx.ready(function () {
+							wx.hideAllNonBaseMenuItem();
+						});
+					} else {
+					}
+				},
+				complete: function (xmlHttpRequest, textStatus) {
+				},
+				error: function (xmlHttpRequest, textStatus) {
+				}
+			});
+		}
+		wxConfig();
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			var mch = $.getUrlParam('mch');
+			var _ismaster = sessionStorage.getItem('ismaster');
+			var ismaster = _ismaster == 'true';
+			var user = sessionStorage.getItem('user');
+			if (user == null || user === '') {
+				function getUserByOpenId() {
+					$.ajax({
+						url: 'api/User/GetUserByOpenID',
+						type: 'GET',
+						headers: { 'CompanyCode': mch },
+						data: {
+							OpenID: '@ViewBag.OpenId',
+							IsManager: ismaster,
+						},
+						success: function (res) {
+							if (res.IsSuccessful) {
+								if (res.Data != null) {
+									sessionStorage.setItem('user', JSON.stringify(res.Data));
+								} else {
+									window.location.href = "/Mobile/Merchant?mch=" + mch;
+								}
+							} else {
+								$.alert(res.ErrorMessage);
+								window.location.href = "/Mobile/Merchant?mch=" + mch;
+							}
+						},
+						error: function () {
+							window.location.href = "/Mobile/Merchant?mch=" + mch;
+						}
+					});
+				}
+				getUserByOpenId();
+			}
+		});
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			var mch = $.getUrlParam('mch');
+			var user = sessionStorage.getItem('user');
+			var _ismaster = sessionStorage.getItem('ismaster');
+			var ismaster = _ismaster == 'true';
+			_viewModel = new Vue({
+				el: '#analyseindex',
+				methods: {
+					home: function (event) {
+						if (ismaster) {
+							window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+						} else {
+							window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+						}
+					},
+					back: function (event) {
+						history.back(-1);
+					},
+					newcustomer: function (event) {
+						sessionStorage.setItem('type', 'newcustomer');
+						window.location.href = "/mobile/Merchant/Analyse?mch=" + mch;
+					},
+					membertype: function (event) {
+						sessionStorage.setItem('type', 'membertype');
+						window.location.href = "/mobile/Merchant/Analyse?mch=" + mch;
+					},
+					bigmember: function (event) {
+						sessionStorage.setItem('type', 'bigmember')
+						window.location.href = "/mobile/Merchant/Analyse?mch=" + mch;
+					},
+					loyalmember: function () {
+						sessionStorage.setItem('type', 'loyalmember')
+						window.location.href = "/mobile/Merchant/Analyse?mch=" + mch;
+					},
+					losemember: function () {
+						sessionStorage.setItem('type', 'losemember')
+						window.location.href = "/mobile/Merchant/Analyse?mch=" + mch;
+					},
+				}
+			});
+		});
+	</script>
+}

@@ -20,7 +20,7 @@ namespace VVCar.Shop.Data.Mapping
 
             Property(t => t.LinkMan)
                 //.IsRequired()
-                .HasMaxLength(20);
+                .HasMaxLength(50);
 
             Property(t => t.Phone)
                 //.IsRequired()

@@ -50,6 +50,7 @@
     <Compile Include="Dtos\CarBitCoinProductLiteDto.cs" />
     <Compile Include="Dtos\CarBitCoinRecordDto.cs" />
     <Compile Include="Dtos\ConsumeHistoryDto.cs" />
+    <Compile Include="Dtos\DataAnalyseDto.cs" />
     <Compile Include="Dtos\GiveAwayCarBitCoinParam.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisDto.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisParam.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Filters\CarBitCoinRecordFilter.cs" />
     <Compile Include="Filters\ComboItemFilter.cs" />
     <Compile Include="Filters\ConsumeHistoryFilter.cs" />
+    <Compile Include="Filters\DataAnalyseFilter.cs" />
     <Compile Include="Filters\DepartmentPerformanceFilter.cs" />
     <Compile Include="Filters\OrderFilter.cs" />
     <Compile Include="Filters\OrderItemFilter.cs" />

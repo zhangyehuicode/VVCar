@@ -52,5 +52,15 @@ namespace VVCar.VIP.Domain.Filters
         /// 是否来自后台客户分配请求
         /// </summary>
         public bool IsFromUserMember { get; set; }
+
+        /// <summary>
+        /// 当日数据
+        /// </summary>
+        public bool? ForDay { get; set; }
+
+        /// <summary>
+        /// 当月数据
+        /// </summary>
+        public bool? ForMonth { get; set; }
     }
 }

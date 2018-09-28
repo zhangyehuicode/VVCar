@@ -82,7 +82,7 @@
 					Ext.create('WX.view.Shop.HtmlEditorImage')
 				],
 			}, {
-				html: ' < span style="font-size:13px;margin:5px 10px 5px 65px;" >（建议上传345* 200的图片）</span>',
+				html: ' <span style="font-size:13px;margin:5px 10px 5px 65px;" >（建议上传345* 200的图片）</span>',
 			}]
 		});
 		me.items = [me.form];

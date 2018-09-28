@@ -58,6 +58,12 @@
 			'CouponPushList button[action=search]': {
 				click: me.searchData
 			},
+			'CouponPushList button[action=fleshCouponPushItem]': {
+				click: me.fleshCouponPushItem
+			},
+			'CouponPushList button[action=fleshCouponPushMember]': {
+				click: me.fleshCouponPushMember
+			},
 			'CouponPushList grid[name=gridCouponPush]': {
 				select: me.gridCouponPushSelect,
 				itemdblclick: me.editCouponPush,
@@ -354,6 +360,26 @@
 		} else {
 			Ext.MessageBox.alert('系统提示', '请输入过滤条件!');
 		}
+	},
+	fleshCouponPushItem: function () {
+		var me = this;
+		var couponPushItemStore = this.getGridCouponPushItem().getStore();
+		var record = me.getGridCouponPush().getSelectionModel().getSelection();
+		Ext.apply(couponPushItemStore.proxy.extraParams, {
+			All: false,
+			CouponPushID: record[0].data.ID
+		});
+		couponPushItemStore.reload();
+	},
+	fleshCouponPushMember: function () {
+		var me = this;
+		var couponPushMemberStore = this.getGridCouponPushMember().getStore();
+		var record = me.getGridCouponPush().getSelectionModel().getSelection();
+		Ext.apply(couponPushMemberStore.proxy.extraParams, {
+			All: false,
+			CouponPushID: record[0].data.ID
+		});
+		couponPushMemberStore.reload();
 	},
 	batchHandCouponPush: function (btn) {
 		var selectedItems = btn.up('grid').getSelectionModel().getSelection();

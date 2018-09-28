@@ -108,6 +108,38 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 数据分析
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("DataAnalyse"), AllowAnonymous]
+
+        public PagedActionResult<DataAnalyseDto> DataAnalyse([FromUri]DataAnalyseFilter filter)
+        {
+            return SafeGetPagedData<DataAnalyseDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = ReportingService.DataAnalyse(filter, ref totalCount);
+                var sum_quantity = 0;
+                decimal sum_money = 0;
+                var dataAnalyseList = data.ToList();
+                foreach (var dataAnalyse in dataAnalyseList)
+                {
+                    sum_quantity += dataAnalyse.TotalQuantity;
+                    sum_money += dataAnalyse.TotalMoney;
+                }
+                DataAnalyseDto dataAnalyseDto = new DataAnalyseDto();
+                dataAnalyseDto.MemberName = "合计:";
+                dataAnalyseDto.MemberMobilePhone = "";
+                dataAnalyseDto.TotalQuantity = sum_quantity;
+                dataAnalyseDto.TotalMoney = sum_money;
+                (data as List<DataAnalyseDto>).Add(dataAnalyseDto);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
         /// 滞销产品提醒
         /// </summary>
         /// <returns></returns>

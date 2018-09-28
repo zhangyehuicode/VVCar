@@ -1,0 +1,249 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="analyse" style="background-color:#f8f9fe;">
+	<div class="toubu">
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px;float:left;margin-left:3%;margin-top:18px;"></a>
+		<div class="title" style="color:#fff;background:#51b3f0;">{{type}}</div>
+		<a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px;float:right;margin-right:3%;margin-top:20px;" /></a>
+	</div>
+	<div class="kcd_box2" style="height:100px;">
+		<form>
+			<select class="kcd_input" style="width:25%;" id="timeselect">
+				<option value="0">请选择</option>
+				<option value="1" selected="selected">当日</option>
+				<option value="2">当月</option>
+			</select>
+			<select class="kcd_input" style="width:50%;" id="membertype">
+				<option value="0">请选择</option>
+				<option value="1" selected="selected">消费小于2千</option>
+				<option value="2">消费2千~5千</option>
+				<option value="3">消费5千~1万</option>
+				<option value="4">消费大于1万</option>
+			</select>
+			<select class="kcd_input" style="width:50%;" id="bigmember">
+				<option value="4">消费大于1万</option>
+			</select>
+			<select class="kcd_input" style="width:50%;" id="loyalmember">
+				<option value="0">请选择</option>
+				<option value="1" selected="selected">每月消费小于1次</option>
+				<option value="2">每月消费1~3次</option>
+				<option value="3">每月消费5~8次</option>
+				<option value="4">每月消费大于8次</option>
+			</select>
+			<select class="kcd_input" style="width:50%;" id="losemember">
+				<option value="0">请选择</option>
+				<option value="1" selected="selected">当前三月内消费8~10次</option>
+				<option value="2">当前三月内消费5~8次</option>
+				<option value="3">当前三月内消费3~5次</option>
+				<option value="3">当前三月内消费1~3次</option>
+				<option value="4">当前三月内消费小于1次</option>
+			</select>
+		</form>
+		<input type="text" class="kcgl_input" style="color:#999" placeholder="请输入会员昵称" id="name" />
+		<div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px;padding-top:10px;" v-on:click="searchMember" /></div>
+	</div>
+	<div class="touxiang" style="margin-bottom:25px;">
+		<ul class="pm_box">
+			<li class="pm_box1">
+				<div class="pm_box2" style="width:25%;text-align:center">会员昵称</div>
+				<div class="pm_box2" style="width:25%;text-align:center">消费项目</div>
+				<div class="pm_box2" style="width:25%;text-align:center">消费金额</div>
+				<div class="pm_box2" style="width:25%;text-align:center;text-align:right;">操作</div>
+			</li>
+			<li class="pm_box1" v-for="Member in MemberList">
+				<div class="pm_box2" style="width:25%;text-align:center;color:#666;">{{Member.MemberName}}</div>
+				<div class="pm_box2" style="width:25%;text-align:center;color:#666;">{{Member.TotalQuantity}}</div>
+				<div class="pm_box2" style="width:25%;text-align:center;color:#666;">{{Member.TotalMoney}}</div>
+				<div class="pm_box2" style="width:25%;text-align:center;text-align:right;"><a class="hymd" v-on:click="detail(Member)">详情</a></div>
+			</li>
+		</ul>
+	</div>
+</div>
+
+@section scripts{
+	<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+	<link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript">
+		function wxConfig() {
+			var mch = $.getUrlParam('mch');
+			$.ajax({
+				type: 'POST',
+				url: "http://wwww.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+				datatype: "json",
+				success: function (data) {
+					if (data.IsSuccessful) {
+						var temp = data.Data;
+						wx.config({
+							debug: false,
+							appId: temp.appId,
+							timestamp: temp.timestamp,
+							nonceStr: temp.nonceStr,
+							signature: temp.signature,
+							jsApiList: [
+								'checkJsApi',
+								'onMenuShareTimeline',
+								'onMenuShareAppMessage',
+								'onMenuShareQQ',
+								'onMenuShareWeibo',
+								'hideOptionMenu',
+								'hideAllNonBaseMenuItem',
+								'showMenuItems',
+								'closeWindow',
+								'scanQRCode',
+							]
+						});
+						wx.ready(function () {
+							wx.hideAllNonBaseMenuItem();
+						});
+					} else {
+					}
+				},
+				complete: function (xmlHttpRequest, textStatus) {
+				},
+				error: function (xmlHttpRequest, textStatus) {
+				}
+			});
+		}
+		wxConfig();
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			var _ismaster = sessionStorage.getItem('ismaster');
+			var ismaster = _ismaster == 'true';
+			var user = sessionStorage.getItem('user');
+			if (user == null || user === '') {
+				function getUserByOpenId() {
+					$.ajax({
+						url: 'api/User/GetUserByOpenID',
+						type: 'GET',
+						headers: { 'CompanyCode': mch },
+						data: {
+							OpenID: '@ViewBag.OpenId',
+							IsManager: ismaster,
+						},
+						success: function (res) {
+							if (res.IsSuccessful) {
+								if (res.Data != null) {
+									sessionStorage.setItem('user', JSON.stringify(res.Data));
+								} else {
+									window.location.href = "/Mobile/Merchant?mch=" + mch;
+								}
+							} else {
+								$.alert(res.ErrorMessage);
+								window.location.href = "/Mobile/Merchant?mch=" + mch;
+							}
+						},
+						error: function () {
+							window.location.href = "/Mobile/Merchant?mch=" + mch;
+						}
+					});
+				}
+				getUserByOpenId();
+			}
+		});
+
+
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			var mch = $.getUrlParam('mch');
+			var _ismaster = sessionStorage.getItem('ismaster');
+			var ismaster = _ismaster == 'true';
+			_viewModel = new Vue({
+				el: '#analyse',
+				data: {
+					type: '',
+					MemberList: [],
+				},
+				methods: {
+					back: function (event) {
+						history.back(-1);
+					},
+					home: function (event) {
+						if (ismaster) {
+							window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+						} else {
+							window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
+						}
+					},
+					searchMember: function (event) {
+						searchMember();
+					},
+					detail: function (data, event) {
+						sessionStorage.setItem('member', JSON.stringify(data));
+						window.location.href = "/mobile/Merchant/AnalyseDetail?mch=" + mch;
+					}
+				}
+			});
+
+			function gettype() {
+				if (sessionStorage.getItem('type') == 'newcustomer') {
+					_viewModel.type = '新客户分析';
+					$('#timeselect').css('display', 'display');
+					$('#timeselect').siblings().css('display', 'none');
+				} else if (sessionStorage.getItem('type') == 'membertype') {
+					_viewModel.type = '客户类型分析';
+					$('#membertype').css('display', 'display');
+					$('#membertype').siblings().css('display', 'none');
+				} else if (sessionStorage.getItem('type') == 'bigmember') {
+					_viewModel.type = '大客户分析';
+					$('#bigmember').css('display', 'display');
+					$('#bigmember').siblings().css('display', 'none');
+				} else if (sessionStorage.getItem('type') == 'loyalmember') {
+					_viewModel.type = '客户忠诚度';
+					$('#loyalmember').css('display', 'display');
+					$('#loyalmember').siblings().css('display', 'none');
+				} else if (sessionStorage.getItem('type') == 'losemember') {
+					_viewModel.type = '客户忠诚度';
+					$('#losemember').css('display', 'display');
+					$('#losemember').siblings().css('display', 'none');
+				}
+			}
+			gettype();
+
+			function searchMember() {
+				var data = {};
+				if (sessionStorage.getItem('type') == 'newcustomer') {
+					data = { 'TimeSelect': $('#timeselect').val(), 'NickName': $('#name').val() };
+				} else if (sessionStorage.getItem('type') == 'membertype') {
+					data = { 'MemberType': $('#membertype').val(), 'NickName': $('#name').val() };
+				} else if (sessionStorage.getItem('type') == 'bigmember') {
+					data = { 'MemberType': $('#bigmember').val(), 'NickName': $('#name').val() };
+				} else if (sessionStorage.getItem('type') == 'loyalmember') {
+					data = { 'LoyalMember': $('#loyalmember').val(), 'NickName': $('#name').val() };
+				} else if (sessionStorage.getItem('type') == 'losemember') {
+					data = { 'LoseMember': $('#losemember').val(), 'NickName': $('#name').val() };
+				}
+
+				$.ajax({
+					url: '/api/Reporting/DataAnalyse?All=false',
+					type: 'GET',
+					data: data,
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.hideLoading();
+					},
+					success: function (res) {
+						$.hideLoading();
+						if (res.IsSuccessful) {
+							_viewModel.MemberList = res.Data;
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					},
+					error: function () {
+						$.hideLoading();
+					}
+				});
+			};
+			searchMember();
+		});
+	</script>
+}
