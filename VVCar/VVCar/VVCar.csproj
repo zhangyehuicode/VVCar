@@ -513,6 +513,7 @@
     <Content Include="Areas\resource\img\mobile\master\6.png" />
     <Content Include="Areas\resource\img\mobile\master\ad.png" />
     <Content Include="Areas\resource\img\mobile\master\analyse.png" />
+    <Content Include="Areas\resource\img\mobile\master\bigmember.png" />
     <Content Include="Areas\resource\img\mobile\master\cbgl.png" />
     <Content Include="Areas\resource\img\mobile\master\class.png" />
     <Content Include="Areas\resource\img\mobile\master\czt.png" />
@@ -530,7 +531,11 @@
     <Content Include="Areas\resource\img\mobile\master\hykk.png" />
     <Content Include="Areas\resource\img\mobile\master\kjkd.png" />
     <Content Include="Areas\resource\img\mobile\master\logo.png" />
+    <Content Include="Areas\resource\img\mobile\master\losemember.png" />
+    <Content Include="Areas\resource\img\mobile\master\loyalmember.png" />
     <Content Include="Areas\resource\img\mobile\master\mdbb.png" />
+    <Content Include="Areas\resource\img\mobile\master\membertype.png" />
+    <Content Include="Areas\resource\img\mobile\master\newcustomer.png" />
     <Content Include="Areas\resource\img\mobile\master\sl.png" />
     <Content Include="Areas\resource\img\mobile\master\ss.png" />
     <Content Include="Areas\resource\img\mobile\master\ss2.png" />

@@ -50,7 +50,7 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        IEnumerable<DataAnalyseDto> DataAnalyse(DataAnalyseFilter filter, ref int totalCount);
+        IEnumerable<DataAnalyseDto> DataAnalyseList(DataAnalyseFilter filter, ref int totalCount);
 
         /// <summary>
         /// 滞销产品提醒

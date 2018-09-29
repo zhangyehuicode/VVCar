@@ -4,47 +4,48 @@
 	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<div id="analyseindex" style="background-color:#f8f9fe;">
+<div id="analyseindex">
 	<div class="toubu">
 		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px;float:left;margin-left:3%;margin-top:18px;"></a>
 		<div class="title" style="color:#fff;background:#51b3f0;">数据分析</div>
 		<a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px;float:right;margin-right:3%;margin-top:-36px;" /></a>
 	</div>
 
-	<div class="item"></div>
+	<div class="item" style="height:50px;border-bottom:none;"></div>
 	<div class="item" v-on:click="newcustomer">
-		<img src="~/Areas/resource/img/mobile/master/newcustomer.png" style="width:25px;float:left;margin-left:10px;">
+		<img src="~/Areas/resource/img/mobile/master/newcustomer.png" style="width:25px;float:left;">
 		<span style="font-size:15px;padding-left:20px;padding-bottom:10px;">新客户分析</span>
-		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-right:10px;margin-top:10px;">
+		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-top:5px;">
 	</div>
 	<div class="item" v-on:click="membertype">
-		<img src="~/Areas/resource/img/mobile/master/membertype.png" style="width:25px;float:left;margin-left:10px;">
+		<img src="~/Areas/resource/img/mobile/master/membertype.png" style="width:25px;float:left;">
 		<span style="font-size:15px;padding-left:20px;padding-bottom:10px;">会员类型分析</span>
-		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-right:10px;margin-top:10px;">
+		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-top:5px;">
 	</div>
 	<div class="item" v-on:click="bigmember">
-		<img src="~/Areas/resource/img/mobile/master/bigmember.png" style="width:25px;float:left;margin-left:10px;">
+		<img src="~/Areas/resource/img/mobile/master/bigmember.png" style="width:25px;float:left;">
 		<span style="font-size:15px;padding-left:20px;padding-bottom:10px;">大客户分析</span>
-		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-right:10px;margin-top:10px;">
+		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-top:5px;">
 	</div>
 	<div class="item" v-on:click="loyalmember">
-		<img src="~/Areas/resource/img/mobile/master/loyalmember.png" style="width:25px;float:left;margin-left:10px;">
+		<img src="~/Areas/resource/img/mobile/master/loyalmember.png" style="width:25px;float:left;">
 		<span style="font-size:15px;padding-left:20px;padding-bottom:10px;">忠诚客户分析</span>
-		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-right:10px;margin-top:10px;">
+		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-top:5px;">
 	</div>
 	<div class="item" v-on:click="losemember">
-		<img src="~/Areas/resource/img/mobile/master/losemember.png" style="width:30px;float:left;margin-left:5px;">
+		<img src="~/Areas/resource/img/mobile/master/losemember.png" style="width:30px;float:left;margin-left:-3px;">
 		<span style="font-size:15px;padding-left:20px;padding-bottom:10px;">流失客户分析</span>
-		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-right:10px;margin-top:10px;">
+		<img src="~/Areas/resource/img/mobile/master/fhjright.png" style="width:10px;float:right;margin-top:5px;">
 	</div>
-
 </div>
 
 @section scripts{
 	<style type="text/css">
 		.item {
-			height: 50px;
+			height: 35px;
 			padding-top: 10px;
+			border-bottom: 1px #ccc solid;
+			margin:0 13px;
 		}
 	</style>
 	<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
@@ -129,6 +130,30 @@
 				}
 				getUserByOpenId();
 			}
+
+			function getAllMember() {
+				$.ajax({
+					url: '/api/Member/?All=false',
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.hideLoading();
+					},
+					success: function (res) {
+						$.hideLoading();
+						if (res.IsSuccessful) {
+							sessionStorage.setItem('allmembercount', res.Data.length);
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					},
+					error: function () {
+						$.hideLoading();
+					}
+				});
+			}
+
+			getAllMember();
 		});
 	</script>
 	<script type="text/javascript">

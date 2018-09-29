@@ -112,14 +112,14 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpGet, Route("DataAnalyse"), AllowAnonymous]
+        [HttpGet, Route("DataAnalyseList"), AllowAnonymous]
 
         public PagedActionResult<DataAnalyseDto> DataAnalyse([FromUri]DataAnalyseFilter filter)
         {
             return SafeGetPagedData<DataAnalyseDto>((result) =>
             {
                 var totalCount = 0;
-                var data = ReportingService.DataAnalyse(filter, ref totalCount);
+                var data = ReportingService.DataAnalyseList(filter, ref totalCount);
                 var sum_quantity = 0;
                 decimal sum_money = 0;
                 var dataAnalyseList = data.ToList();

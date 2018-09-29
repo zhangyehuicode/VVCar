@@ -42,10 +42,12 @@
         <table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
             <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
                 <th scope="col" width="25%">项目</th>
+				<th scope="col" width="25%">价格</th>
                 <th scope="col" width="25%">操作</th>
             </tr>
             <tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; " v-for="Product in CurrentProductList">
                 <td>{{Product.Name}}</td>
+				<td>{{Product.PriceSale}}</td>
                 <td><span class="addbtn" style="margin:5px;padding:3px;" v-on:click="currentproductclick(Product)">删除</span><span class="addbtn" style="margin:5px;padding:3px;" v-on:click="distribution(Product)">人员分配</span></td>
             </tr>
         </table>

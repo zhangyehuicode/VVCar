@@ -14,11 +14,6 @@ namespace VVCar.Shop.Domain.Filters
     public class DataAnalyseFilter : BasePageFilter
     {
         /// <summary>
-        /// 会员昵称
-        /// </summary>
-        public string NickName { get; set; }
-
-        /// <summary>
         /// 时间条件
         /// </summary>
         public ETimeSelect? TimeSelect { get; set; }
@@ -27,6 +22,11 @@ namespace VVCar.Shop.Domain.Filters
         /// 会员等级
         /// </summary>
         public EMemberType? MemberType { get; set; }
+
+        /// <summary>
+        /// 大客户
+        /// </summary>
+        public EBigMember? BigMember { get; set; }
 
         /// <summary>
         /// 会员忠诚度
@@ -62,8 +62,6 @@ namespace VVCar.Shop.Domain.Filters
     /// </summary>
     public enum EMemberType
     {
-
-
         /// <summary>
         /// 小于2千（普通会员）
         /// </summary>
@@ -86,35 +84,40 @@ namespace VVCar.Shop.Domain.Filters
     }
 
     /// <summary>
+    /// 大客户
+    /// </summary>
+    public enum EBigMember
+    {
+        /// <summary>
+        /// 普通大客户(年消费大于1万)
+        /// </summary>
+        Nomal = 1,
+
+        /// <summary>
+        /// 土豪大客户(年消费大于1万)
+        /// </summary>
+        Rich = 2,
+    }
+
+    /// <summary>
     /// 忠诚度
     /// </summary>
     public enum ELoyalMember
     {
         /// <summary>
-        /// 月消费小于1次（不忠诚）
+        /// 每月消费1次（一般）
         /// </summary>
-        NoLoyal = 1,
+        NomalLoyal = 1,
 
         /// <summary>
-        /// 月消费1~3次（缺乏忠诚）
+        /// 每月消费2次（良好）
         /// </summary>
-        LessLoyal = 2,
+        GoodLoyal = 2,
 
         /// <summary>
-        /// 月消费3~5次（一般忠诚）
+        /// 每月消费3次以上（绝对忠诚）
         /// </summary>
-        NomalLoyal = 3,
-
-
-        /// <summary>
-        /// 月消费5~8次（良好忠诚）
-        /// </summary>
-        GoodLoyal = 4,
-
-        /// <summary>
-        /// 月消费大于8次（绝对忠诚）
-        /// </summary>
-        AbsoluteLoyalty = 4,
+        AbsoluteLoyalty = 3,
     }
 
     /// <summary>
@@ -123,28 +126,18 @@ namespace VVCar.Shop.Domain.Filters
     public enum ELoseMember
     {
         /// <summary>
-        /// 三个月消费8~10次（没有流失）
+        /// 三个月消费未消费
         /// </summary>
-        NoLose = 1,
+        NomalLose = 1,
 
         /// <summary>
-        /// 三个月消费5~8次（轻微流失）
+        /// 六个月消费未消费
         /// </summary>
-        LightLose = 2,
+        SevereLose = 2,
 
         /// <summary>
-        /// 三个月消费3~5次（大量流失）
+        /// 十二个月消费未消费
         /// </summary>
-        HeavyLose = 3,
-
-        /// <summary>
-        /// 三个月消费1~3次（严重流失）
-        /// </summary>
-        SeverLose = 3,
-
-        /// <summary>
-        /// 三个月消费小于1次（完全流失）
-        /// </summary>
-        AbsoluteLose = 4,
+        AbsoluteLose = 3,
     }
 }
