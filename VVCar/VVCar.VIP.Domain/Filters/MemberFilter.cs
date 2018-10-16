@@ -52,5 +52,10 @@ namespace VVCar.VIP.Domain.Filters
         /// 是否来自后台客户分配请求
         /// </summary>
         public bool IsFromUserMember { get; set; }
+
+        /// <summary>
+        /// 微信OpenID
+        /// </summary>
+        public string WeChatOpenID { get; set; }
     }
 }

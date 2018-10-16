@@ -89,6 +89,12 @@
     <Compile Include="Mapping\MemberMap.cs" />
     <Compile Include="Mapping\MemberPlateMap.cs" />
     <Compile Include="Mapping\MemberPointHistoryMap.cs" />
+    <Compile Include="Mapping\MerchantBargainOrderMap.cs" />
+    <Compile Include="Mapping\MerchantBargainOrderRecordItemMap.cs" />
+    <Compile Include="Mapping\MerchantBargainOrderRecordMap.cs" />
+    <Compile Include="Mapping\MerchantCrowdOrderMap.cs" />
+    <Compile Include="Mapping\MerchantCrowdOrderRecordItemMap.cs" />
+    <Compile Include="Mapping\MerchantCrowdOrderRecordMap.cs" />
     <Compile Include="Mapping\PointExchangeCouponMap.cs" />
     <Compile Include="Mapping\RechargeHistoryMap.cs" />
     <Compile Include="Mapping\RechargePlanMap.cs" />

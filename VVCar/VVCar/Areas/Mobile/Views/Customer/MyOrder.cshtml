@@ -5,85 +5,129 @@
 }
 
 <div id="myorder" style="background-color:#f8f9fe;">
-    <div class="top_box">
-        <div class="top_box_text">我的订单</div>
-        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
-        <a class="top_box2"></a>
-        <a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="home"></a>
-    </div>
-    <div class="nav_box" style="position:relative; box-shadow:none;">
-        @*<div>
-                <a><img src="~/Areas/resource/img/mobile/dfk.png"></a><br>
-                待付款
-            </div>
-            <div>
-                <a><img src="~/Areas/resource/img/mobile/dsh.png"></a><br>
-                待收货
-            </div>
-            <div>
-                <a><img src="~/Areas/resource/img/mobile/ysh.png"></a><br>
-                已完成
-            </div>
-            <div>
-                <a><img src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
-                现场订单
-            </div>*@
-        <div v-on:click="storeorder" style="width:50%;">
-            <a><img style="width:35px;" src="~/Areas/resource/img/mobile/ysh.png"></a><br>
-            商城订单
-        </div>
-        <div v-on:click="pickuporder" style="width:50%;">
-            <a><img style="width:35px;" src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
-            接车单
-        </div>
-    </div>
-    <div class="wddd_box">
-        <div class="wddd_input">
-            <input type="text" style="color:#ddd" placeholder="订单号" class="pass_box">
-            <a><img src="~/Areas/resource/img/mobile/ss.png" style="width:6%; margin-top:10px; float:right; margin-right:4%;"></a>
-        </div>
-    </div>
-    <div class="gwc_box" style="margin-top:15px;" v-for="Order in OrderList" v-if="ShowOrder">
-        <img class="gwc_img" src="~/Areas/resource/img/mobile/defaultimg1.png">
-        <div class="gwc_box2">
-            <span class="gwc_text">订单号：{{Order.Code}}</span>
-            <span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==-1">付款不足</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==0">未付款</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==1">已付款未发货</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==2">已发货</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==3">已完成</span>
-        </div>
-        <div class="wddd_box2">
-            <span style="margin-left:3%;">
-                共计{{Order.Quantity}}件商品
-                <span style="margin-left:3%;">
-                    合计:<span style="color:#ff0c4b;">{{Order.Money}}</span>
-                </span>
-            </span>
-            <a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="orderdetails(Order)">详情</a>
-        </div>
-    </div>
-    <div class="gwc_box" style="margin-top:15px;" v-for="Order in PickUpOrderList" v-if="!ShowOrder">
-        <img class="gwc_img" src="~/Areas/resource/img/mobile/defaultimg1.png">
-        <div class="gwc_box2">
-            <span class="gwc_text">订单号：{{Order.Code}}</span>
-            <span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==2">付款不足</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==0">未付款</span>
-            <span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==1">已付款</span>
-        </div>
-        <div class="wddd_box2">
-            <span style="margin-left:3%;">
-                共计{{Order.Quantity}}个项目
-                <span style="margin-left:3%;">
-                    合计:<span style="color:#ff0c4b;">{{Order.Money}}</span>
-                </span>
-            </span>
-            <a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="pickuporderdetails(Order)">详情</a>
-        </div>
-    </div>
-    <img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
+	<div class="top_box">
+		<div class="top_box_text">我的订单</div>
+		<a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
+		<a class="top_box2"></a>
+		<a><img src="~/Areas/resource/img/mobile/home.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="home"></a>
+	</div>
+	<div class="nav_box" style="position:relative; box-shadow:none;">
+		@*<div>
+				<a><img src="~/Areas/resource/img/mobile/dfk.png"></a><br>
+				待付款
+			</div>
+			<div>
+				<a><img src="~/Areas/resource/img/mobile/dsh.png"></a><br>
+				待收货
+			</div>
+			<div>
+				<a><img src="~/Areas/resource/img/mobile/ysh.png"></a><br>
+				已完成
+			</div>
+			<div>
+				<a><img src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
+				现场订单
+			</div>*@
+		<div id="storeorder" v-on:click="storeorder" style="width:25%;">
+			<a><img style="width:35px;" src="~/Areas/resource/img/mobile/ysh.png"></a><br>
+			商城订单
+		</div>
+		<div id="pickuporder" v-on:click="pickuporder" style="width:25%;">
+			<a><img style="width:35px;" src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
+			接车单
+		</div>
+		<div id="crowdorder" v-on:click="crowdorder" style="width:25%;">
+			<a><img style="width:35px;" src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
+			拼单
+		</div>
+		<div id="bargainorder" v-on:click="bargainorder" style="width:25%;">
+			<a><img style="width:35px;" src="~/Areas/resource/img/mobile/xcdd.png"></a><br>
+			砍价
+		</div>
+	</div>
+	<div class="wddd_box">
+		<div class="wddd_input">
+			<input type="text" style="color:#ddd" placeholder="订单号" class="pass_box">
+			<a><img src="~/Areas/resource/img/mobile/ss.png" style="width:6%; margin-top:10px; float:right; margin-right:4%;"></a>
+		</div>
+	</div>
+	<div class="gwc_box" style="margin-top:15px;" v-for="Order in OrderList" v-if="ShowOrder == 0">
+		<img class="gwc_img" src="~/Areas/resource/img/mobile/defaultimg1.png">
+		<div class="gwc_box2">
+			<span class="gwc_text">订单号：{{Order.Code}}</span>
+			<span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==-1">付款不足</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==0">未付款</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==1">已付款未发货</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==2">已发货</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==3">已完成</span>
+		</div>
+		<div class="wddd_box2">
+			<span style="margin-left:3%;">
+				共计{{Order.Quantity}}件商品
+				<span style="margin-left:3%;">
+					合计:<span style="color:#ff0c4b;">{{Order.Money}}</span>
+				</span>
+			</span>
+			<a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="orderdetails(Order)">详情</a>
+		</div>
+	</div>
+	<div class="gwc_box" style="margin-top:15px;" v-for="Order in PickUpOrderList" v-if="ShowOrder == 1">
+		<img class="gwc_img" src="~/Areas/resource/img/mobile/defaultimg1.png">
+		<div class="gwc_box2">
+			<span class="gwc_text">订单号：{{Order.Code}}</span>
+			<span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==2">付款不足</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==0">未付款</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.Status==1">已付款</span>
+		</div>
+		<div class="wddd_box2">
+			<span style="margin-left:3%;">
+				共计{{Order.Quantity}}个项目
+				<span style="margin-left:3%;">
+					合计:<span style="color:#ff0c4b;">{{Order.Money}}</span>
+				</span>
+			</span>
+			<a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="pickuporderdetails(Order)">详情</a>
+		</div>
+	</div>
+	<div class="gwc_box" style="margin-top:15px;" v-for="Order in MerchantCrowdOrderList" v-if="ShowOrder == 2">
+		<img class="gwc_img" v-bind:src="Order.ImgUrl">
+		<div class="gwc_box2">
+			<span class="gwc_text">拼单：{{Order.Name}}</span>
+			<span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.IsOrdered==0">未下单</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.IsOrdered==1">已下单</span>
+		</div>
+		<div class="wddd_box2">
+			<span style="margin-left:3%;">
+				@*共计{{Order.Quantity}}个项目*@
+				<span style="margin-left:3%;">
+					合计:<span style="color:#ff0c4b;">{{Order.Price}}</span>
+				</span>
+			</span>
+			<a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="merchantcrowdorderdetails(Order)">详情</a>
+		</div>
+	</div>
+	<div class="gwc_box" style="margin-top:15px;" v-for="Order in MerchantBargainOrderList" v-if="ShowOrder == 3">
+		<img class="gwc_img" v-bind:src="Order.ImgUrl">
+		<div class="gwc_box2">
+			<span class="gwc_text">拼单：{{Order.Name}}</span>
+			<span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.IsOrdered==0">未下单</span>
+			<span class="gwc_text" style="margin-top:2px;" v-if="Order.IsOrdered==1">已下单</span>
+		</div>
+		<div class="wddd_box2">
+			@*<span style="margin-left:3%;">
+				共计{{Order.Quantity}}个项目
+				<span style="margin-left:3%;">
+					合计:<span style="color:#ff0c4b;">{{Order.Money}}</span>
+				</span>
+			</span>*@
+			<a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="merchantbargainorderdetails(Order)">详情</a>
+		</div>
+	</div>
+	<img src="~/Areas/resource/img/mobile/daodile.png" class="shop_box6">
 </div>
 
 @section scripts{
@@ -137,14 +181,29 @@
         wxConfig();
     </script>
     <script type="text/javascript">
-        var mch = $.getUrlParam('mch');
-        _viewModel = new Vue({
-            el: '#myorder',
-            data: {
-                OrderList: [],
-                PickUpOrderList: [],
-                ShowOrder: true,
-            },
+		var mch = $.getUrlParam('mch');
+		var showorder = sessionStorage.getItem('showorder');
+		if (showorder == null || showorder == '') {
+			showorder = 0;
+			$('#storeorder').css({ color: '#e8cc61' }).siblings().css({ color: '' });
+		} else if (showorder == 0) {
+			$('#storeorder').css({ color: '#e8cc61' }).siblings().css({ color: '' });
+		} else if (showorder == 1) {
+			$('#pickuporder').css({ color: '#e8cc61' }).siblings().css({ color: '' });
+		} else if (showorder == 2) {
+			$('#crowdorder').css({ color: '#e8cc61' }).siblings().css({ color: '' });
+		} else if (showorder == 3) {
+			$('#bargainorder').css({ color: '#e8cc61' }).siblings().css({ color: '' });
+		}
+		_viewModel = new Vue({
+			el: '#myorder',
+			data: {
+				OrderList: [],
+				PickUpOrderList: [],
+				MerchantCrowdOrderList: [],
+				MerchantBargainOrderList: [],
+				ShowOrder: showorder,
+			},
             methods: {
                 shop: function (event) {
                     window.location.href = "/Mobile/Customer/Shop?mch=" + mch;
@@ -169,27 +228,46 @@
                     });
                 },
                 orderdetails: function (data, event) {
-                    sessionStorage.setItem('isorder', this.ShowOrder);
+                    sessionStorage.setItem('isorder', true);
                     sessionStorage.setItem('order', JSON.stringify(data));
                     window.location.href = "/Mobile/Customer/OrderDetails?mch=" + mch;
                 },
                 pickuporderdetails: function (data, event) {
-                    sessionStorage.setItem('isorder', this.ShowOrder);
+                    sessionStorage.setItem('isorder', false);
                     sessionStorage.setItem('pickuporder', JSON.stringify(data));
-                    window.location.href = "/Mobile/Customer/OrderDetails?mch=" + mch;
-                },
+					window.location.href = "/Mobile/Customer/OrderDetails?mch=" + mch;
+				},
+				merchantcrowdorderdetails: function (data, event) {
+					//sessionStorage.setItem('isorder', this.ShowOrder);
+					sessionStorage.setItem('merchantcrowdorder', JSON.stringify(data));
+					window.location.href = "/Mobile/Customer/MyMerchantCrowdOrderDetails?mch=" + mch;
+				},
+				merchantbargainorderdetails: function (data, event) {
+					sessionStorage.setItem('merchantbargainorder', JSON.stringify(data));
+					window.location.href = "/Mobile/Customer/MyMerchantBargainOrderDetails?mch=" + mch;
+				},
                 home: function (event) {
                     window.location.href = "/Mobile/Customer/Home?mch=" + mch;
                 },
                 back: function (event) {
                     history.back(-1);
                 },
-                storeorder: function (event) {
-                    this.ShowOrder = true;
+				storeorder: function (event) {
+					$('#storeorder').css({ color: '#e8cc61' }).siblings().css({ color: '' });
+                    this.ShowOrder = 0;
                 },
-                pickuporder: function (event) {
-                    this.ShowOrder = false;
-                },
+				pickuporder: function (event) {
+					$('#pickuporder').css({ color: '#e8cc61' }).siblings().css({ color: '' });
+                    this.ShowOrder = 1;
+				},
+				crowdorder: function (event) {
+					$('#crowdorder').css({ color: '#e8cc61' }).siblings().css({ color: '' });
+					this.ShowOrder = 2;
+				},
+				bargainorder: function (event) {
+					$('#bargainorder').css({ color: '#e8cc61' }).siblings().css({ color: '' });
+					this.ShowOrder = 3;
+				},
             }
         });
 
@@ -297,5 +375,80 @@
         }
         getmypickuporder();
 
+		function getmymerchantcrowdorder() {
+			var member = sessionStorage.getItem('member');
+			if (member == null || member == '')
+				return;
+			member = JSON.parse(member);
+			$.ajax({
+				url: '/api/MerchantCrowdOrderRecord?MemberID=' + member.MemberID,
+				type: 'GET',
+				headers: { 'CompanyCode': mch },
+				beforeSend: function () {
+					$.showLoading();
+				},
+				success: function (res) {
+					$.hideLoading();
+					if (res.IsSuccessful) {
+						if (res.Data != null) {
+							//for (var i = 0; i < res.Data.length; i++) {
+							//	var quantity = 0;
+							//	if (res.Data[i].MerchantCrowdOrderList != null) {
+							//		for (var j = 0; j < res.Data[i].MerchantCrowdOrderList.length; j++) {
+							//			quantity += res.Data[i].MerchantCrowdOrderList[j].Quantity;
+							//		}
+							//	}
+							//	res.Data[i].Quantity = quantity;
+							//}
+							_viewModel.MerchantCrowdOrderList = res.Data;
+						}
+					} else {
+						$.alert(res.ErrorMessage);
+					}
+				},
+				error: function () {
+					$.hideLoading();
+				}
+			})
+		}
+		getmymerchantcrowdorder();
+
+		function getmymerchantbargainorder() {
+			var member = sessionStorage.getItem('member');
+			if (member == null || member == '')
+				return;
+			member = JSON.parse(member);
+			$.ajax({
+				url: '/api/MerchantBargainOrderRecord?MemberID=' + member.MemberID,
+				type: 'GET',
+				headers: { 'CompanyCode': mch },
+				beforeSend: function () {
+					$.showLoading();
+				},
+				success: function (res) {
+					$.hideLoading();
+					if (res.IsSuccessful) {
+						if (res.Data != null) {
+							//for (var i = 0; i < res.Data.length; i++) {
+							//	var quantity = 0;
+							//	if (res.Data[i].MerchantCrowdOrderList != null) {
+							//		for (var j = 0; j < res.Data[i].MerchantCrowdOrderList.length; j++) {
+							//			quantity += res.Data[i].MerchantCrowdOrderList[j].Quantity;
+							//		}
+							//	}
+							//	res.Data[i].Quantity = quantity;
+							//}
+							_viewModel.MerchantBargainOrderList = res.Data;
+						}
+					} else {
+						$.alert(res.ErrorMessage);
+					}
+				},
+				error: function () {
+					$.hideLoading();
+				}
+			})
+		}
+		getmymerchantbargainorder();
     </script>
 }

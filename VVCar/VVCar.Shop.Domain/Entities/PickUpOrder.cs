@@ -20,6 +20,12 @@ namespace VVCar.Shop.Domain.Entities
         }
 
         /// <summary>
+        /// 会员ID
+        /// </summary>
+        [Display(Name = "会员ID")]
+        public Guid MemberID { get; set; }
+
+        /// <summary>
         /// 订单号 
         /// </summary>
         [Display(Name = "订单号")]

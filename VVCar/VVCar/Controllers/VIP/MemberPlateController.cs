@@ -54,6 +54,23 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 通过车牌号获取会员
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetMemberByPlate"), AllowAnonymous]
+        public PagedActionResult<Member> GetMemberByPlate([FromUri]MemberPlateFilter filter)
+        {
+            return SafeGetPagedData<Member>(result =>
+            {
+                var totalCount = 0;
+                var data = MemberPlateService.GetMemberByPlate(filter, ref totalCount);
+                result.TotalCount = totalCount;
+                result.Data = data ;
+            });
+        }
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>

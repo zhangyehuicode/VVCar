@@ -52,6 +52,7 @@ namespace VVCar.VIP.Domain.Entities
         /// <summary>
         /// 最后修改人ID
         /// </summary>
+        [Display(Name = "最后修改人ID")]
         public Guid? LastUpdateUserID { get; set; }
 
         /// <summary>

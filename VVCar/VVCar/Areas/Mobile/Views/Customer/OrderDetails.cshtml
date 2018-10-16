@@ -164,10 +164,10 @@
                 data: {
                     Order: {},
                     PickUpOrder: {},
-                    ShowOrder: true,
+					ShowOrder: true,
                 },
                 methods: {
-                    back: function (event) {
+					back: function (event) {
                         history.back(-1);
                     },
                     home: function (event) {
@@ -186,12 +186,14 @@
             });
             var isorder = sessionStorage.getItem('isorder');
             if (isorder == 'true') {
-                var order = sessionStorage.getItem('order');
+				sessionStorage.setItem('showorder', 0);
+				var order = sessionStorage.getItem('order');
                 if (order != null && order != '') {
                     _viewModel.Order = JSON.parse(order);
                 }
             } else {
-                var pickuporder = sessionStorage.getItem('pickuporder');
+				sessionStorage.setItem('showorder', 1);
+				var pickuporder = sessionStorage.getItem('pickuporder');
                 if (pickuporder != null && pickuporder != '') {
                     _viewModel.PickUpOrder = JSON.parse(pickuporder);
                     _viewModel.ShowOrder = false;

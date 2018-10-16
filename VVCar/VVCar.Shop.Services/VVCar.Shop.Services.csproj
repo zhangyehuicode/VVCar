@@ -59,6 +59,7 @@
     <Compile Include="DomainServices\OrderItemService.cs" />
     <Compile Include="DomainServices\OrderPaymentDetailsService.cs" />
     <Compile Include="DomainServices\OrderService.cs" />
+    <Compile Include="DomainServices\PickUpOrderItemService.cs" />
     <Compile Include="DomainServices\PickUpOrderPaymentDetailsService.cs" />
     <Compile Include="DomainServices\PickUpOrderService.cs" />
     <Compile Include="DomainServices\PickUpOrderTaskDistributionService.cs" />

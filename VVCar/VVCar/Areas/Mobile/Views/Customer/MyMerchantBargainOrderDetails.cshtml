@@ -1,0 +1,400 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="mymerchantbargainorderdetails">
+	<img class="return-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back" />
+	<div class="main">
+		<div class="bargainorder-con">
+			<div>
+				<img class="bargainorder-img" v-bind:src=MerchantBargainOrder.ImgUrl />
+			</div>
+			<div class="bargainorder-name">{{MerchantBargainOrder.ProductName}}</div>
+			<div class="cbctable bargainorder-price-con width-fill">
+				<div class="cbctablecell bargainorder-price"><span style="font-size:13px;">￥</span>{{MerchantBargainOrder.Price}}</div>
+				<div class="cbctablecell bargainorder-pricesale">￥{{MerchantBargainOrder.PriceSale}}</div>
+				@*<div class="cbctablecell bargainorder-count">已拼666件</div>*@
+			</div>
+			<div class="bargainorder-name">{{MerchantBargainOrder.Name}}</div>
+		</div>
+		<div class="peoplecount-con">已有<span style="color:#e02d28;margin:0 3px;">{{MerchantBargainOrder.JoinPeople}}</span>人参与<span style="font-size:13px;">（最多<span style="color:#e02d28;">{{MerchantBargainOrder.PeopleCount}}</span>人参与）</span></div>
+		<div v-for="Item in MerchantBargainOrder.MerchantBargainOrderRecordItemList">
+			<div class="peoplecount-con" v-if="MerchantBargainOrder.MemberID!=Item.MemberID">会员：{{Item.MemberName}}帮您省：<span style="font-size:13px;">￥</span>{{Item.Price}}</div>
+		</div>
+	</div>
+	<div class="bottomactioncon" v-on:click="join" v-bind:class="bargainClass">
+		<div>￥{{MerchantBargainOrder.FinalPrice}}</div>
+		<div>帮兄弟砍个价,谢了!</div>
+	</div>
+	<div class="bottomactioncon" v-on:click="buy" v-if="!MerchantBargainOrder.IsOrdered&&MerchantBargainOrder.MemberID==MyInfo.ID" v-bind:class="buyClass">
+		<div>￥{{MerchantBargainOrder.FinalPrice}}</div>
+		<div>立即下单</div>
+	</div>
+	<div class="bottomactioncon" v-if="MerchantBargainOrder.IsOrdered">
+		<div>￥{{MerchantBargainOrder.FinalPrice}}</div>
+		<div>已下单</div>
+	</div>
+</div>
+
+@section scripts{
+	<style type="text/css">
+		.main {
+			background: #f5f5f4;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 50px;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		.cbctable {
+			display: table;
+		}
+
+		.cbctablecell {
+			display: table-cell;
+		}
+
+		.bottomactioncon {
+			height: 50px;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			width: 100%;
+			text-align: center;
+			background: #e02d28;
+			color: #fff;
+			font-size: 15px;
+		}
+
+		.bargainorder-con {
+			background: #fff;
+		}
+
+		.bargainorder-img {
+			width: 100%;
+			height: 250px;
+		}
+
+		.width-fill {
+			width: 100%;
+		}
+
+		.bargainorder-name {
+			font-size: 15px;
+			padding: 0px 13px 10px 13px;
+		}
+
+		.bargainorder-price-con {
+			margin: 0 0px 5px 0px;
+		}
+
+		.bargainorder-price {
+			font-size: 23px;
+			color: #e80c1c;
+			width: 60px;
+			padding: 0 10px 0 13px;
+		}
+
+		.bargainorder-pricesale {
+			font-size: 13px;
+			color: #545456;
+			text-decoration: line-through;
+		}
+
+		.bargainorder-count {
+			font-size: 13px;
+			color: #a8a8a8;
+			float: right;
+			margin-right: 13px;
+		}
+
+		.peoplecount-con {
+			height: 30px;
+			line-height: 30px;
+			padding: 5px 13px;
+			background: #fff;
+			font-size: 15px;
+			margin-top: 3px;
+			letter-spacing: 1px;
+		}
+
+		.bargainorderrules-con {
+			padding: 10px 13px;
+			background: #fff;
+			font-size: 13px;
+			margin-top: 3px;
+			letter-spacing: 1px;
+			color: #58585a;
+		}
+
+		.return-img {
+			width: 33px;
+			position: fixed;
+			top: 20px;
+			left: 20px;
+			z-index: 1;
+			opacity: 0.5;
+		}
+
+		.show {
+			display: inline;
+		}
+
+		.hide {
+			display: none;
+		}
+	</style>
+	<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+	<link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script type="text/javascript">
+        $(function () {
+            var mch = $.getUrlParam('mch');
+            var coid = $.getUrlParam('coid');
+            var isadd = $.getUrlParam('isadd') == 'true';
+            if (isadd && (coid == null || coid=='')) {
+                $.alert('点击右上角分享朋友/朋友圈，开始砍价！');
+            }
+            var corid = $.getUrlParam('corid');
+        var merchantbargainorder = sessionStorage.getItem('merchantbargainorder');
+        //if (bargainorder == null || bargainorder == '')
+        //    return;
+        merchantbargainorder = JSON.parse(merchantbargainorder);
+			_viewModel = new Vue({
+				el: '#mymerchantbargainorderdetails',
+				data: {
+					MyInfo: {},
+					MerchantBargainOrder: {},
+					IsMember: false,
+					Isbargained: false,
+				},
+				computed: {
+					bargainClass: function () {
+						return {
+							show: !this.Isbargained,
+							hide: this.Isbargained,
+						}
+					},
+					buyClass: function () {
+						return {
+							show: this.Isbargained,
+							hide: !this.Isbargained,
+						}
+					}
+				},
+            methods: {
+                register: function (event) {
+                    if (!_viewModel.IsMember)
+                        window.location.href = "/Mobile/Customer/Index?mch=" + mch;
+                },
+				back: function (event) {
+					sessionStorage.setItem('showorder', 3);
+                    history.back(-1);
+				},
+				join: function (event) {
+					if (_viewModel.MerchantBargainOrder.JoinPeople <= _viewModel.MerchantBargainOrder.PeopleCount) {
+						$.ajax({
+							url: '/api/MerchantBargainOrderRecord/AddMerchantBargainOrderRecordItem',
+							type: 'POST',
+							data: {
+								MerchantBargainOrderRecordID: _viewModel.MerchantBargainOrder.ID,
+								MemberID: _viewModel.MyInfo.ID,
+							},
+							headers: { 'CompanyCode': mch },
+							beforeSend: function () {
+								$.showLoading();
+							},
+							success: function (res) {
+								$.hideLoading();
+								if (res.IsSuccessful) {
+									if (res.Data != null) {
+										_viewModel.MerchantBargainOrder.JoinPeople = res.Data.JoinPeople;
+										_viewModel.Isbargained = true;
+										$.alert('您已加入发起砍价成功，请点击右上角分享朋友/朋友圈，让优惠进行到底！');
+										window.location.reload();
+									}
+								} else {
+									$.alert(res.ErrorMessage);
+								}
+							},
+							error: function () {
+								$.hideLoading();
+							}
+						});
+					} else {
+						$.alert('砍价人数已达上限');
+					}
+				},
+                buy: function (event) {
+                    //if (_viewModel.MerchantBargainOrder.JoinPeople>=_viewModel.MerchantBargainOrder.PeopleCount) {
+                        $.confirm('立即下单', function () {
+                            _viewModel.MerchantBargainOrder.Product.PriceSale = _viewModel.MerchantBargainOrder.FinalPrice;
+                            sessionStorage.setItem('product', JSON.stringify(_viewModel.MerchantBargainOrder.Product));
+                            sessionStorage.setItem('isfromcod', 'true');
+                            sessionStorage.setItem('corid', _viewModel.MerchantBargainOrder.ID);
+                            window.location.href = "/Mobile/Customer/ProductDetails?mch=" + mch;
+                        });
+                    //} else {
+                    //    $.alert('未达到拼单人数');
+                    //}
+                }
+            }
+            });
+			if (merchantbargainorder != null && merchantbargainorder != '') {
+				_viewModel.MerchantBargainOrder = merchantbargainorder;
+			}
+
+            function getmymerchantorder(id) {
+                $.ajax({
+                    url: '/api/MerchantBargainOrderRecord?ID=' + id,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.MerchantBargainOrder = res.Data[0];
+                                getMember(_viewModel.MerchantBargainOrder);
+                            }
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
+            function getMember(bargainorder) {
+				$.ajax({
+					url: '/api/Member?WeChatOpenID=@ViewBag.OpenId',
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.showLoading();
+					},
+					success: function (res) {
+						$.hideLoading();
+						if (res.IsSuccessful) {
+							if (res.Data != null) {
+								if (res.Data.length > 0) {
+									_viewModel.MyInfo = res.Data[0];
+									_viewModel.IsMember = true;
+									_viewModel.MerchantBargainOrder.MerchantBargainOrderRecordItemList.forEach(function (item) {
+										if (item.MemberID == _viewModel.MyInfo.ID) {
+											_viewModel.Isbargained = true;
+										}
+									});
+									//if (coid != null && coid != "" && merchantbargainorder != null && merchantbargainorder != '') {
+									//	sessionStorage.setItem('merchantbargainorder', JSON.stringify(merchantbargainorder));
+									//	window.location.href = "/Mobile/Customer/MerchantBargainOrderDetails?mch=" + mch;
+									//} else if (merchantbargainorder == null || merchantBargainorder == ''){
+									//	window.location.href = "/Mobile/Customer/MerchantBargainOrder?mch=" + mch;
+									//}
+								} else {
+									if (coid != null && coid != "") {
+										window.location.href = "/Mobile/Customer/Index?mch=" + mch + "&coid=" + coid;
+									} else {
+										window.location.href = "/Mobile/Customer/Index?mch=" + mch;
+									}
+								}
+							} else {
+								if (coid != null && coid != "") {
+									window.location.href = "/Mobile/Customer/Index?mch=" + mch + "&coid=" + coid;
+								} else {
+									window.location.href = "/Mobile/Customer/Index?mch=" + mch;
+								}
+							}
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					},
+					error: function () {
+						$.hideLoading();
+					}
+				});
+			}
+
+            if (corid != null && corid != '') {
+                getmymerchantorder(corid);
+            } else if (coid != null && coid != "") {
+                getmymerchantorder(coid);
+            } else {
+                getMember(merchantbargainorder);
+            }
+
+            function wxConfig() {
+                $.ajax({
+                    type: "POST",
+                    url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + encodeURIComponent(document.URL),
+                    datatype: "json",
+                    success: function (data) {
+                        if (data.IsSuccessful) {
+                            var temp = data.Data;
+                            wx.config({
+                                debug: false,
+                                appId: temp.appId,
+                                timestamp: temp.timestamp,
+                                nonceStr: temp.nonceStr,
+                                signature: temp.signature,
+                                jsApiList: [
+                                    'checkJsApi',
+                                    'onMenuShareTimeline',
+                                    'onMenuShareAppMessage',
+                                    'onMenuShareQQ',
+                                    'onMenuShareWeibo',
+                                    'hideOptionMenu',
+                                    'hideAllNonBaseMenuItem',
+                                    'showMenuItems',
+                                    'closeWindow',
+                                    'scanQRCode',
+                                ]
+                            });
+                            wx.ready(function () {
+                                //wx.hideAllNonBaseMenuItem();
+                                console.log('ready');
+                                wx.onMenuShareAppMessage({
+                                    title: "【砍价】"+_viewModel.MerchantBargainOrder.Name,
+                                    desc: '砍价助力！分享即享低价！',
+                                    link: document.URL + '&coid=' + _viewModel.MerchantBargainOrder.ID,
+                                    imgUrl: document.location.origin + _viewModel.MerchantBargainOrder.ImgUrl,
+                                    success: function (res) {
+                                    }
+                                });
+                                wx.onMenuShareTimeline({
+                                    title: "【砍价】" + _viewModel.MerchantBargainOrder.Name, // 分享标题
+                                    link: document.URL + '&coid=' + _viewModel.MerchantBargainOrder.ID, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                                    imgUrl: document.location.origin + _viewModel.MerchantBargainOrder.ImgUrl, // 分享图标
+                                    success: function () {
+                                        // 用户点击了分享后执行的回调函数
+                                    }
+                                });
+                            });
+                            } else {
+                        }
+                    },
+                    complete: function (xmlHttpRequest, textStatus) {
+                    },
+                    error: function (xmlHttpRequest, textStatus) {
+                    }
+                });
+            };
+            wxConfig();
+
+        });
+	</script>
+}
+}
+
+

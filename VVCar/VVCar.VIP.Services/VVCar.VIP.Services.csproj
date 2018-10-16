@@ -98,6 +98,10 @@
     <Compile Include="DomainServices\MemberGroupService.cs" />
     <Compile Include="DomainServices\MemberPlateService.cs" />
     <Compile Include="DomainServices\MemberService.cs" />
+    <Compile Include="DomainServices\MerchantBargainOrderRecordService.cs" />
+    <Compile Include="DomainServices\MerchantBargainOrderService.cs" />
+    <Compile Include="DomainServices\MerchantCrowdOrderRecordService.cs" />
+    <Compile Include="DomainServices\MerchantCrowdOrderService.cs" />
     <Compile Include="DomainServices\RechargeHistoryService.cs" />
     <Compile Include="DomainServices\RechargePlanService.cs" />
     <Compile Include="DomainServices\RecruitmemtService.cs" />

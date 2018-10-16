@@ -5,43 +5,127 @@
 }
 
 <div id="quickorder">
-    <div class="toubu">
-        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
-        <div class="title">工作终端</div>
-        <a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
-    </div>
-    <div class="touxiang platenum">
-        <span class="srcph">快捷开单-请输入车牌号码<span class="greenplate" style="background-color:blue;color:white;padding:2px 7px 2px 7px;margin-left:5px;font-size:13px;">蓝牌</span></span>
-        @*<form action="" method="get">
-                <select name="" class="kjkd_select" style="appearance:none;-moz-appearance:none;-webkit-appearance:none;">
-                    <option value="0">闽</option>
-                </select>
-            </form>*@
-        <input id="province" type="text" value="" class="kjkd_select" maxlength="1">
-        <input type="text" value="" class="kjkd_select" maxlength="1">
-        <input type="text" value="" class="kjkd_select" maxlength="1">
-        <input type="text" value="" class="kjkd_select" maxlength="1">
-        <input type="text" value="" class="kjkd_select" maxlength="1">
-        <input type="text" value="" class="kjkd_select" maxlength="1">
-        <input type="text" value="" class="kjkd_select" maxlength="1">
-        <input id="greennum" type="text" value="" class="kjkd_select" maxlength="1" hidden="hidden">
-        @*<div class="kjkd_text2">非会员，首次/多次消费</div>*@
-    </div>
-    <div class="platecon" id="uploadPlateImageTop">
-        @*v-on:click="chooseImage"*@
-        @*<input class="fileinput" id="fileupload" type="file" name="files[]" accept="image/*">*@
-        <input class="fileinput" type="file" accept="image/*">@*(this)*@@*onchange='handleinputchange'*@
-        <img class="plateimg" />
-    </div>
-    <div class="uploadimgcon" id="uploadPlateImage">
-        <span class="btn btn-default plateconpre">
-            <img class="addplateimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="licenceplate"><br>
-            @*<input class="fileinputbuttoninput" id="fileupload" type="file" name="files[]" accept="image/*">*@
-            <input class="fileinput" type="file" accept="image/*">@*(this)*@@*onchange='handleinputchange'*@
-        </span>
-        <div class="platebtmtips">车牌拍照，自动识别</div>
-    </div>
-    <a class="kjtd" style="margin-top:100px; margin-bottom:25px;" v-on:click="openorder">接车单</a>
+	<div class="toubu">
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+		<div class="title">工作终端</div>
+		<a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+	</div>
+	<div class="touxiang platenum">
+		<span class="srcph">快捷开单-请输入车牌号码<span v-bind:class="plateClass" style="padding:2px 7px 2px 7px;margin-left:5px;font-size:13px;" v-on:click="changeplate">蓝牌</span></span>
+		@*<form action="" method="get">
+				<select name="" class="kjkd_select" style="appearance:none;-moz-appearance:none;-webkit-appearance:none;">
+					<option value="0">闽</option>
+				</select>
+			</form>*@
+		<input id="province" type="text" value="" class="plate_select" maxlength="1" readonly="readonly" v-on:click="inputprovince">
+		<input id="alphanum1" type="text" value="" class="plate_select" maxlength="1" readonly="readonly" v-on:click="inputalphanum(1)">
+		<input id="alphanum2" type="text" value="" class="plate_select" maxlength="1" readonly="readonly" v-on:click="inputalphanum(2)">
+		<input id="alphanum3" type="text" value="" class="plate_select" maxlength="1" readonly="readonly" v-on:click="inputalphanum(3)">
+		<input id="alphanum4" type="text" value="" class="plate_select" maxlength="1" readonly="readonly" v-on:click="inputalphanum(4)">
+		<input id="alphanum5" type="text" value="" class="plate_select" maxlength="1" readonly="readonly" v-on:click="inputalphanum(5)">
+		<input id="alphanum6" type="text" value="" class="plate_select" maxlength="1" readonly="readonly" v-on:click="inputalphanum(6)">
+		<input id="alphanum7" type="text" value="" class="plate_select" maxlength="1" hidden="hidden" readonly="readonly" v-on:click="inputalphanum(7)">
+		@*<div class="kjkd_text2">非会员，首次/多次消费</div>*@
+	</div>
+	<div v-bind:class="keyboardClass">
+		<div class="province" v-bind:class="provinceClass">
+			@*<input type="text" value="京" class="kjkd_select" maxlength="1" readonly="readonly" v-on:click="selectprovince('京')">*@
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('京')">京</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('津')">津</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('冀')">冀</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('晋')">晋</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('蒙')">蒙</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('辽')">辽</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('吉')">吉</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('黑')">黑</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('沪')">沪</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('苏')">苏</div>
+
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('浙')">浙</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('皖')">皖</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('闽')">闽</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('赣')">赣</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('鲁')">鲁</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('豫')">豫</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('鄂')">鄂</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('湘')">粤</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('桂')">桂</div>
+
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('琼')">琼</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('渝')">渝</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('川')">川</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('贵')">贵</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('云')">云</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('藏')">藏</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('陕')">陕</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('甘')">甘</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('青')">青</div>
+
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('宁')">宁</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('新')">新</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('台')">台</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('港')">港</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('澳')">澳</div>
+		</div>
+		<div class="alphanum" v-bind:class="alphanumClass">
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('0')">0</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('1')">1</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('2')">2</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('3')">3</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('4')">4</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('5')">5</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('6')">6</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('7')">7</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('8')">8</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('9')">9</div>
+
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('A')">A</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('B')">B</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('C')">C</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('D')">D</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('E')">E</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('F')">F</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('G')">G</div>
+
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('H')">H</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('I')">I</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('J')">J</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('K')">K</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('L')">L</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('M')">M</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('N')">N</div>
+
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('O')">O</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('P')">P</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('Q')">Q</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('R')">R</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('S')">S</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('T')">T</div>
+
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('U')">U</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('V')">V</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('W')">W</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('X')">X</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('Y')">Y</div>
+			<div class="kjkd_select" style="padding-top:6px;" v-on:click="selectprovince('Z')">Z</div>
+		</div>
+		<a class="recognize" v-on:click="recognizeplate">拍照识别</a>
+	</div>
+	<div class="platecon" id="uploadPlateImageTop" v-bind:class="plateImgClass">
+		@*v-on:click="chooseImage"*@
+		@*<input class="fileinput" id="fileupload" type="file" name="files[]" accept="image/*">*@
+		<input class="fileinput" type="file" accept="image/*">@*(this)*@@*onchange='handleinputchange'*@
+		<img class="plateimg" />
+	</div>
+	<div class="uploadimgcon" id="uploadPlateImage" v-bind:class="plateBoardClass">
+		<span class="btn btn-default plateconpre">
+			<img class="addplateimg" src="~/Areas/resource/img/mobile/staff/jh.png" id="licenceplate"><br>
+			@*<input class="fileinputbuttoninput" id="fileupload" type="file" name="files[]" accept="image/*">*@
+			<input class="fileinput" type="file" accept="image/*">@*(this)*@@*onchange='handleinputchange'*@
+		</span>
+		<div class="platebtmtips">车牌拍照，自动识别</div>
+	</div>
+	<a class="kjtd" style="margin-top:100px; margin-bottom:25px;" v-on:click="openorder">接车单</a>
 </div>
 
 @section scripts{
@@ -51,17 +135,40 @@
             border-radius: 0;
         }
 
-        .uploadimgcon {
-            width: 94%;
-            float: left;
-            margin-top: 30px;
-            border-radius: 10px;
-            border: 3px dashed #ddd;
-            text-align: center;
-            margin-left: 3%;
-            box-sizing: border-box;
-            height: 200px;
-        }
+		.recognize {
+			width: 100px;
+			margin-right: 5%;
+			float: right;
+			background-color: #51b3f0;
+			text-align: center;
+			color: #fff;
+			font-size: 15px;
+		}
+
+		.plate_select {
+			width: 11%;
+			margin-left: 2.875%;
+			float: left;
+			height: 40px;
+			font-size: 15px;
+			color: #2d2d30;
+			border: 1px solid #ccc;
+			box-sizing: border-box;
+			text-align: center;
+			outline-style: none;
+		}
+
+		.uploadimgcon {
+			width: 94%;
+			float: left;
+			margin-top: 30px;
+			border-radius: 10px;
+			border: 3px dashed #ddd;
+			text-align: center;
+			margin-left: 3%;
+			box-sizing: border-box;
+			height: 200px;
+		}
 
         .platecon {
             position: absolute;
@@ -132,6 +239,65 @@
             width: 25px;
             margin-top: 50px;
         }
+
+		.blue {
+			background-color: blue;
+			color: white;
+		}
+
+		.gray {
+			background-color: gray;
+			color: white;
+		}
+
+		.green {
+			background-color: green;
+			color: white;
+		}
+
+		.keyboard {
+			width: 94%;
+			float: left;
+			margin-top: 30px;
+			border-radius: 10px;
+			border: 3px dashed #ddd;
+			text-align: center;
+			margin-left: 3%;
+			box-sizing: border-box;
+			height: 210px;
+		}
+
+		.province {
+			width: 94%;
+			float: left;
+			margin-top: 30px;
+			border-radius: 10px;
+			border: 3px dashed #ddd;
+			text-align: center;
+			margin-left: 3%;
+			box-sizing: border-box;
+			height: 210px;
+		}
+
+		.alphanum {
+			width: 94%;
+			float: left;
+			margin-top: 30px;
+			border-radius: 10px;
+			border: 3px dashed #ddd;
+			text-align: center;
+			margin-left: 3%;
+			box-sizing: border-box;
+			height: 250px;
+		}
+
+		.show {
+			display:inline;
+		}
+
+		.hide {
+			display:none;
+		}
     </style>
     @Styles.Render("~/content/jquery-fileupd")
     @Scripts.Render("~/bundles/jquery-fileupd")
@@ -280,11 +446,52 @@
             $('.title').text('店员工作终端');
         }
         var mch = $.getUrlParam('mch');
-        _payBillViewModel = new Vue({
-            el: '#quickorder',
-            data: {
-                User: {},
-            },
+		_payBillViewModel = new Vue({
+			el: '#quickorder',
+			data: {
+				KeyBoard: false,
+				ProvinceKeyBoard: true,
+				GreenPlate: false,
+				User: {},
+			},
+			computed: {
+				plateClass: function () {
+					return {
+						green: this.GreenPlate,
+						blue: !this.GreenPlate,
+					}
+				},
+				keyboardClass: function () {
+					return {
+						show: this.KeyBoard,
+						hide: !this.KeyBoard,
+					}
+				},
+				provinceClass: function () {
+					return {
+						show: this.KeyBoard && this.ProvinceKeyBoard,
+						hide: this.KeyBoard && !this.ProvinceKeyBoard,
+					}
+				},
+				alphanumClass: function() {
+					return {
+						show: this.KeyBoard && !this.ProvinceKeyBoard,
+						hide: this.KeyBoard && this.ProvinceKeyBoard,
+					}
+				},
+				plateImgClass: function () {
+					return {
+						show: !this.KeyBoard,
+						hide: this.KeyBoard,
+					}
+				},
+				plateBoardClass: function () {
+					return {
+						show: !this.KeyBoard,
+						hide: this.KeyBoard,
+					}
+				},
+			},
             methods: {
                 back: function (event) {
                     history.back(-1);
@@ -295,7 +502,41 @@
                     } else {
                         window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
                     }
-                },
+				},
+				inputprovince: function (event) {
+					$('#province').addClass('gray').siblings().removeClass('gray');
+					_payBillViewModel.KeyBoard = true;
+					_payBillViewModel.ProvinceKeyBoard = true;
+				},
+				selectprovince: function (data, event) {
+					$('.gray').val(data);
+					$('.gray').next().addClass('gray').siblings().removeClass('gray');
+					_payBillViewModel.KeyBoard = true;
+					_payBillViewModel.ProvinceKeyBoard = false;
+				},
+				inputalphanum: function (data, event) {
+					$('#alphanum' + data).addClass('gray').siblings().removeClass('gray');
+					_payBillViewModel.KeyBoard = true;
+					_payBillViewModel.ProvinceKeyBoard = false;
+				},
+				selectalphanum: function(data, event) {
+					$('.gray').val(data);
+					$('.gray').next().addClass('gray').siblings().removeClass('gray');
+				},
+				changeplate: function (event) {
+					this.GreenPlate = !this.GreenPlate;
+					if (this.GreenPlate) {
+						$('#alphanum7').show();
+						$('.plate_select').css('width', '9%');
+					} else {
+						$('#alphanum7').hide();
+						$('.plate_select').css('width', '11%');
+					}
+				},
+				recognizeplate: function () {
+					$('#province').removeClass('gray').siblings().removeClass('gray');
+					_payBillViewModel.KeyBoard = false;
+				},
                 openorder: function (event) {
                     var platenum = '';
 					var numinput = $('.platenum').find('input:Visible');
@@ -385,20 +626,6 @@
 					$(this).next('.kjkd_select').focus();
 				}
 			});
-
-			$('.greenplate').on('click', function () {
-				if ($('#greennum').is(":hidden")) {
-					$('#greennum').show();
-					$('.greenplate').css('background-color', 'green');
-					$('.greenplate').html('绿牌');
-					$('.kjkd_select').css('width', '9%');
-				} else {
-					$('.greenplate').css('background-color', 'blue');
-					$('#greennum').hide();
-					$('.greenplate').html('蓝牌');
-					$('.kjkd_select').css('width', '11%');
-				}
-			})
 
             // 全局对象，不同function使用传递数据
             const imgFile = {};

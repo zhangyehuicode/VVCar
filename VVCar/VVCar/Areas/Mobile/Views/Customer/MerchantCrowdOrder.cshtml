@@ -1,0 +1,217 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="merchantcrowdorder">
+	<img class="return-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back" />
+	<div class="main">
+		<div class="crowdorder-con" v-for="MerchantCrowdOrder in MerchantCrowdOrders" v-if="MerchantCrowdOrder.ProductID==ProductID" v-on:click="crowdorderdetails(MerchantCrowdOrder)">
+			<div>
+				<img class="crowdorder-img" v-bind:src=MerchantCrowdOrder.ImgUrl />
+			</div>
+			<div class="width-fill crowdorder-name">{{MerchantCrowdOrder.Name}}</div>
+			<div class="width-fill crowdorder-name">{{MerchantCrowdOrder.ProductName}}</div>
+			<div class="cbctable width-fill crowdorder-price-con">
+				<div class="cbctablecell crowdorder-price"><span style="font-size:13px;">￥</span>{{MerchantCrowdOrder.Price}}</div>
+				<div class="cbctablecell crowdorder-pricesale">￥{{MerchantCrowdOrder.PriceSale}}</div>
+			</div>
+			<div class="width-fill crowdorder-name">拼单人数：{{MerchantCrowdOrder.PeopleCount}}</div>
+		</div>
+	</div>
+	@*<div class="bottomactioncon cbctable">
+			<div class="cbctablecell" style="vertical-align:middle;" v-on:click="home">
+				<div>
+					<img class="btnicon" src="~/Areas/resource/img/mobile/homeselected.png" />
+				</div>
+				<div class="btnfont" style="color:#7859f2;" v-on:click="home">首页</div>
+			</div>
+			<div class="cbctablecell" style="vertical-align:middle;" v-on:click="wk">
+				<div>
+					<img class="btnicon" style="width:35px;margin-bottom:-13px;margin-top:-2px;" src="~/Areas/resource/img/mobile/kuang.png" />
+				</div>
+				<div class="btnfont" v-on:click="wk">挖矿</div>
+			</div>
+			<div class="cbctablecell" style="vertical-align:middle;" v-on:click="myinfo">
+				<div>
+					<img class="btnicon" src="~/Areas/resource/img/mobile/wd.png" />
+				</div>
+				<div class="btnfont" v-on:click="myinfo">我的</div>
+			</div>
+			<div class="cbctablecell" style="vertical-align:middle;" v-on:click="nearby">
+				<div>
+					<img class="btnicon" src="~/Areas/resource/img/mobile/location.png" />
+				</div>
+				<div class="btnfont" v-on:click="nearby">附近</div>
+			</div>
+		</div>*@
+</div>
+
+@section scripts{
+	<style type="text/css">
+		.main {
+			background: #f4f4f4;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 50px;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		.cbctable {
+			display: table;
+		}
+
+		.cbctablecell {
+			display: table-cell;
+		}
+
+		.bottomactioncon {
+			height: 50px;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			border-top: 1px #dcdcdc solid;
+			width: 100%;
+			text-align: center;
+			background: #faf9f9;
+			color: #999;
+		}
+
+		.btnicon {
+			width: 25px;
+			margin-bottom: -6px;
+			margin-right: 3px;
+		}
+
+		.btnfont {
+			font-size: 10px;
+		}
+
+		.crowdorder-con {
+			margin: 13px 10px 0 10px;
+			background: #fff;
+		}
+
+		.crowdorder-img {
+			width: 100%;
+			height: 220px;
+		}
+
+		.width-fill {
+			width: 100%;
+		}
+
+		.crowdorder-name {
+			font-size: 15px;
+			margin: 5px 10px;
+		}
+
+		.crowdorder-price-con {
+			margin: 0 10px 5px 10px;
+		}
+
+		.crowdorder-price {
+			font-size: 18px;
+			color: #e80c1c;
+			width: 60px;
+		}
+
+		.crowdorder-pricesale {
+			font-size: 13px;
+			color: #545456;
+			text-decoration: line-through;
+		}
+
+		.crowdorder-count {
+			font-size: 13px;
+			color: #a8a8a8;
+			float: right;
+			margin-right: 25px;
+		}
+
+		.return-img {
+			width: 33px;
+			position: fixed;
+			top: 20px;
+			left: 20px;
+			z-index: 1;
+			opacity: 0.5;
+		}
+	</style>
+	<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+	<link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script type="text/javascript">
+        function wxConfig() {
+			var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            //wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+	</script>
+	<script type="text/javascript">
+		var mch = $.getUrlParam('mch');
+		var productid = $.getUrlParam('productid');
+		_viewModel = new Vue({
+			el: '#merchantcrowdorder',
+			data: {
+				ProductID: productid,
+				MerchantCrowdOrders: [],
+			},
+			methods: {
+				back: function (event) {
+					history.back(-1);
+				},
+				crowdorderdetails: function (data, event) {
+					sessionStorage.setItem('merchantcrowdorder', JSON.stringify(data));
+					window.location.href = '/Mobile/Customer/MerchantCrowdOrderDetails?mch=' + mch;
+				}
+			}
+		})
+		var merchantCrowdOrders = sessionStorage.getItem('merchantcrowdorders');
+		if (merchantCrowdOrders != null) {
+			_viewModel.MerchantCrowdOrders = JSON.parse(merchantCrowdOrders);
+		}
+	</script>
+}

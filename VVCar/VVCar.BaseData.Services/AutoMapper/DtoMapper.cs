@@ -203,6 +203,18 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.CarBitCoinProduct.Stock))
                 .ForMember(dest => dest.ImgUrl, opt => opt.MapFrom(src => src.CarBitCoinProduct.ImgUrl));
 
+                cfg.CreateMap<MerchantCrowdOrder, MerchantCrowdOrderDto>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(dest => dest.PriceSale, opt => opt.MapFrom(src => src.Product.PriceSale))
+                .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Product.Stock))
+                .ForMember(dest => dest.ImgUrl, opt => opt.MapFrom(src => src.Product.ImgUrl));
+
+                cfg.CreateMap<MerchantBargainOrder, MerchantBargainOrderDto>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(dest => dest.PriceSale, opt => opt.MapFrom(src => src.Product.PriceSale))
+                .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.Product.Stock))
+                .ForMember(dest => dest.ImgUrl, opt => opt.MapFrom(src => src.Product.ImgUrl));
+
                 cfg.CreateMap<CrowdOrderRecord, CrowdOrderRecordDto>()
                 .ForMember(dest => dest.ProductID, opt => opt.MapFrom(src => src.CrowdOrder.CarBitCoinProductID))
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.CrowdOrder.CarBitCoinProduct.Name))
@@ -213,6 +225,31 @@ namespace VVCar.BaseData.Services
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.CrowdOrder.Price))
                 .ForMember(dest => dest.PeopleCount, opt => opt.MapFrom(src => src.CrowdOrder.PeopleCount))
                 .ForMember(dest => dest.CarBitCoinProduct, opt => opt.MapFrom(src => src.CrowdOrder.CarBitCoinProduct));
+
+                cfg.CreateMap<MerchantCrowdOrderRecord, MerchantCrowdOrderRecordDto>()
+                .ForMember(dest => dest.ProductID, opt => opt.MapFrom(src => src.MerchantCrowdOrder.ProductID))
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.MerchantCrowdOrder.Product.Name))
+                .ForMember(dest => dest.PriceSale, opt => opt.MapFrom(src => src.MerchantCrowdOrder.Product.PriceSale))
+                .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.MerchantCrowdOrder.Product.Stock))
+                .ForMember(dest => dest.ImgUrl, opt => opt.MapFrom(src => src.MerchantCrowdOrder.Product.ImgUrl))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.MerchantCrowdOrder.Name))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.MerchantCrowdOrder.Price))
+                .ForMember(dest => dest.PeopleCount, opt => opt.MapFrom(src => src.MerchantCrowdOrder.PeopleCount))
+                .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.MerchantCrowdOrder.Product));
+
+                cfg.CreateMap<MerchantBargainOrderRecord, MerchantBargainOrderRecordDto>()
+               .ForMember(dest => dest.ProductID, opt => opt.MapFrom(src => src.MerchantBargainOrder.ProductID))
+               .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.MerchantBargainOrder.Product.Name))
+               .ForMember(dest => dest.PriceSale, opt => opt.MapFrom(src => src.MerchantBargainOrder.Product.PriceSale))
+               .ForMember(dest => dest.Stock, opt => opt.MapFrom(src => src.MerchantBargainOrder.Product.Stock))
+               .ForMember(dest => dest.ImgUrl, opt => opt.MapFrom(src => src.MerchantBargainOrder.Product.ImgUrl))
+               .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.MerchantBargainOrder.Name))
+               .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.MerchantBargainOrder.Price))
+               .ForMember(dest => dest.PeopleCount, opt => opt.MapFrom(src => src.MerchantBargainOrder.PeopleCount))
+               .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.MerchantBargainOrder.Product));
+
+                cfg.CreateMap<MerchantBargainOrderRecordItem, MerchantBargainOrderRecordItemDto>()
+                .ForMember(dest => dest.MemberName, opt => opt.MapFrom(src => src.Member.Name));
 
                 cfg.CreateMap<UnsaleProductSettingItem, UnsaleProductSettingItemDto>()
                 .ForMember(dest => dest.ProductCode, opt => opt.MapFrom(src => src.Product.Code))

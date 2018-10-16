@@ -91,6 +91,11 @@
     <Compile Include="Dtos\MemberLoginDto.cs" />
     <Compile Include="Dtos\MemberRegisterDto.cs" />
     <Compile Include="Dtos\MemberRightDto.cs" />
+    <Compile Include="Dtos\MerchantBargainOrderDto.cs" />
+    <Compile Include="Dtos\MerchantBargainOrderRecordDto.cs" />
+    <Compile Include="Dtos\MerchantBargainOrderRecordItemDto.cs" />
+    <Compile Include="Dtos\MerchantCrowdOrderDto.cs" />
+    <Compile Include="Dtos\MerchantCrowdOrderRecordDto.cs" />
     <Compile Include="Dtos\NewUpdateRechargePlanDto.cs" />
     <Compile Include="Dtos\ReceiveCouponDto.cs" />
     <Compile Include="Dtos\ReceiveGameDto.cs" />
@@ -147,6 +152,12 @@
     <Compile Include="Entities\MemberPoint.cs" />
     <Compile Include="Entities\MemberPointAdditionalRule.cs" />
     <Compile Include="Entities\MemberPointHistory.cs" />
+    <Compile Include="Entities\MerchantBargainOrder.cs" />
+    <Compile Include="Entities\MerchantBargainOrderRecord.cs" />
+    <Compile Include="Entities\MerchantBargainOrderRecordItem.cs" />
+    <Compile Include="Entities\MerchantCrowdOrder.cs" />
+    <Compile Include="Entities\MerchantCrowdOrderRecord.cs" />
+    <Compile Include="Entities\MerchantCrowdOrderRecordItem.cs" />
     <Compile Include="Entities\PointExchangeCoupon.cs" />
     <Compile Include="Entities\RechargeHistory.cs" />
     <Compile Include="Entities\RechargePlan.cs" />
@@ -228,6 +239,10 @@
     <Compile Include="Filters\MemberGradeFilter.cs" />
     <Compile Include="Filters\MemberGroupFilter.cs" />
     <Compile Include="Filters\MemberPlateFilter.cs" />
+    <Compile Include="Filters\MerchantBargainOrderFilter.cs" />
+    <Compile Include="Filters\MerchantBargainOrderRecordFilter.cs" />
+    <Compile Include="Filters\MerchantCrowdOrderFilter.cs" />
+    <Compile Include="Filters\MerchantCrowdOrderRecordFilter.cs" />
     <Compile Include="Filters\RechargeHistoryFilter.cs" />
     <Compile Include="Filters\RechargePlanFilter.cs" />
     <Compile Include="Filters\RecruitmentFilter.cs" />
@@ -272,6 +287,10 @@
     <Compile Include="Services\IMemberGroupService.cs" />
     <Compile Include="Services\IMemberPlateService.cs" />
     <Compile Include="Services\IMemberService.cs" />
+    <Compile Include="Services\IMerchantBargainOrderRecordService.cs" />
+    <Compile Include="Services\IMerchantBargainOrderService.cs" />
+    <Compile Include="Services\IMerchantCrowdOrderRecordService.cs" />
+    <Compile Include="Services\IMerchantCrowdOrderService.cs" />
     <Compile Include="Services\IRechargeHistoryService.cs" />
     <Compile Include="Services\IRechargePlanService.cs" />
     <Compile Include="Services\IRecruitmentService.cs" />

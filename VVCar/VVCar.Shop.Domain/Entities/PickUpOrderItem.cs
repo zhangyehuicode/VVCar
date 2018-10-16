@@ -65,6 +65,18 @@ namespace VVCar.Shop.Domain.Entities
         public decimal PriceSale { get; set; }
 
         /// <summary>
+        /// 是否优惠
+        /// </summary>
+        [Display(Name = "是否优惠")]
+        public bool IsReduce { get; set; }
+
+        /// <summary>
+        /// 优惠价
+        /// </summary>
+        [Display(Name = "优惠价")]
+        public decimal ReducedPrice { get; set; }
+
+        /// <summary>
         /// 折扣系数
         /// </summary>
         [Display(Name = "折扣系数")]

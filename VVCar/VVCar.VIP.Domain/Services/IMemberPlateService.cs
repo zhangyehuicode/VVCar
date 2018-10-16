@@ -13,6 +13,14 @@ namespace VVCar.VIP.Domain.Services
     public interface IMemberPlateService : IDomainService<IRepository<MemberPlate>, MemberPlate, Guid>
     {
         /// <summary>
+        /// 通过车牌获取会员
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        IEnumerable<Member> GetMemberByPlate(MemberPlateFilter filter, ref int totalCount);
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>

@@ -127,10 +127,10 @@ namespace VVCar.Controllers.VIP
         {
             return SafeGetPagedData<MemberDto>((result) =>
             {
-                if (!ModelState.IsValid)//表示没有过滤参数成功匹配，判定为错误请求。
-                {
-                    throw new DomainException("查询参数错误。");
-                }
+                //if (!ModelState.IsValid)//表示没有过滤参数成功匹配，判定为错误请求。
+                //{
+                //    throw new DomainException("查询参数错误。");
+                //}
                 var pagedData = this.MemberService.Search(filter);
                 result.Data = pagedData.Items;
                 result.TotalCount = pagedData.TotalCount;

@@ -50,6 +50,9 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<UnsaleProductSettingItem> UnsaleProductSettingItemRepo { get => UnitOfWork.GetRepository<IRepository<UnsaleProductSettingItem>>(); }
 
+        IRepository<MerchantCrowdOrder> MerchantCrowdOrderRepo { get => UnitOfWork.GetRepository<IRepository<MerchantCrowdOrder>>(); }
+
+        IRepository<Product> ProductRepo { get => UnitOfWork.GetRepository<IRepository<Product>>(); }
         #endregion
 
         protected override bool DoValidate(Product entity)

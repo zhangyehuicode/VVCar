@@ -101,6 +101,11 @@ namespace VVCar.Shop.Services.DomainServices
             entity.CreatedDate = DateTime.Now;
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
 
+            if (entity.StaffID == null || entity.StaffID == Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            {
+                entity.StaffID = AppContext.CurrentSession.UserID;
+                entity.StaffName = AppContext.CurrentSession.UserName;
+            }
             if (string.IsNullOrEmpty(entity.Code))
                 entity.Code = GetTradeNo();
 
@@ -116,6 +121,24 @@ namespace VVCar.Shop.Services.DomainServices
             PickUpOrderTaskDistribution(entity.PickUpOrderItemList.ToList());
             entity.PlateNumber = entity.PlateNumber.ToUpper();
             return base.Add(entity);
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public override bool Delete(Guid key)
+        {
+            var entity = Repository.GetByKey(key);
+            if (entity == null)
+                throw new DomainException("数据不存在");
+            if (entity.Status == EPickUpOrderStatus.Payed)
+                throw new DomainException("订单已付款,不能删除!");
+            if (entity.Status == EPickUpOrderStatus.UnEnough)
+                throw new DomainException("订单付款付款不足,不能删除!");
+            entity.IsDeleted = true;
+            return Repository.Update(entity) > 0;
         }
 
         private void PickUpOrderTaskDistribution(List<PickUpOrderItem> pickUpOrderItemList)
@@ -169,8 +192,15 @@ namespace VVCar.Shop.Services.DomainServices
                 decimal totalMoney = 0;
                 entity.PickUpOrderItemList.ForEach(t =>
                 {
+                    if (t.IsReduce)
+                    {
+                        totalMoney += t.Quantity * t.ReducedPrice;
+                    }
+                    else
+                    {
+                        totalMoney += t.Quantity * t.PriceSale;
+                    }
                     //t.Money = t.Quantity * t.PriceSale;
-                    totalMoney += t.Quantity * t.PriceSale;
                 });
                 entity.Money = totalMoney;
             }
@@ -206,13 +236,19 @@ namespace VVCar.Shop.Services.DomainServices
             return Repository.Update(entity) > 0;
         }
 
-        public IEnumerable<PickUpOrder> Search(PickUpOrderFilter filter, ref int totalCount)
+        public IEnumerable<PickUpOrderDto> Search(PickUpOrderFilter filter, ref int totalCount)
         {
             var queryable = Repository.GetInclude(t => t.PickUpOrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter.ID.HasValue)
                 queryable = queryable.Where(t => t.ID == filter.ID.Value);
+            if (!string.IsNullOrEmpty(filter.Code))
+                queryable = queryable.Where(t => t.Code == filter.Code);
             if (!string.IsNullOrEmpty(filter.PlateNumber))
-                queryable = queryable.Where(t => t.PlateNumber == filter.PlateNumber);
+                queryable = queryable.Where(t => t.PlateNumber.Contains(filter.PlateNumber));
+            if (!string.IsNullOrEmpty(filter.StaffName))
+                queryable = queryable.Where(t => t.StaffName.Contains(filter.StaffName));
+            if (filter.Status.HasValue)
+                queryable = queryable.Where(t => t.Status == filter.Status);
             if (filter.CreatedDate.HasValue)
             {
                 var date = filter.CreatedDate.Value.Date;
@@ -222,7 +258,17 @@ namespace VVCar.Shop.Services.DomainServices
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.OrderByDescending(t => t.CreatedDate).ToArray();
+            var result = queryable.MapTo<PickUpOrderDto>().OrderByDescending(t => t.CreatedDate).ToArray();
+            result.ForEach(t =>
+            {
+                if (t.MemberID != null && t.MemberID!=Guid.Parse("00000000-0000-0000-0000-000000000000"))
+                {
+                    var member = MemberRepo.GetByKey(t.MemberID);
+                    t.MemberName = member.Name;
+                    t.MemberMobilePhoneNo = member.MobilePhoneNo;
+                }
+            });
+            return result;
         }
 
         /// <summary>

@@ -49,7 +49,6 @@
 		}];
 		me.columnLines = true;
 		me.columns = [
-			{ header: '广告标题', dataIndex: 'Title', flex: 1, },
 			{
 				header: '封面图片', dataIndex: 'ImgUrl', width: 100,
 				renderer: function (value) {
@@ -58,6 +57,7 @@
 					}
 				}
 			},
+			{ header: '广告标题', dataIndex: 'Title', flex: 1, },
 			{ header: '广告内容', dataIndex: 'Content', flex: 1, },
 			{
 				header: '创建时间', dataIndex: 'CreatedDate', width: 100,

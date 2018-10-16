@@ -19,7 +19,7 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        IEnumerable<PickUpOrder> Search(PickUpOrderFilter filter, ref int totalCount);
+        IEnumerable<PickUpOrderDto> Search(PickUpOrderFilter filter, ref int totalCount);
 
         /// <summary>
         /// 结账

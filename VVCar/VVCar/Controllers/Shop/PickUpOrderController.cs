@@ -18,6 +18,10 @@ namespace VVCar.Controllers.Shop
     [RoutePrefix("api/PickUpOrder")]
     public class PickUpOrderController : BaseApiController
     {
+        /// <summary>
+        /// ctor.
+        /// </summary>
+        /// <param name="pickUpOrderService"></param>
         public PickUpOrderController(IPickUpOrderService pickUpOrderService)
         {
             PickUpOrderService = pickUpOrderService;
@@ -40,14 +44,28 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public JsonActionResult<bool> Delete(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return PickUpOrderService.Delete(id);
+            });
+        }
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpGet, AllowAnonymous]
-        public PagedActionResult<PickUpOrder> Search([FromUri]PickUpOrderFilter filter)
+        public PagedActionResult<PickUpOrderDto> Search([FromUri]PickUpOrderFilter filter)
         {
-            return SafeGetPagedData<PickUpOrder>((result) =>
+            return SafeGetPagedData<PickUpOrderDto>((result) =>
             {
                 var totalCount = 0;
                 var data = PickUpOrderService.Search(filter, ref totalCount);

@@ -29,7 +29,7 @@ namespace VVCar.Shop.Data.Mapping
                 .HasMaxLength(50);
 
             Property(t => t.Introduction)
-                .HasMaxLength(100);
+                .HasMaxLength(200);
 
             Property(t => t.CreatedUser)
                 .IsRequired()

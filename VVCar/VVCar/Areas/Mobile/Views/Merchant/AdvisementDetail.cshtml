@@ -5,26 +5,35 @@
 }
 
 <div id="advisementdetails">
-	<div class="toubu">
+	<div class="toubu" v-bind:class="hideClass">
 		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px;float:left;margin-left:3%;margin-top:18px;"></a>
 		<div class="title">广告详情</div>
 		<a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px;float:right;margin-right:3%;margin-top:18px;" /></a>
 	</div>
-	<div class="kcgl_box">
+	<div class="kcgl_box" v-bind:class="hideClass">
 		<div class="kcgl">广告标题</div>
 		<div class="kcgl2">
 			@*<img class="gwc_img" v-bind:src=ImgUrl width=80 height=80>*@
 			<span>{{Title}}</span>
 		</div>
-		<div class="content">
-		</div>
 	</div>
+	<div class="content"></div>
+	<div class="kcd_btn2" v-bind:class="hideClass" v-on:click="share">分享朋友圈</div>
+	<div class="kcd_btn2" v-bind:class="showClass" v-on:click="leave">离开</div>
 </div>
 
 @section scripts{
 	<style type="text/css">
 		.content {
 			margin: 0 13px 20px 13px;
+		}
+
+		.show {
+			display:inline;
+		}
+
+		.hide {
+			display:none;
 		}
 	</style>
 	<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
@@ -66,6 +75,7 @@
 							wx.onMenuShareTimeline({
 								title: advisement.Title,
 								link: window.location.origin + '/Mobile/Merchant/AdvisementDetail?mch=' + mch + '&adid=' + advisement.ID,
+								imgUrl: window.location.origin + advisement.ImgUrl,
 								success: function (res) {
 
 								}
@@ -73,7 +83,7 @@
 
 							wx.onMenuShareAppMessage({
 								title: advisement.Title,
-								desc: '',
+								desc: '国庆快乐',
 								link: window.location.origin + '/Mobile/Merchant/AdvisementDetail?mch=' + mch + '&adid=' + advisement.ID,
 								imgUrl: window.location.origin + advisement.ImgUrl,
 								success: function (res) {
@@ -144,7 +154,22 @@
 		_viewModel = new Vue({
 			el: '#advisementdetails',
 			data: {
+				IsHiden: false,
 				Title: '',
+			},
+			computed: {
+				hideClass: function () {
+					return {
+						show: !this.IsHiden,
+						hide: this.IsHiden,
+					}
+				},
+				showClass: function () {
+					return {
+						show: this.IsHiden,
+						hide: !this.IsHiden,
+					}
+				}
 			},
 			methods: {
 				home: function (event) {
@@ -157,13 +182,20 @@
 				back: function (event) {
 					history.back(-1);
 				},
+				share: function (event) {
+					$.alert('点击右上角按钮，选择发送到朋友圈');
+				},
+				leave: function () {
+					recordhistory();
+					wx.closeWindow();
+				}
 			}
 		});
 
 		function getAdvisement() {
 			if (advisement == null || advisement == '') {
 				if (adid != null && adid != '') {
-					$('.toubu').hide();
+					_viewModel.IsHiden = true;
 					$.ajax({
 						url: '/api/AdvisementSetting',
 						type: 'GET',
@@ -195,11 +227,20 @@
 			} else {
 				_viewModel.Title = advisement.Title;
 				$('.content').append(advisement.Content);
+				if (adid != null && adid != '') {
+					_viewModel.IsHiden = true;
+				} else {
+					_viewModel.IsHiden = false;
+				}
 			}
 		}
 		getAdvisement();
 
 		window.onbeforeunload = function(){
+			recordhistory();
+		}
+
+		function recordhistory() {
 			if (adid != null && adid != '') {
 				var enddate = new Date();
 				var time = (enddate.getTime() - startdate.getTime()) / 1000;

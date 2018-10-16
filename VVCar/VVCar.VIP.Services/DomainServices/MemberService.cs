@@ -98,6 +98,9 @@ namespace VVCar.VIP.Services.DomainServices
 
         IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
 
+        IMerchantCrowdOrderRecordService MerchantCrowdOrderRecordService { get => ServiceLocator.Instance.GetService<IMerchantCrowdOrderRecordService>(); }
+
+
         #endregion
 
         #region propertiesTemp
@@ -258,6 +261,8 @@ namespace VVCar.VIP.Services.DomainServices
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter != null)
             {
+                if (!string.IsNullOrEmpty(filter.WeChatOpenID))
+                    queryable = queryable.Where(p => p.WeChatOpenID == filter.WeChatOpenID);
                 if (filter.IsStockholder.HasValue)
                     queryable = queryable.Where(p => p.IsStockholder == filter.IsStockholder.Value);
                 if (!string.IsNullOrEmpty(filter.MobilePhoneNo))
@@ -440,7 +445,10 @@ namespace VVCar.VIP.Services.DomainServices
                             MerchantID = AppContext.CurrentSession.MerchantID,
                         });
                     }
-
+                    if (registerDto.MerchantCrowdOrderRecordID.HasValue)
+                    {
+                        MerchantCrowdOrderRecordService.JoinMerchantCrowdOrderRecord(registerDto.MerchantCrowdOrderRecordID.Value, newMember.ID);
+                    }
                     this.UnitOfWork.CommitTransaction();
 
                     //try
@@ -596,10 +604,14 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (ids == null || ids.Length < 1)
                 throw new DomainException("参数错误");
-            var memberList = this.Repository.GetQueryable(false).Where(t => ids.Contains(t.ID)).ToList();
+            var memberList = this.Repository.GetInclude(t => t.Card, true).Where(t => ids.Contains(t.ID)).ToList();
             if (memberList == null || memberList.Count() < 1)
                 throw new DomainException("数据不存在");
-            memberList.ForEach(t => t.IsDeleted = true);
+            memberList.ForEach(t =>
+            {
+                t.IsDeleted = true;
+                t.Card.IsDeleted = true;
+            });
             return Repository.Update(memberList) > 0;
         }
 
@@ -657,7 +669,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (string.IsNullOrEmpty(mobilePhoneNo))
                 return null;
-            return this.Repository.GetIncludes(false, "Card", "Card.CardType", "MemberGroup")//"Card", "OwnerGroup", "MemberGrade", "MemberGrade.GradeRights"
+            return this.Repository.GetIncludes(false, "Card", "Card.CardType", "MemberGroup").Where(t=> t.MerchantID == AppContext.CurrentSession.MerchantID)//"Card", "OwnerGroup", "MemberGrade", "MemberGrade.GradeRights"
                 .FirstOrDefault(t => t.MobilePhoneNo == mobilePhoneNo);
         }
 

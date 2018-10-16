@@ -204,6 +204,16 @@ namespace VVCar.Shop.Domain.Entities
         public DateTime? DeliveryDate { get; set; }
 
         /// <summary>
+        /// 拼单记录ID
+        /// </summary>
+        public Guid? MerchantCrowdOrderRecordID { get; set; }
+
+        /// <summary>
+        /// 砍价记录ID
+        /// </summary>
+        public Guid? MerchantBargainOrderRecordID { get; set; }
+
+        /// <summary>
         /// 商城订单子项
         /// </summary>
         public ICollection<OrderItem> OrderItemList { get; set; }

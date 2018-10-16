@@ -30,6 +30,27 @@ namespace VVCar.VIP.Services.DomainServices
             return base.Add(entity);
         }
 
+        /// <summary>
+        /// 通过车牌获取会员
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<Member> GetMemberByPlate(MemberPlateFilter filter, ref int totalCount)
+        {
+            if (string.IsNullOrEmpty(filter.PlateNumber))
+                throw new DomainException("车牌号错误");
+            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PlateNumber == filter.PlateNumber).Select(t => t.Member);
+            var result = queryable.ToList();
+            if (result.Count < 1) {
+                var member = new Member();
+                member.ID = Guid.Parse("00000000-0000-0000-0000-000000000000");
+                member.Name = "未注册会员";
+                result.Add(member);
+            }
+            return result;
+        }
+
         public IEnumerable<MemberPlate> Search(MemberPlateFilter filter, ref int totalCount)
         {
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);

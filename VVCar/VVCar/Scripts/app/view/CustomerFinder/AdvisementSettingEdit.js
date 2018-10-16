@@ -2,10 +2,14 @@
 	extend: 'Ext.window.Window',
 	alias: 'widget.AdvisementSettingEdit',
 	title: '编辑广告',
-	layout: 'fit',
-	width: 600,
+	//layout: 'fit',
+	width: 500,
+	height: 600,
 	bodyPadding: 5,
 	modal: true,
+	resizable: false,
+	autoScroll: true,
+	bodyStyle: 'overflow-y:auto; overflow-x:hidden;',
 	initComponent: function () {
 		var me = this;
 		var yesNoDictStore = Ext.create('WX.store.DataDict.YesNoTypeStore');
@@ -66,7 +70,7 @@
 				margin: '5 10 5 5',
 				name: 'Content',
 				fieldLabel: '内容',
-				height: 300,
+				height: 600,
 				maxLength: 3000,
 				allowBlank: true,
 				enableAlignments: true,

@@ -73,5 +73,10 @@ namespace VVCar.VIP.Domain.Dtos
         /// 父级会员ID
         /// </summary>
         public Guid? ParentMemberID { get; set; }
+
+        /// <summary>
+        /// 拼单记录ID
+        /// </summary>
+        public Guid? MerchantCrowdOrderRecordID { get; set; }
     }
 }

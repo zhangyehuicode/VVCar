@@ -1,0 +1,283 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="merchantcrowdorderdetails">
+	<img class="return-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back" />
+	<div class="main">
+		<div class="crowdorder-con">
+			<div>
+				<img class="crowdorder-img" v-bind:src=MerchantCrowdOrder.ImgUrl />
+			</div>
+			<div class="cbctable crowdorder-price-con width-fill">
+				<div class="cbctablecell crowdorder-price"><span style="font-size:13px;">￥</span>{{MerchantCrowdOrder.Price}}</div>
+				<div class="cbctablecell crowdorder-pricesale">￥{{MerchantCrowdOrder.PriceSale}}</div>
+			</div>
+			<div class="crowdorder-name">{{MerchantCrowdOrder.Name}}</div>
+		</div>
+		<div class="peoplecount-con">需<span style="color:#e02d28;margin:0 3px;">{{MerchantCrowdOrder.PeopleCount}}</span>人参与</div>
+		<div class="crowdorderrules-con">规则：发起拼单后，在我的拼单里面，选择一个已发起的拼单右上角转发分享，每新注册一个爱保养会员，拼单人数加一，直到满足拼单人数，可享受拼单价格并获得立即下单购买资格。</div>
+	</div>
+	<div class="bottomactioncon" v-on:click="crowdordering">
+		<div>￥{{MerchantCrowdOrder.Price}}</div>
+		<div>发起拼单</div>
+	</div>
+</div>
+
+@section scripts{
+	<style type="text/css">
+		.main {
+			background: #f5f5f4;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 50px;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		.cbctable {
+			display: table;
+		}
+
+		.cbctablecell {
+			display: table-cell;
+		}
+
+		.bottomactioncon {
+			height: 50px;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			width: 100%;
+			text-align: center;
+			background: #e02d28;
+			color: #fff;
+			font-size: 15px;
+		}
+
+		.crowdorder-con {
+			background: #fff;
+		}
+
+		.crowdorder-img {
+			width: 100%;
+			height: 250px;
+		}
+
+		.width-fill {
+			width: 100%;
+		}
+
+		.crowdorder-name {
+			font-size: 15px;
+			padding: 0px 13px 10px 13px;
+		}
+
+		.crowdorder-price-con {
+			margin: 0 0px 5px 0px;
+		}
+
+		.crowdorder-price {
+			font-size: 23px;
+			color: #e80c1c;
+			width: 60px;
+			padding: 0 10px 0 13px;
+		}
+
+		.crowdorder-pricesale {
+			font-size: 13px;
+			color: #545456;
+			text-decoration: line-through;
+		}
+
+		.crowdorder-count {
+			font-size: 13px;
+			color: #a8a8a8;
+			float: right;
+			margin-right: 13px;
+		}
+
+		.peoplecount-con {
+			height: 30px;
+			line-height: 30px;
+			padding: 5px 13px;
+			background: #fff;
+			font-size: 15px;
+			margin-top: 3px;
+			letter-spacing: 1px;
+		}
+
+		.crowdorderrules-con {
+			padding: 10px 13px;
+			background: #fff;
+			font-size: 13px;
+			margin-top: 3px;
+			letter-spacing: 1px;
+			color: #58585a;
+		}
+
+		.return-img {
+			width: 33px;
+			position: fixed;
+			top: 20px;
+			left: 20px;
+			z-index: 1;
+			opacity: 0.5;
+		}
+
+	</style>
+	<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+	<link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script type="text/javascript">
+		function wxConfig() {
+			var mch = $.getUrlParam('mch');
+			$.ajax({
+				type: "POST",
+				url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+				datatype: "json",
+				success: function (data) {
+					if (data.IsSuccessful) {
+						var temp = data.Data;
+						wx.config({
+							debug: false,
+							appId: temp.appId,
+							timestamp: temp.timestamp,
+							nonceStr: temp.nonceStr,
+							signature: temp.signature,
+							jsApiList: [
+								'checkJsApi',
+								'onMenuShareTimeline',
+								'onMenuShareAppMessage',
+								'onMenuShareQQ',
+								'onMenuShareWeibo',
+								'hideOptionMenu',
+								'hideAllNonBaseMenuItem',
+								'showMenuItems',
+								'closeWindow',
+								'scanQRCode',
+							]
+						});
+						wx.ready(function () {
+							//wx.hideAllNonBaseMenuItem();
+						});
+					} else {
+					}
+				},
+				complete: function (xmlHttpRequest, textStatus) {
+
+				},
+				error: function (xmlHttpRequest, textStatus) {
+
+				}
+			});
+		};
+		wxConfig();
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			var mch = $.getUrlParam('mch');
+			var merchantcrowdorder = sessionStorage.getItem('merchantcrowdorder');
+			if (merchantcrowdorder == null || merchantcrowdorder == '')
+				return;
+			merchantcrowdorder = JSON.parse(merchantcrowdorder);
+			_viewModel = new Vue({
+				el: '#merchantcrowdorderdetails',
+				data: {
+					IsMember: false,
+					MerchantCrowdOrder: {},
+					MerchantCrowdOrderRecord: {
+						MemberID: '',
+						MerchantCrowdOrderID: merchantcrowdorder.ID,
+						MerchantCrowdOrderRecordItemList: [{
+							MemberID: '',
+						}]
+					}
+				},
+				methods: {
+					back: function (event) {
+						history.back(-1);
+					},
+					crowdordering: function (event) {
+						if (this.IsMember) {
+							$.confirm('确认发起拼单？', function () {
+								addMerchantCrowdOrderRecord();
+							});
+						} else {
+							$.confirm('请先注册', function () {
+								window.location.href = "/Mobile/Customer/Index?mch=" + mch;
+							})
+						}
+					}
+				}
+			});
+
+			_viewModel.MerchantCrowdOrder = merchantcrowdorder;
+
+			function getMember() {
+				$.ajax({
+					url: '/api/Member?WeChatOpenID=' + '@ViewBag.OpenId',
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.showLoading();
+					},
+					success: function (res) {
+						if (res.IsSuccessful) {
+							if (res.Data != null) {
+								if (res.Data.length > 0) {
+									_viewModel.IsMember = true;
+									_viewModel.MerchantCrowdOrderRecord.MemberID = res.Data[0].ID;
+									_viewModel.MerchantCrowdOrderRecord.MerchantCrowdOrderRecordItemList[0].MemberID = res.Data[0].ID;
+								}
+							}
+						} else {
+							$.alert(res.ErroMessage);
+						}
+						$.hideLoading();
+					},
+					error: function () {
+						$.hideLoading();
+					}
+				})
+			}
+
+			getMember();
+
+			function addMerchantCrowdOrderRecord() {
+				$.ajax({
+					url: '/api/MerchantCrowdOrderRecord',
+					type: 'POST',
+					data: _viewModel.MerchantCrowdOrderRecord,
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.showLoading();
+					},
+					success: function (res) {
+						$.hideLoading();
+						if (res.IsSuccessful) {
+							if (res.Data != null) {
+								$.toast('发起成功', function () {
+									sessionStorage.setItem('merchantcrowdorder', JSON.stringify(res.Data));
+									window.location.href = "/Mobile/Customer/MyMerchantCrowdOrderDetails?mch=" + mch + "&isadd=true&corid=" + res.Data.ID;
+								})
+							}
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					},
+					error: function () {
+						$.hideLoading();
+					}
+				})
+			}
+		});
+	</script>
+}
+

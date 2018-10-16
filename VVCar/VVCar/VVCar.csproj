@@ -307,6 +307,7 @@
     <Compile Include="Controllers\Shop\OrderItemController.cs" />
     <Compile Include="Controllers\Shop\OrderPaymentDetailsController.cs" />
     <Compile Include="Controllers\Shop\PickUpOrderController.cs" />
+    <Compile Include="Controllers\Shop\PickUpOrderItemController.cs" />
     <Compile Include="Controllers\Shop\PickUpOrderPaymentDetailsController.cs" />
     <Compile Include="Controllers\Shop\PickUpOrderTaskDistributionController.cs" />
     <Compile Include="Controllers\Shop\ProductCategoryController.cs" />
@@ -344,6 +345,10 @@
     <Compile Include="Controllers\VIP\MemberGradeController.cs" />
     <Compile Include="Controllers\VIP\MemberGroupController.cs" />
     <Compile Include="Controllers\VIP\MemberPlateController.cs" />
+    <Compile Include="Controllers\VIP\MerchantBargainOrderController.cs" />
+    <Compile Include="Controllers\VIP\MerchantBargainOrderRecordController.cs" />
+    <Compile Include="Controllers\VIP\MerchantCrowdOrderController.cs" />
+    <Compile Include="Controllers\VIP\MerchantCrowdOrderRecordController.cs" />
     <Compile Include="Controllers\VIP\RechargeHistoryController.cs" />
     <Compile Include="Controllers\VIP\RechargePlanController.cs" />
     <Compile Include="Controllers\VIP\RecruitmentController.cs" />
@@ -451,6 +456,7 @@
     <Content Include="Areas\resource\img\mobile\7.png" />
     <Content Include="Areas\resource\img\mobile\8.png" />
     <Content Include="Areas\resource\img\mobile\9.jpg" />
+    <Content Include="Areas\resource\img\mobile\addperson.png" />
     <Content Include="Areas\resource\img\mobile\arrowr.png" />
     <Content Include="Areas\resource\img\mobile\asset.png" />
     <Content Include="Areas\resource\img\mobile\banner.jpg" />
@@ -466,6 +472,7 @@
     <Content Include="Areas\resource\img\mobile\cbcbac.jpg" />
     <Content Include="Areas\resource\img\mobile\cbcindex.png" />
     <Content Include="Areas\resource\img\mobile\close.png" />
+    <Content Include="Areas\resource\img\mobile\close_blue.png" />
     <Content Include="Areas\resource\img\mobile\coppermedal.png" />
     <Content Include="Areas\resource\img\mobile\cph.png" />
     <Content Include="Areas\resource\img\mobile\crowdorder.png" />
@@ -548,6 +555,7 @@
     <Content Include="Areas\resource\img\mobile\master\yybb.png" />
     <Content Include="Areas\resource\img\mobile\master\yzm2.png" />
     <Content Include="Areas\resource\img\mobile\master\zk.png" />
+    <Content Include="Areas\resource\img\mobile\modifyprice.png" />
     <Content Include="Areas\resource\img\mobile\music.png" />
     <Content Include="Areas\resource\img\mobile\my.png" />
     <Content Include="Areas\resource\img\mobile\nj.png" />
@@ -693,6 +701,10 @@
     <Content Include="Scripts\app\controller\Article.js" />
     <Content Include="Scripts\app\controller\CrowdOrder.js" />
     <Content Include="Scripts\app\controller\Logistics.js" />
+    <Content Include="Scripts\app\controller\MerchantBargainOrder.js" />
+    <Content Include="Scripts\app\controller\MerchantCrowdOrder.js" />
+    <Content Include="Scripts\app\controller\PickUpOrder.js" />
+    <Content Include="Scripts\app\controller\QuickOrder.js" />
     <Content Include="Scripts\app\controller\Tag.js" />
     <Content Include="Scripts\app\controller\CarBitCoinMember.js" />
     <Content Include="Scripts\app\controller\CarBitCoinOrder.js" />
@@ -760,6 +772,11 @@
     <Content Include="Scripts\app\model\BaseData\CrowdOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\LogisticsModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberGroupTreeModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MerchantBargainOrderModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MerchantCrowdOrderModel.js" />
+    <Content Include="Scripts\app\model\BaseData\PickUpOrderItemModel.js" />
+    <Content Include="Scripts\app\model\BaseData\PickUpOrderModel.js" />
+    <Content Include="Scripts\app\model\BaseData\QuickOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\TagModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinOrderItemModel.js" />
@@ -846,6 +863,11 @@
     <Content Include="Scripts\app\store\BaseData\CrowdOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\LogisticsStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberGroupLiteStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MerchantBargainOrderStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MerchantCrowdOrderStore.js" />
+    <Content Include="Scripts\app\store\BaseData\PickUpOrderItemStore.js" />
+    <Content Include="Scripts\app\store\BaseData\PickUpOrderStore.js" />
+    <Content Include="Scripts\app\store\BaseData\QuickOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\SalesmanStore.js" />
     <Content Include="Scripts\app\store\BaseData\TagStore.js" />
     <Content Include="Scripts\app\store\BaseData\CarBitCoinMemberStore.js" />
@@ -977,6 +999,16 @@
     <Content Include="Scripts\app\view\Logistics\Logistics.js" />
     <Content Include="Scripts\app\view\Logistics\SalesmanSelector.js" />
     <Content Include="Scripts\app\view\Member\MemberDetail.js" />
+    <Content Include="Scripts\app\view\MerchantBargainOrder\MerchantBargainOrderEdit.js" />
+    <Content Include="Scripts\app\view\MerchantBargainOrder\MerchantBargainOrderList.js" />
+    <Content Include="Scripts\app\view\MerchantBargainOrder\ProductSelector.js" />
+    <Content Include="Scripts\app\view\MerchantCrowdOrder\MerchantCrowdOrderEdit.js" />
+    <Content Include="Scripts\app\view\MerchantCrowdOrder\MerchantCrowdOrderList.js" />
+    <Content Include="Scripts\app\view\MerchantCrowdOrder\ProductSelector.js" />
+    <Content Include="Scripts\app\view\PickUpOrder\PickUpOrder.js" />
+    <Content Include="Scripts\app\view\PickUpOrder\PickUpOrderDetails.js" />
+    <Content Include="Scripts\app\view\PickUpOrder\ProductSelector.js" />
+    <Content Include="Scripts\app\view\QuickOrder\QuickOrderList.js" />
     <Content Include="Scripts\app\view\SystemSetting\SystemSettingEdit.js" />
     <Content Include="Scripts\app\view\Tag\TagEdit.js" />
     <Content Include="Scripts\app\view\Tag\TagList.js" />
@@ -1288,6 +1320,12 @@
     <Content Include="Areas\Mobile\Views\Merchant\AnalyseIndex.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\Analyse.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\AnalyseDetail.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MerchantCrowdOrderDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MerchantCrowdOrder.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MyMerchantCrowdOrderDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MerchantBargainOrder.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MerchantBargainOrderDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\MyMerchantBargainOrderDetails.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

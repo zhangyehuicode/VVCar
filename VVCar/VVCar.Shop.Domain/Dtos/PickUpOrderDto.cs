@@ -24,6 +24,21 @@ namespace VVCar.Shop.Domain.Dtos
         public Guid ID { get; set; }
 
         /// <summary>
+        /// 会员ID
+        /// </summary>
+        public Guid MemberID { get; set; }
+
+        /// <summary>
+        /// 会员名称
+        /// </summary>
+        public string MemberName { get; set; }
+
+        /// <summary>
+        /// 会员手机号
+        /// </summary>
+        public string MemberMobilePhoneNo { get; set; }
+
+        /// <summary>
         /// 门店名称
         /// </summary>
         public string DepartmentName { get; set; }

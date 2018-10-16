@@ -125,6 +125,7 @@
     <Compile Include="Filters\OrderFilter.cs" />
     <Compile Include="Filters\OrderItemFilter.cs" />
     <Compile Include="Filters\PickUpOrderFilter.cs" />
+    <Compile Include="Filters\PickUpOrderItemFilter.cs" />
     <Compile Include="Filters\ProductCategoryFilter.cs" />
     <Compile Include="Filters\ProductFilter.cs" />
     <Compile Include="Filters\ProductRetailStatisticsFilter.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Services\IOrderItemService.cs" />
     <Compile Include="Services\IOrderPaymentDetailsService.cs" />
     <Compile Include="Services\IOrderService.cs" />
+    <Compile Include="Services\IPickUpOrderItemService.cs" />
     <Compile Include="Services\IPickUpOrderPaymentDetailsService.cs" />
     <Compile Include="Services\IPickUpOrderService.cs" />
     <Compile Include="Services\IPickUpOrderTaskDistributionService.cs" />

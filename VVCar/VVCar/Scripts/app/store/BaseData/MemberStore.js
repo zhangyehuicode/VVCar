@@ -25,6 +25,7 @@
 			batchDelete: Ext.GlobalConfig.ApiDomainUrl + "api/Member/BatchDelete",
 			setStockholder: Ext.GlobalConfig.ApiDomainUrl + "api/Member/SetStockholder",
 			cancelStockholder: Ext.GlobalConfig.ApiDomainUrl + "api/Member/CancelStockholder",
+			getMemberByPlateNumber: Ext.GlobalConfig.ApiDomainUrl + "api/MemberPlate/GetMemberByPlate",
 		},
 	},
 	failure: function (response) {
@@ -197,6 +198,14 @@
 			url: this.proxy.api.cancelStockholder + '?id=' + id,
 			// jsonData: entities,
 			callback: cb
+		});
+	},
+	getMemberByPlateNumber: function (plateNumber, cb) {
+		Ext.Ajax.request({
+			method: "GET",
+			timeout: 300000,
+			url: this.proxy.api.getMemberByPlateNumber + '?plateNumber=' + plateNumber,
+			callback: cb,
 		});
 	}
 });

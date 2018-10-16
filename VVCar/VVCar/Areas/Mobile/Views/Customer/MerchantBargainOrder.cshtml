@@ -1,0 +1,217 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="merchantbargainorder">
+	<img class="return-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back" />
+	<div class="main">
+		<div class="bargainorder-con" v-for="MerchantBargainOrder in MerchantBargainOrders" v-if="MerchantBargainOrder.ProductID==ProductID" v-on:click="bargainorderdetails(MerchantBargainOrder)">
+			<div>
+				<img class="bargainorder-img" v-bind:src=MerchantBargainOrder.ImgUrl />
+			</div>
+			<div class="width-fill bargainorder-name">{{MerchantBargainOrder.Name}}</div>
+			<div class="width-fill bargainorder-name">{{MerchantBargainOrder.ProductName}}</div>
+			<div class="cbctable width-fill bargainorder-price-con">
+				<div class="cbctablecell bargainorder-price"><span style="font-size:13px;">￥</span>{{MerchantBargainOrder.Price}}</div>
+				<div class="cbctablecell bargainorder-pricesale">￥{{MerchantBargainOrder.PriceSale}}</div>
+			</div>
+			<div class="width-fill crowdorder-name">砍价人数：{{MerchantBargainOrder.PeopleCount}}</div>
+		</div>
+	</div>
+	@*<div class="bottomactioncon cbctable">
+			<div class="cbctablecell" style="vertical-align:middle;" v-on:click="home">
+				<div>
+					<img class="btnicon" src="~/Areas/resource/img/mobile/homeselected.png" />
+				</div>
+				<div class="btnfont" style="color:#7859f2;" v-on:click="home">首页</div>
+			</div>
+			<div class="cbctablecell" style="vertical-align:middle;" v-on:click="wk">
+				<div>
+					<img class="btnicon" style="width:35px;margin-bottom:-13px;margin-top:-2px;" src="~/Areas/resource/img/mobile/kuang.png" />
+				</div>
+				<div class="btnfont" v-on:click="wk">挖矿</div>
+			</div>
+			<div class="cbctablecell" style="vertical-align:middle;" v-on:click="myinfo">
+				<div>
+					<img class="btnicon" src="~/Areas/resource/img/mobile/wd.png" />
+				</div>
+				<div class="btnfont" v-on:click="myinfo">我的</div>
+			</div>
+			<div class="cbctablecell" style="vertical-align:middle;" v-on:click="nearby">
+				<div>
+					<img class="btnicon" src="~/Areas/resource/img/mobile/location.png" />
+				</div>
+				<div class="btnfont" v-on:click="nearby">附近</div>
+			</div>
+		</div>*@
+</div>
+
+@section scripts{
+	<style type="text/css">
+		.main {
+			background: #f4f4f4;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 50px;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+		}
+
+		.cbctable {
+			display: table;
+		}
+
+		.cbctablecell {
+			display: table-cell;
+		}
+
+		.bottomactioncon {
+			height: 50px;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			border-top: 1px #dcdcdc solid;
+			width: 100%;
+			text-align: center;
+			background: #faf9f9;
+			color: #999;
+		}
+
+		.btnicon {
+			width: 25px;
+			margin-bottom: -6px;
+			margin-right: 3px;
+		}
+
+		.btnfont {
+			font-size: 10px;
+		}
+
+		.bargainorder-con {
+			margin: 13px 10px 0 10px;
+			background: #fff;
+		}
+
+		.bargainorder-img {
+			width: 100%;
+			height: 220px;
+		}
+
+		.width-fill {
+			width: 100%;
+		}
+
+		.bargainorder-name {
+			font-size: 15px;
+			margin: 5px 10px;
+		}
+
+		.bargainorder-price-con {
+			margin: 0 10px 5px 10px;
+		}
+
+		.bargainorder-price {
+			font-size: 18px;
+			color: #e80c1c;
+			width: 60px;
+		}
+
+		.bargainorder-pricesale {
+			font-size: 13px;
+			color: #545456;
+			text-decoration: line-through;
+		}
+
+		.bargainorder-count {
+			font-size: 13px;
+			color: #a8a8a8;
+			float: right;
+			margin-right: 25px;
+		}
+
+		.return-img {
+			width: 33px;
+			position: fixed;
+			top: 20px;
+			left: 20px;
+			z-index: 1;
+			opacity: 0.5;
+		}
+	</style>
+	<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+	<link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script type="text/javascript">
+        function wxConfig() {
+			var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            //wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+	</script>
+	<script type="text/javascript">
+		var mch = $.getUrlParam('mch');
+		var productid = $.getUrlParam('productid');
+		_viewModel = new Vue({
+			el: '#merchantbargainorder',
+			data: {
+				ProductID: productid,
+				MerchantBargainOrders: [],
+			},
+			methods: {
+				back: function (event) {
+					history.back(-1);
+				},
+				bargainorderdetails: function (data, event) {
+					sessionStorage.setItem('merchantbargainorder', JSON.stringify(data));
+					window.location.href = '/Mobile/Customer/MerchantBargainOrderDetails?mch=' + mch;
+				}
+			}
+		})
+		var merchantBargainOrders = sessionStorage.getItem('merchantbargainorders');
+		if (merchantBargainOrders != null) {
+			_viewModel.MerchantBargainOrders = JSON.parse(merchantBargainOrders);
+		}
+	</script>
+}

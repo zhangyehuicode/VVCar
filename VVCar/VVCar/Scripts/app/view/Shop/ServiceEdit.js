@@ -303,7 +303,7 @@
                 xtype: 'form',
                 layout: 'hbox',
                 items: [{
-                    xtype: 'textfield',
+                    xtype: 'textareafield',
                     margin: '5 10 5 5',
                     name: 'Introduction',
                     fieldLabel: '产品介绍',
