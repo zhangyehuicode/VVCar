@@ -663,6 +663,7 @@
     <Content Include="Content\icons\login3.png" />
     <Content Include="Content\icons\logout.png" />
     <Content Include="Content\icons\minpro.png" />
+    <Content Include="Content\icons\openorder.png" />
     <Content Include="Content\icons\refresh.png" />
     <Content Include="Content\icons\reportLoss.png" />
     <Content Include="Content\icons\reset.png" />
@@ -776,6 +777,7 @@
     <Content Include="Scripts\app\model\BaseData\MerchantCrowdOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\PickUpOrderItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\PickUpOrderModel.js" />
+    <Content Include="Scripts\app\model\BaseData\PickUpOrderTaskDistributionModel.js" />
     <Content Include="Scripts\app\model\BaseData\QuickOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\TagModel.js" />
     <Content Include="Scripts\app\model\BaseData\CarBitCoinMemberModel.js" />
@@ -867,6 +869,7 @@
     <Content Include="Scripts\app\store\BaseData\MerchantCrowdOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\PickUpOrderItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\PickUpOrderStore.js" />
+    <Content Include="Scripts\app\store\BaseData\PickUpOrderTaskDistributionStore.js" />
     <Content Include="Scripts\app\store\BaseData\QuickOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\SalesmanStore.js" />
     <Content Include="Scripts\app\store\BaseData\TagStore.js" />
@@ -1008,6 +1011,7 @@
     <Content Include="Scripts\app\view\PickUpOrder\PickUpOrder.js" />
     <Content Include="Scripts\app\view\PickUpOrder\PickUpOrderDetails.js" />
     <Content Include="Scripts\app\view\PickUpOrder\ProductSelector.js" />
+    <Content Include="Scripts\app\view\PickUpOrder\UserSelector.js" />
     <Content Include="Scripts\app\view\QuickOrder\QuickOrderList.js" />
     <Content Include="Scripts\app\view\SystemSetting\SystemSettingEdit.js" />
     <Content Include="Scripts\app\view\Tag\TagEdit.js" />

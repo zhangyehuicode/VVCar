@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
@@ -59,9 +60,9 @@ namespace VVCar.Controllers.VIP
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpGet, Route("GetMemberByPlate"), AllowAnonymous]
-        public PagedActionResult<Member> GetMemberByPlate([FromUri]MemberPlateFilter filter)
+        public PagedActionResult<MemberDto> GetMemberByPlate([FromUri]MemberPlateFilter filter)
         {
-            return SafeGetPagedData<Member>(result =>
+            return SafeGetPagedData<MemberDto>(result =>
             {
                 var totalCount = 0;
                 var data = MemberPlateService.GetMemberByPlate(filter, ref totalCount);

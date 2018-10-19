@@ -29,6 +29,34 @@ namespace VVCar.Controllers.Shop
         IPickUpOrderItemService PickUpOrderItemService { get; set; }
 
         /// <summary>
+        /// 批量新增
+        /// </summary>
+        /// <param name="pickUpOrderItems"></param>
+        /// <returns></returns>
+        [HttpPost, Route("BatchAdd")]
+        public JsonActionResult<PickUpOrder> BatchAdd(IEnumerable<PickUpOrderItem> pickUpOrderItems)
+        {
+            return SafeExecute(() =>
+            {
+                return PickUpOrderItemService.BatchAdd(pickUpOrderItems);
+            });
+        }
+
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpDelete, Route("BatchDelete")]
+        public JsonActionResult<PickUpOrder> BatchDelete(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return this.PickUpOrderItemService.BatchDelete(parameter.IdList.ToArray());
+            });
+        }
+
+        /// <summary>
         /// 更新
         /// </summary>
         /// <param name="entity"></param>
@@ -39,6 +67,20 @@ namespace VVCar.Controllers.Shop
             return SafeExecute(() =>
             {
                 return PickUpOrderItemService.Update(entity);
+            });
+        }
+
+        /// <summary>
+        /// 更新返回订单实体用于显示
+        /// </summary>
+        /// <param name="pickUpOrderItem"></param>
+        /// <returns></returns>
+        [HttpPut, Route("UpdatePickUpOrder")]
+        public JsonActionResult<PickUpOrder> UpdatePickUpOrder(PickUpOrderItem pickUpOrderItem)
+        {
+            return SafeExecute(() =>
+            {
+                return PickUpOrderItemService.UpdatePickUpOrder(pickUpOrderItem);
             });
         }
 

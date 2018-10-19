@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
@@ -17,6 +18,11 @@ namespace VVCar.VIP.Services.DomainServices
         public MemberPlateService()
         {
         }
+
+        #region properties
+        IRepository<MemberCard> MemberCardRepo { get => UnitOfWork.GetRepository<IRepository<MemberCard>>(); }
+
+        #endregion
 
         public override MemberPlate Add(MemberPlate entity)
         {
@@ -36,17 +42,31 @@ namespace VVCar.VIP.Services.DomainServices
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        public IEnumerable<Member> GetMemberByPlate(MemberPlateFilter filter, ref int totalCount)
+        public IEnumerable<MemberDto> GetMemberByPlate(MemberPlateFilter filter, ref int totalCount)
         {
             if (string.IsNullOrEmpty(filter.PlateNumber))
                 throw new DomainException("车牌号错误");
-            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PlateNumber == filter.PlateNumber).Select(t => t.Member);
+            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PlateNumber == filter.PlateNumber).Select(t => t.Member).MapTo<MemberDto>();
             var result = queryable.ToList();
-            if (result.Count < 1) {
-                var member = new Member();
+            if (result.Count < 1)
+            {
+                var member = new MemberDto();
                 member.ID = Guid.Parse("00000000-0000-0000-0000-000000000000");
                 member.Name = "未注册会员";
                 result.Add(member);
+            }
+            else {
+                result.ForEach(t =>
+                {
+                    var memberCard = MemberCardRepo.GetByKey(t.CardID);
+                    if (memberCard != null)
+                    {
+                        t.CardNumber = memberCard.Code;
+                        t.CardBalance = memberCard.CardBalance;
+                        t.CardStatus = memberCard.Status;
+                        t.EffectiveDate = memberCard.EffectiveDate;
+                    }
+                });
             }
             return result;
         }

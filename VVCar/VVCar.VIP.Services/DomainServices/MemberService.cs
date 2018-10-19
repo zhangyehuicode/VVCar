@@ -611,6 +611,10 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 t.IsDeleted = true;
                 t.Card.IsDeleted = true;
+                t.MemberPlateList.ForEach(m =>
+                {
+                    t.IsDeleted = true;
+                });
             });
             return Repository.Update(memberList) > 0;
         }

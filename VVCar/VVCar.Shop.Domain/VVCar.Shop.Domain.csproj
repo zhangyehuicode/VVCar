@@ -56,6 +56,7 @@
     <Compile Include="Dtos\HistoryDataAnalysisParam.cs" />
     <Compile Include="Dtos\OrderDto.cs" />
     <Compile Include="Dtos\PickUpOrderDto.cs" />
+    <Compile Include="Dtos\PickUpOrderTaskDistributionDto.cs" />
     <Compile Include="Dtos\ProductCategoryLiteDto.cs" />
     <Compile Include="Dtos\ProductCategoryTreeDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Dtos\TurnoverReportingDto.cs" />
     <Compile Include="Dtos\UnsaleProductSettingDto.cs" />
     <Compile Include="Dtos\UnsaleProductSettingItemDto.cs" />
+    <Compile Include="Dtos\VerificationByMemberCardParam.cs" />
     <Compile Include="Dtos\VerificationParam.cs" />
     <Compile Include="Entities\Appointment.cs" />
     <Compile Include="Entities\CarBitCoinDistribution.cs" />
@@ -126,6 +128,7 @@
     <Compile Include="Filters\OrderItemFilter.cs" />
     <Compile Include="Filters\PickUpOrderFilter.cs" />
     <Compile Include="Filters\PickUpOrderItemFilter.cs" />
+    <Compile Include="Filters\PickUpOrderTaskDistributionFilter.cs" />
     <Compile Include="Filters\ProductCategoryFilter.cs" />
     <Compile Include="Filters\ProductFilter.cs" />
     <Compile Include="Filters\ProductRetailStatisticsFilter.cs" />

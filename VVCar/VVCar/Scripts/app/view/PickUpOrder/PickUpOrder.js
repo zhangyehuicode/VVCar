@@ -16,63 +16,6 @@
 			]
 		});
 		me.items = [{
-			xtype: 'panel',
-			name: 'openorder',
-			border: false,
-			trackResetOnLoad: true,
-			fieldDefaults: {
-				labelAlign: 'left',
-				labelWidth: 80,
-				anchor: '100%',
-				readOnly: true,
-				margin: '0 0 8 0',
-				tabIndex: 0,
-				fieldStyle: 'font-size: 16px; line-height: normal',
-			},
-			items: [{
-				xtype: 'displayfield',
-				value: '接车单开单',
-				fieldStyle: 'font-weight:bold;font-size:22px',
-			}, {
-				xtype: 'fieldcontainer',
-				layout: 'hbox',
-				items: [{
-					xtype: 'textfield',
-					name: 'PlateNumber',
-					fieldLabel: '车牌号',
-					emptyText: '请输入车牌号',
-					allowBlank: false,
-					readOnly: false,
-					tabIndex: 1,
-					labelStyle: 'font-weight: bold; font-size: 22px;',
-					fieldStyle: 'font-weight; bold; font-siez: 22px;line-height: normal',
-					height: 30,
-				}, {
-					xtype: 'textfield',
-					fieldLabel: '会员ID',
-					name: 'MemberID',
-					hidden: true,
-				}, {
-					xtype: 'textfield',
-					fieldLabel: '姓名',
-					name: 'MemberName',
-					labelAlign: 'right',
-					flex: 1,
-				}, {
-					xtype: 'textfield',
-					fieldLabel: '手机号码',
-					name: 'MobilePhoneNo',
-					labelAlign: 'right',
-					flex: 1,
-				}, {
-					action: 'openorder',
-					xtype: 'button',
-					text: '开单',
-					cls: 'submitBtn',
-					margin: '0 0 0 10'
-				}]
-			}]
-		}, {
 			xtype: 'gridpanel',
 			name: 'pickuporder',
 			store: Ext.create('WX.store.BaseData.PickUpOrderStore'),
@@ -93,7 +36,7 @@
 					xtype: 'textfield',
 					name: 'Code',
 					fieldLabel: '订单号',
-					width: 280,
+					width: 220,
 					labelWidth: 60,
 					margin: '5 5 5 10',
 				}, {
@@ -129,6 +72,12 @@
 					iconCls: 'fa fa-search',
 					cls: 'submitBtn',
 					margin: '5 5 5 10'
+				}, {
+					action: 'openorder',
+					xtype: 'button',
+					text: '接车单开单',
+					cls: 'submitBtn',
+					margin: '5 5 5 10',
 				}]
 			}],
 			columns: [

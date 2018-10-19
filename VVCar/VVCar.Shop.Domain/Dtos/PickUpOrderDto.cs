@@ -39,6 +39,26 @@ namespace VVCar.Shop.Domain.Dtos
         public string MemberMobilePhoneNo { get; set; }
 
         /// <summary>
+        /// 储值卡号
+        /// </summary>
+        public string CardNumber { get; set; }
+
+        /// <summary>
+        /// 是否激活
+        /// </summary>
+        public string CardStatus { get; set; }
+
+        /// <summary>
+        /// 储值卡卡生效时间
+        /// </summary>
+        public DateTime? EffectiveDate { get; set; }
+
+        /// <summary>
+        /// 储值卡余额
+        /// </summary>
+        public decimal CardBalance { get; set; }
+
+        /// <summary>
         /// 门店名称
         /// </summary>
         public string DepartmentName { get; set; }

@@ -1,7 +1,7 @@
-﻿Ext.define('WX.view.PickUpOrder.ProductSelector', {
+﻿Ext.define('WX.view.PickUpOrder.UserSelector', {
 	extend: 'Ext.window.Window',
-	alias: 'widget.ProductSelector',
-	title: '选择产品',
+	alias: 'widget.UserSelector',
+	title: '选择人员',
 	layout: 'fit',
 	width: 600,
 	height: 500,
@@ -11,14 +11,14 @@
 	buttonAlign: 'center',
 	initComponent: function () {
 		var me = this;
-		var productStore = Ext.create('WX.store.BaseData.ProductStore');
-		productStore.load();
+		var userStore = Ext.create('WX.store.BaseData.UserStore');
+		userStore.load();
 		me.items = [{
 			xtype: 'grid',
-			name: 'gridProduct',
+			name: 'gridUser',
 			stripeRows: true,
 			loadMask: true,
-			store: productStore,
+			store: userStore,
 			selType: 'checkboxmodel',
 			tbar: {
 				xtype: 'form',
@@ -33,9 +33,17 @@
 				autoScroll: true,
 				columnWidth: 1,
 				items: [{
-					name: 'PickUpOrderID',
+					name: 'UserID',
 					xtype: 'textfield',
-					fieldLabel: '接车单ID',
+					fieldLabel: '用户ID',
+					width: 170,
+					labelWidth: 60,
+					margin: '0 0 0 5',
+					hidden: true,
+				}, {
+					name: 'PeopleType',
+					xtype: 'textfield',
+					fieldLabel: '用户类型',
 					width: 170,
 					labelWidth: 60,
 					margin: '0 0 0 5',
@@ -43,14 +51,14 @@
 				},{
 					name: 'Code',
 					xtype: 'textfield',
-					fieldLabel: '产品编码',
+					fieldLabel: '用户编号',
 					width: 170,
 					labelWidth: 60,
 					margin: '0 0 0 5',
 				}, {
 					name: 'Name',
 					xtype: 'textfield',
-					fieldLabel: '产品名称',
+					fieldLabel: '用户名称',
 					width: 170,
 					labelWidth: 60,
 					margin: '0 0 0 5',
@@ -62,11 +70,8 @@
 				}]
 			},
 			columns: [
-				{ header: '产品编号', dataIndex: 'Code', flex: 1 },
-				{ header: '产品名称', dataIndex: 'Name', flex: 1 },
-				//{ header: '原单价', dataIndex: 'BasePrice', flex: 1 },
-				{ header: '销售单价', dataIndex: 'PriceSale', flex: 1 },
-				//{ header: '库存', dataIndex: 'Stock', flex: 1 },
+				{ header: '用户编号', dataIndex: 'Code', flex: 1 },
+				{ header: '用户名称', dataIndex: 'Name', flex: 1 },
 			],
 			bbar: {
 				xtype: 'pagingtoolbar',

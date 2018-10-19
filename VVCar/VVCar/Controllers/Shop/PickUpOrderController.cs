@@ -117,6 +117,20 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 通过储值卡核销
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost, Route("VerificationByMemberCard")]
+        public JsonActionResult<PickUpOrder> VerificationByMemberCard(VerificationByMemberCardParam param)
+        {
+            return SafeExecute(() =>
+            {
+                return PickUpOrderService.VerificationByMemberCard(param);
+            });
+        }
+
+        /// <summary>
         /// 获取会员接车单
         /// </summary>
         /// <param name="memberId"></param>

@@ -40,6 +40,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         ICouponService CouponService { get => ServiceLocator.Instance.GetService<ICouponService>(); }
 
+        IRepository<PickUpOrder> PickUpOrderRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrder>>(); }
+
         IRepository<PickUpOrderItem> PickUpOrderItemRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrderItem>>(); }
 
         IMemberService MemberService { get => ServiceLocator.Instance.GetService<IMemberService>(); }
@@ -93,7 +95,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         public override PickUpOrder Add(PickUpOrder entity)
         {
-            if (entity == null || entity.PickUpOrderItemList == null || entity.PickUpOrderItemList.Count < 1)
+            if (entity == null)//|| entity.PickUpOrderItemList == null || entity.PickUpOrderItemList.Count < 1
                 return null;
             if (string.IsNullOrEmpty(entity.PlateNumber))
                 throw new DomainException("车牌号不能为空");
@@ -115,9 +117,13 @@ namespace VVCar.Shop.Services.DomainServices
                 t.PickUpOrderID = entity.ID;
                 t.MerchantID = entity.MerchantID;
                 t.Money = t.Quantity * t.PriceSale;
+                t.ReducedPrice = t.PriceSale;
                 t.Discount = 1;
             });
-            RecountMoney(entity);
+            if(entity.PickUpOrderItemList.Count > 0)
+            {
+                RecountMoney(entity);
+            }
             PickUpOrderTaskDistribution(entity.PickUpOrderItemList.ToList());
             entity.PlateNumber = entity.PlateNumber.ToUpper();
             return base.Add(entity);
@@ -192,15 +198,18 @@ namespace VVCar.Shop.Services.DomainServices
                 decimal totalMoney = 0;
                 entity.PickUpOrderItemList.ForEach(t =>
                 {
-                    if (t.IsReduce)
+                    if(t.IsDeleted == false)
                     {
-                        totalMoney += t.Quantity * t.ReducedPrice;
+                        if (t.IsReduce)
+                        {
+                            totalMoney += t.Quantity * t.ReducedPrice;
+                        }
+                        else
+                        {
+                            totalMoney += t.Quantity * t.PriceSale;
+                        }
+                        //t.Money = t.Quantity * t.PriceSale;
                     }
-                    else
-                    {
-                        totalMoney += t.Quantity * t.PriceSale;
-                    }
-                    //t.Money = t.Quantity * t.PriceSale;
                 });
                 entity.Money = totalMoney;
             }
@@ -218,8 +227,9 @@ namespace VVCar.Shop.Services.DomainServices
             entity.StillOwedMoney = entity.Money - entity.ReceivedMoney;
             if (entity.StillOwedMoney < 0)
                 entity.StillOwedMoney = 0;
-
-            if (entity.ReceivedMoney > 0 && entity.ReceivedMoney < entity.Money)
+            if (entity.Money == 0)
+                entity.Status = EPickUpOrderStatus.UnPay;
+            else if (entity.ReceivedMoney > 0 && entity.ReceivedMoney < entity.Money)
                 entity.Status = EPickUpOrderStatus.UnEnough;
             else if (entity.ReceivedMoney >= entity.Money)
                 entity.Status = EPickUpOrderStatus.Payed;
@@ -266,6 +276,18 @@ namespace VVCar.Shop.Services.DomainServices
                     var member = MemberRepo.GetByKey(t.MemberID);
                     t.MemberName = member.Name;
                     t.MemberMobilePhoneNo = member.MobilePhoneNo;
+                    var memberCard = MemberCardRepo.GetByKey(member.CardID);
+                    if(memberCard != null)
+                    {
+                        t.CardNumber = memberCard.Code;
+                        t.CardStatus = memberCard.Status == ECardStatus.Activated ? "已激活" : memberCard.Status == ECardStatus.Lost ? "挂失" : "未激活";
+                        t.EffectiveDate = memberCard.EffectiveDate;
+                        t.CardBalance = memberCard.CardBalance;
+                    }
+                    else
+                    {
+                        t.CardNumber = "未找到储值卡";
+                    }
                 }
             });
             return result;
@@ -480,6 +502,61 @@ namespace VVCar.Shop.Services.DomainServices
                 Repository.Update(order);
                 UnitOfWork.CommitTransaction();
                 return true;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw new DomainException(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// 储值卡核销
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public PickUpOrder VerificationByMemberCard(VerificationByMemberCardParam param)
+        {
+            if(param.PickUpOrderID == null)
+            {
+                throw new DomainException("参数错误");
+            }
+            UnitOfWork.BeginTransaction();
+            try {
+                var member = MemberRepo.GetByKey(param.MemberID);
+                if (member == null)
+                    throw new DomainException("会员不存在");
+                var memberCard = MemberCardRepo.GetByKey(member.CardID);
+                if(memberCard.CardBalance < param.PayMoney)
+                {
+                    throw new DomainException("储值卡余额不足");
+                }
+                memberCard.CardBalance -= param.PayMoney;
+
+                var cardTradeResult = MemberCardService.Consume(new ConsumeInfoDto
+                {
+                    CardNumber = memberCard.Code,
+                    OutTradeNo = param.Code,
+                    TradeAmount = param.PayMoney,
+                    UseBalanceAmount = 0,
+                    OperateUser = param.StaffName,
+                }, ETradeSource.WeChat);
+
+                PickUpOrderPaymentDetailsService.Add(new PickUpOrderPaymentDetails
+                {
+                    PickUpOrderID = param.PickUpOrderID,
+                    PickUpOrderCode = param.Code,
+                    PayType = EPayType.MemberCard,
+                    PayMoney = param.PayMoney,
+                    PayInfo = "储值卡支付:" + param.PayMoney + "元",
+                    MemberInfo = "",
+                    StaffID = param.StaffID,
+                    StaffName = param.StaffName,
+                });
+                UnitOfWork.CommitTransaction();
+                var pickUpOrder = PickUpOrderRepo.GetByKey(param.PickUpOrderID);
+                SendMemberCardUsedNotify(member, param.Code, "接车单",param.PayMoney, memberCard.CardBalance);
+                return pickUpOrder;
             }
             catch (Exception e)
             {
@@ -869,6 +946,32 @@ namespace VVCar.Shop.Services.DomainServices
             message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(coupon.Template.Title);
             message.data.keyword3 = new WeChatTemplateMessageDto.MessageData($"{voucherAmount.ToString("0.##")}{couponValueUnit}");
             message.data.remark = new WeChatTemplateMessageDto.MessageData($"核销项目：{verificationItems}。感谢您的使用，欢迎下次光临");
+            WeChatService.SendWeChatNotifyAsync(message);
+        }
+
+        /// <summary>
+        /// 发送储值卡使用通知
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="title"></param>
+        /// <param name="code"></param>
+        /// <param name="payMoney"></param>
+        /// <param name="keepMoney"></param>
+        void SendMemberCardUsedNotify(Member member, string title, string code, decimal payMoney = 0, decimal keepMoney = 0)
+        {
+            var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_VerificationSuccess);
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = member.WeChatOpenID,
+                template_id = templateId,
+                url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={AppContext.CurrentSession.CompanyCode}",
+                data = new System.Dynamic.ExpandoObject(),
+            };     
+            message.data.first = new WeChatTemplateMessageDto.MessageData(($"您好,您已使用储值卡完成核销{title}!"));
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData($"{title}:{code}！");
+            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData($"{payMoney.ToString("0.##")}元", "#FF4040");
+            message.data.remark = new WeChatTemplateMessageDto.MessageData($"卡内余额:{keepMoney.ToString("0.##")}元,感恩惠顾，期待下次再为您服务");
             WeChatService.SendWeChatNotifyAsync(message);
         }
     }

@@ -50,6 +50,13 @@ namespace VVCar.Shop.Domain.Services
         bool Verification(VerificationParam param);
 
         /// <summary>
+        /// 储值卡核销
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        PickUpOrder VerificationByMemberCard(VerificationByMemberCardParam param);
+
+        /// <summary>
         /// 获取会员接车单
         /// </summary>
         /// <param name="memberId"></param>

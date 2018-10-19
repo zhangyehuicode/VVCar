@@ -8,6 +8,8 @@
 		{ name: "ProductType" },
 		{ name: "PriceSale" },
 		{ name: "Quantity" },
+		{ name: "ReducedPrice" },
+		{ name: "IsReduce" },
 		{ name: "Money" },
 	]
 });

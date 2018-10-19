@@ -28,18 +28,168 @@ namespace VVCar.Shop.Services.DomainServices
         #endregion
 
         /// <summary>
+        /// 批量新增
+        /// </summary>
+        /// <param name="pickUpOrderItems"></param>
+        /// <returns></returns>
+        public PickUpOrder BatchAdd(IEnumerable<PickUpOrderItem> pickUpOrderItems)
+        {
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                if (pickUpOrderItems == null || pickUpOrderItems.Count() < 1)
+                    throw new DomainException("参数错误");
+                var pickUpOrderID = pickUpOrderItems.FirstOrDefault().PickUpOrderID;
+                var productIDs = pickUpOrderItems.Select(t => t.ProductID).Distinct();
+                var pickUpOrder = PickUpOrderRepo.GetByKey(pickUpOrderID);
+                var existData = Repository.GetQueryable(false)
+                    .Where(t => t.PickUpOrderID == pickUpOrderID && productIDs.Contains(t.ProductID)).ToList();
+                if (existData.Count > 0)
+                {
+                    throw new DomainException("数据已存在");
+                }
+                pickUpOrderItems.ForEach(t =>
+                {
+                    if (t.PickUpOrderID == null || t.ProductID == null)
+                        throw new DomainException("参数错误");
+                    t.ID = Util.NewID();
+                    t.ReducedPrice = t.PriceSale;
+                    if (t.IsReduce)
+                    {
+                        t.ReducedPrice = t.PriceSale;
+                        t.Money = t.ReducedPrice * t.Quantity;
+                    }
+                    else
+                    {
+                        t.ReducedPrice = t.ReducedPrice;
+                        t.Money = t.PriceSale * t.Quantity;
+                    }
+                    t.MerchantID = AppContext.CurrentSession.MerchantID;
+                });
+                Repository.AddRange(pickUpOrderItems).Count();
+                PickUpOrderService.RecountMoneySave(pickUpOrder.Code);
+                UnitOfWork.CommitTransaction();
+                return PickUpOrderRepo.GetByKey(pickUpOrderID);
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw new DomainException(e.Message);
+            }
+            
+        }
+
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public PickUpOrder BatchDelete(Guid[] ids)
+        {
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                if (ids == null || ids.Length < 1)
+                    throw new DomainException("参数错误");
+                var pickUpOrderItems = this.Repository.GetQueryable(false).Where(t => ids.Contains(t.ID)).ToList();
+                var pickUpOrderID = pickUpOrderItems.Select(t => t.PickUpOrderID).FirstOrDefault();
+                var pickUpOrder = PickUpOrderRepo.GetByKey(pickUpOrderID);
+
+                if (pickUpOrderItems == null || pickUpOrderItems.Count() < 1)
+                    throw new DomainException("数据不存在");
+                pickUpOrderItems.ForEach(t =>
+                {
+                    t.IsDeleted = true;
+                });
+                Repository.UpdateRange(pickUpOrderItems);
+                PickUpOrderService.RecountMoneySave(pickUpOrder.Code);
+                UnitOfWork.CommitTransaction();
+                return PickUpOrderRepo.GetByKey(pickUpOrderID);
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw new DomainException(e.Message);
+            }
+        }
+
+        /// <summary>
         /// 更新
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
         public override bool Update(PickUpOrderItem entity)
         {
-            entity.Money = entity.PriceSale * entity.Quantity;
-            var pickUpOrder = PickUpOrderRepo.GetByKey(entity.PickUpOrderID);
-            if (pickUpOrder.Status == Domain.Enums.EPickUpOrderStatus.Payed)
-                throw new DomainException("订单已付款");
-            Repository.Update(entity);
-            return PickUpOrderService.RecountMoneySave(pickUpOrder.Code);
+            var pickUpOrderItem = Repository.GetByKey(entity.ID);
+            if (pickUpOrderItem == null)
+                return false;
+            UnitOfWork.BeginTransaction();
+            try {
+                pickUpOrderItem.Quantity = entity.Quantity;
+                pickUpOrderItem.IsReduce = entity.IsReduce;
+                if (entity.IsReduce)
+                {
+                    pickUpOrderItem.ReducedPrice = entity.ReducedPrice;
+                    pickUpOrderItem.Money = entity.ReducedPrice * entity.Quantity;
+                }
+                else
+                {
+                    pickUpOrderItem.ReducedPrice = entity.PriceSale;
+                    pickUpOrderItem.Money = entity.PriceSale * entity.Quantity;
+                }              
+                var pickUpOrder = PickUpOrderRepo.GetByKey(entity.PickUpOrderID);
+                if (pickUpOrder.Status == Domain.Enums.EPickUpOrderStatus.Payed)
+                    throw new DomainException("订单已付款");
+                Repository.Update(pickUpOrderItem);
+                PickUpOrderService.RecountMoneySave(pickUpOrder.Code);
+                UnitOfWork.CommitTransaction();
+                return true;
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw new DomainException(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public PickUpOrder UpdatePickUpOrder(PickUpOrderItem entity)
+        {
+            var pickUpOrderItem = Repository.GetByKey(entity.ID);
+            if (pickUpOrderItem == null)
+                return null;
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                pickUpOrderItem.Quantity = entity.Quantity;
+                pickUpOrderItem.IsReduce = entity.IsReduce;
+                if (entity.IsReduce)
+                {
+                    pickUpOrderItem.ReducedPrice = entity.ReducedPrice;
+                    pickUpOrderItem.Money = entity.ReducedPrice * entity.Quantity;
+                }
+                else
+                {
+                    pickUpOrderItem.ReducedPrice = entity.PriceSale;
+                    pickUpOrderItem.Money = entity.PriceSale * entity.Quantity;
+                }
+                var pickUpOrder = PickUpOrderRepo.GetByKey(entity.PickUpOrderID);
+                if (pickUpOrder.Status == Domain.Enums.EPickUpOrderStatus.Payed)
+                    throw new DomainException("订单已付款");
+                Repository.Update(pickUpOrderItem);
+                PickUpOrderService.RecountMoneySave(pickUpOrder.Code);
+                UnitOfWork.CommitTransaction();
+                return PickUpOrderRepo.GetByKey(entity.PickUpOrderID);
+            }
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw new DomainException(e.Message);
+            }
         }
 
         /// <summary>

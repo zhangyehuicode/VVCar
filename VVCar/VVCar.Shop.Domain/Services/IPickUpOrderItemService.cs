@@ -16,6 +16,27 @@ namespace VVCar.Shop.Domain.Services
     public interface IPickUpOrderItemService : IDomainService<IRepository<PickUpOrderItem>, PickUpOrderItem, Guid>
     {
         /// <summary>
+        /// 批量新增
+        /// </summary>
+        /// <param name="pickUpOrderItems"></param>
+        /// <returns></returns>
+        PickUpOrder BatchAdd(IEnumerable<PickUpOrderItem> pickUpOrderItems);
+
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        PickUpOrder BatchDelete(Guid[] ids);
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="pickUpOrderItem"></param>
+        /// <returns></returns>
+        PickUpOrder UpdatePickUpOrder(PickUpOrderItem pickUpOrderItem);
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>
