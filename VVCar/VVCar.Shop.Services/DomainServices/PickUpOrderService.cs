@@ -42,11 +42,16 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<PickUpOrder> PickUpOrderRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrder>>(); }
 
+        IRepository<OrderDividend> OrderDividendRepo { get => UnitOfWork.GetRepository<IRepository<OrderDividend>>(); }
+
         IRepository<PickUpOrderItem> PickUpOrderItemRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrderItem>>(); }
+
+        IRepository<PickUpOrderTaskDistribution> PickUpOrderTaskDistributionRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrderTaskDistribution>>(); }
 
         IMemberService MemberService { get => ServiceLocator.Instance.GetService<IMemberService>(); }
 
         IRepository<CouponItem> CouponItemRepo { get => UnitOfWork.GetRepository<IRepository<CouponItem>>(); }
+        IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
 
         IRepository<CouponItemVerificationRecord> CouponItemVerificationRecordRepo { get => UnitOfWork.GetRepository<IRepository<CouponItemVerificationRecord>>(); }
 
@@ -99,34 +104,54 @@ namespace VVCar.Shop.Services.DomainServices
                 return null;
             if (string.IsNullOrEmpty(entity.PlateNumber))
                 throw new DomainException("车牌号不能为空");
-            entity.ID = Util.NewID();
-            entity.CreatedDate = DateTime.Now;
-            entity.MerchantID = AppContext.CurrentSession.MerchantID;
+            UnitOfWork.BeginTransaction();
+            try
+            {
+                entity.ID = Util.NewID();
+                entity.CreatedDate = DateTime.Now;
+                entity.MerchantID = AppContext.CurrentSession.MerchantID;
 
-            if (entity.StaffID == null || entity.StaffID == Guid.Parse("00000000-0000-0000-0000-000000000000"))
-            {
-                entity.StaffID = AppContext.CurrentSession.UserID;
-                entity.StaffName = AppContext.CurrentSession.UserName;
-            }
-            if (string.IsNullOrEmpty(entity.Code))
-                entity.Code = GetTradeNo();
+                if (entity.StaffID == null || entity.StaffID == Guid.Parse("00000000-0000-0000-0000-000000000000"))
+                {
+                    entity.StaffID = AppContext.CurrentSession.UserID;
+                    entity.StaffName = AppContext.CurrentSession.UserName;
+                }
+                if (string.IsNullOrEmpty(entity.Code))
+                    entity.Code = GetTradeNo();
 
-            entity.PickUpOrderItemList.ForEach(t =>
-            {
-                t.ID = Util.NewID();
-                t.PickUpOrderID = entity.ID;
-                t.MerchantID = entity.MerchantID;
-                t.Money = t.Quantity * t.PriceSale;
-                t.ReducedPrice = t.PriceSale;
-                t.Discount = 1;
-            });
-            if(entity.PickUpOrderItemList.Count > 0)
-            {
-                RecountMoney(entity);
+                entity.PickUpOrderItemList.ForEach(t =>
+                {
+                    t.ID = Util.NewID();
+                    t.PickUpOrderID = entity.ID;
+                    t.MerchantID = entity.MerchantID;
+                    if (t.IsReduce)
+                    {
+                        t.Money = t.Quantity * t.ReducedPrice;
+                        t.ReducedPrice = t.ReducedPrice;
+                    }
+                    else
+                    {
+                        t.Money = t.Quantity * t.PriceSale;
+                        t.ReducedPrice = t.PriceSale;
+                    }
+                    t.Discount = 1;
+                });
+                if (entity.PickUpOrderItemList.Count > 0)
+                {
+                    RecountMoney(entity);
+                }
+                PickUpOrderTaskDistribution(entity.PickUpOrderItemList.ToList());
+                entity.PlateNumber = entity.PlateNumber.ToUpper();
+                var pickupOrder = base.Add(entity);
+                RecountMoneySave(entity.Code);
+                UnitOfWork.CommitTransaction();
+                return pickupOrder;
             }
-            PickUpOrderTaskDistribution(entity.PickUpOrderItemList.ToList());
-            entity.PlateNumber = entity.PlateNumber.ToUpper();
-            return base.Add(entity);
+            catch (Exception e)
+            {
+                UnitOfWork.RollbackTransaction();
+                throw new DomainException(e.Message);
+            }
         }
 
         /// <summary>
@@ -151,40 +176,79 @@ namespace VVCar.Shop.Services.DomainServices
         {
             if (pickUpOrderItemList == null || pickUpOrderItemList.Count < 1)
                 return;
-            foreach (var pickUpOrderItem in pickUpOrderItemList)
+            //foreach (var pickUpOrderItem in pickUpOrderItemList)
+            //{
+            //    if (pickUpOrderItem == null || pickUpOrderItem.PickUpOrderTaskDistributionList == null || pickUpOrderItem.PickUpOrderTaskDistributionList.Count < 1)
+            //        continue;
+            //    var constructionCount = pickUpOrderItem.PickUpOrderTaskDistributionList.Count(t => t.PeopleType == ETaskDistributionPeopleType.ConstructionCrew);
+            //    var salesmanCount = pickUpOrderItem.PickUpOrderTaskDistributionList.Count(t => t.PeopleType == ETaskDistributionPeopleType.Salesman);
+            //    var product = ProductRepo.GetByKey(pickUpOrderItem.ProductID, false);
+            //    pickUpOrderItem.PickUpOrderTaskDistributionList.ForEach(t =>
+            //    {
+            //        t.ID = Util.NewID();
+            //        t.CreatedUserID = AppContext.CurrentSession.UserID;
+            //        t.CreatedUser = AppContext.CurrentSession.UserName;
+            //        t.CreatedDate = DateTime.Now;
+            //        t.MerchantID = AppContext.CurrentSession.MerchantID;
+            //        t.PickUpOrderID = pickUpOrderItem.PickUpOrderID;
+            //        t.PickUpOrderItemID = pickUpOrderItem.ID;
+            //        //t.ConstructionCount = constructionCount;
+            //        pickUpOrderItem.ConstructionCount = constructionCount;
+            //        pickUpOrderItem.SalesmanCount = salesmanCount;
+            //        //t.SalesmanCount = salesmanCount;
+            //        t.TotalMoney = pickUpOrderItem.Money;
+            //        if (product != null)
+            //        {
+            //            if (t.PeopleType == ETaskDistributionPeopleType.ConstructionCrew)
+            //            {
+            //                t.CommissionRate = constructionCount != 0 ? Math.Floor(product.CommissionRate / constructionCount) : 0;
+            //                t.Commission = Math.Floor(pickUpOrderItem.Money * product.CommissionRate / 100);
+            //            }
+            //            if (t.PeopleType == ETaskDistributionPeopleType.Salesman)
+            //            {
+            //                t.SalesmanCommissionRate = salesmanCount != 0 ? Math.Floor(product.SalesmanCommissionRate / salesmanCount) : 0;
+            //                t.SalesmanCommission = Math.Floor(pickUpOrderItem.Money * product.SalesmanCommissionRate / 100);
+            //            }
+            //        }
+            //    });
+            //}
+            pickUpOrderItemList.ForEach(t =>
             {
-                if (pickUpOrderItem == null || pickUpOrderItem.PickUpOrderTaskDistributionList == null || pickUpOrderItem.PickUpOrderTaskDistributionList.Count < 1)
-                    continue;
-                var constructionCount = pickUpOrderItem.PickUpOrderTaskDistributionList.Count(t => t.PeopleType == ETaskDistributionPeopleType.ConstructionCrew);
-                var salesmanCount = pickUpOrderItem.PickUpOrderTaskDistributionList.Count(t => t.PeopleType == ETaskDistributionPeopleType.Salesman);
-                var product = ProductRepo.GetByKey(pickUpOrderItem.ProductID, false);
-                pickUpOrderItem.PickUpOrderTaskDistributionList.ForEach(t =>
+                if (t.PickUpOrderTaskDistributionList.Count > 0)
                 {
-                    t.ID = Util.NewID();
-                    t.CreatedUserID = AppContext.CurrentSession.UserID;
-                    t.CreatedUser = AppContext.CurrentSession.UserName;
-                    t.CreatedDate = DateTime.Now;
-                    t.MerchantID = AppContext.CurrentSession.MerchantID;
-                    t.PickUpOrderID = pickUpOrderItem.PickUpOrderID;
-                    t.PickUpOrderItemID = pickUpOrderItem.ID;
-                    t.ConstructionCount = constructionCount;
-                    t.SalesmanCount = salesmanCount;
-                    t.TotalMoney = pickUpOrderItem.Money;
-                    if (product != null)
+                    var constructionCount = t.PickUpOrderTaskDistributionList.Count(m => m.PeopleType == ETaskDistributionPeopleType.ConstructionCrew);
+                    var salesmanCount = t.PickUpOrderTaskDistributionList.Count(m => m.PeopleType == ETaskDistributionPeopleType.Salesman);
+                    var product = ProductRepo.GetByKey(t.ProductID, false);
+                    t.PickUpOrderTaskDistributionList.ForEach(m =>
                     {
-                        if (t.PeopleType == ETaskDistributionPeopleType.ConstructionCrew)
+                        m.ID = Util.NewID();
+                        m.CreatedUserID = AppContext.CurrentSession.UserID;
+                        m.CreatedUser = AppContext.CurrentSession.UserName;
+                        m.CreatedDate = DateTime.Now;
+                        m.MerchantID = AppContext.CurrentSession.MerchantID;
+                        m.PickUpOrderID = t.PickUpOrderID;
+                        m.PickUpOrderItemID = t.ID;
+                        t.ConstructionCount = constructionCount;
+                        t.SalesmanCount = salesmanCount;
+                        t.CommissionRate = product.CommissionRate;
+                        t.SalesmanCommissionRate = product.SalesmanCommissionRate;
+                        m.TotalMoney = t.Money;
+                        if (product != null)
                         {
-                            t.CommissionRate = product.CommissionRate;
-                            t.Commission = constructionCount != 0 ? Math.Floor(pickUpOrderItem.Money * product.CommissionRate / 100 / constructionCount) : 0;
+                            if (m.PeopleType == ETaskDistributionPeopleType.ConstructionCrew)
+                            {
+                                m.CommissionRate = constructionCount != 0 ? Math.Round(product.CommissionRate / constructionCount, 2) : 0;
+                                m.Commission = Math.Floor(t.Money * m.CommissionRate / 100);
+                            }
+                            if (m.PeopleType == ETaskDistributionPeopleType.Salesman)
+                            {
+                                m.SalesmanCommissionRate = salesmanCount != 0 ? Math.Round(product.SalesmanCommissionRate / salesmanCount, 2) : 0;
+                                m.SalesmanCommission = Math.Floor(t.Money * m.SalesmanCommissionRate / 100);
+                            }
                         }
-                        if (t.PeopleType == ETaskDistributionPeopleType.Salesman)
-                        {
-                            t.SalesmanCommissionRate = product.SalesmanCommissionRate;
-                            t.SalesmanCommission = salesmanCount != 0 ? Math.Floor(pickUpOrderItem.Money * product.SalesmanCommissionRate / 100 / salesmanCount) : 0;
-                        }
-                    }
-                });
-            }
+                    });
+                }
+            });
         }
 
         public void RecountMoney(PickUpOrder entity)
@@ -198,7 +262,7 @@ namespace VVCar.Shop.Services.DomainServices
                 decimal totalMoney = 0;
                 entity.PickUpOrderItemList.ForEach(t =>
                 {
-                    if(t.IsDeleted == false)
+                    if (t.IsDeleted == false)
                     {
                         if (t.IsReduce)
                         {
@@ -213,7 +277,6 @@ namespace VVCar.Shop.Services.DomainServices
                 });
                 entity.Money = totalMoney;
             }
-
             decimal paymoney = 0;
             var paymentdetails = PickUpOrderPaymentDetailsRepo.GetQueryable(false).Where(t => t.PickUpOrderCode == entity.Code).ToList();
             if (paymentdetails != null && paymentdetails.Count > 0)
@@ -227,19 +290,76 @@ namespace VVCar.Shop.Services.DomainServices
             entity.StillOwedMoney = entity.Money - entity.ReceivedMoney;
             if (entity.StillOwedMoney < 0)
                 entity.StillOwedMoney = 0;
-            if (entity.Money == 0)
-                entity.Status = EPickUpOrderStatus.UnPay;
             else if (entity.ReceivedMoney > 0 && entity.ReceivedMoney < entity.Money)
                 entity.Status = EPickUpOrderStatus.UnEnough;
             else if (entity.ReceivedMoney >= entity.Money)
-                entity.Status = EPickUpOrderStatus.Payed;
+            {
+                if (entity.PickUpOrderItemList != null && entity.PickUpOrderItemList.Count > 0)
+                {
+                    entity.Status = EPickUpOrderStatus.Payed;
+                    AddOrderDividend(entity.Code);
+                }
+                else
+                {
+                    entity.Status = EPickUpOrderStatus.UnPay;
+                }
+            }
+        }
+
+        void AddOrderDividend(string code)
+        {
+            try
+            {
+                var pickUpOrder = Repository.GetInclude(t => t.PickUpOrderItemList, false).Where(t => t.Code == code).FirstOrDefault();
+                var orderDividendList = new List<OrderDividend>();
+                pickUpOrder.PickUpOrderItemList.ForEach(t =>
+                {
+                    var pickUpOrderTaskDistributionList = PickUpOrderTaskDistributionRepo.GetInclude(m => m.User, false).Where(m => m.PickUpOrderID == pickUpOrder.ID && m.PickUpOrderItemID == t.ID).ToList();
+                    pickUpOrderTaskDistributionList.ForEach(m =>
+                    {
+                        var orderDividend = new OrderDividend();
+                        orderDividend.TradeOrderID = pickUpOrder.ID;
+                        orderDividend.TradeNo = pickUpOrder.Code;
+                        orderDividend.PlateNumber = pickUpOrder.PlateNumber;
+                        orderDividend.Code = t.ProductCode;
+                        orderDividend.Name = t.ProductName;
+                        orderDividend.GoodsID = t.ProductID;
+                        orderDividend.OrderType = EShopTradeOrderType.PickupOrder;
+                        orderDividend.CreatedDate = DateTime.Now;
+                        orderDividend.ID = Util.NewID();
+                        orderDividend.PickUpOrderTaskDistributionID = m.ID;
+                        if (m.PeopleType == ETaskDistributionPeopleType.ConstructionCrew)
+                        {
+                            orderDividend.CommissionRate = m.CommissionRate;
+                            orderDividend.Commission = m.Commission;
+                        }
+                        if (m.PeopleType == ETaskDistributionPeopleType.Salesman)
+                        {
+                            orderDividend.CommissionRate = m.SalesmanCommissionRate;
+                            orderDividend.Commission = m.SalesmanCommission;
+                        }
+                        orderDividend.PeopleType = m.PeopleType;
+                        var user = UserRepo.GetByKey(m.UserID);
+                        orderDividend.UserCode = user.Code;
+                        orderDividend.UserName = user.Name;
+                        orderDividend.UserID = user.ID;
+                        orderDividend.Money = m.TotalMoney;
+                        orderDividendList.Add(orderDividend);
+                    });
+                });
+                OrderDividendRepo.AddRange(orderDividendList);
+            }
+            catch (Exception e)
+            {
+                AppContext.Logger.Error("接车单分红记录失败:" + e.Message);
+            }
         }
 
         public bool RecountMoneySave(string code)
         {
             if (string.IsNullOrEmpty(code))
                 return false;
-            var entity = Repository.GetInclude(t => t.PickUpOrderItemList).FirstOrDefault(t => t.Code == code);
+            var entity = Repository.GetInclude(t => t.PickUpOrderItemList, false).FirstOrDefault(t => t.Code == code);//PickUpOrderItemList PickUpOrderTaskDistributionList User
             if (entity == null)
                 return false;
             RecountMoney(entity);
@@ -271,13 +391,13 @@ namespace VVCar.Shop.Services.DomainServices
             var result = queryable.MapTo<PickUpOrderDto>().OrderByDescending(t => t.CreatedDate).ToArray();
             result.ForEach(t =>
             {
-                if (t.MemberID != null && t.MemberID!=Guid.Parse("00000000-0000-0000-0000-000000000000"))
+                if (t.MemberID != null && t.MemberID != Guid.Parse("00000000-0000-0000-0000-000000000000"))
                 {
                     var member = MemberRepo.GetByKey(t.MemberID);
                     t.MemberName = member.Name;
                     t.MemberMobilePhoneNo = member.MobilePhoneNo;
                     var memberCard = MemberCardRepo.GetByKey(member.CardID);
-                    if(memberCard != null)
+                    if (memberCard != null)
                     {
                         t.CardNumber = memberCard.Code;
                         t.CardStatus = memberCard.Status == ECardStatus.Activated ? "已激活" : memberCard.Status == ECardStatus.Lost ? "挂失" : "未激活";
@@ -517,17 +637,18 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns></returns>
         public PickUpOrder VerificationByMemberCard(VerificationByMemberCardParam param)
         {
-            if(param.PickUpOrderID == null)
+            if (param.PickUpOrderID == null)
             {
                 throw new DomainException("参数错误");
             }
             UnitOfWork.BeginTransaction();
-            try {
+            try
+            {
                 var member = MemberRepo.GetByKey(param.MemberID);
                 if (member == null)
                     throw new DomainException("会员不存在");
                 var memberCard = MemberCardRepo.GetByKey(member.CardID);
-                if(memberCard.CardBalance < param.PayMoney)
+                if (memberCard.CardBalance < param.PayMoney)
                 {
                     throw new DomainException("储值卡余额不足");
                 }
@@ -546,7 +667,7 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     PickUpOrderID = param.PickUpOrderID,
                     PickUpOrderCode = param.Code,
-                    PayType = EPayType.MemberCard,
+                    PayType = EPayType.ValueCard,
                     PayMoney = param.PayMoney,
                     PayInfo = "储值卡支付:" + param.PayMoney + "元",
                     MemberInfo = "",
@@ -555,7 +676,7 @@ namespace VVCar.Shop.Services.DomainServices
                 });
                 UnitOfWork.CommitTransaction();
                 var pickUpOrder = PickUpOrderRepo.GetByKey(param.PickUpOrderID);
-                SendMemberCardUsedNotify(member, param.Code, "接车单",param.PayMoney, memberCard.CardBalance);
+                SendMemberCardUsedNotify(member, param.Code, "接车单", param.PayMoney, memberCard.CardBalance);
                 return pickUpOrder;
             }
             catch (Exception e)
@@ -966,7 +1087,7 @@ namespace VVCar.Shop.Services.DomainServices
                 template_id = templateId,
                 url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MemberCard?mch={AppContext.CurrentSession.CompanyCode}",
                 data = new System.Dynamic.ExpandoObject(),
-            };     
+            };
             message.data.first = new WeChatTemplateMessageDto.MessageData(($"您好,您已使用储值卡完成核销{title}!"));
             message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             message.data.keyword2 = new WeChatTemplateMessageDto.MessageData($"{title}:{code}！");

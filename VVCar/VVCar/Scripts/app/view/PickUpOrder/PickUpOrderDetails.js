@@ -3,13 +3,13 @@
 	alias: 'widget.PickUpOrderDetails',
 	title: '接车单详情',
 	layout: 'vbox',
-	width: 950,
+	width: 1150,
 	modal: true,
 	bodyPadding: 5,
 	initComponent: function () {
 		var me = this;
-		var orderItemStore = Ext.create('WX.store.BaseData.PickUpOrderItemStore');
-		var pickUpOrderTaskDistributionStore = Ext.create('WX.store.BaseData.PickUpOrderTaskDistributionStore');
+		//var orderItemStore = Ext.create('WX.store.BaseData.PickUpOrderItemStore');
+		//var pickUpOrderTaskDistributionStore = Ext.create('WX.store.BaseData.PickUpOrderTaskDistributionStore');
 		me.container = {
 			xtype: "container",
 			name: 'details',
@@ -25,7 +25,7 @@
 				name: 'pickuporderitemgrid',
 				xtype: 'grid',
 				flex: 7,
-				store: orderItemStore,
+				store: Ext.create('WX.store.BaseData.PickUpOrderItemStore'),
 				tbar: [{
 					action: 'addPickUpOrderItem',
 					xtype: 'button',
@@ -86,11 +86,12 @@
 					},
 					{ header: '优惠价', dataIndex: 'ReducedPrice', width: 80, editor: { xtype: 'numberfield', allowBlank: false } },
 					{ header: '数量', dataIndex: 'Quantity', width: 70, editor: { xtype: 'numberfield', allowBlank: false, minValue: 1 } },
+					{ header: '备注', dataIndex: 'Remark', flex: 1, editor: { xtype: 'textfield', allowBlank: true }},
 					{ header: '销售总价', dataIndex: 'Money', width: 80 },
 				],
 				dockedItems: [{
 					xtype: 'pagingtoolbar',
-					store: orderItemStore,
+					store: this.store,
 					dock: 'bottom',
 					displayInfo: true
 				}]
@@ -101,7 +102,7 @@
 				title: '人员',
 				name: 'pickuporderitemusergrid',
 				xtype: 'grid',
-				store: pickUpOrderTaskDistributionStore,
+				store: Ext.create('WX.store.BaseData.PickUpOrderTaskDistributionStore'),
 				tbar: [{
 					action: 'addPickUpOrderItemCrew',
 					xtype: 'button',
@@ -131,10 +132,16 @@
 						}
 					},
 					{ header: '用户名称', dataIndex: 'UserName', flex: 1 },
+					{
+						header: '抽成比例', dataIndex: 'CommissionRate', flex: 1,
+						renderer: function (value) {
+							return value + '%';
+						}
+					},
 				],
 				dockedItems: [{
 					xtype: 'pagingtoolbar',
-					store: pickUpOrderTaskDistributionStore,
+					store: this.store,
 					dock: 'bottom',
 					displayInfo: true
 				}]
@@ -277,12 +284,15 @@
 					name: 'PayMoney',
 					fieldLabel: '结算金额',
 					minValue: 0,
+					value: 0,
+					allowBlank: false,
 				}, {
 					xtype: "radiogroup",
 					name: 'PayType',
-					columns: 2,
+					columns: 3,
 					items: [
 						{ boxLabel: '现金', name: 'type', inputValue: 2, width: 50, checked: true },
+						{ boxLabel: '微信', name: 'type', inputValue: 1, width: 50, },
 						{ boxLabel: '储值卡', name: 'type', inputValue: 6, width: 70 },
 					]
 				}]
@@ -294,7 +304,12 @@
 					action: 'payorder',
 					xtype: 'button',
 					text: '结算',
-					margin: '5 5 5 850',
+					margin: '5 5 5 800',
+				}, {
+					action: 'paydetails',
+					xtype: 'button',
+					text: '结算详情',
+					margin: '5 5 5 5',
 				}]
 			}]
 		});

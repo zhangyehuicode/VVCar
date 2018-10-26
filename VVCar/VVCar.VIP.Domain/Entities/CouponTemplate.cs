@@ -358,6 +358,12 @@ namespace VVCar.VIP.Domain.Entities
         public bool IsDeductionFirst { get; set; }
 
         /// <summary>
+        /// 抽成比例(0~100)
+        /// </summary>
+        [Display(Name = "抽成比例(0~100)")]
+        public decimal CommissionRate { get; set; }
+
+        /// <summary>
         /// 消费返积分比例(返回积分=抵用总额*比例)
         /// </summary>
         [Display(Name = "消费返积分比例(返回积分=抵用总额*比例)")]

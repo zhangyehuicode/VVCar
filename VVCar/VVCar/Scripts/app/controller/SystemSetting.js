@@ -145,6 +145,5 @@ Ext.define('WX.controller.SystemSetting', {
 				});
 			}
 		}
-		Ext.Msg.alert('提示', '保存');
 	},
 });

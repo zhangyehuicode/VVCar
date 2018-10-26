@@ -2,7 +2,7 @@
 	extend: 'Ext.app.Controller',
 	requires: ['WX.store.BaseData.ProductStore', 'WX.store.BaseData.ProductCategoryTreeStore'],
 	models: ['BaseData.ProductModel', 'BaseData.ProductCategoryModel', 'BaseData.ProductCategoryTreeModel'],
-	views: ['Shop.Service', 'Shop.ServiceEdit', 'Shop.ServiceCategoryList', 'Shop.ServiceCategoryEdit', 'Shop.ChangeCategory', 'Shop.StockOutInEdit'],
+	views: ['Shop.Service', 'Shop.ServiceEdit', 'Shop.ServiceCategoryList', 'Shop.ServiceCategoryEdit', 'Shop.ChangeServiceCategory', 'Shop.StockOutInEdit'],
 	refs: [{
 		ref: 'service',
 		selector: 'Service grid'
@@ -67,7 +67,7 @@
 			'ServiceCategoryEdit button[action=save]': {
 				click: me.saveProductCategory
 			},
-			'ChangeCategory button[action=saveProductCategoryBtn]': {
+			'ChangeServiceCategory button[action=saveProductCategoryBtn]': {
 				click: me.ProductChangeCategory
 			},
 			'Service button[action=changeCategory]': {
@@ -263,7 +263,7 @@
 			return;
 		}
 		var selectedData = selectedItems[0].data;
-		var win = Ext.widget("ChangeCategory");
+		var win = Ext.widget("ChangeServiceCategory");
 		win.form.getForm().actionMethod = 'PUT';
 		win.form.loadRecord(selectedItems[0]);
 		var cmbCurrentRegion = win.down('combo[name=CurrCategory]');

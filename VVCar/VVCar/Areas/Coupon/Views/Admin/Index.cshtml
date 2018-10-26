@@ -680,122 +680,134 @@
                 <form class="form-horizontal">
                     <fieldset>
                         <legend>使用设置</legend>
-                        <div class="form-group" style="padding-left:20px;">
-                            <div class="form-group">
-                                <div class="col-md-2">
-                                    <label>库存</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="input-group">
-                                        <input class="form-control" type="text" data-bind="value:BaseInfo().Stock" name="stock"
-                                               data-val="true" data-val-required="不能为空" data-val-digits="请输入整数" data-val-range="不能小于1且不能大于99999999" data-val-range-max="99999999" data-val-range-min="1" />
-                                        <span class="input-group-addon">份</span>
-                                    </div>
-                                    <span class="field-validation-valid" data-valmsg-for="stock" data-valmsg-replace="true"></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-2">
-                                    <label>领取限制</label>
-                                    <p class="help-block">(选填)</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="radio-inline col-md-2">
-                                        <label>
-                                            <input type="radio" name="IsNoCollarQuantityLimit" value="0" data-bind="checked:BaseInfo().IsNoCollarQuantityLimit" />有
-                                        </label>
-                                    </div>
-                                    <div class="radio-inline col-md-2">
-                                        <label>
-                                            <input type="radio" name="IsNoCollarQuantityLimit" value="1" data-bind="checked:BaseInfo().IsNoCollarQuantityLimit" />无
-                                        </label>
-                                    </div>
-                                </div>
-                                @*<div class="col-md-2" data-bind="visible:BaseInfo().IsCollarQuantityLimit()=='1'">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" data-bind="value:BaseInfo().CollarQuantityLimit" name="collarquantitylimit"
-                                                   data-val="true" data-val-digits="请输入整数" data-val-range="不能小于0" data-val-range-min="0" />
-                                            <span class="input-group-addon">张</span>
-                                        </div>
-                                        <span class="field-validation-valid" data-valmsg-for="collarquantitylimit" data-valmsg-replace="true"></span>
-                                        <p class="help-block">每个用户领取上限，如不填，则默认为1</p>
-                                    </div>*@
-                            </div>
-                            <div class="form-group" style="padding-left:185px;">
-                                <div class="col-md-2" data-bind="visible:BaseInfo().IsNoCollarQuantityLimit()=='0'">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" style="min-width:60px;" data-bind="value:BaseInfo().CollarQuantityLimit" name="collarquantitylimit"
-                                               data-val="true" data-val-digits="请输入整数" data-val-range="不能小于0" data-val-range-min="0" />
-                                        <span class="input-group-addon">张</span>
-                                    </div>
-                                    <span class="field-validation-valid" data-valmsg-for="collarquantitylimit" data-valmsg-replace="true"></span>
-                                    <p class="help-block">每个用户领取上限，如不填，则默认为1</p>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-2">
-                                    <label>分享与赠送</label>
-                                    <p class="help-block">(选填)</p>
-                                </div>
-                                <div class="col-md-15">
-                                    <label class="checkbox-inline">
-                                        <input type="radio" class="sharegive" name="sharegive" value="true" data-bind="checked:BaseInfo().CanShareByPeople()" id="cansharebypeople" />可分享领取链接
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="radio" class="sharegive" name="sharegive" id="cangivetopeople" />可赠送
-                                    </label>
-                                    <label class="checkbox-inline">
-                                        <input type="radio" class="sharegive" name="sharegive" id="cannotgiveshare" />既不分享也不赠送
-                                    </label>
-                                </div>
-                                @*<div class="col-md-10">
-                                        <label class="checkbox-inline">
-                                            <input type="checkbox" name="sharegive" data-bind="checked:BaseInfo().CanGiveToPeople" />用户可以赠送
-                                        </label>
-                                    </div>*@
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-2">
-                                    <label>是否推荐</label>
-                                </div>
-                                <div class="col-md-10" style="margin-top:-8px;">
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" name="recommend" id="IsRecommend" />推荐
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">消费返积分比例</label>
-                                <div class="col-md-2">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" data-bind="value:BaseInfo().ConsumePointRate" name="consumepointrate"
-                                               data-val="true" data-val-number="请输入数字" data-val-required="不能为空" data-val-range-min="0" data-val-range-max="100" data-val-range="请填写0~100的数字" />
-                                        <span class="input-group-addon">%</span>
-                                    </div>
-                                    <span class="field-validation-valid" data-valmsg-for="consumepointrate" data-valmsg-replace="true"></span>
-                                </div>
-                                <div class="help-block col-md-2">返回积分=抵用总额*比例</div>
-                            </div>
-                            <label class="col-md-6 control-label" style="display:none;">核销方式</label>
-                            <div class="form-group" style="padding-left:50px;display:none;">
-                                <div class="col-md-10">
-                                    <div class="radio-inline">
-                                        <label>
-                                            <input type="radio" style="padding-left:5px;" name="VerificationMode" value="0" data-bind="checked:BaseInfo().VerificationMode" />自助核销
-                                        </label>
-                                    </div>
-                                    <p class="help-block">消费者到店后通过自助点击卡券上的核销按钮，选择门店完成卡券核销</p>
-                                </div>
-                                <div class="col-md-10">
-                                    <div class="radio-inline">
-                                        <label>
-                                            <input type="radio" style="padding-left:5px;" name="VerificationMode" value="2" id="isspecialcoupon" data-bind="checked:BaseInfo().VerificationMode" />特殊代销卡券
-                                        </label>
-                                    </div>
-                                    <p class="help-block">特殊代销卡券无须领取，仅需核销。用于代其他渠道的优惠卡券核销统计与记录</p>
-                                </div>
-                            </div>
-                        </div>
+						<div class="form-group" style="padding-left:20px;">
+							<div class="form-group">
+								<div class="col-md-2">
+									<label>库存</label>
+								</div>
+								<div class="col-md-2">
+									<div class="input-group">
+										<input class="form-control" type="text" data-bind="value:BaseInfo().Stock" name="stock"
+											   data-val="true" data-val-required="不能为空" data-val-digits="请输入整数" data-val-range="不能小于1且不能大于99999999" data-val-range-max="99999999" data-val-range-min="1" />
+										<span class="input-group-addon">份</span>
+									</div>
+									<span class="field-validation-valid" data-valmsg-for="stock" data-valmsg-replace="true"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-2">
+									<label>领取限制</label>
+									<p class="help-block">(选填)</p>
+								</div>
+								<div class="col-md-4">
+									<div class="radio-inline col-md-2">
+										<label>
+											<input type="radio" name="IsNoCollarQuantityLimit" value="0" data-bind="checked:BaseInfo().IsNoCollarQuantityLimit" />有
+										</label>
+									</div>
+									<div class="radio-inline col-md-2">
+										<label>
+											<input type="radio" name="IsNoCollarQuantityLimit" value="1" data-bind="checked:BaseInfo().IsNoCollarQuantityLimit" />无
+										</label>
+									</div>
+								</div>
+								@*<div class="col-md-2" data-bind="visible:BaseInfo().IsCollarQuantityLimit()=='1'">
+				<div class="input-group">
+					<input type="text" class="form-control" data-bind="value:BaseInfo().CollarQuantityLimit" name="collarquantitylimit"
+						   data-val="true" data-val-digits="请输入整数" data-val-range="不能小于0" data-val-range-min="0" />
+					<span class="input-group-addon">张</span>
+				</div>
+				<span class="field-validation-valid" data-valmsg-for="collarquantitylimit" data-valmsg-replace="true"></span>
+				<p class="help-block">每个用户领取上限，如不填，则默认为1</p>
+			</div>*@
+							</div>
+							<div class="form-group" style="padding-left:185px;">
+								<div class="col-md-2" data-bind="visible:BaseInfo().IsNoCollarQuantityLimit()=='0'">
+									<div class="input-group">
+										<input type="text" class="form-control" style="min-width:60px;" data-bind="value:BaseInfo().CollarQuantityLimit" name="collarquantitylimit"
+											   data-val="true" data-val-digits="请输入整数" data-val-range="不能小于0" data-val-range-min="0" />
+										<span class="input-group-addon">张</span>
+									</div>
+									<span class="field-validation-valid" data-valmsg-for="collarquantitylimit" data-valmsg-replace="true"></span>
+									<p class="help-block">每个用户领取上限，如不填，则默认为1</p>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-md-2">
+									<label>分享与赠送</label>
+									<p class="help-block">(选填)</p>
+								</div>
+								<div class="col-md-15">
+									<label class="checkbox-inline">
+										<input type="radio" class="sharegive" name="sharegive" value="true" data-bind="checked:BaseInfo().CanShareByPeople()" id="cansharebypeople" />可分享领取链接
+									</label>
+									<label class="checkbox-inline">
+										<input type="radio" class="sharegive" name="sharegive" id="cangivetopeople" />可赠送
+									</label>
+									<label class="checkbox-inline">
+										<input type="radio" class="sharegive" name="sharegive" id="cannotgiveshare" />既不分享也不赠送
+									</label>
+								</div>
+								@*<div class="col-md-10">
+				<label class="checkbox-inline">
+					<input type="checkbox" name="sharegive" data-bind="checked:BaseInfo().CanGiveToPeople" />用户可以赠送
+				</label>
+			</div>*@
+							</div>
+							<div class="form-group">
+								<div class="col-md-2">
+									<label>是否推荐</label>
+								</div>
+								<div class="col-md-10" style="margin-top:-8px;">
+									<label class="checkbox-inline">
+										<input type="checkbox" name="recommend" id="IsRecommend" />推荐
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">消费返积分比例</label>
+								<div class="col-md-2">
+									<div class="input-group">
+										<input type="text" class="form-control" data-bind="value:BaseInfo().ConsumePointRate" name="consumepointrate"
+											   data-val="true" data-val-number="请输入数字" data-val-required="不能为空" data-val-range-min="0" data-val-range-max="100" data-val-range="请填写0~100的数字" />
+										<span class="input-group-addon">%</span>
+									</div>
+									<span class="field-validation-valid" data-valmsg-for="consumepointrate" data-valmsg-replace="true"></span>
+								</div>
+								<div class="help-block col-md-2">返回积分=抵用总额*比例</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-2 control-label">抽成比例</label>
+								<div class="col-md-2">
+									<div class="input-group">
+										<input type="text" class="form-control" data-bind="value:BaseInfo().CommissionRate" name="commissionrate"
+											   data-val="true" data-val-number="请输入数字" data-val-required="不能为空" data-val-range-min="0" data-val-range-max="100" data-val-range="请填写0~100的数字" />
+										<span class="input-group-addon">%</span>
+									</div>
+									<span class="field-validation-valid" data-valmsg-for="commissionrate" data-valmsg-replace="true"></span>
+								</div>
+								<div class="help-block col-md-2">抽成=总额*比例</div>
+							</div>
+							<label class="col-md-6 control-label" style="display:none;">核销方式</label>
+							<div class="form-group" style="padding-left:50px;display:none;">
+								<div class="col-md-10">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" style="padding-left:5px;" name="VerificationMode" value="0" data-bind="checked:BaseInfo().VerificationMode" />自助核销
+										</label>
+									</div>
+									<p class="help-block">消费者到店后通过自助点击卡券上的核销按钮，选择门店完成卡券核销</p>
+								</div>
+								<div class="col-md-10">
+									<div class="radio-inline">
+										<label>
+											<input type="radio" style="padding-left:5px;" name="VerificationMode" value="2" id="isspecialcoupon" data-bind="checked:BaseInfo().VerificationMode" />特殊代销卡券
+										</label>
+									</div>
+									<p class="help-block">特殊代销卡券无须领取，仅需核销。用于代其他渠道的优惠卡券核销统计与记录</p>
+								</div>
+							</div>
+						</div>
                     </fieldset>
                     <fieldset>
                         <legend> 门店信息 </legend>
@@ -1231,7 +1243,8 @@
                             IsPutaway: ko.observable('0'),//是否在微信领取中心显示(是否上架)
                             PutawayTime: ko.observable(null),//上架时间
                             SoldOutTime: ko.observable(null),//下架时间
-                            ConsumePointRate: ko.observable(0),
+							ConsumePointRate: ko.observable(0),
+							CommissionRate: ko.observable(0),
                             PriceSale: ko.observable(0),
                         }
                         me.BaseInfo(baseInfo);
@@ -1293,7 +1306,8 @@
                                 } else {
                                     $('#DiscountFirst').attr("checked", true);
                                 }
-                                me.BaseInfo().ConsumePointRate(me.ModifyCouponTemplate().ConsumePointRate);
+								me.BaseInfo().ConsumePointRate(me.ModifyCouponTemplate().ConsumePointRate);
+								me.BaseInfo().CommissionRate(me.ModifyCouponTemplate().CommissionRate);
                                 me.BaseInfo().PriceSale(me.ModifyCouponTemplate().PriceSale);
                                 me.BaseInfo().CouponColor(me.ModifyCouponTemplate().Color);
                                 me.BaseInfo().CouponValue(me.ModifyCouponTemplate().CouponValue);
@@ -2154,7 +2168,8 @@
                                     PutawayTime: window._rootModel.BaseInfo().PutawayTime(),
                                     SoldOutTime: window._rootModel.BaseInfo().SoldOutTime(),
                                     IsDeductionFirst: $('#DeductionFirst')[0].checked,
-                                    ConsumePointRate: window._rootModel.BaseInfo().ConsumePointRate(),
+									ConsumePointRate: window._rootModel.BaseInfo().ConsumePointRate(),
+									CommissionRate: window._rootModel.BaseInfo().CommissionRate(),
                                     PriceSale: window._rootModel.BaseInfo().PriceSale(),
                                     IsApplyAllProduct: $('#suitgoods')[0].checked,
                                 };

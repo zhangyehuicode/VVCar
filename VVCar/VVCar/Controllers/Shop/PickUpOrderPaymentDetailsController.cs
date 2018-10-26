@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using VVCar.Shop.Domain.Entities;
+using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
 using YEF.Core.Dtos;
 
@@ -16,6 +17,10 @@ namespace VVCar.Controllers.Shop
     [RoutePrefix("api/PickUpOrderPaymentDetails")]
     public class PickUpOrderPaymentDetailsController : BaseApiController
     {
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="pickUpOrderPaymentDetailsService"></param>
         public PickUpOrderPaymentDetailsController(IPickUpOrderPaymentDetailsService pickUpOrderPaymentDetailsService)
         {
             PickUpOrderPaymentDetailsService = pickUpOrderPaymentDetailsService;
@@ -34,6 +39,23 @@ namespace VVCar.Controllers.Shop
             return SafeExecute(() =>
             {
                 return PickUpOrderPaymentDetailsService.Add(entity);
+            });
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public PagedActionResult<PickUpOrderPaymentDetails> Search([FromUri]PickUpOrderPaymentDetailsFilter filter)
+        {
+            return SafeGetPagedData<PickUpOrderPaymentDetails>((result) =>
+            {
+                var totalCount = 0;
+                var data = PickUpOrderPaymentDetailsService.Search(filter, out totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
             });
         }
     }

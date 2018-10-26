@@ -54,7 +54,7 @@ namespace VVCar.Shop.Domain.Services
         /// 获取推荐产品
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Product> GetRecommendProduct();
+        IEnumerable<ProductDto> GetRecommendProduct();
 
         /// <summary>
         /// 获取服务

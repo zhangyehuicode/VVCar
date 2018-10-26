@@ -11,5 +11,6 @@
 		{ name: "ReducedPrice" },
 		{ name: "IsReduce" },
 		{ name: "Money" },
+		{ name: "Remark" },
 	]
 });

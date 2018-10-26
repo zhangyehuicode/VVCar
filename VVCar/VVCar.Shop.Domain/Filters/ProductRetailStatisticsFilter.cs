@@ -44,6 +44,11 @@ namespace VVCar.Shop.Domain.Filters
         public EProductType? ProductType { get; set; }
 
         /// <summary>
+        /// 车牌号
+        /// </summary>
+        public string PlateNumber { get; set; }
+
+        /// <summary>
         /// 是否畅销
         /// </summary>
         public bool? IsSaleWell { get; set; }

@@ -23,6 +23,9 @@ namespace VVCar.Shop.Data.Mapping
 
             Property(t => t.ImgUrl)
                .HasMaxLength(50);
+
+            Property(t => t.Remark)
+                .HasMaxLength(100);
         }
     }
 }

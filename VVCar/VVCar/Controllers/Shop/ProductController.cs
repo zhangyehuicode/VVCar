@@ -134,9 +134,9 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("GetRecommendProduct"), AllowAnonymous]
-        public PagedActionResult<Product> GetRecommendProduct()
+        public PagedActionResult<ProductDto> GetRecommendProduct()
         {
-            return SafeGetPagedData<Product>((result) =>
+            return SafeGetPagedData<ProductDto>((result) =>
             {
                 var data = ProductService.GetRecommendProduct();
                 result.Data = data;

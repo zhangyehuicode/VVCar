@@ -8,10 +8,12 @@
 	bodyPadding: 5,
 	autoShow: false,
 	modal: true,
-	buttonAlign: 'center',
+	buttonAlign: 'right',
 	initComponent: function () {
 		var me = this;
 		var userStore = Ext.create('WX.store.BaseData.UserStore');
+		userStore.limit = 10;
+		userStore.pageSize = 10;
 		userStore.load();
 		me.items = [{
 			xtype: 'grid',
@@ -77,16 +79,16 @@
 				xtype: 'pagingtoolbar',
 				displayInfo: true,
 			},
-			buttons: [{
-				text: '保存',
-				action: 'save',
-				cls: 'submitBtn',
-				scope: me
-			}, {
-				text: '取消',
-				scope: me,
-				handler: me.close
-			}]
+		}];
+		me.buttons = [{
+			text: '保存',
+			action: 'save',
+			cls: 'submitBtn',
+			scope: me
+		}, {
+			text: '取消',
+			scope: me,
+			handler: me.close
 		}];
 		me.callParent(arguments);
 	}

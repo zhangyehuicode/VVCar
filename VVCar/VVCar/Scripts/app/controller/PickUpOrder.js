@@ -1,8 +1,8 @@
 ﻿Ext.define('WX.controller.PickUpOrder', {
 	extend: 'Ext.app.Controller',
-	requires: ['WX.store.BaseData.PickUpOrderStore','WX.store.BaseData.PickUpOrderTaskDistributionStore'],
-	models: ['BaseData.PickUpOrderModel', 'BaseData.PickUpOrderTaskDistributionModel'],
-	views: ['PickUpOrder.PickUpOrder', 'PickUpOrder.PickUpOrderDetails', 'PickUpOrder.ProductSelector', 'PickUpOrder.UserSelector'],
+	requires: ['WX.store.BaseData.PickUpOrderStore', 'WX.store.BaseData.PickUpOrderTaskDistributionStore', 'WX.store.BaseData.PickUpOrderPaymentDetailsStore'],
+	models: ['BaseData.PickUpOrderModel', 'BaseData.PickUpOrderTaskDistributionModel', 'BaseData.PickUpOrderPaymentDetailsModel'],
+	views: ['PickUpOrder.PickUpOrder', 'PickUpOrder.PickUpOrderDetails', 'PickUpOrder.ProductSelector', 'PickUpOrder.UserSelector', 'PickUpOrder.PickUpOrderPaymentDetails'],
 	refs: [{
 		ref: 'pickUpOrderList',
 		selector: 'PickUpOrder grid[name=pickuporder]',
@@ -21,6 +21,15 @@
 	}, {
 		ref: 'gridPickUpOrderItemUser',
 		selector: 'PickUpOrderDetails grid[name=pickuporderitemusergrid]',
+	}, {
+		ref: 'pickUpOrderPaymentDetails',
+		selector: 'PickUpOrderPaymentDetails',
+	}, {
+		ref: 'gridPickUpOrderPaymentDetails',
+		selector: 'PickUpOrderPaymentDetails grid[name=gridPickUpOrderPaymentDetails]',
+	}, {
+		ref: 'pickUpOrderDetails',
+		selector: 'PickUpOrderDetails',
 	}],
 	init: function () {
 		var me = this;
@@ -69,27 +78,60 @@
 			'PickUpOrderDetails button[action=payorder]': {
 				click: me.payorder
 			},
+			'PickUpOrderDetails button[action=paydetails]': {
+				click: me.paydetails
+			},
 			'ProductSelector button[action=save]': {
 				click: me.saveItem
 			},
+			'ProductSelector button[action=search]': {
+				click: me.searchProduct
+			},
 			'UserSelector button[action=save]': {
 				click: me.saveUser
-			}
+			},
+			'UserSelector button[action=search]': {
+				click: me.searchUser
+			},
 		});
 	},
-	itemdblclick: function () {
-		Ext.Msg.alert('hello', 'hei');
+	searchUser: function (btn) {
+		var store = btn.up('grid').getStore();
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			store.currentPage = 1;
+			store.load({ params: queryValues });
+		}
+	},
+	searchProduct: function(btn) {
+		var store = btn.up('grid').getStore();
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			store.currentPage = 1;
+			store.load({ params: queryValues });
+		}
+	},
+	paydetails: function (btn) {
+		var me = this;
+		var win = Ext.widget('PickUpOrderPaymentDetails');
+		var store = me.getGridPickUpOrderPaymentDetails().getStore();
+		Ext.apply(store.proxy.extraParams, {
+			All: false,
+			PickUpOrderID: btn.up('window').down('textfield[name=ID]').getValue(),
+		});
+		store.load();
+		win.show();
 	},
 	payorder: function (btn) {
 		var me = this;
 		var win = btn.up('window');
-		var count = me.getGridPickUpOrderItem().getStore().getTotalCount();
-		if (count < 1) {
-			Ext.Msg.alert('提示', '请先添加项目!');
-			return;
-		}
+		//var count = me.getGridPickUpOrderItem().getStore().getTotalCount();
+		//if (count < 1) {
+		//	Ext.Msg.alert('提示', '请先添加项目!');
+		//	return;
+		//}
 		var payMoney = win.down('numberfield[name=PayMoney]').getValue();
-		if (payMoney == null || payMoney == '') {
+		if (payMoney < 0) {
 			Ext.Msg.alert('提示', '请输入金额');
 			return;
 		}
@@ -101,15 +143,16 @@
 		var payType = win.down('radiogroup[name=PayType]').getValue();
 		var code = win.down('textfield[name=Code]').getValue();
 		var store = me.getPickUpOrderList().getStore();
-		if (payType.type == 2) {
-			Ext.Msg.confirm('提示', '确定要<span><font color="red">现金</font></span>支付吗?', function (opt) {
+		if (payType.type == 1 || payType.type == 2) {
+			var tip = payType.type == 1 ? '微信' : '现金';
+			Ext.Msg.confirm('提示', '确定要<span><font color="red">'+ tip +'</font></span>支付吗?', function (opt) {
 				if (opt === 'yes') {
 					//现金支付
 					var pickUpOrderDetail = {};
 					pickUpOrderDetail.PickUpOrderID = win.down('textfield[name=ID]').getValue();
 					pickUpOrderDetail.PickUpOrderCode = code;
-					pickUpOrderDetail.PayType = payType;
-					pickUpOrderDetail.PayInfo = '现金支付:' + payMoney + '元';
+					pickUpOrderDetail.PayType = payType.type;
+					pickUpOrderDetail.PayInfo = tip + '支付:' + payMoney + '元';
 					pickUpOrderDetail.payMoney = payMoney;
 					pickUpOrderDetail.MemberInfo = win.down('textfield[name=MemberName]').getValue();
 					pickUpOrderDetail.StaffID = win.down('textfield[name=StaffID]').getValue();
@@ -123,11 +166,21 @@
 							win.down('numberfield[name=StillOwedMoney]').setValue(Number(stillOwedMoney) - Number(payMoney));
 							if (win.down('numberfield[name=StillOwedMoney]').getValue() == 0) {
 								win.down('textfield[name=Status]').setValue('已付款');
+								win.down('grid[name=pickuporderitemgrid]').down('button[action=addPickUpOrderItem]').hide();
+								win.down('grid[name=pickuporderitemgrid]').down('button[action=delPickUpOrderItem]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemCrew]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemSalesman]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=delPickUpOrderItemUser]').hide();
 							} else {
 								win.down('textfield[name=Status]').setValue('付款不足');
+								win.down('grid[name=pickuporderitemgrid]').down('button[action=addPickUpOrderItem]').hide();
+								win.down('grid[name=pickuporderitemgrid]').down('button[action=delPickUpOrderItem]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemCrew]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemSalesman]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=delPickUpOrderItemUser]').hide();
 							}
 							store.load();
-							Ext.Msg.alert('提示', '现金支付' + payMoney + '元成功');
+							Ext.Msg.alert('提示', tip + '支付' + payMoney + '元成功');
 						} else {
 							Ext.Msg.alert("提示", ajaxResult.ErrorMessage);
 							return;
@@ -166,8 +219,18 @@
 							win.down('numberfield[name=CardBalance]').setValue(Number(cardBalance) - Number(payMoney));
 							if (win.down('numberfield[name=StillOwedMoney]').getValue() == 0) {
 								win.down('textfield[name=Status]').setValue('已付款');
+								win.down('grid[name=pickuporderitemgrid]').down('button[action=addPickUpOrderItem]').hide();
+								win.down('grid[name=pickuporderitemgrid]').down('button[action=delPickUpOrderItem]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemCrew]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemSalesman]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=delPickUpOrderItemUser]').hide();
 							} else {
 								win.down('textfield[name=Status]').setValue('付款不足');
+								win.down('grid[name=pickuporderitemgrid]').down('button[action=addPickUpOrderItem]').hide();
+								win.down('grid[name=pickuporderitemgrid]').down('button[action=delPickUpOrderItem]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemCrew]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemSalesman]').hide();
+								win.down('grid[name=pickuporderitemusergrid]').down('button[action=delPickUpOrderItemUser]').hide();
 							}
 							store.load();
 							Ext.Msg.alert('提示', '储值卡支付' + payMoney + '元成功');
@@ -223,13 +286,29 @@
 							break;
 						case 1:
 							statusdesc = "已付款";
+							win.down('grid[name=pickuporderitemgrid]').down('button[action=addPickUpOrderItem]').hide();
+							win.down('grid[name=pickuporderitemgrid]').down('button[action=delPickUpOrderItem]').hide();
+							win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemCrew]').hide();
+							win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemSalesman]').hide();
+							win.down('grid[name=pickuporderitemusergrid]').down('button[action=delPickUpOrderItemUser]').hide();
 							break;
 						case 2:
 							statusdesc = "付款不足";
+							win.down('grid[name=pickuporderitemgrid]').down('button[action=addPickUpOrderItem]').hide();
+							win.down('grid[name=pickuporderitemgrid]').down('button[action=delPickUpOrderItem]').hide();
+							win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemCrew]').hide();
+							win.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemSalesman]').hide();
+							win.down('grid[name=pickuporderitemusergrid]').down('button[action=delPickUpOrderItemUser]').hide();
 							break;
 					}
 					win.down('textfield[name=Status]').setValue(statusdesc);
-					pickUpOrderItemStore.proxy.extraParams = { PickUpOrderID: records[0].data.ID };
+					var pickUpOrderItemStore = win.down('grid[name=pickuporderitemgrid]').getStore();
+					Ext.apply(pickUpOrderItemStore.proxy.extraParams, {
+						All: false,
+						PickUpOrderID: win.down('textfield[name=ID]').getValue(),
+					});
+					pickUpOrderItemStore.limit = 3;
+					pickUpOrderItemStore.pageSize = 3;
 					pickUpOrderItemStore.load();
 				}
 			}
@@ -268,7 +347,7 @@
 						pickorder.down('textfield[name=StillOwedMoney]').setValue(ajaxResult.Data.StillOwedMoney);
 					}
 				}
-				store.load();
+				store.reload();
 				me.getGridPickUpOrderItem().getStore().load();
 			}, function (response, opts) {
 				var ajaxResult = JSON.parse(response.responseText);
@@ -310,7 +389,10 @@
 								pickorder.down('textfield[name=ReceivedMoney]').setValue(ajaxResult.Data.ReceivedMoney);
 								pickorder.down('textfield[name=StillOwedMoney]').setValue(ajaxResult.Data.StillOwedMoney);
 							}
-							store.reload();
+							store.currentPage = 1;
+							store.load();
+							me.getGridPickUpOrderItemUser().getStore().removeAll();
+							me.getPickUpOrderList().getStore().reload();
 							Ext.Msg.alert('提示', '删除成功');
 						} else {
 							Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
@@ -323,10 +405,10 @@
 			}
 		});
 	},
-	addPickUpOrderItemCrew: function () {
+	addPickUpOrderItemCrew: function (btn) {
 		var me = this;
 		var win = Ext.widget('UserSelector');
-		var selectedItems = me.getGridPickUpOrderItem().getSelectionModel().getSelection();
+		var selectedItems = btn.up('window').down('grid[name=pickuporderitemgrid]').getSelectionModel().getSelection();
 		if (selectedItems.length === 0) {
 			Ext.Msg.alert('提示', '请先选中项目');
 			return;
@@ -334,10 +416,10 @@
 		win.down('textfield[name=PeopleType]').setValue(0);
 		win.show();
 	},
-	addPickUpOrderItemSalesman: function () {
+	addPickUpOrderItemSalesman: function (btn) {
 		var me = this;
 		var win = Ext.widget('UserSelector');
-		var selectedItems = me.getGridPickUpOrderItem().getSelectionModel().getSelection();
+		var selectedItems = btn.up('window').down('grid[name=pickuporderitemgrid]').getSelectionModel().getSelection();
 		if (selectedItems.length === 0) {
 			Ext.Msg.alert('提示', '请先选中项目');
 			return;
@@ -362,7 +444,8 @@
 					function success(response, request, c) {
 						var ajaxResult = JSON.parse(c.responseText);
 						if (ajaxResult.IsSuccessful) {
-							store.reload();
+							store.currentPage = 1;
+							store.load();
 							Ext.Msg.alert('提示', '删除成功');
 						} else {
 							Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
@@ -424,11 +507,14 @@
 		}
 
 		var pickupOrderID = win.down('textfield[name=PickUpOrderID]').getValue();
-		var store = me.getGridPickUpOrderItem().getStore();
+		//var store = me.getPickUpOrderDetails().down('grid[name=pickuporderitemgrid]').getStore();
+		//var test = Ext.ComponentQuery.query('grid[name=pickuporderitemgrid]');
+		//var store = Ext.ComponentQuery.query('grid[name=pickuporderitemgrid]')[0].getStore();
 		var pickuporderitems = [];
 		selectedItems.forEach(function (item) {
 			pickuporderitems.push({ PickUpOrderID: pickupOrderID, ProductID: item.data.ID, ProductCode: item.data.Code, ProductName: item.data.Name, PriceSale: item.data.PriceSale, ImgUrl: item.data.ImgUrl, Quantity: 1, });
 		});
+		var store = me.getGridPickUpOrderItem().getStore();
 		store.batchAdd(pickuporderitems, function (response, opts) {
 			var ajaxResult = JSON.parse(response.responseText);
 			if (ajaxResult.IsSuccessful) {
@@ -437,7 +523,10 @@
 					pickorder.down('textfield[name=ReceivedMoney]').setValue(ajaxResult.Data.ReceivedMoney);
 					pickorder.down('textfield[name=StillOwedMoney]').setValue(ajaxResult.Data.StillOwedMoney);
 				}
-				store.load();
+				store.reload();
+				me.getPickUpOrderList().getStore().reload();
+			} else {
+				Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
 			}
 			win.close();
 		}, function (response, opts) {
@@ -471,7 +560,6 @@
 		var win = Ext.widget('PickUpOrderDetails');
 		win.form.loadRecord(record);
 		var pickUpOrderItemStore = win.down('grid[name=pickuporderitemgrid]').getStore();
-
 		var statusdesc = "";
 		switch (record.data.Status) {
 			case 0:
@@ -495,9 +583,10 @@
 				break;
 		}
 		win.down('textfield[name=Status]').setValue(statusdesc);
-		pickUpOrderItemStore.proxy.extraParams = { PickUpOrderID: record.data.ID };
-		pickUpOrderItemStore.limit = 3;
-		pickUpOrderItemStore.pageSize = 3;
+		Ext.apply(pickUpOrderItemStore.proxy.extraParams, {
+			All: false, 
+			PickUpOrderID: record.data.ID,
+		});
 		pickUpOrderItemStore.load();
 
 		plateNumber = win.down('textfield[name=PlateNumber]').getValue();
@@ -540,20 +629,16 @@
 				Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
 			}
 		);
-
-
 		win.show();
 	},
 	gridPickUpOrderItemSelect: function (grid, record, index, eOpts) {
 		var me = this;
-		var win = Ext.widget('PickUpOrderDetails');
 		var store = me.getGridPickUpOrderItemUser().getStore();
 		store.proxy.extraParams = { PickUpOrderItemID: record.data.ID };
 		store.load();
 	},
 	openorder: function (btn) {
 		var win = Ext.widget('PickUpOrderDetails');
-		//win.down('textfield[name=Code]').hide();
 		win.down('button[action=checkOpenOrder]').show();
 		win.down('form[name=form4]').hide();
 		win.down('form[name=form5]').hide();

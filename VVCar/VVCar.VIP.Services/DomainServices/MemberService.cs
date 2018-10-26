@@ -604,7 +604,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (ids == null || ids.Length < 1)
                 throw new DomainException("参数错误");
-            var memberList = this.Repository.GetInclude(t => t.Card, true).Where(t => ids.Contains(t.ID)).ToList();
+            var memberList = this.Repository.GetIncludes(true, "Card", "MemberPlateList").Where(t => ids.Contains(t.ID)).ToList();
             if (memberList == null || memberList.Count() < 1)
                 throw new DomainException("数据不存在");
             memberList.ForEach(t =>
@@ -613,7 +613,7 @@ namespace VVCar.VIP.Services.DomainServices
                 t.Card.IsDeleted = true;
                 t.MemberPlateList.ForEach(m =>
                 {
-                    t.IsDeleted = true;
+                    m.IsDeleted = true;
                 });
             });
             return Repository.Update(memberList) > 0;

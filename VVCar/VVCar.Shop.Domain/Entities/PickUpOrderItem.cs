@@ -89,10 +89,40 @@ namespace VVCar.Shop.Domain.Entities
         public int Quantity { get; set; }
 
         /// <summary>
+        /// 施工人数
+        /// </summary>
+        [Display(Name = "施工人数")]
+        public int ConstructionCount { get; set; }
+
+        /// <summary>
+        /// 业务员人数
+        /// </summary>
+        [Display(Name = "业务员人数")]
+        public int SalesmanCount { get; set; }
+
+        /// <summary>
+        /// 抽成比例
+        /// </summary>
+        [Display(Name = "抽成比例")]
+        public decimal CommissionRate { get; set; }
+
+        /// <summary>
+        /// 业务员抽成比例(0~100)
+        /// </summary>
+        [Display(Name = "业务员抽成比例(0~100)")]
+        public decimal SalesmanCommissionRate { get; set; }
+
+        /// <summary>
         /// 图片
         /// </summary>
         [Display(Name = "图片")]
         public string ImgUrl { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
 
         /// <summary>
         /// 接车单任务分配

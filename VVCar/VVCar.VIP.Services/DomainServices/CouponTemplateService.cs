@@ -321,6 +321,7 @@ namespace VVCar.VIP.Services.DomainServices
                 PutInIsUseAllTime = c.PutInIsUseAllTime,
                 IsDeductionFirst = c.IsDeductionFirst,
                 ConsumePointRate = c.ConsumePointRate,
+                CommissionRate = c.CommissionRate,
                 DiscountRate = c.DiscountRate,
                 PriceSale = c.PriceSale,
                 IsApplyAllProduct = c.IsApplyAllProduct,
@@ -572,6 +573,7 @@ namespace VVCar.VIP.Services.DomainServices
                     Introduction = t.IntroDetail,
                     DeliveryNotes = "购买后可到会员卡包中查看已有卡券",
                     IsMemberCard = true,
+                    CommissionRate = t.CommissionRate,
                 });
         }
 

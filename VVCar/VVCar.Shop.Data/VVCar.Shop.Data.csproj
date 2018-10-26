@@ -61,6 +61,7 @@
     <Compile Include="Mapping\CarBitCoinRecordMap.cs" />
     <Compile Include="Mapping\ComboItemMap.cs" />
     <Compile Include="Mapping\ConsumeHistoryMap.cs" />
+    <Compile Include="Mapping\OrderDividendMap.cs" />
     <Compile Include="Mapping\OrderItemMap.cs" />
     <Compile Include="Mapping\OrderMap.cs" />
     <Compile Include="Mapping\OrderPaymentDetailsMap.cs" />

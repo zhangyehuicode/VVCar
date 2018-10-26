@@ -33,21 +33,21 @@
 				margin: '5 5 0 5',
 				name: 'Caption',
 				fieldLabel: '模板名称',
-				maxLength: 10,
+				maxLength: 30,
 				allowBlank: true,
 			}, {
 				xtype: 'textfield',
 				margin: '5 5 0 5',
 				name: 'Name',
 				fieldLabel: '模板编码',
-				maxLength: 10,
+				maxLength: 30,
 				allowBlank: true,
 			}, {
 				xtype: 'textfield',
 				margin: '5 5 0 5',
 				name: 'SettingValue',
 				fieldLabel: '模板数值',
-				maxLength: 10,
+				maxLength: 100,
 				allowBlank: true,
 			}]
 		});

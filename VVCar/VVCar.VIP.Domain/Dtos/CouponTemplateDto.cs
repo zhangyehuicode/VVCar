@@ -27,7 +27,6 @@ namespace VVCar.VIP.Domain.Dtos
         /// <summary>
         /// 是否推荐
         /// </summary>
-        [Display(Name = "是否推荐")]
         public bool IsRecommend { get; set; }
 
         /// <summary>
@@ -43,13 +42,11 @@ namespace VVCar.VIP.Domain.Dtos
         /// <summary>
         ///  优惠券编号
         /// </summary>
-        [Display(Name = "优惠券编号")]
         public string CouponCode { get; set; }
 
         /// <summary>
         ///  是否为特殊代销券
         /// </summary>
-        [Display(Name = "是否为特殊代销券")]
         public bool IsSpecialCoupon { get; set; }
 
         /// <summary>
@@ -80,13 +77,11 @@ namespace VVCar.VIP.Domain.Dtos
         /// <summary>
         ///投放开始时间
         /// </summary>
-        [Display(Name = "投放开始时间")]
         public string PutInStartDate { get; set; }
 
         /// <summary>
         ///投放结束时间
         /// </summary>
-        [Display(Name = "投放结束时间")]
         public string PutInEndDate { get; set; }
 
         /// <summary>
@@ -117,55 +112,46 @@ namespace VVCar.VIP.Domain.Dtos
         /// <summary>
         /// 剩余库存
         /// </summary>
-        [Display(Name = "剩余库存")]
         public int FreeStock { get; set; }
 
         /// <summary>
         /// 创建日期
         /// </summary>
-        [Display(Name = "创建日期")]
         public DateTime CreatedDate { get; set; }
 
         /// <summary>
         ///  颜色
         /// </summary>
-        [Display(Name = "颜色")]
         public string Color { get; set; }
 
         /// <summary>
         ///  券面值，抵用券时为抵用金额，代金券时为减免金额，折扣券时为折扣比例
         /// </summary>
-        [Display(Name = "抵用金额")]
         public decimal CouponValue { get; set; }
 
         /// <summary>
         ///  副标题
         /// </summary>
-        [Display(Name = "副标题")]
         public string SubTitle { get; set; }
 
         /// <summary>
         ///  封面图片
         /// </summary>
-        [Display(Name = "封面图片")]
         public string CoverImage { get; set; }
 
         /// <summary>
         ///  使用须知
         /// </summary>
-        [Display(Name = "使用须知")]
         public string UseInstructions { get; set; }
 
         /// <summary>
         ///  商户电话
         /// </summary>
-        [Display(Name = "商户电话")]
         public string MerchantPhoneNo { get; set; }
 
         /// <summary>
         ///  商户服务
         /// </summary>
-        [Display(Name = "商户服务")]
         public string MerchantServiceDesc { get; set; }
 
         /// <summary>
@@ -387,8 +373,12 @@ namespace VVCar.VIP.Domain.Dtos
         /// <summary>
         /// 消费返积分比例(返回积分=抵用总额*比例)
         /// </summary>
-        [Display(Name = "消费返积分比例(返回积分=抵用总额*比例)")]
         public decimal ConsumePointRate { get; set; }
+
+        /// <summary>
+        /// 抽成比例(0~100)
+        /// </summary>
+        public decimal CommissionRate { get; set; }
 
         /// <summary>
         /// 股东卡折扣系数

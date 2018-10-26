@@ -61,6 +61,9 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<Merchant> MerchantRepo { get => ServiceLocator.Instance.GetService<IRepository<Merchant>>(); }
 
+        IRepository<MemberPlate> MemberPlateRepo { get => ServiceLocator.Instance.GetService<IRepository<MemberPlate>>(); }
+
+
         IWeChatService WeChatService { get => ServiceLocator.Instance.GetService<IWeChatService>(); }
 
         ISystemSettingService SystemSettingService { get => ServiceLocator.Instance.GetService<ISystemSettingService>(); }
@@ -503,6 +506,23 @@ namespace VVCar.Shop.Services.DomainServices
 
             if (filter != null)
             {
+                if(!string.IsNullOrEmpty(filter.PlateNumber))
+                {
+                    var memberPlate = MemberPlateRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PlateNumber == filter.PlateNumber).FirstOrDefault();
+                    if(memberPlate != null)
+                        orderItemQueryable = orderItemQueryable.Where(t => t.Order.MemberID == memberPlate.MemberID);
+                    else
+                        orderItemQueryable = orderItemQueryable.Where(t => 1==0);
+                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.PlateNumber == filter.PlateNumber);
+                }
+
+                if (!string.IsNullOrEmpty(filter.ProductCodeName))
+                {
+                    var productIDs = ProductRepo.GetQueryable(false).Where(t => t.Code.Contains(filter.ProductCodeName) || t.Name.Contains(filter.ProductCodeName)).Select(t=>t.ID).Distinct();
+                    orderItemQueryable = orderItemQueryable.Where(t => productIDs.Contains(t.GoodsID));
+                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => productIDs.Contains(t.ProductID));
+                }
+
                 if (filter.StartDate.HasValue)
                 {
                     orderItemQueryable = orderItemQueryable.Where(t => t.Order.CreatedDate >= filter.StartDate.Value);
@@ -574,8 +594,10 @@ namespace VVCar.Shop.Services.DomainServices
                     result = result.Where(t => t.ProductName.Contains(filter.ProductName)).ToList();
                 if (!string.IsNullOrEmpty(filter.ProductCode))
                     result = result.Where(t => t.ProductCode.Contains(filter.ProductCode)).ToList();
-                if (!string.IsNullOrEmpty(filter.ProductCodeName))
-                    result = result.Where(t => t.ProductCode.Contains(filter.ProductCodeName) || t.ProductName.Contains(filter.ProductCodeName)).ToList();
+                //if (!string.IsNullOrEmpty(filter.ProductCodeName))
+                //{
+                //    result = result.Where(t => filter.ProductCodeName.Contains(t.ProductCode) || filter.ProductCodeName.Contains(t.ProductName)).ToList();
+                //}
                 if (filter.IsSaleWell.HasValue)
                 {
                     if (!(filter.StartDate.HasValue && filter.EndDate.HasValue))

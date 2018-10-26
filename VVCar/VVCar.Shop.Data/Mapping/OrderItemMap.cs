@@ -14,8 +14,11 @@ namespace VVCar.Shop.Data.Mapping
         {
             HasKey(t => t.ID);
 
-            Property(t => t.ProductName)
+            Property(t => t.ProductCode)
                 .HasMaxLength(20);
+
+            Property(t => t.ProductName)
+                .HasMaxLength(50);
 
             Property(t => t.ImgUrl)
                 .HasMaxLength(50);

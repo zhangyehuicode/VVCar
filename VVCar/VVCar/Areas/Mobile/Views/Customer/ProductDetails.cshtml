@@ -4,28 +4,28 @@
 	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<div id="productdetails">
+<div id="productdetails" style="background-color:white;">
+	<img class="details-img" src="~/Areas/resource/img/mobile/details-circle.png" v-on:click="shareimg" style="display:none" />
 	<div class="top_box">
 		<div class="top_box_text">{{Product.Name}}</div>
-		<a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" v-on:click="back" style="position:absolute;top:17px;"></a>
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
 		<a class="top_box2"></a>
-		<a><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;position:absolute;top:17px;right:10px;" v-on:click="shoppingcart"></a>
+		<a v-on:click="shoppingcart"><img src="~/Areas/resource/img/mobile/gwc2.png" style="width:5%;position:absolute;top:17px;right:10px;"></a>
 	</div>
 	<img class="sp_img" v-bind:src=Product.ImgUrl>
 	<div class="sp_text">
 		{{Product.Name}}
-		@*<a><img src="~/Areas/resource/img/mobile/fx.png"></a>*@
 	</div>
-
-	<div style="float:right;margin-right:10px;display: table;">
-		<div style="height:25px;" v-bind:class="crowdClass" v-on:click="crowdorder(MerchantCrowdOrderList)">
-			<span style="display:table-cell;background-color:red;padding:3px;width:60px;color:white;text-align:center;">拼单</span>
+	<center>
+		<div style="display: table;">
+			<div style="height:25px;padding: 10px 10px 0px 10px;" v-bind:class="crowdClass" v-on:click="crowdorder(MerchantCrowdOrderList)">
+				<span style="border-radius: 10px;display:table-cell;background-color:#FF0C4B;padding:3px;width:60px;color:white;text-align:center;">拼单</span>
+			</div>
+			<div style="height:25px;padding: 10px 10px 0px 10px;" v-bind:class="bargainClass" v-on:click="bargainorder(MerchantBargainOrderList)">
+				<span style="border-radius: 10px;display:table-cell;background-color:#FF0C4B;padding:3px;width:60px;color:white;text-align:center;">砍价</span>
+			</div>
 		</div>
-		<div style="height:25px;" v-bind:class="bargainClass" v-on:click="bargainorder(MerchantBargainOrderList)">
-			<span style="display:table-cell;background-color:blue;padding:3px;width:60px;color:white;text-align:center;">砍价</span>
-		</div>
-	</div>
-
+	</center>
 	<div class="sp_text2" style="border:none;">
 		￥{{TotalMoney}}@*Product.PriceSale*@
 		<div style="float:right;display:table;" v-if="ShowQuantity">
@@ -78,6 +78,15 @@
 
 		.hide {
 			display: none;
+		}
+
+		.details-img {
+			width: 33px;
+			position: fixed;
+			top: 220px;
+			right: 20px;
+			z-index: 1;
+			opacity: 0.5;
 		}
 	</style>
 	<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
@@ -216,7 +225,7 @@
 					TotalMoney: product.PriceSale,
 					ShowQuantity: !isfromcod,
 					ShoppingCart: {
-						MemberID: '',//member.MemberID,
+						MemberID: member.MemberID,
 						OpenID: '@ViewBag.OpenId',
 						Money: product.PriceSale,
 						ShoppingCartItemList: [{
@@ -246,6 +255,9 @@
 					}
 				},
 				methods: {
+					shareimg: function (event) {
+
+					},
 					back: function (event) {
 						history.back(-1);
 					},

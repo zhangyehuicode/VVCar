@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.Shop.Domain.Entities;
+using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
 using YEF.Core;
 using YEF.Core.Data;
@@ -77,6 +78,21 @@ namespace VVCar.Shop.Services.DomainServices
                 return result;
             result = Repository.GetQueryable(false).Where(t => t.PickUpOrderCode == pickUpOrderCode).ToList();
             return result;
+        }
+
+        /// <summary>
+        /// 出现
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<PickUpOrderPaymentDetails> Search(PickUpOrderPaymentDetailsFilter filter, out int totalCount)
+        {
+            var queryable = Repository.GetQueryable(false).Where(t => t.PickUpOrderID == filter.PickUpOrderID && t.MerchantID == AppContext.CurrentSession.MerchantID);
+            totalCount = queryable.Count();
+            if(filter.Start.HasValue && filter.Limit.HasValue)
+                queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
+            return queryable.ToList();
         }
     }
 }

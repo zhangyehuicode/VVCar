@@ -202,6 +202,7 @@ namespace VVCar.Shop.Services.DomainServices
                     result.ForEach(t =>
                     {
                         t.PriceSale = t.WholesalePrice;
+                        t.IsWholesale = true;
                     });
                 }
             }
@@ -277,15 +278,15 @@ namespace VVCar.Shop.Services.DomainServices
         /// 获取推荐产品
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Product> GetRecommendProduct()
+        public IEnumerable<ProductDto> GetRecommendProduct()
         {
-            var result = new List<Product>();
+            var result = new List<ProductDto>();
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType == EProductType.Goods && t.IsPublish && t.Stock > 0);
-            var recommend = queryable.Where(t => t.IsRecommend).ToList();
+            var recommend = queryable.Where(t => t.IsRecommend).ToList().MapTo<List<ProductDto>>();
             result = recommend;
             if (result.Count < 4)
             {
-                var additional = queryable.Where(t => !t.IsRecommend).OrderBy(t => t.Index).ToList();
+                var additional = queryable.Where(t => !t.IsRecommend).OrderBy(t => t.Index).ToList().MapTo<List<ProductDto>>();
                 foreach (var item in additional)
                 {
                     result.Add(item);
@@ -295,7 +296,7 @@ namespace VVCar.Shop.Services.DomainServices
             }
             else if (result.Count > 4)
             {
-                result = new List<Product>();
+                result = new List<ProductDto>();
                 foreach (var item in recommend)
                 {
                     result.Add(item);
@@ -311,6 +312,7 @@ namespace VVCar.Shop.Services.DomainServices
                     result.ForEach(t =>
                     {
                         t.PriceSale = t.WholesalePrice;
+                        t.IsWholesale = true;
                     });
                 }
             }

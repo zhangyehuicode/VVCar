@@ -4,6 +4,7 @@
 	title: '游戏卡券编辑',
 	layout: 'fit',
 	width: 450,
+	hight: 800,
 	bodyPadding: 5,
 	modal: true,
 	initComponent: function () {

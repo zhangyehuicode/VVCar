@@ -28,6 +28,11 @@ namespace VVCar.Shop.Domain.Dtos
         public string UserName { get; set; }
 
         /// <summary>
+        /// 抽成比例
+        /// </summary>
+        public decimal CommissionRate { get; set; }
+
+        /// <summary>
         /// 人员类型
         /// </summary>
         public ETaskDistributionPeopleType PeopleType { get; set; }

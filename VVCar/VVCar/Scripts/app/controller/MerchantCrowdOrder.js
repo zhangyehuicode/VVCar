@@ -2,7 +2,7 @@
 	extend: 'Ext.app.Controller',
 	requires: ['WX.store.BaseData.MerchantCrowdOrderStore'],
 	models: ['BaseData.MerchantCrowdOrderModel'],
-	views: ['MerchantCrowdOrder.MerchantCrowdOrderList', 'MerchantCrowdOrder.MerchantCrowdOrderEdit', 'MerchantCrowdOrder.ProductSelector'],
+	views: ['MerchantCrowdOrder.MerchantCrowdOrderList', 'MerchantCrowdOrder.MerchantCrowdOrderEdit', 'MerchantCrowdOrder.CrowdProductSelector'],
 	refs: [{
 		ref: 'merchantCrowdOrderList',
 		selector: 'MerchantCrowdOrderList'
@@ -10,8 +10,8 @@
 		ref: 'merchantCrowdOrderEdit',
 		selector: 'MerchantCrowdOrderEdit'
 	}, {
-		ref: 'productSelector',
-		selector: 'ProductSelector'
+		ref: 'crowdProductSelector',
+		selector: 'CrowdProductSelector'
 	}],
 	init: function () {
 		var me = this;
@@ -34,7 +34,7 @@
 			'MerchantCrowdOrderEdit button[action=save]': {
 				click: me.save
 			},
-			'ProductSelector grid[name=productList]': {
+			'CrowdProductSelector grid[name=productList]': {
 				itemdblclick: me.chooseProduct
 			}
 		});
@@ -87,7 +87,7 @@
 		});
 	},
 	selectProduct: function () {
-		var win = Ext.widget('ProductSelector');
+		var win = Ext.widget('CrowdProductSelector');
 		var store = win.down('grid').getStore();
 		store.proxy.extraParams = {
 			CarBitCoinProductType: 1,

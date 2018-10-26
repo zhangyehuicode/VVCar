@@ -56,11 +56,8 @@ namespace VVCar.Shop.Services.DomainServices
                 entity.CreatedDate = DateTime.Now;
                 entity.MerchantID = AppContext.CurrentSession.MerchantID;
                 var result = base.Add(entity);
-
-                OrderService.RecountMoneySave(entity.OrderCode, true);
-
                 UnitOfWork.CommitTransaction();
-
+                OrderService.RecountMoneySave(entity.OrderCode, true);
                 return result;
             }
             catch (Exception e)

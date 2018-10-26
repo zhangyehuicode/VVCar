@@ -25,6 +25,10 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<PickUpOrder> PickUpOrderRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrder>>(); }
 
+        IRepository<Product> ProductRepo { get => UnitOfWork.GetRepository<IRepository<Product>>(); }
+
+        IRepository<PickUpOrderTaskDistribution> PickUpOrderTaskDistributionRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrderTaskDistribution>>(); }
+
         #endregion
 
         /// <summary>
@@ -64,10 +68,16 @@ namespace VVCar.Shop.Services.DomainServices
                         t.ReducedPrice = t.ReducedPrice;
                         t.Money = t.PriceSale * t.Quantity;
                     }
+                    var product = ProductRepo.GetByKey(t.ProductID);
+                    t.CommissionRate = product.CommissionRate;
+                    t.SalesmanCommissionRate = product.SalesmanCommissionRate;
                     t.MerchantID = AppContext.CurrentSession.MerchantID;
                 });
                 Repository.AddRange(pickUpOrderItems).Count();
                 PickUpOrderService.RecountMoneySave(pickUpOrder.Code);
+                pickUpOrder = PickUpOrderRepo.GetByKey(pickUpOrderID);
+                pickUpOrder.Status = Domain.Enums.EPickUpOrderStatus.UnPay;
+                PickUpOrderRepo.Update(pickUpOrder);
                 UnitOfWork.CommitTransaction();
                 return PickUpOrderRepo.GetByKey(pickUpOrderID);
             }
@@ -100,9 +110,18 @@ namespace VVCar.Shop.Services.DomainServices
                 pickUpOrderItems.ForEach(t =>
                 {
                     t.IsDeleted = true;
+                    var distributionList = PickUpOrderTaskDistributionRepo.GetQueryable(true).Where(m => m.PickUpOrderID == pickUpOrderID && m.PickUpOrderItemID == t.ID).ToList();
+                    distributionList.ForEach(m =>
+                    {
+                        m.IsDeleted = true;
+                    });
+                    PickUpOrderTaskDistributionRepo.UpdateRange(distributionList);
                 });
                 Repository.UpdateRange(pickUpOrderItems);
                 PickUpOrderService.RecountMoneySave(pickUpOrder.Code);
+                pickUpOrder = PickUpOrderRepo.GetByKey(pickUpOrderID);
+                pickUpOrder.Status = Domain.Enums.EPickUpOrderStatus.UnPay;
+                PickUpOrderRepo.Update(pickUpOrder);
                 UnitOfWork.CommitTransaction();
                 return PickUpOrderRepo.GetByKey(pickUpOrderID);
             }
@@ -125,6 +144,7 @@ namespace VVCar.Shop.Services.DomainServices
                 return false;
             UnitOfWork.BeginTransaction();
             try {
+                pickUpOrderItem.Remark = entity.Remark;
                 pickUpOrderItem.Quantity = entity.Quantity;
                 pickUpOrderItem.IsReduce = entity.IsReduce;
                 if (entity.IsReduce)
@@ -165,6 +185,7 @@ namespace VVCar.Shop.Services.DomainServices
             UnitOfWork.BeginTransaction();
             try
             {
+                pickUpOrderItem.Remark = entity.Remark;
                 pickUpOrderItem.Quantity = entity.Quantity;
                 pickUpOrderItem.IsReduce = entity.IsReduce;
                 if (entity.IsReduce)

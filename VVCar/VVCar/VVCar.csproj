@@ -483,6 +483,7 @@
     <Content Include="Areas\resource\img\mobile\defaultimg3.png" />
     <Content Include="Areas\resource\img\mobile\departmentaddress.png" />
     <Content Include="Areas\resource\img\mobile\departmentname.png" />
+    <Content Include="Areas\resource\img\mobile\details-circle.png" />
     <Content Include="Areas\resource\img\mobile\dfk.png" />
     <Content Include="Areas\resource\img\mobile\dols.png" />
     <Content Include="Areas\resource\img\mobile\dsh.png" />
@@ -775,6 +776,7 @@
     <Content Include="Scripts\app\model\BaseData\MemberGroupTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\MerchantBargainOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\MerchantCrowdOrderModel.js" />
+    <Content Include="Scripts\app\model\BaseData\PickUpOrderPaymentDetailsModel.js" />
     <Content Include="Scripts\app\model\BaseData\PickUpOrderItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\PickUpOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\PickUpOrderTaskDistributionModel.js" />
@@ -867,6 +869,7 @@
     <Content Include="Scripts\app\store\BaseData\MemberGroupLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\MerchantBargainOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\MerchantCrowdOrderStore.js" />
+    <Content Include="Scripts\app\store\BaseData\PickUpOrderPaymentDetailsStore.js" />
     <Content Include="Scripts\app\store\BaseData\PickUpOrderItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\PickUpOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\PickUpOrderTaskDistributionStore.js" />
@@ -1004,15 +1007,17 @@
     <Content Include="Scripts\app\view\Member\MemberDetail.js" />
     <Content Include="Scripts\app\view\MerchantBargainOrder\MerchantBargainOrderEdit.js" />
     <Content Include="Scripts\app\view\MerchantBargainOrder\MerchantBargainOrderList.js" />
-    <Content Include="Scripts\app\view\MerchantBargainOrder\ProductSelector.js" />
+    <Content Include="Scripts\app\view\MerchantBargainOrder\BargainProductSelector.js" />
     <Content Include="Scripts\app\view\MerchantCrowdOrder\MerchantCrowdOrderEdit.js" />
     <Content Include="Scripts\app\view\MerchantCrowdOrder\MerchantCrowdOrderList.js" />
-    <Content Include="Scripts\app\view\MerchantCrowdOrder\ProductSelector.js" />
+    <Content Include="Scripts\app\view\MerchantCrowdOrder\CrowdProductSelector.js" />
+    <Content Include="Scripts\app\view\PickUpOrder\PickUpOrderPaymentDetails.js" />
     <Content Include="Scripts\app\view\PickUpOrder\PickUpOrder.js" />
     <Content Include="Scripts\app\view\PickUpOrder\PickUpOrderDetails.js" />
     <Content Include="Scripts\app\view\PickUpOrder\ProductSelector.js" />
     <Content Include="Scripts\app\view\PickUpOrder\UserSelector.js" />
     <Content Include="Scripts\app\view\QuickOrder\QuickOrderList.js" />
+    <Content Include="Scripts\app\view\Shop\ChangeServiceCategory.js" />
     <Content Include="Scripts\app\view\SystemSetting\SystemSettingEdit.js" />
     <Content Include="Scripts\app\view\Tag\TagEdit.js" />
     <Content Include="Scripts\app\view\Tag\TagList.js" />

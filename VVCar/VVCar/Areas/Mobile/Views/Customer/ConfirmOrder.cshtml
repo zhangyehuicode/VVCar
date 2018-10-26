@@ -290,20 +290,21 @@
 
                     if (!isfromsc) {
 
-                    if(i==0)
-                        body += productList[i].Name;
-                    else
+						if(i==0)
+							body += productList[i].Name;
+						else
                             body += '、' + productList[i].Name;
 
                         orderitemlist.push({
                             GoodsID: productList[i].ID,
+                            ImgUrl: productList[i].ImgUrl,
+                            ProductName: productList[i].Name,
                             ProductType: productList[i].IsMemberCard ? 2 : 1,
                             Quantity: productList[i].Quantity,
                             PriceSale: productList[i].PriceSale,
                             Money: productList[i].Money,
-                            Points: 0,
-                            ProductName: productList[i].Name,
-                            ImgUrl: productList[i].ImgUrl,
+							Points: 0,
+							CommissionRate: productList[i].IsWholesale ? productList[i].WholesaleCommissionRate: productList[i].CommissionRate,
                         });
                         if (!productList[i].IsMemberCard) {
                             hasproduct = true;
@@ -317,13 +318,14 @@
 
                         orderitemlist.push({
                             GoodsID: productList[i].GoodsID,
+                            ProductName: productList[i].ProductName,
+							ImgUrl: productList[i].ImgUrl,
                             ProductType: productList[i].ProductType,
                             Quantity: productList[i].Quantity,
                             PriceSale: productList[i].PriceSale,
                             Money: productList[i].Money,
                             Points: 0,
-                            ProductName: productList[i].ProductName,
-                            ImgUrl: productList[i].ImgUrl,
+							CommissionRate: productList[i].IsWholesale ? productList[i].WholesaleCommissionRate : productList[i].CommissionRate,
                         });
                         if (productList[i].ProductType==1) {
                             hasproduct = true;
@@ -335,7 +337,7 @@
                 }
                 _payBillViewModel.TotalMoney = totalMoney;
                 _payBillViewModel.Body = body;
-                _payBillViewModel.Order.Money = totalMoney;
+				_payBillViewModel.Order.Money = totalMoney;
                 _payBillViewModel.Order.OrderItemList = orderitemlist;
             }
             var member = sessionStorage.getItem('member');
@@ -353,7 +355,8 @@
                             if (res.IsSuccessful) {
                                 if (res.Data != null) {
                                     sessionStorage.setItem('member', JSON.stringify(res.Data));
-                                    _payBillViewModel.MemberInfo = res.Data;
+									_payBillViewModel.MemberInfo = res.Data;
+									_payBillViewModel.Order.MemberID = res.Data[0].ID;
                                 } else {
                                     window.location.href = "/Mobile/Customer?mch=" + mch;
                                 }
@@ -370,7 +373,9 @@
                 }
                 init();
             } else {
-                _payBillViewModel.MemberInfo = JSON.parse(member);
+				_payBillViewModel.MemberInfo = JSON.parse(member);
+				_payBillViewModel.Order.MemberID = _payBillViewModel.MemberInfo.MemberID;
+
             }
             _payBillViewModel.Order.Phone = _payBillViewModel.MemberInfo.MobilePhoneNo;
             _payBillViewModel.Order.LinkMan = _payBillViewModel.MemberInfo.MemberName;

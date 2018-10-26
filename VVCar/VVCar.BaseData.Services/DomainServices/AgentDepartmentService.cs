@@ -63,6 +63,8 @@ namespace VVCar.BaseData.Services.DomainServices
             UnitOfWork.BeginTransaction();
             try
             {
+                if (entity.AgentDepartmentCategoryID == Guid.Parse("00000000-0000-0000-0000-000000000001"))
+                    entity.AgentDepartmentCategoryID = null;
                 entity.ID = Util.NewID();
                 entity.IsHQ = false;
                 entity.CreatedDate = DateTime.Now;

@@ -39,6 +39,11 @@ namespace VVCar.Shop.Domain.Entities
         public string ImgUrl { get; set; }
 
         /// <summary>
+        /// 产品编码
+        /// </summary>
+        public string ProductCode { get; set; }
+
+        /// <summary>
         /// 产品名称
         /// </summary>
         [Display(Name = "产品名称")]

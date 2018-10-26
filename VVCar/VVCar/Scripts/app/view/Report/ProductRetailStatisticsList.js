@@ -48,6 +48,11 @@
 						fieldLabel: '关键词',
 						emptyText: '产品名称/编码',
 					}, {
+						xtype: 'textfield',
+						name: 'PlateNumber',
+						labelWidth: 45,
+						fieldLabel: '车牌号',
+					}, {
 						xtype: 'datefield',
 						name: 'StartDate',
 						fieldLabel: '开始时间',

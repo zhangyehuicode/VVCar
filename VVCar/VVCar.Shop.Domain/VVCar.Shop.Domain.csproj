@@ -83,6 +83,7 @@
     <Compile Include="Entities\ComboItem.cs" />
     <Compile Include="Entities\ConsumeHistory.cs" />
     <Compile Include="Entities\Order.cs" />
+    <Compile Include="Entities\OrderDividend.cs" />
     <Compile Include="Entities\OrderItem.cs" />
     <Compile Include="Entities\OrderPaymentDetails.cs" />
     <Compile Include="Entities\PickUpOrder.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Enums\EStockRecordSource.cs" />
     <Compile Include="Enums\EStockRecordType.cs" />
     <Compile Include="Enums\ETaskDistributionPeopleType.cs" />
+    <Compile Include="Enums\EShopTradeOrderType.cs" />
     <Compile Include="Filters\AppointmentFilter.cs" />
     <Compile Include="Filters\CarBitCoinMemberEngineFilter.cs" />
     <Compile Include="Filters\CarBitCoinProductCategoryFilter.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="Filters\OrderItemFilter.cs" />
     <Compile Include="Filters\PickUpOrderFilter.cs" />
     <Compile Include="Filters\PickUpOrderItemFilter.cs" />
+    <Compile Include="Filters\PickUpOrderPaymentDetailsFilter.cs" />
     <Compile Include="Filters\PickUpOrderTaskDistributionFilter.cs" />
     <Compile Include="Filters\ProductCategoryFilter.cs" />
     <Compile Include="Filters\ProductFilter.cs" />

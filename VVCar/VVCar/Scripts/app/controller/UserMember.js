@@ -81,7 +81,7 @@
 		var me = this;
 		var grid = me.getGridUserMember();
 
-		var selectedMemberItems = btn.up('grid').getSelectionModel().getSelection();
+		var selectedMemberItems = btn.up('window').down('grid').getSelectionModel().getSelection();
 		if (selectedMemberItems.length < 1) {
 			Ext.Msg.alert('提示', '未选择会员');
 			return;
@@ -102,9 +102,7 @@
 		store.batchAdd(userMember, function (response, opts) {
 			var ajaxResult = JSON.parse(response.responseText);
 			if (ajaxResult.Data == true) {
-				Ext.Msg.alert('提示', '新增成功');
-				btn.up('grid').getStore().reload();
-				grid.up('window').close();
+				btn.up('window').close();
 				store.reload();
 				return;
 			} else {
@@ -123,6 +121,7 @@
 		if (queryValues != null) {
 			queryValues.ProductType = 0;
 			var store = me.getGridUserMemberSelector().getStore();
+			store.currentPage = 1;
 			store.load({ params: queryValues });
 		} else {
 			Ext.Msg.alert('提示', '请输入过滤条件');

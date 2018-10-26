@@ -420,7 +420,8 @@
         var record = form.getRecord().data;
         record.MemberGroupID = formValues.DestMemberGroup;
         if (form.isValid()) {
-            var store = me.getMember().getStore();
+			var store = me.getMember().getStore();
+			var storeCategory = me.getTreeMemberGroup().getStore();
             var rr = store.getById(record.ID);
             rr.MemberGroupID = record.MemberGroupID;
             Ext.Msg.show({
@@ -442,7 +443,8 @@
                 callback: function (options, success, response) {
                     if (success) {
                         Ext.MessageBox.hide();
-                        store.load();
+						store.load();
+						storeCategory.load();
                         win.close();
                         Ext.MessageBox.alert("操作成功", "更新成功");
                     } else {
@@ -622,7 +624,7 @@
         var form = win.form.getForm();
         var formValues = form.getValues();
         if (form.isValid()) {
-            var store = me.getTreegridMemberGroup().getStore();
+			var store = me.getTreegridMemberGroup().getStore();
             var treeMemberGroupStore = me.getTreeMemberGroup().getStore();
             if (form.actionMethod == 'POST') {
                 store.addMemberGroup(formValues, function (request, success, response) {

@@ -456,11 +456,11 @@ namespace VVCar.VIP.Services.DomainServices
                     if (template.Nature == ENature.Card && !string.IsNullOrEmpty(template.IncludeProducts))
                     {
                         var items = AddCouponItem(newCoupon.ID, template.IncludeProducts);
-                        AppContext.Logger.Info($"AddCouponItem result:{items.Count}");
                         if (items != null && items.Count > 0)
                         {
                             //couponItems.AddRange(items);
                             newCoupon.CouponItemList = items;
+                            AppContext.Logger.Info($"AddCouponItem result:{items.Count}");
                         }
                     }
                     newCoupons.Add(newCoupon);

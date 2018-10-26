@@ -2,7 +2,7 @@
 	extend: 'Ext.app.Controller',
 	requires: ['WX.store.BaseData.MerchantBargainOrderStore'],
 	models: ['BaseData.MerchantBargainOrderModel'],
-	views: ['MerchantBargainOrder.MerchantBargainOrderList', 'MerchantBargainOrder.MerchantBargainOrderEdit', 'MerchantBargainOrder.ProductSelector'],
+	views: ['MerchantBargainOrder.MerchantBargainOrderList', 'MerchantBargainOrder.MerchantBargainOrderEdit', 'MerchantBargainOrder.BargainProductSelector'],
 	refs: [{
 		ref: 'merchantBargainOrderList',
 		selector: 'MerchantBargainOrderList'
@@ -10,8 +10,8 @@
 		ref: 'merchantBargainOrderEdit',
 		selector: 'MerchantBargainOrderEdit'
 	}, {
-		ref: 'productSelector',
-		selector: 'ProductSelector'
+		ref: 'bargainProductSelector',
+		selector: 'BargainProductSelector'
 	}],
 	init: function () {
 		var me = this;
@@ -34,7 +34,7 @@
 			'MerchantBargainOrderEdit button[action=save]': {
 				click: me.save
 			},
-			'ProductSelector grid[name=productList]': {
+			'BargainProductSelector grid[name=productList]': {
 				itemdblclick: me.chooseProduct
 			}
 		});
@@ -87,7 +87,7 @@
 		});
 	},
 	selectProduct: function () {
-		var win = Ext.widget('ProductSelector');
+		var win = Ext.widget('BargainProductSelector');
 		var store = win.down('grid').getStore();
 		store.proxy.extraParams = {
 			CarBitCoinProductType: 1,

@@ -1,6 +1,6 @@
-﻿Ext.define('WX.view.MerchantCrowdOrder.ProductSelector', {
+﻿Ext.define('WX.view.MerchantBargainOrder.BargainProductSelector', {
 	extend: 'Ext.window.Window',
-	alias: 'widget.ProductSelector',
+	alias: 'widget.BargainProductSelector',
 	title: '选择产品',
 	layout: 'fit',
 	width: 600,

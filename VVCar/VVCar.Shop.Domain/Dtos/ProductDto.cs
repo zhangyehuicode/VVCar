@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VVCar.Shop.Domain.Enums;
 
 namespace VVCar.Shop.Domain.Dtos
 {
@@ -39,9 +33,19 @@ namespace VVCar.Shop.Domain.Dtos
         public decimal BasePrice { get; set; }
 
         /// <summary>
+        /// 是否推荐
+        /// </summary>
+        public bool IsRecommend { get; set; }
+
+        /// <summary>
         /// 销售单价
         /// </summary>
         public decimal PriceSale { get; set; }
+
+        /// <summary>
+        /// 是否批发价
+        /// </summary>
+        public bool IsWholesale { get; set; }
 
         /// <summary>
         /// 批发价
@@ -72,5 +76,25 @@ namespace VVCar.Shop.Domain.Dtos
         /// 是否会员卡
         /// </summary>
         public bool IsMemberCard { get; set; }
+
+        /// <summary>
+        /// 抽成比例(0~100)
+        /// </summary>
+        public decimal CommissionRate { get; set; }
+
+        /// <summary>
+        /// 业务员抽成比例(0~100)
+        /// </summary>
+        public decimal SalesmanCommissionRate { get; set; }
+
+        /// <summary>
+        /// 批发价抽成比例(0~100) --> 对于服务就是优惠价
+        /// </summary>
+        public decimal WholesaleCommissionRate { get; set; }
+
+        /// <summary>
+        /// 优惠价施工抽成
+        /// </summary>
+        public decimal WholesaleConstructionCommissionRate { get; set; }
     }
 }
