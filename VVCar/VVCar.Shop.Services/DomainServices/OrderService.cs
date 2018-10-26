@@ -133,47 +133,47 @@ namespace VVCar.Shop.Services.DomainServices
                 t.Commission = Math.Round(t.Money * t.CommissionRate / 100, 2);
             });
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
-
-            Order result = null;
             UnitOfWork.BeginTransaction();
             try
             {
+                Order result = null;
                 //var cardItems = entity.OrderItemList.Where(t => t.ProductType == EProductType.MemberCard).ToList();
                 //var couponTemplateIDs = cardItems.Select(t => t.GoodsID).ToList();
                 //if (couponTemplateIDs != null && couponTemplateIDs.Count > 0)
                 //    ReceiveCoupons(couponTemplateIDs, entity.OpenID);
                 //if (cardItems.Count == entity.OrderItemList.Count)
                 //    entity.Status = EOrderStatus.Finish;
-                result = base.Add(entity);
                 RecountMoney(entity);
                 RecountOrderItemMoney(entity);
-                //try
-                //{
-                //    MemberService.AdjustMemberPoint(result.OpenID, EMemberPointType.MemberConsume, (double)result.Money);
-                //}
-                //catch (Exception e)
-                //{
-                //    AppContext.Logger.Error($"商城下单增加会员积分出现异常，{e.Message}");
-                //}
+                result = base.Add(entity);
+                try
+                {
+                    MemberService.AdjustMemberPoint(result.OpenID, EMemberPointType.MemberConsume, (double)result.Money);
+                }
+                catch (Exception e)
+                {
+                    AppContext.Logger.Error($"商城下单增加会员积分出现异常，{e.Message}");
+                }
                 if (entity.Source == EOrderSource.Shop)
                     ShoppingCartService.ClearShoppingCart(result.OpenID);
+
+                try
+                {
+                    if (result.Status == EOrderStatus.OnCredit || result.Status == EOrderStatus.PayUnshipped)
+                        SendDeliveryNotify(result);
+                }
+                catch (Exception e)
+                {
+                    AppContext.Logger.Error(e);
+                }
                 UnitOfWork.CommitTransaction();
+                return result;
             }
             catch (Exception e)
             {
                 UnitOfWork.RollbackTransaction();
                 throw new DomainException(e.Message);
             }
-            try
-            {
-                if (result.Status == EOrderStatus.OnCredit || result.Status == EOrderStatus.PayUnshipped)
-                    SendDeliveryNotify(result);
-            }
-            catch (Exception e)
-            {
-                AppContext.Logger.Error(e);
-            }
-            return result;
         }
 
         public void RecountMoney(Order entity, bool isNotify = false)
@@ -203,14 +203,9 @@ namespace VVCar.Shop.Services.DomainServices
                 });
             }
             entity.ReceivedMoney = paymoney;
-#if DEBUG
-            entity.ReceivedMoney = entity.Money;
-#endif
-
             entity.StillOwedMoney = entity.Money - entity.ReceivedMoney;
             if (entity.StillOwedMoney < 0)
                 entity.StillOwedMoney = 0;
-
             if (entity.ReceivedMoney > 0 && entity.ReceivedMoney < entity.Money)
                 entity.Status = EOrderStatus.UnEnough;
             else if (entity.ReceivedMoney >= entity.Money)
@@ -219,9 +214,6 @@ namespace VVCar.Shop.Services.DomainServices
                 var cardItems = entity.OrderItemList.Where(t => t.ProductType == EProductType.MemberCard).ToList();
                 if (cardItems != null && cardItems.Count == entity.OrderItemList.Count)
                     entity.Status = EOrderStatus.Finish;
-#if DEBUG
-                isNotify = true;
-#endif
                 if (isNotify)
                 {
                     StockOut(entity.OrderItemList.Where(t => t.ProductType == EProductType.Goods).ToList());
@@ -247,6 +239,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         void AddOrderDevidend(Order entity)
         {
+            UnitOfWork.BeginTransaction();
             try
             {
                 var orderDividendList = new List<OrderDividend>();
@@ -254,6 +247,7 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     var orderDividend = new OrderDividend();
                     orderDividend.ID = Util.NewID();
+                    orderDividend.GoodsID = t.GoodsID;
                     orderDividend.TradeOrderID = entity.ID;
                     orderDividend.TradeNo = entity.Code;
                     orderDividend.Code = t.ProductCode;
@@ -274,12 +268,15 @@ namespace VVCar.Shop.Services.DomainServices
                     orderDividend.CommissionRate = t.CommissionRate;
                     orderDividend.Commission = t.Commission;
                     orderDividend.Money = t.Money;
+                    orderDividend.MerchantID = t.MerchantID;
                     orderDividendList.Add(orderDividend);
                 });
                 OrderDividendRepo.AddRange(orderDividendList);
+                UnitOfWork.CommitTransaction();
             }
             catch (Exception e)
             {
+                UnitOfWork.RollbackTransaction();
                 AppContext.Logger.Error($"商城下单记录分红出现异常，{e.Message}");
             }
         }
@@ -296,7 +293,6 @@ namespace VVCar.Shop.Services.DomainServices
 
         public bool RecountMoneySave(string code, bool isNotify = false)
         {
-            UnitOfWork.BeginTransaction();
             try {
                 if (string.IsNullOrEmpty(code))
                     return false;
@@ -305,13 +301,11 @@ namespace VVCar.Shop.Services.DomainServices
                     return false;
                 RecountMoney(entity, isNotify);
                 Repository.Update(entity);
-                UnitOfWork.CommitTransaction();
                 return true;
             }
             catch (Exception e)
             {
                 AppContext.Logger.Error($"商城订单重新计算金额保存出现异常{e.Message}");
-                UnitOfWork.RollbackTransaction();
                 return false;
             }
         }
@@ -476,13 +470,19 @@ namespace VVCar.Shop.Services.DomainServices
             message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(order.Code);
             message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(order.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss"));
             message.data.remark = new WeChatTemplateMessageDto.MessageData($"订单项：{productNames}。在管理后台查看订单详情，请及时发货");
-
-            users.ForEach(t =>
+            if (order.OpenID == "oI4ee0pN20eepDVJHh_UlD_oH_Ew")
             {
-                message.touser = t.OpenID;
-                //WeChatService.SendWeChatNotifyAsync(message);
+                message.touser = order.OpenID;
                 WeChatService.SendWeChatNotify(message);
-            });
+            }
+            else {
+                users.ForEach(t =>
+                {
+                    message.touser = t.OpenID;
+                    //WeChatService.SendWeChatNotifyAsync(message);
+                    WeChatService.SendWeChatNotify(message);
+                });
+            }
         }
 
         /// <summary>

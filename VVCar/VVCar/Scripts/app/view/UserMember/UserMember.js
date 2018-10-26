@@ -33,6 +33,11 @@
 					{ header: '用户代码', dataIndex: 'Code', flex: 1, },
 					{ header: '用户名称', dataIndex: 'Name', flex: 1, },
 				],
+				bbar: {
+					xtype: 'pagingtoolbar',
+					store: userStore,
+					displayInfo: true
+				}
 			},
 			{
 				xtype: 'grid',
