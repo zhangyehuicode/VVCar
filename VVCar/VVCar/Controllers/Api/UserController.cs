@@ -96,7 +96,7 @@ namespace VVCar.Controllers.Api
         /// 查询用户
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public PagedActionResult<User> Query([FromUri]UserFilter filter)
         {
             return SafeGetPagedData<User>((result) =>

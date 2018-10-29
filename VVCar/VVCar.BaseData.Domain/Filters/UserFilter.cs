@@ -25,6 +25,11 @@ namespace VVCar.BaseData.Domain.Filters
         public Guid? Department { get; set; }
 
         /// <summary>
+        /// 关键字
+        /// </summary>
+        public string Keyword { get; set; }
+
+        /// <summary>
         /// 排序方向
         /// </summary>
         public EUserSortDirection SortDirection { get; set; }

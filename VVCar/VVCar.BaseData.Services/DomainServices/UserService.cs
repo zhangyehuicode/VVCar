@@ -393,13 +393,14 @@ namespace VVCar.BaseData.Services.DomainServices
                     queryable = queryable.Where(t => t.Code.Contains(filter.Code));
                 if (!string.IsNullOrEmpty(filter.Name))
                     queryable = queryable.Where(t => t.Name.Contains(filter.Name));
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                    queryable = queryable.Where(t => t.Code.Contains(filter.Keyword) || t.Name.Contains(filter.Keyword));
                 if (filter.Department.HasValue)
                     queryable = queryable.Where(t => t.DepartmentID == filter.Department);
             }
-            if (AppContext.CurrentSession.MerchantID == Guid.Parse("00000000-0000-0000-0000-000000000001") && AppContext.CurrentSession.UserID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
-            {
-                queryable = queryable.Where(t => t.ID == AppContext.CurrentSession.UserID || t.CreatedUserID == AppContext.CurrentSession.UserID);
-            }
+            if (!filter.All)
+                if (AppContext.CurrentSession.MerchantID == Guid.Parse("00000000-0000-0000-0000-000000000001") && AppContext.CurrentSession.UserID != Guid.Parse("00000000-0000-0000-0000-000000000001"))
+                    queryable = queryable.Where(t => t.ID == AppContext.CurrentSession.UserID || t.CreatedUserID == AppContext.CurrentSession.UserID);
             result.TotalCount = queryable.Count();
             queryable = queryable.OrderBy(t => t.Code);
             if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
