@@ -73,9 +73,9 @@ namespace VVCar.Shop.Domain.Entities
         public decimal TotalMoney { get; set; }
 
         /// <summary>
-        /// 抽成比例
+        /// 施工抽成比例
         /// </summary>
-        [Display(Name = "抽成比例")]
+        [Display(Name = "施工抽成比例")]
         public decimal CommissionRate { get; set; }
 
         /// <summary>

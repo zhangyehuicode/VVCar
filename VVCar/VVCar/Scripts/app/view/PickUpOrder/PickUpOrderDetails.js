@@ -8,8 +8,6 @@
 	bodyPadding: 5,
 	initComponent: function () {
 		var me = this;
-		//var orderItemStore = Ext.create('WX.store.BaseData.PickUpOrderItemStore');
-		//var pickUpOrderTaskDistributionStore = Ext.create('WX.store.BaseData.PickUpOrderTaskDistributionStore');
 		me.container = {
 			xtype: "container",
 			name: 'details',

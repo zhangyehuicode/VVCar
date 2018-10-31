@@ -13,5 +13,10 @@ namespace VVCar.Controllers
         {
             return View();
         }
+
+        public ActionResult AnalyseIndex()
+        {
+            return View();
+        }
     }
 }

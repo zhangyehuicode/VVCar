@@ -118,32 +118,27 @@ namespace VVCar.Shop.Services.DomainServices
                 }
                 if (string.IsNullOrEmpty(entity.Code))
                     entity.Code = GetTradeNo();
-
-                entity.PickUpOrderItemList.ForEach(t =>
+                if (entity.PickUpOrderItemList != null && entity.PickUpOrderItemList.Count > 0)
                 {
-                    t.ID = Util.NewID();
-                    t.PickUpOrderID = entity.ID;
-                    t.MerchantID = entity.MerchantID;
-                    if (t.IsReduce)
+                    entity.PickUpOrderItemList.ForEach(t =>
                     {
-                        t.Money = t.Quantity * t.ReducedPrice;
-                        t.ReducedPrice = t.ReducedPrice;
-                    }
-                    else
-                    {
-                        t.Money = t.Quantity * t.PriceSale;
-                        t.ReducedPrice = t.PriceSale;
-                    }
-                    t.Discount = 1;
-                });
-                if (entity.PickUpOrderItemList.Count > 0)
-                {
+                        t.ID = Util.NewID();
+                        t.PickUpOrderID = entity.ID;
+                        t.MerchantID = entity.MerchantID;
+                        if (t.IsReduce)
+                            t.Money = t.Quantity * t.ReducedPrice;
+                        else
+                        {
+                            t.Money = t.Quantity * t.PriceSale;
+                            t.ReducedPrice = t.PriceSale;
+                        }
+                        t.Discount = 1;
+                    });
                     RecountMoney(entity);
+                    PickUpOrderTaskDistribution(entity.PickUpOrderItemList.ToList());
                 }
-                PickUpOrderTaskDistribution(entity.PickUpOrderItemList.ToList());
                 entity.PlateNumber = entity.PlateNumber.ToUpper();
                 var pickupOrder = base.Add(entity);
-                RecountMoneySave(entity.Code);
                 UnitOfWork.CommitTransaction();
                 return pickupOrder;
             }
@@ -219,31 +214,33 @@ namespace VVCar.Shop.Services.DomainServices
                     var constructionCount = t.PickUpOrderTaskDistributionList.Count(m => m.PeopleType == ETaskDistributionPeopleType.ConstructionCrew);
                     var salesmanCount = t.PickUpOrderTaskDistributionList.Count(m => m.PeopleType == ETaskDistributionPeopleType.Salesman);
                     var product = ProductRepo.GetByKey(t.ProductID, false);
-                    t.PickUpOrderTaskDistributionList.ForEach(m =>
+                    t.PickUpOrderTaskDistributionList.ForEach(distribution =>
                     {
-                        m.ID = Util.NewID();
-                        m.CreatedUserID = AppContext.CurrentSession.UserID;
-                        m.CreatedUser = AppContext.CurrentSession.UserName;
-                        m.CreatedDate = DateTime.Now;
-                        m.MerchantID = AppContext.CurrentSession.MerchantID;
-                        m.PickUpOrderID = t.PickUpOrderID;
-                        m.PickUpOrderItemID = t.ID;
                         t.ConstructionCount = constructionCount;
                         t.SalesmanCount = salesmanCount;
-                        t.CommissionRate = product.CommissionRate;
-                        t.SalesmanCommissionRate = product.SalesmanCommissionRate;
-                        m.TotalMoney = t.Money;
+                        distribution.ID = Util.NewID();
+                        distribution.CreatedUserID = AppContext.CurrentSession.UserID;
+                        distribution.CreatedUser = AppContext.CurrentSession.UserName;
+                        distribution.CreatedDate = DateTime.Now;
+                        distribution.MerchantID = AppContext.CurrentSession.MerchantID;
+                        distribution.PickUpOrderID = t.PickUpOrderID;
+                        distribution.PickUpOrderItemID = t.ID;
+                        distribution.TotalMoney = t.Money;
                         if (product != null)
                         {
-                            if (m.PeopleType == ETaskDistributionPeopleType.ConstructionCrew)
+                            t.CommissionRate = product.CommissionRate;
+                            t.SalesmanCommissionRate = product.SalesmanCommissionRate;
+                            if (distribution.PeopleType == ETaskDistributionPeopleType.ConstructionCrew)
                             {
-                                m.CommissionRate = constructionCount != 0 ? Math.Round(product.CommissionRate / constructionCount, 2) : 0;
-                                m.Commission = Math.Floor(t.Money * m.CommissionRate / 100);
+                                distribution.CommissionRate = product.CommissionRate;//constructionCount != 0 ? Math.Round(product.CommissionRate / constructionCount, 2) : 0;
+                                distribution.Commission = Math.Floor(t.Money * distribution.CommissionRate / constructionCount / 100);
+                                distribution.ConstructionCount = constructionCount;
                             }
-                            if (m.PeopleType == ETaskDistributionPeopleType.Salesman)
+                            if (distribution.PeopleType == ETaskDistributionPeopleType.Salesman)
                             {
-                                m.SalesmanCommissionRate = salesmanCount != 0 ? Math.Round(product.SalesmanCommissionRate / salesmanCount, 2) : 0;
-                                m.SalesmanCommission = Math.Floor(t.Money * m.SalesmanCommissionRate / 100);
+                                distribution.SalesmanCommissionRate = product.SalesmanCommissionRate;//salesmanCount != 0 ? Math.Round(product.SalesmanCommissionRate / salesmanCount, 2) : 0;
+                                distribution.SalesmanCommission = Math.Floor(t.Money * distribution.SalesmanCommissionRate / salesmanCount / 100);
+                                distribution.SalesmanCount = salesmanCount;
                             }
                         }
                     });

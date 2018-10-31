@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain;
 using VVCar.BaseData.Domain.Dtos;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Enums;
@@ -35,9 +36,15 @@ namespace VVCar.BaseData.Services.DomainServices
 
         IMemberService MemberService { get => ServiceLocator.Instance.GetService<IMemberService>(); }
 
+        IWeChatService WeChatService { get => ServiceLocator.Instance.GetService<IWeChatService>(); }
+
         IMerchantService MerchantService { get => ServiceLocator.Instance.GetService<IMerchantService>(); }
 
         IRepository<Member> MemberRepo { get => ServiceLocator.Instance.GetService<IRepository<Member>>(); }
+
+        IRepository<User> UserRepo { get => ServiceLocator.Instance.GetService<IRepository<User>>(); }
+
+        ISystemSettingService SystemSettingService { get => ServiceLocator.Instance.GetService<ISystemSettingService>(); }
 
         #endregion
 
@@ -85,6 +92,8 @@ namespace VVCar.BaseData.Services.DomainServices
                     });
                 }
                 UnitOfWork.CommitTransaction();
+                SendWeChatNotify(entity);
+                SendOrderWeChatNotify(entity);
                 return result;
             }
             catch (Exception e)
@@ -92,6 +101,59 @@ namespace VVCar.BaseData.Services.DomainServices
                 UnitOfWork.RollbackTransaction();
                 throw e;
             }
+        }
+
+        /// <summary>
+        /// 发送开发门店成功给代理商
+        /// </summary>
+        /// <param name="agentDepartment"></param>
+        private void SendWeChatNotify(AgentDepartment agentDepartment)
+        {
+            if (agentDepartment == null)
+                return;
+            var user = UserRepo.GetByKey(agentDepartment.CreatedUserID);
+            if (user.OpenID == null || user.OpenID == "")
+                return;
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = user.OpenID,
+                template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_OrderSuccess),
+                data = new System.Dynamic.ExpandoObject(),
+            };      
+
+            var remark = "已通知总部联系门店对接";
+
+            message.data.first = new WeChatTemplateMessageDto.MessageData("您已成功提交门店信息给总部");
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData("无");
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData($"{agentDepartment.Name}");
+            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData("1");
+            message.data.keyword4 = new WeChatTemplateMessageDto.MessageData("无");
+            message.data.keyword5 = new WeChatTemplateMessageDto.MessageData("无");
+            message.data.remark = new WeChatTemplateMessageDto.MessageData(remark);
+            WeChatService.SendWeChatNotifyAsync(message);
+        }
+
+        /// <summary>
+        /// 发送新订单提醒给总部
+        /// </summary>
+        /// <param name="agentDepartment"></param>
+        private void SendOrderWeChatNotify(AgentDepartment agentDepartment)
+        {
+            if (agentDepartment == null)
+                return;
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = "oI4ee0pN20eepDVJHh_UlD_oH_Ew",
+                template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_OrderRemind),
+                data = new System.Dynamic.ExpandoObject(),
+            };
+
+            message.data.first = new WeChatTemplateMessageDto.MessageData("您有新门店需要对接，请及时处理");
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(agentDepartment.Name);
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(agentDepartment.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            message.data.remark = new WeChatTemplateMessageDto.MessageData($"在管理后台查看商户审核，请及时对接软件");
+            
+            WeChatService.SendWeChatNotify(message);
         }
 
         /// <summary>

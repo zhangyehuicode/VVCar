@@ -88,9 +88,9 @@ namespace VVCar.Shop.Domain.Entities
         public decimal WholesalePrice { get; set; }
 
         /// <summary>
-        /// 抽成比例(0~100)
+        /// 施工抽成比例(0~100)
         /// </summary>
-        [Display(Name = "抽成比例(0~100)")]
+        [Display(Name = "施工抽成比例(0~100)")]
         public decimal CommissionRate { get; set; }
 
         /// <summary>
@@ -100,10 +100,10 @@ namespace VVCar.Shop.Domain.Entities
         public decimal SalesmanCommissionRate { get; set; }
 
         /// <summary>
-        /// 批发价抽成比例(0~100) --> 对于服务就是优惠价
+        /// 批发价业务员抽成比例(0~100) --> 对于服务就是优惠价
         /// </summary>
-        [Display(Name = "批发价抽成比例(0~100)")]
-        public decimal WholesaleCommissionRate { get; set; } 
+        [Display(Name = "批发价业务员抽成比例(0~100)")]
+        public decimal WholesaleCommissionRate { get; set; }
 
         /// <summary>
         /// 优惠价施工抽成

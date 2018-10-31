@@ -60,6 +60,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<StockholderDividend> StockholderDividendRepo { get => UnitOfWork.GetRepository<IRepository<StockholderDividend>>(); }
 
+        IRepository<OrderItem> OrderItemRepo { get => UnitOfWork.GetRepository<IRepository<OrderItem>>(); }
+
         #endregion
 
         public override bool Delete(Guid key)
@@ -116,26 +118,27 @@ namespace VVCar.Shop.Services.DomainServices
 
         public override Order Add(Order entity)
         {
-            if (entity == null || entity.OrderItemList == null || entity.OrderItemList.Count < 1)
-                return null;
-            entity.ID = Util.NewID();
-            entity.Index = GetIndex();
-            if (string.IsNullOrEmpty(entity.Code))
-                entity.Code = GetTradeNo();
-            var existNo = Repository.Exists(t => t.Code == entity.Code);
-            if (existNo)
-                throw new DomainException($"创建订单失败，订单号{entity.Code}已存在");
-            entity.CreatedDate = DateTime.Now;
-            entity.OrderItemList.ForEach(t =>
-            {
-                t.ID = Util.NewID();
-                t.OrderID = entity.ID;
-                t.Commission = Math.Round(t.Money * t.CommissionRate / 100, 2);
-            });
-            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             UnitOfWork.BeginTransaction();
             try
             {
+                if (entity == null || entity.OrderItemList == null || entity.OrderItemList.Count < 1)
+                    return null;
+                entity.ID = Util.NewID();
+                entity.Index = GetIndex();
+                if (string.IsNullOrEmpty(entity.Code))
+                    entity.Code = GetTradeNo();
+                var existNo = Repository.Exists(t => t.Code == entity.Code);
+                if (existNo)
+                    throw new DomainException($"创建订单失败，订单号{entity.Code}已存在");
+                entity.CreatedDate = DateTime.Now;
+                entity.OrderItemList.ForEach(t =>
+                {
+                    t.ID = Util.NewID();
+                    t.OrderID = entity.ID;
+                    t.Commission = Math.Round(t.Money * t.CommissionRate / 100, 2);
+                    t.MerchantID = AppContext.CurrentSession.MerchantID;
+                });
+                entity.MerchantID = AppContext.CurrentSession.MerchantID;
                 Order result = null;
                 //var cardItems = entity.OrderItemList.Where(t => t.ProductType == EProductType.MemberCard).ToList();
                 //var couponTemplateIDs = cardItems.Select(t => t.GoodsID).ToList();
@@ -178,63 +181,68 @@ namespace VVCar.Shop.Services.DomainServices
 
         public void RecountMoney(Order entity, bool isNotify = false)
         {
-            if (entity == null)
-                return;
-            if (entity.OrderItemList == null || entity.OrderItemList.Count < 1)
-                entity.Money = 0;
-            else
+            try
             {
-                decimal totalMoney = 0;
-                entity.OrderItemList.ForEach(t =>
+                if (entity == null)
+                    return;
+                if (entity.OrderItemList == null || entity.OrderItemList.Count < 1)
+                    entity.Money = 0;
+                else
                 {
-                    //t.Money = t.Quantity * t.PriceSale;
-                    totalMoney += t.Quantity * t.PriceSale;
-                });
-                entity.Money = totalMoney;
-            }
-
-            decimal paymoney = 0;
-            var paymentdetails = OrderPaymentDetailsRepo.GetQueryable(false).Where(t => t.OrderCode == entity.Code).ToList();
-            if (paymentdetails != null && paymentdetails.Count > 0)
-            {
-                paymentdetails.ForEach(t =>
-                {
-                    paymoney += t.PayMoney;
-                });
-            }
-            entity.ReceivedMoney = paymoney;
-            entity.StillOwedMoney = entity.Money - entity.ReceivedMoney;
-            if (entity.StillOwedMoney < 0)
-                entity.StillOwedMoney = 0;
-            if (entity.ReceivedMoney > 0 && entity.ReceivedMoney < entity.Money)
-                entity.Status = EOrderStatus.UnEnough;
-            else if (entity.ReceivedMoney >= entity.Money)
-            {
-                entity.Status = EOrderStatus.PayUnshipped;
-                var cardItems = entity.OrderItemList.Where(t => t.ProductType == EProductType.MemberCard).ToList();
-                if (cardItems != null && cardItems.Count == entity.OrderItemList.Count)
-                    entity.Status = EOrderStatus.Finish;
-                if (isNotify)
-                {
-                    StockOut(entity.OrderItemList.Where(t => t.ProductType == EProductType.Goods).ToList());
-                    SendWeChatNotify(entity);
-                    SendOrderWeChatNotify(entity);
-
-                    var couponTemplateIDs = cardItems.Select(t => t.GoodsID).ToList();
-                    if (couponTemplateIDs != null && couponTemplateIDs.Count > 0)
-                        ReceiveCoupons(couponTemplateIDs, entity.OpenID);
-                    try
+                    decimal totalMoney = 0;
+                    entity.OrderItemList.ForEach(t =>
                     {
-                        MemberService.AdjustMemberPoint(entity.OpenID, EMemberPointType.MemberConsume, (double)entity.Money);
-                    }
-                    catch (Exception e)
+                        //t.Money = t.Quantity * t.PriceSale;
+                        totalMoney += t.Quantity * t.PriceSale;
+                    });
+                    entity.Money = totalMoney;
+                }
+
+                decimal paymoney = 0;
+                var paymentdetails = OrderPaymentDetailsRepo.GetQueryable(false).Where(t => t.OrderCode == entity.Code).ToList();
+                if (paymentdetails != null && paymentdetails.Count > 0)
+                {
+                    paymentdetails.ForEach(t =>
                     {
-                        AppContext.Logger.Error($"商城下单增加会员积分出现异常，{e.Message}");
+                        paymoney += t.PayMoney;
+                    });
+                }
+                entity.ReceivedMoney = paymoney;
+                entity.StillOwedMoney = entity.Money - entity.ReceivedMoney;
+                if (entity.StillOwedMoney < 0)
+                    entity.StillOwedMoney = 0;
+                if (entity.ReceivedMoney > 0 && entity.ReceivedMoney < entity.Money)
+                    entity.Status = EOrderStatus.UnEnough;
+                else if (entity.ReceivedMoney >= entity.Money)
+                {
+                    entity.Status = EOrderStatus.PayUnshipped;
+                    var cardItems = entity.OrderItemList.Where(t => t.ProductType == EProductType.MemberCard).ToList();
+                    if (cardItems != null && cardItems.Count == entity.OrderItemList.Count)
+                        entity.Status = EOrderStatus.Finish;
+                    if (isNotify)
+                    {
+                        StockOut(entity.OrderItemList.Where(t => t.ProductType == EProductType.Goods).ToList());
+                        SendWeChatNotify(entity);
+                        SendOrderWeChatNotify(entity);
+                        var couponTemplateIDs = cardItems.Select(t => t.GoodsID).ToList();
+                        if (couponTemplateIDs != null && couponTemplateIDs.Count > 0)
+                            ReceiveCoupons(couponTemplateIDs, entity.OpenID);
+                        try
+                        {
+                            MemberService.AdjustMemberPoint(entity.OpenID, EMemberPointType.MemberConsume, (double)entity.Money);
+                        }
+                        catch (Exception e)
+                        {
+                            AppContext.Logger.Error($"商城下单增加会员积分出现异常，{e.Message}");
+                        }
+                        StockholderDividendAction(entity);
+                        AddOrderDevidend(entity);
                     }
-                    StockholderDividendAction(entity);
-                    AddOrderDevidend(entity);
                 }
             }
+            catch (Exception e) {
+                AppContext.Logger.Error($"商城下单重新计算金额出现异常，{e.Message}");
+            }         
         }
 
         void AddOrderDevidend(Order entity)
@@ -242,8 +250,9 @@ namespace VVCar.Shop.Services.DomainServices
             UnitOfWork.BeginTransaction();
             try
             {
-                var orderDividendList = new List<OrderDividend>();
-                entity.OrderItemList.ForEach(t =>
+                //var orderDividendList = new List<OrderDividend>();
+                var orderItemList = OrderItemRepo.GetQueryable(false).Where(t=>t.OrderID == entity.ID);
+                orderItemList.ForEach(t =>
                 {
                     var orderDividend = new OrderDividend();
                     orderDividend.ID = Util.NewID();
@@ -269,9 +278,10 @@ namespace VVCar.Shop.Services.DomainServices
                     orderDividend.Commission = t.Commission;
                     orderDividend.Money = t.Money;
                     orderDividend.MerchantID = t.MerchantID;
-                    orderDividendList.Add(orderDividend);
+                    //orderDividendList.Add(orderDividend);
+                    OrderDividendRepo.Add(orderDividend);
                 });
-                OrderDividendRepo.AddRange(orderDividendList);
+                //OrderDividendRepo.AddRange(orderDividendList);
                 UnitOfWork.CommitTransaction();
             }
             catch (Exception e)
@@ -317,7 +327,6 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns></returns>
         private bool StockholderDividendAction(Order order)
         {
-            UnitOfWork.BeginTransaction();
             try
             {
                 if (order == null || order.Money <= 0 || string.IsNullOrEmpty(order.OpenID))
@@ -340,17 +349,20 @@ namespace VVCar.Shop.Services.DomainServices
                     CreatedDate = DateTime.Now,
                     MerchantID = AppContext.CurrentSession.MerchantID,
                 });
-                UnitOfWork.CommitTransaction();
                 return true;
             }
             catch (Exception e)
             {
-                UnitOfWork.RollbackTransaction();
                 AppContext.Logger.Error($"商城订单会员消费添加股东返拥记录出现异常，{e.Message}");
                 return false;
             }
         }
 
+        /// <summary>
+        /// 出库
+        /// </summary>
+        /// <param name="orderItemList"></param>
+        /// <returns></returns>
         private bool StockOut(List<OrderItem> orderItemList)
         {
             if (orderItemList == null || orderItemList.Count < 1)

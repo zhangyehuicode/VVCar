@@ -1,0 +1,567 @@
+﻿
+@{
+	Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html class="absolute-con">
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>Index</title>
+	<style type="text/css">
+		.absolute-con {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			overflow-y: auto;
+		}
+
+		.widthfill {
+			width: 100%;
+		}
+
+		.reporttable {
+			display: table;
+		}
+
+		.reporttablecell {
+			display: table-cell;
+		}
+
+		.valuefont {
+			font-size: 26px;
+			margin-top: 8px;
+		}
+
+		.titlefont {
+			font-size: 15px;
+		}
+
+		.icontips {
+			height: 16px;
+			width: 22px;
+			text-align: center;
+			font-size: 10px;
+			border-radius: 2px;
+			line-height: 15px;
+		}
+
+		table {
+			border-right: 1px black solid;
+		}
+
+		.analyse {
+			width: 200px;
+			height: 40px;
+			border-radius: 3px;
+			font-size: 20px;
+			text-align: center;
+			margin: auto;
+		}
+
+		.condition {
+			width: 200px;
+			height: 40px;
+			border-radius: 3px;
+			font-size: 20px;
+			text-align: center;
+			margin: 10px auto 10px auto;
+		}
+
+		.chartset {
+			width: 400px;
+			height: 400px;
+			border-radius: 3px;
+			font-size: 20px;
+			text-align: center;
+			margin: 10px auto 10px auto;
+		}
+
+		.iconimg {
+			width: 57px;
+			height: 50px;
+		}
+
+		.kcd_input {
+			width: 28%;
+			float: left;
+			margin-left: 4%;
+			height: 40px;
+			font-size: 14px;
+			color: #2d2d30;
+			outline-style: none;
+			margin-top: 10px;
+			background: none;
+			border-color: #eee;
+			border-radius: 5px;
+		}
+	</style>
+</head>
+<body style="background:#f3f3f5;" class="absolute-con">
+	<div>
+		<div style="width:100%">
+			<div class="reporttable" style="width:100%;">
+				<select style="width:200px;height:50px;font-size:20px;padding:10px;float:left;" id="datatype">
+					<option value="1" selected="selected">新客户分析</option>
+					<option value="2">会员类型分析</option>
+					<option value="3">大客户分析</option>
+					<option value="4">忠诚客户分析</option>
+					<option value="5">流失客户分析</option>
+				</select>
+			</div>
+		</div>
+		<div>
+			<div class="reporttable newmember" style="width:100%;">
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="byday">
+						<div>当日新增 <span id="dayincrease"></span>人</div>
+					</div>
+					<div id="echartbyday" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartbyday" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="bymonth">
+						<div>当月新增 <span id="monthincrease"></span>人</div>
+					</div>
+					<div id="echartbymonth" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartbymonth" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="reporttable membertype" style="width:100%;">
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="membertype1">
+						<div>消费小于2千</div>
+					</div>
+					<div id="echartmembertype1" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartmembertype1" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="membertype2">
+						<div>年消费2千~5千</div>
+					</div>
+					<div id="echartmembertype2" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartmembertype2" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="membertype3">
+						<div>年消费5千~1万</div>
+					</div>
+					<div id="echartmembertype3" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartmembertype3" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="membertype4">
+						<div>年消费大于1万</div>
+					</div>
+					<div id="echartmembertype4" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartmembertype4" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="reporttable bigmember" style="width:100%;">
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="bigmember1">
+						<div>年消费大于1万</div>
+					</div>
+					<div id="echartbigmember1" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartbigmember1" style="width:100%;">
+							<tr>
+								<th>项目名称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="bigmember2">
+						<div>年消费大于2万</div>
+					</div>
+					<div id="echartbigmember2" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartbigmember2" style="width:100%;">
+							<tr>
+								<th>项目名称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="reporttable loyalmember" style="width:100%;">
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="loyalmember1">
+						<div>月消费1次</div>
+					</div>
+					<div id="echartloyalmember1" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartloyalmember1" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="loyalmember2">
+						<div>月消费2次</div>
+					</div>
+					<div id="echartloyalmember2" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartloyalmember2" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="loyalmember3">
+						<div>月消费3次以上</div>
+					</div>
+					<div id="echartloyalmember3" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartloyalmember3" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="reporttable losemember" style="width:100%;">
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="losemember1">
+						<div>3个月未消费</div>
+					</div>
+					<div id="echartlosemember1" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartlosemember1" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="losemember2">
+						<div>6个月未消费</div>
+					</div>
+					<div id="echartlosemember2" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartlosemember2" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="reporttablecell">
+					<div class="condition" style="background:#5FA2DD;color:#fff;cursor:pointer;" id="losemember3">
+						<div>12个月未消费</div>
+					</div>
+					<div id="echartlosemember3" class="chartset"></div>
+					<div class="chartset">
+						<table id="gridechartlosemember3" style="width:100%;">
+							<tr>
+								<th>会员昵称</th>
+								<th>消费次数</th>
+								<th>消费金额</th>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+	<script src="~/Content/js/echarts.js"></script>
+	<script src="~/Content/js/dark.js"></script>
+	<script src="~/Content/js/macarons.js"></script>
+	<script src="~/Scripts/ext/ext-all.js"></script>
+	<script type="text/javascript">
+		$(function () {
+			$('.newmember').show().siblings().hide();
+			var mch = sessionStorage.getItem('companyCode');
+			function getAllMember() {
+				$.ajax({
+					url: '/api/Member/?All=false',
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					success: function (res) {
+						if (res.IsSuccessful) {
+							var allMemberCount = res.Data.length;
+							searchNewMemberByDay(allMemberCount);
+							searchNewMemberByMonth(allMemberCount);
+							searchMemberType(allMemberCount, 1);
+							searchMemberType(allMemberCount, 2);
+							searchMemberType(allMemberCount, 3);
+							searchMemberType(allMemberCount, 4);
+							searchBigMember(allMemberCount, 1);
+							searchBigMember(allMemberCount, 2);
+							searchLoyalMember(allMemberCount, 1);
+							searchLoyalMember(allMemberCount, 2);
+							searchLoyalMember(allMemberCount, 3);
+							searchLoseMember(allMemberCount, 1);
+							searchLoseMember(allMemberCount, 2);
+							searchLoseMember(allMemberCount, 3);
+						} else {
+						}
+					},
+					error: function () {
+					}
+				});
+			}
+
+			getAllMember();
+
+			function searchNewMemberByDay(all) {
+				$.ajax({
+					url: '/api/Reporting/DataAnalyseList?All=false',
+					type: 'GET',
+					data: { 'TimeSelect': '1' },
+					headers: { 'CompanyCode': mch },
+					success: function (res) {
+						if (res.IsSuccessful) {
+							memberanalysepie('echartbyday', '会员基数', all, '新增会员', res.Data.length - 1);
+							var html = '';
+							res.Data.forEach(function (item) {
+								html += '<tr>';
+								html += '<td style="width: 200px;">' + item.MemberName + '</td>' + '<td>' + item.TotalQuantity + '</td>' + '<td>' + item.TotalMoney + '</td>';
+								html += '</tr>';
+							});
+							$('#gridechartbyday').append(html);
+							$('#dayincrease').text(res.Data.length - 1);
+						} else {
+						}
+					},
+					error: function () {
+					}
+				});
+			};
+
+			function searchNewMemberByMonth(all) {
+				$.ajax({
+					url: '/api/Reporting/DataAnalyseList?All=false',
+					type: 'GET',
+					data: { 'TimeSelect': '2' },
+					headers: { 'CompanyCode': mch },
+					success: function (res) {
+						if (res.IsSuccessful) {
+							memberanalysepie('echartbymonth', '会员基数', all, '新增会员', res.Data.length - 1);
+							var html = '';
+							res.Data.forEach(function (item) {
+								html += '<tr>';
+								html += '<td style="width: 200px;">' + item.MemberName + '</td>' + '<td>' + item.TotalQuantity + '</td>' + '<td>' + item.TotalMoney + '</td>';
+								html += '</tr>';
+							});
+							$('#gridechartbymonth').append(html);
+							$('#monthincrease').text(res.Data.length - 1);
+						} else {
+						}
+					},
+					error: function () {
+					}
+				});
+			};
+
+			function searchMemberType(all, index) {
+				$.ajax({
+					url: '/api/Reporting/DataAnalyseList?All=false',
+					type: 'GET',
+					data: { 'MemberType': index },
+					headers: { 'CompanyCode': mch },
+					success: function (res) {
+						if (res.IsSuccessful) {
+							memberanalysepie('echartmembertype' + index, '会员基数', all, $('#membertype' + index).text() + '会员', res.Data.length - 1);
+							var html = '';
+							res.Data.forEach(function (item) {
+								html += '<tr>';
+								html += '<td style="width: 200px;">' + item.MemberName + '</td>' + '<td>' + item.TotalQuantity + '</td>' + '<td>' + item.TotalMoney + '</td>';
+								html += '</tr>';
+							});
+							$('#gridechartmembertype' + index).append(html);
+						} else {
+						}
+					},
+					error: function () {
+					}
+				});
+			};
+
+			function searchBigMember(all, index) {
+				$.ajax({
+					url: '/api/Reporting/DataAnalyseList?All=false',
+					type: 'GET',
+					data: { 'BigMember': index },
+					headers: { 'CompanyCode': mch },
+					success: function (res) {
+						if (res.IsSuccessful) {
+							memberanalysepie('echartbigmember' + index, '会员基数', all, $('#bigmember' + index).text() + '会员', res.Data.length - 1);
+							var html = '';
+							res.Data.forEach(function (item) {
+								html += '<tr>';
+								html += '<td style="width: 200px;">' + item.MemberName + '</td>' + '<td>' + item.TotalQuantity + '</td>' + '<td>' + item.TotalMoney + '</td>';
+								html += '</tr>';
+							});
+							$('#gridechartbigmember' + index).append(html);
+						} else {
+						}
+					},
+					error: function () {
+					}
+				});
+			};
+
+			function searchLoyalMember(all, index) {
+				$.ajax({
+					url: '/api/Reporting/DataAnalyseList?All=false',
+					type: 'GET',
+					data: { 'LoyalMember': index },
+					headers: { 'CompanyCode': mch },
+					success: function (res) {
+						if (res.IsSuccessful) {
+							memberanalysepie('echartloyalmember' + index, '会员基数', all, $('#loyalmember' + index).text() + '会员', res.Data.length - 1);
+							var html = '';
+							res.Data.forEach(function (item) {
+								html += '<tr>';
+								html += '<td style="width: 200px;">' + item.MemberName + '</td>' + '<td>' + item.TotalQuantity + '</td>' + '<td>' + item.TotalMoney + '</td>';
+								html += '</tr>';
+							});
+							$('#gridechartloyalmember' + index).append(html);
+						} else {
+						}
+					},
+					error: function () {
+					}
+				});
+			};
+
+			function searchLoseMember(all, index) {
+				$.ajax({
+					url: '/api/Reporting/DataAnalyseList?All=false',
+					type: 'GET',
+					data: { 'LoseMember': index },
+					headers: { 'CompanyCode': mch },
+					success: function (res) {
+						if (res.IsSuccessful) {
+							memberanalysepie('echartlosemember' + index, '会员基数', all, $('#losemember' + index).text() + '会员', res.Data.length - 1);
+							var html = '';
+							res.Data.forEach(function (item) {
+								html += '<tr>';
+								html += '<td style="width: 200px;">' + item.MemberName + '</td>' + '<td>' + item.TotalQuantity + '</td>' + '<td>' + item.TotalMoney + '</td>';
+								html += '</tr>';
+							});
+							$('#gridechartlosemember' + index).append(html);
+						} else {
+						}
+					},
+					error: function () {
+					}
+				});
+			};
+
+			function memberanalysepie(id, param1, value1, param2, value2) {
+				var echat = echarts.init(document.getElementById(id)).setOption({
+					series: {
+						type: 'pie',
+						radius: '50%',
+						center: '50%',
+						labelLine: {
+							normal: {
+								length: 10
+							}
+						},
+						data: [
+							{ name: param1, value: value1 },
+							{ name: param2 + '占比: ' + ((value2 * 1.0 / value1).toFixed(2) * 100 )+ '%', value: value2 },
+						]
+					}
+				});
+			}
+		});
+	</script>
+	<script type="text/javascript">
+		$('#datatype').change(function () {
+			var value = $(this).find("option:selected").val();
+			if (value == 1) {
+				$('.newmember').show().siblings().hide();
+			}
+			if (value == 2) {
+				$('.membertype').show().siblings().hide();
+			}
+			if (value == 3) {
+				$('.bigmember').show().siblings().hide();
+			}
+			if (value == 4) {
+				$('.loyalmember').show().siblings().hide();
+			}
+			if (value == 5) {
+				$('.losemember').show().siblings().hide();
+			}
+		});
+	</script>
+</body>
+</html>

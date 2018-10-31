@@ -2114,6 +2114,7 @@
     <Content Include="Scripts\plugin\UEditor\third-party\video-js\font\vjs.woff" />
     <Content Include="Views\Login\Page.cshtml" />
     <Content Include="Views\Reporting\Index.cshtml" />
+    <Content Include="Views\Reporting\AnalyseIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
