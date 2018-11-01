@@ -3,7 +3,7 @@
 	alias: 'widget.ProductEdit',
 	title: '',
 	//layout: 'fit',
-	width: 640,
+	width: 680,
 	height: 600,
 	modal: true,
 	bodyPadding: 5,
@@ -16,7 +16,7 @@
 		var productTypeStore = Ext.create('WX.store.DataDict.ProductTypeStore');
 		me.form = Ext.create('Ext.form.Panel', {
 			border: false,
-			width: 600,
+			width: 640,
 			trackResetOnLoad: true,
 			fieldDefaults: {
 				labelAlign: 'left',
@@ -163,19 +163,36 @@
 					xtype: 'form',
 					border: false,
 					layout: 'hbox',
-					margin: '0 10 5 0',
+					margin: '0 5 5 0',
 					items: [{
+						xtype: "radiogroup",
+						fieldLabel: "业务员抽成",
+						name: 'SalesmanCommissionType',
+						columns: 2,
+						items: [
+							{ boxLabel: '比例', name: 'IsSalesmanCommissionRate', inputValue: true, checked: true },
+							{ boxLabel: '金额', name: 'IsSalesmanCommissionRate', inputValue: false },
+						]
+					}, {
 						xtype: 'numberfield',
-						width: 205,
-						name: 'CommissionRate',
-						fieldLabel: '抽成比例',
+						width: 90,
+						name: 'SalesmanCommissionRate',
 						minValue: 0,
 						maxValue: 100,
 						allowBlank: false,
 						value: 0,
 					}, {
+						xtype: 'numberfield',
+						width: 90,
+						name: 'SalesmanCommissionMoney',
+						minValue: 0,
+						allowBlank: false,
+						value: 0,
+						hidden: true,
+					}, {
 						xtype: 'label',
-						text: '%（0~100）',
+						name: 'SalesmanCommissionUnit',
+						text: '%',
 						margin: '12 0 0 0',
 					}]
 				}, {
@@ -187,17 +204,35 @@
 						layout: 'hbox',
 						margin: '0 10 5 0',
 						items: [{
+							xtype: "radiogroup",
+							fieldLabel: "业务员批发抽成",
+							name: 'WholesaleCommissionType',
+							columns: 2,
+							items: [
+								{ boxLabel: '比例', name: 'IsWholesaleCommissionRate', inputValue: false, checked: true },
+								{ boxLabel: '金额', name: 'IsWholesaleCommissionRate', inputValue: true },
+							]
+						}, {
 							xtype: 'numberfield',
-							width: 205,
+							width: 90,
 							name: 'WholesaleCommissionRate',
-							fieldLabel: '批发价抽成比例',
 							minValue: 0,
 							maxValue: 100,
 							allowBlank: false,
 							value: 0,
 						}, {
+							xtype: 'numberfield',
+							width: 90,
+							name: 'WholesaleCommissionMoney',
+							minValue: 0,
+							maxValue: 100,
+							allowBlank: false,
+							value: 0,
+							hidden: true,
+						}, {
 							xtype: 'label',
-							text: '%（0~100）',
+							name: 'WholesaleCommissionUnit',
+							text: '%',
 							margin: '12 0 0 0',
 						}]
 					}]
@@ -219,7 +254,7 @@
 						inputValue: true,
 					}, {
 						xtype: 'numberfield',
-						width: 170,
+						width: 200,
 						margin: '5 0 5 5',
 						name: 'Points',
 						fieldLabel: '兑换积分',
@@ -256,7 +291,7 @@
 					}, {
 						xtype: 'combobox',
 						margin: '5 0 5 5',
-						width: 170,
+						width: 200,
 						name: 'IsPublish',
 						store: yesNoDictStore,
 						displayField: 'DictName',

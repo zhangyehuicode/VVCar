@@ -2,18 +2,22 @@
     extend: 'Ext.window.Window',
     alias: 'widget.ServiceEdit',
     title: '',
-    layout: 'fit',
-    width: 600,
+    //layout: 'fit',
+	width: 680,
+	height: 600,
     modal: true,
     bodyPadding: 5,
-    resizable: false,
+	resizable: false,
+	autoScroll: true,
+	bodyStyle: 'overflow-y:auto; overflow-x:hidden;',
     initComponent: function () {
         var me = this;
         var yesNoDictStore = Ext.create('WX.store.DataDict.YesNoTypeStore');
         var productTypeStore = Ext.create('WX.store.DataDict.ProductTypeStore');
         me.form = Ext.create('Ext.form.Panel', {
             border: false,
-            trackResetOnLoad: true,
+			width: 640,
+			trackResetOnLoad: true,
             fieldDefaults: {
                 labelAlign: 'left',
                 labelWidth: 60,
@@ -143,7 +147,14 @@
                     allowBlank: false,
                     value: 0,
                 }, {
-
+					xtype: 'numberfield',
+					margin: '5 10 5 5',
+					name: 'WholesalePrice',
+					fieldLabel: '优惠价',
+					minValue: 0,
+					allowBlank: false,
+					value: 0,
+					hidden: true,
                 }]
             }, {
                 xtype: 'form',
@@ -153,18 +164,35 @@
                     border: false,
                     layout: 'hbox',
                     margin: '0 10 5 0',
-                    items: [{
+					items: [{
+						xtype: "radiogroup",
+						fieldLabel: "施工员抽成",
+						name: 'CommissionType',
+						columns: 2,
+						items: [
+							{ boxLabel: '比例', name: 'IsCommissionRate', inputValue: true, checked: true },
+							{ boxLabel: '金额', name: 'IsCommissionRate', inputValue: false },
+						]
+					}, {
                         xtype: 'numberfield',
-                        width: 202,
+                        width: 90,
                         name: 'CommissionRate',
-                        fieldLabel: '施工抽成',
                         minValue: 0,
                         maxValue: 100,
                         allowBlank: false,
                         value: 0,
-                    }, {
+					}, {
+						xtype: 'numberfield',
+						width: 90,
+						name: 'CommissionMoney',
+						minValue: 0,
+						allowBlank: false,
+						value: 0,
+						hidden: true,
+					}, {
                         xtype: 'label',
-                        text: '%（0~100）',
+						text: '%',
+						name: 'CommissionUnit',
                         margin: '12 0 0 0',
                     }]
                 }, {
@@ -172,19 +200,37 @@
                     border: false,
                     layout: 'hbox',
                     margin: '0 10 5 0',
-                    items: [{
+					items: [{
+						xtype: "radiogroup",
+						fieldLabel: "业务员抽成",
+						name: 'SalesmanCommissionType',
+						columns: 2,
+						items: [
+							{ boxLabel: '比例', name: 'IsSalesmanCommissionRate', inputValue: true, checked: true },
+							{ boxLabel: '金额', name: 'IsSalesmanCommissionRate', inputValue: false },
+						]
+					}, {
                         xtype: 'numberfield',
-                        width: 202,
+                        width: 90,
                         name: 'SalesmanCommissionRate',
-                        fieldLabel: '业务员抽成',
                         labelWidth: 70,
                         minValue: 0,
                         maxValue: 100,
                         allowBlank: false,
                         value: 0,
-                    }, {
-                        xtype: 'label',
-                        text: '%（0~100）',
+					}, {
+						xtype: 'numberfield',
+						width: 90,
+						name: 'SalesmanCommissionMoney',
+						labelWidth: 70,
+						minValue: 0,
+						allowBlank: false,
+						value: 0,
+						hidden: true,
+					}, {
+						xtype: 'label',
+						name: 'SalesmanCommissionUnit',
+                        text: '%',
                         margin: '12 0 0 0',
                     }]
                 }]
@@ -196,41 +242,77 @@
                     border: false,
                     layout: 'hbox',
                     margin: '0 10 5 0',
-                    items: [{
+					items: [{
+						xtype: "radiogroup",
+						fieldLabel: "优惠价施工抽成",
+						name: 'WholesaleConstructionCommissionType',
+						columns: 2,
+						items: [
+							{ boxLabel: '比例', name: 'IsWholesaleConstructionCommissionRate', inputValue: false, checked: true },
+							{ boxLabel: '金额', name: 'IsWholesaleConstructionCommissionRate', inputValue: true },
+						]
+					}, {
                         xtype: 'numberfield',
-                        width: 202,
+                        width: 90,
                         name: 'WholesaleConstructionCommissionRate',
-                        fieldLabel: '优惠价施工抽成',
                         labelWidth: 60,
                         minValue: 0,
                         maxValue: 100,
                         allowBlank: false,
                         value: 0,
-                    }, {
-                        xtype: 'label',
-                        text: '%（0~100）',
+					}, {
+						xtype: 'numberfield',
+						width: 90,
+						name: 'WholesaleConstructionCommissionMoney',
+						labelWidth: 60,
+						minValue: 0,
+						allowBlank: false,
+						value: 0,
+						hidden: true,
+					}, {
+						xtype: 'label',
+						name: 'WholesaleConstructionCommissionUnit',
+                        text: '%',
                         margin: '12 0 0 0',
-                    }]
+					}],
+					hidden: true,
                 }, {
                     xtype: 'form',
                     border: false,
                     layout: 'hbox',
                     margin: '0 10 5 0',
-                    items: [{
+					items: [{
+						xtype: "radiogroup",
+						fieldLabel: "优惠价业务员抽成",
+						name: 'WholesaleCommissionType',
+						columns: 2,
+						items: [
+							{ boxLabel: '比例', name: 'IsWholesaleCommissionRate', inputValue: false, checked: true },
+							{ boxLabel: '金额', name: 'IsWholesaleCommissionRate', inputValue: true },
+						]
+					}, {
                         xtype: 'numberfield',
-                        width: 202,
+                        width: 90,
                         name: 'WholesaleCommissionRate',
-                        fieldLabel: '优惠价业务员抽成',
-                        labelWidth: 70,
                         minValue: 0,
                         maxValue: 100,
                         allowBlank: false,
                         value: 0,
-                    }, {
-                        xtype: 'label',
-                        text: '%（0~100）',
+					}, {
+						xtype: 'numberfield',
+						width: 90,
+						name: 'WholesaleCommissionMoney',
+						minValue: 0,
+						allowBlank: false,
+						value: 0,
+						hidden: true,
+					}, {
+						xtype: 'label',
+						name: 'WholesaleCommissionUnit',
+                        text: '%',
                         margin: '12 0 0 0',
-                    }]
+					}],
+					hidden: true,
                 }]
             }, {
                 xtype: 'form',

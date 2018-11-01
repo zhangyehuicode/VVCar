@@ -47,11 +47,22 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     var distributionList = Repository.GetQueryable(true).Where(t => t.PickUpOrderID == entity.PickUpOrderID && t.PickUpOrderItemID == entity.PickUpOrderItemID && t.PeopleType == Domain.Enums.ETaskDistributionPeopleType.ConstructionCrew).ToList();
                     var constructionCount = distributionList.Count() + 1;
-                    entity.CommissionRate = constructionCount != 0 ? Math.Round(pickUpOrderItem.Product.CommissionRate / constructionCount) : 0;
+                    entity.CommissionRate = pickUpOrderItem.Product.CommissionRate;
+                    entity.CommissionMoney = pickUpOrderItem.Product.CommissionMoney;
+                    entity.SalesmanCommissionRate = pickUpOrderItem.Product.SalesmanCommissionRate;
+                    entity.SalesmanCommissionMoney = pickUpOrderItem.Product.SalesmanCommissionMoney;
                     pickUpOrderItem.ConstructionCount = constructionCount;
                     distributionList.ForEach(t =>
                     {
-                        t.CommissionRate = entity.CommissionRate;
+                        if (pickUpOrderItem.IsCommissionRate)
+                        {
+                            t.CommissionRate = entity.CommissionRate;
+                        }
+                        else
+                        {
+                            t.CommissionMoney = entity.CommissionMoney;
+                        }
+                        
                     });
                     Repository.UpdateRange(distributionList);
                 }
@@ -59,11 +70,18 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     var distributionList = Repository.GetQueryable(true).Where(t => t.PickUpOrderID == entity.PickUpOrderID && t.PickUpOrderItemID == entity.PickUpOrderItemID && t.PeopleType == Domain.Enums.ETaskDistributionPeopleType.Salesman).ToList();
                     var salesmanCount = distributionList.Count() + 1;
-                    entity.CommissionRate = salesmanCount != 0 ? pickUpOrderItem.Product.SalesmanCommissionRate / salesmanCount : 0;
+                    entity.SalesmanCommissionRate = pickUpOrderItem.Product.SalesmanCommissionRate;
                     pickUpOrderItem.SalesmanCount = salesmanCount;
                     distributionList.ForEach(t =>
                     {
-                        t.CommissionRate = entity.CommissionRate;
+                        if (pickUpOrderItem.IsSalesmanCommissionRate)
+                        {
+                            t.SalesmanCommissionRate = entity.SalesmanCommissionRate;
+                        }
+                        else
+                        {
+                            t.SalesmanCommissionMoney = entity.SalesmanCommissionMoney;
+                        }
                     });
                     Repository.UpdateRange(distributionList);
                 }
@@ -89,21 +107,37 @@ namespace VVCar.Shop.Services.DomainServices
         void ReCountCommission(Guid pickUpOrderID)
         {
             var pickUpOrder = PickUpOrderRepo.GetByKey(pickUpOrderID);
-            var pickUpOrderTaskDistributionList = Repository.GetQueryable(true).Where(m => m.PickUpOrderID == pickUpOrder.ID).ToList();
-            pickUpOrderTaskDistributionList.ForEach(m =>
+            var pickUpOrderTaskDistributionList = Repository.GetQueryable(true).Where(t => t.PickUpOrderID == pickUpOrder.ID).ToList();
+            pickUpOrderTaskDistributionList.ForEach(t =>
             {
-                var pickUpOrderItem = PickUpOrderItemRepo.GetByKey(m.PickUpOrderItemID);
-                if (m.PeopleType == Domain.Enums.ETaskDistributionPeopleType.ConstructionCrew)
+                var pickUpOrderItem = PickUpOrderItemRepo.GetByKey(t.PickUpOrderItemID);
+                if (t.PeopleType == Domain.Enums.ETaskDistributionPeopleType.ConstructionCrew)
                 {
-                    m.TotalMoney = pickUpOrderItem.Money;
-                    m.CommissionRate = pickUpOrderItem.ConstructionCount != 0 ? Math.Round(pickUpOrderItem.CommissionRate / pickUpOrderItem.ConstructionCount, 2) : 0;
-                    m.Commission = Math.Round(m.TotalMoney * m.CommissionRate / 100, 2);
+                    t.TotalMoney = pickUpOrderItem.Money / pickUpOrderItem.ConstructionCount;
+                    if (t.IsCommissionRate)
+                    {
+                        t.CommissionRate = pickUpOrderItem.CommissionRate;
+                        t.Commission = Math.Round(t.TotalMoney * t.CommissionRate / 100, 2);
+                    }
+                    else
+                    {
+                        t.CommissionMoney = pickUpOrderItem.CommissionMoney;
+                        t.Commission = (pickUpOrderItem.CommissionMoney * pickUpOrderItem.Quantity) / pickUpOrderItem.ConstructionCount;
+                    }
                 }
-                if (m.PeopleType == Domain.Enums.ETaskDistributionPeopleType.Salesman)
+                if (t.PeopleType == Domain.Enums.ETaskDistributionPeopleType.Salesman)
                 {
-                    m.TotalMoney = pickUpOrderItem.Money;
-                    m.SalesmanCommissionRate = pickUpOrderItem.SalesmanCount != 0 ? Math.Round(pickUpOrderItem.SalesmanCommissionRate / pickUpOrderItem.SalesmanCount, 2) : 0;
-                    m.SalesmanCommission = Math.Round(m.TotalMoney * m.SalesmanCommissionRate / 100, 2);
+                    t.TotalMoney = pickUpOrderItem.Money / pickUpOrderItem.SalesmanCount;
+                    if (t.IsSalesmanCommissionRate)
+                    {
+                        t.SalesmanCommissionRate = pickUpOrderItem.SalesmanCommissionRate;
+                        t.SalesmanCommission = Math.Round(t.TotalMoney * t.SalesmanCommissionRate / 100, 2);
+                    }
+                    else
+                    {
+                        t.SalesmanCommissionMoney = pickUpOrderItem.SalesmanCommissionMoney;
+                        t.SalesmanCommission = (pickUpOrderItem.SalesmanCommissionMoney * pickUpOrderItem.Quantity) / pickUpOrderItem.SalesmanCount;
+                    }
                 }
             });
             Repository.UpdateRange(pickUpOrderTaskDistributionList);
@@ -154,6 +188,8 @@ namespace VVCar.Shop.Services.DomainServices
                     {
                         pickUpOrderItem.SalesmanCount += 1;
                     }
+                    t.IsCommissionRate = pickUpOrderItem.IsCommissionRate;
+                    t.IsSalesmanCommissionRate = pickUpOrderItem.IsSalesmanCommissionRate;
                     t.CreatedDate = DateTime.Now;
                     t.CreatedUserID = AppContext.CurrentSession.UserID;
                     t.CreatedUser = AppContext.CurrentSession.UserName;
@@ -219,10 +255,12 @@ namespace VVCar.Shop.Services.DomainServices
                 if(t.PeopleType == Domain.Enums.ETaskDistributionPeopleType.ConstructionCrew)
                 {
                     t.CommissionRate = distribution.CommissionRate;
+                    t.Commission = distribution.Commission;
                 }
                 else
                 {
                     t.CommissionRate = distribution.SalesmanCommissionRate;
+                    t.Commission = distribution.SalesmanCommission;
                 }
             });
             return result;

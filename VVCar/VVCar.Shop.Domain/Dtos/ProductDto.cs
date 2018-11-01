@@ -78,9 +78,24 @@ namespace VVCar.Shop.Domain.Dtos
         public bool IsMemberCard { get; set; }
 
         /// <summary>
+        /// 是否抽成比例
+        /// </summary>
+        public bool IsCommissionRate { get; set; }
+
+        /// <summary>
         /// 抽成比例(0~100)
         /// </summary>
         public decimal CommissionRate { get; set; }
+
+        /// <summary>
+        /// 抽成金额
+        /// </summary>
+        public decimal CommissionMoney { get; set; }
+
+        /// <summary>
+        /// 是否业务员抽成比例
+        /// </summary>
+        public bool IsSalesmanCommissionRate { get; set; }
 
         /// <summary>
         /// 业务员抽成比例(0~100)
@@ -88,13 +103,38 @@ namespace VVCar.Shop.Domain.Dtos
         public decimal SalesmanCommissionRate { get; set; }
 
         /// <summary>
+        /// 业务员抽成金额
+        /// </summary>
+        public decimal SalesmanCommissionMoney { get; set; }
+
+        /// <summary>
+        /// /是否批发价抽成比例
+        /// </summary>
+        public bool IsWholesaleCommissionRate { get; set; }
+
+        /// <summary>
         /// 批发价抽成比例(0~100) --> 对于服务就是优惠价
         /// </summary>
         public decimal WholesaleCommissionRate { get; set; }
 
         /// <summary>
-        /// 优惠价施工抽成
+        /// 批发价抽成金额
+        /// </summary>
+        public decimal WholesaleCommissionMoney { get; set; }
+
+        /// <summary>
+        /// 是否优惠价施工抽成比例
+        /// </summary>
+        public bool IsWholesaleConstructionCommissionRate { get; set; }
+
+        /// <summary>
+        /// 优惠价施工抽成比例
         /// </summary>
         public decimal WholesaleConstructionCommissionRate { get; set; }
+
+        /// <summary>
+        /// 优惠价施工抽成金额
+        /// </summary>
+        public decimal WholesaleConstructionCommissionMoney { get; set; }
     }
 }

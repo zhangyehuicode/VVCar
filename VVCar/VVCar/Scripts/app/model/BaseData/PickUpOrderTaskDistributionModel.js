@@ -7,5 +7,6 @@
 		{ name: "UserName" },
 		{ name: "PeopleType" },
 		{ name: "CommissionRate" },
+		{ name: "Commission" },
 	]
 });

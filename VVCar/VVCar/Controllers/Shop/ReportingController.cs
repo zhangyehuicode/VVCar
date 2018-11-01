@@ -182,7 +182,7 @@ namespace VVCar.Controllers.Shop
                 var totalCount = 0;
                 filter.Start = null;
                 filter.Limit = null;
-                var data = ReportingService.StaffPerformanceStatistics1(filter, ref totalCount);
+                var data = ReportingService.StaffPerformanceStatistics(filter, ref totalCount);
                 var staffPerformanceStatisticsList = data.ToList();
                 StaffPerformance staffPerformance = new StaffPerformance();
                 staffPerformanceStatisticsList.ForEach(t =>

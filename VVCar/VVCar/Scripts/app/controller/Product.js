@@ -88,6 +88,12 @@
 			'ProductEdit combobox[name=IsCombo]': {
 				//change: me.isComboChange
 			},
+			'ProductEdit radiogroup[name=SalesmanCommissionType]': {
+				change: me.salesmancommissiontype
+			},
+			'ProductEdit radiogroup[name=WholesaleCommissionType]': {
+				change: me.wholesalecommissiontype
+			},
 			'Product combobox[name=ProductType]': {
 				change: me.productproducttypechange
 			},
@@ -95,6 +101,34 @@
 				click: me.stockSave
 			},
 		});
+	},
+	salesmancommissiontype: function (group, checked) {
+		var me = this;
+		var win = group.up('window');
+		if (checked.IsSalesmanCommissionRate == true) {
+			win.down('numberfield[name=SalesmanCommissionRate]').show();
+			win.down('numberfield[name=SalesmanCommissionMoney]').hide();
+			win.down('label[name=SalesmanCommissionUnit]').setText('%');
+		}
+		if (checked.IsSalesmanCommissionRate == false) {
+			win.down('numberfield[name=SalesmanCommissionMoney]').show();
+			win.down('numberfield[name=SalesmanCommissionRate]').hide();
+			win.down('label[name=SalesmanCommissionUnit]').setText('元');
+		}
+	},
+	wholesalecommissiontype: function (group, checked) {
+		var me = this;
+		var win = group.up('window');
+		if (checked.IsWholesaleCommissionRate == true) {
+			win.down('numberfield[name=WholesaleCommissionRate]').show();
+			win.down('numberfield[name=WholesaleCommissionMoney]').hide();
+			win.down('label[name=WholesaleCommissionUnit]').setText('%');
+		}
+		if (checked.IsWholesaleCommissionRate == false) {
+			win.down('numberfield[name=WholesaleCommissionMoney]').show();
+			win.down('numberfield[name=WholesaleCommissionRate]').hide();
+			win.down('label[name=WholesaleCommissionUnit]').setText('元');
+		}
 	},
 	productproducttypechange: function (com, newValue, oldValue, eOpts) {
 		this.search(com);
@@ -435,6 +469,34 @@
 		win.down('numberfield[name=Stock]').setDisabled(true);
 		win.down('numberfield[name=Stock]').hide();
 		win.down('combobox[name=ProductType]').hidden = true;
+		if (record.data.IsSalesmanCommissionRate == false) {
+			win.down('radiogroup[name=SalesmanCommissionType]').items.get(0).setValue(false);
+			win.down('radiogroup[name=SalesmanCommissionType]').items.get(1).setValue(true);
+			win.down('numberfield[name=SalesmanCommissionRate]').hide();
+			win.down('numberfield[name=SalesmanCommissionMoney]').show();
+			win.down('label[name=SalesmanCommissionUnit]').setText('元');
+		}
+		if (record.data.IsSalesmanCommissionRate == true) {
+			win.down('radiogroup[name=SalesmanCommissionType]').items.get(1).setValue(false);
+			win.down('radiogroup[name=SalesmanCommissionType]').items.get(0).setValue(true);
+			win.down('numberfield[name=SalesmanCommissionRate]').show();
+			win.down('numberfield[name=SalesmanCommissionMoney]').hide();
+			win.down('label[name=SalesmanCommissionUnit]').setText('%');
+		}
+		if (record.data.IsWholesaleCommissionRate == false) {
+			win.down('radiogroup[name=WholesaleCommissionType]').items.get(0).setValue(false);
+			win.down('radiogroup[name=WholesaleCommissionType]').items.get(1).setValue(true);
+			win.down('numberfield[name=WholesaleCommissionRate]').hide();
+			win.down('numberfield[name=WholesaleCommissionMoney]').show();
+			win.down('label[name=WholesaleCommissionUnit]').setText('元');
+		}
+		if (record.data.IsWholesaleCommissionRate == true) {
+			win.down('radiogroup[name=WholesaleCommissionType]').items.get(1).setValue(false);
+			win.down('radiogroup[name=WholesaleCommissionType]').items.get(0).setValue(true);
+			win.down('numberfield[name=WholesaleCommissionRate]').show();
+			win.down('numberfield[name=WholesaleCommissionMoney]').hide();
+			win.down('label[name=WholesaleCommissionUnit]').setText('%');
+		}
 		win.form.getForm().actionMethod = 'PUT';
 		win.setTitle('编辑商品');
 		win.show();

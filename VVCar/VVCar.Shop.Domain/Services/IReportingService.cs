@@ -73,14 +73,6 @@ namespace VVCar.Shop.Domain.Services
         IEnumerable<StaffPerformance> StaffPerformanceStatistics(StaffPerformanceFilter filter, ref int totalCount);
 
         /// <summary>
-        /// 员工业绩统计
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="totalCount"></param>
-        /// <returns></returns>
-        IEnumerable<StaffPerformance> StaffPerformanceStatistics1(StaffPerformanceFilter filter, ref int totalCount);
-
-        /// <summary>
         /// 门店开发业绩统计
         /// </summary>
         /// <param name="filter"></param>

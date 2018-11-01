@@ -88,10 +88,28 @@ namespace VVCar.Shop.Domain.Entities
         public decimal WholesalePrice { get; set; }
 
         /// <summary>
+        /// 是否施工抽成比例(否为固定定额)
+        /// </summary>
+        [Display(Name = "是否施工抽成比例")]
+        public bool IsCommissionRate { get; set; }
+
+        /// <summary>
         /// 施工抽成比例(0~100)
         /// </summary>
         [Display(Name = "施工抽成比例(0~100)")]
         public decimal CommissionRate { get; set; }
+
+        /// <summary>
+        /// 施工固定抽成金额
+        /// </summary>
+        [Display(Name = "固定抽成金额")]
+        public decimal CommissionMoney { get; set; }
+
+        /// <summary>
+        /// 是否业务员抽成比例(否为固定金额)
+        /// </summary>
+        [Display(Name = "是否业务员抽成比例")]
+        public bool IsSalesmanCommissionRate { get; set; }
 
         /// <summary>
         /// 业务员抽成比例(0~100)
@@ -100,16 +118,45 @@ namespace VVCar.Shop.Domain.Entities
         public decimal SalesmanCommissionRate { get; set; }
 
         /// <summary>
+        /// 业务员固定抽成金额
+        /// </summary>
+        [Display(Name = "业务员固定抽成金额")]
+        public decimal SalesmanCommissionMoney { get; set; }
+
+        /// <summary>
+        /// 是否批发价抽成比例
+        /// </summary>
+        [Display(Name = "是否批发价抽成比例")]
+        public bool IsWholesaleCommissionRate { get; set; }
+
+        /// <summary>
         /// 批发价业务员抽成比例(0~100) --> 对于服务就是优惠价
         /// </summary>
         [Display(Name = "批发价业务员抽成比例(0~100)")]
         public decimal WholesaleCommissionRate { get; set; }
 
         /// <summary>
-        /// 优惠价施工抽成
+        /// 批发价固定抽成金额
         /// </summary>
-        [Display(Name = "优惠价施工抽成")]
+        [Display(Name = "批发价固定抽成金额")]
+        public decimal WholesaleCommissionMoney { get; set; }
+
+        /// <summary>
+        /// 是否优惠价施工抽成比例
+        /// </summary>
+        public bool IsWholesaleConstructionCommissionRate { get; set; }
+
+        /// <summary>
+        /// 优惠价施工抽成比例
+        /// </summary>
+        [Display(Name = "优惠价施工抽成比例")]
         public decimal WholesaleConstructionCommissionRate { get; set; }
+
+        /// <summary>
+        /// 优惠价施工固定抽成金额
+        /// </summary>
+        [Display(Name = "优惠价施工固定抽成金额")]
+        public decimal WholesaleConstructionCommissionMoney { get; set; }
 
         /// <summary>
         /// 兑换积分

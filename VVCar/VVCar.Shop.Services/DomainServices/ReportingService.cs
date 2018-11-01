@@ -63,6 +63,9 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<MemberPlate> MemberPlateRepo { get => ServiceLocator.Instance.GetService<IRepository<MemberPlate>>(); }
 
+        IRepository<OrderDividend> OrderDividendRepo { get => ServiceLocator.Instance.GetService<IRepository<OrderDividend>>(); }
+
+        IRepository<CouponTemplate> CouponTemplateRepo { get => ServiceLocator.Instance.GetService<IRepository<CouponTemplate>>(); }
 
         IWeChatService WeChatService { get => ServiceLocator.Instance.GetService<IWeChatService>(); }
 
@@ -265,171 +268,120 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<StaffPerformance> StaffPerformanceStatistics(StaffPerformanceFilter filter, ref int totalCount)
         {
+            //var result = new List<StaffPerformance>();
+            //var userQueryable = UserRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            //if (filter != null && !string.IsNullOrEmpty(filter.StaffName))
+            //    userQueryable = userQueryable.Where(t => t.Name.Contains(filter.StaffName));
+            //var users = userQueryable.ToList();
+            //if (users != null && users.Count > 0)
+            //{
+            //    var now = DateTime.Now;
+            //    var monthStartTime = new DateTime(now.Year, now.Month, 1);
+            //    var nextMonthStartTime = monthStartTime.AddMonths(1);
+            //    var pickuporderQueryable = PickUpOrderRepo.GetIncludes(false, "PickUpOrderItemList", "PickUpOrderItemList.Product").Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            //    var currentpickuporderlist = pickuporderQueryable;
+            //    var monthpickuporderlist = pickuporderQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
+            //    if (filter != null)
+            //    {
+            //        if (filter.StartDate.HasValue)
+            //            currentpickuporderlist = currentpickuporderlist.Where(t => t.CreatedDate >= filter.StartDate.Value);
+            //        if (filter.EndDate.HasValue)
+            //            currentpickuporderlist = currentpickuporderlist.Where(t => t.CreatedDate < filter.EndDate.Value);
+            //    }
+            //    users.ForEach(user =>
+            //    {
+            //        var userpickuporder = pickuporderQueryable.Where(t => t.StaffID == user.ID).ToList();
+            //        var monthuserpickuporder = monthpickuporderlist.Where(t => t.StaffID == user.ID).ToList();
+            //        var currentuserpickuporder = currentpickuporderlist.Where(t => t.StaffID == user.ID).ToList();
+
+            //        var staffPerformance = new StaffPerformance();
+
+            //        staffPerformance.TotalPerformance = userpickuporder.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            //        staffPerformance.MonthPerformance = monthuserpickuporder.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault(); ;
+            //        staffPerformance.CurrentPerformance = currentuserpickuporder.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+
+            //        staffPerformance.CustomerServiceCount = userpickuporder.Count();
+            //        staffPerformance.MonthCustomerServiceCount = monthuserpickuporder.Count();
+            //        staffPerformance.CurrentCustomerServiceCount = currentuserpickuporder.Count();
+
+            //        userpickuporder.Select(t => t.PickUpOrderItemList).ForEach(t =>
+            //        {
+            //            staffPerformance.TotalCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
+            //        });
+            //        monthuserpickuporder.Select(t => t.PickUpOrderItemList).ForEach(t =>
+            //        {
+            //            staffPerformance.MonthCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
+            //        });
+            //        currentuserpickuporder.Select(t => t.PickUpOrderItemList).ForEach(t =>
+            //        {
+            //            staffPerformance.CurrentCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
+            //        });
+
+            //        staffPerformance.BasicSalary = user.BasicSalary;
+            //        staffPerformance.Subsidy = 0;
+
+            //        staffPerformance.StaffID = user.ID;
+            //        staffPerformance.StaffName = user.Name;
+            //        staffPerformance.StaffCode = user.Code;
+
+            //        staffPerformance.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
+            //        staffPerformance.MonthOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID && t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime).Count();
+
+            //        result.Add(staffPerformance);
+            //    });
+            //}
+            //totalCount = result.Count();
+            //if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
+            //    result = result.OrderByDescending(t => t.CurrentPerformance).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
+            //return result.OrderByDescending(t => t.CurrentPerformance).ToList();
             var result = new List<StaffPerformance>();
             var userQueryable = UserRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
-            if (filter != null && !string.IsNullOrEmpty(filter.StaffName))
-                userQueryable = userQueryable.Where(t => t.Name.Contains(filter.StaffName));
+            if (!string.IsNullOrEmpty(filter.StaffName))
+                userQueryable = userQueryable.Where(t => t.Name.Contains(filter.StaffName) || t.Code.Contains(filter.StaffName));
+            var orderDividendQueryable = OrderDividendRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var now = DateTime.Now;
+            var monthStartTime = new DateTime(now.Year, now.Month, 1);
+            var nextMonthStartTime = monthStartTime.AddMonths(1);
+            var currentOrderDividendQueryable = orderDividendQueryable;
+            var monthOrderDividendQueryable = orderDividendQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
+            if (filter.StartDate.HasValue)
+                currentOrderDividendQueryable = currentOrderDividendQueryable.Where(t=> t.CreatedDate >= filter.StartDate.Value);
+            if (filter.EndDate.HasValue)
+                currentOrderDividendQueryable = currentOrderDividendQueryable.Where(t => t.CreatedDate < filter.EndDate.Value);
             var users = userQueryable.ToList();
-            if (users != null && users.Count > 0)
+            users.ForEach(t =>
             {
-                var now = DateTime.Now;
-                var monthStartTime = new DateTime(now.Year, now.Month, 1);
-                var nextMonthStartTime = monthStartTime.AddMonths(1);
-                var pickuporderQueryable = PickUpOrderRepo.GetIncludes(false, "PickUpOrderItemList", "PickUpOrderItemList.Product").Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
-                var currentpickuporderlist = pickuporderQueryable;
-                var monthpickuporderlist = pickuporderQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
-                if (filter != null)
-                {
-                    if (filter.StartDate.HasValue)
-                        currentpickuporderlist = currentpickuporderlist.Where(t => t.CreatedDate >= filter.StartDate.Value);
-                    if (filter.EndDate.HasValue)
-                        currentpickuporderlist = currentpickuporderlist.Where(t => t.CreatedDate < filter.EndDate.Value);
-                }
-                users.ForEach(user =>
-                {
-                    var userpickuporder = pickuporderQueryable.Where(t => t.StaffID == user.ID).ToList();
-                    var monthuserpickuporder = monthpickuporderlist.Where(t => t.StaffID == user.ID).ToList();
-                    var currentuserpickuporder = currentpickuporderlist.Where(t => t.StaffID == user.ID).ToList();
+                var userOrderDividendList = orderDividendQueryable.Where(dividend => dividend.UserID == t.ID).ToList();
+                var userMonthOrderDividendList = monthOrderDividendQueryable.Where(dividend => dividend.UserID == t.ID).ToList();
+                var userCurrentOrderDividendList = currentOrderDividendQueryable.Where(dividend => dividend.UserID == t.ID).ToList();
 
-                    var staffPerformance = new StaffPerformance();
+                var staffPerformance = new StaffPerformance();
+                staffPerformance.TotalPerformance = userOrderDividendList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Money)).FirstOrDefault();
+                staffPerformance.MonthPerformance = userMonthOrderDividendList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Money)).FirstOrDefault();
+                staffPerformance.CurrentPerformance = userCurrentOrderDividendList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Money)).FirstOrDefault();
 
-                    staffPerformance.TotalPerformance = userpickuporder.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
-                    staffPerformance.MonthPerformance = monthuserpickuporder.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault(); ;
-                    staffPerformance.CurrentPerformance = currentuserpickuporder.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+                staffPerformance.CustomerServiceCount = userOrderDividendList.Where(m => m.OrderType == EShopTradeOrderType.PickupOrder).Count();
+                staffPerformance.MonthCustomerServiceCount = userMonthOrderDividendList.Where(m => m.OrderType == EShopTradeOrderType.PickupOrder).Count();
+                staffPerformance.CurrentCustomerServiceCount = userCurrentOrderDividendList.Where(m => m.OrderType == EShopTradeOrderType.PickupOrder).Count();
 
-                    staffPerformance.CustomerServiceCount = userpickuporder.Count();
-                    staffPerformance.MonthCustomerServiceCount = monthuserpickuporder.Count();
-                    staffPerformance.CurrentCustomerServiceCount = currentuserpickuporder.Count();
+                staffPerformance.TotalCommission = userOrderDividendList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Commission)).FirstOrDefault();
+                staffPerformance.MonthCommission = userMonthOrderDividendList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Commission)).FirstOrDefault();
+                staffPerformance.CurrentCommission = userCurrentOrderDividendList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Commission)).FirstOrDefault();
 
-                    userpickuporder.Select(t => t.PickUpOrderItemList).ForEach(t =>
-                    {
-                        staffPerformance.TotalCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
-                    });
-                    monthuserpickuporder.Select(t => t.PickUpOrderItemList).ForEach(t =>
-                    {
-                        staffPerformance.MonthCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
-                    });
-                    currentuserpickuporder.Select(t => t.PickUpOrderItemList).ForEach(t =>
-                    {
-                        staffPerformance.CurrentCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
-                    });
+                staffPerformance.BasicSalary = t.BasicSalary;
+                staffPerformance.Subsidy = 0;
 
-                    staffPerformance.BasicSalary = user.BasicSalary;
-                    staffPerformance.Subsidy = 0;
+                staffPerformance.StaffID = t.ID;
+                staffPerformance.StaffName = t.Name;
+                staffPerformance.StaffCode = t.Code;
 
-                    staffPerformance.StaffID = user.ID;
-                    staffPerformance.StaffName = user.Name;
-                    staffPerformance.StaffCode = user.Code;
+                staffPerformance.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(m => m.UserID == t.ID).Count();
+                staffPerformance.MonthOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(m => m.UserID == t.ID).Count();
 
-                    staffPerformance.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
-                    staffPerformance.MonthOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID && t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime).Count();
-
-                    result.Add(staffPerformance);
-                });
-            }
+                result.Add(staffPerformance);
+            });
             totalCount = result.Count();
-            if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
-                result = result.OrderByDescending(t => t.CurrentPerformance).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
-            return result.OrderByDescending(t => t.CurrentPerformance).ToList();
-        }
-
-        /// <summary>
-        /// 员工业绩统计
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="totalCount"></param>
-        /// <returns></returns>
-        public IEnumerable<StaffPerformance> StaffPerformanceStatistics1(StaffPerformanceFilter filter, ref int totalCount)
-        {
-            var result = new List<StaffPerformance>();
-            var userQueryable = UserRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
-            if (filter != null && !string.IsNullOrEmpty(filter.StaffName))
-                userQueryable = userQueryable.Where(t => t.Name.Contains(filter.StaffName));
-            var users = userQueryable.ToList();
-            if (users != null && users.Count > 0)
-            {
-                var now = DateTime.Now;
-                var monthStartTime = new DateTime(now.Year, now.Month, 1);
-                var nextMonthStartTime = monthStartTime.AddMonths(1);
-                //接车单
-                var pickUpOrderTaskDistributionQueryable = PickUpOrderTaskDistributionRepo.GetInclude(t => t.PickUpOrder, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PickUpOrder.Status == EPickUpOrderStatus.Payed);
-                var currentPickupOrderQueryable = pickUpOrderTaskDistributionQueryable;
-                var monthPickupOrderQueryable = pickUpOrderTaskDistributionQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
-
-                //商城
-                var orderQueryable = OrderRepo.GetInclude(t => t.OrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && (t.Status == EOrderStatus.PayUnshipped || t.Status == EOrderStatus.Delivered || t.Status == EOrderStatus.Finish || t.Status == EOrderStatus.PayUnshipped));
-                var currentOrderQueryable = orderQueryable;
-                var monthOrderQueryable = orderQueryable.Where(t => t.CreatedDate >= monthStartTime && t.CreatedDate < nextMonthStartTime);
-
-                if (filter != null)
-                {
-                    if (filter.StartDate.HasValue)
-                    {
-                        currentPickupOrderQueryable = currentPickupOrderQueryable.Where(t => t.CreatedDate >= filter.StartDate.Value);
-                        currentOrderQueryable = currentOrderQueryable.Where(t => t.CreatedDate >= filter.StartDate.Value);
-                    }
-                    if (filter.EndDate.HasValue)
-                    {
-                        currentPickupOrderQueryable = currentPickupOrderQueryable.Where(t => t.CreatedDate < filter.EndDate.Value);
-                        currentOrderQueryable = currentOrderQueryable.Where(t => t.CreatedDate < filter.EndDate.Value);
-                    }
-                }
-                users.ForEach(user =>
-                {
-                    //接车单
-                    var userPickupOrderList = pickUpOrderTaskDistributionQueryable.Where(t => t.UserID == user.ID).ToList();
-                    var userMonthPickupOrderList = monthPickupOrderQueryable.Where(t => t.UserID == user.ID).ToList();
-                    var userCurrentPickupOrderList = currentPickupOrderQueryable.Where(t => t.UserID == user.ID).ToList();
-
-                    var staffPerformance = new StaffPerformance();
-
-                    staffPerformance.TotalPerformance = userPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.TotalMoney)).FirstOrDefault();
-                    staffPerformance.MonthPerformance = userMonthPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.TotalMoney)).FirstOrDefault();
-                    staffPerformance.CurrentPerformance = userCurrentPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.TotalMoney)).FirstOrDefault();
-
-                    staffPerformance.CustomerServiceCount = userPickupOrderList.Count();
-                    staffPerformance.MonthCustomerServiceCount = userMonthPickupOrderList.Count();
-                    staffPerformance.CurrentCustomerServiceCount = userCurrentPickupOrderList.Count();
-
-                    staffPerformance.TotalCommission = userPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Commission + s.SalesmanCommission)).FirstOrDefault();
-                    staffPerformance.MonthCommission = userMonthPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Commission + s.SalesmanCommission)).FirstOrDefault();
-                    staffPerformance.CurrentCommission = userCurrentPickupOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Commission + s.SalesmanCommission)).FirstOrDefault();
-
-                    //商城
-                    var memberIDs = UserMemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.UserID == user.ID).Select(t => t.MemberID).ToList();
-                    var userOrderList = orderQueryable.Where(t => t.UserID == user.ID || memberIDs.Contains(t.MemberID.Value)).ToList();
-                    var userMonthOrderList = monthOrderQueryable.Where(t => t.UserID == user.ID || memberIDs.Contains(t.MemberID.Value)).ToList();
-                    var userCurrentOrderList = currentOrderQueryable.Where(t => t.UserID == user.ID || memberIDs.Contains(t.MemberID.Value)).ToList();
-
-                    staffPerformance.TotalPerformance += userOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
-                    staffPerformance.MonthPerformance += userMonthOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
-                    staffPerformance.CurrentPerformance += userCurrentOrderList.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
-
-                    userOrderList.Select(t => t.OrderItemList).ForEach(t =>
-                    {
-                        staffPerformance.TotalCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Commission)).FirstOrDefault();
-                    });
-                    userMonthOrderList.Select(t => t.OrderItemList).ForEach(t =>
-                    {
-                        staffPerformance.MonthCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Commission)).FirstOrDefault();
-                    });
-
-                    staffPerformance.BasicSalary = user.BasicSalary;
-                    staffPerformance.Subsidy = 0;
-
-                    staffPerformance.StaffID = user.ID;
-                    staffPerformance.StaffName = user.Name;
-                    staffPerformance.StaffCode = user.Code;
-
-                    staffPerformance.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
-                    staffPerformance.MonthOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
-
-                    result.Add(staffPerformance);
-
-                });
-            }
-            totalCount = result.Count();
-            if (filter != null && filter.Start.HasValue && filter.Limit.HasValue)
+            if (filter.Start.HasValue && filter.Limit.HasValue)
                 result = result.OrderByDescending(t => t.CurrentPerformance).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             return result.OrderByDescending(t => t.CurrentPerformance).ToList();
 
@@ -499,147 +451,189 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<ProductRetailStatisticsDto> ProductRetailStatistics(ProductRetailStatisticsFilter filter, ref int totalCount)
         {
+            //var result = new List<ProductRetailStatisticsDto>();
+
+            //var orderItemQueryable = OrderItemRepo.GetQueryable(false);
+            //var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetInclude(t => t.Product, false);
+
+            //if (filter != null)
+            //{
+            //    if(!string.IsNullOrEmpty(filter.PlateNumber))
+            //    {
+            //        var memberPlate = MemberPlateRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PlateNumber == filter.PlateNumber).FirstOrDefault();
+            //        if(memberPlate != null)
+            //            orderItemQueryable = orderItemQueryable.Where(t => t.Order.MemberID == memberPlate.MemberID);
+            //        else
+            //            orderItemQueryable = orderItemQueryable.Where(t => 1==0);
+            //        pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.PlateNumber == filter.PlateNumber);
+            //    }
+
+            //    if (!string.IsNullOrEmpty(filter.ProductCodeName))
+            //    {
+            //        var productIDs = ProductRepo.GetQueryable(false).Where(t => t.Code.Contains(filter.ProductCodeName) || t.Name.Contains(filter.ProductCodeName)).Select(t=>t.ID).Distinct();
+            //        orderItemQueryable = orderItemQueryable.Where(t => productIDs.Contains(t.GoodsID));
+            //        pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => productIDs.Contains(t.ProductID));
+            //    }
+
+            //    if (filter.StartDate.HasValue)
+            //    {
+            //        orderItemQueryable = orderItemQueryable.Where(t => t.Order.CreatedDate >= filter.StartDate.Value);
+            //        pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.CreatedDate >= filter.StartDate.Value);
+            //    }
+            //    if (filter.EndDate.HasValue)
+            //    {
+            //        orderItemQueryable = orderItemQueryable.Where(t => t.Order.CreatedDate < filter.EndDate.Value);
+            //        pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.CreatedDate < filter.EndDate.Value);
+            //    }
+            //    if (filter.ProductType.HasValue)
+            //    {
+            //        orderItemQueryable = orderItemQueryable.Where(t => t.ProductType == filter.ProductType.Value);
+            //        pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.Product.ProductType == filter.ProductType.Value);
+            //    }
+            //}
+
+            //var orderItemList = orderItemQueryable.Where(t => t.Order.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType != Domain.Enums.EProductType.MemberCard).ToList();
+            //var orderItemGroup = orderItemList.GroupBy(g => g.GoodsID).Select(t => new
+            //{
+            //    ProductID = t.Key,
+            //    Quantity = t.Sum(s => s.Quantity),
+            //    ProductName = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductName : "",
+            //    ProductCode = "",
+            //    ProductType = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductType : Domain.Enums.EProductType.Goods,
+            //    Money = t.Sum(s => s.Money),
+            //}).ToList();
+
+            //var pickUpOrderList = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+            //var pickUpOrderGroup = pickUpOrderList.GroupBy(g => g.ProductID).Select(t => new
+            //{
+            //    ProductID = t.Key,
+            //    Quantity = t.Sum(s => s.Quantity),
+            //    ProductName = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductName : "",
+            //    ProductCode = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductCode : "",
+            //    ProductType = t.FirstOrDefault() != null ? t.FirstOrDefault().Product.ProductType : Domain.Enums.EProductType.Goods,
+            //    Money = t.Sum(s => s.Money),
+            //}).ToList();
+
+            //orderItemGroup.AddRange(pickUpOrderGroup);
+
+            //var productQueryable = ProductRepo.GetInclude(p => p.ProductCategory, false);
+            //orderItemGroup.ForEach(t =>
+            //{
+            //    var item = new ProductRetailStatisticsDto();
+            //    item.ProductID = t.ProductID;
+            //    item.Quantity = t.Quantity;
+            //    item.ProductName = t.ProductName;
+            //    item.ProductType = t.ProductType.GetDescription();
+            //    item.Money = t.Money;
+            //    var product = productQueryable.Where(p => p.ID == t.ProductID).FirstOrDefault();
+            //    if (product != null)
+            //    {
+            //        item.ProductName = product.Name;
+            //        item.ProductCategoryName = product.ProductCategory.Name;
+            //        item.ProductCode = product.Code;
+            //        item.Unit = product.Unit;
+            //        item.ProductType = product.ProductType.GetDescription();
+            //    }
+            //    result.Add(item);
+            //});
+
+            //result = result.OrderBy(t => t.ProductType).OrderByDescending(t => t.Quantity).ToList();
+            //totalCount = result.Count();
+
+            //if (filter != null)
+            //{
+            //    if (!string.IsNullOrEmpty(filter.ProductName))
+            //        result = result.Where(t => t.ProductName.Contains(filter.ProductName)).ToList();
+            //    if (!string.IsNullOrEmpty(filter.ProductCode))
+            //        result = result.Where(t => t.ProductCode.Contains(filter.ProductCode)).ToList();
+            //    //if (!string.IsNullOrEmpty(filter.ProductCodeName))
+            //    //{
+            //    //    result = result.Where(t => filter.ProductCodeName.Contains(t.ProductCode) || filter.ProductCodeName.Contains(t.ProductName)).ToList();
+            //    //}
+            //    if (filter.IsSaleWell.HasValue)
+            //    {
+            //        if (!(filter.StartDate.HasValue && filter.EndDate.HasValue))
+            //        {
+            //            throw new DomainException("参数错误");
+            //        }
+            //        var days = (filter.EndDate.Value - filter.StartDate.Value).Days;
+            //        if (filter.IsSaleWell.Value)
+            //        {
+            //            result = result.Take(5).ToList();
+            //        }
+            //        else
+            //        {
+            //            IList<ProductRetailStatisticsDto> removeData = new List<ProductRetailStatisticsDto>();
+            //            foreach (var t in result)
+            //            {
+            //                var unsaleProductSettingItem = UnsaleProductSettingItemRepo.GetInclude(p => p.UnsaleProductSetting, false).Where(p => p.MerchantID == AppContext.CurrentSession.MerchantID && p.UnsaleProductSetting.IsAvailable == true && p.ProductID == t.ProductID).FirstOrDefault();
+            //                if (unsaleProductSettingItem != null)
+            //                {
+            //                    var quantitiesUnit = unsaleProductSettingItem.UnsaleProductSetting.Quantities * 1.0 / unsaleProductSettingItem.UnsaleProductSetting.PeriodDays;
+            //                    var performenceUnit = unsaleProductSettingItem.UnsaleProductSetting.Performence / unsaleProductSettingItem.UnsaleProductSetting.PeriodDays;
+            //                    if ((t.Quantity * 1.0 / days) > quantitiesUnit || (t.Money / days) > performenceUnit)
+            //                    {
+            //                        removeData.Add(t);
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    removeData.Add(t);
+            //                }
+            //            }
+            //            removeData.ForEach(t =>
+            //            {
+            //                result.Remove(t);
+            //            });
+            //            result = result.OrderBy(t => t.Quantity).ToList();
+            //        }
+            //    }
+            //    totalCount = result.Count();
+            //    if (filter.Start.HasValue && filter.Limit.HasValue)
+            //        result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
+            //}
+            //return result;
+
+
             var result = new List<ProductRetailStatisticsDto>();
-
-            var orderItemQueryable = OrderItemRepo.GetQueryable(false);
-            var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetInclude(t => t.Product, false);
-
-            if (filter != null)
-            {
-                if(!string.IsNullOrEmpty(filter.PlateNumber))
-                {
-                    var memberPlate = MemberPlateRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PlateNumber == filter.PlateNumber).FirstOrDefault();
-                    if(memberPlate != null)
-                        orderItemQueryable = orderItemQueryable.Where(t => t.Order.MemberID == memberPlate.MemberID);
-                    else
-                        orderItemQueryable = orderItemQueryable.Where(t => 1==0);
-                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.PlateNumber == filter.PlateNumber);
-                }
-
-                if (!string.IsNullOrEmpty(filter.ProductCodeName))
-                {
-                    var productIDs = ProductRepo.GetQueryable(false).Where(t => t.Code.Contains(filter.ProductCodeName) || t.Name.Contains(filter.ProductCodeName)).Select(t=>t.ID).Distinct();
-                    orderItemQueryable = orderItemQueryable.Where(t => productIDs.Contains(t.GoodsID));
-                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => productIDs.Contains(t.ProductID));
-                }
-
-                if (filter.StartDate.HasValue)
-                {
-                    orderItemQueryable = orderItemQueryable.Where(t => t.Order.CreatedDate >= filter.StartDate.Value);
-                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.CreatedDate >= filter.StartDate.Value);
-                }
-                if (filter.EndDate.HasValue)
-                {
-                    orderItemQueryable = orderItemQueryable.Where(t => t.Order.CreatedDate < filter.EndDate.Value);
-                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.CreatedDate < filter.EndDate.Value);
-                }
-                if (filter.ProductType.HasValue)
-                {
-                    orderItemQueryable = orderItemQueryable.Where(t => t.ProductType == filter.ProductType.Value);
-                    pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.Product.ProductType == filter.ProductType.Value);
-                }
-            }
-
-            var orderItemList = orderItemQueryable.Where(t => t.Order.MerchantID == AppContext.CurrentSession.MerchantID && t.ProductType != Domain.Enums.EProductType.MemberCard).ToList();
-            var orderItemGroup = orderItemList.GroupBy(g => g.GoodsID).Select(t => new
-            {
-                ProductID = t.Key,
-                Quantity = t.Sum(s => s.Quantity),
-                ProductName = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductName : "",
-                ProductCode = "",
-                ProductType = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductType : Domain.Enums.EProductType.Goods,
-                Money = t.Sum(s => s.Money),
-            }).ToList();
-
-            var pickUpOrderList = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
-            var pickUpOrderGroup = pickUpOrderList.GroupBy(g => g.ProductID).Select(t => new
-            {
-                ProductID = t.Key,
-                Quantity = t.Sum(s => s.Quantity),
-                ProductName = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductName : "",
-                ProductCode = t.FirstOrDefault() != null ? t.FirstOrDefault().ProductCode : "",
-                ProductType = t.FirstOrDefault() != null ? t.FirstOrDefault().Product.ProductType : Domain.Enums.EProductType.Goods,
-                Money = t.Sum(s => s.Money),
-            }).ToList();
-
-            orderItemGroup.AddRange(pickUpOrderGroup);
-
-            var productQueryable = ProductRepo.GetInclude(p => p.ProductCategory, false);
-            orderItemGroup.ForEach(t =>
+            var productQueryable = ProductRepo.GetInclude(t => t.ProductCategory, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (filter.ProductType.HasValue)
+                productQueryable = productQueryable.Where(t => t.ProductType == filter.ProductType.Value);
+            if (!string.IsNullOrEmpty(filter.ProductCodeName))
+                productQueryable = productQueryable.Where(t => filter.ProductCodeName.Contains(t.Code) || filter.ProductCodeName.Contains(t.Name));
+            var productList = productQueryable.ToList();
+            var orderDividendQuery = OrderDividendRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var TradeOrderIDs = orderDividendQuery.Select(t => t.TradeOrderID).Distinct();
+            if (filter.StartDate.HasValue)
+                TradeOrderIDs = orderDividendQuery.Where(t => t.CreatedDate >= filter.StartDate).Select(sl => sl.TradeOrderID).Distinct();
+            if(filter.EndDate.HasValue)
+                TradeOrderIDs = orderDividendQuery.Where(t => t.CreatedDate < filter.EndDate).Select(sl => sl.TradeOrderID).Distinct();
+            if(filter.StartDate.HasValue && filter.EndDate.HasValue)
+                TradeOrderIDs = orderDividendQuery.Where(t => t.CreatedDate >= filter.StartDate && t.CreatedDate < filter.EndDate).Select(sl => sl.TradeOrderID).Distinct();
+            var orderItemQueryable = OrderItemRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && TradeOrderIDs.Contains(t.OrderID));
+            var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && TradeOrderIDs.Contains(t.PickUpOrderID));
+            productList.ForEach(t =>
             {
                 var item = new ProductRetailStatisticsDto();
-                item.ProductID = t.ProductID;
-                item.Quantity = t.Quantity;
-                item.ProductName = t.ProductName;
+                item.ProductID = t.ID;
+                item.ProductCode = t.Code;
+                item.ProductName = t.Name;
+                item.ProductCategoryName = t.ProductCategory.Name;
                 item.ProductType = t.ProductType.GetDescription();
-                item.Money = t.Money;
-                var product = productQueryable.Where(p => p.ID == t.ProductID).FirstOrDefault();
-                if (product != null)
-                {
-                    item.ProductName = product.Name;
-                    item.ProductCategoryName = product.ProductCategory.Name;
-                    item.ProductCode = product.Code;
-                    item.Unit = product.Unit;
-                    item.ProductType = product.ProductType.GetDescription();
-                }
+                var orderItemList = orderItemQueryable.Where(m => m.GoodsID == t.ID).ToList();
+                var pickUpOrderItemList = pickUpOrderItemQueryable.Where(m => m.ProductID == t.ID).ToList();
+                var orderItemQuantity = orderItemList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Quantity)).FirstOrDefault();
+                var pickOrderItemQuantity = pickUpOrderItemList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Quantity)).FirstOrDefault();
+                item.Quantity = orderItemQuantity + pickOrderItemQuantity;
+                item.Unit = t.Unit;
+                var orderItemMoney = orderItemList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Money)).FirstOrDefault();
+                var pickOrderItemMoney = pickUpOrderItemList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Money)).FirstOrDefault();
+                item.Money = orderItemMoney + pickOrderItemMoney;
                 result.Add(item);
             });
-
-            result = result.OrderBy(t => t.ProductType).OrderByDescending(t => t.Quantity).ToList();
             totalCount = result.Count();
-
-            if (filter != null)
-            {
-                if (!string.IsNullOrEmpty(filter.ProductName))
-                    result = result.Where(t => t.ProductName.Contains(filter.ProductName)).ToList();
-                if (!string.IsNullOrEmpty(filter.ProductCode))
-                    result = result.Where(t => t.ProductCode.Contains(filter.ProductCode)).ToList();
-                //if (!string.IsNullOrEmpty(filter.ProductCodeName))
-                //{
-                //    result = result.Where(t => filter.ProductCodeName.Contains(t.ProductCode) || filter.ProductCodeName.Contains(t.ProductName)).ToList();
-                //}
-                if (filter.IsSaleWell.HasValue)
-                {
-                    if (!(filter.StartDate.HasValue && filter.EndDate.HasValue))
-                    {
-                        throw new DomainException("参数错误");
-                    }
-                    var days = (filter.EndDate.Value - filter.StartDate.Value).Days;
-                    if (filter.IsSaleWell.Value)
-                    {
-                        result = result.Take(5).ToList();
-                    }
-                    else
-                    {
-                        IList<ProductRetailStatisticsDto> removeData = new List<ProductRetailStatisticsDto>();
-                        foreach (var t in result)
-                        {
-                            var unsaleProductSettingItem = UnsaleProductSettingItemRepo.GetInclude(p => p.UnsaleProductSetting, false).Where(p => p.MerchantID == AppContext.CurrentSession.MerchantID && p.UnsaleProductSetting.IsAvailable == true && p.ProductID == t.ProductID).FirstOrDefault();
-                            if (unsaleProductSettingItem != null)
-                            {
-                                var quantitiesUnit = unsaleProductSettingItem.UnsaleProductSetting.Quantities * 1.0 / unsaleProductSettingItem.UnsaleProductSetting.PeriodDays;
-                                var performenceUnit = unsaleProductSettingItem.UnsaleProductSetting.Performence / unsaleProductSettingItem.UnsaleProductSetting.PeriodDays;
-                                if ((t.Quantity * 1.0 / days) > quantitiesUnit || (t.Money / days) > performenceUnit)
-                                {
-                                    removeData.Add(t);
-                                }
-                            }
-                            else
-                            {
-                                removeData.Add(t);
-                            }
-                        }
-                        removeData.ForEach(t =>
-                        {
-                            result.Remove(t);
-                        });
-                        result = result.OrderBy(t => t.Quantity).ToList();
-                    }
-                }
-                totalCount = result.Count();
-                if (filter.Start.HasValue && filter.Limit.HasValue)
-                    result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
-            }
+            if (filter.Start.HasValue && filter.Limit.HasValue)
+                result = result.OrderByDescending(t => t.Money).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             return result;
         }
 

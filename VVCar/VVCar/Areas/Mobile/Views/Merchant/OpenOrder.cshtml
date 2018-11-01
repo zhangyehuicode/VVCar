@@ -49,7 +49,7 @@
 			<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
 				<th scope="col" width="33%">项目</th>
 				<th scope="col" width="15%">价格</th>
-				<th scope="col" width="17%">优惠价</th>
+				<th scope="col" width="17%">改价</th>
 				<th scope="col" width="35%;">操作</th>
 			</tr>
 			<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; " v-for="Product in CurrentProductList">
@@ -145,7 +145,7 @@
 					</div>
 				</div>
 				<div class="kcgl_box">
-					<div class="kcgl">是否优惠</div>
+					<div class="kcgl">是否改价</div>
 					<div class="kcgl_input" v-bind:class="[unReduceClass?unReduceClass:'']" style="width:80px;padding-top:10px;" v-on:click="setReducePrice(0)">
 						<span class="gwc_text">否</span>
 					</div>
@@ -154,9 +154,9 @@
 					</div>
 				</div>
 				<div class="kcgl_box" v-bind:class="[showClass?showClass:'']">
-					<div class="kcgl">优惠价</div>
+					<div class="kcgl">改价</div>
 					<div class="kcgl2">
-						<input type="number" style="width:80px;text-align:center;border:1px #fff solid" placeholder="输入优惠价" id="inputReducePrice" v-on:change="reducePrice" />
+						<input type="number" style="width:80px;text-align:center;border:1px #fff solid" placeholder="输入改价价" id="inputReducePrice" v-on:change="reducePrice" />
 					</div>
 				</div>
 				<div class="kcd_btn2" v-on:click="closemodifyprice">确认</div>
@@ -457,6 +457,18 @@
 								IsReduce: items[i].IsReduce,
 								Quantity: 1,
 								ImgUrl: items[i].ImgUrl,
+								IsCommissionRate: items[i].IsCommissionRate,
+								CommissionRate: items[i].CommissionRate,
+								CommissionMoney: items[i].CommissionMoney,
+								IsSalesmanCommissionRate: items[i].IsSalesmanCommissionRate,
+								SalesmanCommissionRate: items[i].SalesmanCommissionRate,
+								SalesmanCommissionMoney: items[i].SalesmanCommissionMoney,
+								IsWholesaleCommissionRate: items[i].IsWholesaleCommissionRate,
+								WholesaleCommissionRate: items[i].WholesaleCommissionRate,
+								WholesaleCommissionMoney: items[i].WholesaleCommissionMoney,
+								IsWholesaleConstructionCommissionRate: items[i].IsWholesaleConstructionCommissionRate,
+								WholesaleConstructionCommissionRate: items[i].WholesaleConstructionCommissionRate,
+								WholesaleConstructionCommissionMoney: items[i].WholesaleConstructionCommissionMoney,
 								PickUpOrderTaskDistributionList: items[i].PickUpOrderTaskDistributionList,
 							});
 						}

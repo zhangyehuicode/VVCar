@@ -101,16 +101,40 @@ namespace VVCar.Shop.Domain.Entities
         public int SalesmanCount { get; set; }
 
         /// <summary>
+        /// 是否抽成比例
+        /// </summary>
+        [Display(Name = "是否抽成比例")]
+        public bool IsCommissionRate { get; set; }
+
+        /// <summary>
         /// 抽成比例
         /// </summary>
         [Display(Name = "抽成比例")]
         public decimal CommissionRate { get; set; }
 
         /// <summary>
+        /// 抽成金额
+        /// </summary>
+        [Display(Name = "抽成金额")]
+        public decimal CommissionMoney { get; set; }
+
+        /// <summary>
+        /// 是否业务员抽成比例
+        /// </summary>
+        [Display(Name = "是否业务员抽成比例")]
+        public bool IsSalesmanCommissionRate{ get; set; }
+
+        /// <summary>
         /// 业务员抽成比例(0~100)
         /// </summary>
         [Display(Name = "业务员抽成比例(0~100)")]
         public decimal SalesmanCommissionRate { get; set; }
+
+        /// <summary>
+        /// 业务员抽成金额
+        /// </summary>
+        [Display(Name = "业务员抽成金额")]
+        public decimal SalesmanCommissionMoney { get; set; }
 
         /// <summary>
         /// 图片

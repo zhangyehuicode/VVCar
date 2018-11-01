@@ -135,7 +135,16 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     t.ID = Util.NewID();
                     t.OrderID = entity.ID;
-                    t.Commission = Math.Round(t.Money * t.CommissionRate / 100, 2);
+                    if (t.IsCommissionRate)
+                    {
+                        t.Commission = Math.Round(t.Money * t.CommissionRate / 100, 2);
+                        t.CommissionMoney = 0;
+                    }
+                    else
+                    {
+                        t.Commission = t.CommissionMoney;
+                        t.CommissionRate = 0;
+                    }
                     t.MerchantID = AppContext.CurrentSession.MerchantID;
                 });
                 entity.MerchantID = AppContext.CurrentSession.MerchantID;
@@ -250,7 +259,6 @@ namespace VVCar.Shop.Services.DomainServices
             UnitOfWork.BeginTransaction();
             try
             {
-                //var orderDividendList = new List<OrderDividend>();
                 var orderItemList = OrderItemRepo.GetQueryable(false).Where(t=>t.OrderID == entity.ID);
                 orderItemList.ForEach(t =>
                 {
@@ -274,14 +282,14 @@ namespace VVCar.Shop.Services.DomainServices
                             orderDividend.UserName = user.Name;
                         }
                     }
+                    orderDividend.IsCommissionRate = t.IsCommissionRate;
                     orderDividend.CommissionRate = t.CommissionRate;
+                    orderDividend.CommissionMoney = t.CommissionMoney;
                     orderDividend.Commission = t.Commission;
                     orderDividend.Money = t.Money;
                     orderDividend.MerchantID = t.MerchantID;
-                    //orderDividendList.Add(orderDividend);
                     OrderDividendRepo.Add(orderDividend);
                 });
-                //OrderDividendRepo.AddRange(orderDividendList);
                 UnitOfWork.CommitTransaction();
             }
             catch (Exception e)

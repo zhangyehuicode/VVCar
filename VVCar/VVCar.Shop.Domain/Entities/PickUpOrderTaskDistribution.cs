@@ -67,10 +67,16 @@ namespace VVCar.Shop.Domain.Entities
         public int SalesmanCount { get; set; }
 
         /// <summary>
-        /// 接车单订单子项总额
+        /// 业绩
         /// </summary>
-        [Display(Name = "接车单订单子项总额")]
+        [Display(Name = "业绩")]
         public decimal TotalMoney { get; set; }
+
+        /// <summary>
+        /// 是否施工抽成比例
+        /// </summary>
+        [Display(Name = "是否施工抽成比例")]
+        public bool IsCommissionRate { get; set; }
 
         /// <summary>
         /// 施工抽成比例
@@ -79,16 +85,34 @@ namespace VVCar.Shop.Domain.Entities
         public decimal CommissionRate { get; set; }
 
         /// <summary>
-        /// 抽成
+        /// 施工抽成金额
         /// </summary>
-        [Display(Name = "抽成")]
+        [Display(Name = "施工抽成金额")]
+        public decimal CommissionMoney { get; set; }
+
+        /// <summary>
+        /// 施工抽成
+        /// </summary>
+        [Display(Name = "施工抽成")]
         public decimal Commission { get; set; }
+
+        /// <summary>
+        /// 是否业务员抽成比例
+        /// </summary>
+        [Display(Name = "是否业务员抽成比例")]
+        public bool IsSalesmanCommissionRate { get; set; }
 
         /// <summary>
         /// 业务员抽成比例(0~100)
         /// </summary>
         [Display(Name = "业务员抽成比例(0~100)")]
         public decimal SalesmanCommissionRate { get; set; }
+
+        /// <summary>
+        /// 业务员抽成金额
+        /// </summary>
+        [Display(Name = "业务员抽成金额")]
+        public decimal SalesmanCommissionMoney { get; set; }
 
         /// <summary>
         /// 业务员抽成

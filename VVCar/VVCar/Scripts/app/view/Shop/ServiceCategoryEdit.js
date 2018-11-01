@@ -42,19 +42,19 @@
 				hideLabel: true
 			}, {
 				xtype: 'textfield',
-				name: 'Code',
-				fieldLabel: '类别代码',
-				maxLength: 20,
-				maxLengthText: '分区代码的最大长度为20个字符',
-				blankText: '分区代码不能为空,请输入!',
-				allowBlank: false,
-			}, {
-				xtype: 'textfield',
 				name: 'Name',
 				fieldLabel: '类别名称',
 				maxLength: 20,
 				maxLengthText: '分区名称的最大长度为20个字符',
 				blankText: '分区名称不能为空,请输入!',
+				allowBlank: false,
+			}, {
+				xtype: 'textfield',
+				name: 'Code',
+				fieldLabel: '类别代码',
+				maxLength: 20,
+				maxLengthText: '分区代码的最大长度为20个字符',
+				blankText: '分区代码不能为空,请输入!',
 				allowBlank: false,
 			}, {
 				xtype: 'numberfield',

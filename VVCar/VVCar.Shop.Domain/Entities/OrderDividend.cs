@@ -81,10 +81,22 @@ namespace VVCar.Shop.Domain.Entities
         public decimal Money { get; set; }
 
         /// <summary>
+        /// 是否抽成比例
+        /// </summary>
+        [Display(Name = "是否抽成比例")]
+        public bool IsCommissionRate { get; set; }
+
+        /// <summary>
         /// 抽成比例
         /// </summary>
         [Display(Name = "抽成比例")]
         public decimal CommissionRate { get; set; }
+
+        /// <summary>
+        /// 抽成金额
+        /// </summary>
+        [Display(Name = "抽成金额")]
+        public decimal CommissionMoney { get; set; }
 
         /// <summary>
         /// 抽成

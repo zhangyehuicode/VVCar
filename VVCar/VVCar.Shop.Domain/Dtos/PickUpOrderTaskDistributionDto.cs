@@ -33,6 +33,11 @@ namespace VVCar.Shop.Domain.Dtos
         public decimal CommissionRate { get; set; }
 
         /// <summary>
+        /// 抽成
+        /// </summary>
+        public decimal Commission { get; set; }
+
+        /// <summary>
         /// 人员类型
         /// </summary>
         public ETaskDistributionPeopleType PeopleType { get; set; }

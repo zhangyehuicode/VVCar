@@ -130,12 +130,7 @@
 						}
 					},
 					{ header: '用户名称', dataIndex: 'UserName', flex: 1 },
-					{
-						header: '抽成比例', dataIndex: 'CommissionRate', flex: 1,
-						renderer: function (value) {
-							return value + '%';
-						}
-					},
+					{ header: '抽成', dataIndex: 'Commission', flex: 1 },
 				],
 				dockedItems: [{
 					xtype: 'pagingtoolbar',
