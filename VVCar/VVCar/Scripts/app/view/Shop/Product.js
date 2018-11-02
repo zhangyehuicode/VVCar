@@ -60,10 +60,11 @@
                     iconCls: 'fa fa-plus-circle',
                 }, {
                     xtype: 'textfield',
-                    name: 'Name',
-                    fieldLabel: '名称',
-                    width: 170,
-                    labelWidth: 30,
+                    name: 'NameCode',
+                    fieldLabel: '关键字',
+                    width: 200,
+					labelWidth: 60,
+					emptyText: '名称/编码',
                     margin: '0 0 0 15'
                 }, {
                     xtype: 'combobox',

@@ -196,6 +196,8 @@ namespace VVCar.Shop.Services.DomainServices
                         distribution.PickUpOrderItemID = t.ID;
                         if (product != null)
                         {
+                            t.IsCommissionRate = product.IsCommissionRate;
+                            t.IsSalesmanCommissionRate = product.IsSalesmanCommissionRate;
                             t.CommissionRate = product.CommissionRate;
                             t.SalesmanCommissionRate = product.SalesmanCommissionRate;
                             if (distribution.PeopleType == ETaskDistributionPeopleType.ConstructionCrew)
@@ -204,7 +206,7 @@ namespace VVCar.Shop.Services.DomainServices
                                 distribution.TotalMoney = t.Money / constructionCount;
                                 if (t.IsCommissionRate)
                                 {
-                                    distribution.CommissionRate = product.CommissionRate;//constructionCount != 0 ? Math.Round(product.CommissionRate / constructionCount, 2) : 0;
+                                    distribution.CommissionRate = product.CommissionRate;
                                     distribution.Commission = Math.Floor(distribution.TotalMoney * distribution.CommissionRate / 100);
                                 }
                                 else
@@ -220,13 +222,13 @@ namespace VVCar.Shop.Services.DomainServices
                                 distribution.TotalMoney = t.Money / salesmanCount;
                                 if (t.IsSalesmanCommissionRate)
                                 {
-                                    distribution.SalesmanCommissionRate = product.SalesmanCommissionRate;//salesmanCount != 0 ? Math.Round(product.SalesmanCommissionRate / salesmanCount, 2) : 0;
+                                    distribution.SalesmanCommissionRate = product.SalesmanCommissionRate;
                                     distribution.SalesmanCommission = Math.Floor(distribution.TotalMoney * distribution.SalesmanCommissionRate / 100);
                                 }
                                 else
                                 {
                                     distribution.SalesmanCommissionMoney = product.SalesmanCommissionMoney;
-                                    distribution.SalesmanCommission = (product.SalesmanCommissionMoney * t.Quantity) / constructionCount;
+                                    distribution.SalesmanCommission = (product.SalesmanCommissionMoney * t.Quantity) / salesmanCount;
                                 }
                                 distribution.SalesmanCount = salesmanCount;
                             }

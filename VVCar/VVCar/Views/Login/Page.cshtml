@@ -98,7 +98,9 @@
     @Scripts.Render("~/bundles/jquerycookie")
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script type="text/javascript">
-        $(function () {
+		$(function () {
+			$('.merchantcode').val(sessionStorage.getItem('companyCode'));
+			$('.username').val(sessionStorage.getItem('userCode'));
             if ('@ViewBag.IsMrTarot' == 'True') {
                 var link = document.createElement("link");
                 link.href = "/mrtarotfavicon.ico";
@@ -114,8 +116,8 @@
         var _viewModel = new Vue({
             el: '#vuecon',
             data: {
-                MerchantCode: '',
-                UserName: '',
+				MerchantCode: sessionStorage.getItem('companyCode'),
+				UserName: sessionStorage.getItem('userCode'),
                 Password: '',
             },
             methods: {
@@ -177,7 +179,7 @@
                         sessionStorage.setItem('isGeneralMerchant', data.IsGeneralMerchant);
                         window.location.href = "/";
                     } else {
-                        $('.operationError').text(data.ErrorMsg).show();
+						$('.operationError').text(data.ErrorMsg).show();
                         $('.logintext').text('登录');
                         $('.glyphicon').hide();
                         $('.loginbtn').attr("disabled", false);

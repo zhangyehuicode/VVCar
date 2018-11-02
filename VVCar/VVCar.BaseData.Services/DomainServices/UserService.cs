@@ -181,6 +181,7 @@ namespace VVCar.BaseData.Services.DomainServices
                 DepartmentCode = t.Department.Code,
                 DepartmentName = t.Department.Name,
                 MerchantID = t.MerchantID,
+                MobilePhoneNo = t.MobilePhoneNo,
             }).FirstOrDefault();
             if (user == null)
                 throw new DomainException("用户名或密码不正确");
@@ -235,6 +236,15 @@ namespace VVCar.BaseData.Services.DomainServices
                 }
             }
 
+            return result;
+        }
+
+        public UserInfoDto AppLogin(AppLoginParams param)
+        {
+            if (param == null || string.IsNullOrEmpty(param.UserName) || string.IsNullOrEmpty(param.Password) || string.IsNullOrEmpty(param.MerchantCode))
+                throw new DomainException("参数错误！");
+            var password = Util.EncryptPassword(param.UserName, param.Password);
+            var result = Login(param.UserName, password, param.MerchantCode);
             return result;
         }
 

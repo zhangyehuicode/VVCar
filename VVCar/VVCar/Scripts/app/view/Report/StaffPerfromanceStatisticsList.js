@@ -30,8 +30,8 @@
 					xtype: 'textfield',
 					name: 'StaffName',
 					labelWidth: 60,
-					fieldLabel: '员工姓名',
-					emptyText: '请输入...',
+					fieldLabel: '关键字',
+					emptyText: '员工姓名/编码',
 				}, {
 					xtype: 'datefield',
 					name: 'StartDate',

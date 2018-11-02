@@ -45,6 +45,7 @@
     <Compile Include="Dtos\AgentDepartmentCategoryTreeDto.cs" />
     <Compile Include="Dtos\AgentDepartmentDto.cs" />
     <Compile Include="Dtos\AgentDepartmentTagDto.cs" />
+    <Compile Include="Dtos\AppLoginParams.cs" />
     <Compile Include="Dtos\DepartmentLocationDto.cs" />
     <Compile Include="Dtos\TagDto.cs" />
     <Compile Include="Dtos\AssignPermissionDto.cs" />

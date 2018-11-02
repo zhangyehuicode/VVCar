@@ -38,17 +38,11 @@
 					columnWidth: 1,
 					items: [{
 						xtype: 'textfield',
-						name: 'Code',
-						fieldLabel: '编码',
-						width: 170,
-						labelWidth: 30,
-						margin: '0 0 0 5'
-					}, {
-						xtype: 'textfield',
-						name: 'Name',
-						fieldLabel: '名称',
-						width: 170,
-						labelWidth: 30,
+						name: 'NameCode',
+						fieldLabel: '关键字',
+						width: 200,
+						emptyText: '名称/编码',
+						labelWidth: 60,
 						margin: '0 0 0 5'
 					}, {
 						action: 'search',

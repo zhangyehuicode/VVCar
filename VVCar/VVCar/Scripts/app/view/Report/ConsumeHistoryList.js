@@ -33,13 +33,9 @@
 					items: [{
 						xtype: 'textfield',
 						name: 'Name',
-						labelWidth: 30,
-						fieldLabel: '姓名',
-					}, {
-						xtype: 'textfield',
-						name: 'MobilePhoneNo',
-						labelWidth: 45,
-						fieldLabel: '手机号',
+						labelWidth: 60,
+						fieldLabel: '关键字',
+						emptyText: '姓名/手机号',
 					}, {
 						xtype: 'textfield',
 						name: 'PlateNumber',

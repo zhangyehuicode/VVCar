@@ -10,16 +10,43 @@
     initComponent: function() {
         var me = this;
         var store = Ext.create('WX.store.BaseData.MemberStore');
-        store.limit = 10,
-            store.pageSize = 10,
-            store.load();
-        me.grid = Ext.create('Ext.grid.Panel', {
-            name: "gridMember",
-            flex: 1,
-            store: store,
-            stripeRows: true,
-            selModel: Ext.create('Ext.selection.CheckboxModel', { model: 'SIMPLE' }),
-            columns: [
+		store.limit = 10;
+		store.pageSize = 10;
+        store.load();
+		me.grid = Ext.create('Ext.grid.Panel', {
+			name: "gridMember",
+			flex: 1,
+			store: store,
+			stripeRows: true,
+			selModel: Ext.create('Ext.selection.CheckboxModel', { model: 'SIMPLE' }),
+			tbar: {
+				xtype: 'form',
+				layout: 'column',
+				border: false,
+				frame: false,
+				labelAlign: 'left',
+				buttonAlign: 'right',
+				labelWidth: 100,
+				padding: 5,
+				autoWidth: true,
+				autoScroll: true,
+				columnWidth: 1,
+				items: [{
+					name: 'Keyword',
+					xtype: 'textfield',
+					fieldLabel: '关键字',
+					width: 170,
+					labelWidth: 60,
+					margin: '0 0 0 5',
+				}, {
+					action: 'search',
+					xtype: 'button',
+					text: '搜索',
+					iconCls: 'submitBtn',
+					margin: '0 0 0 5',
+				}]
+			},
+			columns: [
                 { header: '会员名称', dataIndex: 'Name', flex: 1 },
                 { header: '手机号码', dataIndex: 'MobilePhoneNo', flex: 1 },
                 { header: '车牌号', dataIndex: 'PlateList', flex: 1 },

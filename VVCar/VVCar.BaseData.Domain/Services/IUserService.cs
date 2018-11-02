@@ -29,6 +29,13 @@ namespace VVCar.BaseData.Domain.Services
         UserInfoDto SsoLogin(string userCode, string password, string companycode);
 
         /// <summary>
+        /// App登录
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        UserInfoDto AppLogin(AppLoginParams param);
+
+        /// <summary>
         /// 修改密码
         /// </summary>
         /// <param name="userID">用户ID</param>

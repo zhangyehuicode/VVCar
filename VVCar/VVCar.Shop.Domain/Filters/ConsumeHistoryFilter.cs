@@ -20,6 +20,11 @@ namespace VVCar.Shop.Domain.Filters
         public string MobilePhoneNo { get; set; }
 
         /// <summary>
+        /// 关键字
+        /// </summary>
+        public string Keyword { get; set; }
+        
+        /// <summary>
         /// 车牌号
         /// </summary>
         public string PlateNumber { get; set; }

@@ -92,7 +92,7 @@ namespace VVCar.Shop.Services.DomainServices
                 var result = Repository.Add(entity);
                 PickUpOrderItemRepo.Update(pickUpOrderItem);
                 var pickUpOrder = PickUpOrderRepo.GetByKey(entity.PickUpOrderID);
-                ReCountCommission(pickUpOrder.ID);
+                RecountCommission(pickUpOrder.ID);
                 UnitOfWork.CommitTransaction();
                 return result;
             }
@@ -104,7 +104,7 @@ namespace VVCar.Shop.Services.DomainServices
 
         }
 
-        void ReCountCommission(Guid pickUpOrderID)
+        void RecountCommission(Guid pickUpOrderID)
         {
             var pickUpOrder = PickUpOrderRepo.GetByKey(pickUpOrderID);
             var pickUpOrderTaskDistributionList = Repository.GetQueryable(true).Where(t => t.PickUpOrderID == pickUpOrder.ID).ToList();
@@ -152,7 +152,7 @@ namespace VVCar.Shop.Services.DomainServices
             entity.LastUpdateUserID = AppContext.CurrentSession.UserID;
             entity.LastUpdateUser = AppContext.CurrentSession.UserName;
             entity.LastUpdateDate = DateTime.Now;
-            ReCountCommission(entity.PickUpOrderID);
+            RecountCommission(entity.PickUpOrderID);
             return Repository.Update(entity) > 0;
         }
 
@@ -197,7 +197,7 @@ namespace VVCar.Shop.Services.DomainServices
                 });
                 PickUpOrderItemRepo.Update(pickUpOrderItem);         
                 Repository.AddRange(pickUpOrderTaskDistributions);
-                ReCountCommission(pickUpOrderItem.PickUpOrderID);
+                RecountCommission(pickUpOrderItem.PickUpOrderID);
                 UnitOfWork.CommitTransaction();
                 return true;
 
@@ -228,7 +228,7 @@ namespace VVCar.Shop.Services.DomainServices
                 t.LastUpdateUserID = AppContext.CurrentSession.UserID;
                 t.LastUpdateUser = AppContext.CurrentSession.UserName;
             });
-            ReCountCommission(pickUpOrderID);
+            RecountCommission(pickUpOrderID);
             return this.Repository.UpdateRange(pickUpOrderItems) > 0;
         }
 

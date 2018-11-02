@@ -59,10 +59,11 @@
 					columWidth: 1,
 					items: [{
 						xtype: 'textfield',
-						name: 'ProductName',
-						fieldLabel: '服务名称',
+						name: 'Keyword',
+						fieldLabel: '关键字',
 						width: 170,
 						labelWidth: 60,
+						emptyText: '配置编码/名称',
 						margin: '0 0 0 5'
 					}, {
 						action: 'search',
@@ -75,7 +76,7 @@
 				}
 			],
 			columns: [
-				{ header: '配置编号', dataIndex: 'Code', flex: 1 },
+				{ header: '配置编码', dataIndex: 'Code', flex: 1 },
 				{ header: '配置名称', dataIndex: 'Name', flex: 1 },
 				{ header: '配置周期', dataIndex: 'PeriodDays', flex: 1 },
 				{ header: '销售数量', dataIndex: 'Quantities', flex: 1 },

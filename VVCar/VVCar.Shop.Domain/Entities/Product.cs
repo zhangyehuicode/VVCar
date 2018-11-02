@@ -88,9 +88,9 @@ namespace VVCar.Shop.Domain.Entities
         public decimal WholesalePrice { get; set; }
 
         /// <summary>
-        /// 是否施工抽成比例(否为固定定额)
+        /// 施工是否按比例抽成(否为固定定额)
         /// </summary>
-        [Display(Name = "是否施工抽成比例")]
+        [Display(Name = "施工是否按比例抽成(否为固定定额)")]
         public bool IsCommissionRate { get; set; }
 
         /// <summary>
@@ -106,9 +106,9 @@ namespace VVCar.Shop.Domain.Entities
         public decimal CommissionMoney { get; set; }
 
         /// <summary>
-        /// 是否业务员抽成比例(否为固定金额)
+        /// 业务员是否按比例抽成(否为固定金额)
         /// </summary>
-        [Display(Name = "是否业务员抽成比例")]
+        [Display(Name = "业务员是否按比例抽成(否为固定金额)")]
         public bool IsSalesmanCommissionRate { get; set; }
 
         /// <summary>

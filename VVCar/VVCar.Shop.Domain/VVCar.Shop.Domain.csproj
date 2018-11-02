@@ -80,6 +80,7 @@
     <Compile Include="Entities\CarBitCoinProduct.cs" />
     <Compile Include="Entities\CarBitCoinProductCategory.cs" />
     <Compile Include="Entities\CarBitCoinRecord.cs" />
+    <Compile Include="Entities\CarInspectionReport.cs" />
     <Compile Include="Entities\ComboItem.cs" />
     <Compile Include="Entities\ConsumeHistory.cs" />
     <Compile Include="Entities\Order.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Filters\CarBitCoinDistributionFilter.cs" />
     <Compile Include="Filters\CarBitCoinMemberFilter.cs" />
     <Compile Include="Filters\CarBitCoinRecordFilter.cs" />
+    <Compile Include="Filters\CarInspectionReportFilter.cs" />
     <Compile Include="Filters\ComboItemFilter.cs" />
     <Compile Include="Filters\ConsumeHistoryFilter.cs" />
     <Compile Include="Filters\DataAnalyseFilter.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="Services\ICarBitCoinOrderService.cs" />
     <Compile Include="Services\ICarBitCoinProductCategoryService.cs" />
     <Compile Include="Services\ICarBitCoinProductService.cs" />
+    <Compile Include="Services\ICarInspectionReportService.cs" />
     <Compile Include="Services\IComboItemService.cs" />
     <Compile Include="Services\IOrderItemService.cs" />
     <Compile Include="Services\IOrderPaymentDetailsService.cs" />

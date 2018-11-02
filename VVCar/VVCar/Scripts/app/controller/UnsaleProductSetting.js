@@ -215,7 +215,10 @@
 		var queryValues = btn.up('form').getValues();
 		if (queryValues != null) {
 			me.getGridUnsaleProductSetting().getSelectionModel().clearSelections();
-			me.getGridUnsaleProductSetting().getStore().load();
+			var store = me.getGridUnsaleProductSetting().getStore();
+			store.proxy.extraParams = queryValues;
+			store.currentPage = 1;
+			store.load();
 			me.getGridUnsaleProductSettingItem().getStore().removeAll();
 		} else {
 			Ext.Msg.alert('提示', '请输入过滤条件');

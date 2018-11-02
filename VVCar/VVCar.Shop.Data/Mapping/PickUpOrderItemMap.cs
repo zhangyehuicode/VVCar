@@ -22,7 +22,7 @@ namespace VVCar.Shop.Data.Mapping
                 .HasMaxLength(20);
 
             Property(t => t.ImgUrl)
-               .HasMaxLength(50);
+               .HasMaxLength(100);
 
             Property(t => t.Remark)
                 .HasMaxLength(100);

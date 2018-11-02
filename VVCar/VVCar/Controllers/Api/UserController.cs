@@ -231,6 +231,20 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// App登录
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [HttpPost, Route("AppLogin"), AllowAnonymous]
+        public JsonActionResult<UserInfoDto> AppLogin(AppLoginParams param)
+        {
+            return SafeExecute(() =>
+            {
+                return UserService.AppLogin(param);
+            });
+        }
+
+        /// <summary>
         /// 获取用户信息通过OpenId
         /// </summary>
         /// <param name="param"></param>

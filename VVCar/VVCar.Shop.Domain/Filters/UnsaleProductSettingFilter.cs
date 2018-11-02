@@ -12,6 +12,9 @@ namespace VVCar.Shop.Domain.Filters
     /// </summary>
     public class UnsaleProductSettingFilter : BasePageFilter
     {
-
+        /// <summary>
+        /// 关键字
+        /// </summary>
+        public string Keyword { get; set; }
     }
 }

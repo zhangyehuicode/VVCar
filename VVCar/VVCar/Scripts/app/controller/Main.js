@@ -99,8 +99,8 @@
     },
     exitSystem: function () {
         Ext.Msg.confirm('系统提示？', '您确定要退出本系统吗？', function (optional) {
-            if (optional == 'yes') {
-                sessionStorage.clear();
+			if (optional == 'yes') {
+				sessionStorage.setItem('userToken', '');
                 window.location.href = "/login/page";
             }
         });

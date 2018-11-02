@@ -79,8 +79,23 @@
 			},
 			'MemberSelector button[action=save]': {
 				click: me.saveCouponPushMember
-			}
+			},
+			'MemberSelector button[action=search]': {
+				click: me.searchMember
+			},
 		});
+	},
+	searchMember: function (btn) {
+		var me = this;
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			var store = btn.up('gridpanel').getStore();
+			store.proxy.extraParams = queryValues;
+			store.currentPage = 1;
+			store.load();
+		} else {
+			Ext.MessageBox.alert('系统提示', '请输入过滤条件!');
+		}
 	},
 	gridCouponPushSelect: function (grid, record, index, eOpts) {
 		var me = this;

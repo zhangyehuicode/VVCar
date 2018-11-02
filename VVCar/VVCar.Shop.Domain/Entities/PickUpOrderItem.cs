@@ -101,9 +101,9 @@ namespace VVCar.Shop.Domain.Entities
         public int SalesmanCount { get; set; }
 
         /// <summary>
-        /// 是否抽成比例
+        /// 施工员是否按比例抽成
         /// </summary>
-        [Display(Name = "是否抽成比例")]
+        [Display(Name = "施工员是否按比例抽成")]
         public bool IsCommissionRate { get; set; }
 
         /// <summary>
@@ -119,10 +119,10 @@ namespace VVCar.Shop.Domain.Entities
         public decimal CommissionMoney { get; set; }
 
         /// <summary>
-        /// 是否业务员抽成比例
+        /// 业务员是否按比例抽成
         /// </summary>
-        [Display(Name = "是否业务员抽成比例")]
-        public bool IsSalesmanCommissionRate{ get; set; }
+        [Display(Name = "业务员是否按比例抽成")]
+        public bool IsSalesmanCommissionRate { get; set; }
 
         /// <summary>
         /// 业务员抽成比例(0~100)

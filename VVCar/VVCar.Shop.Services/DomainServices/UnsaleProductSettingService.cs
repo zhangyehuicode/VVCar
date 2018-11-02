@@ -118,6 +118,8 @@ namespace VVCar.Shop.Services.DomainServices
         public IEnumerable<UnsaleProductSettingDto> Search(UnsaleProductSettingFilter filter, out int totalCount)
         {
             var queryable = this.Repository.GetQueryable(false).Where(t=> t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (!string.IsNullOrEmpty(filter.Keyword))
+                queryable = queryable.Where(t => t.Code.Contains(filter.Keyword) || t.Name.Contains(filter.Keyword));
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);

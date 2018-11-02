@@ -62,6 +62,7 @@
 		if (queryValues != null) {
 			var store = me.getConsumeHistoryList().getStore();
 			store.proxy.extraParams = queryValues;
+			store.currentPage = 1;
 			store.load();
 		} else {
 			Ext.Msg.alert('提示', '请输入过滤条件');

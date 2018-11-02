@@ -1056,30 +1056,29 @@ namespace VVCar.Shop.Services.DomainServices
             });
 
             totalCount = result.Count();
-            if (filter != null)
+
+            if (!string.IsNullOrEmpty(filter.Name))
+                result = result.Where(t => t.Name.Contains(filter.Name)).ToList();
+            if (!string.IsNullOrEmpty(filter.MobilePhoneNo))
+                result = result.Where(t => (t.MobilePhoneNo ?? string.Empty).Contains(filter.MobilePhoneNo)).ToList();
+            if (!string.IsNullOrEmpty(filter.Keyword))
+                result = result.Where(t => t.Name.Contains(filter.Keyword) || (t.MobilePhoneNo ?? string.Empty).Contains(filter.Keyword)).ToList();
+            if (!string.IsNullOrEmpty(filter.PlateNumber))
+                result = result.Where(t => (t.PlateNumber ?? string.Empty).Contains(filter.PlateNumber)).ToList();
+            if (!string.IsNullOrEmpty(filter.TradeNo))
+                result = result.Where(t => t.TradeNo.Contains(filter.TradeNo)).ToList();
+            if (filter.StartTime.HasValue)
+                result = result.Where(t => t.CreatedDate >= filter.StartTime.Value).ToList();
+            if (filter.EndTime.HasValue)
             {
-                result = result.OrderBy(t => t.CreatedDate).ToList();
-                if (!string.IsNullOrEmpty(filter.Name))
-                    result = result.Where(t => t.Name.Contains(filter.Name)).ToList();
-                if (!string.IsNullOrEmpty(filter.MobilePhoneNo))
-                    result = result.Where(t => t.MobilePhoneNo.Contains(filter.MobilePhoneNo)).ToList();
-                if (!string.IsNullOrEmpty(filter.PlateNumber))
-                    result = result.Where(t => t.PlateNumber.Contains(filter.PlateNumber)).ToList();
-                if (!string.IsNullOrEmpty(filter.TradeNo))
-                    result = result.Where(t => t.TradeNo.Contains(filter.TradeNo)).ToList();
-                if (filter.StartTime.HasValue)
-                    result = result.Where(t => t.CreatedDate >= filter.StartTime.Value).ToList();
-                if (filter.EndTime.HasValue)
-                {
-                    var endTime = filter.EndTime.Value.AddDays(1);
-                    result = result.Where(t => t.CreatedDate < endTime).ToList();
-                }
-                if (filter.Source.HasValue)
-                    result = result.Where(t => t.Source == filter.Source.Value).ToList();
-                totalCount = result.Count();
-                if (filter.Start.HasValue && filter.Limit.HasValue)
-                    result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
+                var endTime = filter.EndTime.Value.AddDays(1);
+                result = result.Where(t => t.CreatedDate < endTime).ToList();
             }
+            if (filter.Source.HasValue)
+                result = result.Where(t => t.Source == filter.Source.Value).ToList();
+            totalCount = result.Count();
+            if (filter.Start.HasValue && filter.Limit.HasValue)
+                result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
 
             return result.OrderByDescending(t => t.CreatedDate).ToList();
         }
