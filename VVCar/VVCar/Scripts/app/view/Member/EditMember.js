@@ -208,7 +208,13 @@
                         allowBlank: true,
                         minLength: 7,
                         maxLength: 8,
-                    }]
+					}, {
+						xtype: 'numberfield',
+						name: 'CardBalance',
+						fieldLabel: '历史余额',
+						minValue: 0,
+						value:0,
+					}]
                 }, {
                     xtype: "container",
                     defaults: {

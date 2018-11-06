@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
+using VVCar.BaseData.Services;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
@@ -43,10 +45,20 @@ namespace VVCar.Shop.Services.DomainServices
                 entity.Code = GetCarInspectionReportCode();
             var existCode = Repository.Exists(t => t.Code == entity.Code);
             if (existCode)
-                throw new DomainException($"创建车检报告失败，订单号{entity.Code}已存在");
+                throw new DomainException($"创建车检报告失败，车检号{entity.Code}已存在");
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
+            if (!entity.DepartmentID.HasValue)
+            {
+                entity.DepartmentID = AppContext.CurrentSession.DepartmentID;
+                entity.DepartmentName = AppContext.CurrentSession.DepartmentName;
+            }
+            if (!entity.InspectorID.HasValue)
+            {
+                entity.InspectorID = AppContext.CurrentSession.UserID;
+                entity.Inspector = AppContext.CurrentSession.UserName;
+            }
             return base.Add(entity);
         }
 
@@ -60,7 +72,7 @@ namespace VVCar.Shop.Services.DomainServices
             var existCode = false;
             var makeCodeRuleService = ServiceLocator.Instance.GetService<IMakeCodeRuleService>();
             var entity = Repository.GetQueryable(false).OrderByDescending(t => t.CreatedDate).FirstOrDefault();
-            if(entity != null && entity.CreatedDate.Date != DateTime.Now.Date)
+            if (entity != null && entity.CreatedDate.Date != DateTime.Now.Date)
             {
                 var rule = MakeCodeRuleRepo.GetQueryable().Where(t => t.Code == "CarInspectionReport" && t.IsAvailable).FirstOrDefault();
                 if (rule != null)
@@ -146,7 +158,7 @@ namespace VVCar.Shop.Services.DomainServices
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        public IEnumerable<CarInspectionReport> Search(CarInspectionReportFilter filter, out int totalCount)
+        public IEnumerable<CarInspectionReportDto> Search(CarInspectionReportFilter filter, out int totalCount)
         {
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.PlateNumber))
@@ -155,10 +167,58 @@ namespace VVCar.Shop.Services.DomainServices
                 queryable = queryable.Where(t => t.PickUpOrderID == filter.PickUpOrderID);
             if (filter.MemberID.HasValue)
                 queryable = queryable.Where(t => t.MemberID == filter.MemberID);
+            if (!string.IsNullOrEmpty(filter.Code))
+                queryable = queryable.Where(t => t.Code.Contains(filter.Code));
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.ToArray();
+            var queryList = queryable.ToList();
+            var result = new List<CarInspectionReportDto>();
+            queryList.ForEach(t =>
+            {
+                var carInspectionReportDto = new CarInspectionReportDto();
+                carInspectionReportDto = t.MapTo<CarInspectionReportDto>();
+                carInspectionReportDto.EnergySurfaceStatus = t.EnergySurfaceStatus.GetDescription();
+                carInspectionReportDto.AntifreezingSolutionStatus = t.AntifreezingSolutionStatus.GetDescription();
+                carInspectionReportDto.BrakeOilWaterStatus = t.BrakeOilWaterStatus.GetDescription();
+                carInspectionReportDto.BrakeOilLevelStatus = t.BrakeOilLevelStatus.GetDescription();
+                carInspectionReportDto.EngineOilLevelStatus = t.EngineOilLevelStatus.GetDescription();
+                carInspectionReportDto.EngineOilShapeStatus = t.EngineOilShapeStatus.GetDescription();
+                carInspectionReportDto.MaintainExpiredStatus = t.MaintainExpiredStatus.GetDescription();
+                carInspectionReportDto.LeftFrontTireStatus = t.LeftFrontTireStatus.GetDescription();
+                carInspectionReportDto.RightFrontTireStatus = t.RightFrontTireStatus.GetDescription();
+                carInspectionReportDto.LeftBackTireStatus = t.LeftBackTireStatus.GetDescription();
+                carInspectionReportDto.RightBackTireStatus = t.RightBackTireStatus.GetDescription();
+                carInspectionReportDto.LeftFrontRimStatus = t.LeftFrontRimStatus.GetDescription();
+                carInspectionReportDto.RightFrontRimStatus = t.RightFrontRimStatus.GetDescription();
+                carInspectionReportDto.LeftBackRimStatus = t.LeftBackRimStatus.GetDescription();
+                carInspectionReportDto.RightBackRimStatus = t.RightBackRimStatus.GetDescription();
+                carInspectionReportDto.FrontWiperStatus = t.FrontWiperStatus.GetDescription();
+                carInspectionReportDto.BackWiperStatus = t.BackWiperStatus.GetDescription();
+                carInspectionReportDto.FrontGuardLacquerStatus = t.FrontGuardLacquerStatus.GetDescription();
+                carInspectionReportDto.BackGuardLacquerStatus = t.BackGuardLacquerStatus.GetDescription();
+                carInspectionReportDto.FrontHoodLacquerStatus = t.FrontHoodLacquerStatus.GetDescription();
+                carInspectionReportDto.TrunkLidLacquerStatus = t.TrunkLidLacquerStatus.GetDescription();
+                carInspectionReportDto.LeftFrontPageLacquerStatus = t.LeftFrontPageLacquerStatus.GetDescription();
+                carInspectionReportDto.RightFrontPageLacquerStatus = t.RightFrontPageLacquerStatus.GetDescription();
+                carInspectionReportDto.LeftBackPageLacquerStatus = t.LeftBackPageLacquerStatus.GetDescription();
+                carInspectionReportDto.RightBackPageLacquerStatus = t.RightBackPageLacquerStatus.GetDescription();
+                carInspectionReportDto.LeftFrontDoorLacquerStatus = t.LeftFrontDoorLacquerStatus.GetDescription();
+                carInspectionReportDto.RightFrontDoorLacquerStatus = t.RightFrontDoorLacquerStatus.GetDescription();
+                carInspectionReportDto.LeftBackDoorLacquerStatus = t.LeftBackDoorLacquerStatus.GetDescription();
+                carInspectionReportDto.RightBackDoorLacquerStatus = t.RightBackDoorLacquerStatus.GetDescription();
+                carInspectionReportDto.GlassOxidationDetectionStatus = t.GlassOxidationDetectionStatus.GetDescription();
+                carInspectionReportDto.GlassRuptureStatus = t.GlassRuptureStatus.GetDescription();
+                carInspectionReportDto.HeatInsulatingFilmStatus = t.HeatInsulatingFilmStatus.GetDescription();
+                carInspectionReportDto.PeculiarSmellStatus = t.PeculiarSmellStatus.GetDescription();
+                carInspectionReportDto.SeatStatus = t.SeatStatus.GetDescription();
+                carInspectionReportDto.DashBoardStatus = t.DashBoardStatus.GetDescription();
+                carInspectionReportDto.MedialPortalStatus = t.MedialPortalStatus.GetDescription();
+                carInspectionReportDto.PlasticPartStatus = t.PlasticPartStatus.GetDescription();
+                carInspectionReportDto.ChromiumPlatedPartStatus = t.ChromiumPlatedPartStatus.GetDescription();
+                result.Add(carInspectionReportDto);
+            });
+            return result;
         }
     }
 }

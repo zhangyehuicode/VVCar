@@ -265,6 +265,7 @@
     <Compile Include="Areas\Mobile\Controllers\AgentController.cs" />
     <Compile Include="Areas\Mobile\Controllers\CarBitcoinController.cs" />
     <Compile Include="Areas\Mobile\Controllers\CustomerController.cs" />
+    <Compile Include="Areas\Mobile\Controllers\DownloadController.cs" />
     <Compile Include="Areas\Mobile\Controllers\MapController.cs" />
     <Compile Include="Areas\Mobile\Controllers\MerchantController.cs" />
     <Compile Include="Areas\Mobile\MobileAreaRegistration.cs" />
@@ -305,6 +306,7 @@
     <Compile Include="Controllers\Shop\CarInspectionReportController.cs" />
     <Compile Include="Controllers\Shop\ComboItemController.cs" />
     <Compile Include="Controllers\Shop\OrderController.cs" />
+    <Compile Include="Controllers\Shop\OrderDividendController.cs" />
     <Compile Include="Controllers\Shop\OrderItemController.cs" />
     <Compile Include="Controllers\Shop\OrderPaymentDetailsController.cs" />
     <Compile Include="Controllers\Shop\PickUpOrderController.cs" />
@@ -458,6 +460,7 @@
     <Content Include="Areas\resource\img\mobile\8.png" />
     <Content Include="Areas\resource\img\mobile\9.jpg" />
     <Content Include="Areas\resource\img\mobile\addperson.png" />
+    <Content Include="Areas\resource\img\mobile\android.png" />
     <Content Include="Areas\resource\img\mobile\arrowr.png" />
     <Content Include="Areas\resource\img\mobile\asset.png" />
     <Content Include="Areas\resource\img\mobile\banner.jpg" />
@@ -504,6 +507,7 @@
     <Content Include="Areas\resource\img\mobile\hot.png" />
     <Content Include="Areas\resource\img\mobile\hy.png" />
     <Content Include="Areas\resource\img\mobile\hyk.png" />
+    <Content Include="Areas\resource\img\mobile\ios.png" />
     <Content Include="Areas\resource\img\mobile\jf.png" />
     <Content Include="Areas\resource\img\mobile\jia.png" />
     <Content Include="Areas\resource\img\mobile\jiajian.png" />
@@ -1336,6 +1340,11 @@
     <Content Include="Areas\Mobile\Views\Customer\MerchantBargainOrder.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\MerchantBargainOrderDetails.cshtml" />
     <Content Include="Areas\Mobile\Views\Customer\MyMerchantBargainOrderDetails.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\CarInspectionReport.cshtml" />
+    <Content Include="Areas\Mobile\Views\Customer\CarInspectionReportDetail.cshtml" />
+    <Content Include="Areas\Mobile\Views\Download\App.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\MyCommission.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\MyPerformance.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

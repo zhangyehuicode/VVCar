@@ -18,6 +18,11 @@ namespace VVCar.Shop.Domain.Filters
         public Guid? MemberID { get; set; }
 
         /// <summary>
+        /// 报告编号
+        /// </summary>
+        public string Code { get; set; }
+
+        /// <summary>
         /// 接车单ID
         /// </summary>
         public Guid? PickUpOrderID { get; set; }

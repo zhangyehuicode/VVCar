@@ -37,6 +37,9 @@ namespace VVCar.Shop.Data.Mapping
             Property(t => t.Inspector)
                 .HasMaxLength(20);
 
+            Property(t => t.Conclusion)
+                .HasMaxLength(100);
+
             Property(t => t.CreatedUser)
                 .IsRequired()
                 .HasMaxLength(20);

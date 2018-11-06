@@ -55,6 +55,20 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 通过会员ID获取会员
+        /// </summary>
+        /// <param name="memberID"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetMemberByMemberID"), AllowAnonymous]
+        public JsonActionResult<MemberDto> GetMemberByMemberID(Guid memberID)
+        {
+            return SafeExecute(() =>
+            {
+                return MemberPlateService.GetMemberByMemberID(memberID);
+            });
+        }
+
+        /// <summary>
         /// 通过车牌号获取会员
         /// </summary>
         /// <param name="filter"></param>

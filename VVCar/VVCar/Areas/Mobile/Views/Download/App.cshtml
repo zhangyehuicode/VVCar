@@ -1,0 +1,132 @@
+﻿
+@{
+    ViewBag.Title = "车因子App下载";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="appdownload">
+    <div class="top-distance title">门店端</div>
+    <div class="download-table content-center" style="padding-top:25px;" v-on:click="androiddownload">
+        <img class="download-tablecell img-icon" src="~/Areas/resource/img/mobile/android.png" style="margin-top:5px;" />
+        <div class="download-tablecell item-font">安卓App下载</div>
+    </div>
+    <div class="download-table content-center item-spacing" v-on:click="iosdownload">
+        <img class="download-tablecell img-icon" src="~/Areas/resource/img/mobile/ios.png" style="margin-top:5px;" />
+        <div class="download-tablecell item-font">苹果App下载</div>
+    </div>
+    @*<div style="padding-top:30px;font-size:15px;color:#ccc;text-align:center;">车主客户端，敬请期待！</div>*@
+</div>
+
+@section scripts{
+    <style type="text/css">
+
+        .title {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .top-distance {
+            padding-top: 80px;
+        }
+
+        .item-spacing {
+            padding-top: 20px;
+        }
+
+        .content-center {
+            text-align: center;
+        }
+
+        .download-table {
+            display: table;
+            margin: auto;
+        }
+
+        .download-tablecell {
+            display: table-cell;
+        }
+
+        .item-font {
+            font-size: 18px;
+            text-align: center;
+            padding-left: 5px;
+        }
+
+        .img-icon {
+            width: 25px;
+            margin: 0 5px -5px 0;
+        }
+    </style>
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        //function wxConfig() {
+        //    var mch = $.getUrlParam('mch');
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+        //        datatype: "json",
+        //        success: function (data) {
+        //            if (data.IsSuccessful) {
+        //                var temp = data.Data;
+        //                wx.config({
+        //                    debug: false,
+        //                    appId: temp.appId,
+        //                    timestamp: temp.timestamp,
+        //                    nonceStr: temp.nonceStr,
+        //                    signature: temp.signature,
+        //                    jsApiList: [
+        //                        'checkJsApi',
+        //                        'onMenuShareTimeline',
+        //                        'onMenuShareAppMessage',
+        //                        'onMenuShareQQ',
+        //                        'onMenuShareWeibo',
+        //                        'hideOptionMenu',
+        //                        'hideAllNonBaseMenuItem',
+        //                        'showMenuItems',
+        //                        'closeWindow',
+        //                        'scanQRCode',
+        //                    ]
+        //                });
+        //                wx.ready(function () {
+        //                    //wx.hideAllNonBaseMenuItem();
+        //                });
+        //            } else {
+        //            }
+        //        },
+        //        complete: function (xmlHttpRequest, textStatus) {
+        //        },
+        //        error: function (xmlHttpRequest, textStatus) {
+        //        }
+        //    });
+        //};
+        //wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+
+            var mch = $.getUrlParam('mch');
+
+            _viewModel = new Vue({
+                el: '#appdownload',
+                data: {
+
+                },
+                methods: {
+                    androiddownload: function (event) {
+                        if ('@ViewBag.ClientType' === '2') {
+                            $.alert('安卓App下载，请点击右上角，选择在浏览器中打开后再点击下载。');
+                            return;
+                        }
+                        window.location.href = "https://www.cheyinz.cn/cheyinzi.apk";
+                    },
+                    iosdownload: function () {
+                        $.alert("苹果客户端，敬请期待！");
+                    }
+                }
+            });
+
+        });
+    </script>
+}
+

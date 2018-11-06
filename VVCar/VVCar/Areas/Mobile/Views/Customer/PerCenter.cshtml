@@ -36,78 +36,85 @@
             <span style=" font-size:14px; color:#333;">绑定手机：{{MyInfo.MobilePhoneNo}}<a style="font-size:13px; color:#ff0c4b; float:right; margin-right:4%;" v-on:click="bindingmobilephone">[更换手机]</a></span>
         </div>
     </div>
-    <div class="user">
-        <a class="user2" v-on:click="myplate">
-            <div class="user3">
-                <img src="~/Areas/resource/img/mobile/cph.png" style="width:100%;">
-            </div>
-            <span style="font-size:15px; color:#2d2d30;">我的车牌号</span><br>
-            <span style="font-size:13px; color:#999;">{{MyPlate}}</span><br><br>@*{{MyInfo.Plate}}*@
-        </a>
-        <a class="user2" v-on:click="membercard">
-            <div class="user3">
-                <img src="~/Areas/resource/img/mobile/hyk.png" style="width:100%;">
-            </div>
-            <span style="font-size:15px; color:#2d2d30;">我的会员卡</span><br>
-            <span style="font-size:13px; color:#999;">{{MyInfo.CardCount+1}}张</span><br><br>
-        </a>
-        <a class="user2" style="width:33.4%; border-right:none;" v-on:click="mypoints">
-            <div class="user3">
-                <img src="~/Areas/resource/img/mobile/jf.png" style="width:100%;">
-            </div>
-            <span style="font-size:15px; color:#2d2d30;">我的积分</span><br>
-            <span style="font-size:13px; color:#999;">{{MyInfo.MemberPoint}}分</span><br><br>
-        </a>
-        <a class="user2" v-on:click="myorder">
-            <div class="user3">
-                <img src="~/Areas/resource/img/mobile/dd.png" style="width:100%;">
-            </div>
-            <span style="font-size:15px; color:#2d2d30;">我的订单</span><br>
-            <span style="font-size:13px; color:#999;">订单查询</span><br><br>
-        </a>
-        @*<a class="user2" v-on:click="memberservices">
-                <div class="user3">
-                    <img src="~/Areas/resource/img/mobile/hy.png" style="width:90%;">
-                </div>
-                <span style="font-size:15px; color:#2d2d30;">会员服务</span><br>
-                <span style="font-size:13px; color:#999;">道路救援等</span><br><br>
-            </a>*@
-        <a class="user2" v-on:click="myappointment">
-            <div class="user3">
-                <img src="~/Areas/resource/img/mobile/hy.png" style="width:90%;">
-            </div>
-            <span style="font-size:15px; color:#2d2d30;">我的预约</span><br>
-            <span style="font-size:13px; color:#999;">预约查询</span><br><br>
-        </a>
-        <a class="user2" style="width:33.4%; border-right:none;" v-on:click="callservicetel">
-            <div class="user3">
-                <img src="~/Areas/resource/img/mobile/kf.png" style="width:100%;">
-            </div>
-            <span style="font-size:15px; color:#2d2d30;">我的客服</span><br>
-            <span style="font-size:13px; color:#999;">专属客服</span><br><br>
-        </a>
-        <a class="user2" v-on:click="memberregister">
-            <div class="user3">
-                <img src="~/Areas/resource/img/mobile/dd.png" style="width:100%;">
-            </div>
-            <span style="font-size:15px; color:#2d2d30;">会员注册</span><br>
-            <span style="font-size:13px; color:#999;">二维码</span><br><br>
-        </a>
-        <a class="user2" v-on:click="mymember">
-            <div class="user3">
-                <img src="~/Areas/resource/img/mobile/hy.png" style="width:90%;">
-            </div>
-            <span style="font-size:15px; color:#2d2d30;">我的会员</span><br>
-            <span style="font-size:13px; color:#999;">会员</span><br><br>
-        </a>
-        <a class="user2" style="width:33.4%; border-right:none;" v-on:click="mydividend">
-            <div class="user3">
-                <img src="~/Areas/resource/img/mobile/jf.png" style="width:100%;">
-            </div>
-            <span style="font-size:15px; color:#2d2d30;">我的分红</span><br>
-            <span style="font-size:13px; color:#999;">分红</span><br><br>
-        </a>
-    </div>
+	<div class="user">
+		<a class="user2" v-on:click="myplate">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/cph.png" style="width:100%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">我的车牌号</span><br>
+			<span style="font-size:13px; color:#999;">{{MyPlate}}</span><br><br>@*{{MyInfo.Plate}}*@
+		</a>
+		<a class="user2" v-on:click="membercard">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/hyk.png" style="width:100%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">我的会员卡</span><br>
+			<span style="font-size:13px; color:#999;">{{MyInfo.CardCount+1}}张</span><br><br>
+		</a>
+		<a class="user2" style="width:33.4%; border-right:none;" v-on:click="mypoints">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/jf.png" style="width:100%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">我的积分</span><br>
+			<span style="font-size:13px; color:#999;">{{MyInfo.MemberPoint}}分</span><br><br>
+		</a>
+		<a class="user2" v-on:click="myorder">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/dd.png" style="width:100%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">我的订单</span><br>
+			<span style="font-size:13px; color:#999;">订单查询</span><br><br>
+		</a>
+		@*<a class="user2" v-on:click="memberservices">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/hy.png" style="width:90%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">会员服务</span><br>
+			<span style="font-size:13px; color:#999;">道路救援等</span><br><br>
+		</a>*@
+		<a class="user2" v-on:click="myappointment">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/hy.png" style="width:90%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">我的预约</span><br>
+			<span style="font-size:13px; color:#999;">预约查询</span><br><br>
+		</a>
+		<a class="user2" style="width:33.4%; border-right:none;" v-on:click="callservicetel">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/kf.png" style="width:100%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">我的客服</span><br>
+			<span style="font-size:13px; color:#999;">专属客服</span><br><br>
+		</a>
+		<a class="user2" v-on:click="memberregister">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/dd.png" style="width:100%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">会员注册</span><br>
+			<span style="font-size:13px; color:#999;">二维码</span><br><br>
+		</a>
+		<a class="user2" v-on:click="mymember">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/hy.png" style="width:90%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">我的会员</span><br>
+			<span style="font-size:13px; color:#999;">会员</span><br><br>
+		</a>
+		<a class="user2" style="width:33.4%; border-right:none;" v-on:click="mydividend">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/jf.png" style="width:100%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">我的分红</span><br>
+			<span style="font-size:13px; color:#999;">分红</span><br><br>
+		</a>
+		<a class="user2" v-on:click="carinspectionreport">
+			<div class="user3">
+				<img src="~/Areas/resource/img/mobile/cph.png" style="width:100%;">
+			</div>
+			<span style="font-size:15px; color:#2d2d30;">车检报告</span><br>
+			<span style="font-size:13px; color:#999;">车检报告</span><br><br>
+		</a>
+	</div>
     <div class="x-slide" id="j-image-box">
         <ul>
             <li style="display:block;">
@@ -145,7 +152,7 @@
             width: 100%;
             margin: 0 auto;
             position: relative;
-            top: 596px;
+            top: 720px;
         }
 
             .x-slide li {
@@ -252,7 +259,10 @@
                     },
                     mydividend: function (event) {
                         window.location.href = "/Mobile/Customer/MyDividend?mch=" + mch;
-                    },
+					},
+					carinspectionreport: function (event) {
+						window.location.href = "/Mobile/Customer/CarInspectionReport?mch=" + mch;
+					}
             }
         });
 

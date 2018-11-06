@@ -554,7 +554,6 @@
             Ext.Msg.alert('提示', '确定要导入数据吗?', function (optional) {
                 if (optional === 'ok') {
                     form.submit({
-                        getTreegridMemberGroup,
                         url: Ext.GlobalConfig.ApiDomainUrl + 'api/UploadFile/UploadMemberExcel',
                         waitMsg: '正在上传文件...',
                         headers: { 'Content-Type': 'multipart/form-data; charset=UTF-8' },

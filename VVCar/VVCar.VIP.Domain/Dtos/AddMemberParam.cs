@@ -47,5 +47,10 @@ namespace VVCar.VIP.Domain.Dtos
         /// 保险到期时间
         /// </summary>
         public DateTime? InsuranceExpirationDate { get; set; }
+
+        /// <summary>
+        /// 储值卡金额
+        /// </summary>
+        public decimal CardBalance { get; set; }
     }
 }

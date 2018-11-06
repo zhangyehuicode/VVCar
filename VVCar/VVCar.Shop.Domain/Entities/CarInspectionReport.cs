@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YEF.Core.Data;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace VVCar.Shop.Domain.Entities
 {
@@ -29,7 +30,7 @@ namespace VVCar.Shop.Domain.Entities
         /// 会员ID
         /// </summary>
         [Display(Name = "会员ID")]
-        public Guid? MemberID { get; set; }
+        public Guid MemberID { get; set; }
 
         /// <summary>
         /// 会员OpenID
@@ -42,6 +43,12 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "车牌号")]
         public string PlateNumber { get; set; }
+
+        /// <summary>
+        /// 门店ID
+        /// </summary>
+        [Display(Name = "门店ID")]
+        public Guid? DepartmentID { get; set; }
 
         /// <summary>
         /// 门店名称
@@ -74,10 +81,22 @@ namespace VVCar.Shop.Domain.Entities
         public decimal Mileage { get; set; }
 
         /// <summary>
+        /// 车检人员ID
+        /// </summary>
+        [Display(Name = "车检人员ID")]
+        public Guid? InspectorID { get; set; }
+
+        /// <summary>
         /// 车检人员
         /// </summary>
         [Display(Name = "车检人员")]
         public string Inspector { get; set; }
+
+        /// <summary>
+        /// 结论
+        /// </summary>
+        [Display(Name = "结论")]
+        public string Conclusion { get; set; }
 
         /// <summary>
         /// 发动机表面状态
@@ -237,21 +256,21 @@ namespace VVCar.Shop.Domain.Entities
         public ELeftFrontDoorLacquerStatus LeftFrontDoorLacquerStatus { get; set; }
 
         /// <summary>
-        /// 右前叶漆面
+        /// 右前门漆面
         /// </summary>
-        [Display(Name = "右前叶漆面")]
+        [Display(Name = "右前门漆面")]
         public ERightFrontDoorLacquerStatus RightFrontDoorLacquerStatus { get; set; }
 
         /// <summary>
-        /// 左后叶漆面
+        /// 左后门漆面
         /// </summary>
-        [Display(Name = "左后叶漆面")]
+        [Display(Name = "左后门漆面")]
         public ELeftBackDoorLacquerStatus LeftBackDoorLacquerStatus { get; set; }
 
         /// <summary>
         /// 右后叶漆面
         /// </summary>
-        [Display(Name = "右后叶漆面")]
+        [Display(Name = "右后门漆面")]
         public ERightBackDoorLacquerStatus RightBackDoorLacquerStatus { get; set; }
 
         /// <summary>
@@ -353,13 +372,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -371,13 +390,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -389,14 +408,14 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 百分三
         /// </summary>
-        [Display(Name = "百分三")]
-        ThreePercentage = 1,
+        [Description("百分三")]
+        ThreePercentage = 0,
 
         /// <summary>
         /// 百分十
         /// </summary>
-        [Display(Name = "百分十")]
-        TenPercentage = 2,
+        [Description("百分十")]
+        TenPercentage = 1,
     }
 
     /// <summary>
@@ -407,13 +426,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常液位
         /// </summary>
-        [Display(Name = "正常液位")]
+        [Description("正常液位")]
         Normal = 0,
 
         /// <summary>
         /// 液位过低
         /// </summary>
-        [Display(Name = "液位过低")]
+        [Description("液位过低")]
         Lower = 1,
     }
 
@@ -425,13 +444,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常液位
         /// </summary>
-        [Display(Name = "正常液位")]
+        [Description("正常液位")]
         Normal = 0,
 
         /// <summary>
         /// 液位过低
         /// </summary>
-        [Display(Name = "液位过低")]
+        [Description("液位过低")]
         Lower = 1,
     }
 
@@ -443,13 +462,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -461,13 +480,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 过期
         /// </summary>
-        [Display(Name = "过期")]
+        [Description("过期")]
         Expired = 1,
     }
 
@@ -479,13 +498,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -497,13 +516,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -515,13 +534,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -533,13 +552,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -551,13 +570,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -569,13 +588,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -587,13 +606,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -605,13 +624,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -623,13 +642,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -641,13 +660,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -659,13 +678,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -677,13 +696,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -695,13 +714,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -713,13 +732,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -731,13 +750,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -749,13 +768,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -767,13 +786,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -786,13 +805,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -804,13 +823,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -822,13 +841,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -840,13 +859,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -858,13 +877,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 划痕
         /// </summary>
-        [Display(Name = "划痕")]
+        [Description("划痕")]
         Scratch = 1,
     }
 
@@ -876,13 +895,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -894,13 +913,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 破裂
         /// </summary>
-        [Display(Name = "破裂")]
+        [Description("破裂")]
         Rupture = 1,
     }
 
@@ -912,13 +931,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 鼓包
         /// </summary>
-        [Display(Name = "鼓包")]
+        [Description("鼓包")]
         Swell = 1,
     }
 
@@ -930,13 +949,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 
@@ -948,13 +967,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 破损
         /// </summary>
-        [Display(Name = "破损")]
+        [Description("破损")]
         Damage = 1,
     }
 
@@ -966,13 +985,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 破损
         /// </summary>
-        [Display(Name = "破损")]
+        [Description("破损")]
         Damage = 1,
     }
 
@@ -984,13 +1003,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 脏污
         /// </summary>
-        [Display(Name = "脏污")]
+        [Description("脏污")]
         Dirty = 1,
     }
 
@@ -1002,13 +1021,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 氧化发白
         /// </summary>
-        [Display(Name = "氧化发白")]
+        [Description("氧化发白")]
         Oxide = 1,
     }
 
@@ -1020,13 +1039,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 正常
         /// </summary>
-        [Display(Name = "正常")]
+        [Description("正常")]
         Normal = 0,
 
         /// <summary>
         /// 不正常
         /// </summary>
-        [Display(Name = "不正常")]
+        [Description("不正常")]
         OffNormal = 1,
     }
 }

@@ -345,6 +345,7 @@ namespace VVCar.Controllers.VIP
                     new ExportInfo("MobilePhoneNo", "手机号码"),
                     new ExportInfo("PlateNumber", "车牌号"),
                     new ExportInfo("InsuranceExpirationDate", "保险到期"),
+                    new ExportInfo("CardBalance", "历史余额"),
                 };
                 var eh = new ExportHelper(exportInfos);
                 return eh.ImportMemberTemplate("会员导入模板");
@@ -371,7 +372,8 @@ namespace VVCar.Controllers.VIP
                     new ExcelFieldInfo(2, "Birthday", "出生年月", true),
                     new ExcelFieldInfo(3, "MobilePhoneNo", "手机号码"),
                     new ExcelFieldInfo(4, "PlateNumber", "车牌号", true),
-                    new ExcelFieldInfo(5, "InsuranceExpirationDate", "保险到期", true)
+                    new ExcelFieldInfo(5, "InsuranceExpirationDate", "保险到期", true),
+                    new ExcelFieldInfo(6, "CardBalance", "历史余额", true),
                 };
                 var data = ExcelHelper.ImportFromExcel<AddMemberParam>(targetPath, excelFieldInfos);
                 if (data == null || data.Count < 1)

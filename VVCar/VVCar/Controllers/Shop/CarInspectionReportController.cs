@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
@@ -57,9 +58,9 @@ namespace VVCar.Controllers.Shop
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpGet, AllowAnonymous]
-        public PagedActionResult<CarInspectionReport> Search(CarInspectionReportFilter filter)
+        public PagedActionResult<CarInspectionReportDto> Search([FromUri]CarInspectionReportFilter filter)
         {
-            return SafeGetPagedData<CarInspectionReport>((result) =>
+            return SafeGetPagedData<CarInspectionReportDto>((result) =>
             {
                 var totalCount = 0;
                 var data = CarInspectionReportService.Search(filter, out totalCount);

@@ -22,6 +22,9 @@ namespace VVCar.VIP.Services.DomainServices
         #region properties
         IRepository<MemberCard> MemberCardRepo { get => UnitOfWork.GetRepository<IRepository<MemberCard>>(); }
 
+        IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
+
+
         #endregion
 
         public override MemberPlate Add(MemberPlate entity)
@@ -37,6 +40,29 @@ namespace VVCar.VIP.Services.DomainServices
         }
 
         /// <summary>
+        /// 获取会员
+        /// </summary>
+        /// <param name="memberID"></param>
+        /// <returns></returns>
+        public MemberDto GetMemberByMemberID(Guid memberID)
+        {
+            if (memberID == null)
+                throw new DomainException("参数错误");
+            var member = MemberRepo.GetByKey(memberID).MapTo<MemberDto>();
+            if(member == null)
+                throw new DomainException("会员不存在");
+            var memberCard = MemberCardRepo.GetByKey(member.CardID);
+            if(memberCard != null)
+            {
+                member.CardNumber = memberCard.Code;
+                member.CardBalance = memberCard.CardBalance;
+                member.CardStatus = memberCard.Status;
+                member.EffectiveDate = memberCard.EffectiveDate;
+            }
+            return member;
+        }
+
+        /// <summary>
         /// 通过车牌获取会员
         /// </summary>
         /// <param name="filter"></param>
@@ -46,7 +72,7 @@ namespace VVCar.VIP.Services.DomainServices
         {
             if (string.IsNullOrEmpty(filter.PlateNumber))
                 throw new DomainException("车牌号错误");
-            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PlateNumber == filter.PlateNumber).Select(t => t.Member).MapTo<MemberDto>();
+            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.PlateNumber == filter.PlateNumber && t.Member.IsDeleted == false).Select(t => t.Member).MapTo<MemberDto>();
             var result = queryable.ToList();
             if (result.Count < 1)
             {

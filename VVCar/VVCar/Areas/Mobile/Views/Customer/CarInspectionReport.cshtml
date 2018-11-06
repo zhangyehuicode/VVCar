@@ -1,0 +1,179 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div style="background-color:#f8f9fe;" id="myreport">
+	<div class="top_box">
+		<div class="top_box_text">我的车检报告</div>
+		<a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
+	</div>
+	<div>
+		<div class="wdcph_box2">
+			<input class="code" type="text" placeholder="车检报告编号" style="font-size:13px;">
+			<a v-on:click="search">查询</a>
+		</div>
+	</div>
+	<div class="wdcph">
+		<div class="wdcph_text" style="color:#666; border-bottom:1px dashed #eee;" v-for="Report in ReportList">{{Report.Code}}<a v-on:click="detail(Report)">详情</a></div>
+	</div>
+</div>
+
+@section scripts{
+	<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+	<link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script type="text/javascript">
+		function wxConfig() {
+			var mch = $.getUrlParam('mch');
+			$.ajax({
+				type: "POST",
+				url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+				datatype: "json",
+				success: function (data) {
+					if (data.IsSuccessful) {
+						var temp = data.Data;
+						wx.config({
+							debug: false,
+							appId: temp.appId,
+							timestamp: temp.timestamp,
+							nonceStr: temp.nonceStr,
+							signature: temp.signature,
+							jsApiList: [
+								'checkJsApi',
+								'onMenuShareTimeline',
+								'onMenuShareAppMessage',
+								'onMenuShareQQ',
+								'onMenuShareWeibo',
+								'hideOptionMenu',
+								'hideAllNonBaseMenuItem',
+								'showMenuItems',
+								'closeWindow',
+								'scanQRCode',
+							]
+						});
+						wx.ready(function () {
+							wx.hideAllNonBaseMenuItem();
+						});
+					} else {
+					}
+				},
+				complete: function (xmlHttpRequest, textStatus) {
+				},
+				error: function (xmlHttpRequest, textStatus) {
+				}
+			});
+		};
+		wxConfig();
+	</script>
+	<script type="text/javascript">
+        $(function () {
+
+        var mch = $.getUrlParam('mch');
+        _viewModel = new Vue({
+            el: '#myreport',
+            data: {
+                MyInfo: {},
+                ReportList: [],
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                search: function (event) {
+					var code = $('.code').val();
+					search(code);
+				},
+				detail: function (data, event) {
+					sessionStorage.setItem('report', JSON.stringify(data));
+					window.location.href = '/Mobile/Customer/CarInspectionReportDetail?mch=' + mch;
+				}
+            }
+        });
+
+            var member = sessionStorage.getItem('member');
+             function init() {
+                    $.ajax({
+                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                        type: 'GET',
+                        headers: { 'CompanyCode': mch },
+                        beforeSend: function () {
+                            $.showLoading();
+                        },
+                        success: function (res) {
+                            $.hideLoading();
+                            if (res.IsSuccessful) {
+                                if (res.Data != null) {
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                    _viewModel.MyInfo = res.Data;
+                                } else {
+                                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                                }
+                            } else {
+                                $.alert(res.ErrorMessage);
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        },
+                        error: function () {
+                            $.hideLoading();
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                    });
+                }
+            if (member == null || member == '') {
+                init();
+            } else {
+                member = JSON.parse(member)
+                _viewModel.MyInfo = member;
+            }
+
+            function getCarInspectionReport(showloading) {
+				$.ajax({
+					url: '/api/CarInspectionReport?MemberID=' + _viewModel.MyInfo.MemberID,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        if (showloading)
+                           $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.ReportList = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+			getCarInspectionReport(true);
+
+			function search(data) {
+				$.ajax({
+					url: '/api/CarInspectionReport?MemberID=' + _viewModel.MyInfo.MemberID + '&Code=' + data,
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.showLoading();
+					},
+					success: function (res) {
+						$.hideLoading();
+						if (res.IsSuccessful) {
+							_viewModel.ReportList = res.Data;
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					},
+					error: function () {
+						$.hideLoading();
+					}
+				});
+			}
+        });
+	</script>
+}

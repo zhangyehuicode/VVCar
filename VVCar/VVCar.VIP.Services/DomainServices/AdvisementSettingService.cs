@@ -53,6 +53,8 @@ namespace VVCar.VIP.Services.DomainServices
             var advisementSetting = Repository.GetByKey(entity.ID);
             if (advisementSetting == null)
                 return false;
+            if (advisementSetting.CreatedUserID != AppContext.CurrentSession.UserID)
+                throw new DomainException("不能修改其他人的广告设计!");
             advisementSetting.Title = entity.Title;
             advisementSetting.ImgUrl = entity.ImgUrl;
             advisementSetting.Content = entity.Content;

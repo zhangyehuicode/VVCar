@@ -35,12 +35,12 @@
 			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">领券中心</span>
 		</a>
 		@*style="width:33.4%;border-bottom:none;"*@
-		<a class="bq_box">
+		<a class="bq_box" v-on:click="monthperformance">
 			<div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
 			<span>我的业绩</span>
 			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥{{UserInfo.MonthPerformance}}</span>
 		</a>
-		<a class="bq_box" style="width:33.4%">
+		<a class="bq_box" style="width:33.4%" v-on:click="monthCommission">
 			<div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:23px;"></div>
 			<span>我的分红</span>
 			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥{{UserInfo.MonthCommission}}</span>
@@ -242,7 +242,13 @@
                     },
                     deptlocation: function (event) {
                         window.location.href = "/Mobile/Merchant/DepartmentLocation?mch=" + mch;
-                    }
+					},
+					monthCommission: function (event) {
+						window.location.href = "/Mobile/Merchant/MyCommission?mch=" + mch;
+					},
+					monthperformance: function (event) {
+						window.location.href = "/Mobile/Merchant/MyPerformance?mch=" + mch;
+					}
                 }
             });
 

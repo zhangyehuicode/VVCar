@@ -552,6 +552,8 @@ namespace VVCar.VIP.Services.DomainServices
             try
             {
                 var memberCard = MemberCardService.GenerateVirtualCard();
+                memberCard.CardBalance = param.CardBalance;
+                MemberCardService.Update(memberCard);
                 var newMember = new Member
                 {
                     MemberGroupID = param.MemberGroupID,

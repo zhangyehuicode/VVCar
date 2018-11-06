@@ -235,23 +235,41 @@ namespace VVCar.Shop.Services.DomainServices
                 starttime = new DateTime(date.Value.Year, date.Value.Month, 1);
                 endtime = starttime.AddMonths(1);
             }
+            //var pickuporderqueryable = PickUpOrderRepo.GetIncludes(false, "PickUpOrderItemList", "PickUpOrderItemList.Product").Where(t => t.StaffID == user.ID && t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+            //var monthpickuporderlist = pickuporderqueryable.Where(t => t.CreatedDate >= starttime && t.CreatedDate < endtime).ToList();
 
-            var pickuporderqueryable = PickUpOrderRepo.GetIncludes(false, "PickUpOrderItemList", "PickUpOrderItemList.Product").Where(t => t.StaffID == user.ID && t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
-            var monthpickuporderlist = pickuporderqueryable.Where(t => t.CreatedDate >= starttime && t.CreatedDate < endtime).ToList();
+            //staffPerformance.MonthPerformance = monthpickuporderlist.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            //staffPerformance.TotalPerformance = pickuporderqueryable.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            //staffPerformance.CustomerServiceCount = pickuporderqueryable.Count();
+            //staffPerformance.MonthCustomerServiceCount = monthpickuporderlist.Count();
 
-            staffPerformance.MonthPerformance = monthpickuporderlist.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
-            staffPerformance.TotalPerformance = pickuporderqueryable.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
-            staffPerformance.CustomerServiceCount = pickuporderqueryable.Count();
-            staffPerformance.MonthCustomerServiceCount = monthpickuporderlist.Count();
+            //pickuporderqueryable.Select(t => t.PickUpOrderItemList).ForEach(t =>
+            //{
+            //    staffPerformance.TotalCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
+            //});
+            //monthpickuporderlist.Select(t => t.PickUpOrderItemList).ForEach(t =>
+            //{
+            //    staffPerformance.MonthCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
+            //});
+            //staffPerformance.BasicSalary = user.BasicSalary;
 
-            pickuporderqueryable.Select(t => t.PickUpOrderItemList).ForEach(t =>
-            {
-                staffPerformance.TotalCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
-            });
-            monthpickuporderlist.Select(t => t.PickUpOrderItemList).ForEach(t =>
-            {
-                staffPerformance.MonthCommission += t.GroupBy(g => 1).Select(item => item.Sum(s => s.Product.PriceSale * s.Product.CommissionRate / 100)).FirstOrDefault();
-            });
+            //staffPerformance.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();
+            //staffPerformance.MonthOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID && t.CreatedDate >= starttime && t.CreatedDate < endtime).Count();
+
+            var orderDividendList = OrderDividendRepo.GetQueryable(false).Where(t => t.UserID == user.ID && t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+            var monthOrderDividendList = orderDividendList.Where(t => t.CreatedDate >= starttime && t.CreatedDate < endtime).ToList();
+
+            var pickUpOrderTotalCount = orderDividendList.Where(t => t.OrderType == EShopTradeOrderType.PickupOrder).Select(t=> t.TradeNo).Distinct().Count();
+            var pickUpOrderMonthCount = orderDividendList.Where(t => t.OrderType == EShopTradeOrderType.PickupOrder && t.CreatedDate >= starttime && t.CreatedDate < endtime).Select(t => t.TradeNo).Distinct().Count();
+
+            staffPerformance.MonthPerformance = monthOrderDividendList.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            staffPerformance.TotalPerformance = orderDividendList.GroupBy(g => 1).Select(t => t.Sum(s => s.Money)).FirstOrDefault();
+            staffPerformance.CustomerServiceCount = pickUpOrderTotalCount;
+            staffPerformance.MonthCustomerServiceCount = pickUpOrderMonthCount;
+
+            staffPerformance.TotalCommission = orderDividendList.GroupBy(g => 1).Select(t => t.Sum(s => s.Commission)).FirstOrDefault();
+            staffPerformance.MonthCommission = monthOrderDividendList.GroupBy(g => 1).Select(t => t.Sum(s => s.Commission)).FirstOrDefault();
+
             staffPerformance.BasicSalary = user.BasicSalary;
 
             staffPerformance.TotalOpenAccountCount = AgentDepartmentRepo.GetQueryable(false).Where(t => t.UserID == user.ID).Count();

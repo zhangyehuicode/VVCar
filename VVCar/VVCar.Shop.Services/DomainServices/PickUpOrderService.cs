@@ -402,19 +402,26 @@ namespace VVCar.Shop.Services.DomainServices
                 if (t.MemberID != null && t.MemberID != Guid.Parse("00000000-0000-0000-0000-000000000000"))
                 {
                     var member = MemberRepo.GetByKey(t.MemberID);
-                    t.MemberName = member.Name;
-                    t.MemberMobilePhoneNo = member.MobilePhoneNo;
-                    var memberCard = MemberCardRepo.GetByKey(member.CardID);
-                    if (memberCard != null)
+                    if (member != null)
                     {
-                        t.CardNumber = memberCard.Code;
-                        t.CardStatus = memberCard.Status == ECardStatus.Activated ? "已激活" : memberCard.Status == ECardStatus.Lost ? "挂失" : "未激活";
-                        t.EffectiveDate = memberCard.EffectiveDate;
-                        t.CardBalance = memberCard.CardBalance;
+                        t.MemberName = member.Name;
+                        t.MemberMobilePhoneNo = member.MobilePhoneNo;
+                        var memberCard = MemberCardRepo.GetByKey(member.CardID);
+                        if (memberCard != null)
+                        {
+                            t.CardNumber = memberCard.Code;
+                            t.CardStatus = memberCard.Status == ECardStatus.Activated ? "已激活" : memberCard.Status == ECardStatus.Lost ? "挂失" : "未激活";
+                            t.EffectiveDate = memberCard.EffectiveDate;
+                            t.CardBalance = memberCard.CardBalance;
+                        }
+                        else
+                        {
+                            t.CardNumber = "未找到储值卡";
+                        }
                     }
                     else
                     {
-                        t.CardNumber = "未找到储值卡";
+                        throw new DomainException("会员不存在");
                     }
                 }
             });

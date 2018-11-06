@@ -12,9 +12,9 @@ using YEF.Core.Domain;
 namespace VVCar.Shop.Domain.Services
 {
     /// <summary>
-    /// 车检报告领域服务接口
+    /// 订单分红领域服务接口
     /// </summary>
-    public interface ICarInspectionReportService : IDomainService<IRepository<CarInspectionReport>, CarInspectionReport, Guid>
+    public interface IOrderDividendService : IDomainService<IRepository<OrderDividend>, OrderDividend, Guid>
     {
         /// <summary>
         /// 查询
@@ -22,6 +22,6 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        IEnumerable<CarInspectionReportDto> Search(CarInspectionReportFilter filter, out int totalCount);
+        IEnumerable<OrderDividendDto> Search(OrderDividendFilter filter, out int totalCount);
     }
 }

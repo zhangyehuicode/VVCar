@@ -1,0 +1,185 @@
+﻿
+@{
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="report">
+	<div>
+		<div class="title">
+			<span>爱车信息</span>
+			<div class="oddrow">车牌号:<span style="float: right">{{Report.PlateNumber}}</span></div>
+			<div class="evenrow">门店:<span style="float: right">{{Report.DepartmentName}}</span></div>
+			<div class="oddrow">检查日期:<span style="float: right">{{Report.InspectionDate}}</span></div>
+			<div class="evenrow">品牌:<span style="float: right">{{Report.Brand}}</span></div>
+			<div class="oddrow">车型:<span style="float: right">{{Report.CarType}}</span></div>
+			<div class="evenrow">车辆注册日期:<span style="float: right">{{Report.RegistDate}}</span></div>
+			<div class="oddrow">当前公里数:<span style="float: right">{{Report.Mileage}}</span></div>
+			<div class="evenrow">车检人员:<span style="float: right">{{Report.Inspector}}</span></div>
+			<hr />
+
+			<span>发动机舱</span>
+			<div class="oddrow">发动机表面:<span style="float: right">{{Report.EnergySurfaceStatus}}</span></div>
+			<div class="evenrow">防冻液:<span style="float: right">{{Report.AntifreezingSolutionStatus}}</span></div>
+			<hr />
+
+			<span>刹车油</span>
+			<div class="oddrow">含水量:<span style="float: right">{{Report.BrakeOilWaterStatus}}</span></div>
+			<div class="evenrow">刹车油液位:<span style="float: right">{{Report.BrakeOilLevelStatus}}</span></div>
+			<hr />
+
+			<span>机油</span>
+			<div class="oddrow">机油液位:<span style="float: right">{{Report.EngineOilLevelStatus}}</span></div>
+			<div class="evenrow">机油形态:<span style="float: right">{{Report.EngineOilShapeStatus}}</span></div>
+			<div class="oddrow">保养到期:<span style="float: right">{{Report.MaintainExpiredStatus}}</span></div>
+			<hr />
+
+			<span>轮胎/轮毂</span>
+			<div class="oddrow">左前轮胎:<span style="float: right">{{Report.LeftFrontTireStatus}}</span></div>
+			<div class="evenrow">右前轮胎:<span style="float: right">{{Report.RightFrontTireStatus}}</span></div>
+			<div class="oddrow">左后轮胎:<span style="float: right">{{Report.LeftBackTireStatus}}</span></div>
+			<div class="evenrow">右后轮胎:<span style="float: right">{{Report.RightBackTireStatus}}</span></div>
+			<div class="oddrow">左前车毂:<span style="float: right">{{Report.LeftFrontRimStatus}}</span></div>
+			<div class="evenrow">右前车毂:<span style="float: right">{{Report.RightFrontRimStatus}}</span></div>
+			<div class="oddrow">左后车毂:<span style="float: right">{{Report.LeftBackRimStatus}}</span></div>
+			<div class="evenrow">右后车毂:<span style="float: right">{{Report.RightBackRimStatus}}</span></div>
+			<hr />
+
+			<span>雨刮片</span>
+			<div class="oddrow">前雨刮:<span style="float: right">{{Report.FrontWiperStatus}}</span></div>
+			<div class="evenrow">后雨刮:<span style="float: right">{{Report.BackWiperStatus}}</span></div>
+			<hr />
+
+			<span>漆面</span>
+			<div class="oddrow">前保险杆:<span style="float: right">{{Report.FrontGuardLacquerStatus}}</span></div>
+			<div class="evenrow">前引擎盖:<span style="float: right">{{Report.FrontHoodLacquerStatus}}</span></div>
+			<div class="oddrow">左前叶:<span style="float: right">{{Report.RightFrontPageLacquerStatus}}</span></div>
+			<div class="evenrow">右前叶:<span style="float: right">{{Report.RightFrontPageLacquerStatus}}</span></div>
+			<div class="oddrow">左后叶:<span style="float: right">{{Report.LeftBackPageLacquerStatus}}</span></div>
+			<div class="evenrow">右后叶:<span style="float: right">{{Report.RightBackPageLacquerStatus}}</span></div>
+			<div class="oddrow">后保险杆:<span style="float: right">{{Report.BackGuardLacquerStatus}}</span></div>
+			<div class="evenrow">后备箱盖:<span style="float: right">{{Report.TrunkLidLacquerStatus}}</span></div>
+			<hr />
+
+			<span>玻璃</span>
+			<div class="oddrow">氧化检测:<span style="float: right">{{Report.GlassOxidationDetectionStatus}}</span></div>
+			<div class="evenrow">破裂:<span style="float: right">{{Report.GlassRuptureStatus}}</span></div>
+			<div class="oddrow">隔热膜:<span style="float: right">{{Report.HeatInsulatingFilmStatus}}</span></div>
+			<hr />
+
+			<span>车室内</span>
+			<div class="oddrow">异味:<span style="float: right">{{Report.PeculiarSmellStatus}}</span></div>
+			<div class="evenrow">座椅:<span style="float: right">{{Report.SeatStatus}}</span></div>
+			<div class="oddrow">仪表盘:<span style="float: right">{{Report.DashBoardStatus}}</span></div>
+			<div class="evenrow">门内侧:<span style="float: right">{{Report.MedialPortalStatus}}</span></div>
+			<hr />
+
+			<span>外饰件</span>
+			<div class="oddrow">橡塑件:<span style="float: right">{{Report.PlasticPartStatus}}</span></div>
+			<div class="evenrow">镀铬件:<span style="float: right">{{Report.ChromiumPlatedPartStatus}}</span></div>
+			<hr />
+
+			<a class="kjtd" style="margin-top:20px; margin-bottom:10px;background-color:#EFCB47" v-on:click="back">返回</a>
+		</div>
+	</div>
+</div>
+
+@section scripts{
+	<style type="text/css">
+		.title {
+			background-color: #EFEEF3;
+			padding-left: 5px;
+		}
+
+			.title > span {
+				font-weight: bold;
+				padding-left: 10px;
+			}
+
+		.oddrow {
+			background-color: #D3D4D0;
+			margin-left: 5px;
+			margin-right: 5px;
+			padding-left: 5px;
+			padding-right: 5px;
+		}
+
+		.evenrow {
+			background-color: #EFEEF3;
+			margin-left: 5px;
+			margin-right: 5px;
+			padding-left: 5px;
+			padding-right: 5px;
+		}
+
+		hr {
+			margin: 5px 5px 15px 5px;
+		}
+	</style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+			var mch = $.getUrlParam('mch');
+			var report = sessionStorage.getItem('report');
+			_viewModel = new Vue({
+				el: '#report',
+				data: {
+					Report: {},
+				},
+				methods: {
+					back: function (event) {
+						history.back(-1);
+					}
+				}
+			});
+			_viewModel.Report = JSON.parse(report);
+        });
+    </script>
+}

@@ -408,7 +408,8 @@
     },
     addPickUpOrderItemCrew: function (btn) {
         var me = this;
-        var win = Ext.widget('UserSelector');
+		var win = Ext.widget('UserSelector');
+		win.setTitle('添加施工员');
         var selectedItems = btn.up('window').down('grid[name=pickuporderitemgrid]').getSelectionModel().getSelection();
         if (selectedItems.length === 0) {
             Ext.Msg.alert('提示', '请先选中项目');
@@ -419,7 +420,8 @@
     },
     addPickUpOrderItemSalesman: function (btn) {
         var me = this;
-        var win = Ext.widget('UserSelector');
+		var win = Ext.widget('UserSelector');
+		win.setTitle('添加业务员');
         var selectedItems = btn.up('window').down('grid[name=pickuporderitemgrid]').getSelectionModel().getSelection();
         if (selectedItems.length === 0) {
             Ext.Msg.alert('提示', '请先选中项目');
@@ -591,45 +593,80 @@
         pickUpOrderItemStore.load();
 
         plateNumber = win.down('textfield[name=PlateNumber]').getValue();
-        var memberStore = Ext.create('WX.store.BaseData.MemberStore');
-        memberStore.getMemberByPlateNumber(plateNumber,
-            function success(response, request, c) {
-                var ajaxResult = JSON.parse(c.responseText);
-                if (ajaxResult.IsSuccessful) {
-                    if (ajaxResult.Data != null) {
-                        var data = [];
-                        ajaxResult.Data.forEach(function (item) {
-                            data.push({ 'Name': item.Name, 'Value': item.ID, 'MobilePhoneNo': item.MobilePhoneNo, CardNumber: item.CardNumber, CardBalance: item.CardBalance, CardStatus: item.CardStatus, EffectiveDate: item.EffectiveDate });
-                        });
-                        if (data.length > 1) {
-                            Ext.Msg.alert('提示', '该车牌号绑定了多个会员，请联系管理员');
-                            return;
-                        }
-                        win.down("textfield[name=MemberID]").setValue(data[0].Value);
-                        win.down("textfield[name=MemberName]").setValue(data[0].Name);
-                        win.down("textfield[name=MemberMobilePhoneNo]").setValue(data[0].MobilePhoneNo);
-                        win.down("textfield[name=CardNumber]").setValue(data[0].CardNumber);
-                        win.down("textfield[name=CardBalance]").setValue(data[0].CardBalance);
-                        win.down("textfield[name=EffectiveDate]").setValue(data[0].EffectiveDate);
-                        win.down("textfield[name=CardStatus]").setValue(data[0].CardStatus);
-                    } else {
-                        Ext.Msg.alert('该车牌号尚未绑定会员');
-                        win.down("textfield[name=MemberID]").setValue('');
-                        win.down("textfield[name=MemberName]").setValue('');
-                        win.down("textfield[name=MemberMobilePhoneNo]").setValue('');
-                        win.down("textfield[name=CardNumber]").setValue('');
-                        win.down("textfield[name=CardBalance]").setValue('');
-                        win.down("textfield[name=CardStatus]").setValue('');
-                        win.down("textfield[name=EffectiveDate]").setValue('');
-                    }
-                } else {
-                    Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
-                }
-            },
-            function failure(a, b, c) {
-                Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
-            }
-        );
+		var memberStore = Ext.create('WX.store.BaseData.MemberStore');
+		if (record.data.MemberID != null && record.data.MemberID != '' && record.data.MemberID != '00000000-0000-0000-0000-000000000000') {
+			memberStore.getMemberByMemberID(record.data.MemberID,
+				function success(response, request, c) {
+					var ajaxResult = JSON.parse(c.responseText);
+					if (ajaxResult.IsSuccessful) {
+						if (ajaxResult.Data != null) {
+							var data = ajaxResult.Data;
+							win.down("textfield[name=MemberID]").setValue(data.Value);
+							win.down("textfield[name=MemberName]").setValue(data.Name);
+							win.down("textfield[name=MemberMobilePhoneNo]").setValue(data.MobilePhoneNo);
+							win.down("textfield[name=CardNumber]").setValue(data.CardNumber);
+							win.down("textfield[name=CardBalance]").setValue(data.CardBalance);
+							win.down("textfield[name=EffectiveDate]").setValue(data.EffectiveDate);
+							win.down("textfield[name=CardStatus]").setValue(data.CardStatus);
+						} else {
+							Ext.Msg.alert('会员不存在');
+							win.down("textfield[name=MemberID]").setValue('');
+							win.down("textfield[name=MemberName]").setValue('');
+							win.down("textfield[name=MemberMobilePhoneNo]").setValue('');
+							win.down("textfield[name=CardNumber]").setValue('');
+							win.down("textfield[name=CardBalance]").setValue('');
+							win.down("textfield[name=CardStatus]").setValue('');
+							win.down("textfield[name=EffectiveDate]").setValue('');
+						}
+					} else {
+						Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+					}
+				},
+				function failure(a, b, c) {
+					Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+				}
+			);
+		} else {
+			memberStore.getMemberByPlateNumber(plateNumber,
+				function success(response, request, c) {
+					var ajaxResult = JSON.parse(c.responseText);
+					if (ajaxResult.IsSuccessful) {
+						if (ajaxResult.Data != null) {
+							var data = [];
+							ajaxResult.Data.forEach(function (item) {
+								data.push({ 'Name': item.Name, 'Value': item.ID, 'MobilePhoneNo': item.MobilePhoneNo, CardNumber: item.CardNumber, CardBalance: item.CardBalance, CardStatus: item.CardStatus, EffectiveDate: item.EffectiveDate });
+							});
+							if (data.length > 1) {
+								Ext.Msg.alert('提示', '该车牌号绑定了多个会员，请联系管理员');
+								return;
+							}
+							win.down("textfield[name=MemberID]").setValue(data[0].Value);
+							win.down("textfield[name=MemberName]").setValue(data[0].Name);
+							win.down("textfield[name=MemberMobilePhoneNo]").setValue(data[0].MobilePhoneNo);
+							win.down("textfield[name=CardNumber]").setValue(data[0].CardNumber);
+							win.down("textfield[name=CardBalance]").setValue(data[0].CardBalance);
+							win.down("textfield[name=EffectiveDate]").setValue(data[0].EffectiveDate);
+							win.down("textfield[name=CardStatus]").setValue(data[0].CardStatus);
+						} else {
+							Ext.Msg.alert('该车牌号尚未绑定会员');
+							win.down("textfield[name=MemberID]").setValue('');
+							win.down("textfield[name=MemberName]").setValue('');
+							win.down("textfield[name=MemberMobilePhoneNo]").setValue('');
+							win.down("textfield[name=CardNumber]").setValue('');
+							win.down("textfield[name=CardBalance]").setValue('');
+							win.down("textfield[name=CardStatus]").setValue('');
+							win.down("textfield[name=EffectiveDate]").setValue('');
+						}
+					} else {
+						Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+					}
+				},
+				function failure(a, b, c) {
+					Ext.Msg.alert('提示', ajaxResult.ErrorMessage);
+				}
+			);
+		}
+        
         win.show();
     },
     gridPickUpOrderItemSelect: function (grid, record, index, eOpts) {

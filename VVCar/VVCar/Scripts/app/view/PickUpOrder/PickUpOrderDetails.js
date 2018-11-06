@@ -16,7 +16,7 @@
 				type: 'hbox', align: 'stretch'
 			},
 			width: '100%',
-			height: 430,
+			height: 300,
 			autoScroll: true,
 			items: [{
 				title: '项目',
@@ -61,7 +61,7 @@
 						header: '项目图片', dataIndex: 'ImgUrl', width: 100,
 						renderer: function (value) {
 							if (value != "" && value != null) {
-								return '<img src="' + value + '" style="width: 80px; height: 50px;" />';
+								return '<img src="' + value + '" style="width: 50px; height: 20px;" />';
 							}
 						}
 					},
@@ -224,7 +224,7 @@
 					action: 'checkOpenOrder',
 					xtype: 'button',
 					text: '开单',
-					margin: '5 5 5 850',
+					margin: '5 5 5 1050',
 					hidden: true,
 				}]
 			}, {
@@ -297,7 +297,7 @@
 					action: 'payorder',
 					xtype: 'button',
 					text: '结算',
-					margin: '5 5 5 800',
+					margin: '5 5 5 1000',
 				}, {
 					action: 'paydetails',
 					xtype: 'button',
