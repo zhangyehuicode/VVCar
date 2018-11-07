@@ -48,7 +48,24 @@ namespace VVCar.Controllers.VIP
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet, Route("GetBrowseAnalyse"), AllowAnonymous]
+        public PagedActionResult<BrowseAnalyseDto> GetBrowseAnalyse([FromUri]BrowseAnalyseFilter filter)
+        {
+            return SafeGetPagedData<BrowseAnalyseDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = AdvisementBrowseHistoryService.GetBrowseAnalyse(filter, out totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, AllowAnonymous]
         public PagedActionResult<AdvisementBrowseHistoryDto> Search([FromUri]AdvisementBrowseHistoryFilter filter)
         {
             return SafeGetPagedData<AdvisementBrowseHistoryDto>((result) =>

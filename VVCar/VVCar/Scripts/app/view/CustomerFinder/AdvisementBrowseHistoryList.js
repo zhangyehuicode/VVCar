@@ -33,6 +33,22 @@
 				labelWidth: 30,
 				margin: '0 0 0 5',
 			}, {
+				xtype: 'textfield',
+				name: 'NickName',
+				fieldLabel: '会员昵称',
+				width: 170,
+				labelWidth: 60,
+				margin: '0 0 0 5',
+			}, {
+				xtype: 'numberfield',
+				name: 'Period',
+				fieldLabel: '大于间隔时间',
+				width: 170,
+				labelWidth: 90,
+				value: 0,
+				minValue: 0,
+				margin: '0 0 0 5',
+			},{
 				action: 'search',
 				xtype: 'button',
 				text: '搜索',
@@ -44,6 +60,7 @@
 		me.columnLines = true;
 		me.columns = [
 			{ header: '广告标题', dataIndex: 'Title', flex: 1, },
+			{ header: '分享者', dataIndex: 'ShareNickName', flex: 1 },
 			{ header: '会员名称', dataIndex: 'NickName', flex: 1 },
 			{ header: '开始浏览时间', dataIndex: 'StartDate', flex: 1,},
 			{ header: '结束浏览时间', dataIndex: 'EndDate', flex:1,},

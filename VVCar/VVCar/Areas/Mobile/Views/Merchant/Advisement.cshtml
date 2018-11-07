@@ -10,10 +10,11 @@
 		<a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:-36px;"></a>
 	</div>
 	<div class="gwc_box" v-for="Advisement in AdvisementList">
-		<img class="gwc_img" v-bind:src="Advisement.ImgUrl" style="width:50px;height:50px">
+		<img class="gwc_img" v-bind:src="Advisement.ImgUrl" style="width:50px;height:50px" v-on:click="history(Advisement)">
 		<div class="gwc_box2" v-on:click="detail(Advisement)">
-			<span class="gwc_text">标题：{{Advisement.Title}}</span>
-			<span class="gwc_text">作者：{{Advisement.CreatedUser}}</span>
+			<span class="gwc_text" style="font-size:18px;">标题：{{Advisement.Title}}</span>
+			<span class="gwc_text" style="margin-top:0px;">作者：{{Advisement.CreatedUser}}</span>
+			<span class="gwc_text" style="margin-top:0px;font-size:10px;">今日关注:<font color="red">{{Advisement.FocusTodayCount}}</font>, 总关注:<font color="red">{{Advisement.TotalFocusCount}}</font></span>
 		</div>
 	</div>
 </div>
@@ -125,6 +126,10 @@
 				detail: function (data, event) {
 					sessionStorage.setItem('advisement', JSON.stringify(data));
 					window.location.href = "/Mobile/Merchant/AdvisementDetail?mch=" + mch;
+				},
+				history: function (data, event) {
+					sessionStorage.setItem('advisement', JSON.stringify(data));
+					window.location.href = "/Mobile/Merchant/AdvisementBrowseHistory?mch=" + mch;
 				}
 			}
 		});

@@ -35,6 +35,18 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "微信昵称")]
         public string NickName { get; set; } 
+        
+        /// <summary>
+        /// 分享者OpenID
+        /// </summary>
+        [Display(Name = "分享者OpenID")]
+        public string ShareOpenID { get; set; }
+
+        /// <summary>
+        ///  分享者昵称
+        /// </summary>
+        [Display(Name = "分享者昵称")]
+        public string ShareNickName { get; set; }
 
         /// <summary>
         /// 开始浏览时间

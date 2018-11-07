@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Http;
+using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
@@ -87,9 +88,9 @@ namespace VVCar.Controllers.VIP
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpGet, AllowAnonymous]
-        public PagedActionResult<AdvisementSetting> Search([FromUri]AdvisementSettingFilter filter)
+        public PagedActionResult<AdvisementSettingDto> Search([FromUri]AdvisementSettingFilter filter)
         {
-            return SafeGetPagedData<AdvisementSetting>((result) =>
+            return SafeGetPagedData<AdvisementSettingDto>((result) =>
             {
                 var totalCount = 0;
                 var data = AdvisementSettingService.Search(filter, out totalCount);

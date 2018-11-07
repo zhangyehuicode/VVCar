@@ -30,7 +30,10 @@ namespace VVCar.Shop.Data.Mapping
                 .HasMaxLength(20);
 
             Property(t => t.UserName)
-                .HasMaxLength(50); 
+                .HasMaxLength(50);
+
+            Property(t => t.BalanceUserName)
+                .HasMaxLength(50);
         }
     }
 }

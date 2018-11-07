@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace VVCar.VIP.Domain.Dtos
 {
-    /// <summary>
-    /// 寻客侠广告浏览记录
-    /// </summary>
-    public class AdvisementBrowseHistoryDto
+    public class AdvisementSettingDto
     {
         /// <summary>
         /// ID
@@ -22,33 +19,33 @@ namespace VVCar.VIP.Domain.Dtos
         public string Title { get; set; }
 
         /// <summary>
-        /// 会员名称
+        /// 封面路径
         /// </summary>
-        public string NickName { get; set; }
+        public string ImgUrl { get; set; }
 
         /// <summary>
-        /// 分享者昵称
+        /// 图文内容
         /// </summary>
-        public string ShareNickName { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
-        /// 开始浏览时间
+        /// 创建人名称
         /// </summary>
-        public DateTime StartDate { get; set; }
-
-        /// <summary>
-        /// 结束浏览时间
-        /// </summary>
-        public DateTime EndDate { get; set; }
-
-        /// <summary>
-        /// 停留时间(秒)
-        /// </summary>
-        public decimal Period { get; set; }
+        public string CreatedUser { get; set; }
 
         /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreatedDate { get; set; }
+
+        /// <summary>
+        /// 今日浏览人数
+        /// </summary>
+        public int FocusTodayCount { get; set; }
+
+        /// <summary>
+        /// 总浏览人数
+        /// </summary>
+        public int TotalFocusCount { get; set; }
     }
 }

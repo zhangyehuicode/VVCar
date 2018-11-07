@@ -5,6 +5,7 @@
 		{ name: 'ID' },
 		{ name: 'Title' },
 		{ name: 'NickName' },
+		{ name: 'ShareNickName' },
 		{ name: 'StartDate' },
 		{ name: 'EndDate' },
 		{ name: 'Period' },

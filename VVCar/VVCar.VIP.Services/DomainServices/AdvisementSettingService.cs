@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
 using VVCar.VIP.Domain.Services;
@@ -117,9 +118,9 @@ namespace VVCar.VIP.Services.DomainServices
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        public IEnumerable<AdvisementSetting> Search(AdvisementSettingFilter filter, out int totalCount)
+        public IEnumerable<AdvisementSettingDto> Search(AdvisementSettingFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = Repository.GetInclude(t => t.AdvisementBrowseHistoryList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter.ID.HasValue)
                 queryable = queryable.Where(t => t.ID == filter.ID);
             if (!string.IsNullOrEmpty(filter.Title))
@@ -127,7 +128,24 @@ namespace VVCar.VIP.Services.DomainServices
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.ToArray();
+            var result = new List<AdvisementSettingDto>();
+            var queryList = queryable.ToList();
+            var start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+            queryList.ForEach(t =>
+            {
+                var advisementSettingDto = new AdvisementSettingDto {
+                    ID = t.ID,
+                    Title = t.Title,
+                    Content = t.Content,
+                    ImgUrl = t.ImgUrl,
+                    CreatedUser = t.CreatedUser,
+                    CreatedDate = t.CreatedDate,
+                    FocusTodayCount = t.AdvisementBrowseHistoryList.Where(c => c.CreatedDate > start).Select(s => s.NickName).Distinct().Count(),
+                    TotalFocusCount = t.AdvisementBrowseHistoryList.Select(s => s.NickName).Distinct().Count(),
+                };
+                result.Add(advisementSettingDto);
+            });
+            return result;
         }
     }
 }

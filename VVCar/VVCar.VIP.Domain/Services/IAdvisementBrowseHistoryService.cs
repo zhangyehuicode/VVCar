@@ -17,6 +17,14 @@ namespace VVCar.VIP.Domain.Services
     public partial interface IAdvisementBrowseHistoryService : IDomainService<IRepository<AdvisementBrowseHistory>, AdvisementBrowseHistory, Guid>
     {
         /// <summary>
+        /// 浏览记录分析
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        IEnumerable<BrowseAnalyseDto> GetBrowseAnalyse(BrowseAnalyseFilter filter, out int totalCount);
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>

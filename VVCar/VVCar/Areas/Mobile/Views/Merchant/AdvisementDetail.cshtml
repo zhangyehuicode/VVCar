@@ -5,10 +5,10 @@
 }
 
 <div id="advisementdetails">
-	<img class="back-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back"/>
+	<img class="leave-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="leave" v-bind:class="showClass" />
+	<img class="share-img" src="~/Areas/resource/img/mobile/share.png" v-bind:class="hideClass" />
+	<img class="back-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back" v-bind:class="hideClass" />
 	<div class="content"></div>
-	<div class="kcd_btn2" v-bind:class="hideClass" v-on:click="share">分享朋友圈</div>
-	<div class="kcd_btn2" v-bind:class="showClass" v-on:click="leave">离开</div>
 </div>
 
 @section scripts{
@@ -28,8 +28,24 @@
 		.back-img {
 			width: 33px;
 			position: fixed;
-			top: 20px;
+			top: 0px;
 			left: 20px;
+			z-index: 1;
+			opacity: 0.5;
+		}
+		.leave-img {
+			width: 33px;
+			position: fixed;
+			top: 0px;
+			left: 20px;
+			z-index: 1;
+			opacity: 0.5;
+		}
+		.share-img {
+			width: 66px;
+			position: fixed;
+			top: 0px;
+			right: 20px;
 			z-index: 1;
 			opacity: 0.5;
 		}
@@ -72,7 +88,7 @@
 							var advisement = JSON.parse(sessionStorage.getItem('advisement'));
 							wx.onMenuShareTimeline({
 								title: advisement.Title,
-								link: window.location.origin + '/Mobile/Merchant/AdvisementDetail?mch=' + mch + '&adid=' + advisement.ID,
+								link: window.location.origin + '/Mobile/Merchant/AdvisementDetail?mch=' + mch + '&adid=' + advisement.ID + '&shareopenid='+ '@ViewBag.OpenID' + '&sharenickname=' +'@ViewBag.NickName',
 								imgUrl: window.location.origin + advisement.ImgUrl,
 								success: function (res) {
 
@@ -81,8 +97,8 @@
 
 							wx.onMenuShareAppMessage({
 								title: advisement.Title,
-								desc: '国庆快乐',
-								link: window.location.origin + '/Mobile/Merchant/AdvisementDetail?mch=' + mch + '&adid=' + advisement.ID,
+								desc: '',
+								link: window.location.origin + '/Mobile/Merchant/AdvisementDetail?mch=' + mch + '&adid=' + advisement.ID + '&shareopenid='+ '@ViewBag.OpenID' + '&sharenickname=' +'@ViewBag.NickName',
 								imgUrl: window.location.origin + advisement.ImgUrl,
 								success: function (res) {
 
@@ -233,6 +249,8 @@
 
 		function recordhistory() {
 			if (adid != null && adid != '') {
+				var shareopenid = $.getUrlParam('shareopenid');
+				var sharenickname = $.getUrlParam('sharenickname');
 				var enddate = new Date();
 				var time = (enddate.getTime() - startdate.getTime()) / 1000;
 				$.ajax({
@@ -243,6 +261,8 @@
 					data: {
 						OpenID: '@ViewBag.OpenId',
 						NickName: '@ViewBag.NickName',
+						ShareOpenID: shareopenid,
+						ShareNickName: sharenickname,
 						AdvisementSettingID: adid,
 						StartDate: format(startdate),
 						EndDate: format(enddate),

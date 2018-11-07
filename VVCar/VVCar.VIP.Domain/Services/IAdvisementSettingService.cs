@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
 using YEF.Core.Data;
@@ -28,6 +29,6 @@ namespace VVCar.VIP.Domain.Services
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        IEnumerable<AdvisementSetting> Search(AdvisementSettingFilter filter, out int totalCount);
+        IEnumerable<AdvisementSettingDto> Search(AdvisementSettingFilter filter, out int totalCount);
     }
 }

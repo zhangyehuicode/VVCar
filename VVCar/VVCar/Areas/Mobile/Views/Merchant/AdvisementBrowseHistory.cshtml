@@ -1,0 +1,150 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+<div id="browsehistory" style="background-color:#f8f9fe;">
+	<div class="touxiang" style="margin-bottom:25px;">
+		<div class="pm_box">
+			<div class="pm_text">浏览排名</div>
+			<div class="pm_box1">
+				<div class="pm_box2">昵称</div>
+				<div class="pm_box2" style="text-align:center;">点击次数</div>
+				<div class="pm_box2" style="width:33.4%; text-align:center;">总停留时间</div>
+			</div>
+			<div class="pm_box1" v-for="BrowseAnalyse in BrowseAnalyseList">
+				<div class="pm_box2" style=" color:#666;">{{BrowseAnalyse.NickName}}</div>
+				<div class="pm_box2" style=" text-align:center;color:#ff0c4c;">{{BrowseAnalyse.ClickCount}}</div>
+				<div class="pm_box2" style="text-align:center;color:#666;">{{BrowseAnalyse.StayPeriod}}秒</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section scripts{
+	<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+	<link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript">
+		function wxConfig() {
+			var mch = $.getUrlParam('mch');
+			$.ajax({
+				type: "POST",
+				url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+				datatype: "json",
+				success: function (data) {
+					if (data.IsSuccessful) {
+						var temp = data.Data;
+						wx.config({
+							debug: false,
+							appId: temp.appId,
+							timestamp: temp.timestamp,
+							nonceStr: temp.nonceStr,
+							signature: temp.signature,
+							jsApiList: [
+								'checkJsApi',
+								'onMenuShareTimeline',
+								'onMenuShareAppMessage',
+								'onMenuShareQQ',
+								'onMenuShareWeibo',
+								'hideOptionMenu',
+								'hideAllNonBaseMenuItem',
+								'showMenuItems',
+								'closeWindow',
+								'scanQRCode',
+							]
+						});
+						wx.ready(function () {
+							wx.hideAllNonBaseMenuItem();
+						});
+					} else {
+					}
+				},
+				complete: function (xmlHttpRequest, textStatus) {
+				},
+				error: function (xmlHttpRequest, textStatus) {
+				}
+			});
+		};
+		wxConfig();
+	</script>
+	<script type="text/javascript">
+		$(function () {
+			var _ismaster = sessionStorage.getItem('ismaster');
+			var ismaster = _ismaster == 'true';
+			var user = sessionStorage.getItem('user');
+			if (user == null || user === '') {
+				function getUserByOpenId() {
+					$.ajax({
+						url: 'api/User/GetUserByOpenID',
+						type: 'GET',
+						headers: { 'CompanyCode': mch },
+						data: {
+							OpenID: '@ViewBag.OpenId',
+						},
+						success: function (res) {
+							if (res.IsSuccessful) {
+								if (res.Data != null) {
+									sessionStorage.setItem('user', JSON.stringify(res.Data));
+								} else {
+									window.location.href = "/Mobile/Merchant?mch=" + mch;
+								}
+							} else {
+								$.alert(res.ErrorMessage);
+								window.location.href = "/Mobile/Merchant?mch=" + mch;
+							}
+						},
+						error: function () {
+							window.location.href = "/Mobile/Merchant?mch=" + mch;
+						}
+					});
+				}
+				getUserByOpenId();
+			}
+		});
+	</script>
+	<script type="text/javascript">
+		var mch = $.getUrlParam('mch');
+		var advisement = JSON.parse(sessionStorage.getItem('advisement'));
+		_viewModel = new Vue({
+			el: '#browsehistory',
+			data: {
+				BrowseAnalyseList: [],
+			},
+			methods: {
+				back: function (event) {
+					history.back(-1);
+				},
+			}
+		});
+		function getBrowseHistory() {
+			$.ajax({
+				url: '/api/AdvisementBrowseHistory/GetBrowseAnalyse?AdvisementSettingID=' + advisement.ID,
+				type: 'GET',
+				headers: { 'CompanyCode': mch },
+				beforeSend: function () {
+					$.showLoading();
+				},
+				success: function (res) {
+					$.hideLoading();
+					if (res.IsSuccessful) {
+						if (res.IsSuccessful) {
+							if (res.Data != null) {
+								_viewModel.BrowseAnalyseList = res.Data;
+							}
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					}
+				},
+				error: function () {
+					$.hideLoading();
+				}
+			});
+		}
+		getBrowseHistory();
+	</script>
+}
+

@@ -13,6 +13,11 @@ namespace VVCar.VIP.Domain.Entities
     /// </summary>
     public class AdvisementSetting: EntityBase
     {
+        public AdvisementSetting()
+        {
+            AdvisementBrowseHistoryList = new List<AdvisementBrowseHistory>();
+        }
+
         /// <summary>
         /// 标题
         /// </summary>
@@ -66,5 +71,10 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "最后修改时间")]
         public DateTime? LastUpdateDate { get; set; }
+
+        /// <summary>
+        /// 浏览记录
+        /// </summary>
+        public ICollection<AdvisementBrowseHistory> AdvisementBrowseHistoryList { get; set; }
     }
 }

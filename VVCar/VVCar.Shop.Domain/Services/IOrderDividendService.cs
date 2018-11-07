@@ -17,6 +17,13 @@ namespace VVCar.Shop.Domain.Services
     public interface IOrderDividendService : IDomainService<IRepository<OrderDividend>, OrderDividend, Guid>
     {
         /// <summary>
+        /// 结算
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool Balance(Guid[] ids);
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>

@@ -45,8 +45,10 @@
     <Compile Include="Dtos\AddMemberParam.cs" />
     <Compile Include="Dtos\AdjustBalanceDto.cs" />
     <Compile Include="Dtos\AdvisementBrowseHistoryDto.cs" />
+    <Compile Include="Dtos\AdvisementSettingDto.cs" />
     <Compile Include="Dtos\AnnouncementPushMemberDto.cs" />
     <Compile Include="Dtos\ArticleDto.cs" />
+    <Compile Include="Dtos\BrowseAnalyseDto.cs" />
     <Compile Include="Dtos\BulkReceiveCouponDto.cs" />
     <Compile Include="Dtos\BuyGiftCardByPosDto.cs" />
     <Compile Include="Dtos\CardThemeCategoryMenu.cs" />
@@ -214,6 +216,7 @@
     <Compile Include="Filters\AnnouncementPushMemberFilter.cs" />
     <Compile Include="Filters\ArticleFilter.cs" />
     <Compile Include="Filters\ArticleItemFilter.cs" />
+    <Compile Include="Filters\BrowseAnalyseFilter.cs" />
     <Compile Include="Filters\CardThemeCategoryFilter.cs" />
     <Compile Include="Filters\CardThemeGroupFilter.cs" />
     <Compile Include="Filters\CouponFilter.cs" />

@@ -617,6 +617,7 @@
     <Content Include="Areas\resource\img\mobile\yzm.png" />
     <Content Include="Areas\resource\img\mobile\yzm2.png" />
     <Content Include="Areas\resource\img\mobile\icon_coupon.png" />
+    <Content Include="Areas\resource\img\mobile\share.png" />
     <Content Include="Areas\resource\img\shouyelunbo1900x300.jpg" />
     <Content Include="Areas\resource\img\图层-4%402x.png" />
     <Content Include="Areas\resource\js\bootstrap-datetimepicker.min.js" />
@@ -710,6 +711,7 @@
     <Content Include="Scripts\app\controller\Logistics.js" />
     <Content Include="Scripts\app\controller\MerchantBargainOrder.js" />
     <Content Include="Scripts\app\controller\MerchantCrowdOrder.js" />
+    <Content Include="Scripts\app\controller\OrderDividend.js" />
     <Content Include="Scripts\app\controller\PickUpOrder.js" />
     <Content Include="Scripts\app\controller\QuickOrder.js" />
     <Content Include="Scripts\app\controller\Tag.js" />
@@ -781,6 +783,7 @@
     <Content Include="Scripts\app\model\BaseData\MemberGroupTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\MerchantBargainOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\MerchantCrowdOrderModel.js" />
+    <Content Include="Scripts\app\model\BaseData\OrderDividendModel.js" />
     <Content Include="Scripts\app\model\BaseData\PickUpOrderPaymentDetailsModel.js" />
     <Content Include="Scripts\app\model\BaseData\PickUpOrderItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\PickUpOrderModel.js" />
@@ -874,6 +877,7 @@
     <Content Include="Scripts\app\store\BaseData\MemberGroupLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\MerchantBargainOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\MerchantCrowdOrderStore.js" />
+    <Content Include="Scripts\app\store\BaseData\OrderDividendStore.js" />
     <Content Include="Scripts\app\store\BaseData\PickUpOrderPaymentDetailsStore.js" />
     <Content Include="Scripts\app\store\BaseData\PickUpOrderItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\PickUpOrderStore.js" />
@@ -1016,6 +1020,7 @@
     <Content Include="Scripts\app\view\MerchantCrowdOrder\MerchantCrowdOrderEdit.js" />
     <Content Include="Scripts\app\view\MerchantCrowdOrder\MerchantCrowdOrderList.js" />
     <Content Include="Scripts\app\view\MerchantCrowdOrder\CrowdProductSelector.js" />
+    <Content Include="Scripts\app\view\OrderDividend\OrderDividend.js" />
     <Content Include="Scripts\app\view\PickUpOrder\PickUpOrderPaymentDetails.js" />
     <Content Include="Scripts\app\view\PickUpOrder\PickUpOrder.js" />
     <Content Include="Scripts\app\view\PickUpOrder\PickUpOrderDetails.js" />
@@ -1345,6 +1350,7 @@
     <Content Include="Areas\Mobile\Views\Download\App.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\MyCommission.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\MyPerformance.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\AdvisementBrowseHistory.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

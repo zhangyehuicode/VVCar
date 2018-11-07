@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System.Linq;
+using System.Web.Http;
 using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
@@ -23,6 +24,21 @@ namespace VVCar.Controllers.Shop
         IOrderDividendService OrderDividendService { get; set; }
 
         #endregion
+
+
+        /// <summary>
+        /// 结算
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpPost, Route("Balance")]
+        public JsonActionResult<bool> Balance(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return OrderDividendService.Balance(parameter.IdList.ToArray());
+            });
+        }
 
         /// <summary>
         /// 查询

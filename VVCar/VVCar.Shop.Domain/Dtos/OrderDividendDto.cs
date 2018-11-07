@@ -14,6 +14,11 @@ namespace VVCar.Shop.Domain.Dtos
     public class OrderDividendDto
     {
         /// <summary>
+        /// ID
+        /// </summary>
+        public Guid ID { get; set; }
+
+        /// <summary>
         /// 交易单号
         /// </summary>
         public string TradeNo { get; set; }
@@ -87,5 +92,20 @@ namespace VVCar.Shop.Domain.Dtos
         /// 创建时间
         /// </summary>
         public DateTime CreatedDate { get; set; }
+
+        /// <summary>
+        /// 是否已结算
+        /// </summary>
+        public bool IsBalance { get; set; }
+
+        /// <summary>
+        /// 结算时间
+        /// </summary>
+        public DateTime? BalanceDate { get; set; }
+
+        /// <summary>
+        /// 结算者姓名
+        /// </summary>
+        public string BalanceUserName { get; set; }
     }
 }

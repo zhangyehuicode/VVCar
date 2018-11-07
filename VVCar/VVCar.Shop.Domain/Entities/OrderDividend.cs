@@ -117,6 +117,30 @@ namespace VVCar.Shop.Domain.Entities
         public ETaskDistributionPeopleType PeopleType { get; set; }
 
         /// <summary>
+        /// 是否已结算
+        /// </summary>
+        [Display(Name = "是否已结算")]
+        public bool IsBalance { get; set; }
+
+        /// <summary>
+        /// 结算时间
+        /// </summary>
+        [Display(Name = "结算时间")]
+        public DateTime? BalanceDate { get; set; }
+
+        /// <summary>
+        /// 结算者ID
+        /// </summary>
+        [Display(Name = "结算者ID")]
+        public Guid? BalanceUserID { get; set; }
+
+        /// <summary>
+        /// 结算者姓名
+        /// </summary>
+        [Display(Name = "结算者姓名")]
+        public string BalanceUserName { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         [Display(Name = "创建时间")]

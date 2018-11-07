@@ -25,6 +25,12 @@ namespace VVCar.VIP.Data.Mapping
 
             Property(t => t.NickName)
                 .HasMaxLength(50);
+
+            Property(t => t.ShareOpenID)
+                .HasMaxLength(36);
+
+            Property(t => t.ShareNickName)
+                .HasMaxLength(36);
         }
     }
 }
