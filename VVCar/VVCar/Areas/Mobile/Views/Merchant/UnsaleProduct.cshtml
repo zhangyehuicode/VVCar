@@ -1,0 +1,194 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="unsaleproduct">
+	<div class="toubu">
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+		店长工作终端
+		<a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+	</div>
+	<div class="touxiang">
+		<div style="width:100%; float:left; border-bottom:1px solid #eee;">
+			<img src="@ViewBag.HeadImgUrl" class="touxiang_img">
+			<div class="touxiang_div">
+				<span>{{User.Name}}</span>
+				<span style=" font-size:14px; color:#999;">会员：{{MemberList.length}}名</span>
+			</div>
+		</div>
+		<a class="cbgl_btn" v-if="!ShowHYMD" v-on:click="showHYMD">
+			<span style="line-height:44px; ">畅销产品</span>
+		</a>
+		<a class="cbgl_btn" v-if="ShowHYMD">
+			<span style="line-height:44px; color:#51b3f0; width:100%; float:left;">会员名单</span>
+			<div style="width:50%; margin-left:25%; border-bottom:2px solid #51b3f0; float:left;"></div>
+		</a>
+		<a class="cbgl_btn" v-if="ShowHYMD" v-on:click="showJJDQ">
+			<span style="line-height:44px; ">滞销产品</span>
+		</a>
+		<a class="cbgl_btn" v-if="!ShowHYMD">
+			<span style="line-height:44px; color:#51b3f0; width:100%; float:left;">即将到期</span>
+			<div style="width:50%; margin-left:25%; border-bottom:2px solid #51b3f0; float:left;"></div>
+		</a>
+	</div>
+	<div class="touxiang" style="margin-bottom:25px;" v-if="ShowHYMD">
+		<ul class="pm_box">
+			<li class="pm_box1">
+				<div class="pm_box2">会员姓名</div>
+				<div class="pm_box2" style="width:33.4%; text-align:center;">会员手机号</div>
+				<div class="pm_box2" style=" text-align:right;">操作</div>
+			</li>
+			<li class="pm_box1" v-for="Member in MemberList">
+				<div class="pm_box2" style=" color:#666;">{{Member.Name}}</div>
+				@*<div class="pm_box2" style="width:33.4%; text-align:center;color:#666;">{{Member.PlateNumber}}</div>*@
+				<div class="pm_box2" style="width:33.4%; text-align:center;color:#666;">{{Member.MobilePhoneNo}}</div>
+				<div class="pm_box2"><a class="hymd" v-on:click="memberDetails(Member)">会员详情</a></div>
+			</li>
+		</ul>
+	</div>
+</div>
+
+@section scripts{
+	<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+	<link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+	</script>
+	<script type="text/javascript">
+        $(function () {
+        var mch = $.getUrlParam('mch');
+        var user = sessionStorage.getItem('user');
+        _viewModel = new Vue({
+            el: '#unsaleproduct',
+            data: {
+                User: {},
+                ShowHYMD: true,
+                MemberList: [],
+            },
+            methods: {
+                back: function (event) {
+                    history.back(-1);
+                },
+                home: function (event) {
+                        window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+                },
+                showHYMD: function (event) {
+                    _viewModel.ShowHYMD = true;
+                },
+                showJJDQ: function (event) {
+                    _viewModel.ShowHYMD = false;
+                },
+                memberDetails: function (data, event) {
+                    sessionStorage.setItem('member', JSON.stringify(data));
+                    sessionStorage.setItem('memberlist', JSON.stringify(_viewModel.MemberList));
+                    window.location.href = "/Mobile/Merchant/MemberDetails?mch=" + mch;
+                }
+            }
+        });
+
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsManager: true,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.User = res.Data;
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            if (user == null || user == '') {
+                getUserByOpenId();
+            } else {
+                _viewModel.User = JSON.parse(user);
+            }
+
+            function getMembers() {
+                $.ajax({
+                    url: '/api/Member?All=false',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.MemberList = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getMembers();
+
+        });
+	</script>
+}

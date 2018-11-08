@@ -4,24 +4,37 @@
 	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 <div id="browsehistory" style="background-color:#f8f9fe;">
+	<img class="back-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back"/>
 	<div class="touxiang" style="margin-bottom:25px;">
 		<div class="pm_box">
 			<div class="pm_text">浏览排名</div>
 			<div class="pm_box1">
-				<div class="pm_box2">昵称</div>
-				<div class="pm_box2" style="text-align:center;">点击次数</div>
-				<div class="pm_box2" style="width:33.4%; text-align:center;">总停留时间</div>
+				<div class="pm_box2" style="width:10%;text-align:center;font-weight:bold;">序号</div>
+				<div class="pm_box2" style="width:35%;text-align:center;font-weight:bold;">微信昵称</div>
+				<div class="pm_box2" style="width:20%;text-align:center;font-weight:bold;">点击次数</div>
+				<div class="pm_box2" style="width:35%;text-align:center;font-weight:bold;">总停留时间</div>
 			</div>
 			<div class="pm_box1" v-for="BrowseAnalyse in BrowseAnalyseList">
-				<div class="pm_box2" style=" color:#666;">{{BrowseAnalyse.NickName}}</div>
-				<div class="pm_box2" style=" text-align:center;color:#ff0c4c;">{{BrowseAnalyse.ClickCount}}</div>
-				<div class="pm_box2" style="text-align:center;color:#666;">{{BrowseAnalyse.StayPeriod}}秒</div>
+				<div class="pm_box2" style="width:10%;text-align:center;">@*<span style="background:#59d2de;color:#fff;border-radius:100%;padding:5px;"></span>*@{{BrowseAnalyse.Index}}</div>
+				<div class="pm_box2" style="width:35%;text-align:center;">{{BrowseAnalyse.NickName}}</div>
+				<div class="pm_box2" style="width:20%;text-align:center;">{{BrowseAnalyse.ClickCount}}</div>
+				<div class="pm_box2" style="width:35%;text-align:center;">{{BrowseAnalyse.StayPeriod}}秒</div>
 			</div>
 		</div>
 	</div>
 </div>
 
 @section scripts{
+	<style type="text/css">
+		.back-img {
+			width: 33px;
+			position: fixed;
+			top: 0px;
+			left: 20px;
+			z-index: 1;
+			opacity: 0.5;
+		}
+	</style>
 	<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
 	<link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
 	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -133,6 +146,11 @@
 						if (res.IsSuccessful) {
 							if (res.Data != null) {
 								_viewModel.BrowseAnalyseList = res.Data;
+								var index = 0;
+								_viewModel.BrowseAnalyseList.forEach(function (item) {
+									index += 1;
+									item.Index = index; 
+								});
 							}
 						} else {
 							$.alert(res.ErrorMessage);

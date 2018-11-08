@@ -86,6 +86,14 @@ namespace VVCar.Controllers.Api
             }
         }
 
+        IUnsaleProductSettingService UnsaleProductSettingService
+        {
+            get
+            {
+                return ServiceLocator.Instance.GetService<IUnsaleProductSettingService>();
+            }
+        }
+
         ///// <summary>
         ///// 微信粉丝 领域服务
         ///// </summary>
@@ -182,11 +190,17 @@ namespace VVCar.Controllers.Api
             });
         }
 
-        public JsonActionResult<bool> UnsaleProductNotify()
+
+        /// <summary>
+        /// 畅销/滞销产品报表导入
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("RecordUnsaleHistoryData"), AllowAnonymous]
+        public JsonActionResult<bool> RecordUnsaleHistoryData()
         {
             return SafeExecute(() =>
             {
-                return ReportingService.UnsaleProductProductNotify();
+                return UnsaleProductSettingService.RecordUnsaleHistoryData();
             });
         }
 

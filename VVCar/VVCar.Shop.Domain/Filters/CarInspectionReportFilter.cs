@@ -13,6 +13,11 @@ namespace VVCar.Shop.Domain.Filters
     public class CarInspectionReportFilter : BasePageFilter
     {
         /// <summary>
+        /// 接车单ID
+        /// </summary>
+        public Guid? PickUpOrderID { get; set; }
+
+        /// <summary>
         /// 会员ID
         /// </summary>
         public Guid? MemberID { get; set; }
@@ -21,11 +26,6 @@ namespace VVCar.Shop.Domain.Filters
         /// 报告编号
         /// </summary>
         public string Code { get; set; }
-
-        /// <summary>
-        /// 接车单ID
-        /// </summary>
-        public Guid? PickUpOrderID { get; set; }
 
         /// <summary>
         /// 车牌号

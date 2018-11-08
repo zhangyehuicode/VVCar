@@ -20,6 +20,11 @@ namespace VVCar.Shop.Domain.Services
         bool BatchDelete(Guid[] id);
 
         /// <summary>
+        /// 畅销/滞销产品报表
+        /// </summary>
+        bool RecordUnsaleHistoryData();
+
+        /// <summary>
         /// 查询
         /// </summary>
         /// <param name="filter"></param>

@@ -99,6 +99,11 @@ namespace VVCar.Shop.Domain.Dtos
         public bool IsBalance { get; set; }
 
         /// <summary>
+        /// 结算状态
+        /// </summary>
+        public string BalanceStatus { get { return IsBalance == true ? "已结算" : "未结算"; } }
+
+        /// <summary>
         /// 结算时间
         /// </summary>
         public DateTime? BalanceDate { get; set; }

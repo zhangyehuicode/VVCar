@@ -28,6 +28,9 @@ namespace VVCar.Shop.Domain.Filters
         /// </summary>
         public string TradeNo { get; set; }
 
+        /// <summary>
+        /// 订单类型
+        /// </summary>
         public EShopTradeOrderType? OrderType { get; set; }
 
         /// <summary>

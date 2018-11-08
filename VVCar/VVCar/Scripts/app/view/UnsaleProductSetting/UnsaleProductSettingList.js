@@ -78,9 +78,8 @@
 			columns: [
 				{ header: '配置编码', dataIndex: 'Code', flex: 1 },
 				{ header: '配置名称', dataIndex: 'Name', flex: 1 },
-				{ header: '配置周期', dataIndex: 'PeriodDays', flex: 1 },
-				{ header: '销售数量', dataIndex: 'Quantities', flex: 1 },
-				{ header: '销售业绩', dataIndex: 'Performence', flex: 1 },
+				{ header: '滞销数量上限', dataIndex: 'UnsaleQuantity', flex: 1 },
+				{ header: '畅销数量下限', dataIndex: 'SaleWellQuantity', flex: 1 },
 				{
 					header: '是否启用', dataIndex: 'IsAvailable', flex: 1,
 					renderer: function (value) {

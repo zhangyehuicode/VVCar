@@ -29,20 +29,14 @@
 				allowBlank: false,
 			}, {
 				xtype: 'numberfield',
-				name: 'PeriodDays',
-				fieldLabel: '服务周期(天)',
+				name: 'UnsaleQuantity',
+				fieldLabel: '滞销数量上限',
 				minValue: 0,
 				allowBlank: false,
 			}, {
 				xtype: 'numberfield',
-				name: 'Quantities',
-				fieldLabel: '销售数量',
-				minValue: 0,
-				allowBlank: false,
-			}, {
-				xtype: 'numberfield',
-				name: 'Performence',
-				fieldLabel: '销售业绩',
+				name: 'SaleWellQuantity',
+				fieldLabel: '畅销数量下限',
 				minValue: 0,
 				allowBlank: false,
 			}, {

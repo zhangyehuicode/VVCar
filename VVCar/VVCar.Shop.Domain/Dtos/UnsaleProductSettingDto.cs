@@ -23,14 +23,14 @@ namespace VVCar.Shop.Domain.Dtos
         public string Name { get; set; }
 
         /// <summary>
-        /// 滞销产品提醒周期参数(天)
+        /// 滞销数量上限值,低于即视为滞销产品
         /// </summary>
-        public int PeriodDays { get; set; }
+        public int UnsaleQuantity { get; set; }
 
         /// <summary>
-        /// 滞销产品提醒数量参数
+        /// 畅销数量下限值,高于则视为畅销产品
         /// </summary>
-        public int Quantities { get; set; }
+        public int SaleWellQuantity { get; set; }
 
         /// <summary>
         /// 滞销产品提醒营业额参数

@@ -151,6 +151,11 @@ namespace VVCar.Shop.Domain.Entities
     /// </summary>
     public class CarInspectionDetails : EntityBase
     {
+        public CarInspectionDetails()
+        {
+            ImgList = new List<CarInspectionDetailsImg>();
+        }
+
         /// <summary>
         /// 车检ID
         /// </summary>

@@ -56,13 +56,7 @@ namespace VVCar.Shop.Domain.Services
         /// 滞销产品提醒
         /// </summary>
         /// <returns></returns>
-        IEnumerable<ProductRetailStatisticsDto> UnsaleProductNotify(ProductRetailStatisticsFilter filter, ref int totalCount);
-
-        /// <summary>
-        /// 滞销产品通知定时器接口
-        /// </summary>
-        /// <returns></returns>
-        bool UnsaleProductProductNotify();
+        IEnumerable<UnsaleProductHistoryDto> UnsaleProductHistory(UnsaleProductHistoryFilter filter, ref int totalCount);
 
         /// <summary>
         /// 员工业绩统计

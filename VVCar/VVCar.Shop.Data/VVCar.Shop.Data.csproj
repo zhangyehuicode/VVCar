@@ -79,6 +79,7 @@
     <Compile Include="Mapping\ShoppingCartItemMap.cs" />
     <Compile Include="Mapping\ShoppingCartMap.cs" />
     <Compile Include="Mapping\StockRecordMap.cs" />
+    <Compile Include="Mapping\UnsaleProductHistoryMap.cs" />
     <Compile Include="Mapping\UnsaleProductSettingItemMap.cs" />
     <Compile Include="Mapping\UnsaleProductSettingMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

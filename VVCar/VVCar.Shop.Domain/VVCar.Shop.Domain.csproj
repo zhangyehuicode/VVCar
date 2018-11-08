@@ -68,6 +68,7 @@
     <Compile Include="Dtos\ServicePeriodDto.cs" />
     <Compile Include="Dtos\StockRecordDto.cs" />
     <Compile Include="Dtos\TurnoverReportingDto.cs" />
+    <Compile Include="Dtos\UnsaleProductHistoryDto.cs" />
     <Compile Include="Dtos\UnsaleProductSettingDto.cs" />
     <Compile Include="Dtos\UnsaleProductSettingItemDto.cs" />
     <Compile Include="Dtos\VerificationByMemberCardParam.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Entities\ShoppingCart.cs" />
     <Compile Include="Entities\ShoppingCartItem.cs" />
     <Compile Include="Entities\StockRecord.cs" />
+    <Compile Include="Entities\UnsaleProductHistory.cs" />
     <Compile Include="Entities\UnsaleProductSetting.cs" />
     <Compile Include="Entities\UnsaleProductSettingItem.cs" />
     <Compile Include="Enums\EAdjustDirection.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Enums\EStockRecordType.cs" />
     <Compile Include="Enums\ETaskDistributionPeopleType.cs" />
     <Compile Include="Enums\EShopTradeOrderType.cs" />
+    <Compile Include="Enums\EUnsaleProductStatus.cs" />
     <Compile Include="Filters\AppointmentFilter.cs" />
     <Compile Include="Filters\CarBitCoinMemberEngineFilter.cs" />
     <Compile Include="Filters\CarBitCoinProductCategoryFilter.cs" />
@@ -145,6 +148,7 @@
     <Compile Include="Filters\ShoppingCartFilter.cs" />
     <Compile Include="Filters\StaffPerformanceFilter.cs" />
     <Compile Include="Filters\StockRecordFilter.cs" />
+    <Compile Include="Filters\UnsaleProductHistoryFilter.cs" />
     <Compile Include="Filters\UnsaleProductSettingFilter.cs" />
     <Compile Include="Filters\UnsaleProductSettingItemFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

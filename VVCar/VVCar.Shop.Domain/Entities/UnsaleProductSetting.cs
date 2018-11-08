@@ -9,10 +9,15 @@ using YEF.Core.Data;
 namespace VVCar.Shop.Domain.Entities
 {
     /// <summary>
-    /// 滞销产品通知设置
+    /// 畅销/滞销产品通知配置
     /// </summary>
     public class UnsaleProductSetting : EntityBase
     {
+        public UnsaleProductSetting()
+        {
+            unsaleProductSettingItemList = new List<UnsaleProductSettingItem>();
+        }
+
         /// <summary>
         /// 配置编码
         /// </summary>
@@ -26,22 +31,16 @@ namespace VVCar.Shop.Domain.Entities
         public string Name { get; set; }
 
         /// <summary>
-        /// 滞销产品提醒周期参数(天)
+        /// 滞销数量上限值,低于即视为滞销产品
         /// </summary>
-        [Display(Name = "滞销产品提醒周期参数(天)")]
-        public int PeriodDays { get; set; }
+        [Display(Name = "滞销数量上限值,低于即视为滞销产品")]
+        public int UnsaleQuantity { get; set; }
 
         /// <summary>
-        /// 滞销产品提醒数量参数
+        /// 畅销数量下限值,高于则视为畅销产品
         /// </summary>
-        [Display(Name = "滞销产品提醒数量参数")]
-        public int Quantities { get; set; }
-
-        /// <summary>
-        /// 滞销产品提醒营业额参数
-        /// </summary>
-        [Display(Name = "滞销产品提醒营业额参数")]
-        public decimal Performence { get; set; }
+        [Display(Name = "畅销数量下限值,高于则视为畅销产品")]
+        public int SaleWellQuantity { get; set; }
 
         /// <summary>
         /// 是否启用
@@ -84,5 +83,11 @@ namespace VVCar.Shop.Domain.Entities
         /// </summary>
         [Display(Name = "最后修改时间")]
         public DateTime? LastUpdateDate { get; set; }
+
+
+        /// <summary>
+        /// 畅销/滞销产品子项
+        /// </summary>
+        public ICollection<UnsaleProductSettingItem> unsaleProductSettingItemList { get; set; }
     }
 }

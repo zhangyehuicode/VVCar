@@ -54,8 +54,8 @@ namespace VVCar.VIP.Services.DomainServices
                 result = result.Where(t => t.ClickCount >= filter.ClickCount);
             if (filter.StayPeriod.HasValue)
                 result = result.Where(t => t.StayPeriod >= filter.StayPeriod);
-            totalCount = result.Count();
-            return result.OrderByDescending(t=> t.StayPeriod);
+            totalCount = result.Count();      
+            return result.OrderByDescending(t => t.StayPeriod);
 
         }
 

@@ -16,6 +16,7 @@ using VVCar.VIP.Domain.Dtos;
 using VVCar.BaseData.Domain.Services;
 using VVCar.BaseData.Domain;
 using VVCar.VIP.Domain.Services;
+using VVCar.BaseData.Services;
 
 namespace VVCar.Shop.Services.DomainServices
 {
@@ -66,6 +67,8 @@ namespace VVCar.Shop.Services.DomainServices
         IRepository<OrderDividend> OrderDividendRepo { get => ServiceLocator.Instance.GetService<IRepository<OrderDividend>>(); }
 
         IRepository<CouponTemplate> CouponTemplateRepo { get => ServiceLocator.Instance.GetService<IRepository<CouponTemplate>>(); }
+
+        IRepository<UnsaleProductHistory> UnsaleProductHistoryRepo { get => ServiceLocator.Instance.GetService<IRepository<UnsaleProductHistory>>(); }
 
         IWeChatService WeChatService { get => ServiceLocator.Instance.GetService<IWeChatService>(); }
 
@@ -611,8 +614,6 @@ namespace VVCar.Shop.Services.DomainServices
             //        result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             //}
             //return result;
-
-
             var result = new List<ProductRetailStatisticsDto>();
             var productQueryable = ProductRepo.GetInclude(t => t.ProductCategory, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter.ProductType.HasValue)
@@ -628,8 +629,8 @@ namespace VVCar.Shop.Services.DomainServices
                 TradeOrderIDs = orderDividendQuery.Where(t => t.CreatedDate < filter.EndDate).Select(sl => sl.TradeOrderID).Distinct();
             if(filter.StartDate.HasValue && filter.EndDate.HasValue)
                 TradeOrderIDs = orderDividendQuery.Where(t => t.CreatedDate >= filter.StartDate && t.CreatedDate < filter.EndDate).Select(sl => sl.TradeOrderID).Distinct();
-            var orderItemQueryable = OrderItemRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && TradeOrderIDs.Contains(t.OrderID));
-            var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && TradeOrderIDs.Contains(t.PickUpOrderID));
+            var orderItems = OrderItemRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && TradeOrderIDs.Contains(t.OrderID)).ToList();
+            var pickUpOrderItems = PickUpOrderItemRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && TradeOrderIDs.Contains(t.PickUpOrderID)).ToList();
             productList.ForEach(t =>
             {
                 var item = new ProductRetailStatisticsDto();
@@ -638,8 +639,8 @@ namespace VVCar.Shop.Services.DomainServices
                 item.ProductName = t.Name;
                 item.ProductCategoryName = t.ProductCategory.Name;
                 item.ProductType = t.ProductType.GetDescription();
-                var orderItemList = orderItemQueryable.Where(m => m.GoodsID == t.ID).ToList();
-                var pickUpOrderItemList = pickUpOrderItemQueryable.Where(m => m.ProductID == t.ID).ToList();
+                var orderItemList = orderItems.Where(m => m.GoodsID == t.ID).ToList();
+                var pickUpOrderItemList = pickUpOrderItems.Where(m => m.ProductID == t.ID).ToList();
                 var orderItemQuantity = orderItemList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Quantity)).FirstOrDefault();
                 var pickOrderItemQuantity = pickUpOrderItemList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Quantity)).FirstOrDefault();
                 item.Quantity = orderItemQuantity + pickOrderItemQuantity;
@@ -970,47 +971,18 @@ namespace VVCar.Shop.Services.DomainServices
         /// 滞销产品通知
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ProductRetailStatisticsDto> UnsaleProductNotify(ProductRetailStatisticsFilter filter, ref int totalCount)
+        public IEnumerable<UnsaleProductHistoryDto> UnsaleProductHistory(UnsaleProductHistoryFilter filter, ref int totalCount)
         {
-            if (!(filter.StartDate.HasValue && filter.EndDate.HasValue))
-            {
-                throw new DomainException("开始和结束时间必须选择");
-            }
-            var title = filter.StartDate + "~" + filter.EndDate + " 滞销产品状况如下";
-            IEnumerable<ProductRetailStatisticsDto> result = ProductRetailStatistics(filter, ref totalCount);
-            var count = result.Count();
-            var userList = UserRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.DepartmentID).ToList();
-            userList.ForEach(t =>
-            {
-                var message = new WeChatTemplateMessageDto
-                {
-                    touser = t.OpenID,
-                    template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_UnsaleProductNotify),
-                    url = "http://cheyinz.cn",
-                    data = new System.Dynamic.ExpandoObject()
-                };
-                message.data.first = new WeChatTemplateMessageDto.MessageData(title);
-                message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToDateString());
-                message.data.keyword2 = new WeChatTemplateMessageDto.MessageData("滞销产品总数：" + result.Count());
-                message.data.remark = new WeChatTemplateMessageDto.MessageData("明细请点击详情");
-                //WeChatService.SendWeChatNotifyAsync(message, AppContext.CurrentSession.MerchantCode);
-            });
-            return result;
-        }
-
-        /// <summary>
-        /// 滞销产品通知定时
-        /// </summary>
-        /// <returns></returns>
-        public bool UnsaleProductProductNotify()
-        {
-            var endDate = DateTime.Now;
-            var merchantList = MerchantRepo.GetQueryable(false).ToList();
-            merchantList.ForEach(t =>
-            {
-
-            });
-            return true;
+            var queryable = UnsaleProductHistoryRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (!string.IsNullOrEmpty(filter.Code))
+                queryable = queryable.Where(t => t.Code.Contains(filter.Code));
+            if (!string.IsNullOrEmpty(filter.Keyword))
+                queryable = queryable.Where(t => t.ProductCode.Contains(filter.Keyword) || t.ProductName.Contains(filter.Keyword));
+            if (filter.ProductType.HasValue)
+                queryable = queryable.Where(t => t.ProductType == filter.ProductType);
+            if (filter.Status.HasValue)
+                queryable = queryable.Where(t => t.Status == filter.Status);
+            return queryable.MapTo<UnsaleProductHistoryDto>().OrderByDescending(t=> t.Code).OrderByDescending(t=>t.Quantity);
         }
 
         public IEnumerable<ConsumeHistoryDto> GetConsumeHistory(ConsumeHistoryFilter filter, ref int totalCount)

@@ -561,6 +561,7 @@
     <Content Include="Areas\resource\img\mobile\master\yybb.png" />
     <Content Include="Areas\resource\img\mobile\master\yzm2.png" />
     <Content Include="Areas\resource\img\mobile\master\zk.png" />
+    <Content Include="Areas\resource\img\mobile\master\product.png" />
     <Content Include="Areas\resource\img\mobile\modifyprice.png" />
     <Content Include="Areas\resource\img\mobile\music.png" />
     <Content Include="Areas\resource\img\mobile\my.png" />
@@ -762,6 +763,7 @@
     <Content Include="Scripts\app\controller\SuperClass.js" />
     <Content Include="Scripts\app\controller\SysMenu.js" />
     <Content Include="Scripts\app\controller\SystemSetting.js" />
+    <Content Include="Scripts\app\controller\UnsaleAnalyse.js" />
     <Content Include="Scripts\app\controller\UnsaleProductSetting.js" />
     <Content Include="Scripts\app\controller\User.js" />
     <Content Include="Scripts\app\controller\UserMember.js" />
@@ -851,6 +853,7 @@
     <Content Include="Scripts\app\model\BaseData\SysNavMenuModel.js" />
     <Content Include="Scripts\app\model\BaseData\SystemSettingModel.js" />
     <Content Include="Scripts\app\model\BaseData\TradeHistoryModel.js" />
+    <Content Include="Scripts\app\model\BaseData\UnsaleAnalyseModel.js" />
     <Content Include="Scripts\app\model\BaseData\UnsaleProductSettingItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\UnsaleProductSettingModel.js" />
     <Content Include="Scripts\app\model\BaseData\UserMemberModel.js" />
@@ -949,6 +952,7 @@
     <Content Include="Scripts\app\store\BaseData\SysNavMenuStore.js" />
     <Content Include="Scripts\app\store\BaseData\SystemSettingStore.js" />
     <Content Include="Scripts\app\store\BaseData\TradeHistoryStore.js" />
+    <Content Include="Scripts\app\store\BaseData\UnsaleAnalyseStore.js" />
     <Content Include="Scripts\app\store\BaseData\UnsaleProductSettingItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\UnsaleProductSettingStore.js" />
     <Content Include="Scripts\app\store\BaseData\UserMemberStore.js" />
@@ -1158,6 +1162,7 @@
     <Content Include="Scripts\app\view\SysMenu\SysMenu.js" />
     <Content Include="Scripts\app\view\SysMenu\SysMenuTreeComboBox.js" />
     <Content Include="Scripts\app\view\SystemSetting\SystemSetting.js" />
+    <Content Include="Scripts\app\view\UnsaleAnalyse\UnsaleAnalyse.js" />
     <Content Include="Scripts\app\view\UnsaleProductSetting\UnsaleProductSelector.js" />
     <Content Include="Scripts\app\view\UnsaleProductSetting\UnsaleProductSettingEdit.js" />
     <Content Include="Scripts\app\view\UnsaleProductSetting\UnsaleProductSettingList.js" />
@@ -1351,6 +1356,7 @@
     <Content Include="Areas\Mobile\Views\Merchant\MyCommission.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\MyPerformance.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\AdvisementBrowseHistory.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\UnsaleProduct.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

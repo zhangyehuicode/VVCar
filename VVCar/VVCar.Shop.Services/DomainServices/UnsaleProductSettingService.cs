@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VVCar.BaseData.Services;
 using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
+using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
 using YEF.Core;
@@ -26,7 +27,23 @@ namespace VVCar.Shop.Services.DomainServices
         {
         }
 
+        #region properties
+
         IRepository<UnsaleProductSettingItem> UnsaleProductSettingItemRepo { get => UnitOfWork.GetRepository<IRepository<UnsaleProductSettingItem>>(); }
+
+        IRepository<Merchant> MerchantRepo { get => UnitOfWork.GetRepository<IRepository<Merchant>>(); }
+
+        IRepository<UnsaleProductHistory> UnsaleProductHistoryRepo { get => UnitOfWork.GetRepository<IRepository<UnsaleProductHistory>>(); }
+
+        IRepository<Product> ProductRepo { get => UnitOfWork.GetRepository<IRepository<Product>>(); }
+
+        IRepository<OrderDividend> OrderDividendRepo { get => UnitOfWork.GetRepository<IRepository<OrderDividend>>(); }
+
+        IRepository<OrderItem> OrderItemRepo { get => UnitOfWork.GetRepository<IRepository<OrderItem>>(); }
+
+        IRepository<PickUpOrderItem> PickUpOrderItemRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrderItem>>(); }
+
+        #endregion
 
         protected override bool DoValidate(UnsaleProductSetting entity)
         {
@@ -45,6 +62,8 @@ namespace VVCar.Shop.Services.DomainServices
         {
             if (entity == null)
                 return null;
+            if (entity.UnsaleQuantity >= entity.SaleWellQuantity)
+                throw new DomainException("参数错误, 滞销上限必须小于畅销下限!");
             entity.ID = Util.NewID();
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
@@ -93,20 +112,89 @@ namespace VVCar.Shop.Services.DomainServices
         {
             if (entity == null)
                 return false;
+            if (entity.UnsaleQuantity >= entity.SaleWellQuantity)
+                throw new DomainException("参数错误, 滞销上限必须小于畅销下限!");
             var unsaleProductSetting = Repository.GetByKey(entity.ID);
             if (unsaleProductSetting == null)
                 return false;
             unsaleProductSetting.Code = entity.Code;
             unsaleProductSetting.Name = entity.Name;
-            unsaleProductSetting.PeriodDays = entity.PeriodDays;
-            unsaleProductSetting.Quantities = entity.Quantities;
-            unsaleProductSetting.Performence = entity.Performence;
+            unsaleProductSetting.UnsaleQuantity = entity.UnsaleQuantity;
+            unsaleProductSetting.SaleWellQuantity = entity.SaleWellQuantity;
             unsaleProductSetting.IsAvailable = entity.IsAvailable;
-
             unsaleProductSetting.LastUpdateDate = DateTime.Now;
             unsaleProductSetting.LastUpdateUserID = AppContext.CurrentSession.UserID;
             unsaleProductSetting.LastUpdateUser = AppContext.CurrentSession.UserName;
             return base.Update(unsaleProductSetting);
+        }
+
+        /// <summary>
+        /// 畅销/滞销产品报表
+        /// </summary>
+        /// <returns></returns>
+        public bool RecordUnsaleHistoryData()
+        {
+            try
+            {
+                var merchantList = MerchantRepo.GetQueryable(false).ToList();
+                var result = new List<UnsaleProductHistory>();
+                var now = DateTime.Now.AddMonths(-1);
+                var monthStartTime = new DateTime(now.Year, now.Month, 1);
+                var startDate = monthStartTime;
+                var days = DateTime.DaysInMonth(now.Year, now.Month);
+                var endDate = new DateTime(now.Year, now.Month, days, 23, 59, 59);
+                var orderDividendList = OrderDividendRepo.GetQueryable(false).Where(t => t.CreatedDate >= startDate && t.CreatedDate < endDate).ToList();
+                var orderItemList = OrderItemRepo.GetQueryable(false).ToList();
+                var unsaleProductSettingList = this.Repository.GetInclude(u => u.unsaleProductSettingItemList, false).Where(t =>t.IsAvailable == true).ToList();
+                var pickUpOrderIteeList = PickUpOrderItemRepo.GetQueryable(false).ToList();
+                merchantList.ForEach(t =>
+                {
+                    var unsaleProductSettings = unsaleProductSettingList.Where(u => u.MerchantID == t.ID).ToList();
+                    var orderDividends = orderDividendList.Where(devidend => devidend.MerchantID == t.ID);
+                    var TradeOrderIDs = orderDividends.Select(dividend => dividend.TradeOrderID).Distinct();
+                    var orderItems = orderItemList.Where(item => TradeOrderIDs.Contains(item.OrderID)).ToList();
+                    var pickUpOrderItems = pickUpOrderIteeList.Where(item => TradeOrderIDs.Contains(item.PickUpOrderID)).ToList();
+                    unsaleProductSettings.ForEach(unsaleProductSetting =>
+                    {
+                        unsaleProductSetting.unsaleProductSettingItemList.ForEach(item =>
+                        {
+                            if(item.IsDeleted == false)
+                            {
+                                var unsaleProductHistory = new UnsaleProductHistory();
+                                var product = ProductRepo.GetByKey(item.ProductID);
+                                unsaleProductHistory.ID = Util.NewID();
+                                unsaleProductHistory.StartDate = startDate;
+                                unsaleProductHistory.EndDate = endDate;
+                                unsaleProductHistory.ProductID = item.ProductID;
+                                unsaleProductHistory.Code = now.Year.ToString() + (now.Month > 9 ? now.Month.ToString() : "0" + now.Month.ToString());
+                                unsaleProductHistory.ProductType = product.ProductType;
+                                unsaleProductHistory.ProductCode = product.Code;
+                                unsaleProductHistory.ProductName = product.Name;
+                                unsaleProductHistory.UnsaleQuantity = unsaleProductSetting.UnsaleQuantity;
+                                unsaleProductHistory.SaleWellQuantity = unsaleProductSetting.SaleWellQuantity;
+                                var orderItemQuantity = orderItems.Where(c=> c.GoodsID == item.ProductID).GroupBy(g => 1).Select(sl => sl.Sum(s => s.Quantity)).FirstOrDefault();
+                                var pickOrderItemQuantity = pickUpOrderItems.Where(c=>c.ProductID == item.ProductID).GroupBy(g => 1).Select(sl => sl.Sum(s => s.Quantity)).FirstOrDefault();
+                                unsaleProductHistory.Quantity = orderItemQuantity + pickOrderItemQuantity;
+                                if (unsaleProductHistory.Quantity >= unsaleProductHistory.SaleWellQuantity)
+                                    unsaleProductHistory.Status = EUnsaleProductStatus.SaleWell;
+                                else if (unsaleProductHistory.Quantity < unsaleProductHistory.UnsaleQuantity)
+                                    unsaleProductHistory.Status = EUnsaleProductStatus.Unsale;
+                                else
+                                    unsaleProductHistory.Status = EUnsaleProductStatus.Normal;
+                                unsaleProductHistory.CreatedDate = DateTime.Now;
+                                unsaleProductHistory.MerchantID = t.ID;
+                                result.Add(unsaleProductHistory);
+                            }
+                        });
+                    });
+                });
+                return UnsaleProductHistoryRepo.AddRange(result).Count() > 0;
+            }catch(Exception e)
+            {
+                AppContext.Logger.Error("畅销/滞销产品记录失败:" + e.Message);
+                return false;
+            }
+            
         }
 
         /// <summary>

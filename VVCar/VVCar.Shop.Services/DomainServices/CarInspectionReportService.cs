@@ -40,12 +40,12 @@ namespace VVCar.Shop.Services.DomainServices
         {
             if (entity == null)
                 return null;
-            entity.ID = Util.NewID();
             if (string.IsNullOrEmpty(entity.Code))
                 entity.Code = GetCarInspectionReportCode();
             var existCode = Repository.Exists(t => t.Code == entity.Code);
             if (existCode)
                 throw new DomainException($"创建车检报告失败，车检号{entity.Code}已存在");
+            entity.ID = Util.NewID();
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
@@ -59,6 +59,16 @@ namespace VVCar.Shop.Services.DomainServices
                 entity.InspectorID = AppContext.CurrentSession.UserID;
                 entity.Inspector = AppContext.CurrentSession.UserName;
             }
+            entity.CarInspectionDetailsList.ForEach(t =>
+            {
+                t.ID = Util.NewID();
+                t.CarInspectionReportID = entity.ID;
+                t.ImgList.ForEach(item =>
+                {
+                    item.ID = Util.NewID();
+                    item.CarInspectionDetailsID = t.ID;
+                });
+            });
             return base.Add(entity);
         }
 
@@ -134,8 +144,8 @@ namespace VVCar.Shop.Services.DomainServices
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            var queryList = queryable.ToList();
-            var result = new List<CarInspectionReportDto>();
+            return queryable.ToList().MapTo<List<CarInspectionReportDto>>();
+            //var result = new List<CarInspectionReportDto>();
             //queryList.ForEach(t =>
             //{
             //    var carInspectionReportDto = new CarInspectionReportDto();
@@ -180,7 +190,7 @@ namespace VVCar.Shop.Services.DomainServices
             //    carInspectionReportDto.ChromiumPlatedPartStatus = t.ChromiumPlatedPartStatus.GetDescription();
             //    result.Add(carInspectionReportDto);
             //});
-            return result;
+            //return result;
         }
     }
 }

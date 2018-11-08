@@ -19,10 +19,15 @@
 			</div>
 		</div>
 	</div>
-	<div class="kcd_box2">
+	<div class="kcd_box2" style="height:110px;">
 		<form>
-			<input type="date" class="kcgl_input" style="color:#999;width:35%;" id="startdate">
-			<input type="date" class="kcgl_input" style="color:#999;width:35%;" id="enddate">
+			<input type="date" class="kcgl_input" style="color:#999;width:45%;padding:0px;" id="startdate">
+			<input type="date" class="kcgl_input" style="color:#999;width:45%;padding:0px;" id="enddate">
+			<select class="kcd_input" style="width:45%;" id="balance">
+				<option value="" selected="selected">全部</option>
+				<option value="false">未结算</option>
+				<option value="true">已结算</option>
+			</select>
 		</form>
 		<div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="searchCommission"></div>
 	</div>
@@ -55,6 +60,12 @@
 			<div class="kcgl">分红</div>
 			<div class="kcgl2">
 				<span>{{OrderDividend.Commission}}</span>
+			</div>
+		</div>
+		<div class="kcgl_box">
+			<div class="kcgl">结算状态</div>
+			<div class="kcgl2">
+				<span>{{OrderDividend.BalanceStatus}}</span>
 			</div>
 		</div>
 		<div class="kcgl_box">
@@ -215,9 +226,15 @@
 				var startdate = $('#startdate').val();
 				var enddate = $('#enddate').val();
 				$.ajax({
-					url: '/api/OrderDividend?All=false&UserID=' + _viewModel.User.ID + '&StartDate=' + startdate + '&EndDate=' + enddate,
-                    type: 'GET',
-                    headers: { 'CompanyCode': mch },
+					url: '/api/OrderDividend?All=false',
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					data: {
+						UserID: _viewModel.User.ID,
+						StartDate: startdate,
+						EndDate: enddate,
+						IsBalance: $('#balance').val() 
+					},
                     beforeSend: function () {
                         $.showLoading();
                     },

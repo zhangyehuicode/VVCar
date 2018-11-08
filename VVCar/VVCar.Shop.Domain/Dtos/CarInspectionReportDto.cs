@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Entities;
 
 namespace VVCar.Shop.Domain.Dtos
 {
@@ -11,6 +12,16 @@ namespace VVCar.Shop.Domain.Dtos
     /// </summary>
     public class CarInspectionReportDto
     {
+        public CarInspectionReportDto()
+        {
+            CarInspectionDetailsList = new List<CarInspectionDetails>();
+        }
+
+        /// <summary>
+        /// ID
+        /// </summary>
+        public Guid ID { get; set; }
+
         /// <summary>
         /// 报告单编码
         /// </summary>
@@ -24,7 +35,7 @@ namespace VVCar.Shop.Domain.Dtos
         /// <summary>
         /// 会员ID
         /// </summary>
-        public Guid MemberID { get; set; }
+        public Guid? MemberID { get; set; }
 
         /// <summary>
         /// 会员OpenID
@@ -42,11 +53,6 @@ namespace VVCar.Shop.Domain.Dtos
         public string DepartmentName { get; set; }
 
         /// <summary>
-        /// 车检日期
-        /// </summary>
-        public DateTime InspectionDate { get; set; }
-
-        /// <summary>
         /// 品牌
         /// </summary>
         public string Brand { get; set; }
@@ -59,12 +65,17 @@ namespace VVCar.Shop.Domain.Dtos
         /// <summary>
         /// 车辆注册时间
         /// </summary>
-        public DateTime RegistDate { get; set; }
+        public DateTime? RegistDate { get; set; }
 
         /// <summary>
         /// 当前公里数
         /// </summary>
         public decimal Mileage { get; set; }
+
+        /// <summary>
+        /// 车检人员ID
+        /// </summary>
+        public Guid? InspectorID { get; set; }
 
         /// <summary>
         /// 车检人员
@@ -271,5 +282,10 @@ namespace VVCar.Shop.Domain.Dtos
         /// 创建时间
         /// </summary>
         public DateTime CreatedDate { get; set; }
+
+        /// <summary>
+        /// 车检详情
+        /// </summary>
+        public ICollection<CarInspectionDetails> CarInspectionDetailsList { get; set; }
     }
 }

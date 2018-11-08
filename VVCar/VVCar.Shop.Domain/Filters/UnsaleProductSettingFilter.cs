@@ -16,5 +16,10 @@ namespace VVCar.Shop.Domain.Filters
         /// 关键字
         /// </summary>
         public string Keyword { get; set; }
+
+        /// <summary>
+        /// 是否滞销,真为滞销，假为畅销
+        /// </summary>
+        public bool? IsUnsale { get; set; }
     }
 }
