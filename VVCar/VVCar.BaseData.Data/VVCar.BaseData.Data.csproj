@@ -65,6 +65,7 @@
     <Compile Include="Mapping\UserMap.cs" />
     <Compile Include="Mapping\UserMemberMap.cs" />
     <Compile Include="Mapping\UserRoleMap.cs" />
+    <Compile Include="Mapping\WechatMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

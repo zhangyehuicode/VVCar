@@ -6,18 +6,22 @@
 
 <div id="merchantbargainorder">
 	<img class="return-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back" />
+	<div class="top_box">
+		<div class="top_box_text">砍价列表</div>
+	</div>
 	<div class="main">
-		<div class="bargainorder-con" v-for="MerchantBargainOrder in MerchantBargainOrders" v-if="MerchantBargainOrder.ProductID==ProductID" v-on:click="bargainorderdetails(MerchantBargainOrder)">
+		<div class="bargainorder-con" v-for="MerchantBargainOrder in MerchantBargainOrders" v-if="MerchantBargainOrder.ProductID==ProductID">
 			<div>
 				<img class="bargainorder-img" v-bind:src=MerchantBargainOrder.ImgUrl />
 			</div>
 			<div class="width-fill bargainorder-name">{{MerchantBargainOrder.Name}}</div>
-			<div class="width-fill bargainorder-name">{{MerchantBargainOrder.ProductName}}</div>
 			<div class="cbctable width-fill bargainorder-price-con">
+				<div class="cbctablecell">{{MerchantBargainOrder.ProductName}}</div>
 				<div class="cbctablecell bargainorder-price"><span style="font-size:13px;">￥</span>{{MerchantBargainOrder.Price}}</div>
 				<div class="cbctablecell bargainorder-pricesale">￥{{MerchantBargainOrder.PriceSale}}</div>
+				<div class="cbctablecell bargainorder-name">砍价人数：<span style="color:red;">{{MerchantBargainOrder.PeopleCount}}</span>人</div>
 			</div>
-			<div class="width-fill crowdorder-name">砍价人数：{{MerchantBargainOrder.PeopleCount}}</div>
+			<div style="background-color:#ff0c4b;text-align:center;padding:10px;color:white;border-radius:10px;" v-on:click="bargainorderdetails(MerchantBargainOrder)">点击进入砍价</div>
 		</div>
 	</div>
 </div>
@@ -27,7 +31,7 @@
 		.main {
 			background: #f4f4f4;
 			position: absolute;
-			top: 0;
+			top: 60px;
 			left: 0;
 			right: 0;
 			/*bottom: 50px;*/
@@ -151,7 +155,7 @@
                             ]
                         });
                         wx.ready(function () {
-                            //wx.hideAllNonBaseMenuItem();
+							wx.hideOptionMenu();
                         });
                     } else {
                     }

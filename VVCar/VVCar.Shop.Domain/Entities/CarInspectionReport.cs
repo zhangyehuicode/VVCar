@@ -367,6 +367,7 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 发动机表面
         /// </summary>
+        [Description("发动机表面")]
         EnergySurface = 21,
 
         /// <summary>
@@ -469,7 +470,19 @@ namespace VVCar.Shop.Domain.Entities
         /// 镀铬件
         /// </summary>
         [Description("镀铬件")]
-        ChromiumPlatedPartStatus = 38,
+        ChromiumPlatedPart = 38,
+
+        /// <summary>
+        /// 脚垫
+        /// </summary>
+        [Description("脚垫")]
+        FootPad = 39,
+
+        /// <summary>
+        /// 座垫
+        /// </summary>
+        [Description("座垫")]
+        SeatCushion = 40,
     }
 
     #region enum

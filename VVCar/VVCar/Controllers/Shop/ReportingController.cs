@@ -140,10 +140,10 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
-        /// 畅销/滞销产品提醒
+        /// 畅销/滞销产品
         /// </summary>
         /// <returns></returns>
-        [HttpGet, Route("UnsaleProductHistory")]
+        [HttpGet, Route("UnsaleProductHistory"), AllowAnonymous]
         public PagedActionResult<UnsaleProductHistoryDto> UnsaleProductHistory([FromUri]UnsaleProductHistoryFilter filter)
         {
             return SafeGetPagedData<UnsaleProductHistoryDto>((result) =>

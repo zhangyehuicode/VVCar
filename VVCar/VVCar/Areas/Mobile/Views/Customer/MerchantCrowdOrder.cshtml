@@ -6,18 +6,22 @@
 
 <div id="merchantcrowdorder">
 	<img class="return-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back" />
+	<div class="top_box">
+		<div class="top_box_text">拼单列表</div>
+	</div>
 	<div class="main">
-		<div class="crowdorder-con" v-for="MerchantCrowdOrder in MerchantCrowdOrders" v-if="MerchantCrowdOrder.ProductID==ProductID" v-on:click="crowdorderdetails(MerchantCrowdOrder)">
+		<div class="crowdorder-con" v-for="MerchantCrowdOrder in MerchantCrowdOrders" v-if="MerchantCrowdOrder.ProductID==ProductID">
 			<div>
 				<img class="crowdorder-img" v-bind:src=MerchantCrowdOrder.ImgUrl />
 			</div>
 			<div class="width-fill crowdorder-name">{{MerchantCrowdOrder.Name}}</div>
-			<div class="width-fill crowdorder-name">{{MerchantCrowdOrder.ProductName}}</div>
 			<div class="cbctable width-fill crowdorder-price-con">
+				<div class="cbctablecell">{{MerchantCrowdOrder.ProductName}}</div>
 				<div class="cbctablecell crowdorder-price"><span style="font-size:13px;">￥</span>{{MerchantCrowdOrder.Price}}</div>
 				<div class="cbctablecell crowdorder-pricesale">￥{{MerchantCrowdOrder.PriceSale}}</div>
+				<div class="cbctablecell crowdorder-name">拼单人数：<span style="color:red;">{{MerchantCrowdOrder.PeopleCount}}</span>人</div>
 			</div>
-			<div class="width-fill crowdorder-name">拼单人数：{{MerchantCrowdOrder.PeopleCount}}</div>
+			<div style="background-color:#ff0c4b;text-align:center;padding:10px;color:white;border-radius:10px;" v-on:click="crowdorderdetails(MerchantCrowdOrder)">点击进入拼单</div>
 		</div>
 	</div>
 </div>
@@ -27,7 +31,7 @@
 		.main {
 			background: #f4f4f4;
 			position: absolute;
-			top: 0;
+			top: 60px;
 			left: 0;
 			right: 0;
 			overflow-y: auto;
@@ -150,7 +154,7 @@
                             ]
                         });
                         wx.ready(function () {
-                            //wx.hideAllNonBaseMenuItem();
+							wx.hideOptionMenu();
                         });
                     } else {
                     }

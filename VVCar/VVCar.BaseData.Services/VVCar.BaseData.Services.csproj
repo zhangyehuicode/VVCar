@@ -63,6 +63,7 @@
     <Compile Include="DomainServices\UserMemberService.cs" />
     <Compile Include="DomainServices\UserRoleService.cs" />
     <Compile Include="DomainServices\UserService.cs" />
+    <Compile Include="DomainServices\WechatService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

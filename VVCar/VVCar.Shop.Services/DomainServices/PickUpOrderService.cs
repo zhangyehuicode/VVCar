@@ -380,13 +380,15 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter.ID.HasValue)
                 queryable = queryable.Where(t => t.ID == filter.ID.Value);
             if (!string.IsNullOrEmpty(filter.Code))
-                queryable = queryable.Where(t => t.Code == filter.Code);
+                queryable = queryable.Where(t => t.Code.Contains(filter.Code));
             if (!string.IsNullOrEmpty(filter.PlateNumber))
                 queryable = queryable.Where(t => t.PlateNumber.Contains(filter.PlateNumber));
             if (!string.IsNullOrEmpty(filter.StaffName))
                 queryable = queryable.Where(t => t.StaffName.Contains(filter.StaffName));
             if (filter.Status.HasValue)
                 queryable = queryable.Where(t => t.Status == filter.Status);
+            if (!string.IsNullOrEmpty(filter.Keyword))
+                queryable = queryable.Where(t => t.Code.Contains(filter.Keyword) || t.PlateNumber.Contains(filter.Keyword) || t.StaffName.Contains(filter.Keyword));
             if (filter.CreatedDate.HasValue)
             {
                 var date = filter.CreatedDate.Value.Date;

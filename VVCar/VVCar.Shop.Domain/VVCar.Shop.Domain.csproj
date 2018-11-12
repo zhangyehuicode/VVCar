@@ -49,6 +49,7 @@
     <Compile Include="Dtos\CarBitCoinProductDto.cs" />
     <Compile Include="Dtos\CarBitCoinProductLiteDto.cs" />
     <Compile Include="Dtos\CarBitCoinRecordDto.cs" />
+    <Compile Include="Dtos\CarInspectionDetailsDto.cs" />
     <Compile Include="Dtos\CarInspectionReportDto.cs" />
     <Compile Include="Dtos\ConsumeHistoryDto.cs" />
     <Compile Include="Dtos\DataAnalyseDto.cs" />

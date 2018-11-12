@@ -15,17 +15,13 @@
 	<img class="sp_img" v-bind:src=Product.ImgUrl>
 	<div class="sp_text">
 		{{Product.Name}}
+		<span style="float:right;border-radius:10px;background-color:#FF0C4B;width:60px;padding:3px;margin:3px;text-align:center;color:white;" v-bind:class="bargainClass" v-on:click="bargainorder(MerchantBargainOrderList)">砍价</span>
+		<span style="float:right;border-radius:10px;background-color:#FF0C4B;width:60px;padding:3px;margin:3px;text-align:center;color:white;" v-bind:class="crowdClass" v-on:click="crowdorder(MerchantCrowdOrderList)">拼单</span>
 	</div>
-	<center>
-		<div style="display: table;">
-			<div style="height:25px;padding: 10px 10px 0px 10px;" v-bind:class="crowdClass" v-on:click="crowdorder(MerchantCrowdOrderList)">
-				<span style="border-radius: 10px;display:table-cell;background-color:#FF0C4B;padding:3px;width:60px;color:white;text-align:center;">拼单</span>
-			</div>
-			<div style="height:25px;padding: 10px 10px 0px 10px;" v-bind:class="bargainClass" v-on:click="bargainorder(MerchantBargainOrderList)">
-				<span style="border-radius: 10px;display:table-cell;background-color:#FF0C4B;padding:3px;width:60px;color:white;text-align:center;">砍价</span>
-			</div>
-		</div>
-	</center>
+
+	<div style="display: table;">
+	</div>
+
 	<div class="sp_text2" style="border:none;">
 		￥{{TotalMoney}}@*Product.PriceSale*@
 		<div style="float:right;display:table;" v-if="ShowQuantity">

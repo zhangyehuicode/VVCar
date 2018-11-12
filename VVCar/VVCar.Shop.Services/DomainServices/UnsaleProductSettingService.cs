@@ -189,6 +189,7 @@ namespace VVCar.Shop.Services.DomainServices
                     });
                 });
                 return UnsaleProductHistoryRepo.AddRange(result).Count() > 0;
+
             }catch(Exception e)
             {
                 AppContext.Logger.Error("畅销/滞销产品记录失败:" + e.Message);

@@ -273,6 +273,7 @@
     <Compile Include="Controllers\Api\AgentDepartmentCategoryController.cs" />
     <Compile Include="Controllers\Api\AgentDepartmentController.cs" />
     <Compile Include="Controllers\Api\AgentDepartmentTagController.cs" />
+    <Compile Include="Controllers\Api\WechatController.cs" />
     <Compile Include="Controllers\Api\TagController.cs" />
     <Compile Include="Controllers\Api\BackgroundTaskController.cs" />
     <Compile Include="Controllers\Api\CommonController.cs" />

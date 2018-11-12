@@ -73,6 +73,7 @@
     <Compile Include="Entities\SystemSetting.cs" />
     <Compile Include="Entities\UserMember.cs" />
     <Compile Include="Entities\UserRole.cs" />
+    <Compile Include="Entities\Wechat.cs" />
     <Compile Include="Enums\EAgentDepartmentApproveStatus.cs" />
     <Compile Include="Enums\EAgentDepartmentSource.cs" />
     <Compile Include="Enums\EAgentDepartmentType.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Services\IUserMemberService.cs" />
     <Compile Include="Services\IUserRoleService.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Services\IWechatService.cs" />
     <Compile Include="SysSettingTypes.cs" />
   </ItemGroup>
   <ItemGroup />

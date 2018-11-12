@@ -49,6 +49,7 @@ namespace VVCar.Shop.Services.DomainServices
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
             entity.CreatedUser = AppContext.CurrentSession.UserName;
+            entity.MerchantID = AppContext.CurrentSession.MerchantID;
             if (!entity.DepartmentID.HasValue)
             {
                 entity.DepartmentID = AppContext.CurrentSession.DepartmentID;
@@ -132,7 +133,7 @@ namespace VVCar.Shop.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<CarInspectionReportDto> Search(CarInspectionReportFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var queryable = Repository.GetInclude(t => t.CarInspectionDetailsList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (!string.IsNullOrEmpty(filter.PlateNumber))
                 queryable = queryable.Where(t => t.PlateNumber.Contains(filter.PlateNumber));
             if (filter.PickUpOrderID.HasValue)
@@ -144,7 +145,25 @@ namespace VVCar.Shop.Services.DomainServices
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.ToList().MapTo<List<CarInspectionReportDto>>();
+            var result = queryable.ToList().MapTo<List<CarInspectionReportDto>>();
+            result.ForEach(t =>
+            {
+                IEnumerable<ECarInspectionPart> parts = t.CarInspectionDetailsList.Select(m => m.Part).Distinct();
+                foreach (ECarInspectionPart part in Enum.GetValues(typeof(ECarInspectionPart)))
+                {
+                    if (!parts.Contains(part) && part != ECarInspectionPart.None)
+                    {
+                        t.CarInspectionDetailsList.Add(new CarInspectionDetailsDto
+                        {
+                            Part = part,
+                            Status = ECarInspectionStatus.Normal,
+                            Explain = string.Empty,
+                            ImgList = new List<CarInspectionDetailsImg>(),
+                        });
+                    }
+                }
+            });
+            return result.OrderByDescending(t => t.CreatedDate).ToList();
             //var result = new List<CarInspectionReportDto>();
             //queryList.ForEach(t =>
             //{

@@ -968,7 +968,7 @@ namespace VVCar.Shop.Services.DomainServices
         }
 
         /// <summary>
-        /// 滞销产品通知
+        /// 畅销/滞销产品
         /// </summary>
         /// <returns></returns>
         public IEnumerable<UnsaleProductHistoryDto> UnsaleProductHistory(UnsaleProductHistoryFilter filter, ref int totalCount)
@@ -982,7 +982,8 @@ namespace VVCar.Shop.Services.DomainServices
                 queryable = queryable.Where(t => t.ProductType == filter.ProductType);
             if (filter.Status.HasValue)
                 queryable = queryable.Where(t => t.Status == filter.Status);
-            return queryable.MapTo<UnsaleProductHistoryDto>().OrderByDescending(t=> t.Code).OrderByDescending(t=>t.Quantity);
+            totalCount = queryable.Count();
+            return queryable.MapTo<UnsaleProductHistoryDto>().OrderByDescending(t=> t.Code).OrderByDescending(t=>t.Quantity).ToList();
         }
 
         public IEnumerable<ConsumeHistoryDto> GetConsumeHistory(ConsumeHistoryFilter filter, ref int totalCount)

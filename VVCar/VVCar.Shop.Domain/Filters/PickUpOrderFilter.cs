@@ -36,6 +36,11 @@ namespace VVCar.Shop.Domain.Filters
         public EPickUpOrderStatus? Status { get; set; }
 
         /// <summary>
+        /// 关键字
+        /// </summary>
+        public string Keyword { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime? CreatedDate { get; set; }

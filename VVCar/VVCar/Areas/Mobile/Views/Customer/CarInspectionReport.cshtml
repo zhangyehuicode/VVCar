@@ -1,74 +1,83 @@
 ﻿
 @{
-	ViewBag.Title = "";
-	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
 <div style="background-color:#f8f9fe;" id="myreport">
-	<div class="top_box">
-		<div class="top_box_text">我的车检报告</div>
-		<a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
-	</div>
-	<div>
-		<div class="wdcph_box2">
-			<input class="code" type="text" placeholder="车检报告编号" style="font-size:13px;">
-			<a v-on:click="search">查询</a>
-		</div>
-	</div>
-	<div class="wdcph">
-		<div class="wdcph_text" style="color:#666; border-bottom:1px dashed #eee;" v-for="Report in ReportList">{{Report.Code}}<a v-on:click="detail(Report)">详情</a></div>
-	</div>
+    <div class="top_box">
+        <div class="top_box_text">我的车检报告</div>
+        <a><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;" v-on:click="back"></a>
+    </div>
+    <div>
+        <div class="wdcph_box2">
+            <input class="code" type="text" placeholder="车检报告编号" style="font-size:13px;">
+            <a v-on:click="search">查询</a>
+        </div>
+    </div>
+    <div class="wdcph">
+        <div style="color:#666; border-bottom:1px dashed #eee;display:table;width:100%;height:80px;vertical-align:middle;" v-for="Report in ReportList">
+            <div style="display:table-cell;font-size:15px;vertical-align:middle;padding-left:10px;">
+                <div>{{Report.PlateNumber}}</div>
+                <div>{{Report.Code}}</div>
+            </div>
+            <div style="display:table-cell;vertical-align:middle;width:150px;text-align:center;">
+                <div style="background:#babbbb;font-size:13px;color:#fff;border-radius:3px;margin:auto;width:50px;margin-top:23px;" v-on:click="detail(Report)">详情</div>
+                <div style="margin-top:18px;">{{Report.CreatedDate}}</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section scripts{
-	<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
-	<link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
-	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
-	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-	<script type="text/javascript">
-		function wxConfig() {
-			var mch = $.getUrlParam('mch');
-			$.ajax({
-				type: "POST",
-				url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
-				datatype: "json",
-				success: function (data) {
-					if (data.IsSuccessful) {
-						var temp = data.Data;
-						wx.config({
-							debug: false,
-							appId: temp.appId,
-							timestamp: temp.timestamp,
-							nonceStr: temp.nonceStr,
-							signature: temp.signature,
-							jsApiList: [
-								'checkJsApi',
-								'onMenuShareTimeline',
-								'onMenuShareAppMessage',
-								'onMenuShareQQ',
-								'onMenuShareWeibo',
-								'hideOptionMenu',
-								'hideAllNonBaseMenuItem',
-								'showMenuItems',
-								'closeWindow',
-								'scanQRCode',
-							]
-						});
-						wx.ready(function () {
-							wx.hideAllNonBaseMenuItem();
-						});
-					} else {
-					}
-				},
-				complete: function (xmlHttpRequest, textStatus) {
-				},
-				error: function (xmlHttpRequest, textStatus) {
-				}
-			});
-		};
-		wxConfig();
-	</script>
-	<script type="text/javascript">
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+    </script>
+    <script type="text/javascript">
         $(function () {
 
         var mch = $.getUrlParam('mch');
@@ -175,5 +184,5 @@
 				});
 			}
         });
-	</script>
+    </script>
 }
