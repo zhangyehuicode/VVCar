@@ -4,6 +4,7 @@
 	fields: [
 		{ name: 'ID' },
 		{ name: 'Title' },
+		{ name: 'SubTitle' },
 		{ name: 'ImgUrl' },
 		{ name: 'Content' },
 		{ name: 'CreatedDate' },

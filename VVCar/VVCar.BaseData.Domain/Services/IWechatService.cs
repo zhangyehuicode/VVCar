@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.BaseData.Domain.Entities;
+using VVCar.BaseData.Domain.Filters;
 using YEF.Core.Data;
 using YEF.Core.Domain;
 
@@ -14,6 +15,11 @@ namespace VVCar.BaseData.Domain.Services
     /// </summary>
     public partial interface IWechatService : IDomainService<IRepository<Wechat>, Wechat, Guid>
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        string Index(WechatFilter filter);
     }
 }

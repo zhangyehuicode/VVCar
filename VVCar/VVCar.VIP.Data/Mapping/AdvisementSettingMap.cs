@@ -24,6 +24,9 @@ namespace VVCar.VIP.Data.Mapping
                 .IsRequired()
                 .HasMaxLength(20);
 
+            Property(t => t.SubTitle)
+                .HasMaxLength(20);
+
             Property(t => t.ImgUrl)
                 .HasMaxLength(50);
 

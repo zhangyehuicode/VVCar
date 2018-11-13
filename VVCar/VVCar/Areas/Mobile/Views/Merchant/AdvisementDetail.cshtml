@@ -18,11 +18,11 @@
 		}
 
 		.show {
-			display:inline;
+			display: inline;
 		}
 
 		.hide {
-			display:none;
+			display: none;
 		}
 
 		.back-img {
@@ -33,6 +33,7 @@
 			z-index: 1;
 			opacity: 0.5;
 		}
+
 		.leave-img {
 			width: 33px;
 			position: fixed;
@@ -41,6 +42,7 @@
 			z-index: 1;
 			opacity: 0.5;
 		}
+
 		.share-img {
 			width: 66px;
 			position: fixed;
@@ -55,70 +57,126 @@
 	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
 	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 	<script type="text/javascript">
-		function wxConfig() {
+		$(function () {
 			var mch = $.getUrlParam('mch');
-			$.ajax({
-				type: "POST",
-				url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
-				datatype: "json",
-				success: function (data) {
-					if (data.IsSuccessful) {
-						var temp = data.Data;
-						wx.config({
-							debug: false,
-							appId: temp.appId,
-							timestamp: temp.timestamp,
-							nonceStr: temp.nonceStr,
-							signature: temp.signature,
-							jsApiList: [
-								'checkJsApi',
-								'onMenuShareTimeline',
-								'onMenuShareAppMessage',
-								'onMenuShareQQ',
-								'onMenuShareWeibo',
-								'hideOptionMenu',
-								'hideAllNonBaseMenuItem',
-								'showMenuItems',
-								'closeWindow',
-								'scanQRCode',
-							]
-						});
-						wx.ready(function () {
-							//wx.hideAllNonBaseMenuItem();
-							var advisement = JSON.parse(sessionStorage.getItem('advisement'));
-							wx.onMenuShareTimeline({
-								title: advisement.Title,
-								link: window.location.origin + '/Mobile/Merchant/AdvisementDetail?mch=' + mch + '&adid=' + advisement.ID + '&shareopenid='+ '@ViewBag.OpenID' + '&sharenickname=' +'@ViewBag.NickName',
-								imgUrl: window.location.origin + advisement.ImgUrl,
-								success: function (res) {
-
-								}
-							});
-
-							wx.onMenuShareAppMessage({
-								title: advisement.Title,
-								desc: '',
-								link: window.location.origin + '/Mobile/Merchant/AdvisementDetail?mch=' + mch + '&adid=' + advisement.ID + '&shareopenid='+ '@ViewBag.OpenID' + '&sharenickname=' +'@ViewBag.NickName',
-								imgUrl: window.location.origin + advisement.ImgUrl,
-								success: function (res) {
-
-								}
-							})
-						});
-					} else {
+			var adid = $.getUrlParam('adid');
+			var _ismaster = sessionStorage.getItem('ismaster');
+			var ismaster = _ismaster == 'true';
+			var advisement = JSON.parse(sessionStorage.getItem('advisement'));
+			var startdate = new Date();
+			_viewModel = new Vue({
+				el: '#advisementdetails',
+				data: {
+					IsHiden: false,
+					Advisement: {},
+				},
+				computed: {
+					hideClass: function () {
+						return {
+							show: !this.IsHiden,
+							hide: this.IsHiden,
+						}
+					},
+					showClass: function () {
+						return {
+							show: this.IsHiden,
+							hide: !this.IsHiden,
+						}
 					}
 				},
-				complete: function (xmlHttpRequest, textStatus) {
-				},
-				error: function (xmlHttpRequest, textStatus) {
+				methods: {
+					back: function (event) {
+						history.back(-1);
+					},
+					leave: function () {
+						recordhistory();
+						wx.closeWindow();
+					}
 				}
 			});
-		};
-		wxConfig();
-	</script>
-	<script type="text/javascript">
-		$(function () {
-			var adid = $.getUrlParam('adid');
+
+			function getAdvisement() {
+				if (advisement == null || advisement == '') {
+					if (adid != null && adid != '') {
+						_viewModel.IsHiden = true;
+						$.ajax({
+							url: '/api/AdvisementSetting',
+							type: 'GET',
+							headers: { 'CompanyCode': mch },
+							data: { 'ID': adid },
+							beforeSend: function () {
+								$.showLoading();
+							},
+							success: function (res) {
+								$.hideLoading();
+								if (res.IsSuccessful) {
+									if (res.Data != null) {
+										advisement = res.Data[0];
+										_viewModel.Advisement = advisement;
+										$('.content').append(advisement.Content);
+										sessionStorage.setItem('advisement', advisement);
+									}
+								} else {
+									$.alert(res.ErrorMessage);
+								}
+							},
+							error: function () {
+								$.hideLoading();
+							}
+						});
+					} else {
+						$.alert('参数错误');
+					}
+				} else {
+					_viewModel.Advisement = advisement;
+					$('.content').append(advisement.Content);
+					if (adid != null && adid != '') {
+						_viewModel.IsHiden = true;
+					} else {
+						_viewModel.IsHiden = false;
+					}
+				}
+			}
+			getAdvisement();
+
+			window.onbeforeunload = function(){
+				recordhistory();
+			}
+
+			function recordhistory() {
+				if (adid != null && adid != '') {
+					var shareopenid = $.getUrlParam('shareopenid');
+					var sharenickname = $.getUrlParam('sharenickname');
+					var enddate = new Date();
+					var time = (enddate.getTime() - startdate.getTime()) / 1000;
+					$.ajax({
+						url: '/api/AdvisementBrowseHistory',
+						type: 'POST',
+						headers: { 'CompanyCode': mch },
+						async: false,
+						data: {
+							OpenID: '@ViewBag.OpenId',
+							NickName: '@ViewBag.NickName',
+							ShareOpenID: shareopenid,
+							ShareNickName: sharenickname,
+							AdvisementSettingID: adid,
+							StartDate: format(startdate),
+							EndDate: format(enddate),
+							Period: time,
+						},
+						success: function (res) {
+							if (res.IsSuccessful) {
+
+							} else {
+								$.alert(res.ErrorMessage);
+							}
+						},
+						error: function () {
+							$.alert('浏览记录失败');
+						}
+					});
+				}
+			}
 			if (adid == null || adid == '') {
 				var _ismaster = sessionStorage.getItem('ismaster');
 				var ismaster = _ismaster == 'true';
@@ -156,140 +214,71 @@
 			} else {
 
 			}
-		});
-	</script>
-	<script type="text/javascript">
-		var mch = $.getUrlParam('mch');
-		var _ismaster = sessionStorage.getItem('ismaster');
-		var ismaster = _ismaster == 'true';
-		var advisement = JSON.parse(sessionStorage.getItem('advisement'));
-		var adid = $.getUrlParam('adid');
-		var startdate = new Date();
-		_viewModel = new Vue({
-			el: '#advisementdetails',
-			data: {
-				IsHiden: false,
-				Title: '',
-			},
-			computed: {
-				hideClass: function () {
-					return {
-						show: !this.IsHiden,
-						hide: this.IsHiden,
-					}
-				},
-				showClass: function () {
-					return {
-						show: this.IsHiden,
-						hide: !this.IsHiden,
-					}
-				}
-			},
-			methods: {
-				back: function (event) {
-					history.back(-1);
-				},
-				share: function (event) {
-					$.alert('点击右上角按钮，选择发送到朋友圈');
-				},
-				leave: function () {
-					recordhistory();
-					wx.closeWindow();
-				}
+
+			function format(date) {
+				var year = date.getFullYear();//年
+				var month = date.getMonth() > 8 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);//月
+				var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();//日
+				var hour = date.getHours() > 9 ? date.getHours() : '0' + date.getHours();//时
+				var minute = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes();//分
+				var second = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds();//秒
+				return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
 			}
-		});
 
-		function getAdvisement() {
-			if (advisement == null || advisement == '') {
-				if (adid != null && adid != '') {
-					_viewModel.IsHiden = true;
-					$.ajax({
-						url: '/api/AdvisementSetting',
-						type: 'GET',
-						headers: { 'CompanyCode': mch },
-						data: { 'ID': adid },
-						beforeSend: function () {
-							$.showLoading();
-						},
-						success: function (res) {
-							$.hideLoading();
-							if (res.IsSuccessful) {
-								if (res.Data != null) {
-									advisement = res.Data[0];
-									_viewModel.Title = advisement.Title;
-									$('.content').append(advisement.Content);
-									sessionStorage.setItem('advisement', advisement);
-								}
-							} else {
-								$.alert(res.ErrorMessage);
-							}
-						},
-						error: function () {
-							$.hideLoading();
-						}
-					});
-				} else {
-					$.alert('参数错误');
-				} 
-			} else {
-				_viewModel.Title = advisement.Title;
-				$('.content').append(advisement.Content);
-				if (adid != null && adid != '') {
-					_viewModel.IsHiden = true;
-				} else {
-					_viewModel.IsHiden = false;
-				}
-			}
-		}
-		getAdvisement();
-
-		window.onbeforeunload = function(){
-			recordhistory();
-		}
-
-		function recordhistory() {
-			if (adid != null && adid != '') {
-				var shareopenid = $.getUrlParam('shareopenid');
-				var sharenickname = $.getUrlParam('sharenickname');
-				var enddate = new Date();
-				var time = (enddate.getTime() - startdate.getTime()) / 1000;
+			function wxConfig() {
 				$.ajax({
-					url: '/api/AdvisementBrowseHistory',
-					type: 'POST',
-					headers: { 'CompanyCode': mch },
-					async: false,
-					data: {
-						OpenID: '@ViewBag.OpenId',
-						NickName: '@ViewBag.NickName',
-						ShareOpenID: shareopenid,
-						ShareNickName: sharenickname,
-						AdvisementSettingID: adid,
-						StartDate: format(startdate),
-						EndDate: format(enddate),
-						Period: time,
-					},
-					success: function (res) {
-						if (res.IsSuccessful) {
-
+					type: "POST",
+					url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+					datatype: "json",
+					success: function (data) {
+						if (data.IsSuccessful) {
+							var temp = data.Data;
+							wx.config({
+								debug: false,
+								appId: temp.appId,
+								timestamp: temp.timestamp,
+								nonceStr: temp.nonceStr,
+								signature: temp.signature,
+								jsApiList: [
+									'checkJsApi',
+									'onMenuShareTimeline',
+									'onMenuShareAppMessage',
+									'onMenuShareQQ',
+									'onMenuShareWeibo',
+									'hideOptionMenu',
+									'hideAllNonBaseMenuItem',
+									'showMenuItems',
+									'closeWindow',
+									'scanQRCode',
+								]
+							});
+							wx.ready(function () {
+								wx.onMenuShareAppMessage({
+									title: _viewModel.Advisement.Title,
+									desc: _viewModel.Advisement.SubTitle,
+									link: document.URL + '&adid=' + _viewModel.Advisement.ID + '&shareopenid=' + '@ViewBag.OpenID' + '&sharenickname=' + '@ViewBag.NickName',
+									imgUrl: window.location.origin + _viewModel.Advisement.ImgUrl,
+									success: function (res) {
+									}
+								});
+								wx.onMenuShareTimeline({
+									title: _viewModel.Advisement.Title,
+									link: document.URL + '&adid=' + _viewModel.Advisement.ID + '&shareopenid='+ '@ViewBag.OpenID' + '&sharenickname=' +'@ViewBag.NickName',
+									imgUrl: window.location.origin + _viewModel.Advisement.ImgUrl,
+									success: function (res) {
+									}
+								});
+							});
 						} else {
-							$.alert(res.ErrorMessage);
 						}
 					},
-					error: function () {
-						$.alert('浏览记录失败');
+					complete: function (xmlHttpRequest, textStatus) {
+					},
+					error: function (xmlHttpRequest, textStatus) {
 					}
 				});
-			}
-		}
-
-		function format(date) {
-			var year = date.getFullYear();//年
-			var month = date.getMonth() > 8 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);//月
-			var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();//日
-			var hour = date.getHours() > 9 ? date.getHours() : '0' + date.getHours();//时
-			var minute = date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes();//分
-			var second = date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds();//秒
-			return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
-		}
+			};
+			wxConfig();
+		});
 	</script>
 }

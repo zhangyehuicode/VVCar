@@ -29,13 +29,20 @@
 				maxLength: 18,
 				allowBlank: false,
 			}, {
+				xtype: 'textfield',
+				name: 'SubTitle',
+				fieldLabel: '副标题',
+				margin: '5 5 5 5',
+				maxLength: 18,
+				allowBlank: true,
+			}, {
 				xtype: 'form',
 				layout: 'hbox',
 				items: [{
 					xtype: 'form',
 					border: false,
 					layout: 'hbox',
-					margin: '5 10 0 0',
+					margin: '5 10 0 5',
 					items: [{
 						xtype: 'filefield',
 						fieldLabel: '封面图片',

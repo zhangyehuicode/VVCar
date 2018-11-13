@@ -99,6 +99,7 @@
     <Compile Include="Filters\UserFilter.cs" />
     <Compile Include="Filters\UserMemberFilter.cs" />
     <Compile Include="Filters\UserRoleFilter.cs" />
+    <Compile Include="Filters\WechatFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IAgentDepartmentCategoryService.cs" />
     <Compile Include="Services\IAgentDepartmentService.cs" />

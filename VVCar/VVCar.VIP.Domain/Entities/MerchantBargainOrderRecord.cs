@@ -49,9 +49,9 @@ namespace VVCar.VIP.Domain.Entities
         public virtual MerchantBargainOrder MerchantBargainOrder { get; set; }
 
         /// <summary>
-        /// 已经加入拼单人数
+        /// 已加入砍价人数
         /// </summary>
-        [Display(Name = "已经加入拼单人数")]
+        [Display(Name = "已加入砍价人数")]
         public int JoinPeople { get; set; }
 
         /// <summary>

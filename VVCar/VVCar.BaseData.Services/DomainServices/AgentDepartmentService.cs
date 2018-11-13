@@ -117,18 +117,15 @@ namespace VVCar.BaseData.Services.DomainServices
             var message = new WeChatTemplateMessageDto
             {
                 touser = user.OpenID,
-                template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_OrderSuccess),
+                template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_Announcement),
                 data = new System.Dynamic.ExpandoObject(),
             };      
 
             var remark = "已通知总部联系门店对接";
 
             message.data.first = new WeChatTemplateMessageDto.MessageData("您已成功提交门店信息给总部");
-            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData("无");
-            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData($"{agentDepartment.Name}");
-            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData("1");
-            message.data.keyword4 = new WeChatTemplateMessageDto.MessageData("无");
-            message.data.keyword5 = new WeChatTemplateMessageDto.MessageData("无");
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(agentDepartment.Name);
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData("总部审核");
             message.data.remark = new WeChatTemplateMessageDto.MessageData(remark);
             WeChatService.SendWeChatNotifyAsync(message);
         }
@@ -443,7 +440,7 @@ namespace VVCar.BaseData.Services.DomainServices
             var queryable = Repository.GetIncludes(false, "Merchant", "User");
             if (!(AppContext.CurrentSession.MerchantID == Guid.Parse("00000000-0000-0000-0000-000000000001")))
             {
-                queryable = queryable.Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+                queryable = queryable.Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.CreatedUserID == AppContext.CurrentSession.UserID);
             }
             if (filter.ApproveStatus.HasValue)
                 queryable = queryable.Where(t => t.ApproveStatus == filter.ApproveStatus.Value);

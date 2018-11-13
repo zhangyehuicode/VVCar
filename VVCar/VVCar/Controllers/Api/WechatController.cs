@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using VVCar.BaseData.Domain.Filters;
+using VVCar.BaseData.Domain.Services;
 using YEF.Core.Dtos;
 
 namespace VVCar.Controllers.Api
@@ -15,19 +17,23 @@ namespace VVCar.Controllers.Api
     [RoutePrefix("api/Wechat")]
     public class WechatController : BaseApiController
     {
-        public WechatController()
+        public WechatController(IWechatService wechatService)
         {
+            WechatService = wechatService;
         }
+
+        IWechatService WechatService { get; set; }
 
         /// <summary>
         /// 入口
         /// </summary>
         /// <returns></returns>
-        public JsonActionResult<string> Index()
+        [HttpGet, AllowAnonymous]
+        public JsonActionResult<string> Index([FromUri]WechatFilter filter)
         {
             return SafeExecute(() =>
             {
-                return "hello";
+                return WechatService.Index(filter);
             });
         }
     }

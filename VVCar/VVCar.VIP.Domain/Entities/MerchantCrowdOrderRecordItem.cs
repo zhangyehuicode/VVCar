@@ -31,6 +31,12 @@ namespace VVCar.VIP.Domain.Entities
         public Guid MemberID { get; set; }
 
         /// <summary>
+        /// 会员名称
+        /// </summary>
+        [Display(Name = "会员名称")]
+        public string MemberName { get; set; }
+
+        /// <summary>
         /// 会员
         /// </summary>
         public virtual Member Member { get; set; }

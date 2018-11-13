@@ -96,7 +96,5 @@ namespace VVCar.VIP.Domain.Entities
         /// </summary>
         [Display(Name = "最后修改时间")]
         public DateTime? LastUpdateDate { get; set; }
-
-
     }
 }

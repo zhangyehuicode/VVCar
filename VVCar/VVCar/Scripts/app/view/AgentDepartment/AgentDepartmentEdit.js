@@ -4,7 +4,7 @@
     title: '编辑代理商门店信息',
     //layout: 'fit',
     width: 1150,
-    height: 700,
+    height: 600,
     bodyPadding: 5,
     modal: true,
     autoScoll: true,
@@ -61,7 +61,8 @@
                             margin: '5 5 5 10',
                             name: 'Email',
                             fieldLabel: '注册邮箱',
-                            maxLength: 25,
+							maxLength: 25,
+							width: 265,
                             allowBlank: true,
                         }]
                     }]
@@ -185,7 +186,8 @@
                             margin: '5 12 5 10',
                             name: 'BankCard',
                             fieldLabel: '银行账号',
-                            maxLength: 32,
+							maxLength: 32,
+							width: 263,
                             allowBlank: true,
                         }, {
                             xtype: 'textfield',

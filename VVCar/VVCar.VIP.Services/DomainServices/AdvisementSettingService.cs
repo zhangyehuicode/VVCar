@@ -57,6 +57,7 @@ namespace VVCar.VIP.Services.DomainServices
             if (advisementSetting.CreatedUserID != AppContext.CurrentSession.UserID)
                 throw new DomainException("不能修改其他人的广告设计!");
             advisementSetting.Title = entity.Title;
+            advisementSetting.SubTitle = entity.SubTitle;
             advisementSetting.ImgUrl = entity.ImgUrl;
             advisementSetting.Content = entity.Content;
             advisementSetting.LastUpdateDate = DateTime.Now;
@@ -136,6 +137,7 @@ namespace VVCar.VIP.Services.DomainServices
                 var advisementSettingDto = new AdvisementSettingDto {
                     ID = t.ID,
                     Title = t.Title,
+                    SubTitle = t.SubTitle,
                     Content = t.Content,
                     ImgUrl = t.ImgUrl,
                     CreatedUser = t.CreatedUser,

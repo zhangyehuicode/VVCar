@@ -19,6 +19,11 @@ namespace VVCar.VIP.Domain.Dtos
         public string Title { get; set; }
 
         /// <summary>
+        /// 副标题
+        /// </summary>
+        public string SubTitle { get; set; }
+
+        /// <summary>
         /// 封面路径
         /// </summary>
         public string ImgUrl { get; set; }

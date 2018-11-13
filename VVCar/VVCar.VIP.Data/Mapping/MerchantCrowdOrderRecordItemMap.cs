@@ -13,6 +13,9 @@ namespace VVCar.VIP.Data.Mapping
         public MerchantCrowdOrderRecordItemMap()
         {
             this.HasKey(t => t.ID);
+
+            Property(t => t.MemberName)
+                .HasMaxLength(20);
         }
     }
 }

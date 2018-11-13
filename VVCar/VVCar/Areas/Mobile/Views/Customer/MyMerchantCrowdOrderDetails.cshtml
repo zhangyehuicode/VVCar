@@ -20,6 +20,9 @@
 			<div class="crowdorder-name">{{MerchantCrowdOrder.Name}}</div>
 		</div>
 		<div class="peoplecount-con">已有<span style="color:#e02d28;margin:0 3px;">{{MerchantCrowdOrder.JoinPeople}}</span>人参与<span style="font-size:13px;">（需<span style="color:#e02d28;">{{MerchantCrowdOrder.PeopleCount}}</span>人参与）</span></div>
+		<div v-for="MerchantCrowdOrderRecordItem in MerchantCrowdOrder.MerchantCrowdOrderRecordItemList">
+			<div class="peoplecount-con"><span style="color: red;">{{MerchantCrowdOrderRecordItem.MemberName}}</span>参与拼单</div>
+		</div>
 	</div>
 	<div class="bottomactioncon" v-on:click="join" v-bind:class="crowdClass">
 		<div>￥{{MerchantCrowdOrder.Price}}</div>
@@ -155,9 +158,11 @@
         $(function () {
             var mch = $.getUrlParam('mch');
             var coid = $.getUrlParam('coid');
-            var isadd = $.getUrlParam('isadd') == 'true';
+			var isadd = $.getUrlParam('isadd') == 'true';
+			var IsCrowded = false;
             if (isadd && (coid == null || coid=='')) {
-                $.alert('点击右上角分享朋友/朋友圈，开始拼单！');
+				$.alert('点击右上角分享朋友/朋友圈，开始拼单！');
+				IsCrowded = true;
             }
             var corid = $.getUrlParam('corid');
         var merchantcrowdorder = sessionStorage.getItem('merchantcrowdorder');
@@ -170,7 +175,7 @@
 					MyInfo: {},
 					MerchantCrowdOrder: {},
 					IsMember: false,
-					IsCrowded: false,
+					IsCrowded: IsCrowded,
 				},
 				computed: {
 					crowdClass: function () {
@@ -202,6 +207,7 @@
 						data: {
 							MerchantCrowdOrderRecordID: _viewModel.MerchantCrowdOrder.ID,
 							MemberID: _viewModel.MyInfo.ID,
+							MemberName: '@ViewBag.NickName',
 						},
 						headers: { 'CompanyCode': mch },
 						beforeSend: function () {

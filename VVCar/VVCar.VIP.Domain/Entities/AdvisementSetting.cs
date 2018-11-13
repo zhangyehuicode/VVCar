@@ -25,6 +25,12 @@ namespace VVCar.VIP.Domain.Entities
         public string Title { get; set; }
 
         /// <summary>
+        /// 副标题
+        /// </summary>
+        [Display(Name = "副标题")]
+        public string SubTitle { get; set; }
+
+        /// <summary>
         /// 封面路径
         /// </summary>
         [Display(Name = "封面路径")]
