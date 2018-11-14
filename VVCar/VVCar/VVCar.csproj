@@ -1358,6 +1358,7 @@
     <Content Include="Areas\Mobile\Views\Merchant\MyPerformance.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\AdvisementBrowseHistory.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\UnsaleProduct.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\CarInspection.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />
