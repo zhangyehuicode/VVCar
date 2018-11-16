@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.BaseData.Domain;
+using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
 using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
@@ -32,11 +33,16 @@ namespace VVCar.VIP.Services.DomainServices
 
         IWeChatService WeChatService { get => ServiceLocator.Instance.GetService<IWeChatService>(); }
 
-        IRepository<MerchantBargainOrder> MerchantBargainOrderRepo { get => UnitOfWork.GetRepository<IRepository<MerchantBargainOrder>>(); }
+        IRepository<Order> OrderRepo { get => UnitOfWork.GetRepository<IRepository<Order>>(); }
+
+        IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
 
         IRepository<Product> ProductRepo { get => UnitOfWork.GetRepository<IRepository<Product>>(); }
 
-        IRepository<Order> OrderRepo { get => UnitOfWork.GetRepository<IRepository<Order>>(); }
+        IRepository<MakeCodeRule> MakeCodeRuleRepo { get => UnitOfWork.GetRepository<IRepository<MakeCodeRule>>(); }
+
+        IRepository<MerchantBargainOrder> MerchantBargainOrderRepo { get => UnitOfWork.GetRepository<IRepository<MerchantBargainOrder>>(); }
+
         #endregion
 
         /// <summary>
@@ -49,6 +55,8 @@ namespace VVCar.VIP.Services.DomainServices
             if (entity == null || entity.MerchantBargainOrderRecordItemList == null || entity.MerchantBargainOrderRecordItemList.Count < 1)
                 return null;
             entity.ID = Util.NewID();
+            if (string.IsNullOrEmpty(entity.Code))
+                entity.Code = GetCode();
             entity.CreatedDate = DateTime.Now;
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
             entity.JoinPeople = entity.MerchantBargainOrderRecordItemList.Count() - 1; 
@@ -62,8 +70,31 @@ namespace VVCar.VIP.Services.DomainServices
             return base.Add(entity);
         }
 
+        string GetCode()
+        {
+            var newCode = string.Empty;
+            var existCode = false;
+            var makeCodeRuleService = ServiceLocator.Instance.GetService<IMakeCodeRuleService>();
+            var entity = Repository.GetQueryable(false).OrderByDescending(t => t.CreatedDate).FirstOrDefault();
+            if (entity != null && entity.CreatedDate.Date != DateTime.Now.Date)
+            {
+                var rule = MakeCodeRuleRepo.GetQueryable().Where(t => t.Code == "MerchantBargainOrder" && t.IsAvailable).FirstOrDefault();
+                if (rule != null)
+                {
+                    rule.CurrentValue = 0;
+                    MakeCodeRuleRepo.Update(rule);
+                }
+            }
+            do
+            {
+                newCode = makeCodeRuleService.GenerateCode("MerchantBargainOrder", DateTime.Now);
+                existCode = Repository.Exists(t => t.Code == newCode);
+            } while (existCode);
+            return newCode;
+        }
+
         /// <summary>
-        /// 新增拼单子项
+        /// 新增砍价子项
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -78,17 +109,20 @@ namespace VVCar.VIP.Services.DomainServices
             {
                 entity.Price = (merchantBargainOrderRecord.FinalPrice - merchantBargainOrder.Price) / (merchantBargainOrder.PeopleCount - merchantBargainOrderRecord.JoinPeople);
                 merchantBargainOrderRecord.JoinPeople += 1;
+                if (merchantBargainOrderRecord.JoinPeople > merchantBargainOrder.PeopleCount)
+                    throw new DomainException("砍价人数已满");
                 merchantBargainOrderRecord.FinalPrice -= entity.Price;
                 entity.ID = Util.NewID();
                 entity.CreatedDate = DateTime.Now;
                 entity.MerchantID = AppContext.CurrentSession.MerchantID;
                 MerchantBargainOrderRecordItemRepo.Add(entity);
                 UnitOfWork.CommitTransaction();
+                JoinBargainOrderSuccessNotify(merchantBargainOrder, merchantBargainOrderRecord, entity);
             }
             catch (Exception e)
             {
                 UnitOfWork.RollbackTransaction();
-                throw new DomainException("加入拼单出现异常：" + e.Message);
+                throw new DomainException("加入砍价出现异常：" + e.Message);
             }
             return merchantBargainOrderRecord.MapTo<MerchantBargainOrderRecordDto>();
         }
@@ -141,7 +175,7 @@ namespace VVCar.VIP.Services.DomainServices
             var merchantBargainOrderRecord = Repository.GetIncludes(false, "Member", "MerchantBargainOrder", "MerchantBargainOrder.Product").FirstOrDefault(t => t.ID == merchantBargainOrderRecordID);
             if (merchantBargainOrderRecord == null)
             {
-                AppContext.Logger.Error("JoinMerchantBargainOrderRecord:加入砍价，拼单记录不存在");
+                AppContext.Logger.Error("JoinMerchantBargainOrderRecord:加入砍价，砍价记录不存在");
                 return false;
             }
             UnitOfWork.BeginTransaction();
@@ -173,7 +207,7 @@ namespace VVCar.VIP.Services.DomainServices
         }
 
         /// <summary>
-        /// 发送拼单成功提醒
+        /// 发送砍价成功提醒
         /// </summary>
         /// <param name="merchantBargainOrderRecord"></param>
         void MerchantBargainOrderSuccessNotify(MerchantBargainOrderRecord merchantBargainOrderRecord)
@@ -189,10 +223,10 @@ namespace VVCar.VIP.Services.DomainServices
                 {
                     touser = merchantBargainOrderRecord.Member.WeChatOpenID,
                     template_id = templateId,
-                    url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MyMerchantBargainOrderDetails?mch={AppContext.CurrentSession.MerchantCode}&coid={merchantBargainOrderRecord.ID}",
+                    url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MyMerchantBargainOrderDetails?mch={AppContext.CurrentSession.MerchantCode}&bargainid={merchantBargainOrderRecord.ID}",
                     data = new System.Dynamic.ExpandoObject(),
                 };
-                message.data.first = new WeChatTemplateMessageDto.MessageData("拼单成功");
+                message.data.first = new WeChatTemplateMessageDto.MessageData("砍价成功");
                 message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(merchantBargainOrderRecord.MerchantBargainOrder.Product.Name);
                 message.data.keyword2 = new WeChatTemplateMessageDto.MessageData("");
                 message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(merchantBargainOrderRecord.MerchantBargainOrder.CreatedDate.ToString("yyyy-MM-dd"));
@@ -202,6 +236,40 @@ namespace VVCar.VIP.Services.DomainServices
             catch (Exception e)
             {
                 AppContext.Logger.Error($"发送砍价成功提醒异常，{e.Message}");
+            }
+        }
+
+        void JoinBargainOrderSuccessNotify(MerchantBargainOrder merchantBargainOrder, MerchantBargainOrderRecord merchantBargainOrderRecord, MerchantBargainOrderRecordItem merchantBargainOrderRecordItem)
+        {
+            try
+            {
+                var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_CrowdOrderSuccess);
+                if (string.IsNullOrEmpty(templateId))
+                    return;
+                var message = new WeChatTemplateMessageDto
+                {
+                    touser = "",
+                    template_id = templateId,
+                    url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MyMerchantBargainOrderDetails?mch={AppContext.CurrentSession.MerchantCode}&isadd=false&bargainid={merchantBargainOrderRecord.ID}",
+                    data = new System.Dynamic.ExpandoObject(),
+                };
+                var product = ProductRepo.GetByKey(merchantBargainOrder.ProductID);
+                var helper = MemberRepo.GetByKey(merchantBargainOrderRecordItem.MemberID);
+                message.data.first = new WeChatTemplateMessageDto.MessageData(helper!=null ? helper.Name+"帮您砍价成功": "有人帮您砍价成功");
+                message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(product.Name);
+                message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(merchantBargainOrderRecord.Code);
+                message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyy-MM-dd"));
+                message.data.remark = new WeChatTemplateMessageDto.MessageData("立即下单");
+                var member = MemberRepo.GetByKey(merchantBargainOrderRecord.MemberID);
+                if (member!= null)
+                {
+                    message.touser = member.WeChatOpenID;
+                    WeChatService.SendWeChatNotify(message);
+                }
+            }
+            catch (Exception e)
+            {
+                AppContext.Logger.Error($"加入砍价提醒异常，{e.Message}");
             }
         }
     }

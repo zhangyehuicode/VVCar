@@ -32,5 +32,11 @@ namespace VVCar.BaseData.Domain.Services
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<Merchant> Search(MerchantFilter filter, out int totalCount);
+
+        /// <summary>
+        /// 获取子商户
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Merchant> GetSubMerchants();
     }
 }

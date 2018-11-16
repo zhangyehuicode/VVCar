@@ -23,5 +23,11 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="totalCount"></param>
         /// <returns></returns>
         IEnumerable<CarInspectionReportDto> Search(CarInspectionReportFilter filter, out int totalCount);
+
+        /// <summary>
+        /// 获取车检部位
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<CarInspectionPartInfo> GetCarInspectionPart();
     }
 }

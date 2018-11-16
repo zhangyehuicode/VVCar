@@ -17,6 +17,9 @@ namespace VVCar.VIP.Data.Mapping
         {
             HasKey(t => t.ID);
 
+            Property(t => t.Code)
+                .HasMaxLength(20);
+
             Property(t => t.Project)
                 .IsRequired()
                 .HasMaxLength(20);

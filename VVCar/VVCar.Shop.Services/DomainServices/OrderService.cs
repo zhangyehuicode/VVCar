@@ -62,6 +62,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<OrderItem> OrderItemRepo { get => UnitOfWork.GetRepository<IRepository<OrderItem>>(); }
 
+        IRepository<Product> ProductRepo { get => UnitOfWork.GetRepository<IRepository<Product>>(); }
+
         #endregion
 
         public override bool Delete(Guid key)
@@ -145,6 +147,12 @@ namespace VVCar.Shop.Services.DomainServices
                         t.Commission = t.CommissionMoney;
                         t.CommissionRate = 0;
                     }
+                    var product = ProductRepo.GetByKey(t.GoodsID);
+                    if (product != null) {
+                        t.CostPrice = product.CostPrice;
+                        t.CostMoney = t.CostPrice * t.Quantity;
+
+                    }
                     t.MerchantID = AppContext.CurrentSession.MerchantID;
                 });
                 entity.MerchantID = AppContext.CurrentSession.MerchantID;
@@ -195,16 +203,21 @@ namespace VVCar.Shop.Services.DomainServices
                 if (entity == null)
                     return;
                 if (entity.OrderItemList == null || entity.OrderItemList.Count < 1)
+                {
                     entity.Money = 0;
+                    entity.CostMoney = 0;
+                }
                 else
                 {
                     decimal totalMoney = 0;
+                    decimal totalCostMoney = 0;
                     entity.OrderItemList.ForEach(t =>
                     {
-                        //t.Money = t.Quantity * t.PriceSale;
                         totalMoney += t.Quantity * t.PriceSale;
+                        totalCostMoney += t.Quantity * t.CostMoney;
                     });
                     entity.Money = totalMoney;
+                    entity.CostMoney = totalCostMoney;
                 }
 
                 decimal paymoney = 0;

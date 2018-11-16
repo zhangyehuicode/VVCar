@@ -69,6 +69,7 @@
 				data: {
 					IsHiden: false,
 					Advisement: {},
+					IsShare: true,
 				},
 				computed: {
 					hideClass: function () {
@@ -99,6 +100,7 @@
 				if (advisement == null || advisement == '') {
 					if (adid != null && adid != '') {
 						_viewModel.IsHiden = true;
+						_viewModel.IsShare = false;
 						$.ajax({
 							url: '/api/AdvisementSetting',
 							type: 'GET',
@@ -146,7 +148,6 @@
 			function recordhistory() {
 				if (adid != null && adid != '') {
 					var shareopenid = $.getUrlParam('shareopenid');
-					var sharenickname = $.getUrlParam('sharenickname');
 					var enddate = new Date();
 					var time = (enddate.getTime() - startdate.getTime()) / 1000;
 					$.ajax({
@@ -158,7 +159,6 @@
 							OpenID: '@ViewBag.OpenId',
 							NickName: '@ViewBag.NickName',
 							ShareOpenID: shareopenid,
-							ShareNickName: sharenickname,
 							AdvisementSettingID: adid,
 							StartDate: format(startdate),
 							EndDate: format(enddate),
@@ -253,17 +253,20 @@
 								]
 							});
 							wx.ready(function () {
+								if (_viewModel.IsShare == false) {
+									wx.hideOptionMenu();
+								}
 								wx.onMenuShareAppMessage({
 									title: _viewModel.Advisement.Title,
 									desc: _viewModel.Advisement.SubTitle,
-									link: document.URL + '&adid=' + _viewModel.Advisement.ID + '&shareopenid=' + '@ViewBag.OpenID' + '&sharenickname=' + '@ViewBag.NickName',
+									link: document.URL + '&shareopenid='+ '@ViewBag.OpenID' + '&adid=' + _viewModel.Advisement.ID, 
 									imgUrl: window.location.origin + _viewModel.Advisement.ImgUrl,
 									success: function (res) {
 									}
 								});
 								wx.onMenuShareTimeline({
 									title: _viewModel.Advisement.Title,
-									link: document.URL + '&adid=' + _viewModel.Advisement.ID + '&shareopenid='+ '@ViewBag.OpenID' + '&sharenickname=' +'@ViewBag.NickName',
+									link: document.URL + '&shareopenid='+ '@ViewBag.OpenID' + '&adid=' + _viewModel.Advisement.ID,
 									imgUrl: window.location.origin + _viewModel.Advisement.ImgUrl,
 									success: function (res) {
 									}

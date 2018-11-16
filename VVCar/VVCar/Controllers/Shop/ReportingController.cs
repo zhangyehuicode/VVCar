@@ -81,7 +81,7 @@ namespace VVCar.Controllers.Shop
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        [HttpGet, Route("ProductRetailStatistics")]
+        [HttpGet, Route("ProductRetailStatistics"), AllowAnonymous]
         public PagedActionResult<ProductRetailStatisticsDto> ProductRetailStatistics([FromUri]ProductRetailStatisticsFilter filter)
         {
             return SafeGetPagedData<ProductRetailStatisticsDto>((result) =>
@@ -522,6 +522,51 @@ namespace VVCar.Controllers.Shop
             return SafeExecute(() =>
             {
                 return ReportingService.GetMonthOpenAccountPerformance(date);
+            });
+        }
+
+        /// <summary>
+        /// 营业报表
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetOperationStatement"), AllowAnonymous]
+        public PagedActionResult<OperationStatementDto> GetOperationStatement([FromUri]OperationStatementFilter filter)
+        {
+            return SafeGetPagedData<OperationStatementDto>((result) =>
+            {
+                var totalCount = 0;
+                filter.Start = null;
+                filter.Limit = null;
+                var data = ReportingService.GetOperationStatement(filter, out totalCount).ToList();
+                var operationStatementList = data.ToList();
+                OperationStatementDto operationStatement = new OperationStatementDto();
+                operationStatementList.ForEach(t =>
+                {
+                    operationStatement.TotalInCome += t.TotalInCome;
+                    operationStatement.TotalOutCome += t.TotalOutCome;
+                });
+                operationStatement.Code = "合计:";
+                data.Add(operationStatement);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        /// 营业报表 详情
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("GetOperationStatementDetail"), AllowAnonymous]
+        public PagedActionResult<OperationStatementDetailDto> GetOperationStatementDetail([FromUri]OperationStatementFilter filter)
+        {
+            return SafeGetPagedData<OperationStatementDetailDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = ReportingService.GetOperationStatementDetail(filter, out totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
             });
         }
     }

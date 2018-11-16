@@ -128,6 +128,12 @@ namespace VVCar.Shop.Services.DomainServices
                     entity.PickUpOrderItemList.ForEach(t =>
                     {
                         t.ID = Util.NewID();
+                        var product = ProductRepo.GetByKey(t.ProductID);
+                        if(product!= null)
+                        {
+                            t.CostPrice = product.CostPrice;
+                            t.CostMoney = t.CostPrice * t.Quantity;
+                        }
                         t.PickUpOrderID = entity.ID;
                         t.MerchantID = entity.MerchantID;
                         if (t.IsReduce)
@@ -247,6 +253,7 @@ namespace VVCar.Shop.Services.DomainServices
             else
             {
                 decimal totalMoney = 0;
+                decimal totalCostMoney = 0;
                 entity.PickUpOrderItemList.ForEach(t =>
                 {
                     if (t.IsDeleted == false)
@@ -259,10 +266,11 @@ namespace VVCar.Shop.Services.DomainServices
                         {
                             totalMoney += t.Quantity * t.PriceSale;
                         }
-                        //t.Money = t.Quantity * t.PriceSale;
+                        totalCostMoney += t.Quantity * t.CostMoney;
                     }
                 });
                 entity.Money = totalMoney;
+                entity.CostMoney = totalCostMoney;
             }
             decimal paymoney = 0;
             var paymentdetails = PickUpOrderPaymentDetailsRepo.GetQueryable(false).Where(t => t.PickUpOrderCode == entity.Code).ToList();

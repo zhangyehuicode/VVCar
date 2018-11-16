@@ -31,7 +31,7 @@ namespace VVCar.VIP.Data.Mapping
                 .HasMaxLength(50);
 
             Property(t => t.Content)
-                .HasMaxLength(1500);
+                .HasMaxLength(15000);
 
             Property(t => t.CreatedUser)
                 .IsRequired()

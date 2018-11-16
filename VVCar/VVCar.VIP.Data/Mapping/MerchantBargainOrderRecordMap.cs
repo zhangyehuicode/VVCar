@@ -13,6 +13,9 @@ namespace VVCar.VIP.Data.Mapping
         public MerchantBargainOrderRecordMap()
         {
             this.HasKey(t => t.ID);
+
+            Property(t => t.Code)
+                .HasMaxLength(20);
         }
     }
 }

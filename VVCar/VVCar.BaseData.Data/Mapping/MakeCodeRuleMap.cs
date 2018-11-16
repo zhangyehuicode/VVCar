@@ -18,7 +18,7 @@ namespace VVCar.BaseData.Data.Mapping
             // Properties
             this.Property(t => t.Code)
                 .IsRequired()
-                .HasMaxLength(20);
+                .HasMaxLength(30);
 
             this.Property(t => t.Name)
                 .IsRequired()

@@ -5,24 +5,48 @@
 }
 
 <div id="carinspection" style="margin:10px 0;">
-    <div class="cari-table" style="border-bottom:1px solid #f4f4f4;margin:5px 13px;vertical-align:middle;width:100%;">
+    <div class="cari-table" style="margin:5px 13px;vertical-align:middle;">
         <div class="cari-font cari-tablecell">当前公里数</div>
-        <input class="cari-tablecell" type="number" value="0" style="margin-left:10px;height:30px;width:80px;text-align:center;" />
+        <input class="cari-tablecell" type="number" value="0" style="margin-left:10px;height:30px;width:80px;text-align:center;" min="0" />
     </div>
-    <div class="cari-font" style="height:40px;vertical-align:middle;padding:0 13px;border-bottom:1px solid #f4f4f4;">车检结论</div>
-    <div style="padding:5px 13px;">
-        <textarea placeholder="请输入车检结论" style="height:120px;width:100%;"></textarea>
+    <div style="height:1px;background:#f4f4f4;width:100%;"></div>
+    <div class="cari-font" style="height:40px;line-height:40px;margin:0 13px;border-bottom:1px solid #f4f4f4;">车检结论</div>
+    <div style="padding:0 13px;">
+        <textarea placeholder="请输入车检结论" style="height:120px;width:100%;margin:5px 0;"></textarea>
     </div>
     <div class="slide-box">
-        <span>漆面检查</span>
-        <span>轮胎/车毂</span>
-        <span>发动机舱</span>
-        <span>刹车油</span>
-        <span>机油</span>
-        <span>雨刮片</span>
-        <span>玻璃</span>
-        <span>车内饰</span>
-        <span>外饰件</span>
+        <div class="slide-box-item selected-font" v-on:click="selectitem">漆面检查</div>
+        <div class="slide-box-item" v-on:click="tyrecheckitem">轮胎/车毂</div>
+        <div class="slide-box-item" v-on:click="enginecheckitem">发动机舱</div>
+        <div class="slide-box-item" v-on:click="selectitem">刹车油</div>
+        <div class="slide-box-item" v-on:click="selectitem">机油</div>
+        <div class="slide-box-item" v-on:click="selectitem">雨刮片</div>
+        <div class="slide-box-item" v-on:click="selectitem">玻璃</div>
+        <div class="slide-box-item" v-on:click="selectitem">车内饰</div>
+        <div class="slide-box-item" v-on:click="selectitem">外饰件</div>
+    </div>
+    <div class="cari-table" style="width:100%;">
+        <div class="cari-tablecell check-item">项目名称</div>
+        <div class="cari-tablecell check-item">状态</div>
+        <div class="cari-tablecell check-item">车检详情</div>
+    </div>
+    <div>
+        <div class="cari-table" style="width:100%;text-align:center;border-bottom:1px solid #f4f4f4;padding:5px 0;" v-for="Part in CarInspectionPartDisplayList">
+            <div class="cari-tablecell check-item-title" style="width:33.33%">{{Part.Name}}</div>
+            <div class="cari-tablecell" style="width:33.33%">
+                <div class="cari-table" style="margin:auto;">
+                    <div class="cari-tablecell status-abnormal" v-on:click="abnormalclick">异常</div>
+                    <div class="cari-tablecell status-normal" v-on:click="normalclick">正常</div>
+                    <div style="display:none;">{{Part.Part}}</div>
+                </div>
+            </div>
+            <div class="cari-tablecell" style="width:33.33%">
+                <div class="cari-table" style="margin:auto;">
+                    <img class="cari-tablecell check-item-icon" src="~/Areas/resource/img/mobile/plus_icon.png" />
+                    <div class="cari-tablecell check-item-explain">添加说明</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -32,19 +56,19 @@
             display: -webkit-box;
             overflow-x: scroll;
             -webkit-overflow-scrolling: touch;
-            /*float: left;*/
             width: 100%;
             height: 40px;
             border-top: 5px solid #f4f4f4;
-            /*color: #484a4e;
-            font-size: 15px;*/
+            vertical-align: middle;
+            border-bottom: 1px solid #f4f4f4;
         }
 
-            .slide-box span {
-                color: #484a4e;
-                font-size: 15px;
-                margin: 0 5px;
-            }
+        .slide-box-item {
+            color: #484a4e;
+            font-size: 15px;
+            margin: 0 6px;
+            line-height: 40px;
+        }
 
         .cari-table {
             display: table;
@@ -57,6 +81,62 @@
         .cari-font {
             color: #484a4e;
             font-size: 15px;
+        }
+
+        .selected-font {
+            color: #67b1f0;
+        }
+
+        .check-item {
+            color: #ccc;
+            font-size: 18px;
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            width: 33.33%;
+        }
+
+        .check-item-title {
+            color: #484a4e;
+            font-size: 15px;
+        }
+
+        .check-item-explain {
+            color: #67b1f0;
+            font-size: 13px;
+        }
+
+        .check-item-icon {
+            width: 20px;
+            margin: 0 3px -5px 0;
+        }
+
+        .status-normal {
+            color: #fff;
+            background: #67b1f0;
+            font-size: 14px;
+            text-align: center;
+            height: 28px;
+            line-height: 28px;
+            width: 38px;
+        }
+
+        .status-abnormal {
+            color: #fff;
+            background: #dadada;
+            font-size: 14px;
+            text-align: center;
+            height: 28px;
+            line-height: 28px;
+            width: 38px;
+        }
+
+        .status-abnormal-selected {
+            background: red;
+        }
+
+        .status-normal-unselected {
+            background: #dadada;
         }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
@@ -89,13 +169,12 @@
                                 'hideAllNonBaseMenuItem',
                                 'showMenuItems',
                                 'closeWindow',
-                                'scanQRCode',
+                                'scanQRCode'
                             ]
                         });
                         wx.ready(function () {
                             wx.hideAllNonBaseMenuItem();
                         });
-                    } else {
                     }
                 },
                 complete: function (xmlHttpRequest, textStatus) {
@@ -103,7 +182,7 @@
                 error: function (xmlHttpRequest, textStatus) {
                 }
             });
-        };
+        }
         wxConfig();
     </script>
     <script type="text/javascript">
@@ -115,13 +194,15 @@
             _viewModel = new Vue({
                 el: '#carinspection',
                 data: {
+                    CarInspectionPartList: [],
+                    CarInspectionPartDisplayList:[],
                 },
                 methods: {
                     back: function (event) {
                         history.back(-1);
                     },
                     home: function (event) {
-                        if (_ismaster == 'true') {
+                        if (_ismaster === 'true') {
                             window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
                         } else {
                             window.location.href = "/Mobile/Merchant/StaffHome?mch=" + mch;
@@ -129,11 +210,50 @@
                     },
                     confirm: function (event) {
 
-                    }
+                    },
+                    selectitem: function (event) {
+                        var currentitem = event.currentTarget;
+                        var items = $('.slide-box').find('div');
+                        for (var i = 0; i < items.length; i++) {
+                            var item = $(items[i]);
+                            if (item[0] === currentitem)
+                                item.css('color', '#67b1f0');
+                            else
+                                item.css('color','#484a4e');
+                        }
+                    },
+                    normalclick: function (event) {
+                        var btn = $(event.currentTarget);
+                        btn.removeClass('status-normal-unselected');
+                        var parent = btn.parent();
+                        var abnormal = $(parent.find('div')[0]);
+                        abnormal.removeClass('status-abnormal-selected');
+                        var part = $(parent.find('div')[2]).html();
+                    },
+                    abnormalclick: function (event) {
+                        var btn = $(event.currentTarget);
+                        btn.addClass('status-abnormal-selected');
+                        var parent = btn.parent();
+                        var normal = $(parent.find('div')[1]);
+                        normal.addClass('status-normal-unselected');
+                        var part = $(parent.find('div')[2]).html();
+                    },
+                    tyrecheckitem: function (event) {
+                        this.selectitem(event);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(12, 20);
+                    },
+                    enginecheckitem: function (event) {
+                        this.selectitem(event);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(20, 21);
+                    },
+                    brakeoilcheckitem: function (event) {
+                        this.selectitem(event);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(20, 21);
+                    },
                 }
             });
 
-            var ismaster = _ismaster == 'true';
+            var ismaster = _ismaster === 'true';
             function getUserByOpenId() {
                 $.ajax({
                     url: '/api/User/GetUserByOpenID',
@@ -145,7 +265,7 @@
                     },
                     success: function (res) {
                         if (res.IsSuccessful) {
-                            if (res.Data != null) {
+                            if (res.Data !== null) {
                                 user = res.Data;
                                 sessionStorage.setItem('user', JSON.stringify(res.Data));
                             }
@@ -163,11 +283,31 @@
                     }
                 });
             }
-            if (user == null || user == '') {
+            if (user === null || user === '') {
                 //getUserByOpenId();
             } else {
                 user = JSON.parse(user);
             }
+
+            function getCarInspectionPart() {
+                $.ajax({
+                    url: '/api/CarInspectionReport/GetCarInspectionPart',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.CarInspectionPartList = res.Data;
+                                _viewModel.CarInspectionPartDisplayList = res.Data.slice(0,12);
+                            }
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+            getCarInspectionPart();
 
         });
     </script>

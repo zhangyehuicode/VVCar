@@ -69,6 +69,8 @@ namespace VVCar.Shop.Services.DomainServices
                         t.Money = t.PriceSale * t.Quantity;
                     }
                     var product = ProductRepo.GetByKey(t.ProductID);
+                    t.CostPrice = product.CostPrice;
+                    t.CostMoney = t.CostPrice * t.Quantity;
                     t.IsCommissionRate = product.IsCommissionRate;
                     t.CommissionRate = product.CommissionRate;
                     t.CommissionMoney = product.CommissionMoney;

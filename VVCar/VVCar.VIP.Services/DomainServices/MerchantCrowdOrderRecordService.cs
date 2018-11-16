@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.BaseData.Domain;
+using VVCar.BaseData.Domain.Entities;
 using VVCar.BaseData.Domain.Services;
 using VVCar.Shop.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
@@ -34,6 +35,14 @@ namespace VVCar.VIP.Services.DomainServices
 
         IRepository<Order> OrderRepo { get => UnitOfWork.GetRepository<IRepository<Order>>(); }
 
+        IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
+
+        IRepository<Product> ProductRepo { get => UnitOfWork.GetRepository<IRepository<Product>>(); }
+
+        IRepository<MakeCodeRule> MakeCodeRuleRepo { get => UnitOfWork.GetRepository<IRepository<MakeCodeRule>>(); }
+
+        IRepository<MerchantCrowdOrder> MerchantCrowdOrderRepo { get => UnitOfWork.GetRepository<IRepository<MerchantCrowdOrder>>(); }
+
         #endregion
 
         /// <summary>
@@ -46,17 +55,54 @@ namespace VVCar.VIP.Services.DomainServices
             if (entity == null || entity.MerchantCrowdOrderRecordItemList == null || entity.MerchantCrowdOrderRecordItemList.Count < 1)
                 return null;
             entity.ID = Util.NewID();
+            if (string.IsNullOrEmpty(entity.Code))
+                entity.Code = GetCode();
             entity.CreatedDate = DateTime.Now;
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
             entity.JoinPeople = entity.MerchantCrowdOrderRecordItemList.Count();
+            var merchantCrowdOrder = MerchantCrowdOrderRepo.GetByKey(entity.MerchantCrowdOrderID);
             entity.MerchantCrowdOrderRecordItemList.ForEach(t =>
             {
                 t.ID = Util.NewID();
+                var member = MemberRepo.GetByKey(entity.MemberID);
+                if (member != null)
+                    t.MemberName = member.Name;
                 t.MerchantCrowdOrderRecordID = entity.ID;
                 t.CreatedDate = DateTime.Now;
                 t.MerchantID = entity.MerchantID;
             });
-            return base.Add(entity);
+            var result = base.Add(entity);
+
+            if (entity.JoinPeople == merchantCrowdOrder.PeopleCount)
+            {
+                var memberIDs = MerchantCrowdOrderRecordItemRepo.GetQueryable(false).Where(t => t.MerchantCrowdOrderRecordID == result.ID).Select(t => t.MemberID).Distinct().ToArray();
+                JoinCrowdOrderSuccessNotify(merchantCrowdOrder, result, memberIDs);
+            }
+
+            return result;
+        }
+
+        string GetCode()
+        {
+            var newCode = string.Empty;
+            var existCode = false;
+            var makeCodeRuleService = ServiceLocator.Instance.GetService<IMakeCodeRuleService>();
+            var entity = Repository.GetQueryable(false).OrderByDescending(t => t.CreatedDate).FirstOrDefault();
+            if (entity != null && entity.CreatedDate.Date != DateTime.Now.Date)
+            {
+                var rule = MakeCodeRuleRepo.GetQueryable().Where(t => t.Code == "MerchantCrowdOrder" && t.IsAvailable).FirstOrDefault();
+                if (rule != null)
+                {
+                    rule.CurrentValue = 0;
+                    MakeCodeRuleRepo.Update(rule);
+                }
+            }
+            do
+            {
+                newCode = makeCodeRuleService.GenerateCode("MerchantCrowdOrder", DateTime.Now);
+                existCode = Repository.Exists(t => t.Code == newCode);
+            } while (existCode);
+            return newCode;
         }
 
         /// <summary>
@@ -69,21 +115,34 @@ namespace VVCar.VIP.Services.DomainServices
             if (entity == null)
                 return null;
             var merchantCrowdOrderRecord = Repository.GetByKey(entity.MerchantCrowdOrderRecordID);
+            var merchantCrowdOrder = MerchantCrowdOrderRepo.GetByKey(merchantCrowdOrderRecord.MerchantCrowdOrderID);
             UnitOfWork.BeginTransaction();
             try {
                 merchantCrowdOrderRecord.JoinPeople += 1;
+                if (merchantCrowdOrderRecord.JoinPeople > merchantCrowdOrder.PeopleCount)
+                    throw new DomainException("拼单人数已满");
                 entity.ID = Util.NewID();
+                var member = MemberRepo.GetByKey(entity.MemberID);
+                if (member != null)
+                    entity.MemberName = member.Name;
                 entity.CreatedDate = DateTime.Now;
                 entity.MerchantID = AppContext.CurrentSession.MerchantID;
                 MerchantCrowdOrderRecordItemRepo.Add(entity);
                 UnitOfWork.CommitTransaction();
+                //通知
+                var result = merchantCrowdOrderRecord.MapTo<MerchantCrowdOrderRecordDto>();
+                if (merchantCrowdOrderRecord.JoinPeople == result.PeopleCount)
+                {
+                    var memberIDs = MerchantCrowdOrderRecordItemRepo.GetQueryable(false).Where(t => t.MerchantCrowdOrderRecordID == merchantCrowdOrderRecord.ID).Select(t => t.MemberID).Distinct().ToArray();
+                    JoinCrowdOrderSuccessNotify(merchantCrowdOrder, merchantCrowdOrderRecord, memberIDs);
+                }
+                return result;
             }
             catch (Exception e)
             {
                 UnitOfWork.RollbackTransaction();
                 throw new DomainException("加入拼单出现异常："+ e.Message);
             }
-            return merchantCrowdOrderRecord.MapTo<MerchantCrowdOrderRecordDto>();
         }
 
         /// <summary>
@@ -94,14 +153,14 @@ namespace VVCar.VIP.Services.DomainServices
         /// <returns></returns>
         public IEnumerable<MerchantCrowdOrderRecordDto> Search(MerchantCrowdOrderRecordFilter filter, out int totalCount)
         {
-            var queryable = Repository.GetIncludes(false, "MerchantCrowdOrder", "MerchantCrowdOrder.Product");
+            var queryable = Repository.GetIncludes(false, "MerchantCrowdOrder", "MerchantCrowdOrder.Product", "MerchantCrowdOrderRecordItemList");
             if (filter.ID.HasValue)
             {
                 queryable = queryable.Where(t => t.ID == filter.ID.Value);
             }
             if (filter.MemberID.HasValue)
             {
-                queryable = queryable.Where(t => t.MemberID == filter.MemberID.Value);
+                queryable = queryable.Where(t => t.MerchantCrowdOrderRecordItemList.Select(item => item.MemberID).Contains(filter.MemberID.Value));
             }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
@@ -182,7 +241,7 @@ namespace VVCar.VIP.Services.DomainServices
                 {
                     touser = merchantCrowdOrderRecord.Member.WeChatOpenID,
                     template_id = templateId,
-                    url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MyMerchantCrowdOrderDetails?mch={AppContext.CurrentSession.MerchantCode}&coid={merchantCrowdOrderRecord.ID}",
+                    url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MyMerchantCrowdOrderDetails?mch={AppContext.CurrentSession.MerchantCode}&crowdid={merchantCrowdOrderRecord.ID}",
                     data = new System.Dynamic.ExpandoObject(),
                 };
                 message.data.first = new WeChatTemplateMessageDto.MessageData("拼单成功");
@@ -195,6 +254,39 @@ namespace VVCar.VIP.Services.DomainServices
             catch (Exception e)
             {
                 AppContext.Logger.Error($"发送拼单成功提醒异常，{e.Message}");
+            }
+        }
+
+        void JoinCrowdOrderSuccessNotify(MerchantCrowdOrder merchantCrowdOrder, MerchantCrowdOrderRecord merchantCrowdOrderRecord, Guid[] memberIDs)
+        {
+            try
+            {
+                var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_CrowdOrderSuccess);
+                if (string.IsNullOrEmpty(templateId))
+                    return;
+                var message = new WeChatTemplateMessageDto
+                {
+                    touser = "",
+                    template_id = templateId,
+                    url = $"{AppContext.Settings.SiteDomain}/Mobile/Customer/MyMerchantCrowdOrderDetails?mch={AppContext.CurrentSession.MerchantCode}&crowdid={merchantCrowdOrderRecord.ID}",
+                    data = new System.Dynamic.ExpandoObject(),
+                };
+                var product = ProductRepo.GetByKey(merchantCrowdOrder.ProductID);
+                message.data.first = new WeChatTemplateMessageDto.MessageData("拼单成功");
+                message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(product.Name);
+                message.data.keyword2 = new WeChatTemplateMessageDto.MessageData(merchantCrowdOrderRecord.Code);
+                message.data.keyword3 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyy-MM-dd"));
+                message.data.remark = new WeChatTemplateMessageDto.MessageData("立即下单");
+                var memberList = MemberRepo.GetQueryable(false).Where(t => memberIDs.Contains(t.ID)).ToList();
+                memberList.ForEach(t =>
+                {
+                    message.touser = t.WeChatOpenID;
+                    WeChatService.SendWeChatNotify(message);
+                });
+            }
+            catch(Exception e)
+            {
+                AppContext.Logger.Error($"加入拼单提醒异常，{e.Message}");
             }
         }
     }

@@ -9,31 +9,31 @@
 	<div class="main">
 		<div class="bargainorder-con">
 			<div>
-				<img class="bargainorder-img" v-bind:src=MerchantBargainOrder.ImgUrl />
+				<img class="bargainorder-img" v-bind:src=MerchantBargainOrderRecord.ImgUrl />
 			</div>
-			<div class="bargainorder-name">{{MerchantBargainOrder.ProductName}}</div>
+			<div class="bargainorder-name">{{MerchantBargainOrderRecord.ProductName}}</div>
 			<div class="cbctable bargainorder-price-con width-fill">
-				<div class="cbctablecell bargainorder-price"><span style="font-size:13px;">￥</span>{{MerchantBargainOrder.Price}}</div>
-				<div class="cbctablecell bargainorder-pricesale">￥{{MerchantBargainOrder.PriceSale}}</div>
+				<div class="cbctablecell bargainorder-price"><span style="font-size:13px;">￥</span>{{MerchantBargainOrderRecord.Price}}</div>
+				<div class="cbctablecell bargainorder-pricesale">￥{{MerchantBargainOrderRecord.PriceSale}}</div>
 				@*<div class="cbctablecell bargainorder-count">已拼666件</div>*@
 			</div>
-			<div class="bargainorder-name">{{MerchantBargainOrder.Name}}</div>
+			<div class="bargainorder-name">{{MerchantBargainOrderRecord.Name}}</div>
 		</div>
-		<div class="peoplecount-con">已有<span style="color:#e02d28;margin:0 3px;">{{MerchantBargainOrder.JoinPeople}}</span>人参与<span style="font-size:13px;">（最多<span style="color:#e02d28;">{{MerchantBargainOrder.PeopleCount}}</span>人参与）</span></div>
-		<div v-for="Item in MerchantBargainOrder.MerchantBargainOrderRecordItemList">
-			<div class="peoplecount-con" v-if="MerchantBargainOrder.MemberID!=Item.MemberID">会员：{{Item.MemberName}}帮您省：<span style="font-size:13px;">￥</span>{{Item.Price}}</div>
+		<div class="peoplecount-con">已有<span style="color:#e02d28;margin:0 3px;">{{MerchantBargainOrderRecord.JoinPeople}}</span>人参与<span style="font-size:13px;">（最多<span style="color:#e02d28;">{{MerchantBargainOrderRecord.PeopleCount}}</span>人参与）</span><span style="float:right;background-color:red;padding:2px 6px 2px 6px;border-radius:5px;color:white;" v-on:click="flash">刷新</span></div>
+		<div v-for="Item in MerchantBargainOrderRecord.MerchantBargainOrderRecordItemList">
+			<div class="peoplecount-con" v-if="MerchantBargainOrderRecord.MemberID!=Item.MemberID"><span style="color:red">{{Item.MemberName}}</span>帮您砍了：<span style="font-size:13px;">￥</span>{{Item.Price}}</div>
 		</div>
 	</div>
 	<div class="bottomactioncon" v-on:click="join" v-bind:class="bargainClass">
-		<div>￥{{MerchantBargainOrder.FinalPrice}}</div>
+		<div>￥{{MerchantBargainOrderRecord.FinalPrice}}</div>
 		<div>帮兄弟砍个价,谢了!</div>
 	</div>
-	<div class="bottomactioncon" v-on:click="buy" v-if="!MerchantBargainOrder.IsOrdered&&MerchantBargainOrder.MemberID==MyInfo.ID" v-bind:class="buyClass">
-		<div>￥{{MerchantBargainOrder.FinalPrice}}</div>
+	<div class="bottomactioncon" v-on:click="buy" v-if="!MerchantBargainOrderRecord.IsOrdered&&MerchantBargainOrderRecord.MemberID==MyInfo.ID" v-bind:class="buyClass">
+		<div>￥{{MerchantBargainOrderRecord.FinalPrice}}</div>
 		<div>立即下单</div>
 	</div>
-	<div class="bottomactioncon" v-if="MerchantBargainOrder.IsOrdered">
-		<div>￥{{MerchantBargainOrder.FinalPrice}}</div>
+	<div class="bottomactioncon" v-if="MerchantBargainOrderRecord.IsOrdered">
+		<div>￥{{MerchantBargainOrderRecord.FinalPrice}}</div>
 		<div>已下单</div>
 	</div>
 </div>
@@ -157,35 +157,35 @@
 	<script type="text/javascript">
         $(function () {
             var mch = $.getUrlParam('mch');
-            var coid = $.getUrlParam('coid');
-            var isadd = $.getUrlParam('isadd') == 'true';
-            if (isadd && (coid == null || coid=='')) {
-                $.alert('点击右上角分享朋友/朋友圈，开始砍价！');
+			var bargainid = $.getUrlParam('bargainid');
+			var isadd = $.getUrlParam('isadd') == 'true';
+			IsBargained = false;
+			if (isadd) {
+				$.alert('点击右上角分享朋友/朋友圈，开始砍价！');
+				IsBargained = true;
             }
-            var corid = $.getUrlParam('corid');
-        var merchantbargainorder = sessionStorage.getItem('merchantbargainorder');
-        //if (bargainorder == null || bargainorder == '')
-        //    return;
-        merchantbargainorder = JSON.parse(merchantbargainorder);
+            var bargainid = $.getUrlParam('bargainid');
+			var merchantbargainorderrecord = sessionStorage.getItem('merchantbargainorderrecord');
+			merchantbargainorderrecord = JSON.parse(merchantbargainorderrecord);
 			_viewModel = new Vue({
 				el: '#mymerchantbargainorderdetails',
 				data: {
 					MyInfo: {},
-					MerchantBargainOrder: {},
+					MerchantBargainOrderRecord: {},
 					IsMember: false,
-					Isbargained: false,
+					IsBargained: IsBargained,
 				},
 				computed: {
 					bargainClass: function () {
 						return {
-							show: !this.Isbargained,
-							hide: this.Isbargained,
+							show: !this.IsBargained,
+							hide: this.IsBargained,
 						}
 					},
 					buyClass: function () {
 						return {
-							show: this.Isbargained,
-							hide: !this.Isbargained,
+							show: this.IsBargained,
+							hide: !this.IsBargained,
 						}
 					}
 				},
@@ -196,15 +196,15 @@
                 },
 				back: function (event) {
 					sessionStorage.setItem('showorder', 3);
-                    history.back(-1);
+					window.location.href = "/Mobile/Customer/MyOrder?mch=" + mch;
 				},
 				join: function (event) {
-					if (_viewModel.MerchantBargainOrder.JoinPeople <= _viewModel.MerchantBargainOrder.PeopleCount) {
+					if (_viewModel.MerchantBargainOrderRecord.JoinPeople <= _viewModel.MerchantBargainOrderRecord.PeopleCount) {
 						$.ajax({
 							url: '/api/MerchantBargainOrderRecord/AddMerchantBargainOrderRecordItem',
 							type: 'POST',
 							data: {
-								MerchantBargainOrderRecordID: _viewModel.MerchantBargainOrder.ID,
+								MerchantBargainOrderRecordID: _viewModel.MerchantBargainOrderRecord.ID,
 								MemberID: _viewModel.MyInfo.ID,
 							},
 							headers: { 'CompanyCode': mch },
@@ -215,8 +215,8 @@
 								$.hideLoading();
 								if (res.IsSuccessful) {
 									if (res.Data != null) {
-										_viewModel.MerchantBargainOrder.JoinPeople = res.Data.JoinPeople;
-										_viewModel.Isbargained = true;
+										_viewModel.MerchantBargainOrderRecord.JoinPeople = res.Data.JoinPeople;
+										_viewModel.IsBargained = true;
 										$.alert('您已加入发起砍价成功，请点击右上角分享朋友/朋友圈，让优惠进行到底！');
 										window.location.reload();
 									}
@@ -233,22 +233,21 @@
 					}
 				},
                 buy: function (event) {
-                    //if (_viewModel.MerchantBargainOrder.JoinPeople>=_viewModel.MerchantBargainOrder.PeopleCount) {
-                        $.confirm('立即下单', function () {
-                            _viewModel.MerchantBargainOrder.Product.PriceSale = _viewModel.MerchantBargainOrder.FinalPrice;
-                            sessionStorage.setItem('product', JSON.stringify(_viewModel.MerchantBargainOrder.Product));
-                            sessionStorage.setItem('isfromcod', 'true');
-                            sessionStorage.setItem('corid', _viewModel.MerchantBargainOrder.ID);
-                            window.location.href = "/Mobile/Customer/ProductDetails?mch=" + mch;
-                        });
-                    //} else {
-                    //    $.alert('未达到拼单人数');
-                    //}
-                }
+                    $.confirm('立即下单', function () {
+                        _viewModel.MerchantBargainOrderRecord.Product.PriceSale = _viewModel.MerchantBargainOrderRecord.FinalPrice;
+                        sessionStorage.setItem('product', JSON.stringify(_viewModel.MerchantBargainOrderRecord.Product));
+                        sessionStorage.setItem('isfromcod', 'true');
+						sessionStorage.setItem('bargainid', _viewModel.MerchantBargainOrderRecord.ID);
+                        window.location.href = "/Mobile/Customer/ProductDetails?mch=" + mch;
+                    });
+				},
+				flash: function (event) { 
+					getmymerchantorder(bargainid);
+				}
             }
             });
-			if (merchantbargainorder != null && merchantbargainorder != '') {
-				_viewModel.MerchantBargainOrder = merchantbargainorder;
+			if (merchantbargainorderrecord != null && merchantbargainorderrecord != '') {
+				_viewModel.MerchantBargainOrderRecord = merchantbargainorderrecord;
 			}
 
             function getmymerchantorder(id) {
@@ -263,8 +262,8 @@
                         $.hideLoading();
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
-                                _viewModel.MerchantBargainOrder = res.Data[0];
-                                getMember(_viewModel.MerchantBargainOrder);
+                                _viewModel.MerchantBargainOrderRecord = res.Data[0];
+                                getMember(_viewModel.MerchantBargainOrderRecord);
                             }
                         } else {
                             $.alert(res.ErrorMessage);
@@ -291,29 +290,17 @@
 								if (res.Data.length > 0) {
 									_viewModel.MyInfo = res.Data[0];
 									_viewModel.IsMember = true;
-									_viewModel.MerchantBargainOrder.MerchantBargainOrderRecordItemList.forEach(function (item) {
+									_viewModel.MerchantBargainOrderRecord.MerchantBargainOrderRecordItemList.forEach(function (item) {
 										if (item.MemberID == _viewModel.MyInfo.ID) {
-											_viewModel.Isbargained = true;
+											_viewModel.IsBargained = true;
 										}
 									});
-									//if (coid != null && coid != "" && merchantbargainorder != null && merchantbargainorder != '') {
-									//	sessionStorage.setItem('merchantbargainorder', JSON.stringify(merchantbargainorder));
-									//	window.location.href = "/Mobile/Customer/MerchantBargainOrderDetails?mch=" + mch;
-									//} else if (merchantbargainorder == null || merchantBargainorder == ''){
-									//	window.location.href = "/Mobile/Customer/MerchantBargainOrder?mch=" + mch;
-									//}
 								} else {
-									if (coid != null && coid != "") {
-										window.location.href = "/Mobile/Customer/Index?mch=" + mch + "&coid=" + coid;
-									} else {
-										window.location.href = "/Mobile/Customer/Index?mch=" + mch;
-									}
+									window.location.href = "/Mobile/Customer/Index?mch=" + mch + "&bargainid=" + bargainid;
 								}
 							} else {
-								if (coid != null && coid != "") {
-									window.location.href = "/Mobile/Customer/Index?mch=" + mch + "&coid=" + coid;
-								} else {
-									window.location.href = "/Mobile/Customer/Index?mch=" + mch;
+								if (bargainid != null && bargainid != "") {
+									window.location.href = "/Mobile/Customer/Index?mch=" + mch + "&bargainid=" + bargainid;
 								}
 							}
 						} else {
@@ -326,12 +313,46 @@
 				});
 			}
 
-            if (corid != null && corid != '') {
-                getmymerchantorder(corid);
-            } else if (coid != null && coid != "") {
-                getmymerchantorder(coid);
+			var member = sessionStorage.getItem('member');
+            if (member == null || member == '') {
+                var mch = $.getUrlParam('mch');
+                function init() {
+                    $.ajax({
+                        url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                        type: 'GET',
+                        headers: { 'CompanyCode': mch },
+                        beforeSend: function () {
+                            $.showLoading();
+                        },
+                        success: function (res) {
+                            $.hideLoading();
+                            if (res.IsSuccessful) {
+                                if (res.Data != null) {
+                                    member = res.Data;
+                                    sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                } else {
+                                    window.location.href = "/Mobile/Customer?mch=" + mch;
+                                }
+                            } else {
+                                $.alert(res.ErrorMessage);
+                                window.location.href = "/Mobile/Customer?mch=" + mch;
+                            }
+                        },
+                        error: function () {
+                            $.hideLoading();
+                            window.location.href = "/Mobile/Customer?mch=" + mch;
+                        }
+                    });
+                }
+                init();
             } else {
-                getMember(merchantbargainorder);
+                member = JSON.parse(member);
+			}
+
+			if (bargainid != null && bargainid != "") {
+				getmymerchantorder(bargainid);
+            } else {
+                getMember(merchantbargainorderrecord);
             }
 
             function wxConfig() {
@@ -365,17 +386,17 @@
                                 //wx.hideAllNonBaseMenuItem();
                                 console.log('ready');
                                 wx.onMenuShareAppMessage({
-                                    title: "【砍价】"+_viewModel.MerchantBargainOrder.Name,
+                                    title: "【砍价】"+_viewModel.MerchantBargainOrderRecord.Name,
                                     desc: '砍价助力！分享即享低价！',
-                                    link: document.URL + '&coid=' + _viewModel.MerchantBargainOrder.ID,
-                                    imgUrl: document.location.origin + _viewModel.MerchantBargainOrder.ImgUrl,
+									link: document.URL.replace('isadd=true', 'isadd=false') + '&bargainid=' + _viewModel.MerchantBargainOrderRecord.ID,
+									imgUrl: document.location.origin + _viewModel.MerchantBargainOrderRecord.ImgUrl,
                                     success: function (res) {
                                     }
                                 });
                                 wx.onMenuShareTimeline({
-                                    title: "【砍价】" + _viewModel.MerchantBargainOrder.Name, // 分享标题
-                                    link: document.URL + '&coid=' + _viewModel.MerchantBargainOrder.ID, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                                    imgUrl: document.location.origin + _viewModel.MerchantBargainOrder.ImgUrl, // 分享图标
+									title: "【砍价】" + _viewModel.MerchantBargainOrderRecord.Name, // 分享标题
+									link: document.URL.replace('isadd=true', 'isadd=false') + '&bargainid=' + _viewModel.MerchantBargainOrderRecord.ID, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+									imgUrl: document.location.origin + _viewModel.MerchantBargainOrderRecord.ImgUrl, // 分享图标
                                     success: function () {
                                         // 用户点击了分享后执行的回调函数
                                     }

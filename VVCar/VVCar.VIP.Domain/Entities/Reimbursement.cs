@@ -12,6 +12,12 @@ namespace VVCar.VIP.Domain.Entities
     public class Reimbursement : EntityBase
     {
         /// <summary>
+        /// 编号
+        /// </summary>
+        [Display(Name = "编号")]
+        public string Code { get; set; }
+
+        /// <summary>
         /// 报销人ID
         /// </summary>
         [Display(Name = "报销人ID")]

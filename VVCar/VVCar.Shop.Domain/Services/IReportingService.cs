@@ -101,5 +101,21 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="consumeHistories"></param>
         /// <returns></returns>
         bool ImportConsumeHistoryData(IEnumerable<ConsumeHistory> consumeHistories);
+
+        /// <summary>
+        /// 营业报表
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        IEnumerable<OperationStatementDto> GetOperationStatement(OperationStatementFilter filter, out int totalCount);
+
+        /// <summary>
+        /// 营业报表详情
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        IEnumerable<OperationStatementDetailDto> GetOperationStatementDetail(OperationStatementFilter filter, out int totalCount);   
     }
 }

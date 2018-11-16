@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain.Entities;
+using VVCar.BaseData.Domain.Services;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Enums;
@@ -26,6 +28,8 @@ namespace VVCar.VIP.Services.DomainServices
         {
         }
 
+        IRepository<MakeCodeRule> MakeCodeRuleRepo { get => UnitOfWork.GetRepository<IRepository<MakeCodeRule>>(); }
+
         /// <summary>
         /// 新增
         /// </summary>
@@ -36,6 +40,8 @@ namespace VVCar.VIP.Services.DomainServices
             if (entity == null)
                 return null;
             entity.ID = Util.NewID();
+            if (string.IsNullOrEmpty(entity.Code))
+                entity.Code = GetCode();
             if (entity.UserID == null)
                 entity.UserID = AppContext.CurrentSession.UserID;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
@@ -43,6 +49,29 @@ namespace VVCar.VIP.Services.DomainServices
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
             entity.CreatedDate = DateTime.Now;
             return base.Add(entity);
+        }
+
+        string GetCode()
+        {
+            var newCode = string.Empty;
+            var existCode = false;
+            var makeCodeRuleService = ServiceLocator.Instance.GetService<IMakeCodeRuleService>();
+            var entity = Repository.GetQueryable(false).OrderByDescending(t => t.CreatedDate).FirstOrDefault();
+            if (entity != null && entity.CreatedDate.Date != DateTime.Now.Date)
+            {
+                var rule = MakeCodeRuleRepo.GetQueryable().Where(t => t.Code == "Reimbursement" && t.IsAvailable).FirstOrDefault();
+                if (rule != null)
+                {
+                    rule.CurrentValue = 0;
+                    MakeCodeRuleRepo.Update(rule);
+                }
+            }
+            do
+            {
+                newCode = makeCodeRuleService.GenerateCode("Reimbursement", DateTime.Now);
+                existCode = Repository.Exists(t => t.Code == newCode);
+            } while (existCode);
+            return newCode;
         }
 
         /// <summary>

@@ -78,6 +78,8 @@ namespace VVCar.VIP.Services.DomainServices
             var advisementSetting = Repository.GetByKey(key);
             if (advisementSetting == null)
                 return false;
+            if(advisementSetting.CreatedUserID != AppContext.CurrentSession.UserID)
+                throw new DomainException("不能删除不是自己创建的数据");
             advisementSetting.IsDeleted = true;
             advisementSetting.LastUpdateDate = DateTime.Now;
             advisementSetting.LastUpdateUserID = AppContext.CurrentSession.UserID;
@@ -147,7 +149,7 @@ namespace VVCar.VIP.Services.DomainServices
                 };
                 result.Add(advisementSettingDto);
             });
-            return result;
+            return result.OrderByDescending(t=> t.CreatedDate);
         }
     }
 }

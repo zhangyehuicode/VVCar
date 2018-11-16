@@ -211,5 +211,25 @@ namespace VVCar.Shop.Services.DomainServices
             //});
             //return result;
         }
+
+        /// <summary>
+        /// 获取车检部位
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<CarInspectionPartInfo> GetCarInspectionPart()
+        {
+            var result = new List<CarInspectionPartInfo>();
+            var parts = Enum.GetValues(typeof(ECarInspectionPart));
+            foreach (ECarInspectionPart part in parts)
+            {
+                if (part != ECarInspectionPart.None)
+                    result.Add(new CarInspectionPartInfo
+                    {
+                        Name = part.GetDescription(),
+                        Part = part,
+                    });
+            }
+            return result.OrderBy(t => t.Part);
+        }
     }
 }

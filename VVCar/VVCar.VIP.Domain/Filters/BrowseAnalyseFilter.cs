@@ -23,5 +23,7 @@ namespace VVCar.VIP.Domain.Filters
         /// 点击次数
         /// </summary>
         public int? ClickCount { get; set; }
+
+        public string ShareOpenID { get; set; }
     }
 }

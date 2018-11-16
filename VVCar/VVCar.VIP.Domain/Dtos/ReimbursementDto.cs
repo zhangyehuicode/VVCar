@@ -10,6 +10,12 @@ namespace VVCar.VIP.Domain.Dtos
     public class ReimbursementDto
     {
         /// <summary>
+        /// 编号
+        /// </summary>
+        [Display(Name = "编号")]
+        public string Code { get; set; }
+
+        /// <summary>
         /// 业务报销ID
         /// </summary>
         [Display(Name = "业务报销ID")]

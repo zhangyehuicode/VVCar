@@ -161,7 +161,9 @@
                         Money: 0,
                         Points: 0,
                         Remark: '',
-                        OrderItemList: [],
+						OrderItemList: [],
+						MerchantCrowdOrderRecordID: '',
+						MerchantBargainOrderRecordID: '',
                 },
                 IsAllMemberCard: false,
             },
@@ -264,6 +266,12 @@
             }
 
             //end
+
+			var crowdid = sessionStorage.getItem('crowdid');
+			var bargainid = sessionStorage.getItem('bargainid');
+
+			_payBillViewModel.Order.MerchantCrowdOrderRecordID = crowdid;
+			_payBillViewModel.Order.MerchantBargainOrderRecordID = bargainid;
 
             var isfromsc = sessionStorage.getItem('isfromshoppingcart');
             if (isfromsc != null && isfromsc == 'true')

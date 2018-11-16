@@ -40,6 +40,13 @@
 				labelWidth: 60,
 				margin: '0 0 0 5',
 			}, {
+				xtype: 'textfield',
+				name: 'ShareNickName',
+				fieldLabel: '分享者',
+				width: 170,
+				labelWidth: 60,
+				margin: '0 0 0 5',
+			}, {
 				xtype: 'numberfield',
 				name: 'Period',
 				fieldLabel: '大于间隔时间',
@@ -61,7 +68,7 @@
 		me.columns = [
 			{ header: '广告标题', dataIndex: 'Title', flex: 1, },
 			{ header: '分享者', dataIndex: 'ShareNickName', flex: 1 },
-			{ header: '会员名称', dataIndex: 'NickName', flex: 1 },
+			{ header: '会员昵称', dataIndex: 'NickName', flex: 1 },
 			{ header: '开始浏览时间', dataIndex: 'StartDate', flex: 1,},
 			{ header: '结束浏览时间', dataIndex: 'EndDate', flex:1,},
 			{ header: '时间间隔(秒)', dataIndex: 'Period', flex: 1, },

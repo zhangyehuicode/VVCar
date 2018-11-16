@@ -220,6 +220,8 @@
 					MerchantBargainOrderList: [],
 					TotalMoney: product.PriceSale,
 					ShowQuantity: !isfromcod,
+					MerchantCrowdOrderRecordID: '',
+					MerchantBargainOrderRecordID: '',
 					ShoppingCart: {
 						MemberID: member.MemberID,
 						OpenID: '@ViewBag.OpenId',
@@ -263,6 +265,8 @@
 					paynow: function (event) {
 						product.Money = _viewModel.TotalMoney;
 						product.Quantity = _viewModel.Quantity;
+						sessionStorage.setItem('crowdid', _viewModel.MerchantCrowdOrderRecordID);
+						sessionStorage.setItem('bargainid', _viewModel.MerchantBargainOrderRecordID);
 						sessionStorage.setItem('productlist', JSON.stringify([product]));
 						window.location.href = "/Mobile/Customer/ConfirmOrder?mch=" + mch;
 					},
@@ -298,6 +302,15 @@
 					}
 				}
 			 });
+
+			 var crowdid = sessionStorage.getItem('crowdid');
+			 if (crowdid != null && crowdid != '') {
+				 _viewModel.MerchantCrowdOrderRecordID = crowdid;
+			 }
+			 var bargainid = sessionStorage.getItem('bargainid');
+			 if (bargainid != null && bargainid != '') {
+				 _viewModel.MerchantBargainOrderRecordID = bargainid;
+			 }
 
 			 function getmerchantcrowdorderlist() {
 				 $.ajax({

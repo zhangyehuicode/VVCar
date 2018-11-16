@@ -9,31 +9,31 @@
 	<div class="main">
 		<div class="crowdorder-con">
 			<div>
-				<img class="crowdorder-img" v-bind:src=MerchantCrowdOrder.ImgUrl />
+				<img class="crowdorder-img" v-bind:src=MerchantCrowdOrderRecord.ImgUrl />
 			</div>
-			<div class="crowdorder-name">{{MerchantCrowdOrder.ProductName}}</div>
+			<div class="crowdorder-name">{{MerchantCrowdOrderRecord.ProductName}}</div>
 			<div class="cbctable crowdorder-price-con width-fill">
-				<div class="cbctablecell crowdorder-price"><span style="font-size:13px;">￥</span>{{MerchantCrowdOrder.Price}}</div>
-				<div class="cbctablecell crowdorder-pricesale">￥{{MerchantCrowdOrder.PriceSale}}</div>
+				<div class="cbctablecell crowdorder-price"><span style="font-size:13px;">￥</span>{{MerchantCrowdOrderRecord.Price}}</div>
+				<div class="cbctablecell crowdorder-pricesale">￥{{MerchantCrowdOrderRecord.PriceSale}}</div>
 				@*<div class="cbctablecell crowdorder-count">已拼666件</div>*@
 			</div>
-			<div class="crowdorder-name">{{MerchantCrowdOrder.Name}}</div>
+			<div class="crowdorder-name">{{MerchantCrowdOrderRecord.Name}}</div>
 		</div>
-		<div class="peoplecount-con">已有<span style="color:#e02d28;margin:0 3px;">{{MerchantCrowdOrder.JoinPeople}}</span>人参与<span style="font-size:13px;">（需<span style="color:#e02d28;">{{MerchantCrowdOrder.PeopleCount}}</span>人参与）</span></div>
-		<div v-for="MerchantCrowdOrderRecordItem in MerchantCrowdOrder.MerchantCrowdOrderRecordItemList">
+		<div class="peoplecount-con">已有<span style="color:#e02d28;margin:0 3px;">{{MerchantCrowdOrderRecord.JoinPeople}}</span>人参与<span style="font-size:13px;">（需<span style="color:#e02d28;">{{MerchantCrowdOrderRecord.PeopleCount}}</span>人参与）</span><span style="float:right;background-color:red;padding:2px 6px 2px 6px;border-radius:5px;color:white;" v-on:click="flash">刷新</span></div>
+		<div v-for="MerchantCrowdOrderRecordItem in MerchantCrowdOrderRecord.MerchantCrowdOrderRecordItemList">
 			<div class="peoplecount-con"><span style="color: red;">{{MerchantCrowdOrderRecordItem.MemberName}}</span>参与拼单</div>
 		</div>
 	</div>
 	<div class="bottomactioncon" v-on:click="join" v-bind:class="crowdClass">
-		<div>￥{{MerchantCrowdOrder.Price}}</div>
+		<div>￥{{MerchantCrowdOrderRecord.Price}}</div>
 		<div>加入拼单</div>
 	</div>
-	<div class="bottomactioncon" v-on:click="buy" v-if="!MerchantCrowdOrder.IsOrdered" v-bind:class="buyClass">
-		<div>￥{{MerchantCrowdOrder.Price}}</div>
+	<div class="bottomactioncon" v-on:click="buy" v-if="!MerchantCrowdOrderRecord.IsOrdered" v-bind:class="buyClass">
+		<div>￥{{MerchantCrowdOrderRecord.Price}}</div>
 		<div>立即下单</div>
 	</div>
-	<div class="bottomactioncon" v-if="MerchantCrowdOrder.IsOrdered">
-		<div>￥{{MerchantCrowdOrder.Price}}</div>
+	<div class="bottomactioncon" v-if="MerchantCrowdOrderRecord.IsOrdered">
+		<div>￥{{MerchantCrowdOrderRecord.Price}}</div>
 		<div>已下单</div>
 	</div>
 </div>
@@ -157,23 +157,21 @@
 	<script type="text/javascript">
         $(function () {
             var mch = $.getUrlParam('mch');
-            var coid = $.getUrlParam('coid');
+			var crowdid = $.getUrlParam('crowdid');
 			var isadd = $.getUrlParam('isadd') == 'true';
 			var IsCrowded = false;
-            if (isadd && (coid == null || coid=='')) {
+			if (isadd) {
 				$.alert('点击右上角分享朋友/朋友圈，开始拼单！');
 				IsCrowded = true;
             }
-            var corid = $.getUrlParam('corid');
-        var merchantcrowdorder = sessionStorage.getItem('merchantcrowdorder');
-        //if (crowdorder == null || crowdorder == '')
-        //    return;
-        merchantcrowdorder = JSON.parse(merchantcrowdorder);
+            var crowdid = $.getUrlParam('crowdid');
+			var merchantcrowdorderrecord = sessionStorage.getItem('merchantcrowdorderrecord');
+			merchantcrowdorderrecord = JSON.parse(merchantcrowdorderrecord);
 			_viewModel = new Vue({
 				el: '#mymerchantcrowdorderdetails',
 				data: {
 					MyInfo: {},
-					MerchantCrowdOrder: {},
+					MerchantCrowdOrderRecord: {},
 					IsMember: false,
 					IsCrowded: IsCrowded,
 				},
@@ -198,16 +196,15 @@
                 },
 				back: function (event) {
 					sessionStorage.setItem('showorder', 2);
-                    history.back(-1);
+					window.location.href = "/Mobile/Customer/MyOrder?mch=" + mch;
 				},
 				join: function (event) {
 					$.ajax({
 						url: '/api/MerchantCrowdOrderRecord/AddMerchantCrowdOrderRecordItem',
 						type: 'POST',
 						data: {
-							MerchantCrowdOrderRecordID: _viewModel.MerchantCrowdOrder.ID,
+							MerchantCrowdOrderRecordID: _viewModel.MerchantCrowdOrderRecord.ID,
 							MemberID: _viewModel.MyInfo.ID,
-							MemberName: '@ViewBag.NickName',
 						},
 						headers: { 'CompanyCode': mch },
 						beforeSend: function () {
@@ -217,9 +214,10 @@
 							$.hideLoading();
 							if (res.IsSuccessful) {
 								if (res.Data != null) {
-									_viewModel.MerchantCrowdOrder.JoinPeople = res.Data.JoinPeople;
+									_viewModel.MerchantCrowdOrderRecord.JoinPeople = res.Data.JoinPeople;
 									_viewModel.IsCrowded = true;
 									$.alert('您已加入拼单成功，请点击右上角分享朋友/朋友圈，让优惠进行到底！');
+									window.location.reload();
 								}
 							} else {
 								$.alert(res.ErrorMessage);
@@ -231,25 +229,28 @@
 					});
 				},
                 buy: function (event) {
-                    if (_viewModel.MerchantCrowdOrder.JoinPeople>=_viewModel.MerchantCrowdOrder.PeopleCount) {
+                    if (_viewModel.MerchantCrowdOrderRecord.JoinPeople>=_viewModel.MerchantCrowdOrderRecord.PeopleCount) {
                         $.confirm('立即下单', function () {
-                            _viewModel.MerchantCrowdOrder.Product.PriceSale = _viewModel.MerchantCrowdOrder.Price;
-                            sessionStorage.setItem('product', JSON.stringify(_viewModel.MerchantCrowdOrder.Product));
-                            sessionStorage.setItem('isfromcod', 'true');
-                            sessionStorage.setItem('corid', _viewModel.MerchantCrowdOrder.ID);
+							_viewModel.MerchantCrowdOrderRecord.Product.PriceSale = _viewModel.MerchantCrowdOrderRecord.Price;
+                            sessionStorage.setItem('product', JSON.stringify(_viewModel.MerchantCrowdOrderRecord.Product));
+							sessionStorage.setItem('isfromcod', 'true');
+                            sessionStorage.setItem('crowdid', _viewModel.MerchantCrowdOrderRecord.ID);
                             window.location.href = "/Mobile/Customer/ProductDetails?mch=" + mch;
                         });
                     } else {
                         $.alert('未达到拼单人数');
                     }
-                }
+				},
+				flash: function (event) {
+					getmymerchantorder(crowdid);
+				}
             }
             });
-			if (merchantcrowdorder != null && merchantcrowdorder != '') {
-				_viewModel.MerchantCrowdOrder = merchantcrowdorder;
+			if (merchantcrowdorderrecord != null && merchantcrowdorderrecord != '') {
+				_viewModel.MerchantCrowdOrderRecord = merchantcrowdorderrecord;
 			}
 
-            function getmymerchantorder(id) {
+			function getmymerchantorder(id) {
                 $.ajax({
                     url: '/api/MerchantCrowdOrderRecord?ID=' + id,
                     type: 'GET',
@@ -261,8 +262,8 @@
                         $.hideLoading();
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
-                                _viewModel.MerchantCrowdOrder = res.Data[0];
-                                getMember(_viewModel.MerchantCrowdOrder);
+								_viewModel.MerchantCrowdOrderRecord = res.Data[0];
+                                getMember(_viewModel.MerchantCrowdOrderRecord);
                             }
                         } else {
                             $.alert(res.ErrorMessage);
@@ -289,29 +290,17 @@
 								if (res.Data.length > 0) {
 									_viewModel.MyInfo = res.Data[0];
 									_viewModel.IsMember = true;
-									_viewModel.MerchantCrowdOrder.MerchantCrowdOrderRecordItemList.forEach(function (item) {
+									_viewModel.MerchantCrowdOrderRecord.MerchantCrowdOrderRecordItemList.forEach(function (item) {
 										if (item.MemberID == _viewModel.MyInfo.ID) {
 											_viewModel.IsCrowded = true;
 										}
 									});
-									//if (coid != null && coid != "" && merchantcrowdorder != null && merchantcrowdorder != '') {
-									//	sessionStorage.setItem('merchantcrowdorder', JSON.stringify(merchantcrowdorder));
-									//	window.location.href = "/Mobile/Customer/MerchantCrowdOrderDetails?mch=" + mch;
-									//} else if (merchantcrowdorder == null || merchantcrowdorder == ''){
-									//	window.location.href = "/Mobile/Customer/MerchantCrowdOrder?mch=" + mch;
-									//}
 								} else {
-									if (coid != null && coid != "") {
-										window.location.href = "/Mobile/Customer/Index?mch=" + mch + "&coid=" + coid;
-									} else {
-										window.location.href = "/Mobile/Customer/Index?mch=" + mch;
-									}
+									window.location.href = "/Mobile/Customer/Index?mch=" + mch + "&bargainid=" + bargainid;
 								}
 							} else {
-								if (coid != null && coid != "") {
-									window.location.href = "/Mobile/Customer/Index?mch=" + mch + "&coid=" + coid;
-								} else {
-									window.location.href = "/Mobile/Customer/Index?mch=" + mch;
+								if (bargainid != null && bargainid != "") {
+									window.location.href = "/Mobile/Customer/Index?mch=" + mch + "&bargainid=" + bargainid;
 								}
 							}
 						} else {
@@ -324,10 +313,44 @@
 				});
 			}
 
-            if (corid != null && corid != '') {
-                getmymerchantorder(corid);
-            } else if (coid != null && coid != "") {
-                getmymerchantorder(coid);
+			var member = sessionStorage.getItem('member');
+             if (member == null || member == '') {
+                 var mch = $.getUrlParam('mch');
+                 function init() {
+                     $.ajax({
+                         url: '/api/Member/GetMemberInfoByWeChat?openID=@ViewBag.OpenId',
+                         type: 'GET',
+                         headers: { 'CompanyCode': mch },
+                         beforeSend: function () {
+                             $.showLoading();
+                         },
+                         success: function (res) {
+                             $.hideLoading();
+                             if (res.IsSuccessful) {
+                                 if (res.Data != null) {
+                                     member = res.Data;
+                                     sessionStorage.setItem('member', JSON.stringify(res.Data));
+                                 } else {
+                                     window.location.href = "/Mobile/Customer?mch=" + mch;
+                                 }
+                             } else {
+                                 $.alert(res.ErrorMessage);
+                                 window.location.href = "/Mobile/Customer?mch=" + mch;
+                             }
+                         },
+                         error: function () {
+                             $.hideLoading();
+                             window.location.href = "/Mobile/Customer?mch=" + mch;
+                         }
+                     });
+                 }
+                 init();
+             } else {
+                 member = JSON.parse(member);
+             }
+
+            if (crowdid != null && crowdid != '') {
+                getmymerchantorder(crowdid);
             } else {
                 getMember(merchantcrowdorder);
             }
@@ -363,17 +386,17 @@
                                 //wx.hideAllNonBaseMenuItem();
                                 console.log('ready');
                                 wx.onMenuShareAppMessage({
-                                    title: "【拼单】"+_viewModel.MerchantCrowdOrder.Name,
+                                    title: "【拼单】"+_viewModel.MerchantCrowdOrderRecord.Name,
                                     desc: '拼单助力！注册即享低价！',
-                                    link: document.URL + '&coid=' + _viewModel.MerchantCrowdOrder.ID,
-                                    imgUrl: document.location.origin + _viewModel.MerchantCrowdOrder.ImgUrl,
+									link: document.URL.replace('isadd=true', 'isadd=false') + '&bargainid=' + _viewModel.MerchantCrowdOrderRecord.ID,
+                                    imgUrl: document.location.origin + _viewModel.MerchantCrowdOrderRecord.ImgUrl,
                                     success: function (res) {
                                     }
                                 });
                                 wx.onMenuShareTimeline({
-                                    title: "【拼单】" + _viewModel.MerchantCrowdOrder.Name, // 分享标题
-                                    link: document.URL + '&coid=' + _viewModel.MerchantCrowdOrder.ID, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                                    imgUrl: document.location.origin + _viewModel.MerchantCrowdOrder.ImgUrl, // 分享图标
+                                    title: "【拼单】" + _viewModel.MerchantCrowdOrderRecord.Name, // 分享标题
+                                    link: document.URL.replace('isadd=true', 'isadd=false') + '&bargainid=' + _viewModel.MerchantCrowdOrderRecord.ID, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                                    imgUrl: document.location.origin + _viewModel.MerchantCrowdOrderRecord.ImgUrl, // 分享图标
                                     success: function () {
                                         // 用户点击了分享后执行的回调函数
                                     }

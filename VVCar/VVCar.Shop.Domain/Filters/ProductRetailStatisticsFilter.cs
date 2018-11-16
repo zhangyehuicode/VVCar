@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VVCar.Shop.Domain.Enums;
 using YEF.Core.Dtos;
+using System.ComponentModel;
 
 namespace VVCar.Shop.Domain.Filters
 {
@@ -52,5 +53,38 @@ namespace VVCar.Shop.Domain.Filters
         /// 是否畅销
         /// </summary>
         public bool? IsSaleWell { get; set; }
+
+        /// <summary>
+        /// 商户号
+        /// </summary>
+        public string MerchantCode { get; set; }
+
+        /// <summary>
+        ///所有子商户数据
+        /// </summary>
+        public bool AllSubMerchantData { get; set; }
+
+        /// <summary>
+        /// 排序类型
+        /// </summary>
+        public EProductRetailStatisticsFilterOrderType OrderType { get; set; }
+    }
+
+    /// <summary>
+    /// 产品零售汇总统计过滤排序类型
+    /// </summary>
+    public enum EProductRetailStatisticsFilterOrderType
+    {
+        /// <summary>
+        /// 销售总额
+        /// </summary>
+        [Description("销售总额")]
+        Money = 0,
+
+        /// <summary>
+        /// 销售总数
+        /// </summary>
+        [Description("销售总数")]
+        Quantity = 1,
     }
 }

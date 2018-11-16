@@ -28,6 +28,11 @@ namespace VVCar.VIP.Domain.Filters
         public string NickName { get; set; }
 
         /// <summary>
+        /// 分享者名称
+        /// </summary>
+        public string ShareNickName { get; set; }
+
+        /// <summary>
         /// 间隔时间
         /// </summary>
         public decimal? Period { get; set; }

@@ -27,6 +27,11 @@ namespace VVCar.VIP.Domain.Dtos
         public Guid ID { get; set; }
 
         /// <summary>
+        /// 编号
+        /// </summary>
+        public string Code { get; set; }
+
+        /// <summary>
         /// 发起会员ID
         /// </summary>
         public Guid MemberID { get; set; }

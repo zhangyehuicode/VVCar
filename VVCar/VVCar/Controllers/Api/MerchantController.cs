@@ -112,6 +112,20 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 获取子商户
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetSubMerchants"), AllowAnonymous]
+        public PagedActionResult<Merchant> GetSubMerchants()
+        {
+            return SafeGetPagedData<Merchant>((result) =>
+            {
+                result.Data = MerchantService.GetSubMerchants();
+                result.TotalCount = result.Data.Count();
+            });
+        }
+
+        /// <summary>
         /// 导出商户
         /// </summary>
         /// <param name="filter"></param>

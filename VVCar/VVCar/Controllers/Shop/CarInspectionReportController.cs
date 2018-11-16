@@ -68,5 +68,19 @@ namespace VVCar.Controllers.Shop
                 result.TotalCount = totalCount;
             });
         }
+
+        /// <summary>
+        /// 获取车检部位
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("GetCarInspectionPart"), AllowAnonymous]
+        public PagedActionResult<CarInspectionPartInfo> GetCarInspectionPart()
+        {
+            return SafeGetPagedData<CarInspectionPartInfo>((result) =>
+            {
+                result.Data = CarInspectionReportService.GetCarInspectionPart();
+                result.TotalCount = result.Data.Count();
+            });
+        }
     }
 }

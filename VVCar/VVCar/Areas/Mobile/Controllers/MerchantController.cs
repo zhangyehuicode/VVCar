@@ -1040,6 +1040,10 @@ namespace VVCar.Areas.Mobile.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 车辆检测
+        /// </summary>
+        /// <returns></returns>
         public ActionResult CarInspection()
         {
             var companyCode = Request["mch"];

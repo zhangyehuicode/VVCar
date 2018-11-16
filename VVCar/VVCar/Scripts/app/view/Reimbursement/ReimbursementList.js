@@ -83,6 +83,7 @@
 			},
 		];
 		me.columns = [
+			{ header: '编号', dataIndex: 'Code', flex: 1},
 			{ header: '项目', dataIndex: 'Project', flex: 1 },
 			{
 				header: '审核状态', dataIndex: 'Status', width: 100,

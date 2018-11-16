@@ -1,0 +1,267 @@
+﻿
+@{
+    ViewBag.Title = "产品销售汇总";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="productretailstatistic">
+    <div class="hykhx">
+        <div style="display:table;margin:5px 13px;">
+            <div style="display:table-cell;font-size:15px;vertical-align:middle;width:30px;">客户</div>
+            <div style="display:table-cell;vertical-align:middle;">
+                <select class="kcd_input" style="width:250px;vertical-align:middle;text-align:center;margin:0 10px;" id="submerchantselect">
+                    <option value="0" style="text-align:center;width:100%;">全部</option>
+                    <option style="text-align:center;" v-for="SubMerchant in SubMerchantList" v-bind:value="SubMerchant.Code">{{SubMerchant.Name}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="hykhx" style="margin:5px 13px;padding:0;text-align:center;">
+        <div style="display:table;width:100%;">
+            <div style="display:table-cell;font-size:15px;vertical-align:middle;">开始日期</div>
+            <div class="mysousuo" style="display:table-cell;vertical-align:middle;">
+                <input type="date" class="dateinput" v-bind:value="StartDate" style="border:none;background:#f5f5f5;vertical-align:middle;" id="startdate">
+            </div>
+        </div>
+        <div style="display:table;width:100%;margin-top:5px;">
+            <div style="display:table-cell;font-size:15px;vertical-align:middle;">结束日期</div>
+            <div class="mysousuo" style="display:table-cell;vertical-align:middle;">
+                <input type="date" class="dateinput" v-bind:value="EndDate" style="border:none;background:#f5f5f5;" id="enddate">
+            </div>
+        </div>
+    </div>
+    <div class="hykhx" style="display:table;">
+        <div style="display:table-cell;width:30px;font-size:15px;vertical-align:middle;text-align:center;padding:0 5px 0 13px;">排序</div>
+        <select class="kcd_input" style="width:80px;display:table-cell;vertical-align:middle;margin:5px;" id="ordertypeselect">
+            <option value="1">销售总量</option>
+            <option value="0">销售总额</option>
+        </select>
+        <input type="text" class="kcgl_input" style="color:#999;display:table-cell;width:150px;vertical-align:middle;margin:5px;" placeholder="产品名称/编号" v-bind:value="ProductCodeName">
+        <div class="kcgl_btn" style="display:table-cell;vertical-align:middle;margin:5px;"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="search"></div>
+    </div>
+    <div class="touxiang" style="margin-bottom:25px;">
+        <ul class="pm_box">
+            <li class="pm_box1">
+                <div class="pm_box2" style="width:25%;text-align:center;">产品名称</div>
+                <div class="pm_box2" style="width:25%;text-align:center;">产品编号</div>
+                <div class="pm_box2" style="width:25%;text-align:center;">销售总量</div>
+                <div class="pm_box2" style="width:25%;text-align:center;">销售总额</div>
+            </li>
+            <li class="pm_box1" v-for="ProductStatistic in ProductStatisticList">
+                <div class="pm_box2" style="width:25%;color:#666;">{{ProductStatistic.ProductName}}</div>
+                <div class="pm_box2" style="width:25%; text-align:center;color:#666;">{{ProductStatistic.ProductCode}}</div>
+                <div class="pm_box2" style="width:25%; text-align:center;color:#666;">{{ProductStatistic.Quantity}}{{ProductStatistic.Unit}}</div>
+                <div class="pm_box2" style="width:25%; text-align:center;color:#666;">{{ProductStatistic.Money}}</div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@section scripts{
+    <style type="text/css">
+        .my_box {
+            /*margin-top: 15px;
+            margin-left: 3%;*/
+            border-radius: 10px;
+            box-shadow: 0 0 20px #f1f1f1;
+            background-color: #fff;
+            /*height: 60px;*/
+        }
+
+        .mysousuo {
+            width: 94%;
+            margin-left: 3%;
+            float: left;
+            background-color: #f5f5f5;
+            border-radius: 22px;
+            height: 30px;
+            margin: 5px 0;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+    <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode'
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        }
+        wxConfig();
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var user = sessionStorage.getItem('user');
+            var isgeneralmanager = sessionStorage.getItem('isgeneralmanager') == 'true';
+            var mch = $.getUrlParam('mch');
+            _viewModel = new Vue({
+                el: '#productretailstatistic',
+                data: {
+                    User: {},
+                    SubMerchantList: [],
+                    ProductStatisticList: [],
+                    StartDate:'@DateTime.Now.Date.ToString("yyyy-MM-dd")',
+                    EndDate:'@DateTime.Now.Date.ToString("yyyy-MM-dd")',
+                    ProductCodeName: ''
+                },
+                methods: {
+                    back: function (event) {
+                        history.back(-1);
+                    },
+                    home: function (event) {
+                        window.location.href = "/Mobile/Agent/GeneralManagerHome?mch=" + mch;
+                    },
+                    search: function (event) {
+                        searchaction();
+                    }
+                }
+            });
+
+            function getproductstatistic(merchantcode, all, ordertype) {
+                $.ajax({
+                    url: '/api/Reporting/ProductRetailStatistics?MerchantCode=' + merchantcode + '&OrderType=' + ordertype + '&StartDate=' + _viewModel.StartDate + '&EndDate=' + _viewModel.EndDate + '&ProductCodeName=' + _viewModel.ProductCodeName + '&AllSubMerchantData=' + all,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            if (res.Data !== null) {
+                                _viewModel.ProductStatisticList = res.Data;
+                            }
+                        } else {
+                            $.alert('提示', res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+
+            function getSubMerchants() {
+                $.ajax({
+                    url: '/api/Merchant/GetSubMerchants',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+                            _viewModel.SubMerchantList = res.Data;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+            getSubMerchants();
+
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsGeneralManager: isgeneralmanager,
+                        IsSalesManger: !isgeneralmanager,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.User = res.Data;
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            if (user === null || user==='') {
+                //getUserByOpenId();
+            }
+
+            function searchaction() {
+                var merchantcode = $('#submerchantselect').val();
+                if (merchantcode === null || merchantcode === '') {
+                    $.alert('提示', '请先选择客户');
+                    return;
+                }
+                var all = false;
+                if (merchantcode === "0")
+                    all = true;
+                var ordertype = $('#ordertypeselect').val();
+                getproductstatistic(merchantcode, all, ordertype);
+            }
+
+            $('#startdate').change(function () {
+                searchaction();
+            });
+
+            $('#enddate').change(function () {
+                searchaction();
+            });
+
+            $('#ordertypeselect').change(function () {
+                searchaction();
+            });
+
+            $('#submerchantselect').change(function () {
+                searchaction();
+            });
+
+        });
+    </script>
+}

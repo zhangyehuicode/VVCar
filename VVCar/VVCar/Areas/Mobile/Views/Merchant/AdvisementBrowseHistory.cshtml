@@ -134,7 +134,7 @@
 		});
 		function getBrowseHistory() {
 			$.ajax({
-				url: '/api/AdvisementBrowseHistory/GetBrowseAnalyse?AdvisementSettingID=' + advisement.ID,
+				url: '/api/AdvisementBrowseHistory/GetBrowseAnalyse?AdvisementSettingID=' + advisement.ID + '&ShareOpenID=' + '@ViewBag.OpenId',
 				type: 'GET',
 				headers: { 'CompanyCode': mch },
 				beforeSend: function () {

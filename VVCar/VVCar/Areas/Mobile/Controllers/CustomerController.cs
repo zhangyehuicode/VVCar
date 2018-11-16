@@ -313,6 +313,9 @@ namespace VVCar.Areas.Mobile.Controllers
             }
             ViewBag.OpenId = openId;
             ViewBag.NickName = TempData["nickname"] as string;
+#if DEBUG
+            ViewBag.NickName = "小灰灰";
+#endif
             ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
             ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
             return View();

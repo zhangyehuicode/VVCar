@@ -22,6 +22,12 @@ namespace VVCar.VIP.Domain.Entities
         }
 
         /// <summary>
+        /// 编号
+        /// </summary>
+        [Display(Name = "编号")]
+        public string Code { get; set; }
+
+        /// <summary>
         /// 发起会员ID
         /// </summary>
         [Display(Name = "发起会员ID")]

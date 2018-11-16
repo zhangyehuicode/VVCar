@@ -94,16 +94,16 @@
 	<div class="gwc_box" style="margin-top:15px;" v-for="Order in MerchantCrowdOrderList" v-if="ShowOrder == 2">
 		<img class="gwc_img" v-bind:src="Order.ImgUrl">
 		<div class="gwc_box2">
-			<span class="gwc_text">拼单：{{Order.Name}}</span>
+			<span class="gwc_text">单号：{{Order.Code}}</span>
 			<span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
 			<span class="gwc_text" style="margin-top:2px;" v-if="Order.IsOrdered==0">未下单</span>
 			<span class="gwc_text" style="margin-top:2px;" v-if="Order.IsOrdered==1">已下单</span>
 		</div>
 		<div class="wddd_box2">
 			<span style="margin-left:3%;">
-				@*共计{{Order.Quantity}}个项目*@
+				{{Order.Name}}
 				<span style="margin-left:3%;">
-					合计:<span style="color:#ff0c4b;">{{Order.Price}}</span>
+					合计:<span style="color:#ff0c4b;">￥{{Order.Price}}</span>
 				</span>
 			</span>
 			<a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="merchantcrowdorderdetails(Order)">详情</a>
@@ -112,18 +112,18 @@
 	<div class="gwc_box" style="margin-top:15px;" v-for="Order in MerchantBargainOrderList" v-if="ShowOrder == 3">
 		<img class="gwc_img" v-bind:src="Order.ImgUrl">
 		<div class="gwc_box2">
-			<span class="gwc_text">拼单：{{Order.Name}}</span>
+			<span class="gwc_text">单号：{{Order.Code}}</span>
 			<span class="gwc_text" style="margin-top:2px;">日期：{{Order.CreatedDate}}</span>
 			<span class="gwc_text" style="margin-top:2px;" v-if="Order.IsOrdered==0">未下单</span>
 			<span class="gwc_text" style="margin-top:2px;" v-if="Order.IsOrdered==1">已下单</span>
 		</div>
 		<div class="wddd_box2">
-			@*<span style="margin-left:3%;">
-				共计{{Order.Quantity}}个项目
+			<span style="margin-left:3%;">
+				{{Order.Name}}
 				<span style="margin-left:3%;">
-					合计:<span style="color:#ff0c4b;">{{Order.Money}}</span>
+					合计:<span style="color:#ff0c4b;">￥{{Order.FinalPrice}}</span>
 				</span>
-			</span>*@
+			</span>
 			<a class="wddd_btn" style=" background:none; border:1px solid #efcb47; color:#efcb47; box-sizing:border-box;" v-on:click="merchantbargainorderdetails(Order)">详情</a>
 		</div>
 	</div>
@@ -239,11 +239,11 @@
 				},
 				merchantcrowdorderdetails: function (data, event) {
 					//sessionStorage.setItem('isorder', this.ShowOrder);
-					sessionStorage.setItem('merchantcrowdorder', JSON.stringify(data));
-					window.location.href = "/Mobile/Customer/MyMerchantCrowdOrderDetails?mch=" + mch;
+					sessionStorage.setItem('merchantcrowdorderrecord', JSON.stringify(data));
+					window.location.href = "/Mobile/Customer/MyMerchantCrowdOrderDetails?mch=" + mch+'&crowdid=' + data.ID;
 				},
 				merchantbargainorderdetails: function (data, event) {
-					sessionStorage.setItem('merchantbargainorder', JSON.stringify(data));
+					sessionStorage.setItem('merchantbargainorderrecord', JSON.stringify(data));
 					window.location.href = "/Mobile/Customer/MyMerchantBargainOrderDetails?mch=" + mch;
 				},
                 home: function (event) {

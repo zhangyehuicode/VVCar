@@ -5,9 +5,9 @@
 }
 
 <div id="merchantbargainorder">
-	<img class="return-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back" />
 	<div class="top_box">
 		<div class="top_box_text">砍价列表</div>
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
 	</div>
 	<div class="main">
 		<div class="bargainorder-con" v-for="MerchantBargainOrder in MerchantBargainOrders" v-if="MerchantBargainOrder.ProductID==ProductID">
@@ -21,7 +21,7 @@
 				<div class="cbctablecell bargainorder-pricesale">￥{{MerchantBargainOrder.PriceSale}}</div>
 				<div class="cbctablecell bargainorder-name">砍价人数：<span style="color:red;">{{MerchantBargainOrder.PeopleCount}}</span>人</div>
 			</div>
-			<div style="background-color:#ff0c4b;text-align:center;padding:10px;color:white;border-radius:10px;" v-on:click="bargainorderdetails(MerchantBargainOrder)">点击进入砍价</div>
+			<div style="background-color:#ff0c4b;text-align:center;padding:10px;color:white;border-radius:10px;" v-on:click="bargainorderdetail(MerchantBargainOrder)">点击进入砍价</div>
 		</div>
 	</div>
 </div>
@@ -31,7 +31,7 @@
 		.main {
 			background: #f4f4f4;
 			position: absolute;
-			top: 60px;
+			top: 50px;
 			left: 0;
 			right: 0;
 			/*bottom: 50px;*/
@@ -181,7 +181,7 @@
 				back: function (event) {
 					history.back(-1);
 				},
-				bargainorderdetails: function (data, event) {
+				bargainorderdetail: function (data, event) {
 					sessionStorage.setItem('merchantbargainorder', JSON.stringify(data));
 					window.location.href = '/Mobile/Customer/MerchantBargainOrderDetails?mch=' + mch;
 				}

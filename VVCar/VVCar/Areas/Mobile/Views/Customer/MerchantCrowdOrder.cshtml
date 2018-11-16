@@ -5,9 +5,9 @@
 }
 
 <div id="merchantcrowdorder">
-	<img class="return-img" src="~/Areas/resource/img/mobile/return-circle.png" v-on:click="back" />
 	<div class="top_box">
 		<div class="top_box_text">拼单列表</div>
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
 	</div>
 	<div class="main">
 		<div class="crowdorder-con" v-for="MerchantCrowdOrder in MerchantCrowdOrders" v-if="MerchantCrowdOrder.ProductID==ProductID">
@@ -21,7 +21,7 @@
 				<div class="cbctablecell crowdorder-pricesale">￥{{MerchantCrowdOrder.PriceSale}}</div>
 				<div class="cbctablecell crowdorder-name">拼单人数：<span style="color:red;">{{MerchantCrowdOrder.PeopleCount}}</span>人</div>
 			</div>
-			<div style="background-color:#ff0c4b;text-align:center;padding:10px;color:white;border-radius:10px;" v-on:click="crowdorderdetails(MerchantCrowdOrder)">点击进入拼单</div>
+			<div style="background-color:#ff0c4b;text-align:center;padding:10px;color:white;border-radius:10px;" v-on:click="crowdorderdetail(MerchantCrowdOrder)">点击进入拼单</div>
 		</div>
 	</div>
 </div>
@@ -31,7 +31,7 @@
 		.main {
 			background: #f4f4f4;
 			position: absolute;
-			top: 60px;
+			top: 50px;
 			left: 0;
 			right: 0;
 			overflow-y: auto;
@@ -180,7 +180,7 @@
 				back: function (event) {
 					history.back(-1);
 				},
-				crowdorderdetails: function (data, event) {
+				crowdorderdetail: function (data, event) {
 					sessionStorage.setItem('merchantcrowdorder', JSON.stringify(data));
 					window.location.href = '/Mobile/Customer/MerchantCrowdOrderDetails?mch=' + mch;
 				}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain.Entities;
 using VVCar.VIP.Domain.Dtos;
 using VVCar.VIP.Domain.Entities;
 using VVCar.VIP.Domain.Filters;
@@ -18,6 +19,12 @@ namespace VVCar.VIP.Services.DomainServices
     /// </summary>
     public class AdvisementBrowseHistoryService : DomainServiceBase<IRepository<AdvisementBrowseHistory>, AdvisementBrowseHistory, Guid>, IAdvisementBrowseHistoryService
     {
+        public AdvisementBrowseHistoryService()
+        {
+        }
+
+        IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
+
         /// <summary>
         /// 新增
         /// </summary>
@@ -28,6 +35,7 @@ namespace VVCar.VIP.Services.DomainServices
             if (entity == null)
                 throw new DomainException("参数错误");
             entity.ID = Util.NewID();
+            entity.ShareNickName = UserRepo.GetQueryable(false).Where(t => t.OpenID == entity.ShareOpenID).FirstOrDefault().Name;
             entity.CreatedDate = DateTime.Now;
             entity.MerchantID = AppContext.CurrentSession.MerchantID;
             return base.Add(entity);
@@ -42,6 +50,8 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<BrowseAnalyseDto> GetBrowseAnalyse(BrowseAnalyseFilter filter, out int totalCount)
         {
             var queryable = Repository.GetInclude(t => t.AdvisementSetting, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (!string.IsNullOrEmpty(filter.ShareOpenID))
+                queryable = queryable.Where(t => t.ShareOpenID.Contains(filter.ShareOpenID));
             if (filter.AdvisementSettingID.HasValue)
                 queryable = queryable.Where(t => t.AdvisementSettingID == filter.AdvisementSettingID);
             var result = queryable.ToList().GroupBy(t => t.NickName).Select(t => new BrowseAnalyseDto
@@ -74,6 +84,8 @@ namespace VVCar.VIP.Services.DomainServices
                 queryable = queryable.Where(t => t.AdvisementSetting.Title.Contains(filter.Title));
             if (!string.IsNullOrEmpty(filter.NickName))
                 queryable = queryable.Where(t => t.NickName.Contains(filter.NickName));
+            if (!string.IsNullOrEmpty(filter.ShareNickName))
+                queryable = queryable.Where(t => t.ShareNickName.Contains(filter.ShareNickName));
             if (filter.Period.HasValue)
                 queryable = queryable.Where(t => t.Period > filter.Period);
             totalCount = queryable.Count();

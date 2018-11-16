@@ -371,15 +371,15 @@ namespace VVCar.Shop.Domain.Entities
         EnergySurface = 21,
 
         /// <summary>
-        /// 防冻液状态
+        /// 防冻液
         /// </summary>
-        [Description("防冻液状态")]
+        [Description("防冻液")]
         AntifreezingSolution = 22,
 
         /// <summary>
         /// 刹车油含水量
         /// </summary>
-        [Description("刹车油含水量")]
+        [Description("含水量")]
         BrakeOilWater = 23,
 
         /// <summary>
