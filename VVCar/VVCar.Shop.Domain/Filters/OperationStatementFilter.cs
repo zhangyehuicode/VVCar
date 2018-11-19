@@ -22,6 +22,11 @@ namespace VVCar.Shop.Domain.Filters
         /// 收支类型
         /// </summary>
         public EBudgetType? BudgetType { get; set; }
+        
+        /// <summary>
+        /// 数据来源
+        /// </summary>
+        public EResourceType? ResourceType { get; set; }
 
         /// <summary>
         /// 开始时间

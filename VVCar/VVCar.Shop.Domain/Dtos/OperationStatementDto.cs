@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YEF.Core;
 
 namespace VVCar.Shop.Domain.Dtos
 {
@@ -26,6 +27,11 @@ namespace VVCar.Shop.Domain.Dtos
         /// 总支出
         /// </summary>
         public decimal TotalOutCome { get; set; }
+
+        /// <summary>
+        /// 利润
+        /// </summary>
+        public decimal TotalProfit { get { return TotalInCome - TotalOutCome; } }
     }
 
     /// <summary>
@@ -42,7 +48,12 @@ namespace VVCar.Shop.Domain.Dtos
         /// <summary>
         /// 收支类型
         /// </summary>
-        public EBudgetType BudgetType { get; set; }
+        public EBudgetType? BudgetType { get; set; }
+
+        /// <summary>
+        /// 收支类型文本
+        /// </summary>
+        public string BudgetTypeText { get { return BudgetType.GetDescription(); } }
 
         /// <summary>
         /// 成本/售价
@@ -52,7 +63,12 @@ namespace VVCar.Shop.Domain.Dtos
         /// <summary>
         /// 数据来源
         /// </summary>
-        public EResourceType TradeOrderType { get; set; }
+        public EResourceType? ResourceType { get; set; }
+
+        /// <summary>
+        /// 数据来源文本
+        /// </summary>
+        public string ResourceTypeText { get { return ResourceType.GetDescription(); } }
 
         /// <summary>
         /// 创建时间

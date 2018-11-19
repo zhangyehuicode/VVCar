@@ -8,6 +8,15 @@
 		url: Ext.GlobalConfig.ApiDomainUrl + 'api/Reporting',
 		api: {
 			read: Ext.GlobalConfig.ApiDomainUrl + 'api/Reporting/GetOperationStatement?All=false',
+			export: Ext.GlobalConfig.ApiDomainUrl + 'api/Reporting/ExtportOperationStatement'
 		},
 	},
+	export: function (p, cb) {
+		Ext.Ajax.request({
+			method: 'GET',
+			url: this.proxy.api.export,
+			params: p,
+			callback: cb,
+		});
+	}
 });

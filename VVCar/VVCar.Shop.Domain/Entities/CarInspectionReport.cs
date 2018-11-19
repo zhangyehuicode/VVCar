@@ -247,43 +247,43 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 前保险杠漆面
         /// </summary>
-        [Description("前保险杠漆面")]
+        [Description("前保险杠")]
         FrontGuardLacquer = 1,
 
         /// <summary>
         /// 前引擎盖漆面
         /// </summary>
-        [Description("前引擎盖漆面")]
+        [Description("前引擎盖")]
         FrontHoodLacquer = 2,
 
         /// <summary>
         /// 右前叶漆面
         /// </summary>
-        [Description("右前叶漆面")]
+        [Description("右前叶")]
         LeftFrontPageLacquer = 3,
 
         /// <summary>
         /// 左前门漆面
         /// </summary>
-        [Description("左前门漆面")]
+        [Description("左前门")]
         LeftFrontDoorLacquer = 4,
 
         /// <summary>
         /// 左后叶漆面
         /// </summary>
-        [Description("左后叶漆面")]
+        [Description("左后叶")]
         LeftBackPageLacquer = 5,
 
         /// <summary>
         /// 左后门漆面
         /// </summary>
-        [Description("左后门漆面")]
+        [Description("左后门")]
         LeftBackDoorLacquer = 6,
 
         /// <summary>
         /// 后保险杠漆面
         /// </summary>
-        [Description("后保险杠漆面")]
+        [Description("后保险杠")]
         BackGuardLacquer = 7,
 
         /// <summary>
@@ -295,25 +295,25 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 右前叶漆面
         /// </summary>
-        [Description("右前叶漆面")]
+        [Description("右前叶")]
         RightFrontPageLacquer = 9,
 
         /// <summary>
         /// 右前门漆面
         /// </summary>
-        [Description("右前门漆面")]
+        [Description("右前门")]
         RightFrontDoorLacquer = 10,
 
         /// <summary>
         /// 右后叶漆面
         /// </summary>
-        [Description("右后叶漆面")]
+        [Description("右后叶")]
         RightBackPageLacquer = 11,
 
         /// <summary>
         /// 右后门漆面
         /// </summary>
-        [Description("右后门漆面")]
+        [Description("右后门")]
         RightBackDoorLacquerStatus = 12,
 
         /// <summary>
@@ -341,27 +341,27 @@ namespace VVCar.Shop.Domain.Entities
         RightBackTire = 16,
 
         /// <summary>
-        /// 左前车毂
+        /// 左前轮毂
         /// </summary>
-        [Description("左前车毂")]
+        [Description("左前轮毂")]
         LeftFrontRim = 17,
 
         /// <summary>
-        /// 右前车毂
+        /// 右前轮毂
         /// </summary>
-        [Description("右前车毂")]
+        [Description("右前轮毂")]
         RightFrontRimStatus = 18,
 
         /// <summary>
-        /// 左后车毂
+        /// 左后轮毂
         /// </summary>
-        [Description("左后车毂")]
+        [Description("左后轮毂")]
         LeftBackRim = 19,
 
         /// <summary>
-        /// 右后车毂
+        /// 右后轮毂
         /// </summary>
-        [Description("右后车毂")]
+        [Description("右后轮毂")]
         RightBackRim = 20,
 
         /// <summary>
@@ -421,13 +421,13 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 玻璃氧化检测
         /// </summary>
-        [Description("玻璃氧化检测")]
+        [Description("氧化检测")]
         GlassOxidationDetection = 30,
 
         /// <summary>
         /// 玻璃破裂
         /// </summary>
-        [Description("玻璃破裂")]
+        [Description("破裂")]
         GlassRupture = 31,
 
         /// <summary>
@@ -439,7 +439,7 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 车内异味
         /// </summary>
-        [Description("车内异味")]
+        [Description("异味")]
         PeculiarSmellStatus = 33,
 
         /// <summary>

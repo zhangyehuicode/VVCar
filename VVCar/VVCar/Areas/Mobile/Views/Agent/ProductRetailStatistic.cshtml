@@ -36,7 +36,7 @@
             <option value="1">销售总量</option>
             <option value="0">销售总额</option>
         </select>
-        <input type="text" class="kcgl_input" style="color:#999;display:table-cell;width:150px;vertical-align:middle;margin:5px;" placeholder="产品名称/编号" v-bind:value="ProductCodeName">
+        <input type="text" class="kcgl_input" style="color:#999;display:table-cell;width:150px;vertical-align:middle;margin:5px;" placeholder="产品名称/编号" id="productcodename">
         <div class="kcgl_btn" style="display:table-cell;vertical-align:middle;margin:5px;"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="search"></div>
     </div>
     <div class="touxiang" style="margin-bottom:25px;">
@@ -153,8 +153,9 @@
             });
 
             function getproductstatistic(merchantcode, all, ordertype) {
+                var productcodename = $('#productcodename').val();
                 $.ajax({
-                    url: '/api/Reporting/ProductRetailStatistics?MerchantCode=' + merchantcode + '&OrderType=' + ordertype + '&StartDate=' + _viewModel.StartDate + '&EndDate=' + _viewModel.EndDate + '&ProductCodeName=' + _viewModel.ProductCodeName + '&AllSubMerchantData=' + all,
+                    url: '/api/Reporting/ProductRetailStatistics?MerchantCode=' + merchantcode + '&OrderType=' + ordertype + '&ProductCodeName=' + productcodename + '&AllSubMerchantData=' + all+ '&StartDate=' + _viewModel.StartDate + '&EndDate=' + _viewModel.EndDate,
                     type: 'GET',
                     headers: { 'CompanyCode': mch },
                     beforeSend: function () {
@@ -247,10 +248,14 @@
             }
 
             $('#startdate').change(function () {
+                var date = $(this).val();
+                _viewModel.StartDate = date;
                 searchaction();
             });
 
             $('#enddate').change(function () {
+                var date = $(this).val();
+                _viewModel.EndDate = date;
                 searchaction();
             });
 
@@ -261,6 +266,8 @@
             $('#submerchantselect').change(function () {
                 searchaction();
             });
+
+            searchaction();
 
         });
     </script>

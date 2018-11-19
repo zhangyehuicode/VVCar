@@ -1368,6 +1368,8 @@
     <Content Include="Areas\Mobile\Views\Merchant\UnsaleProduct.cshtml" />
     <Content Include="Areas\Mobile\Views\Merchant\CarInspection.cshtml" />
     <Content Include="Areas\Mobile\Views\Agent\ProductRetailStatistic.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\OperationStatement.cshtml" />
+    <Content Include="Areas\Mobile\Views\Merchant\OperationStatementDetails.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ext\classic\locale\locale-zh_CN.js" />

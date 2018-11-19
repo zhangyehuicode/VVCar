@@ -62,14 +62,37 @@
 						iconCls: 'search',
 						cls: 'submitBtn',
 						margin: '0 0 0 5',
+					}, {
+						action: 'export',
+						xtype: 'button',
+						text: '导出',
+						iconCls: '',
+						margin: '0 0 0 5',
 					}]
 				}]
 			}]
 		}];
 		this.columns = [
 			{ header: '时间', dataIndex: 'Code', flex: 1 },
-			{ header: '总收入', dataIndex: 'TotalInCome', flex: 1 },
-			{ header: '总支出', dataIndex: 'TotalOutCome', flex: 1 },
+			{
+				header: '总收入', dataIndex: 'TotalInCome', flex: 1,
+				renderer: function (value) { return '<span style="color:green">' + value + '</span>'; }
+			},
+			{
+				header: '总支出', dataIndex: 'TotalOutCome', flex: 1,
+				renderer: function (value) { return '<span style="color:red">' + value + '</span>'; }
+			},
+			{
+				header: '利润', dataIndex: 'TotalProfit', flex: 1,
+				renderer: function (value) {
+					if (value > 0) {
+						return '<span style="color:green">' + value + '</span>';
+					}
+					if (value <= 0) {
+						return '<span style="color:red">' + value + '</span>';
+					}
+				}
+			},
 			{
 				text: '操作',
 				xtype: 'actioncolumn',

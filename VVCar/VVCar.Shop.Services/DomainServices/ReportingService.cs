@@ -637,7 +637,7 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter.ProductType.HasValue)
                 productQueryable = productQueryable.Where(t => t.ProductType == filter.ProductType.Value);
             if (!string.IsNullOrEmpty(filter.ProductCodeName))
-                productQueryable = productQueryable.Where(t => filter.ProductCodeName.Contains(t.Code) || filter.ProductCodeName.Contains(t.Name));
+                productQueryable = productQueryable.Where(t => t.Code.Contains(filter.ProductCodeName) || t.Name.Contains(filter.ProductCodeName));
             var productList = productQueryable.ToList();
             var orderDividendQuery = OrderDividendRepo.GetQueryable(false).Where(t => merchantids.Contains(t.MerchantID));
             var TradeOrderIDs = orderDividendQuery.Select(t => t.TradeOrderID).Distinct();
@@ -1190,9 +1190,12 @@ namespace VVCar.Shop.Services.DomainServices
         public IEnumerable<OperationStatementDetailDto> GetOperationStatementDetail(OperationStatementFilter filter, out int totalCount)
         {
             var operationStatementDetailDtoList = GetAllOperationStatementDetail(filter);
-            operationStatementDetailDtoList = operationStatementDetailDtoList.Where(t => t.CreatedDate.ToDateString() == filter.StartDate.Value.ToDateString()).ToList();
+            if (filter.StartDate.HasValue)
+                operationStatementDetailDtoList = operationStatementDetailDtoList.Where(t => t.CreatedDate.ToDateString() == filter.StartDate.Value.ToDateString()).ToList();
             if (!string.IsNullOrEmpty(filter.TradeNo))
-                operationStatementDetailDtoList = operationStatementDetailDtoList.Where(t => t.TradeNo.Contains(filter.TradeNo)).ToList();
+                operationStatementDetailDtoList = operationStatementDetailDtoList.Where(t => t.TradeNo.Contains(filter.TradeNo.ToUpper())).ToList();
+            if (filter.ResourceType.HasValue)
+                operationStatementDetailDtoList = operationStatementDetailDtoList.Where(t => t.ResourceType == filter.ResourceType).ToList();
             if (filter.BudgetType.HasValue)
                 operationStatementDetailDtoList = operationStatementDetailDtoList.Where(t => t.BudgetType == filter.BudgetType).ToList();
             totalCount = operationStatementDetailDtoList.Count();
@@ -1228,7 +1231,7 @@ namespace VVCar.Shop.Services.DomainServices
                     {
                         TradeNo = t.Code,
                         BudgetType = EBudgetType.InCome,
-                        TradeOrderType = EResourceType.Order,
+                        ResourceType = EResourceType.Order,
                         Money = item.Money,
                         CreatedDate = t.CreatedDate,
                     };
@@ -1238,7 +1241,7 @@ namespace VVCar.Shop.Services.DomainServices
                     {
                         TradeNo = t.Code,
                         BudgetType = EBudgetType.OutCome,
-                        TradeOrderType = EResourceType.Order,
+                        ResourceType = EResourceType.Order,
                         Money = item.CostMoney,
                         CreatedDate = t.CreatedDate,
                     };
@@ -1256,7 +1259,7 @@ namespace VVCar.Shop.Services.DomainServices
                     {
                         TradeNo = t.Code,
                         BudgetType = EBudgetType.InCome,
-                        TradeOrderType = EResourceType.PickupOrder,
+                        ResourceType = EResourceType.PickupOrder,
                         Money = item.Money,
                         CreatedDate = t.CreatedDate,
                     };
@@ -1266,7 +1269,7 @@ namespace VVCar.Shop.Services.DomainServices
                     {
                         TradeNo = t.Code,
                         BudgetType = EBudgetType.OutCome,
-                        TradeOrderType = EResourceType.PickupOrder,
+                        ResourceType = EResourceType.PickupOrder,
                         Money = item.CostMoney,
                         CreatedDate = t.CreatedDate,
                     };
@@ -1282,7 +1285,7 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     TradeNo = t.Code,
                     BudgetType = EBudgetType.OutCome,
-                    TradeOrderType = EResourceType.ReceiptOrder,
+                    ResourceType = EResourceType.ReceiptOrder,
                     Money = t.Money,
                     CreatedDate = t.CreatedDate,
                 };

@@ -554,6 +554,40 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 营业报表统计导出
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ExtportOperationStatement")]
+        public JsonActionResult<string> ExtportOperationStatement([FromUri]OperationStatementFilter filter)
+        {
+            return SafeExecute(() =>
+            {
+                var totalCount = 0;
+                filter.Start = null;
+                filter.Limit = null;
+                var operationStatementList = ReportingService.GetOperationStatement(filter, out totalCount).ToList();
+                var operationStatementDto = new OperationStatementDto();
+                operationStatementList.ForEach(t =>
+                {
+                    operationStatementDto.TotalInCome += t.TotalInCome;
+                    operationStatementDto.TotalOutCome += t.TotalOutCome;
+
+                });
+                operationStatementDto.Code = "合计:";
+                var exporter = new ExportHelper(new[]
+                {
+                    new ExportInfo("Code","时间"),
+                    new ExportInfo("TotalInCome", "总收入"),
+                    new ExportInfo("TotalOutCome","总支出"),
+                    new ExportInfo("TotalProfit","利润"),
+                });
+                operationStatementList.Add(operationStatementDto);
+                return exporter.Export(operationStatementList, "营业报表统计导出");
+            });
+        }
+
+        /// <summary>
         /// 营业报表 详情
         /// </summary>
         /// <param name="filter"></param>
@@ -564,7 +598,19 @@ namespace VVCar.Controllers.Shop
             return SafeGetPagedData<OperationStatementDetailDto>((result) =>
             {
                 var totalCount = 0;
-                var data = ReportingService.GetOperationStatementDetail(filter, out totalCount);
+                filter.Start = null;
+                filter.Limit = null;
+                var data = ReportingService.GetOperationStatementDetail(filter, out totalCount).ToList();
+                var operationStatementDetail = new OperationStatementDetailDto();
+                data.ForEach(t =>
+                {
+                    if(t.BudgetType == EBudgetType.InCome)
+                        operationStatementDetail.Money += t.Money;
+                    if (t.BudgetType == EBudgetType.OutCome)
+                        operationStatementDetail.Money -= t.Money;
+                });
+                operationStatementDetail.TradeNo = "合计:";
+                data.Add(operationStatementDetail);
                 result.Data = data;
                 result.TotalCount = totalCount;
             });

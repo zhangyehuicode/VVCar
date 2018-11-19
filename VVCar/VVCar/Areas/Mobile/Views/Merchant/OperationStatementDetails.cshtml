@@ -1,0 +1,226 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="operationstatementdetails">
+	<div class="toubu">
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+		店长工作终端
+		<a v-on:click="home"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+	</div>
+	<div>
+		@*<div style="width:100%; float:left; border-bottom:1px solid #eee;">
+				<img src="@ViewBag.HeadImgUrl" class="touxiang_img">
+				<div class="touxiang_div">
+					<span>{{User.Name}}</span>
+					<span style=" font-size:14px; color:#999;">营业利润：￥{{Profit}}</span>
+				</div>
+			</div>*@
+	</div>
+	<div class="kcd_box2">
+		<input class="kcgl_input" type="text" placeholder="单号" style="font-size:13px;width:90px;" id="tradeno">
+		<select class="kcgl_input" style="width:70px;" id="budgettype" v-on:change="search">
+			<option selected="selected">全部</option>
+			<option value="0">收入</option>
+			<option value="1">支出</option>
+		</select>
+		<select class="kcgl_input" style="width:90px;" id="resourcetype" v-on:change="search">
+			<option selected="selected">全部</option>
+			<option value="0">报销单</option>
+			<option value="1">商城订单</option>
+			<option value="2">接车单</option>
+		</select>
+		<div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="search"></div>
+	</div>
+	<div class="touxiang" style="margin-bottom:25px;">
+		<ul class="pm_box">
+			<li class="pm_box1">
+				<div class="pm_box2" style="width:40%;">单号</div>
+				<div class="pm_box2" style="width:20%;text-align:center;">总收入</div>
+				<div class="pm_box2" style="width:20%;text-align:center;">总支出</div>
+				<div class="pm_box2" style="width:20%;text-align:center;">数据来源</div>
+			</li>
+			<li class="pm_box1" v-for="OperationStatementDetail in OperationStatementDetailList">
+				<div class="pm_box2" style="width:40%;color:#666;">{{OperationStatementDetail.TradeNo}}</div>
+				<div class="pm_box2" style="width:20%;text-align:center;color:#ff0c4c;" v-if="OperationStatementDetail.BudgetType==1">{{OperationStatementDetail.BudgetTypeText}}</div>
+				<div class="pm_box2" style="width:20%;text-align:center;color:#51b3f0;" v-if="OperationStatementDetail.BudgetType==0">{{OperationStatementDetail.BudgetTypeText}}</div>
+				<div class="pm_box2" style="width:20%;text-align:center;color:#51b3f0;" v-if="OperationStatementDetail.BudgetType==null">{{OperationStatementDetail.BudgetTypeText}}</div>
+				<div class="pm_box2" style="width:20%;text-align:center;color:#666;">{{OperationStatementDetail.Money}}</div>
+				<div class="pm_box2" style="width:20%;text-align:center;color:#666;">{{OperationStatementDetail.ResourceTypeText}}</div>
+			</li>
+		</ul>
+	</div>
+</div>
+
+
+@section scripts{
+	<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+	<link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript">
+        function wxConfig() {
+            var mch = $.getUrlParam('mch');
+            $.ajax({
+                type: "POST",
+                url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+                datatype: "json",
+                success: function (data) {
+                    if (data.IsSuccessful) {
+                        var temp = data.Data;
+                        wx.config({
+                            debug: false,
+                            appId: temp.appId,
+                            timestamp: temp.timestamp,
+                            nonceStr: temp.nonceStr,
+                            signature: temp.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ',
+                                'onMenuShareWeibo',
+                                'hideOptionMenu',
+                                'hideAllNonBaseMenuItem',
+                                'showMenuItems',
+                                'closeWindow',
+                                'scanQRCode',
+                            ]
+                        });
+                        wx.ready(function () {
+                            wx.hideAllNonBaseMenuItem();
+                        });
+                    } else {
+                    }
+                },
+                complete: function (xmlHttpRequest, textStatus) {
+                },
+                error: function (xmlHttpRequest, textStatus) {
+                }
+            });
+        };
+        wxConfig();
+	</script>
+	<script type="text/javascript">
+        $(function () {
+			var mch = $.getUrlParam('mch');
+			var user = sessionStorage.getItem('user');
+			var operationstatement = sessionStorage.getItem('operationstatement');
+			_viewModel = new Vue({
+				el: '#operationstatementdetails',
+				data: {
+					User: {},
+					OperationStatement: {},
+					OperationStatementDetailList: [],
+				},
+				methods: {
+					back: function (event) {
+						history.back(-1);
+					},
+					home: function (event) {
+							window.location.href = "/Mobile/Merchant/MasterHome?mch=" + mch;
+					},
+					operationStatementDetails: function (data, event) {
+						sessionStorage.setItem('operationstatementlist', JSON.stringify(_viewModel.OperationStatementList));
+						window.location.href = "/Mobile/Merchant/OperationStatementDetails?mch=" + mch;
+					},
+					search: function (event) {
+						search();
+					}
+				}
+			});
+
+            function getUserByOpenId() {
+                $.ajax({
+                    url: '/api/User/GetUserByOpenID',
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    data: {
+                        OpenID: '@ViewBag.OpenId',
+                        IsManager: true,
+                    },
+                    success: function (res) {
+                        if (res.IsSuccessful) {
+                            if (res.Data != null) {
+                                _viewModel.User = res.Data;
+                                sessionStorage.setItem('user', JSON.stringify(res.Data));
+                            }
+                            else {
+                                _viewModel.home();
+                            }
+                        }
+                        else {
+                            $.alert(res.ErrorMessage);
+                            _viewModel.home();
+                        }
+                    },
+                    error: function () {
+                        _viewModel.home();
+                    }
+                });
+            }
+            if (user == null || user == '') {
+                getUserByOpenId();
+            } else {
+                _viewModel.User = JSON.parse(user);
+            }
+
+			_viewModel.OperationStatement = JSON.parse(operationstatement);
+
+			function getOperationStatementDetail() {				
+				$.ajax({
+					url: '/api/Reporting/GetOperationStatementDetail?All=false&StartDate=' + _viewModel.OperationStatement.Code,
+                    type: 'GET',
+                    headers: { 'CompanyCode': mch },
+                    beforeSend: function () {
+                        $.showLoading();
+                    },
+                    success: function (res) {
+                        $.hideLoading();
+                        if (res.IsSuccessful) {
+							_viewModel.OperationStatementDetailList = res.Data;
+							var lastrecord = res.Data[res.Data.length - 1];
+							_viewModel.Profit = lastrecord.TotalInCome - lastrecord.TotalOutCome;
+                        } else {
+                            $.alert(res.ErrorMessage);
+                        }
+                    },
+                    error: function () {
+                        $.hideLoading();
+                    }
+                });
+            }
+			getOperationStatementDetail();
+
+			function search() {
+				var tradeno = $('#tradeno').val();
+				var budgettype = $('#budgettype').val();
+				var resourcetype = $('#resourcetype').val();
+				$.ajax({
+					url: '/api/Reporting/GetOperationStatementDetail?All=false&StartDate=' + tradeno + '&TradeNo=' + tradeno + '&BudgetType=' + budgettype + '&ResourceType=' + resourcetype,
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.showLoading();
+					},
+					success: function (res) {
+						$.hideLoading();
+						if (res.IsSuccessful) {
+							_viewModel.OperationStatementDetailList = res.Data;
+							var lastrecord = res.Data[res.Data.length - 1];
+							_viewModel.Profit = lastrecord.TotalInCome - lastrecord.TotalOutCome;
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					},
+					error: function () {
+						$.hideLoading();
+					}
+				});
+			}
+        });
+	</script>
+}

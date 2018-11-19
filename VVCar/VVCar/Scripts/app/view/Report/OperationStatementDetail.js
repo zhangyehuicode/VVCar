@@ -3,7 +3,7 @@
 	alias: 'widget.OperationStatementDetail',
 	title: '营业报表详情',
 	layout: 'fit',
-	width: 600,
+	width: 700,
 	height: 500,
 	bodyPadding: 5,
 	autoShow: false,
@@ -46,7 +46,7 @@
 					xtype: 'textfield',
 					fieldLabel: '单号',
 					width: 200,
-					labelWidth: 60,
+					labelWidth: 30,
 					margin: '0 0 0 5',
 				}, {
 					xtype: 'combobox',
@@ -56,6 +56,18 @@
 						[1, '支出'],
 					],
 					fieldLabel: '收支类型',
+					margin: '0 0 0 15',
+					width: 170,
+					labelWidth: 60,
+				}, {
+					xtype: 'combobox',
+					name: 'ResourceType',
+					store: [
+						[0, '报销单'],
+						[1, '商城订单'],
+						[2, '接车单'],
+					],
+					fieldLabel: '数据来源',
 					margin: '0 0 0 15',
 					width: 170,
 					labelWidth: 60,
@@ -81,7 +93,7 @@
 				},
 				{ header: '金额', dataIndex: 'Money', flex: 1 },
 				{
-					header: '数据来源', dataIndex: 'TradeOrderType', flex: 1,
+					header: '数据来源', dataIndex: 'ResourceType', flex: 1,
 					renderer: function (value) {
 						if (value == 0) {
 							return '报销单';

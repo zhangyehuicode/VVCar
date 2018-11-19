@@ -4,50 +4,53 @@
     Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
-<div id="carinspection" style="margin:10px 0;">
-    <div class="cari-table" style="margin:5px 13px;vertical-align:middle;">
-        <div class="cari-font cari-tablecell">当前公里数</div>
-        <input class="cari-tablecell" type="number" value="0" style="margin-left:10px;height:30px;width:80px;text-align:center;" min="0" />
-    </div>
-    <div style="height:1px;background:#f4f4f4;width:100%;"></div>
-    <div class="cari-font" style="height:40px;line-height:40px;margin:0 13px;border-bottom:1px solid #f4f4f4;">车检结论</div>
-    <div style="padding:0 13px;">
-        <textarea placeholder="请输入车检结论" style="height:120px;width:100%;margin:5px 0;"></textarea>
-    </div>
-    <div class="slide-box">
-        <div class="slide-box-item selected-font" v-on:click="selectitem">漆面检查</div>
-        <div class="slide-box-item" v-on:click="tyrecheckitem">轮胎/车毂</div>
-        <div class="slide-box-item" v-on:click="enginecheckitem">发动机舱</div>
-        <div class="slide-box-item" v-on:click="selectitem">刹车油</div>
-        <div class="slide-box-item" v-on:click="selectitem">机油</div>
-        <div class="slide-box-item" v-on:click="selectitem">雨刮片</div>
-        <div class="slide-box-item" v-on:click="selectitem">玻璃</div>
-        <div class="slide-box-item" v-on:click="selectitem">车内饰</div>
-        <div class="slide-box-item" v-on:click="selectitem">外饰件</div>
-    </div>
-    <div class="cari-table" style="width:100%;">
-        <div class="cari-tablecell check-item">项目名称</div>
-        <div class="cari-tablecell check-item">状态</div>
-        <div class="cari-tablecell check-item">车检详情</div>
-    </div>
-    <div>
-        <div class="cari-table" style="width:100%;text-align:center;border-bottom:1px solid #f4f4f4;padding:5px 0;" v-for="Part in CarInspectionPartDisplayList">
-            <div class="cari-tablecell check-item-title" style="width:33.33%">{{Part.Name}}</div>
-            <div class="cari-tablecell" style="width:33.33%">
-                <div class="cari-table" style="margin:auto;">
-                    <div class="cari-tablecell status-abnormal" v-on:click="abnormalclick">异常</div>
-                    <div class="cari-tablecell status-normal" v-on:click="normalclick">正常</div>
-                    <div style="display:none;">{{Part.Part}}</div>
+<div id="carinspection" style="margin-top:10px;">
+    <div class="main">
+        <div class="cari-table" style="margin:5px 13px;vertical-align:middle;">
+            <div class="cari-font cari-tablecell">当前公里数</div>
+            <input class="cari-tablecell" type="number" value="0" style="margin-left:10px;height:30px;width:80px;text-align:center;" min="0" v-bind:value="CarInspectionReport.Mileage" />
+        </div>
+        <div style="height:1px;background:#f4f4f4;width:100%;"></div>
+        <div class="cari-font" style="height:40px;line-height:40px;margin:0 13px;border-bottom:1px solid #f4f4f4;">车检结论</div>
+        <div style="padding:0 13px;">
+            <textarea placeholder="请输入车检结论" style="height:120px;width:100%;margin:5px 0;" v-bind:value="CarInspectionReport.Conclusion"></textarea>
+        </div>
+        <div class="slide-box">
+            <div class="slide-box-item selected-font" v-on:click="lacquercheckitem">漆面检查</div>
+            <div class="slide-box-item" v-on:click="tyrecheckitem">轮胎/车毂</div>
+            <div class="slide-box-item" v-on:click="enginecheckitem">发动机舱</div>
+            <div class="slide-box-item" v-on:click="brakeoilcheckitem">刹车油</div>
+            <div class="slide-box-item" v-on:click="engineoilitem">机油</div>
+            <div class="slide-box-item" v-on:click="wiper">雨刮片</div>
+            <div class="slide-box-item" v-on:click="glass">玻璃</div>
+            <div class="slide-box-item" v-on:click="carinteriors">车内饰</div>
+            <div class="slide-box-item" v-on:click="exteriorparts">外饰件</div>
+        </div>
+        <div class="cari-table" style="width:100%;">
+            <div class="cari-tablecell check-item">项目名称</div>
+            <div class="cari-tablecell check-item">状态</div>
+            <div class="cari-tablecell check-item">车检详情</div>
+        </div>
+        <div>
+            <div class="cari-table" style="width:100%;text-align:center;border-bottom:1px solid #f4f4f4;padding:5px 0;" v-for="Part in CarInspectionPartDisplayList">
+                <div class="cari-tablecell check-item-title" style="width:33.33%">{{Part.Name}}</div>
+                <div class="cari-tablecell" style="width:33.33%">
+                    <div class="cari-table" style="margin:auto;">
+                        <div class="cari-tablecell status-abnormal" v-on:click="abnormalclick">异常</div>
+                        <div class="cari-tablecell status-normal" v-on:click="normalclick">正常</div>
+                        <div style="display:none;">{{Part.Part}}</div>
+                    </div>
                 </div>
-            </div>
-            <div class="cari-tablecell" style="width:33.33%">
-                <div class="cari-table" style="margin:auto;">
-                    <img class="cari-tablecell check-item-icon" src="~/Areas/resource/img/mobile/plus_icon.png" />
-                    <div class="cari-tablecell check-item-explain">添加说明</div>
+                <div class="cari-tablecell" style="width:33.33%">
+                    <div class="cari-table" style="margin:auto;">
+                        <img class="cari-tablecell check-item-icon" src="~/Areas/resource/img/mobile/plus_icon.png" />
+                        <div class="cari-tablecell check-item-explain">添加说明</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="submit" v-on:click="confirm">提交</div>
 </div>
 
 @section scripts{
@@ -138,6 +141,29 @@
         .status-normal-unselected {
             background: #dadada;
         }
+
+        .main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 45px;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .submit {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 43px;
+            line-height: 43px;
+            text-align: center;
+            background: #67b1f0;
+            color: #fff;
+            font-size: 16px;
+        }
     </style>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
     <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
@@ -195,7 +221,12 @@
                 el: '#carinspection',
                 data: {
                     CarInspectionPartList: [],
-                    CarInspectionPartDisplayList:[],
+                    CarInspectionPartDisplayList: [],
+                    CarInspectionReport: {
+                        Mileage: 0,
+                        Conclusion: '',
+                        CarInspectionDetailsList: []
+                    }
                 },
                 methods: {
                     back: function (event) {
@@ -209,7 +240,9 @@
                         }
                     },
                     confirm: function (event) {
-
+                        $.confirm('确定提交?', '提示', function () {
+                            $.alert(JSON.stringify(_viewModel.CarInspectionReport));
+                        });
                     },
                     selectitem: function (event) {
                         var currentitem = event.currentTarget;
@@ -229,6 +262,23 @@
                         var abnormal = $(parent.find('div')[0]);
                         abnormal.removeClass('status-abnormal-selected');
                         var part = $(parent.find('div')[2]).html();
+                        var carInspectionDetailsList = _viewModel.CarInspectionReport.CarInspectionDetailsList;
+                        var exists = false;
+                        for (var i = 0; i < carInspectionDetailsList.length; i++){
+                            var details = carInspectionDetailsList[i];
+                            if (details.Part == parseInt(part)) {
+                                _viewModel.CarInspectionReport.CarInspectionDetailsList[i].Status = 0;
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            _viewModel.CarInspectionReport.CarInspectionDetailsList.push({
+                                Part: parseInt(part),
+                                Status: 0,
+                                Explain: '',
+                            });
+                        }
                     },
                     abnormalclick: function (event) {
                         var btn = $(event.currentTarget);
@@ -237,6 +287,27 @@
                         var normal = $(parent.find('div')[1]);
                         normal.addClass('status-normal-unselected');
                         var part = $(parent.find('div')[2]).html();
+                        var carInspectionDetailsList = _viewModel.CarInspectionReport.CarInspectionDetailsList;
+                        var exists = false;
+                        for (var i = 0; i < carInspectionDetailsList.length; i++) {
+                            var details = carInspectionDetailsList[i];
+                            if (details.Part == parseInt(part)) {
+                                _viewModel.CarInspectionReport.CarInspectionDetailsList[i].Status = 1;
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            _viewModel.CarInspectionReport.CarInspectionDetailsList.push({
+                                Part: parseInt(part),
+                                Status: 1,
+                                Explain: '',
+                            });
+                        }
+                    },
+                    lacquercheckitem: function (event) {
+                        this.selectitem(event);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(0,12);
                     },
                     tyrecheckitem: function (event) {
                         this.selectitem(event);
@@ -244,11 +315,35 @@
                     },
                     enginecheckitem: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(20, 21);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(20, 22);
                     },
                     brakeoilcheckitem: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(20, 21);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(22, 24);
+                    },
+                    engineoilitem: function (event) {
+                        this.selectitem(event);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(24, 27);
+                    },
+                    wiper: function (event) {
+                        this.selectitem(event);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(27, 29);
+                    },
+                    glass: function (event) {
+                        this.selectitem(event);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(29,32);
+                    },
+                    carinteriors: function (event) {
+                        this.selectitem(event);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(32, 36);
+                        var data = _viewModel.CarInspectionPartList.slice(38, 40);
+                        for (var i = 0; i < data.length; i++) {
+                            this.CarInspectionPartDisplayList.push(data[i]);
+                        }
+                    },
+                    exteriorparts: function (event) {
+                        this.selectitem(event);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(36,38);
                     },
                 }
             });
