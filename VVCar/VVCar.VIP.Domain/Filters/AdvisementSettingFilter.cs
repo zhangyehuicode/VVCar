@@ -21,5 +21,10 @@ namespace VVCar.VIP.Domain.Filters
         /// 标题
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// 微信端访问
+        /// </summary>
+        public bool? IsFromBackground { get; set; }
     }
 }

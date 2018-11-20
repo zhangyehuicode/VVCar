@@ -98,6 +98,9 @@
 		var me = this;
 		me.callParent(arguments);
 		var store = this.getStore();
+		Ext.apply(store.proxy.extraParams, {
+			All: false, IsFromBackground: true
+		});
 		store.load();
 	}
 });

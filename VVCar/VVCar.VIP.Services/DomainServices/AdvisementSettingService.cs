@@ -128,6 +128,13 @@ namespace VVCar.VIP.Services.DomainServices
                 queryable = queryable.Where(t => t.ID == filter.ID);
             if (!string.IsNullOrEmpty(filter.Title))
                 queryable = queryable.Where(t => t.Title.Contains(filter.Title));
+            if (filter.IsFromBackground.HasValue)
+            {
+                if (filter.IsFromBackground.Value)
+                {
+                    queryable = queryable.Where(t => t.CreatedUserID == AppContext.CurrentSession.UserID);
+                }
+            }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);

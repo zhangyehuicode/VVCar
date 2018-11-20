@@ -574,6 +574,7 @@
     <Content Include="Areas\resource\img\mobile\path.png" />
     <Content Include="Areas\resource\img\mobile\phone.png" />
     <Content Include="Areas\resource\img\mobile\plate.jpg" />
+    <Content Include="Areas\resource\img\mobile\plus-square.png" />
     <Content Include="Areas\resource\img\mobile\plus_icon.png" />
     <Content Include="Areas\resource\img\mobile\return-circle.png" />
     <Content Include="Areas\resource\img\mobile\sc.png" />

@@ -94,5 +94,10 @@ namespace VVCar.Shop.Domain.Entities
         /// 商户
         /// </summary>
         public virtual Merchant Merchant { get; set; }
+
+        /// <summary>
+        /// 车检报告
+        /// </summary>
+        public CarInspectionReport CarInspectionReport { get; set; }
     }
 }

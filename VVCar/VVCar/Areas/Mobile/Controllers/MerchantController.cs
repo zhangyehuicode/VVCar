@@ -369,6 +369,10 @@ namespace VVCar.Areas.Mobile.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 客户预约
+        /// </summary>
+        /// <returns></returns>
         public ActionResult MyAppointment()
         {
             var companyCode = Request["mch"];

@@ -251,6 +251,15 @@ namespace VVCar.Controllers.Api
             return UploadAction("Pictures/Reimbursement");
         }
 
+        /// <summary>
+        /// 上传车检报告图片
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadCarInspection")]
+        public UploadFileResult UploadCarInspection()
+        {
+            return UploadAction("Pictures/CarInspection");
+        }
 
         private UploadFileResult UploadAction(string targetDirPath)
         {

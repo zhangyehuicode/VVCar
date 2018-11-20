@@ -5,52 +5,74 @@
 }
 
 <div id="carinspection" style="margin-top:10px;">
-    <div class="main">
-        <div class="cari-table" style="margin:5px 13px;vertical-align:middle;">
-            <div class="cari-font cari-tablecell">当前公里数</div>
-            <input class="cari-tablecell" type="number" value="0" style="margin-left:10px;height:30px;width:80px;text-align:center;" min="0" v-bind:value="CarInspectionReport.Mileage" />
-        </div>
-        <div style="height:1px;background:#f4f4f4;width:100%;"></div>
-        <div class="cari-font" style="height:40px;line-height:40px;margin:0 13px;border-bottom:1px solid #f4f4f4;">车检结论</div>
-        <div style="padding:0 13px;">
-            <textarea placeholder="请输入车检结论" style="height:120px;width:100%;margin:5px 0;" v-bind:value="CarInspectionReport.Conclusion"></textarea>
-        </div>
-        <div class="slide-box">
-            <div class="slide-box-item selected-font" v-on:click="lacquercheckitem">漆面检查</div>
-            <div class="slide-box-item" v-on:click="tyrecheckitem">轮胎/车毂</div>
-            <div class="slide-box-item" v-on:click="enginecheckitem">发动机舱</div>
-            <div class="slide-box-item" v-on:click="brakeoilcheckitem">刹车油</div>
-            <div class="slide-box-item" v-on:click="engineoilitem">机油</div>
-            <div class="slide-box-item" v-on:click="wiper">雨刮片</div>
-            <div class="slide-box-item" v-on:click="glass">玻璃</div>
-            <div class="slide-box-item" v-on:click="carinteriors">车内饰</div>
-            <div class="slide-box-item" v-on:click="exteriorparts">外饰件</div>
-        </div>
-        <div class="cari-table" style="width:100%;">
-            <div class="cari-tablecell check-item">项目名称</div>
-            <div class="cari-tablecell check-item">状态</div>
-            <div class="cari-tablecell check-item">车检详情</div>
-        </div>
-        <div>
-            <div class="cari-table" style="width:100%;text-align:center;border-bottom:1px solid #f4f4f4;padding:5px 0;" v-for="Part in CarInspectionPartDisplayList">
-                <div class="cari-tablecell check-item-title" style="width:33.33%">{{Part.Name}}</div>
-                <div class="cari-tablecell" style="width:33.33%">
-                    <div class="cari-table" style="margin:auto;">
-                        <div class="cari-tablecell status-abnormal" v-on:click="abnormalclick">异常</div>
-                        <div class="cari-tablecell status-normal" v-on:click="normalclick">正常</div>
-                        <div style="display:none;">{{Part.Part}}</div>
+    <div>
+        <div class="main">
+            <div class="cari-table" style="margin:5px 13px;vertical-align:middle;">
+                <div class="cari-font cari-tablecell">当前公里数</div>
+                <input class="cari-tablecell" type="number" value="0" style="margin-left:10px;height:30px;width:80px;text-align:center;text-shadow:none;box-shadow:none;outline-style:none;outline-width:0;" min="0" v-model="CarInspectionReport.Mileage" />
+            </div>
+            <div style="height:1px;background:#f4f4f4;width:100%;"></div>
+            <div class="cari-font" style="height:40px;line-height:40px;margin:0 13px;border-bottom:1px solid #f4f4f4;">车检结论</div>
+            <div style="padding:0 13px;">
+                <textarea placeholder="请输入车检结论" style="height:120px;width:100%;margin:5px 0;" v-model="CarInspectionReport.Conclusion"></textarea>
+            </div>
+            <div class="slide-box">
+                <div class="slide-box-item selected-font" v-on:click="lacquercheckitem">漆面检查</div>
+                <div class="slide-box-item" v-on:click="tyrecheckitem">轮胎/车毂</div>
+                <div class="slide-box-item" v-on:click="enginecheckitem">发动机舱</div>
+                <div class="slide-box-item" v-on:click="brakeoilcheckitem">刹车油</div>
+                <div class="slide-box-item" v-on:click="engineoilitem">机油</div>
+                <div class="slide-box-item" v-on:click="wiper">雨刮片</div>
+                <div class="slide-box-item" v-on:click="glass">玻璃</div>
+                <div class="slide-box-item" v-on:click="carinteriors">车内饰</div>
+                <div class="slide-box-item" v-on:click="exteriorparts">外饰件</div>
+            </div>
+            <div class="cari-table" style="width:100%;">
+                <div class="cari-tablecell check-item">项目名称</div>
+                <div class="cari-tablecell check-item">状态</div>
+                <div class="cari-tablecell check-item">车检详情</div>
+            </div>
+            <div>
+                <div class="cari-table" style="width:100%;text-align:center;border-bottom:1px solid #f4f4f4;padding:5px 0;" v-for="Part in CarInspectionPartDisplayList">
+                    <div class="cari-tablecell check-item-title" style="width:33.33%">{{Part.Name}}</div>
+                    <div class="cari-tablecell" style="width:33.33%">
+                        <div class="cari-table" style="margin:auto;">
+                            <div class="cari-tablecell status-abnormal" v-bind:class="{statusabnormalselected:Part.IsAbnormal}" v-on:click="abnormalclick">异常</div>
+                            <div class="cari-tablecell status-normal" v-bind:class="{statusnormalunselected:Part.IsAbnormal}" v-on:click="normalclick">正常</div>
+                            <div style="display:none;">{{Part.Part}}</div>
+                        </div>
                     </div>
-                </div>
-                <div class="cari-tablecell" style="width:33.33%">
-                    <div class="cari-table" style="margin:auto;">
-                        <img class="cari-tablecell check-item-icon" src="~/Areas/resource/img/mobile/plus_icon.png" />
-                        <div class="cari-tablecell check-item-explain">添加说明</div>
+                    <div class="cari-tablecell" style="width:33.33%">
+                        <div class="cari-table" style="margin:auto;" v-on:click="addexplain(Part,$event)">
+                            <img class="cari-tablecell check-item-icon" src="~/Areas/resource/img/mobile/plus_icon.png" />
+                            <div class="cari-tablecell check-item-explain">添加说明</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="submit" v-on:click="confirm">提交</div>
     </div>
-    <div class="submit" v-on:click="confirm">提交</div>
+    <div class="explainmain">
+        <div class="explaincon">
+            <div class="popcon">
+                <img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closeexplain" />
+                <div class="explaintitle">{{ExplainTitle}}</div>
+                <textarea class="explaintextarea" placeholder="请输入车检详情" id="explaintxt"></textarea>
+                <div class="cari-table addimg-con" style="vertical-align:middle;">
+                    <div class="cari-tablecell addimg-txt" style="vertical-align:middle;">添加图片</div>
+                    <div class="cari-tablecell" style="vertical-align:middle;">
+                        <img class="addimg-icon" src="~/Areas/resource/img/mobile/plus-square.png" />
+                    </div>
+                    <input class="fileinput" type="file" accept="image/*">
+                </div>
+                <div class="slide-img">
+                    <img v-for="Img in ExplainImgs" v-on:click="deleteimg(Img)" v-bind:src=Img.ImgUrl />
+                </div>
+                <div class="confirmexplain" v-on:click="confirmexplain">确认</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section scripts{
@@ -134,11 +156,11 @@
             width: 38px;
         }
 
-        .status-abnormal-selected {
+        .statusabnormalselected {
             background: red;
         }
 
-        .status-normal-unselected {
+        .statusnormalunselected {
             background: #dadada;
         }
 
@@ -164,7 +186,111 @@
             color: #fff;
             font-size: 16px;
         }
+
+        .explainmain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+        }
+
+        .explaincon {
+            position: fixed;
+            top: 10px;
+            left: 20px;
+            right: 20px;
+            bottom: 10px;
+            background: rgba(255,255,255,1);
+            -webkit-overflow-scrolling: touch;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        .closeimg {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            width: 20px;
+        }
+
+        .popcon {
+            padding: 13px;
+        }
+
+        .confirmexplain {
+            position: absolute;
+            bottom: 15px;
+            /*margin: 18px 20px 20px 20px;*/
+            left: 20px;
+            right: 20px;
+            background: #51b3f0;
+            color: #fff;
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .explaintitle {
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .explaintextarea {
+            height: 120px;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .addimg-txt {
+            color: #484a4e;
+            font-size: 13px;
+        }
+
+        .addimg-icon {
+            width: 15px;
+            margin-left: 5px;
+        }
+
+        .width-fill {
+            width: 100%;
+        }
+
+        .addimg-con {
+            padding: 10px 0 5px 0;
+        }
+
+        .slide-img {
+            display: -webkit-box;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            height: 275px;
+            vertical-align: middle;
+        }
+
+            .slide-img img {
+                width: 95px;
+                height: 95px;
+                margin: 0 3px;
+            }
+
+        .fileinput {
+            position: absolute;
+            left: 13px;
+            opacity: 0;
+            width: 75px;
+        }
     </style>
+    @Styles.Render("~/content/jquery-fileupd")
+    @Scripts.Render("~/bundles/jquery-fileupd")
+    <script id="template-upload" type="text/x-jquery-tmpl">
+    </script>
+    <script id="template-download" type="text/x-jquery-tmpl">
+    </script>
     <link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
     <link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
@@ -213,6 +339,259 @@
     </script>
     <script type="text/javascript">
         $(function () {
+
+            $('.addimg-con').click(function () {
+                var uploadurl = "/api/UploadFile/UploadCarInspection";
+                uploadImage($(this), uploadurl);
+            });
+
+            function uploadImage(target, url) {
+                if (target == null || url == null || url == '')
+                    return;
+                target.fileupload({
+                    dropZone: target,
+                    pasteZone: target,
+                    dataType: 'json',
+                    autoUpload: true,
+                    url: url,
+                    add: function (e, data) {
+                        var uploadErrors = [];
+                        var acceptFileTypes = /(gif|jpe?g|png|bmp)$/i;
+                        if (!acceptFileTypes.test(data.originalFiles[0]['name'])) {
+                            uploadErrors.push('不允许的文件类型');
+                        }
+                        if (uploadErrors.length > 0) {
+                            $.alert(uploadErrors.join(", "));
+                        } else {
+                            data.submit();
+                        }
+                    },
+                    send: function (e, data) {
+                        $.showLoading();
+                    },
+                    done: function (e, data) {
+                        $.hideLoading();
+                        if (data.result.success == true) {
+                            _viewModel.ExplainImgs.push({ ImgUrl: data.result.FileUrl });
+                        } else {
+                            $.alert(data.result.errorMessage);
+                        }
+                    }
+                });
+            }
+
+            //$('.fileinput').on('change input', function (e) {
+            //    handleinputchange(this);
+            //});
+
+            // 全局对象，不同function使用传递数据
+            const imgFile = {};
+
+            function handleinputchange(target) {
+                if (target == null)
+                    return;
+                var uploadurl = "/api/UploadFile/UploadReimbursement";
+                //$.alert('enter 1 event:' + event);
+                // 获取当前选中的文件
+                const file = target.files[0];//event.target.files[0];
+                //$.alert(event.files.length);
+                const imgMasSize = 1024 * 1024 * 10; // 10MB
+
+                // 检查文件类型
+                if (['jpeg', 'png', 'gif', 'jpg'].indexOf(file.type.split("/")[1]) < 0) {
+                    // 自定义报错方式
+                    // Toast.error("文件类型仅支持 jpeg/png/gif！", 2000, undefined, false);
+                    $.alert("文件类型仅支持 jpeg/png/gif！");
+                    return;
+                }
+
+                // 文件大小限制
+                if (file.size > imgMasSize) {
+                    // 文件大小自定义限制
+                    // Toast.error("文件大小不能超过10MB！", 2000, undefined, false);
+                    $.alert("文件大小不能超过10MB！");
+                    return;
+                }
+
+                // 判断是否是ios
+                if (!!window.navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)) {
+                    // iOS
+                    transformFileToFormData(file);
+                    return;
+                }
+
+                // 图片压缩之旅
+                transformFileToDataUrl(file);
+            }
+            // 将File append进 FormData
+            function transformFileToFormData(file) {
+                //$.alert('enter transformFileToFormData');
+                const formData = new FormData();
+                // 自定义formData中的内容
+                // type
+                formData.append('type', file.type);
+                // size
+                formData.append('size', file.size || "image/jpeg");
+                // name
+                formData.append('name', file.name);
+                // lastModifiedDate
+                formData.append('lastModifiedDate', file.lastModifiedDate);
+                // append 文件
+                formData.append('file', file);
+                // 上传图片
+                uploadImg(formData);
+            }
+            // 将file转成dataUrl
+            function transformFileToDataUrl(file) {
+                //$.alert("enter transformFileToDataUrl");
+                const imgCompassMaxSize = 200 * 1024; // 超过 200k 就压缩
+
+                // 存储文件相关信息
+                imgFile.type = file.type || 'image/jpeg'; // 部分安卓出现获取不到type的情况
+                imgFile.size = file.size;
+                imgFile.name = file.name;
+                imgFile.lastModifiedDate = file.lastModifiedDate;
+
+                // 封装好的函数
+                const reader = new FileReader();
+
+                // file转dataUrl是个异步函数，要将代码写在回调里
+                reader.onload = function (e) {
+                    const result = e.target.result;
+
+                    if (result.length < imgCompassMaxSize) {
+                        compress(result, processData, false);    // 图片不压缩
+                    } else {
+                        compress(result, processData);            // 图片压缩
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            }
+            // 使用canvas绘制图片并压缩
+            function compress(dataURL, callback, shouldCompress = true) {
+                //$("enter compress");
+                const img = new window.Image();
+
+                img.src = dataURL;
+
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    let compressedDataUrl;
+
+                    if (shouldCompress) {
+                        compressedDataUrl = canvas.toDataURL(imgFile.type, 0.2);
+                    } else {
+                        compressedDataUrl = canvas.toDataURL(imgFile.type, 1);
+                    }
+
+                    callback(compressedDataUrl);
+                }
+            }
+
+            function processData(dataUrl) {
+                //$.alert('enter processData');
+                try {
+                    // 这里使用二进制方式处理dataUrl
+                    const binaryString = window.atob(dataUrl.split(',')[1]);
+                    const arrayBuffer = new ArrayBuffer(binaryString.length);
+                    const intArray = new Uint8Array(arrayBuffer);
+                    //const imgFile = this.imgFile;
+
+                    for (let i = 0, j = binaryString.length; i < j; i++) {
+                        intArray[i] = binaryString.charCodeAt(i);
+                    }
+
+                    const data = [intArray];
+
+                    let blob;
+
+                    try {
+                        blob = new Blob(data, { type: imgFile.type });
+                    } catch (error) {
+                        window.BlobBuilder = window.BlobBuilder ||
+                            window.WebKitBlobBuilder ||
+                            window.MozBlobBuilder ||
+                            window.MSBlobBuilder;
+                        if (error.name === 'TypeError' && window.BlobBuilder) {
+                            const builder = new BlobBuilder();
+                            builder.append(arrayBuffer);
+                            blob = builder.getBlob(imgFile.type);
+                        } else {
+                            // Toast.error("版本过低，不支持上传图片", 2000, undefined, false);
+                            // throw new Error('版本过低，不支持上传图片');
+                            $.alert('版本过低，不支持上传图片');
+                        }
+                    }
+
+                    // blob 转file
+                    const fileOfBlob = new File([blob], imgFile.name);
+                    const formData = new FormData();
+
+                    // type
+                    formData.append('type', imgFile.type);
+                    // size
+                    formData.append('size', fileOfBlob.size);
+                    // name
+                    formData.append('name', imgFile.name);
+                    // lastModifiedDate
+                    formData.append('lastModifiedDate', imgFile.lastModifiedDate);
+                    // append 文件
+                    formData.append('file', fileOfBlob);
+
+                    uploadImg(formData);
+                } catch (e) {
+                    $.alert(e.message);
+                }
+            }
+
+            // 上传图片
+            function uploadImg(formData) {
+                //$.alert('enter uploadImg');
+                const xhr = new XMLHttpRequest();
+                xhr.responseType = "";//json
+                // 进度监听
+                xhr.upload.addEventListener('progress', (e) => {
+                    //console.log(e.loaded / e.total)
+                    $.showLoading();
+                }, false);
+                // 加载监听
+                // xhr.addEventListener('load', ()=>{console.log("加载中");}, false);
+                // 错误监听
+                xhr.addEventListener('error', () => {
+                    $.hideLoading();
+                    $.alert("上传失败");
+                }, false);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        $.hideLoading();
+                        if (xhr.status === 200) {
+                            var result = JSON.parse(xhr.responseText);
+                            if (result.success == true) {
+                                $(target).find('.uploadimg').attr('src', result.FileUrl);
+                            } else {
+                                $.alert(result.errorMessage);
+                            }
+                        } else {
+                            $.alert("上传失败");
+                        }
+                    }
+                };
+                xhr.open('POST', uploadurl, true);
+                xhr.send(formData);
+            }
+
+        });
+    </script>
+    <script type="text/javascript">
+        //$(function () {
             var mch = $.getUrlParam('mch');
             var user = sessionStorage.getItem('user');
             var _ismaster = sessionStorage.getItem('ismaster');
@@ -226,7 +605,10 @@
                         Mileage: 0,
                         Conclusion: '',
                         CarInspectionDetailsList: []
-                    }
+                    },
+                    ExplainTitle: '',
+                    CurrentPart: {},
+                    ExplainImgs: []
                 },
                 methods: {
                     back: function (event) {
@@ -241,7 +623,9 @@
                     },
                     confirm: function (event) {
                         $.confirm('确定提交?', '提示', function () {
-                            $.alert(JSON.stringify(_viewModel.CarInspectionReport));
+                            sessionStorage.setItem('carinspection', JSON.stringify(_viewModel.CarInspectionReport));
+                            history.back(-1);
+                            //$.alert(JSON.stringify(_viewModel.CarInspectionReport));
                         });
                     },
                     selectitem: function (event) {
@@ -252,86 +636,61 @@
                             if (item[0] === currentitem)
                                 item.css('color', '#67b1f0');
                             else
-                                item.css('color','#484a4e');
+                                item.css('color', '#484a4e');
                         }
                     },
                     normalclick: function (event) {
                         var btn = $(event.currentTarget);
-                        btn.removeClass('status-normal-unselected');
+                        btn.removeClass('statusnormalunselected');
                         var parent = btn.parent();
                         var abnormal = $(parent.find('div')[0]);
-                        abnormal.removeClass('status-abnormal-selected');
+                        abnormal.removeClass('statusabnormalselected');
                         var part = $(parent.find('div')[2]).html();
-                        var carInspectionDetailsList = _viewModel.CarInspectionReport.CarInspectionDetailsList;
-                        var exists = false;
-                        for (var i = 0; i < carInspectionDetailsList.length; i++){
-                            var details = carInspectionDetailsList[i];
-                            if (details.Part == parseInt(part)) {
-                                _viewModel.CarInspectionReport.CarInspectionDetailsList[i].Status = 0;
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            _viewModel.CarInspectionReport.CarInspectionDetailsList.push({
-                                Part: parseInt(part),
-                                Status: 0,
-                                Explain: '',
-                            });
-                        }
+                        adddetails(part, 0, null,false);
                     },
                     abnormalclick: function (event) {
                         var btn = $(event.currentTarget);
-                        btn.addClass('status-abnormal-selected');
+                        btn.addClass('statusabnormalselected');
                         var parent = btn.parent();
                         var normal = $(parent.find('div')[1]);
-                        normal.addClass('status-normal-unselected');
+                        normal.addClass('statusnormalunselected');
                         var part = $(parent.find('div')[2]).html();
-                        var carInspectionDetailsList = _viewModel.CarInspectionReport.CarInspectionDetailsList;
-                        var exists = false;
-                        for (var i = 0; i < carInspectionDetailsList.length; i++) {
-                            var details = carInspectionDetailsList[i];
-                            if (details.Part == parseInt(part)) {
-                                _viewModel.CarInspectionReport.CarInspectionDetailsList[i].Status = 1;
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            _viewModel.CarInspectionReport.CarInspectionDetailsList.push({
-                                Part: parseInt(part),
-                                Status: 1,
-                                Explain: '',
-                            });
-                        }
+                        adddetails(part, 1, null,false);
                     },
                     lacquercheckitem: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(0,12);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(0, 12);
+                        changetab();
                     },
                     tyrecheckitem: function (event) {
                         this.selectitem(event);
                         this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(12, 20);
+                        changetab();
                     },
                     enginecheckitem: function (event) {
                         this.selectitem(event);
                         this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(20, 22);
+                        changetab();
                     },
                     brakeoilcheckitem: function (event) {
                         this.selectitem(event);
                         this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(22, 24);
+                        changetab();
                     },
                     engineoilitem: function (event) {
                         this.selectitem(event);
                         this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(24, 27);
+                        changetab();
                     },
                     wiper: function (event) {
                         this.selectitem(event);
                         this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(27, 29);
+                        changetab();
                     },
                     glass: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(29,32);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(29, 32);
+                        changetab();
                     },
                     carinteriors: function (event) {
                         this.selectitem(event);
@@ -340,13 +699,87 @@
                         for (var i = 0; i < data.length; i++) {
                             this.CarInspectionPartDisplayList.push(data[i]);
                         }
+                        changetab();
                     },
                     exteriorparts: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(36,38);
+                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(36, 38);
+                        changetab();
                     },
+                    closeexplain: function (event) {
+                        $('.explainmain').hide();
+                        $('#explaintxt').val('');
+                        _viewModel.ExplainImgs = [];
+                    },
+                    confirmexplain: function (event) {
+                        var explaintxt = $('#explaintxt').val();
+                        adddetails(_viewModel.CurrentPart.Part, null, explaintxt,true);
+                        $('.explainmain').hide();
+                        $('#explaintxt').val('');
+                        _viewModel.ExplainImgs = [];
+                        $.alert(JSON.stringify(_viewModel.CarInspectionReport));
+                    },
+                    addexplain: function (data, event) {
+                        this.ExplainTitle = data.Name;
+                        $('.explainmain').show();
+                        this.CurrentPart = data;
+                        var carInspectionDetailsList = _viewModel.CarInspectionReport.CarInspectionDetailsList;
+                        for (var i = 0; i < carInspectionDetailsList.length; i++) {
+                            var details = carInspectionDetailsList[i];
+                            if (details.Part == data.Part) {
+                                $('#explaintxt').val(details.Explain);
+                                _viewModel.ExplainImgs = details.ImgList;
+                                break;
+                            }
+                        }
+                    },
+                    deleteimg: function (data, event) {
+                        $.confirm('删除图片？', function () {
+                            var imgs = _viewModel.ExplainImgs;
+                            for (var i = 0; i < imgs.length; i++) {
+                                if (imgs[i] == data) {
+                                    _viewModel.ExplainImgs.splice(i,1);
+                                    break;
+                                }
+                            }
+                        });
+                    }
                 }
             });
+
+            function adddetails(part,status,explain,isconfirm) {
+                var carInspectionDetailsList = _viewModel.CarInspectionReport.CarInspectionDetailsList;
+                var exists = false;
+                for (var i = 0; i < carInspectionDetailsList.length; i++) {
+                    var details = carInspectionDetailsList[i];
+                    if (details.Part == parseInt(part)) {
+                        if (status == null)
+                            status = details.Status;
+                        _viewModel.CarInspectionReport.CarInspectionDetailsList[i].Status = status;
+                        if (explain != null)
+                            _viewModel.CarInspectionReport.CarInspectionDetailsList[i].Explain = explain;
+                        if (isconfirm)
+                            _viewModel.CarInspectionReport.CarInspectionDetailsList[i].ImgList = _viewModel.ExplainImgs;
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    if (status == null)
+                        status = 0;
+                    if (explain == null)
+                        explain = '';
+                    var imgs = [];
+                    if (isconfirm)
+                      imgs = _viewModel.ExplainImgs;
+                    _viewModel.CarInspectionReport.CarInspectionDetailsList.push({
+                        Part: parseInt(part),
+                        Status: status,
+                        Explain: explain,
+                        ImgList: imgs
+                    });
+                }
+            }
 
             var ismaster = _ismaster === 'true';
             function getUserByOpenId() {
@@ -393,7 +826,8 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 _viewModel.CarInspectionPartList = res.Data;
-                                _viewModel.CarInspectionPartDisplayList = res.Data.slice(0,12);
+                                _viewModel.CarInspectionPartDisplayList = res.Data.slice(0, 12);
+                                changetab();
                             }
                         }
                     },
@@ -402,8 +836,28 @@
                     }
                 });
             }
-            getCarInspectionPart();
 
-        });
+            function initdata() {
+                var carinspection = sessionStorage.getItem('carinspection');
+                if (carinspection != null)
+                    _viewModel.CarInspectionReport = JSON.parse(carinspection);
+                getCarInspectionPart();
+            }
+            initdata();
+
+        function changetab() {
+            for (var i = 0; i < _viewModel.CarInspectionPartDisplayList.length; i++) {
+                _viewModel.CarInspectionPartDisplayList[i].IsAbnormal = false;
+                for (var j = 0; j < _viewModel.CarInspectionReport.CarInspectionDetailsList.length; j++) {
+                    if (_viewModel.CarInspectionPartDisplayList[i].Part == _viewModel.CarInspectionReport.CarInspectionDetailsList[j].Part) {
+                        if (_viewModel.CarInspectionReport.CarInspectionDetailsList[j].Status==1)
+                            _viewModel.CarInspectionPartDisplayList[i].IsAbnormal = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        //});
     </script>
 }

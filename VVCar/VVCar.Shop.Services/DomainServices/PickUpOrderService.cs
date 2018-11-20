@@ -73,6 +73,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IMemberCardService MemberCardService { get => ServiceLocator.Instance.GetService<IMemberCardService>(); }
 
+        ICarInspectionReportService CarInspectionReportService { get => ServiceLocator.Instance.GetService<ICarInspectionReportService>(); }
+
         #endregion
 
         public string GetTradeNo()
@@ -129,7 +131,7 @@ namespace VVCar.Shop.Services.DomainServices
                     {
                         t.ID = Util.NewID();
                         var product = ProductRepo.GetByKey(t.ProductID);
-                        if(product!= null)
+                        if (product != null)
                         {
                             t.CostPrice = product.CostPrice;
                             t.CostMoney = t.CostPrice * t.Quantity;
@@ -151,6 +153,14 @@ namespace VVCar.Shop.Services.DomainServices
                 entity.PlateNumber = entity.PlateNumber.ToUpper();
                 var pickupOrder = base.Add(entity);
                 UnitOfWork.CommitTransaction();
+                try
+                {
+                    AddCarInspection(pickupOrder, entity.CarInspectionReport);
+                }
+                catch (Exception e)
+                {
+                    AppContext.Logger.Error(e.Message);
+                }
                 return pickupOrder;
             }
             catch (Exception e)
@@ -158,6 +168,22 @@ namespace VVCar.Shop.Services.DomainServices
                 UnitOfWork.RollbackTransaction();
                 throw new DomainException(e.Message);
             }
+        }
+
+        /// <summary>
+        /// 添加车检报告
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="report"></param>
+        private void AddCarInspection(PickUpOrder order, CarInspectionReport report)
+        {
+            if (report == null || order == null)
+                return;
+            report.PickUpOrderID = order.ID;
+            report.MemberID = order.MemberID;
+            report.PlateNumber = order.PlateNumber;
+            report.CarInspectionDetailsList = report.CarInspectionDetailsList.Where(t => t.Status == ECarInspectionStatus.Abnormal || !string.IsNullOrEmpty(t.Explain)).ToList();
+            CarInspectionReportService.Add(report);
         }
 
         /// <summary>

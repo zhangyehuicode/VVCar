@@ -182,7 +182,7 @@ namespace VVCar.VIP.Services.DomainServices
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.MapTo<ReimbursementDto>().ToArray();
+            return queryable.MapTo<ReimbursementDto>().OrderByDescending(t=>t.CreatedDate).ToArray();
         }
     }
 }
