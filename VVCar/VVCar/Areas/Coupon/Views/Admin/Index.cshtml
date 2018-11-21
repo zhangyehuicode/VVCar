@@ -891,9 +891,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-md-12">
-                        <button id="continuecreate" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">继续创建</button>
-                    </div>
+					<div class="col-md-12">
+						@*<button id="continuecreate" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">继续创建</button>*@
+						<button id="immediatepush1" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">前往卡券列表推送卡券→_→</button>
+					</div>
                 </div>
             </div>
             <div id="modifylaststep" hidden="hidden" style="text-align:center;padding-top:250px;">
@@ -903,9 +904,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-md-12">
-                        @*<button id="continuecreate" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">继续创建</button>*@
-                    </div>
+					<div class="col-md-12">
+						@*<button id="continuecreate" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">继续创建</button>*@
+						<button id="immediatepush2" type="button" class="btn btn-default" style="width:100px;background-color:#4695f6;color:white;">前往卡券列表推送卡券→_→</button>
+					</div>
                 </div>
             </div>
 
@@ -2224,6 +2226,17 @@
                             $('#laststepimg').attr('src', window.location.origin + '/Areas/resource/img/icon_number4_normal.png');
                         });
 
+						$('#immediatepush1').click(function (data) {
+							var mch = sessionStorage.getItem('companyCode');
+							//window.parent.navigateLink("/CouponAdmin/ImmediatePush?mch=" + mch, "立即推送");
+							window.parent.navigateLink("/CouponAdmin/CouponTemplate?mch=" + mch, "卡券列表");
+						});
+
+						$('#immediatepush2').click(function (data) {
+							var mch = sessionStorage.getItem('companyCode');
+							//window.parent.navigateLink("/CouponAdmin/ImmediatePush?mch=" + mch, "立即推送");
+							window.parent.navigateLink("/CouponAdmin/ImmediatePush?mch=" + mch, "卡券列表");
+						});
 
                         $('#secondstepaddtime').click(function () {
                             $('#timeul').append('<li style="list-style-type:none;">' +

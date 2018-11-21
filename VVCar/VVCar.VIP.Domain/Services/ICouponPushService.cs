@@ -40,5 +40,13 @@ namespace VVCar.VIP.Domain.Services
         /// </summary>
         /// <returns></returns>
         bool CouponPushTask();
+
+        /// <summary>
+        /// 立即推送
+        /// </summary>
+        /// <param name="couponTemplateID"></param>
+        /// <param name="memberIDs"></param>
+        /// <returns></returns>
+        bool ImmediatePushAction(Guid[] couponTemplateIDs, Guid[] memberIDs);
     }
 }

@@ -57,5 +57,10 @@ namespace VVCar.VIP.Domain.Filters
         /// 微信OpenID
         /// </summary>
         public string WeChatOpenID { get; set; }
+
+        /// <summary>
+        /// 是否存在OpenID
+        /// </summary>
+        public bool? ExistOpenID { get; set; }
     }
 }

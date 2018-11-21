@@ -98,5 +98,14 @@ namespace VVCar.Areas.Coupon.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        /// 卡券立即推送
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ImmediatePush()
+        {
+            return View();
+        }
     }
 }

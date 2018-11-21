@@ -151,11 +151,13 @@ namespace VVCar.Shop.Services.DomainServices
                     PickUpOrderTaskDistribution(entity.PickUpOrderItemList.ToList());
                 }
                 entity.PlateNumber = entity.PlateNumber.ToUpper();
+                var carInspectionReport = entity.CarInspectionReport;
+                entity.CarInspectionReport = null;
                 var pickupOrder = base.Add(entity);
                 UnitOfWork.CommitTransaction();
                 try
                 {
-                    AddCarInspection(pickupOrder, entity.CarInspectionReport);
+                    AddCarInspection(pickupOrder, carInspectionReport);
                 }
                 catch (Exception e)
                 {
@@ -182,7 +184,7 @@ namespace VVCar.Shop.Services.DomainServices
             report.PickUpOrderID = order.ID;
             report.MemberID = order.MemberID;
             report.PlateNumber = order.PlateNumber;
-            report.CarInspectionDetailsList = report.CarInspectionDetailsList.Where(t => t.Status == ECarInspectionStatus.Abnormal || !string.IsNullOrEmpty(t.Explain)).ToList();
+            report.CarInspectionDetailsList = report.CarInspectionDetailsList.Where(t => t.Status == ECarInspectionStatus.Abnormal || !string.IsNullOrEmpty(t.Explain) || t.ImgList.Count() > 0).ToList();
             CarInspectionReportService.Add(report);
         }
 

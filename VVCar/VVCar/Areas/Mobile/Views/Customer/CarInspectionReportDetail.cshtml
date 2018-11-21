@@ -23,12 +23,32 @@
                 <span style="float: right;color:red;" v-if="CarInspectionDetail.Status==1">{{CarInspectionDetail.StatusText}}</span>
             </div>
             <div class="oddrow" style="background:#fff;" v-if="CarInspectionDetail.Explain!=''">检测说明：{{CarInspectionDetail.Explain}}</div>
+            <div class="slide-img" v-if="CarInspectionDetail.ImgList.length>0">
+                <img v-for="Img in CarInspectionDetail.ImgList" v-bind:src=Img.ImgUrl />
+            </div>
         </div>
     </div>
 </div>
 
 @section scripts{
     <style type="text/css">
+        .slide-img {
+            overflow-x: scroll;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            height: 65px;
+            vertical-align: middle;
+            margin: 0 5px;
+            background: #fff;
+        }
+
+            .slide-img img {
+                width: 60px;
+                height: 60px;
+                margin: 1px 2px;
+            }
+
         .title {
             background-color: #EFEEF3;
             padding: 13px 5px;

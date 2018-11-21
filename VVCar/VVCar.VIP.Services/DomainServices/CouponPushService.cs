@@ -240,5 +240,37 @@ namespace VVCar.VIP.Services.DomainServices
             }
             return true;
         }
+
+        /// <summary>
+        /// 立即推送
+        /// </summary>
+        /// <param name="couponTemplateIDs"></param>
+        /// <param name="memberIDs"></param>
+        /// <returns></returns>
+        public bool ImmediatePushAction(Guid[] couponTemplateIDs, Guid[] memberIDs)
+        {
+            var memberList = MemberRepo.GetQueryable(false).Where(t => memberIDs.Contains(t.ID)).ToList();
+            memberList.ForEach(t =>
+            {
+                try
+                {
+                    CouponService.ReceiveCouponsAtcion(new ReceiveCouponDto
+                    {
+                        ReceiveOpenID = t.WeChatOpenID,
+                        CouponTemplateIDs = couponTemplateIDs,
+                        ReceiveChannel = "卡券推送",
+                        CompanyCode = AppContext.CurrentSession.MerchantCode,
+                        NickName = t.Name,
+                        MerchantID = AppContext.CurrentSession.MerchantID,
+                        MemberID = t.ID,
+                    }, true);
+                }
+                catch (Exception e)
+                {
+                    AppContext.Logger.Error($"立即推送卡券出现异常，{e.Message}");
+                }
+            });
+            return true;
+        }
     }
 }

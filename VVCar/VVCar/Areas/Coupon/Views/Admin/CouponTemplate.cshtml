@@ -87,7 +87,7 @@
 				<td class="cell_content"><span data-bind="text:ConsumePointRate+'%'"></span></td>
 				<td class="cell_content"><span data-bind="text:CommissionRate+'%'"></span></td>
 				<td class="cell_content"><span data-bind="text:(Remark!=null&&Remark.length>20)?Remark.substring(0,19)+'...':Remark"></span></td>
-				<td class="cell_content"><a style="cursor:pointer;padding-right:3px;" data-bind="attr:{id:ID},click:$root.CouponDelivery,text:AproveStatus==2?'查看二维码':'投放'"></a><a style="padding-left:3px;cursor:pointer;" data-bind="click:$root.coupondetails">详情</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.CouponModify,visible:AproveStatus!=2">修改</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.CouponDelete,visible:AproveStatus!=2">删除</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.ReceivedRecord,visible:AproveStatus==2">领取记录</a></td>
+				<td class="cell_content"><a style="cursor:pointer;padding-right:3px;" data-bind="attr:{id:ID},click:$root.CouponDelivery,text:AproveStatus==2?'查看二维码':'投放'"></a><a style="padding-left:3px;cursor:pointer;" data-bind="click:$root.coupondetails">详情</a><a style="padding-left:3px;cursor:pointer;" data-bind="click:$root.immediatepush,visible:AproveStatus==2">立即推送</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.CouponModify,visible:AproveStatus!=2">修改</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.CouponDelete,visible:AproveStatus!=2">删除</a><a style="cursor:pointer;padding-left:3px;" data-bind="click:$root.ReceivedRecord,visible:AproveStatus==2">领取记录</a></td>
 				@*<a style="cursor:pointer;padding-left:5px;" data-bind="click:$root.CouponTempReport">报表</a>*@
 			</tr>
             <!--/ko-->
@@ -611,7 +611,11 @@
             this.coupondetails = function (data) {
                 sessionStorage.setItem('couponTemp', JSON.stringify(data));
                 window.parent.navigateLink("/CouponAdmin/CouponDetails", data.Title + "详情");
-            }
+			}
+			this.immediatepush = function (data) {
+				sessionStorage.setItem('couponTemp', JSON.stringify(data));
+				window.parent.navigateLink("/CouponAdmin/ImmediatePush?mch=" + mch, data.Title + "立即推送");
+			}
             this.CouponModify = function (data) {
                 //$.ajax({
                 //    url: '/api/PointExchangeCoupon/ExistRecordByCouponTemplateId/' + data.ID,

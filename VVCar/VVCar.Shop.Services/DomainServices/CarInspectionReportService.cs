@@ -29,6 +29,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<MakeCodeRule> MakeCodeRuleRepo { get => UnitOfWork.GetRepository<IRepository<MakeCodeRule>>(); }
 
+        IRepository<CarInspectionDetailsImg> CarInspectionDetailsImgRepo { get => UnitOfWork.GetRepository<IRepository<CarInspectionDetailsImg>>(); }
+
         #endregion
 
         /// <summary>
@@ -67,6 +69,7 @@ namespace VVCar.Shop.Services.DomainServices
                 t.ImgList.ForEach(item =>
                 {
                     item.ID = Util.NewID();
+                    item.CarInspectionReportID = entity.ID;
                     item.CarInspectionDetailsID = t.ID;
                 });
             });
@@ -162,6 +165,12 @@ namespace VVCar.Shop.Services.DomainServices
                         });
                     }
                 }
+                var carInspectionDetailsImgList = CarInspectionDetailsImgRepo.GetQueryable(false).Where(m => m.CarInspectionReportID == t.ID).ToList();
+                t.CarInspectionDetailsList.ForEach(d =>
+                {
+                    var imglist = carInspectionDetailsImgList.Where(m => m.CarInspectionDetailsID == d.ID).ToList();
+                    d.ImgList = imglist;
+                });
             });
             return result.OrderByDescending(t => t.CreatedDate).ToList();
             //var result = new List<CarInspectionReportDto>();

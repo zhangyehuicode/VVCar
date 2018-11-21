@@ -1,0 +1,333 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+<div id="immediatepush" style="background-color:#fff;">
+	<div>
+		<center>
+			<h2>卡券信息</h2>
+			<table class="coupon" cellspacing="0">
+				<tr>
+					@*<th class="cell_title">ID</th>*@
+					<th class="cell_title">卡券类型</th>
+					<th class="cell_title">优惠类型</th>
+					<th class="cell_title">编号</th>
+					<th class="cell_title">创建时间</th>
+					<th class="cell_title">投放时间</th>
+					<th class="cell_title">标题</th>
+					<th class="cell_title">有效期</th>
+					<th class="cell_title">状态</th>
+					<th class="cell_title">发行量</th>
+					<th class="cell_title">分享与赠送</th>
+					<th class="cell_title">库存</th>
+					<th class="cell_title">消费返积分比例</th>
+					<th class="cell_title">抽成比例</th>
+					<th class="cell_title">备注</th>
+				</tr>
+				<tr>
+					@*<td>{{CouponTemplate.ID}}</td>*@
+					<td v-if="CouponTemplate.Nature==0">优惠券</td>
+					<td v-if="CouponTemplate.Nature==1">会员卡</td>
+					<td>{{CouponTemplate.CouponTypeName}}</td>
+					<td>{{CouponTemplate.TemplateCode}}</td>
+					<td>{{CouponTemplate.CreatedDate}}</td>
+					<td>{{CouponTemplate.PutInDate}}</td>
+					<td>{{CouponTemplate.Title}}</td>
+					<td>{{CouponTemplate.Validity}}</td>
+					<td>{{CouponTemplate.AproveStatusText}}</td>
+					<td>{{CouponTemplate.Stock}}</td>
+					<td v-if="CouponTemplate.CanGiveToPeople">赠送</td>
+					<td v-if="CouponTemplate.CanShareByPeople">分享</td>
+					<td>{{CouponTemplate.FreeStock}}</td>
+					<td>{{CouponTemplate.ConsumePointRate}}%</td>
+					<td>{{CouponTemplate.CommissionRate}}%</td>
+					<td>{{CouponTemplate.Remark}}</td>
+				</tr>
+			</table>
+		</center>
+	</div>
+
+	<form>
+		<div style="margin-top:30px;">
+			<input type="text" class="txt" placeholder="会员名称或者手机号" id="keyword" />
+			<a v-on:click="search" class="btn">搜索</a>
+			<a v-on:click="refresh" class="btn">刷新</a>
+			<a v-on:click="push" class="btn">批量推送</a>
+		</div>
+		<table class="member" cellspacing="0">
+			<tr>
+				<th><input name="allmember" type="checkbox" v-on:change="change" /></th>
+				<th>会员卡号</th>
+				<th>会员名称</th>
+				<th>余额/元</th>
+				<th>手机号码</th>
+				<th>车牌号</th>
+				<th>会员状态</th>
+				<th>保险到期</th>
+				<th>注册时间</th>
+				<th>操作</th>
+			</tr>
+			<tr v-for="Member in MemberList">
+				<td><input name="member" type="checkbox" v-bind:value="Member.ID"></td>
+				<td>{{Member.CardNumber}}</td>
+				<td>{{Member.Name}}</td>
+				<td>{{Member.CardBalance}}</td>
+				<td>{{Member.MobilePhoneNo}}</td>
+				<td>{{Member.PlateList}}</td>
+				<td>{{Member.Status}}</td>
+				<td>{{Member.ExpiredDate}}</td>
+				<td>{{Member.CreatedDate}}</td>
+				<td><a class="btn" v-on:click="singlepush(Member)">推送</a></td>
+			</tr>
+		</table>
+		@*分页*@
+		<div style="display:table;width:100%;text-align:right;">
+			<div class="paging" style="display:table-cell;">
+				<ul id="coupontemplatepaging"></ul>
+			</div>
+			<div style="display:table-cell;width:400px;height:100%;vertical-align:middle;color:#6c6c6c;">
+				<div style="display:table;padding-bottom:7px;">
+					<div style="display:table-cell;padding-right:10px;">共{{TotalPage}}页</div>
+					<input class="form-control" style="display:table-cell;width:60px;margin-right:10px;height:33px;" v-model:value="CurrentPage"/>
+					<a class="btn2" style="width:60px;display:table-cell;margin-right:20px;height:33px;" v-on:click="jump">跳转</a>
+					<div style="display:table-cell;">共{{TotalCount}}条</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+@section scripts{
+	<style type="text/css">
+		.paging {
+			/*width: 100%;*/
+			text-align: right;
+			padding-right: 10px;
+		}
+
+		.coupon {
+			width: 100%;
+			text-align: center;
+			margin: 0px 0px 10px 0px;
+		}
+
+			.coupon th {
+				background-color: #F4F5F9;
+				border: 1px solid #E7E7EB;
+			}
+
+			.coupon td {
+				border: 1px solid #E7E7EB;
+			}
+
+		.member {
+			width: 100%;
+			text-align: center;
+			margin: 20px 0px 10px 0px;
+		}
+
+			.member th {
+				background-color: #F4F5F9;
+				border: 1px solid #E7E7EB;
+			}
+
+			.member td {
+				border: 1px solid #E7E7EB;
+			}
+
+		.btn {
+			border: 1px solid #E7E7EB;
+			padding: 5px 30px;
+			margin-bottom:100px;
+			background-color: #0094FF;
+			color:white;
+		}
+
+		.btn2 {
+			background-color: #E7E7EB;
+			color: black;
+			padding-right:20px;
+		}
+
+		.txt {
+			padding: 8px;
+		}
+	</style>
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script type="text/javascript">
+		var mch = $.getUrlParam('mch');
+		var coupontemplate = JSON.parse(sessionStorage.getItem('couponTemp'));
+		
+		_viewModel = new Vue({
+			el: '#immediatepush',
+			data: {
+				CouponTemplate: coupontemplate,
+				MemberList: [],
+				CurrentPage: 1,
+				PageSize: 25,
+				TotalCount: 0,
+				PushMemberIDList: [],
+			},
+			computed: {
+				TotalPage: function () {
+					return Math.ceil(this.TotalCount / this.PageSize);
+				}
+			},
+			methods: {
+				refresh: function (event) {
+					getAllMember();
+				},
+				change: function (event) {
+					var allmemberbox = $('input:checkbox[name=allmember]')[0];
+					var memberbox = $('input:checkbox[name=member]');
+					if (allmemberbox.checked) {
+						for (var i = 0; i < memberbox.length; i++) {
+							var item = memberbox[i].checked = true;
+						}
+					} else {
+						for (var i = 0; i < memberbox.length; i++) {
+							var item = memberbox[i].checked = false;
+						}
+					}
+				},
+				push: function (event) {
+					var member = $('input:checkbox[name=member]:checked');
+					for (var i = 0; i < member.length; i++) {
+						_viewModel.PushMemberIDList += member[0].value;
+					}
+					$.ajax({
+						url: '/api/CouponPush/ImmediatePush',
+						type: 'POST',
+						headers: { 'CompanyCode': mch },
+						data: {
+							CouponTemplateIDs: _viewModel.CouponTemplate.ID,
+							MemberIDs: _viewModel.PushMemberIDList,
+						},
+						beforeSend: function () {
+							$.showLoading();
+						},
+						success: function (res) {
+							$.hideLoading();
+							if (res.IsSuccessful) {
+								if (res.IsSuccessful) {
+									$.alert('发送成功');
+								} else {
+									$.alert(res.ErrorMessage);
+								}
+							}
+						},
+						error: function () {
+							$.hideLoading();
+						}
+					});
+				},
+				singlepush: function (data, event) {
+					var member = data;
+					$.alert(member.ID);
+					$.ajax({
+						url: '/api/CouponPush/ImmediatePush',
+						type: 'POST',
+						headers: { 'CompanyCode': mch },
+						data: {
+							CouponTemplateIDs: _viewModel.CouponTemplate.ID,
+							MemberIDs: member.ID,
+						},
+						beforeSend: function () {
+							$.showLoading();
+						},
+						success: function (res) {
+							$.hideLoading();
+							if (res.IsSuccessful) {
+								if (res.IsSuccessful) {
+									$.alert('发送成功');
+								} else {
+									$.alert(res.ErrorMessage);
+								}
+							}
+						},
+						error: function () {
+							$.hideLoading();
+						}
+					});
+				},
+				search: function (event) {
+					_viewModel.CurrentPage = 1;
+					getMember();
+				},
+				jump: function (event) {
+					getMember();
+				}
+			}
+		});
+
+		function getAllMember() {
+			$.ajax({
+				url: '/api/Member',
+				type: 'GET',
+				headers: { 'CompanyCode': mch },
+				beforeSend: function () {
+					$.showLoading();
+				},
+				data: {
+					ExistOpenID: true,
+					Start: 1,
+					Limit: _viewModel.PageSize,
+				},
+				success: function (res) {
+					$.hideLoading();
+					if (res.IsSuccessful) {
+						if (res.IsSuccessful) {
+							if (res.Data != null) {
+								_viewModel.MemberList = res.Data;
+								_viewModel.TotalCount = res.TotalCount;
+							}
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					}
+				},
+				error: function () {
+					$.hideLoading();
+				}
+			});
+		}
+		getAllMember();
+
+		function getMember() {
+			var keyword = $('#keyword').val();
+			$.ajax({
+				url: '/api/Member',
+				type: 'GET',
+				headers: { 'CompanyCode': mch },
+				data: {
+					Keyword: keyword,
+					ExistOpenID: true,
+					Start: _viewModel.PageSize * (_viewModel.CurrentPage-1),
+					Limit: _viewModel.PageSize,
+				},
+				beforeSend: function () {
+					$.showLoading();
+				},
+				success: function (res) {
+					$.hideLoading();
+					if (res.IsSuccessful) {
+						if (res.IsSuccessful) {
+							if (res.Data != null) {
+								_viewModel.MemberList = res.Data;
+								_viewModel.TotalCount = res.TotalCount;
+							}
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					}
+				},
+				error: function () {
+					$.hideLoading();
+				}
+			});
+		}
+	</script>
+}
+

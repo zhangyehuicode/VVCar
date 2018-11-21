@@ -5,6 +5,323 @@
 }
 
 <div id="openorder">
+	<div class="toubu">
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+		<div class="title">工作终端</div>
+		<a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+	</div>
+	<div class="kcd_box">
+		<div class="kcd_bg">
+			<div class="kcd_mc">车牌号</div>
+			<div class="kcd_cph">{{PlateNumber}}</div>
+		</div>
+		<div class="kcd_bg">
+			<div class="kcd_mc">会员</div>
+			<select class="kcd_input" id="memberselect" v-on:change="memberChange">
+				<option v-for="Member in MemberList" v-bind:value="Member.ID">{{Member.Name}}</option>
+			</select>
+		</div>
+		@*<div class="kcd_bg">
+				<div class="kcd_hyk">会员卡</div>
+				<div class="kcd_hykmc">会员卡名<span>￥0</span></div>
+				<div class="kcd_hykmc">会员卡名<span>￥0</span></div>
+				<div class="kcd_hykmc" style="border-bottom:none;">会员卡名<span>￥0</span></div>
+			</div>*@
+		<img src="~/Areas/resource/img/mobile/master/u35.png">
+	</div>
+	<div class="kcd_box2">
+		<form action="#" method="get">
+			<select class="kcd_input" id="productcategoryselect">
+				<option v-for="ProductCategory in ProductCategoryList" v-bind:value="ProductCategory.ID">{{ProductCategory.Name}}</option>
+			</select>
+			<select class="kcd_input" id="productselect">
+				<option v-for="Product in ProductList" v-bind:value="Product.ID">{{Product.Name}}</option>
+			</select>
+		</form>
+		<div class="kcd_btn" v-on:click="addproduct">增加</div>
+	</div>
+	<div class="kcd_box" style="padding:0 0 10px 3px;">
+		<div class="kcd_bt">当前项目</div>
+		@*<div>
+				<div class="currentproduct" v-for="Product in CurrentProductList" v-on:click="currentproductclick(Product)">{{Product.Name}}</div>
+			</div>*@
+		<table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
+			<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
+				<th scope="col" width="33%">项目</th>
+				<th scope="col" width="15%">价格</th>
+				<th scope="col" width="17%">改价</th>
+				<th scope="col" width="35%;">操作</th>
+			</tr>
+			<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; " v-for="Product in CurrentProductList">
+				<td>{{Product.Name}}</td>
+				<td>{{Product.PriceSale}}</td>
+				<td>{{Product.ReducedPrice}}</td>
+				<td>
+					@*<span class="addbtn" style="margin:5px;padding:3px;" v-on:click="currentproductclick(Product)">删除</span>
+						<span class="addbtn" style="margin:5px;padding:3px;" v-on:click="distribution(Product)">人员分配</span>
+						<span class="addbtn" style="margin:5px;padding:3px;" v-on:click="modifyprice(Product)">修改价格</span>*@
+					<img src="~/Areas/resource/img/mobile/addperson.png" style="width:27px;margin-top:5px;margin-bottom:5px;" v-on:click="distribution(Product)" />
+					<img src="~/Areas/resource/img/mobile/modifyprice.png" style="width:27px;margin-top:5px;margin-bottom:5px;" v-on:click="modifyprice(Product)" />
+					<img src="~/Areas/resource/img/mobile/close_blue.png" style="width:27px;margin-top:5px;margin-bottom:5px;" v-on:click="currentproductclick(Product)" />
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="kcd_box">
+		<div class="kcd_bt">实时体现历史数据信息</div>
+		<table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
+			<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
+				<th scope="col" width="25%">项目</th>
+				<th scope="col" width="25%">挖掘空间</th>
+				<th scope="col" width="25%">服务次数</th>
+				<th scope="col" width="25%">操作</th>
+			</tr>
+			<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; " v-for="AnalysisData in HistoryAnalysisData">
+				<td>{{AnalysisData.Name}}</td>
+				<td>{{AnalysisData.MiningSpace}}星</td>
+				<td>{{AnalysisData.ServiceTime}}次</td>
+				<td><div class="addbtn" v-on:click="historyaddproduct(AnalysisData)">增加</div></td>
+			</tr>
+		</table>
+	</div>
+	<div class="kcd_btn2" v-on:click="openorder">开单</div>
+	<div class="distributioncon">
+		<div class="distributionmain">
+			<img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closedistribution" />
+			<div class="distributionmaincon">
+				<div style="text-align:center;">{{CurrentDistributionProduct.Name}}</div>
+				<div class="kcd_bt">人员选择</div>
+				<select class="kcd_input" id="userroleselect">
+					<option v-for="UserRole in UserRoleList" v-bind:value="UserRole.ID">{{UserRole.Name}}</option>
+				</select>
+				<select class="kcd_input" id="userselect">
+					<option v-for="User in UserList" v-bind:value="JSON.stringify(User)">{{User.Name}}</option>
+				</select>
+				<div class="kcd_bt">类型选择</div>
+				<select class="kcd_input" id="usertypeselect">
+					<option value="0">施工员</option>
+					<option value="1">业务员</option>
+				</select>
+				<div class="kcd_btn" v-on:click="addpeople">添加</div>
+				<div class="kcd_bt">业务员</div>
+				<table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
+					<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
+						<th scope="col" width="33.3%">姓名</th>
+						<th scope="col" width="33.3%">编号</th>
+						<th scope="col" width="33.3%">操作</th>
+					</tr>
+					<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center;" v-for="Salesman in SalesmanList">
+						<td>{{Salesman.Name}}</td>
+						<td>{{Salesman.Code}}</td>
+						<td><div class="addbtn" v-on:click="deletesalesman(Salesman)">删除</div></td>
+					</tr>
+				</table>
+				<div class="kcd_bt">施工</div>
+				<table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
+					<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
+						<th scope="col" width="33.3%">姓名</th>
+						<th scope="col" width="33.3%">编号</th>
+						<th scope="col" width="33.3%">操作</th>
+					</tr>
+					<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center;" v-for="Construction in ConstructionList">
+						<td>{{Construction.Name}}</td>
+						<td>{{Construction.Code}}</td>
+						<td><div class="addbtn" v-on:click="deleteconstruction(Construction)">删除</div></td>
+					</tr>
+				</table>
+			</div>
+			<div class="kcd_btn2" v-on:click="closedistribution">确认</div>
+		</div>
+	</div>
+	<div class="modifypricemain">
+		<div class="modifypricepanel">
+			<div class="popcon">
+				<img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closemodifyprice" />
+				<div style="text-align:center;padding:5px 0 5px 0;">项目{{CurrentModifyPriceProduct.Name}}</div>
+				<div class="kcgl_box">
+					<div class="kcgl">原价</div>
+					<div class="kcgl2">
+						<span id="priceSale">{{CurrentModifyPriceProduct.PriceSale}}</span>
+					</div>
+				</div>
+				<div class="kcgl_box">
+					<div class="kcgl">是否改价</div>
+					<div class="kcgl_input" v-bind:class="[unReduceClass?unReduceClass:'']" style="width:80px;padding-top:10px;" v-on:click="setReducePrice(0)">
+						<span class="gwc_text">否</span>
+					</div>
+					<div class="kcgl_input" v-bind:class="[reduceClass?reduceClass:'']" style="width:80px;padding-top:10px;" v-on:click="setReducePrice(1)">
+						<span class="gwc_text">是</span>
+					</div>
+				</div>
+				<div class="kcgl_box" v-bind:class="[showClass?showClass:'']">
+					<div class="kcgl">改价</div>
+					<div class="kcgl2">
+						<input type="number" style="width:80px;text-align:center;border:1px #fff solid" placeholder="输入改价价" id="inputReducePrice" v-on:change="reducePrice" />
+					</div>
+				</div>
+				<div class="kcd_btn2" v-on:click="closemodifyprice">确认</div>
+			</div>
+		</div>
+	</div>
+	<div class="toubu">
+		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
+		<div class="title">工作终端</div>
+		<a v-on:click="home" class="homeposition"><img src="~/Areas/resource/img/mobile/master/czt.png" style="width:20px; float:right; margin-right:3%; margin-top:18px;"></a>
+	</div>
+	<div class="kcd_box">
+		<div class="kcd_bg">
+			<div class="kcd_mc">车牌号</div>
+			<div class="kcd_cph">{{PlateNumber}}</div>
+		</div>
+		<div class="kcd_bg">
+			<div class="kcd_mc">会员</div>
+			<select class="kcd_input" id="productselect" v-on:change="memberChange">
+				<option v-for="Member in MemberList" v-bind:value="Member.ID">{{Member.Name}}</option>
+			</select>
+		</div>
+		@*<div class="kcd_bg">
+				<div class="kcd_hyk">会员卡</div>
+				<div class="kcd_hykmc">会员卡名<span>￥0</span></div>
+				<div class="kcd_hykmc">会员卡名<span>￥0</span></div>
+				<div class="kcd_hykmc" style="border-bottom:none;">会员卡名<span>￥0</span></div>
+			</div>*@
+		<img src="~/Areas/resource/img/mobile/master/u35.png">
+	</div>
+	<div class="kcd_box2">
+		<form action="#" method="get">
+			<select class="kcd_input" id="productcategoryselect">
+				<option v-for="ProductCategory in ProductCategoryList" v-bind:value="ProductCategory.ID">{{ProductCategory.Name}}</option>
+			</select>
+			<select class="kcd_input" id="productselect">
+				<option v-for="Product in ProductList" v-bind:value="Product.ID">{{Product.Name}}</option>
+			</select>
+		</form>
+		<div class="kcd_btn" v-on:click="addproduct">增加</div>
+	</div>
+	<div class="kcd_box" style="padding:0 0 10px 3px;">
+		<div class="kcd_bt">当前项目</div>
+		@*<div>
+				<div class="currentproduct" v-for="Product in CurrentProductList" v-on:click="currentproductclick(Product)">{{Product.Name}}</div>
+			</div>*@
+		<table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
+			<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
+				<th scope="col" width="33%">项目</th>
+				<th scope="col" width="15%">价格</th>
+				<th scope="col" width="17%">改价</th>
+				<th scope="col" width="35%;">操作</th>
+			</tr>
+			<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; " v-for="Product in CurrentProductList">
+				<td>{{Product.Name}}</td>
+				<td>{{Product.PriceSale}}</td>
+				<td>{{Product.ReducedPrice}}</td>
+				<td>
+					@*<span class="addbtn" style="margin:5px;padding:3px;" v-on:click="currentproductclick(Product)">删除</span>
+						<span class="addbtn" style="margin:5px;padding:3px;" v-on:click="distribution(Product)">人员分配</span>
+						<span class="addbtn" style="margin:5px;padding:3px;" v-on:click="modifyprice(Product)">修改价格</span>*@
+					<img src="~/Areas/resource/img/mobile/addperson.png" style="width:27px;margin-top:5px;margin-bottom:5px;" v-on:click="distribution(Product)" />
+					<img src="~/Areas/resource/img/mobile/modifyprice.png" style="width:27px;margin-top:5px;margin-bottom:5px;" v-on:click="modifyprice(Product)" />
+					<img src="~/Areas/resource/img/mobile/close_blue.png" style="width:27px;margin-top:5px;margin-bottom:5px;" v-on:click="currentproductclick(Product)" />
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="kcd_box">
+		<div class="kcd_bt">实时体现历史数据信息</div>
+		<table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
+			<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
+				<th scope="col" width="25%">项目</th>
+				<th scope="col" width="25%">挖掘空间</th>
+				<th scope="col" width="25%">服务次数</th>
+				<th scope="col" width="25%">操作</th>
+			</tr>
+			<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; " v-for="AnalysisData in HistoryAnalysisData">
+				<td>{{AnalysisData.Name}}</td>
+				<td>{{AnalysisData.MiningSpace}}星</td>
+				<td>{{AnalysisData.ServiceTime}}次</td>
+				<td><div class="addbtn" v-on:click="historyaddproduct(AnalysisData)">增加</div></td>
+			</tr>
+		</table>
+	</div>
+	<div class="kcd_btn2" v-on:click="openorder">开单</div>
+	<div class="distributioncon">
+		<div class="distributionmain">
+			<img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closedistribution" />
+			<div class="distributionmaincon">
+				<div style="text-align:center;">{{CurrentDistributionProduct.Name}}</div>
+				<div class="kcd_bt">人员选择</div>
+				<select class="kcd_input" id="userroleselect">
+					<option v-for="UserRole in UserRoleList" v-bind:value="UserRole.ID">{{UserRole.Name}}</option>
+				</select>
+				<select class="kcd_input" id="userselect">
+					<option v-for="User in UserList" v-bind:value="JSON.stringify(User)">{{User.Name}}</option>
+				</select>
+				<div class="kcd_bt">类型选择</div>
+				<select class="kcd_input" id="usertypeselect">
+					<option value="0">施工员</option>
+					<option value="1">业务员</option>
+				</select>
+				<div class="kcd_btn" v-on:click="addpeople">添加</div>
+				<div class="kcd_bt">业务员</div>
+				<table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
+					<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
+						<th scope="col" width="33.3%">姓名</th>
+						<th scope="col" width="33.3%">编号</th>
+						<th scope="col" width="33.3%">操作</th>
+					</tr>
+					<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center;" v-for="Salesman in SalesmanList">
+						<td>{{Salesman.Name}}</td>
+						<td>{{Salesman.Code}}</td>
+						<td><div class="addbtn" v-on:click="deletesalesman(Salesman)">删除</div></td>
+					</tr>
+				</table>
+				<div class="kcd_bt">施工</div>
+				<table width="94%" style="border-collapse:collapse; float:left; margin-left:3%; margin-bottom:15px;" border="1">
+					<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center; background-color:#f3f3f3;">
+						<th scope="col" width="33.3%">姓名</th>
+						<th scope="col" width="33.3%">编号</th>
+						<th scope="col" width="33.3%">操作</th>
+					</tr>
+					<tr style="border:1px solid #ddd; height:44px; line-height:44px; font-size:14px; color:#2d2d30; text-align:center;" v-for="Construction in ConstructionList">
+						<td>{{Construction.Name}}</td>
+						<td>{{Construction.Code}}</td>
+						<td><div class="addbtn" v-on:click="deleteconstruction(Construction)">删除</div></td>
+					</tr>
+				</table>
+			</div>
+			<div class="kcd_btn2" v-on:click="closedistribution">确认</div>
+		</div>
+	</div>
+	<div class="modifypricemain">
+		<div class="modifypricepanel">
+			<div class="popcon">
+				<img class="closeimg" src="~/Areas/resource/img/mobile/close.png" v-on:click="closemodifyprice" />
+				<div style="text-align:center;padding:5px 0 5px 0;">项目{{CurrentModifyPriceProduct.Name}}</div>
+				<div class="kcgl_box">
+					<div class="kcgl">原价</div>
+					<div class="kcgl2">
+						<span id="priceSale">{{CurrentModifyPriceProduct.PriceSale}}</span>
+					</div>
+				</div>
+				<div class="kcgl_box">
+					<div class="kcgl">是否改价</div>
+					<div class="kcgl_input" v-bind:class="[unReduceClass?unReduceClass:'']" style="width:80px;padding-top:10px;" v-on:click="setReducePrice(0)">
+						<span class="gwc_text">否</span>
+					</div>
+					<div class="kcgl_input" v-bind:class="[reduceClass?reduceClass:'']" style="width:80px;padding-top:10px;" v-on:click="setReducePrice(1)">
+						<span class="gwc_text">是</span>
+					</div>
+				</div>
+				<div class="kcgl_box" v-bind:class="[showClass?showClass:'']">
+					<div class="kcgl">改价</div>
+					<div class="kcgl2">
+						<input type="number" style="width:80px;text-align:center;border:1px #fff solid" placeholder="输入改价价" id="inputReducePrice" v-on:change="reducePrice" />
+					</div>
+				</div>
+				<div class="kcd_btn2" v-on:click="closemodifyprice">确认</div>
+			</div>
+		</div>
+	</div>
+=======
     <div class="toubu">
         <a v-on:click="back"><img src="~/Areas/resource/img/mobile/master/fhj.png" style="width:10px; float:left; margin-left:3%; margin-top:18px;"></a>
         <div class="title">工作终端</div>
@@ -155,6 +472,7 @@
             </div>
         </div>
     </div>
+>>>>>>> .r374
 </div>
 
 @section scripts{
@@ -342,7 +660,7 @@
 			}
 			var mch = $.getUrlParam('mch');
 
-			function addPickUpOrder(data) {
+            function addPickUpOrder(data) {
 				if (data == null || data.PlateNumber == null || data.PlateNumber == '' || data.StaffID == '' || data.StaffID == null) {
 					$.alert('参数错误');
 					return;
@@ -350,7 +668,7 @@
 				if (data.PickUpOrderItemList == null || data.PickUpOrderItemList.length < 1) {
 					$.alert('请选择服务项目');
 					return;
-				}
+                }
 				$.ajax({
 					url: '/api/PickUpOrder',
 					type: 'POST',
@@ -691,7 +1009,7 @@
 				});
 			}
 			if (user == null || user == '') {
-				//getUserByOpenId();
+				getUserByOpenId();
 			} else {
 				user = JSON.parse(user);
 				_viewModel.PickUpOrder.StaffID = user.ID;

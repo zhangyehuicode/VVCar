@@ -8,16 +8,17 @@
     <div>
         <div class="main">
             <div class="cari-table" style="margin:5px 13px;vertical-align:middle;">
-                <div class="cari-font cari-tablecell">当前公里数</div>
+                <div class="cari-font cari-tablecell" style="vertical-align:middle;">当前公里数</div>
                 <input class="cari-tablecell" type="number" value="0" style="margin-left:10px;height:30px;width:80px;text-align:center;text-shadow:none;box-shadow:none;outline-style:none;outline-width:0;" min="0" v-model="CarInspectionReport.Mileage" />
             </div>
             <div style="height:1px;background:#f4f4f4;width:100%;"></div>
             <div class="cari-font" style="height:40px;line-height:40px;margin:0 13px;border-bottom:1px solid #f4f4f4;">车检结论</div>
             <div style="padding:0 13px;">
-                <textarea placeholder="请输入车检结论" style="height:120px;width:100%;margin:5px 0;" v-model="CarInspectionReport.Conclusion"></textarea>
+                <textarea placeholder="请输入车检结论" style="height:120px;width:100%;margin:5px 0;font-size:13px;color:#484a4e;" v-model="CarInspectionReport.Conclusion"></textarea>
             </div>
             <div class="slide-box">
-                <div class="slide-box-item selected-font" v-on:click="lacquercheckitem">漆面检查</div>
+                <div class="slide-box-item selected-font" v-on:click="allcheckitem">全部</div>
+                <div class="slide-box-item" v-on:click="lacquercheckitem">漆面检查</div>
                 <div class="slide-box-item" v-on:click="tyrecheckitem">轮胎/车毂</div>
                 <div class="slide-box-item" v-on:click="enginecheckitem">发动机舱</div>
                 <div class="slide-box-item" v-on:click="brakeoilcheckitem">刹车油</div>
@@ -32,13 +33,13 @@
                 <div class="cari-tablecell check-item">状态</div>
                 <div class="cari-tablecell check-item">车检详情</div>
             </div>
-            <div>
-                <div class="cari-table" style="width:100%;text-align:center;border-bottom:1px solid #f4f4f4;padding:5px 0;" v-for="Part in CarInspectionPartDisplayList">
+            <div class="checkitem-con">
+                <div class="cari-table checkitem" style="width:100%;text-align:center;border-bottom:1px solid #f4f4f4;padding:5px 0;" v-for="Part in CarInspectionPartList" v-bind:id="Part.Part">
                     <div class="cari-tablecell check-item-title" style="width:33.33%">{{Part.Name}}</div>
                     <div class="cari-tablecell" style="width:33.33%">
                         <div class="cari-table" style="margin:auto;">
-                            <div class="cari-tablecell status-abnormal" v-bind:class="{statusabnormalselected:Part.IsAbnormal}" v-on:click="abnormalclick">异常</div>
-                            <div class="cari-tablecell status-normal" v-bind:class="{statusnormalunselected:Part.IsAbnormal}" v-on:click="normalclick">正常</div>
+                            <div class="cari-tablecell status-abnormal" v-on:click="abnormalclick">异常</div>
+                            <div class="cari-tablecell status-normal" v-on:click="normalclick">正常</div>
                             <div style="display:none;">{{Part.Part}}</div>
                         </div>
                     </div>
@@ -77,11 +78,22 @@
 
 @section scripts{
     <style type="text/css">
+        .checkitem-con {
+            position: relative;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .slide-box {
             display: -webkit-box;
             overflow-x: scroll;
             -webkit-overflow-scrolling: touch;
-            width: 100%;
+            /*width: 100%;*/
             height: 40px;
             border-top: 5px solid #f4f4f4;
             vertical-align: middle;
@@ -622,10 +634,13 @@
                         }
                     },
                     confirm: function (event) {
+                        if (_viewModel.CarInspectionReport.Mileage < 0) {
+                            $.alert('当前公里数不能小于0！');
+                            return;
+                        }
                         $.confirm('确定提交?', '提示', function () {
                             sessionStorage.setItem('carinspection', JSON.stringify(_viewModel.CarInspectionReport));
                             history.back(-1);
-                            //$.alert(JSON.stringify(_viewModel.CarInspectionReport));
                         });
                     },
                     selectitem: function (event) {
@@ -657,54 +672,59 @@
                         var part = $(parent.find('div')[2]).html();
                         adddetails(part, 1, null,false);
                     },
-                    lacquercheckitem: function (event) {
+                    allcheckitem: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(0, 12);
-                        changetab();
+                        $('.checkitem').show();
+                    },
+                    lacquercheckitem: function (event) {
+                        if (event != null)
+                          this.selectitem(event);
+                        var data = _viewModel.CarInspectionPartList.slice(0, 12);
+                        changetab(data);
                     },
                     tyrecheckitem: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(12, 20);
-                        changetab();
+                        var data = _viewModel.CarInspectionPartList.slice(12, 20);
+                        changetab(data);
                     },
                     enginecheckitem: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(20, 22);
-                        changetab();
+                        var data = _viewModel.CarInspectionPartList.slice(20, 22);
+                        changetab(data);
                     },
                     brakeoilcheckitem: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(22, 24);
-                        changetab();
+                        var data = _viewModel.CarInspectionPartList.slice(22, 24);
+                        changetab(data);
                     },
                     engineoilitem: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(24, 27);
-                        changetab();
+                        var data = _viewModel.CarInspectionPartList.slice(24, 27);
+                        changetab(data);
                     },
                     wiper: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(27, 29);
-                        changetab();
+                        var data = _viewModel.CarInspectionPartList.slice(27, 29);
+                        changetab(data);
                     },
                     glass: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(29, 32);
-                        changetab();
+                        var data = _viewModel.CarInspectionPartList.slice(29, 32);
+                        changetab(data);
                     },
                     carinteriors: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(32, 36);
+                        var source = _viewModel.CarInspectionPartList.slice(32, 36);
                         var data = _viewModel.CarInspectionPartList.slice(38, 40);
                         for (var i = 0; i < data.length; i++) {
-                            this.CarInspectionPartDisplayList.push(data[i]);
+                            source.push(data[i]);
                         }
-                        changetab();
+                        changetab(source);
                     },
                     exteriorparts: function (event) {
                         this.selectitem(event);
-                        this.CarInspectionPartDisplayList = _viewModel.CarInspectionPartList.slice(36, 38);
-                        changetab();
+                        var data = _viewModel.CarInspectionPartList.slice(36, 38);
+                        changetab(data);
                     },
                     closeexplain: function (event) {
                         $('.explainmain').hide();
@@ -717,7 +737,6 @@
                         $('.explainmain').hide();
                         $('#explaintxt').val('');
                         _viewModel.ExplainImgs = [];
-                        $.alert(JSON.stringify(_viewModel.CarInspectionReport));
                     },
                     addexplain: function (data, event) {
                         this.ExplainTitle = data.Name;
@@ -812,7 +831,7 @@
                 });
             }
             if (user === null || user === '') {
-                //getUserByOpenId();
+                getUserByOpenId();
             } else {
                 user = JSON.parse(user);
             }
@@ -826,13 +845,13 @@
                         if (res.IsSuccessful) {
                             if (res.Data != null) {
                                 _viewModel.CarInspectionPartList = res.Data;
-                                _viewModel.CarInspectionPartDisplayList = res.Data.slice(0, 12);
-                                changetab();
+                                setTimeout(function () {
+                                    recoverydata();
+                                },1);
                             }
                         }
                     },
                     error: function () {
-
                     }
                 });
             }
@@ -845,14 +864,31 @@
             }
             initdata();
 
-        function changetab() {
-            for (var i = 0; i < _viewModel.CarInspectionPartDisplayList.length; i++) {
-                _viewModel.CarInspectionPartDisplayList[i].IsAbnormal = false;
-                for (var j = 0; j < _viewModel.CarInspectionReport.CarInspectionDetailsList.length; j++) {
-                    if (_viewModel.CarInspectionPartDisplayList[i].Part == _viewModel.CarInspectionReport.CarInspectionDetailsList[j].Part) {
-                        if (_viewModel.CarInspectionReport.CarInspectionDetailsList[j].Status==1)
-                            _viewModel.CarInspectionPartDisplayList[i].IsAbnormal = true;
+        function changetab(source) {
+            var checkitems = $('.checkitem');
+            for (var i = 0; i < checkitems.length; i++) {
+                var show = false;
+                for (var j = 0; j < source.length; j++) {
+                    if (parseInt($(checkitems[i]).attr('id')) == source[j].Part) {
+                        $(checkitems[i]).show();
+                        show = true;
                         break;
+                    }
+                }
+                if (!show)
+                    $(checkitems[i]).hide();
+            }
+        }
+
+        function recoverydata() {
+            for (var i = 0; i < _viewModel.CarInspectionReport.CarInspectionDetailsList.length; i++) {
+                if (_viewModel.CarInspectionReport.CarInspectionDetailsList[i].Status == 1) {
+                    for (var j = 0; j < _viewModel.CarInspectionPartList.length; j++) {
+                        if (_viewModel.CarInspectionReport.CarInspectionDetailsList[i].Part == _viewModel.CarInspectionPartList[j].Part) {
+                            $('#' + _viewModel.CarInspectionPartList[j].Part).find('.status-abnormal').addClass('statusabnormalselected');
+                            $('#' + _viewModel.CarInspectionPartList[j].Part).find('.status-normal').addClass('statusnormalunselected');
+                            break;
+                        }
                     }
                 }
             }

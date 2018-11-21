@@ -267,6 +267,15 @@ namespace VVCar.VIP.Services.DomainServices
                     queryable = queryable.Where(p => p.IsStockholder == filter.IsStockholder.Value);
                 if (!string.IsNullOrEmpty(filter.MobilePhoneNo))
                     queryable = queryable.Where(p => p.MobilePhoneNo.Contains(filter.MobilePhoneNo));
+                if (filter.ExistOpenID.HasValue)
+                {
+                    if (filter.ExistOpenID.Value)
+                        queryable = queryable.Where(p => !string.IsNullOrEmpty(p.WeChatOpenID));
+                    else
+                        queryable = queryable.Where(p => string.IsNullOrEmpty(p.WeChatOpenID));
+
+                }
+
                 if (!string.IsNullOrEmpty(filter.Keyword))
                 {
                     queryable = queryable.Where(p => p.CardNumber.Contains(filter.Keyword)

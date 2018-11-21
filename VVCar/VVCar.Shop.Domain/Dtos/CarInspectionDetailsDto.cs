@@ -13,6 +13,11 @@ namespace VVCar.Shop.Domain.Dtos
     /// </summary>
     public class CarInspectionDetailsDto
     {
+        public CarInspectionDetailsDto()
+        {
+            ImgList = new List<CarInspectionDetailsImg>();
+        }
+
         /// <summary>
         /// ID
         /// </summary>

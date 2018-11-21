@@ -80,6 +80,7 @@
     <Compile Include="Dtos\GetMemberInfoByWeChatDto.cs" />
     <Compile Include="Dtos\GiftCardDtoOfOW.cs" />
     <Compile Include="Dtos\GiftCardReceiveDto.cs" />
+    <Compile Include="Dtos\ImmediatePushDto.cs" />
     <Compile Include="Dtos\MemberBaseInfoDto.cs" />
     <Compile Include="Dtos\MemberCardDto.cs" />
     <Compile Include="Dtos\MemberCardThemeDto.cs" />

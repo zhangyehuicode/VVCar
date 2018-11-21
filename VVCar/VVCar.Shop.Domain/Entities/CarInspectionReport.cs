@@ -209,6 +209,17 @@ namespace VVCar.Shop.Domain.Entities
         public virtual CarInspectionDetails CarInspectionDetails { get; set; }
 
         /// <summary>
+        /// 车检ID
+        /// </summary>
+        [Display(Name = "车检ID")]
+        public Guid CarInspectionReportID { get; set; }
+
+        /// <summary>
+        /// 车检
+        /// </summary>
+        public virtual CarInspectionReport CarInspectionReport { get; set; }
+
+        /// <summary>
         /// 图片路径
         /// </summary>
         [Display(Name = "图片路径")]
