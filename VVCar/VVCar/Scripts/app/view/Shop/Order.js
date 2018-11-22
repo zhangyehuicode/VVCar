@@ -46,7 +46,7 @@
                 store: statusStore,
                 displayField: 'Name',
                 valueField: 'Value',
-                fieldLabel: '发货状态',
+                fieldLabel: '订单状态',
                 labelWidth: 60,
                 width: 200,
                 editable: false,
@@ -70,7 +70,7 @@
             { header: '详细地址', dataIndex: 'Address', flex: 1 },
             { header: '备注', dataIndex: 'Remark', flex: 1 },
             {
-                header: '发货状态', dataIndex: 'Status', width: 100,
+                header: '订单状态', dataIndex: 'Status', width: 100,
                 renderer: function (value) {
                     if (value == 2)
                         return "<span style='color:green;'>已发货</span>";

@@ -28,6 +28,9 @@
 			'ProductRetailStatisticsList button[action=export]': {
 				click: me.export
 			},
+			'ProductRetailStatisticsList combobox[name=OrderType]': {
+				change: me.ordertype
+			}
 		});
 	},
 	searchSellWell: function (btn) {
@@ -82,6 +85,17 @@
 				store.unsaleNotify(queryValues, success, failure);
 			}
 		});
+	},
+	ordertype: function (btn) {
+		var me = this;
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			var store = me.getProductRetailStatisticsList().getStore();
+			store.proxy.extraParams = queryValues;
+			store.load();
+		} else {
+			Ext.Msg.alert('提示', '请输入过滤条件');
+		}
 	},
 	search: function (btn) {
 		var me = this;

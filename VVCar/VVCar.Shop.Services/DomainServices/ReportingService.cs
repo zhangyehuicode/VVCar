@@ -1176,7 +1176,9 @@ namespace VVCar.Shop.Services.DomainServices
                 TotalInCome = t.Sum(s => s.BudgetType == EBudgetType.InCome ? s.Money : 0),
                 TotalOutCome = t.Sum(s => s.BudgetType == EBudgetType.OutCome ? s.Money : 0),
             }).ToList();
-
+            var startdate = operationStatementDtos.Select(t => t.Code).Min();
+            var enddate = operationStatementDtos.Select(t => t.Code).Max();
+            
             totalCount = operationStatementDtos.Count();
             return operationStatementDtos.OrderByDescending(t => t.Code);
         }

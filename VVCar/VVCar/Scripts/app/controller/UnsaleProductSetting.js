@@ -41,6 +41,9 @@
 			'UnsaleProductSettingList button[action=search]': {
 				click: me.search
 			},
+			'UnsaleProductSettingList button[action=analyse]': {
+				click: me.analyse
+			},
 			'UnsaleProductSettingList button[action=addProduct]': {
 				click: me.addProduct
 			},
@@ -223,6 +226,26 @@
 		} else {
 			Ext.Msg.alert('提示', '请输入过滤条件');
 		}
+	},
+	analyse: function (btn) {
+		cname = 'UnsaleAnalyse';
+		mname = 'UnsaleAnalyse';
+		text = '畅销滞销分析';
+		var mainPanel = parent.Ext.getCmp("tabPanelMain");
+		parent.Ext.require('WX.controller.' + cname, function () {
+			parent.Ext.onReady(function () {
+				parent.Ext.getApplication().loadModule(cname);
+				var panel = mainPanel.down(mname);
+				if (!panel) {
+					var panel = parent.Ext.widget(mname, { title: text, minWidth: 1100 });
+					parent.Ext.checkActionPermission(panel);
+					mainPanel.add(panel);
+					mainPanel.setActiveTab(panel);
+				} else {
+					mainPanel.setActiveTab(panel);
+				}
+			});
+		});
 	},
 	searchProduct: function (btn) {
 		var me = this;

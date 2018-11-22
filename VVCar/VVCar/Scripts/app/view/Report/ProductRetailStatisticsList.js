@@ -78,29 +78,43 @@
 						margin: '0 0 0 5',
 						value: '',
 					}, {
+						xtype: 'combobox',
+						name: 'OrderType',
+						fieldLabel: '排序类型',
+						width: 180,
+						labelWidth: 60,
+						margin: '0 0 0 5',
+						store: [
+							[0, '销售总额'],
+							[1, '销售总数'],
+						],
+						value: 0,
+					},{
 						xtype: 'button',
 						action: 'search',
 						text: '搜索',
 						iconCls: 'search',
 						cls: 'submitBtn',
 						margin: '0 0 0 5',
-					}, {
-						xtype: 'button',
-						action: 'searchSellWell',
-						text: '畅销',
-						margin: '0 0 0 5',
-					}, {
-						xtype: 'button',
-						action: 'searchUnsalable',
-						text: '滞销',
-						margin: '0 0 0 5',
-					}, {
-						xtype: 'button',
-						action: 'unsaleNotify',
-						text: '滞销提醒',
-						iconCls: '',
-						margin: '0 0 0 5'
-					}, {
+					}, 
+					//, {
+					//	xtype: 'button',
+					//	action: 'searchSellWell',
+					//	text: '畅销',
+					//	margin: '0 0 0 5',
+					//}, {
+					//	xtype: 'button',
+					//	action: 'searchUnsalable',
+					//	text: '滞销',
+					//	margin: '0 0 0 5',
+					//}, {
+					//	xtype: 'button',
+					//	action: 'unsaleNotify',
+					//	text: '滞销提醒',
+					//	iconCls: '',
+					//	margin: '0 0 0 5'
+					//}
+					,{
 						xtype: 'button',
 						action: 'reset',
 						text: '重置',

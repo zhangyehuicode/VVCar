@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using Senparc.Weixin.MP;
 using System.Web.Http;
 using VVCar.BaseData.Domain.Filters;
 using VVCar.BaseData.Domain.Services;
@@ -15,7 +11,7 @@ namespace VVCar.Controllers.Api
     /// </summary>
     [ApiAuthorize(NeedLogin = false)]
     [RoutePrefix("api/Wechat")]
-    public class WechatController : BaseApiController
+    public class WechatController : System.Web.Mvc.Controller
     {
         public WechatController(IWechatService wechatService)
         {
@@ -29,12 +25,17 @@ namespace VVCar.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet, AllowAnonymous]
-        public JsonActionResult<string> Index([FromUri]WechatFilter filter)
+        public System.Web.Mvc.ActionResult Index([FromUri]WechatFilter filter)
         {
-            return SafeExecute(() =>
+            filter.token = "YBCYZ2018";
+            if (CheckSignature.Check(filter.signature, filter.timestamp, filter.nonce, filter.token))
             {
-                return WechatService.Index(filter);
-            });
+                return Content(filter.echostr);
+            }
+            else
+            {
+                return Content("failed:" + filter.signature + "," + CheckSignature.GetSignature(filter.timestamp, filter.nonce, filter.token));
+            }
         }
     }
 }

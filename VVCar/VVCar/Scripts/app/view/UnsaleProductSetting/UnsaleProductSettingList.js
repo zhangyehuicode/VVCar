@@ -72,6 +72,13 @@
 						iconCls: 'fa fa-search',
 						cls: 'submitBtn',
 						margin: '0 0 0 5'
+					}, {
+						action: 'analyse',
+						xtype: 'button',
+						text: '产品分析',
+						iconCls: 'fa  fa-calculator',
+						cls: 'submitBtn',
+						margin: '0 0 0 5'
 					}]
 				}
 			],

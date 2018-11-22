@@ -266,6 +266,7 @@ namespace VVCar.Areas.Mobile.Controllers
             ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
             return View();
         }
+
         /// <summary>
         /// 砍价详情
         /// </summary>
@@ -949,6 +950,6 @@ namespace VVCar.Areas.Mobile.Controllers
             ViewBag.HeadImgUrl = TempData["headimgurl"] as string;
             ViewBag.ClientType = Request.UserAgent.ToLower().Contains("micromessenger") ? 2 : 3;
             return View();
-        }  
+        }
     }
 }

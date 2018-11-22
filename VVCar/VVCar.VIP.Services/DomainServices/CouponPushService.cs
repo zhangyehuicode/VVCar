@@ -249,6 +249,9 @@ namespace VVCar.VIP.Services.DomainServices
         /// <returns></returns>
         public bool ImmediatePushAction(Guid[] couponTemplateIDs, Guid[] memberIDs)
         {
+            if (couponTemplateIDs.Count() < 1 || memberIDs.Count() < 1)
+                throw new DomainException("参数错误");
+            var count = 0;
             var memberList = MemberRepo.GetQueryable(false).Where(t => memberIDs.Contains(t.ID)).ToList();
             memberList.ForEach(t =>
             {
@@ -268,8 +271,17 @@ namespace VVCar.VIP.Services.DomainServices
                 catch (Exception e)
                 {
                     AppContext.Logger.Error($"立即推送卡券出现异常，{e.Message}");
+                    if (memberIDs.Count() == 1)
+                    {
+                        throw new DomainException(e.Message);
+                    }
+                    count++;
                 }
             });
+            if (count == memberIDs.Count() && memberIDs.Count() != 1)
+            {
+                throw new DomainException("推送失败");
+            }
             return true;
         }
     }

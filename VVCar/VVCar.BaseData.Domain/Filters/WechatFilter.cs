@@ -28,5 +28,10 @@ namespace VVCar.BaseData.Domain.Filters
         /// 随机数字符串
         /// </summary>
         public string echostr { get; set; }
+
+        /// <summary>
+        /// token
+        /// </summary>
+        public string token { get; set; }
     }
 }

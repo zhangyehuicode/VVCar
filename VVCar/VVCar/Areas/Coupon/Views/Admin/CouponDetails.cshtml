@@ -24,7 +24,7 @@
             <div class="coupon-content">
                 <h4 class="coupon-fontcolor coupon-textalign" data-bind="text:CouponTemp().Title"></h4>
                 <div class="coupon-textalign">
-                    <button type="button" class="btn btn-default">立即使用</button>
+                    <button type="button" class="btn btn-default" style="color:#fff;">立即使用</button>
                 </div>
                 <h6 class="coupon-fontcolor coupon-textalign" data-bind="text:CouponTemp().SubTitle"></h6>
                 <h5 class="coupon-fontcolor coupon-padding" data-bind="text:CouponTemp().CouponType==3?'折扣比例：'+CouponTemp().CouponValue:'抵用金额：'+CouponTemp().CouponValue"></h5>@*<span class="coupon-contentfontcolor" data-bind="text:CouponTemp().CouponValue"></span>*@
@@ -302,7 +302,7 @@
             }
 
         .coupon {
-            padding: 20px;
+            padding: 20px 16px;
         }
 
             .coupon button {
@@ -313,7 +313,7 @@
         .coupon-content {
             border: 1px solid #cccccc;
             background-color: #fff;
-            min-height: 430px;
+            min-height: 500px;
         }
 
             .coupon-content img {

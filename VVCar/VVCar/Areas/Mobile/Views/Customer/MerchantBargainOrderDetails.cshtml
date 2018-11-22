@@ -1,143 +1,143 @@
 ﻿
 @{
-	ViewBag.Title = "";
-	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "";
+    Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
 }
 
 <div id="merchantbargainorderdetails">
-	<div class="top_box">
-		<div class="top_box_text">砍价趣</div>
-		<a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
-	</div>
-	<div class="main">
-		<div class="bargainorder-con">
-			<div>
-				<img class="bargainorder-img" v-bind:src=MerchantBargainOrder.ImgUrl />
-			</div>
-			<div class="cbctable bargainorder-price-con width-fill">
-				<div class="cbctablecell bargainorder-price"><span style="font-size:13px;">￥</span>{{MerchantBargainOrder.Price}}</div>
-				<div class="cbctablecell bargainorder-pricesale">￥{{MerchantBargainOrder.PriceSale}}</div>
-			</div>
-			<div class="bargainorder-name">{{MerchantBargainOrder.Name}}</div>
-		</div>
-		<div class="peoplecount-con">需<span style="color:#e02d28;margin:0 3px;">{{MerchantBargainOrder.PeopleCount}}</span>人参与</div>
-		<div class="bargainorderrules-con">规则：发起砍价后，在我的砍价里面，选择一个已发起的砍价右上角转发分享给朋友或朋友圈帮忙砍价。</div>
-	</div>
-	<div class="bottomactioncon" v-on:click="bargainordering">
-		<div>￥{{MerchantBargainOrder.Price}}</div>
-		<div>发起砍价</div>
-	</div>
+    <div class="top_box">
+        <div class="top_box_text">砍价</div>
+        <a v-on:click="back"><img src="~/Areas/resource/img/mobile/ture.png" class="top_box_img" style="position:absolute;top:17px;"></a>
+    </div>
+    <div class="main">
+        <div class="bargainorder-con">
+            <div>
+                <img class="bargainorder-img" v-bind:src=MerchantBargainOrder.ImgUrl />
+            </div>
+            <div class="cbctable bargainorder-price-con width-fill">
+                <div class="cbctablecell bargainorder-price"><span style="font-size:13px;">￥</span>{{MerchantBargainOrder.Price}}</div>
+                <div class="cbctablecell bargainorder-pricesale">￥{{MerchantBargainOrder.PriceSale}}</div>
+            </div>
+            <div class="bargainorder-name">{{MerchantBargainOrder.Name}}</div>
+        </div>
+        <div class="peoplecount-con">需<span style="color:#e02d28;margin:0 3px;">{{MerchantBargainOrder.PeopleCount}}</span>人参与</div>
+        <div class="bargainorderrules-con">规则：发起砍价后，在我的砍价里面，选择一个已发起的砍价右上角转发分享给朋友或朋友圈帮忙砍价。</div>
+    </div>
+    <div class="bottomactioncon" v-on:click="bargainordering">
+        <div>￥{{MerchantBargainOrder.Price}}</div>
+        <div>发起砍价</div>
+    </div>
 </div>
 
 @section scripts{
-	<style type="text/css">
-		.main {
-			background: #f5f5f4;
-			position: absolute;
-			top: 60px;
-			left: 0;
-			right: 0;
-			bottom: 50px;
-			overflow-y: auto;
-			-webkit-overflow-scrolling: touch;
-		}
+    <style type="text/css">
+        .main {
+            background: #f5f5f4;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 50px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
 
-		.cbctable {
-			display: table;
-		}
+        .cbctable {
+            display: table;
+        }
 
-		.cbctablecell {
-			display: table-cell;
-		}
+        .cbctablecell {
+            display: table-cell;
+        }
 
-		.bottomactioncon {
-			height: 50px;
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			width: 100%;
-			text-align: center;
-			background: #e02d28;
-			color: #fff;
-			font-size: 15px;
-		}
+        .bottomactioncon {
+            height: 50px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            text-align: center;
+            background: #e02d28;
+            color: #fff;
+            font-size: 15px;
+        }
 
-		.bargainorder-con {
-			background: #fff;
-		}
+        .bargainorder-con {
+            background: #fff;
+        }
 
-		.bargainorder-img {
-			width: 100%;
-			height: 250px;
-		}
+        .bargainorder-img {
+            width: 100%;
+            height: 250px;
+        }
 
-		.width-fill {
-			width: 100%;
-		}
+        .width-fill {
+            width: 100%;
+        }
 
-		.bargainorder-name {
-			font-size: 15px;
-			padding: 0px 13px 10px 13px;
-		}
+        .bargainorder-name {
+            font-size: 15px;
+            padding: 0px 13px 10px 13px;
+        }
 
-		.bargainorder-price-con {
-			margin: 0 0px 5px 0px;
-		}
+        .bargainorder-price-con {
+            margin: 0 0px 5px 0px;
+        }
 
-		.bargainorder-price {
-			font-size: 23px;
-			color: #e80c1c;
-			width: 60px;
-			padding: 0 10px 0 13px;
-		}
+        .bargainorder-price {
+            font-size: 23px;
+            color: #e80c1c;
+            width: 60px;
+            padding: 0 10px 0 13px;
+        }
 
-		.bargainorder-pricesale {
-			font-size: 13px;
-			color: #545456;
-			text-decoration: line-through;
-		}
+        .bargainorder-pricesale {
+            font-size: 13px;
+            color: #545456;
+            text-decoration: line-through;
+        }
 
-		.bargainorder-count {
-			font-size: 13px;
-			color: #a8a8a8;
-			float: right;
-			margin-right: 13px;
-		}
+        .bargainorder-count {
+            font-size: 13px;
+            color: #a8a8a8;
+            float: right;
+            margin-right: 13px;
+        }
 
-		.peoplecount-con {
-			height: 30px;
-			line-height: 30px;
-			padding: 5px 13px;
-			background: #fff;
-			font-size: 15px;
-			margin-top: 3px;
-			letter-spacing: 1px;
-		}
+        .peoplecount-con {
+            height: 30px;
+            line-height: 30px;
+            padding: 5px 13px;
+            background: #fff;
+            font-size: 15px;
+            margin-top: 3px;
+            letter-spacing: 1px;
+        }
 
-		.bargainorderrules-con {
-			padding: 10px 13px;
-			background: #fff;
-			font-size: 13px;
-			margin-top: 3px;
-			letter-spacing: 1px;
-			color: #58585a;
-		}
+        .bargainorderrules-con {
+            padding: 10px 13px;
+            background: #fff;
+            font-size: 13px;
+            margin-top: 3px;
+            letter-spacing: 1px;
+            color: #58585a;
+        }
 
-		.return-img {
-			width: 33px;
-			position: fixed;
-			top: 20px;
-			left: 20px;
-			z-index: 1;
-			opacity: 0.5;
-		}
-	</style>
-	<link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
-	<link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
-	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
-	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-	<script type="text/javascript">
+        .return-img {
+            width: 33px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1;
+            opacity: 0.5;
+        }
+    </style>
+    <link type="text/css" href="~/Areas/resource/css/mobile/customer.css" />
+    <link href="~/Areas/resource/css/mobile/customer.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
 		function wxConfig() {
 			var mch = $.getUrlParam('mch');
 			$.ajax({
@@ -179,8 +179,8 @@
 			});
 		};
 		wxConfig();
-	</script>
-	<script type="text/javascript">
+    </script>
+    <script type="text/javascript">
 		$(function () {
 			var mch = $.getUrlParam('mch');
 			var merchantbargainorder = sessionStorage.getItem('merchantbargainorder');
@@ -280,7 +280,7 @@
 				})
 			}
 		});
-	</script>
+    </script>
 }
 
 

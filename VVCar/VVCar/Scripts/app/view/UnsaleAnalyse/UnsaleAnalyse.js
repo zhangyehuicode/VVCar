@@ -31,6 +31,16 @@
 					},
 					columnWidth: 1,
 					items: [{
+						xtype: 'datefield',
+						name: 'Code',
+						fieldLabel: '开始时间',
+						allowBlank: true,
+						editable: true,
+						width: 190,
+						format: 'Ym',
+						margin: '0 0 0 20',
+						value: '',
+					}, {
 						xtype: 'combobox',
 						name: 'ProductType',
 						fieldLabel: '产品类别',
@@ -77,7 +87,7 @@
 			}]
 		}];
 		this.columns = [
-			{ header: '编号', dataIndex: 'Code', flex: 1 },
+			{ header: '时间', dataIndex: 'Code', flex: 1 },
 			{
 				header: '产品类别', dataIndex: 'ProductTypeText', flex: 1,
 				renderer: function (value) {

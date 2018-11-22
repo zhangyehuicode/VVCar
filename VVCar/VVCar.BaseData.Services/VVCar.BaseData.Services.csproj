@@ -49,6 +49,7 @@
     <Compile Include="DomainServices\AgentDepartmentCategoryService.cs" />
     <Compile Include="DomainServices\AgentDepartmentService.cs" />
     <Compile Include="DomainServices\AgentDepartmentTagService.cs" />
+    <Compile Include="DomainServices\Cryptography.cs" />
     <Compile Include="DomainServices\TagService.cs" />
     <Compile Include="DomainServices\DataDictTypeService.cs" />
     <Compile Include="DomainServices\DataDictValueService.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="DomainServices\UserRoleService.cs" />
     <Compile Include="DomainServices\UserService.cs" />
     <Compile Include="DomainServices\WechatService.cs" />
+    <Compile Include="DomainServices\WXBizMsgCrypt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

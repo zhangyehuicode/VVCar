@@ -18,67 +18,67 @@
                 <li class="tongzhi">最新动态：XXX会员已到店，请立即迎接</li>
             </ul>*@
     </div>
-	<div class="touxiang">
-		<a class="bq_box" v-on:click="quickorder">
-			<div><img src="~/Areas/resource/img/mobile/master/yhqhz.png" style="width:25px;"></div>
-			<span>快捷开单</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">开单</span>
-		</a>
-		<a class="bq_box" style="width:33.4%" v-on:click="order">
-			<div><img src="~/Areas/resource/img/mobile/master/hykhx.png" style="width:25px;"></div>
-			<span>今日订单</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共{{UserInfo.DailyPickUpOrderCount}}笔</span>
-		</a>
-		<a class="bq_box" style=" border-right:none;" v-on:click="scancodediscounts">
-			<div><img src="~/Areas/resource/img/mobile/master/hykk.png" style="width:25px; margin-top:2px;"></div>
-			<span>扫码优惠</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">领券中心</span>
-		</a>
-		@*style="width:33.4%;border-bottom:none;"*@
-		<a class="bq_box" v-on:click="monthperformance">
-			<div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
-			<span>我的业绩</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥{{UserInfo.MonthPerformance}}</span>
-		</a>
-		<a class="bq_box" style="width:33.4%" v-on:click="monthCommission">
-			<div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:23px;"></div>
-			<span>我的分红</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥{{UserInfo.MonthCommission}}</span>
-		</a>
-		@*<a class="bq_box" style=" border-bottom:none;" v-on:click="membershop">
-			<div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:25px;"></div>
-			<span>会员开卡</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">会员商城</span>
-		</a>*@
-		@*<a href="#" class="bq_box" style=" border-right:none;border-bottom:none;">
-			<div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:25px;"></div>
-			<span>会员动态</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">100位</span>
-		</a>*@
-		<a class="bq_box" style=" border-right:none;" v-on:click="myappointment">
-			@*border-bottom:none;*@
-			<div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:25px;"></div>
-			<span>会员预约</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">{{UserInfo.CustomerAppointmentCount}}个预约</span>
-		</a>
-		<a class="bq_box" v-on:click="customerfinder">
-			@*border-bottom:none;*@
-			<div><img src="~/Areas/resource/img/mobile/master/ad.png" style="width:25px;"></div>
-			<span>寻客侠</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">朋友圈锁客</span>
-		</a>
-		<a class="bq_box" style="width:33.4%" v-on:click="analyseindex">
-			<div><img src="~/Areas/resource/img/mobile/master/analyse.png" style="width:40px;" /></div>
-			<span>数据分析</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">数据分析</span>
-		</a>
-		<a class="bq_box" style=" border-right:none;" v-on:click="unsaleproduct">
-			@*border-bottom:none;*@
-			<div><img src="~/Areas/resource/img/mobile/master/product.png" style="width:25px;"></div>
-			<span>产品销售</span>
-			<span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">畅销/滞销产品报表</span>
-		</a>
-	</div>
+    <div class="touxiang">
+        <a class="bq_box" v-on:click="quickorder">
+            <div><img src="~/Areas/resource/img/mobile/master/yhqhz.png" style="width:25px;"></div>
+            <span>快捷开单</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px; margin-top:0px;">开单</span>
+        </a>
+        <a class="bq_box" style="width:33.4%" v-on:click="order">
+            <div><img src="~/Areas/resource/img/mobile/master/hykhx.png" style="width:25px;"></div>
+            <span>今日订单</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">共{{UserInfo.DailyPickUpOrderCount}}笔</span>
+        </a>
+        <a class="bq_box" style=" border-right:none;" v-on:click="scancodediscounts">
+            <div><img src="~/Areas/resource/img/mobile/master/hykk.png" style="width:25px; margin-top:2px;"></div>
+            <span>扫码优惠</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">领券中心</span>
+        </a>
+        @*style="width:33.4%;border-bottom:none;"*@
+        <a class="bq_box" v-on:click="monthperformance">
+            <div><img src="~/Areas/resource/img/mobile/master/wdyj.png" style="width:23px;"></div>
+            <span>我的业绩</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥{{UserInfo.MonthPerformance}}</span>
+        </a>
+        <a class="bq_box" style="width:33.4%" v-on:click="monthCommission">
+            <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:23px;"></div>
+            <span>我的分红</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">￥{{UserInfo.MonthCommission}}</span>
+        </a>
+        @*<a class="bq_box" style=" border-bottom:none;" v-on:click="membershop">
+                <div><img src="~/Areas/resource/img/mobile/master/kjkd.png" style="width:25px;"></div>
+                <span>会员开卡</span>
+                <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">会员商城</span>
+            </a>*@
+        @*<a href="#" class="bq_box" style=" border-right:none;border-bottom:none;">
+                <div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:25px;"></div>
+                <span>会员动态</span>
+                <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">100位</span>
+            </a>*@
+        <a class="bq_box" style=" border-right:none;" v-on:click="myappointment">
+            @*border-bottom:none;*@
+            <div><img src="~/Areas/resource/img/mobile/master/hydt.png" style="width:25px;"></div>
+            <span>会员预约</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">{{UserInfo.CustomerAppointmentCount}}个预约</span>
+        </a>
+        <a class="bq_box" v-on:click="customerfinder">
+            @*border-bottom:none;*@
+            <div><img src="~/Areas/resource/img/mobile/master/ad.png" style="width:25px;"></div>
+            <span>寻客侠</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">朋友圈锁客</span>
+        </a>
+        <a class="bq_box" style="width:33.4%" v-on:click="analyseindex">
+            <div><img src="~/Areas/resource/img/mobile/master/analyse.png" style="width:40px;" /></div>
+            <span>数据分析</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">数据分析</span>
+        </a>
+        <a class="bq_box" style=" border-right:none;" v-on:click="unsaleproduct">
+            @*border-bottom:none;*@
+            <div><img src="~/Areas/resource/img/mobile/master/product.png" style="width:25px;"></div>
+            <span>产品销售</span>
+            <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">畅销/滞销产品报表</span>
+        </a>
+    </div>
     <div class="bt_box">店长管理端</div>
     <div class="touxiang" style="margin-top:0px;">
         <a class="bq_box" v-on:click="staffmanager">
@@ -101,9 +101,9 @@
             <span>特权订单</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">特权订单</span>
         </a>
-        <a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="operatingstatement">
+        <a class="bq_box" style="width:33.4%;border-bottom:none;" v-on:click="operationstatement">
             <div><img src="~/Areas/resource/img/mobile/master/mdbb.png" style="width:21px;"></div>
-            <span>门店报表</span>
+            <span>营业报表</span>
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">报表</span>
         </a>
         <a class="bq_box" style=" border-right:none;border-bottom:none;" v-on:click="stockmanager">
@@ -129,13 +129,6 @@
             <span style="font-size:12px; color:#999; margin-bottom:20px;margin-top:0px;">课堂</span>
         </a>
     </div>
-	<div class="touxiang" style="margin-top:0px;">
-		<a class="bq_box" v-on:click="operationstatement">
-			<div><img src="~/Areas/resource/img/mobile/master/class.png" style="width:25px;margin-top:5px;"/></div>
-			<span>营业报表</span>
-			<span style="font-size:12px;color:#999;margin-bottom:20px;margin-top:0px;">营业报表</span>
-		</a>
-	</div>
     @*<img src="~/Areas/resource/img/mobile/master/daodile.png" style="width:94%; margin-left:3%; float:left; margin-top:25px; margin-bottom:25px;">*@
 </div>
 

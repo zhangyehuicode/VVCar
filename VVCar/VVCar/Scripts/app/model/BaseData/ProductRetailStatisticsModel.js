@@ -10,5 +10,6 @@
 		{ name: 'Quantity' },
 		{ name: 'Unit' },
 		{ name: 'Money' },
+		{ name: 'OrderType' },
 	]
 })
