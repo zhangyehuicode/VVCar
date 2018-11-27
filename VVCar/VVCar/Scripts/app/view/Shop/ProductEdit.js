@@ -131,7 +131,7 @@
 					xtype: 'numberfield',
 					margin: '5 10 5 5',
 					name: 'WholesalePrice',
-					fieldLabel: '批发价',
+					fieldLabel: '集团客户价',
 					minValue: 0,
 					allowBlank: false,
 					value: 0,
@@ -205,7 +205,7 @@
 						margin: '0 10 5 0',
 						items: [{
 							xtype: "radiogroup",
-							fieldLabel: "业务员批发抽成",
+							fieldLabel: "集团客户抽成",
 							name: 'WholesaleCommissionType',
 							columns: 2,
 							items: [

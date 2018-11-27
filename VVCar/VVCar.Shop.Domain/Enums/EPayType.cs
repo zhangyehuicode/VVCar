@@ -53,5 +53,23 @@ namespace VVCar.Shop.Domain.Enums
         /// </summary>
         [Description("储值卡")]
         ValueCard = 6,
+
+        /// <summary>
+        /// 微信刷卡支付（微信付款码支付）
+        /// </summary>
+        [Description("微信刷卡支付（微信付款码支付）")]
+        WeChatMicroPay = 7,
+
+        /// <summary>
+        /// 微信JS支付(公众号支付)
+        /// </summary>
+        [Description("微信JS支付(公众号支付)")]
+        WeChatJS = 8,
+
+        /// <summary>
+        /// 微信扫码支付
+        /// </summary>
+        [Description("微信扫码支付")]
+        WeChatNative = 9,
     }
 }

@@ -13,7 +13,7 @@ namespace VVCar.Shop.Domain.Dtos
     {
         public DataAnalyseDto()
         {
-            dataAnalyseItemDtos = new List<DataAnalyseItemDto>();
+            DataAnalyseItemDtos = new List<DataAnalyseItemDto>();
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace VVCar.Shop.Domain.Dtos
         /// <summary>
         /// 集合
         /// </summary>
-        public ICollection<DataAnalyseItemDto> dataAnalyseItemDtos { get; set; }
+        public ICollection<DataAnalyseItemDto> DataAnalyseItemDtos { get; set; }
 
     }
 

@@ -2,7 +2,7 @@
 	extend: "Ext.data.Store",
 	model: "WX.model.BaseData.OperationStatementDetailModel",
 	autoLoad: false,
-	pageSize: 25,
+	pageSize: 10,
 	proxy: {
 		type: "rest",
 		url: Ext.GlobalConfig.ApiDomainUrl + 'api/Reporting',

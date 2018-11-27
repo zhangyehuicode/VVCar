@@ -12,8 +12,6 @@
     initComponent: function () {
         var me = this;
         var store = Ext.create('WX.store.BaseData.OperationStatementDetailStore');
-        store.limit = 10;
-        store.pageSize = 10;
         me.items = [{
             xtype: 'grid',
             name: 'gridOperationStatement',

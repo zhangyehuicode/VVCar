@@ -728,6 +728,7 @@
     <Content Include="Scripts\app\controller\AppletCard.js" />
     <Content Include="Scripts\app\controller\Article.js" />
     <Content Include="Scripts\app\controller\CrowdOrder.js" />
+    <Content Include="Scripts\app\controller\DataAnalyse.js" />
     <Content Include="Scripts\app\controller\Logistics.js" />
     <Content Include="Scripts\app\controller\MerchantBargainOrder.js" />
     <Content Include="Scripts\app\controller\MerchantCrowdOrder.js" />
@@ -801,6 +802,7 @@
     <Content Include="Scripts\app\model\BaseData\ArticleItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\ArticleModel.js" />
     <Content Include="Scripts\app\model\BaseData\CrowdOrderModel.js" />
+    <Content Include="Scripts\app\model\BaseData\DataAnalyseModel.js" />
     <Content Include="Scripts\app\model\BaseData\LogisticsModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberGroupTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\MerchantBargainOrderModel.js" />
@@ -898,6 +900,7 @@
     <Content Include="Scripts\app\store\BaseData\ArticleItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\ArticleStore.js" />
     <Content Include="Scripts\app\store\BaseData\CrowdOrderStore.js" />
+    <Content Include="Scripts\app\store\BaseData\DataAnalyseStore.js" />
     <Content Include="Scripts\app\store\BaseData\LogisticsStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberGroupLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\MerchantBargainOrderStore.js" />
@@ -1055,6 +1058,7 @@
     <Content Include="Scripts\app\view\PickUpOrder\ProductSelector.js" />
     <Content Include="Scripts\app\view\PickUpOrder\UserSelector.js" />
     <Content Include="Scripts\app\view\QuickOrder\QuickOrderList.js" />
+    <Content Include="Scripts\app\view\Report\DataAnalyse.js" />
     <Content Include="Scripts\app\view\Report\OperationStatement.js" />
     <Content Include="Scripts\app\view\Report\OperationStatementDetail.js" />
     <Content Include="Scripts\app\view\Shop\ChangeServiceCategory.js" />
@@ -2169,6 +2173,7 @@
     <Content Include="Views\Login\Page.cshtml" />
     <Content Include="Views\Reporting\Index.cshtml" />
     <Content Include="Views\Reporting\AnalyseIndex.cshtml" />
+    <Content Include="Views\Reporting\AnalysePieChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

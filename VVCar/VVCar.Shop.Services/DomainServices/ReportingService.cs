@@ -750,7 +750,7 @@ namespace VVCar.Shop.Services.DomainServices
                     dataAnalyseItem.TotalMoney = m.Money;
                     result.TotalQuantity += m.Quantity;
                     result.TotalMoney += m.Money;
-                    result.dataAnalyseItemDtos.Add(dataAnalyseItem);
+                    result.DataAnalyseItemDtos.Add(dataAnalyseItem);
                 });
                 return result;
             }
@@ -807,11 +807,11 @@ namespace VVCar.Shop.Services.DomainServices
             {
                 if (filter.TimeSelect == ETimeSelect.ByDay)
                 {
-                    return NewMemberDataAnalyse(yesteday, now);
+                    result.AddRange(NewMemberDataAnalyse(yesteday, now));
                 }
                 if (filter.TimeSelect == ETimeSelect.ByMonth)
                 {
-                    return NewMemberDataAnalyse(previousOneMonth, now);
+                    result.AddRange(NewMemberDataAnalyse(previousOneMonth, now));
                 }
             }
 
@@ -891,7 +891,7 @@ namespace VVCar.Shop.Services.DomainServices
                 var dataAnalyseItemList = new List<DataAnalyseItemDto>();
                 resulttemp2.ForEach(t =>
                 {
-                    dataAnalyseItemList.AddRange(t.dataAnalyseItemDtos);
+                    dataAnalyseItemList.AddRange(t.DataAnalyseItemDtos);
                 });
                 var ids = dataAnalyseItemList.Select(t => t.ProductID).Distinct();
                 foreach (var id in ids)
@@ -953,23 +953,31 @@ namespace VVCar.Shop.Services.DomainServices
             {
                 if (filter.LoseMember == ELoseMember.NomalLose)
                 {
+                    var removeMembersIDs = DataAnalyse(previousOneYear, now).Select(t => t.MemberID).Distinct().ToList();
+                    removeMembersIDs.AddRange(DataAnalyse(previousSixMonth, now).Select(t => t.MemberID).Distinct().ToList());
                     var resulttemp = DataAnalyse(previousThreeMonth, now);
                     resulttemp.ForEach(t =>
                     {
-                        if (t.TotalQuantity < 1)
+                        if (!removeMembersIDs.Contains(t.MemberID))
                         {
-                            result.Add(t);
+                            if (t.TotalQuantity < 1)
+                            {
+                                result.Add(t);
+                            }
                         }
                     });
                 }
                 if (filter.LoseMember == ELoseMember.SevereLose)
                 {
+                    var removeMembersIDs = DataAnalyse(previousOneYear, now).Select(t => t.MemberID).Distinct().ToList();
                     var resulttemp = DataAnalyse(previousSixMonth, now);
                     resulttemp.ForEach(t =>
                     {
-                        if (t.TotalQuantity < 1)
-                        {
-                            result.Add(t);
+                        if (!removeMembersIDs.Contains(t.MemberID)) {
+                            if (t.TotalQuantity < 1)
+                            {
+                                result.Add(t);
+                            }
                         }
                     });
                 }
@@ -985,6 +993,9 @@ namespace VVCar.Shop.Services.DomainServices
                     });
                 }
             }
+            totalCount = result.Count();
+            if(filter.Start.HasValue && filter.Limit.HasValue)
+                result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             return result.OrderByDescending(t => t.TotalMoney).ToList();
         }
 
@@ -1176,10 +1187,28 @@ namespace VVCar.Shop.Services.DomainServices
                 TotalInCome = t.Sum(s => s.BudgetType == EBudgetType.InCome ? s.Money : 0),
                 TotalOutCome = t.Sum(s => s.BudgetType == EBudgetType.OutCome ? s.Money : 0),
             }).ToList();
-            var startdate = operationStatementDtos.Select(t => t.Code).Min();
-            var enddate = operationStatementDtos.Select(t => t.Code).Max();
-            
+
+            var codes = operationStatementDtos.Select(t => t.Code).ToList();
+
+            var startdate = Convert.ToDateTime(operationStatementDtos.Select(t => t.Code).Min());
+            var enddate = DateTime.Now;
+
+            for (var i = startdate; i < enddate; i = i.AddDays(1)) {
+                var time = i.ToDateString();
+                if (!codes.Contains(time))
+                {
+                    operationStatementDtos.Add(new OperationStatementDto
+                    {
+                        Code = i.ToDateString(),
+                        TotalInCome = 0,
+                        TotalOutCome = 0,
+                    });
+                }
+            }
+
             totalCount = operationStatementDtos.Count();
+            if(filter.Start.HasValue && filter.Limit.HasValue)
+                operationStatementDtos = operationStatementDtos.OrderByDescending(t => t.Code).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             return operationStatementDtos.OrderByDescending(t => t.Code);
         }
 
@@ -1201,6 +1230,8 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter.BudgetType.HasValue)
                 operationStatementDetailDtoList = operationStatementDetailDtoList.Where(t => t.BudgetType == filter.BudgetType).ToList();
             totalCount = operationStatementDetailDtoList.Count();
+            if(filter.Start.HasValue && filter.Limit.HasValue)
+                operationStatementDetailDtoList = operationStatementDetailDtoList.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             return operationStatementDetailDtoList.OrderByDescending(t => t.CreatedDate);
         }
 

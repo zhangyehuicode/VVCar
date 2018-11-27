@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain;
+using VVCar.BaseData.Domain.Services;
 using VVCar.Shop.Domain.Entities;
+using VVCar.Shop.Domain.Enums;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
+using VVCar.VIP.Domain.Dtos;
+using VVCar.VIP.Domain.Entities;
+using VVCar.VIP.Domain.Services;
 using YEF.Core;
 using YEF.Core.Data;
 using YEF.Core.Domain;
@@ -23,6 +29,12 @@ namespace VVCar.Shop.Services.DomainServices
         IPickUpOrderService PickUpOrderService { get => ServiceLocator.Instance.GetService<IPickUpOrderService>(); }
 
         IRepository<PickUpOrder> PickUpOrderRepo { get => UnitOfWork.GetRepository<IRepository<PickUpOrder>>(); }
+
+        IRepository<Member> MemberRepo { get => UnitOfWork.GetRepository<IRepository<Member>>(); }
+
+        ISystemSettingService SystemSettingService { get { return ServiceLocator.Instance.GetService<ISystemSettingService>(); } }
+
+        IWeChatService WeChatService { get { return ServiceLocator.Instance.GetService<IWeChatService>(); } }
 
         #endregion
 
@@ -60,6 +72,12 @@ namespace VVCar.Shop.Services.DomainServices
 
                 PickUpOrderService.RecountMoneySave(entity.PickUpOrderCode);
 
+                var pickUpOrder = PickUpOrderRepo.GetByKey(entity.PickUpOrderID);
+                if (pickUpOrder != null && pickUpOrder.MemberID.HasValue) {
+                    var member = MemberRepo.GetByKey(pickUpOrder.MemberID.Value);
+                    if(member!=null)
+                        SendCashNotify(member, pickUpOrder.Code, "接车单", entity.PayType, entity.PayMoney);
+                }
                 UnitOfWork.CommitTransaction();
 
                 return result;
@@ -93,6 +111,33 @@ namespace VVCar.Shop.Services.DomainServices
             if(filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
             return queryable.ToList();
+        }
+
+        /// <summary>
+        /// 发送现金使用通知
+        /// </summary>
+        /// <param name="member"></param>
+        /// <param name="title"></param>
+        /// <param name="code"></param>
+        /// <param name="payType"></param>
+        /// <param name="payMoney"></param>
+        /// <param name="keepMoney"></param>
+        void SendCashNotify(Member member, string title, string code, EPayType payType, decimal payMoney = 0, decimal keepMoney = 0)
+        {
+            var templateId = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_VerificationSuccess);
+            var message = new WeChatTemplateMessageDto
+            {
+                touser = member.WeChatOpenID,
+                template_id = templateId,
+                url = "",
+                data = new System.Dynamic.ExpandoObject(),
+            };
+            message.data.first = new WeChatTemplateMessageDto.MessageData(($"您好,您使用{payType.GetDescription()}完成核销{title}!"));
+            message.data.keyword1 = new WeChatTemplateMessageDto.MessageData(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            message.data.keyword2 = new WeChatTemplateMessageDto.MessageData($"{title}:{code}！");
+            message.data.keyword3 = new WeChatTemplateMessageDto.MessageData($"{payMoney.ToString("0.##")}元", "#FF4040");
+            message.data.remark = new WeChatTemplateMessageDto.MessageData($"感恩惠顾，期待下次再为您服务");
+            WeChatService.SendWeChatNotifyAsync(message);
         }
     }
 }

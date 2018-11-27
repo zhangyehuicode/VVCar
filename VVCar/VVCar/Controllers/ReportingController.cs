@@ -18,5 +18,10 @@ namespace VVCar.Controllers
         {
             return View();
         }
+
+        public ActionResult AnalysePieChart()
+        {
+            return View();
+        }
     }
 }

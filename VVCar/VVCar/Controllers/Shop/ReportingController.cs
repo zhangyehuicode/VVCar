@@ -536,8 +536,6 @@ namespace VVCar.Controllers.Shop
             return SafeGetPagedData<OperationStatementDto>((result) =>
             {
                 var totalCount = 0;
-                filter.Start = null;
-                filter.Limit = null;
                 var data = ReportingService.GetOperationStatement(filter, out totalCount).ToList();
                 var operationStatementList = data.ToList();
                 OperationStatementDto operationStatement = new OperationStatementDto();
@@ -598,8 +596,6 @@ namespace VVCar.Controllers.Shop
             return SafeGetPagedData<OperationStatementDetailDto>((result) =>
             {
                 var totalCount = 0;
-                filter.Start = null;
-                filter.Limit = null;
                 var data = ReportingService.GetOperationStatementDetail(filter, out totalCount).ToList();
                 var operationStatementDetail = new OperationStatementDetailDto();
                 data.ForEach(t =>
