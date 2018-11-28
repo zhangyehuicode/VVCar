@@ -13,11 +13,17 @@
 		ref: 'newMemberChart',
 		selector: 'DataAnalyse container[name=newmemberechart]',
 	}, {
-		ref: 'memberTypeGrid',
-		selector: 'DataAnalyse container[name=membertypegrid]',
+		ref: 'memberTypeGrid1',
+		selector: 'DataAnalyse container[name=membertypegrid1]',
 	}, {
-		ref: 'memberTypeChart',
-		selector: 'DataAnalyse container[name=membertypechart]',
+		ref: 'memberTypeGrid2',
+		selector: 'DataAnalyse container[name=membertypegrid2]',
+	}, {
+		ref: 'memberTypeChart1',
+		selector: 'DataAnalyse container[name=membertypechart1]',
+	}, {
+		ref: 'memberTypeChart2',
+		selector: 'DataAnalyse container[name=membertypechart2]',
 	}, {
 		ref: 'bigMemberGrid',
 		selector: 'DataAnalyse container[name=bigmembergrid]',
@@ -85,6 +91,9 @@
 	init: function () {
 		var me = this;
 		me.control({
+			'DataAnalyse': {
+				afterrender: me.afterrender
+			},
 			'DataAnalyse grid[name=newmemberday]': {
 				afterrender: me.newmemberday
 			},
@@ -143,6 +152,13 @@
 				click: me.losemember
 			}
 		});
+	},
+	afterrender: function () {
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#2C3845'); 
 	},
 	newmemberday: function () {
 		var me = this;
@@ -274,65 +290,105 @@
 		var me = this;
 		me.getNewMemberGrid().show();
 		me.getNewMemberChart().show();
-		me.getMemberTypeGrid().hide();
-		me.getMemberTypeChart().hide();
+		me.getMemberTypeGrid1().hide();
+		me.getMemberTypeChart1().hide();
+		me.getMemberTypeGrid2().hide();
+		me.getMemberTypeChart2().hide();
 		me.getBigMemberGrid().hide();
 		me.getBigMemberChart().hide();
 		me.getLoyalMemberGrid().hide();
 		me.getLoyalMemberChart().hide();
 		me.getLoseMemberGrid().hide();
 		me.getLoseMemberChart().hide();
+
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#5FA2DD'); 
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#2C3845'); 
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#2C3845'); 
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#2C3845'); 
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#2C3845'); 
 	},
 	membertype: function () {
 		var me = this;
 		me.getNewMemberGrid().hide();
 		me.getNewMemberChart().hide();
-		me.getMemberTypeGrid().show();
-		me.getMemberTypeChart().show();
+		me.getMemberTypeGrid1().show();
+		me.getMemberTypeChart1().show();
+		me.getMemberTypeGrid2().show();
+		me.getMemberTypeChart2().show();
 		me.getBigMemberGrid().hide();
 		me.getBigMemberChart().hide();
 		me.getLoyalMemberGrid().hide();
 		me.getLoyalMemberChart().hide();
 		me.getLoseMemberGrid().hide();
 		me.getLoseMemberChart().hide();
+
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#2C3845'); 
 	},
 	bigmember: function () {
 		var me = this;
 		me.getNewMemberGrid().hide();
 		me.getNewMemberChart().hide();
-		me.getMemberTypeGrid().hide();
-		me.getMemberTypeChart().hide();
+		me.getMemberTypeGrid1().hide();
+		me.getMemberTypeChart1().hide();
+		me.getMemberTypeGrid2().hide();
+		me.getMemberTypeChart2().hide();
 		me.getBigMemberGrid().show();
 		me.getBigMemberChart().show();
 		me.getLoyalMemberGrid().hide();
 		me.getLoyalMemberChart().hide();
 		me.getLoseMemberGrid().hide();
 		me.getLoseMemberChart().hide();
+
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#2C3845'); 
 	},
 	loyalmember: function () {
 		var me = this;
 		me.getNewMemberGrid().hide();
 		me.getNewMemberChart().hide();
-		me.getMemberTypeGrid().hide();
-		me.getMemberTypeChart().hide();
+		me.getMemberTypeGrid1().hide();
+		me.getMemberTypeChart1().hide();
+		me.getMemberTypeGrid2().hide();
+		me.getMemberTypeChart2().hide();
 		me.getBigMemberGrid().hide();
 		me.getBigMemberChart().hide();
 		me.getLoyalMemberGrid().show();
 		me.getLoyalMemberChart().show();
 		me.getLoseMemberGrid().hide();
 		me.getLoseMemberChart().hide();
+
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#2C3845'); 
 	},
 	losemember: function () {
 		var me = this;
 		me.getNewMemberGrid().hide();
 		me.getNewMemberChart().hide();
-		me.getMemberTypeGrid().hide();
-		me.getMemberTypeChart().hide();
+		me.getMemberTypeGrid1().hide();
+		me.getMemberTypeChart1().hide();
+		me.getMemberTypeGrid2().hide();
+		me.getMemberTypeChart2().hide();
 		me.getBigMemberGrid().hide();
 		me.getBigMemberChart().hide();
 		me.getLoyalMemberGrid().hide();
 		me.getLoyalMemberChart().hide();
 		me.getLoseMemberGrid().show();
 		me.getLoseMemberChart().show();
+
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#2C3845');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#5FA2DD'); 
 	},
 })

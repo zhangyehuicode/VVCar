@@ -28,8 +28,8 @@
 
 
 	<div class="kcd_box2">
-		<input type="month" class="kcgl_input" style="color:#999;width:35%;padding:0px;" id="startdate">
-		<input type="month" class="kcgl_input" style="color:#999;width:35%;padding:0px;" id="enddate">
+		<input type="date" class="kcgl_input" style="color:#999;width:35%;padding:0px;" id="startdate">
+		<input type="date" class="kcgl_input" style="color:#999;width:35%;padding:0px;" id="enddate">
 		<div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px; padding-top:10px;" v-on:click="search"></div>
 	</div>
 
@@ -253,7 +253,7 @@
 				if (data == null || data == '' || data.length < 1)
 					return null;
 				var result = { xAxisdata: [], seriesdata: [] };
-				for (var i = 0; i < data.length-1; i++) {
+				for (var i = data.length - 2; i >=0; i--) {
 					result.xAxisdata.push(data[i].Code);
 					result.seriesdata.push(data[i].TotalProfit);
 				}

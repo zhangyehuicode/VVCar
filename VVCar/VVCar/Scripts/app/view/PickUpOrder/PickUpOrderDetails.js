@@ -65,24 +65,15 @@
                             }
                         }
                     },
-                    //{
-                    //	header: '类型', dataIndex: 'ProductType', width: 80,
-                    //	renderer: function (value) {
-                    //		if (value == 1)
-                    //			return "商品";
-                    //		else if (value == 2)
-                    //			return "会员卡";
-                    //	}
-                    //},
                     { header: '销售单价', dataIndex: 'PriceSale', width: 80 },
                     {
-                        header: '是否优惠', dataIndex: 'IsReduce', width: 80,
+                        header: '是否改价', dataIndex: 'IsReduce', width: 80,
                         renderer: function (value) {
                             return '<input type="checkbox" disabled="disabled"' + (value == "1" ? " checked" : "") + '/>';
                         },
                         editor: { xtype: 'checkboxfield' },
                     },
-                    { header: '优惠价', dataIndex: 'ReducedPrice', width: 80, editor: { xtype: 'numberfield', allowBlank: false } },
+                    { header: '改价', dataIndex: 'ReducedPrice', width: 80, editor: { xtype: 'numberfield', allowBlank: false } },
                     { header: '数量', dataIndex: 'Quantity', width: 70, editor: { xtype: 'numberfield', allowBlank: false, minValue: 1 } },
                     { header: '备注', dataIndex: 'Remark', flex: 1, editor: { xtype: 'textfield', allowBlank: true } },
                     { header: '销售总价', dataIndex: 'Money', width: 80 },
@@ -251,7 +242,6 @@
                     name: 'ReceivedMoney',
                     fieldLabel: '已收金额',
                     readOnly: true,
-
                 }, {
                     xtype: 'numberfield',
                     name: 'StillOwedMoney',
@@ -275,7 +265,7 @@
                 }, {
                     xtype: 'numberfield',
                     name: 'PayMoney',
-                    fieldLabel: '结算金额',
+                    fieldLabel: '结账金额',
                     minValue: 0,
                     value: 0,
                     allowBlank: false,
@@ -293,27 +283,28 @@
                 xtype: 'form',
                 name: 'form6',
                 layout: 'hbox',
+                margin: '0 0 0 865',
                 items: [{
                     action: 'micropay',
                     xtype: 'button',
-                    text: '付款码结算',
-                    margin: '5 5 5 1000',
-                    hidden: true,
+                    text: '付款码结账',
+                    margin: '5 5 5 5',
+                    hidden: true
                 }, {
                     action: 'payorder',
                     xtype: 'button',
-                    text: '手工结算',
-                    margin: '5 5 5 1000',
+                    text: '手工结账',
+                    margin: '5 5 5 101'
                 }, {
                     action: 'paydetails',
                     xtype: 'button',
-                    text: '结算详情',
-                    margin: '5 5 5 5',
+                    text: '支付详情',
+                    margin: '5 5 5 5'
                 }]
             }]
         });
 
-        me.items = [me.form, me.container];//, me.orderItemsGrid
+        me.items = [me.form, me.container];
         me.callParent(arguments);
-    },
+    }
 });

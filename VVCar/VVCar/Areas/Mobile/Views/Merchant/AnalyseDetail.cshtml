@@ -18,14 +18,16 @@
 		<div class="touxiang" style="margin-bottom:25px;">
 			<ul class="pm_box">
 				<li class="pm_box1">
-					<div class="pm_box2" style="width:33%;text-align:center">消费项目</div>
-					<div class="pm_box2" style="width:33%;text-align:center">消费数目</div>
-					<div class="pm_box2" style="width:33%;text-align:center">消费金额</div>
+					<div class="pm_box2" style="width:40%;text-align:left">单号</div>
+					<div class="pm_box2" style="width:25%;text-align:left">消费项目</div>
+					<div class="pm_box2" style="width:15%;text-align:center">数目</div>
+					<div class="pm_box2" style="width:20%;text-align:center">消费金额</div>
 				</li>
 				<li class="pm_box1" v-for="item in Member.DataAnalyseItemDtos">
-					<div class="pm_box2" style="width:33%;text-align:center">{{item.ProductName}}</div>
-					<div class="pm_box2" style="width:33%;text-align:center">{{item.TotalQuantity}}</div>
-					<div class="pm_box2" style="width:33%;text-align:center">{{item.TotalMoney}}</div>
+					<div class="pm_box2" style="width:40%;text-align:left;font-size:12px;">{{item.TradeNo}}</div>
+					<div class="pm_box2" style="width:25%;text-align:left">{{item.ProductName}}</div>
+					<div class="pm_box2" style="width:15%;text-align:center">{{item.TotalQuantity}}</div>
+					<div class="pm_box2" style="width:20%;text-align:center">{{item.TotalMoney}}</div>
 				</li>
 			</ul>
 		</div>

@@ -7,19 +7,19 @@
     <title>@ViewBag.Title</title>
 </head>
 <body>
-    @RenderBody()
+	@RenderBody()
 
-    <link href="@Url.Content("~/Scripts/ext/classic/theme-triton/resources/theme-triton-all.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/icons.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/ext-custom.css")" rel="stylesheet" />
-    <script src="@Url.Content("~/Scripts/ext/ext-all.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/ext/classic/locale/locale-zh_CN.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/ext/classic/theme-triton/theme-triton.js")" type="text/javascript"></script>
-    @RenderSection("scripts", required: false)
-    <script type="text/javascript">
+	<link href="@Url.Content("~/Scripts/ext/classic/theme-triton/resources/theme-triton-all.css")" rel="stylesheet" />
+	<link href="@Url.Content("~/Content/icons.css")" rel="stylesheet" />
+	<link href="@Url.Content("~/Content/ext-custom.css")" rel="stylesheet" />
+	<script src="@Url.Content("~/Scripts/ext/ext-all.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/ext/classic/locale/locale-zh_CN.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/ext/classic/theme-triton/theme-triton.js")" type="text/javascript"></script>
+	@RenderSection("scripts", required: false)
+	<script type="text/javascript">
         var _systemTitle = '@ViewBag.Title';
         var _hqName = '@ViewBag.HQName';
         var _currentYear = '@DateTime.Now.Year';
-    </script>
+	</script>
 </body>
 </html>

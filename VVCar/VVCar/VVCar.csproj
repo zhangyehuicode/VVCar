@@ -1052,6 +1052,7 @@
     <Content Include="Scripts\app\view\MerchantCrowdOrder\MerchantCrowdOrderList.js" />
     <Content Include="Scripts\app\view\MerchantCrowdOrder\CrowdProductSelector.js" />
     <Content Include="Scripts\app\view\OrderDividend\OrderDividend.js" />
+    <Content Include="Scripts\app\view\PickUpOrder\MicroPay.js" />
     <Content Include="Scripts\app\view\PickUpOrder\PickUpOrderPaymentDetails.js" />
     <Content Include="Scripts\app\view\PickUpOrder\PickUpOrder.js" />
     <Content Include="Scripts\app\view\PickUpOrder\PickUpOrderDetails.js" />
@@ -1060,6 +1061,7 @@
     <Content Include="Scripts\app\view\QuickOrder\QuickOrderList.js" />
     <Content Include="Scripts\app\view\Report\DataAnalyse.js" />
     <Content Include="Scripts\app\view\Report\OperationStatement.js" />
+    <Content Include="Scripts\app\view\Report\OperationStatementChart.js" />
     <Content Include="Scripts\app\view\Report\OperationStatementDetail.js" />
     <Content Include="Scripts\app\view\Shop\ChangeServiceCategory.js" />
     <Content Include="Scripts\app\view\SystemSetting\SystemSettingEdit.js" />
@@ -2174,6 +2176,7 @@
     <Content Include="Views\Reporting\Index.cshtml" />
     <Content Include="Views\Reporting\AnalyseIndex.cshtml" />
     <Content Include="Views\Reporting\AnalysePieChart.cshtml" />
+    <Content Include="Views\Reporting\AnalyseLineChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -114,9 +114,9 @@ namespace VVCar.Controllers.Shop
         /// <returns></returns>
         [HttpGet, Route("DataAnalyseList"), AllowAnonymous]
 
-        public PagedActionResult<DataAnalyseDto> DataAnalyse([FromUri]DataAnalyseFilter filter)
+        public PagedActionResultForAnalyse<DataAnalyseDto> DataAnalyse([FromUri]DataAnalyseFilter filter)
         {
-            return SafeGetPagedData<DataAnalyseDto>((result) =>
+            return SafeGetPagedDataForAnalyse<DataAnalyseDto>((result) =>
             {
                 var totalCount = 0;
                 var data = ReportingService.DataAnalyseList(filter, ref totalCount);
@@ -136,7 +136,26 @@ namespace VVCar.Controllers.Shop
                 (data as List<DataAnalyseDto>).Add(dataAnalyseDto);
                 result.Data = data;
                 result.TotalCount = totalCount;
+                result.TotalMemberCount = ReportingService.GetMemberTotalCount();
             });
+        }
+
+        private PagedActionResultForAnalyse<TResult> SafeGetPagedDataForAnalyse<TResult>(Action<PagedActionResultForAnalyse<TResult>> execAction)
+        {
+            var result = new PagedActionResultForAnalyse<TResult>();
+            try
+            {
+                execAction(result);
+            }
+            catch (Exception ex)
+            {
+                YEF.Core.Logging.LoggerManager.GetLogger().Error(ex.ToString());
+                result.IsSuccessful = false;
+                result.TotalCount = 0;
+                result.TotalMemberCount = 0;
+                result.ErrorMessage = ex.Message;
+            }
+            return result;
         }
 
         /// <summary>

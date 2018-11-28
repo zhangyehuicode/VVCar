@@ -68,6 +68,12 @@
 						text: '导出',
 						iconCls: '',
 						margin: '0 0 0 5',
+					}, {
+						action: 'chart',
+						xtype: 'button',
+						text: '折线图',
+						iconCls: '',
+						margin: '0 0 0 5',
 					}]
 				}]
 			}]

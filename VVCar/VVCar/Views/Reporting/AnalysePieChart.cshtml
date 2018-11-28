@@ -17,89 +17,18 @@
 			bottom: 0;
 			overflow-y: auto;
 		}
-
-		.widthfill {
-			width: 100%;
-		}
-
-		.reporttable {
-			display: table;
-		}
-
-		.reporttablecell {
-			display: table-cell;
-		}
-
-		.valuefont {
-			font-size: 26px;
-			margin-top: 8px;
-		}
-
-		.titlefont {
-			font-size: 15px;
-		}
-
-		.icontips {
-			height: 16px;
-			width: 22px;
-			text-align: center;
-			font-size: 10px;
-			border-radius: 2px;
-			line-height: 15px;
-		}
-
-		table {
-			border-right: 1px black solid;
-		}
-
-		.analyse {
-			width: 200px;
-			height: 40px;
-			border-radius: 3px;
-			font-size: 20px;
-			text-align: center;
-			margin: auto;
-		}
-
-		.condition {
-			width: 200px;
-			height: 40px;
-			border-radius: 3px;
-			font-size: 20px;
-			text-align: center;
-			margin: 10px auto 10px auto;
-		}
-
 		.chartset {
 			width: 95%;
 			height: 95%;
 			border-radius: 3px;
 			font-size: 10px;
 			text-align: center;
-			margin: 10px auto 10px auto;
-		}
-
-		.iconimg {
-			width: 57px;
-			height: 50px;
-		}
-
-		.kcd_input {
-			width: 28%;
-			float: left;
-			margin-left: 4%;
-			height: 40px;
-			font-size: 14px;
-			color: #2d2d30;
-			outline-style: none;
-			margin-top: 10px;
-			background: none;
-			border-color: #eee;
-			border-radius: 5px;
+			margin: 0px auto 10px auto;
+			padding-top:0px;
 		}
 	</style>
 </head>
-<body style="background:#f3f3f5;" class="absolute-con">
+<body style="background:#f6f6f6;" class="absolute-con">
 	<div id="echart" class="chartset"></div>
 	<script src="~/Scripts/jquery-1.10.2.min.js"></script>
 	<script src="~/Content/js/echarts.js"></script>
@@ -110,53 +39,37 @@
 		$(function () {
 			var mch = sessionStorage.getItem('companyCode');
 			var analysetype = $.getUrlParam('AnalyseType');
-			function getAllMember() {
-				$.ajax({
-					url: '/api/Member/?All=false',
-					type: 'GET',
-					headers: { 'CompanyCode': mch },
-					success: function (res) {
-						if (res.IsSuccessful) {
-							var allMemberCount = res.Data.length;
-							if (analysetype == 1) {//每日新增会员
-								searchNewMemberByDay(allMemberCount);
-							} else if (analysetype == 2) {//每月新增会员
-								searchNewMemberByMonth(allMemberCount);
-							} else if (analysetype == 3) {//消费小于2千（普通会员）
-								searchMemberType(allMemberCount, 1);
-							} else if (analysetype == 4) {//2千~5千（白银会员）
-								searchMemberType(allMemberCount, 2);
-							} else if (analysetype == 5) {//5千~1万（黄金会员）
-								searchMemberType(allMemberCount, 3);
-							} else if (analysetype == 6) {//大于1万（铂金会员）
-								searchMemberType(allMemberCount, 4);
-							} else if (analysetype == 7) {//普通大客户(年消费大于1万)
-								searchBigMember(allMemberCount, 1);
-							} else if (analysetype == 8) {//土豪大客户(年消费大于1万)
-								searchBigMember(allMemberCount, 2);
-							} else if (analysetype == 9) {//每月消费1次（一般）
-								searchLoyalMember(allMemberCount, 1);
-							} else if (analysetype == 10) {//每月消费2次（良好）
-								searchLoyalMember(allMemberCount, 2);
-							} else if (analysetype == 11) {//每月消费3次以上（绝对忠诚）
-								searchLoyalMember(allMemberCount, 3);
-							} else if (analysetype == 12) {//三个月消费未消费
-								searchLoseMember(allMemberCount, 1);
-							} else if (analysetype == 13) {//六个月消费未消费
-								searchLoseMember(allMemberCount, 2);
-							} else if (analysetype == 14) {//十二个月消费未消费
-								searchLoseMember(allMemberCount, 3);
-							}
-						}
-					},
-					error: function () {
-					}
-				});
+			if (analysetype == 1) {//每日新增会员
+				searchNewMemberByDay();
+			} else if (analysetype == 2) {//每月新增会员
+				searchNewMemberByMonth();
+			} else if (analysetype == 3) {//消费小于2千（普通会员）
+				searchMemberType(1);
+			} else if (analysetype == 4) {//2千~5千（白银会员）
+				searchMemberType(2);
+			} else if (analysetype == 5) {//5千~1万（黄金会员）
+				searchMemberType(3);
+			} else if (analysetype == 6) {//大于1万（铂金会员）
+				searchMemberType(4);
+			} else if (analysetype == 7) {//普通大客户(年消费大于1万)
+				searchBigMember(1);
+			} else if (analysetype == 8) {//土豪大客户(年消费大于1万)
+				searchBigMember(2);
+			} else if (analysetype == 9) {//每月消费1次（一般）
+				searchLoyalMember(1);
+			} else if (analysetype == 10) {//每月消费2次（良好）
+				searchLoyalMember(2);
+			} else if (analysetype == 11) {//每月消费3次以上（绝对忠诚）
+				searchLoyalMember(3);
+			} else if (analysetype == 12) {//三个月消费未消费
+				searchLoseMember(1);
+			} else if (analysetype == 13) {//六个月消费未消费
+				searchLoseMember(2);
+			} else if (analysetype == 14) {//十二个月消费未消费
+				searchLoseMember(3);
 			}
 
-			getAllMember();
-
-			function searchNewMemberByDay(all) {
+			function searchNewMemberByDay() {
 				$.ajax({
 					url: '/api/Reporting/DataAnalyseList?All=false',
 					type: 'GET',
@@ -164,7 +77,7 @@
 					headers: { 'CompanyCode': mch },
 					success: function (res) {
 						if (res.IsSuccessful) {
-							memberanalysepie('会员基数', all, '新增会员', res.Data.length - 1);
+							memberanalysepie('会员基数', res.TotalMemberCount, '新增会员', res.Data.length - 1);
 						} else {
 						}
 					},
@@ -173,7 +86,7 @@
 				});
 			};
 
-			function searchNewMemberByMonth(all) {
+			function searchNewMemberByMonth() {
 				$.ajax({
 					url: '/api/Reporting/DataAnalyseList?All=false',
 					type: 'GET',
@@ -181,7 +94,7 @@
 					headers: { 'CompanyCode': mch },
 					success: function (res) {
 						if (res.IsSuccessful) {
-							memberanalysepie('会员基数', all, '新增会员', res.Data.length - 1);
+							memberanalysepie('会员基数', res.TotalMemberCount, '新增会员', res.Data.length - 1);
 						} else {
 						}
 					},
@@ -190,7 +103,7 @@
 				});
 			};
 
-			function searchMemberType(all, index) {
+			function searchMemberType(index) {
 				$.ajax({
 					url: '/api/Reporting/DataAnalyseList?All=false',
 					type: 'GET',
@@ -198,7 +111,7 @@
 					headers: { 'CompanyCode': mch },
 					success: function (res) {
 						if (res.IsSuccessful) {
-							memberanalysepie('会员基数', all, '目标会员', res.Data.length - 1);
+							memberanalysepie('会员基数', res.TotalMemberCount, '目标会员', res.Data.length - 1);
 						} else {
 						}
 					},
@@ -207,7 +120,7 @@
 				});
 			};
 
-			function searchBigMember(all, index) {
+			function searchBigMember(index) {
 				$.ajax({
 					url: '/api/Reporting/DataAnalyseList?All=false',
 					type: 'GET',
@@ -215,7 +128,7 @@
 					headers: { 'CompanyCode': mch },
 					success: function (res) {
 						if (res.IsSuccessful) {
-							memberanalysepie('会员基数', all, '目标会员', res.Data.length - 1);
+							memberanalysepie('会员基数', res.TotalMemberCount, '目标会员', res.Data.length - 1);
 						} else {
 						}
 					},
@@ -224,7 +137,7 @@
 				});
 			};
 
-			function searchLoyalMember(all, index) {
+			function searchLoyalMember(index) {
 				$.ajax({
 					url: '/api/Reporting/DataAnalyseList?All=false',
 					type: 'GET',
@@ -232,7 +145,7 @@
 					headers: { 'CompanyCode': mch },
 					success: function (res) {
 						if (res.IsSuccessful) {
-							memberanalysepie('会员基数', all, '目标会员', res.Data.length - 1);
+							memberanalysepie('会员基数', res.TotalMemberCount, '目标会员', res.Data.length - 1);
 						} else {
 						}
 					},
@@ -241,7 +154,7 @@
 				});
 			};
 
-			function searchLoseMember(all, index) {
+			function searchLoseMember(index) {
 				$.ajax({
 					url: '/api/Reporting/DataAnalyseList?All=false',
 					type: 'GET',
@@ -249,7 +162,7 @@
 					headers: { 'CompanyCode': mch },
 					success: function (res) {
 						if (res.IsSuccessful) {
-							memberanalysepie('会员基数', all, '目标会员', res.Data.length - 1);
+							memberanalysepie('会员基数', res.TotalMemberCount, '目标会员', res.Data.length - 1);
 						} else {
 						}
 					},
@@ -270,8 +183,8 @@
 							}
 						},
 						data: [
-							{ name: param1 + value1+'人', value: value1 },
-							{ name: param2 + value2 + '人' + '占比: ' + ((value2 * 1.0 / value1).toFixed(2) * 100) + '%', value: value2 },
+							{ name: param1 + value1 + '人', value: value1 },
+							{ name: param2 + value2 + '人' + '占比: ' + Number(((value2 * 1.0 / value1) * 100)).toFixed(2) + '%', value: value2 },
 						]
 					}
 				});

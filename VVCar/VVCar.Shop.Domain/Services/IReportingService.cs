@@ -116,6 +116,12 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        IEnumerable<OperationStatementDetailDto> GetOperationStatementDetail(OperationStatementFilter filter, out int totalCount);   
+        IEnumerable<OperationStatementDetailDto> GetOperationStatementDetail(OperationStatementFilter filter, out int totalCount);
+
+        /// <summary>
+        /// 获取会员总数
+        /// </summary>
+        /// <returns></returns>
+        int GetMemberTotalCount();
     }
 }

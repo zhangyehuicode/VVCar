@@ -2,7 +2,7 @@
     extend: 'Ext.app.Controller',
     requires: ['WX.store.BaseData.PickUpOrderStore', 'WX.store.BaseData.PickUpOrderTaskDistributionStore', 'WX.store.BaseData.PickUpOrderPaymentDetailsStore'],
     models: ['BaseData.PickUpOrderModel', 'BaseData.PickUpOrderTaskDistributionModel', 'BaseData.PickUpOrderPaymentDetailsModel'],
-    views: ['PickUpOrder.PickUpOrder', 'PickUpOrder.PickUpOrderDetails', 'PickUpOrder.ProductSelector', 'PickUpOrder.UserSelector', 'PickUpOrder.PickUpOrderPaymentDetails'],
+    views: ['PickUpOrder.PickUpOrder', 'PickUpOrder.PickUpOrderDetails', 'PickUpOrder.ProductSelector', 'PickUpOrder.UserSelector', 'PickUpOrder.PickUpOrderPaymentDetails', 'PickUpOrder.MicroPay'],
     refs: [{
         ref: 'pickUpOrderList',
         selector: 'PickUpOrder grid[name=pickuporder]',
@@ -29,7 +29,7 @@
         selector: 'PickUpOrderPaymentDetails grid[name=gridPickUpOrderPaymentDetails]',
     }, {
         ref: 'pickUpOrderDetails',
-        selector: 'PickUpOrderDetails',
+        selector: 'PickUpOrderDetails'
     }],
     init: function () {
         var me = this;
@@ -84,6 +84,9 @@
             'PickUpOrderDetails radiogroup[name=PayType]': {
                 change: me.payTypeChange
             },
+            'PickUpOrderDetails button[action=micropay]': {
+                click: me.micropay
+            },
             'ProductSelector button[action=save]': {
                 click: me.saveItem
             },
@@ -96,13 +99,121 @@
             'UserSelector button[action=search]': {
                 click: me.searchUser
             },
+            'PickUpOrderMicroPay button[action=confirm]': {
+                click: me.micropayconfirm
+            }
         });
+    },
+    micropayconfirm: function (btn) {
+        var me = this;
+        var win = btn.up('window');
+        var detailswin = me.getPickUpOrderDetails();
+        var code = detailswin.down('textfield[name=Code]').getValue();
+        if (code === null || code === '') {
+            Ext.Msg.alert('提示', '订单号为空');
+            return;
+        }
+        var authcode = win.down('textfield[name=AuthCode]').getValue();
+        if (authcode === null || authcode === '') {
+            Ext.Msg.alert('提示', '请输入付款码');
+            return;
+        }
+        var stillOwedMoney = detailswin.down('numberfield[name=StillOwedMoney]').getValue();
+        var payMoney = detailswin.down('numberfield[name=PayMoney]').getValue();
+        if (payMoney <= 0) {
+            Ext.Msg.alert('提示', '请输入支付金额');
+            return;
+        }
+        if (payMoney > stillOwedMoney) {
+            Ext.Msg.alert('提示', '支付金额大于尚欠金额!');
+            return;
+        }
+        var progresswin = Ext.create('Ext.window.Window', {
+            minWidth: 350,
+            minHeight: 30,
+            maxWidth: 350,
+            maxHeight: 30,
+            closable: false,
+            header: false,
+            border: false,
+            modal: true,
+            items: [{
+                html: '<div style="height:30px;line-height:30px;width:350px;" id="pickuporderwechatmicropayprogressbarcon"></div>'
+            }]
+        });
+        progresswin.show();
+        var p = Ext.create('Ext.ProgressBar', {
+            renderTo: Ext.getElementById('pickuporderwechatmicropayprogressbarcon'),
+            height: 30
+        });
+        p.wait({
+            interval: 500,
+            duration: 60000,
+            increment: 15,
+            text: '支付正在处理...',
+            scope: this,
+            fn: function () {
+            }
+        });
+        var store = me.getPickUpOrderList().getStore();
+        store.wechatmicropay(authcode, payMoney * 100, code, function (response, opts) {
+            var res = JSON.parse(response.responseText);
+            if (res.IsSuccessful) {
+                if (res.Data) {
+                    Ext.Msg.alert('提示', '支付成功！');
+                    me.getFormPickUpOrder().down('numberfield[name=PayMoney]').setValue(0);
+                    win.close();
+                    progresswin.close();
+                    store.load();
+                    var receivedMoney = detailswin.down('numberfield[name=ReceivedMoney]').getValue();
+                    detailswin.down('numberfield[name=ReceivedMoney]').setValue(Number(receivedMoney) + Number(payMoney));
+                    var stillOwedMoney = detailswin.down('numberfield[name=StillOwedMoney]').getValue();
+                    detailswin.down('numberfield[name=StillOwedMoney]').setValue(Number(stillOwedMoney) - Number(payMoney));
+                    if (detailswin.down('numberfield[name=StillOwedMoney]').getValue() == 0) {
+                        detailswin.down('textfield[name=Status]').setValue('已付款');
+                    } else {
+                        detailswin.down('textfield[name=Status]').setValue('付款不足');
+                    }
+                    detailswin.down('grid[name=pickuporderitemgrid]').down('button[action=addPickUpOrderItem]').hide();
+                    detailswin.down('grid[name=pickuporderitemgrid]').down('button[action=delPickUpOrderItem]').hide();
+                    detailswin.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemCrew]').hide();
+                    detailswin.down('grid[name=pickuporderitemusergrid]').down('button[action=addPickUpOrderItemSalesman]').hide();
+                    detailswin.down('grid[name=pickuporderitemusergrid]').down('button[action=delPickUpOrderItemUser]').hide();
+                } else {
+                    Ext.Msg.alert('提示', '支付失败！');
+                }
+            } else {
+                Ext.Msg.alert('提示', res.ErrorMessage);
+            }
+        }, function (response, opts) {
+            Ext.Msg.alert('提示', '支付失败！');
+            progresswin.close();
+        });
+    },
+    micropay: function (btn) {
+        var parentwin = btn.up('window');
+        var stillOwedMoney = parentwin.down('numberfield[name=StillOwedMoney]').getValue();
+        var payMoney = parentwin.down('numberfield[name=PayMoney]').getValue();
+        if (payMoney <= 0) {
+            Ext.Msg.alert('提示', '请输入支付金额');
+            return;
+        }
+        if (payMoney > stillOwedMoney) {
+            Ext.Msg.alert('提示', '支付金额大于尚欠金额!');
+            return;
+        }
+        var win = Ext.widget('PickUpOrderMicroPay');
+        var paymoney = btn.up('window').down('numberfield[name=PayMoney]').getValue();
+        win.down('textfield[name=TotalFee]').setValue(paymoney);
+        win.show();
     },
     payTypeChange: function (radiogroup, newValue, oldValue, eOpts) {
         if (newValue.type === 1) {
-            radiogroup.up('window').down('button[action=micropay]').hidden = false;
+            radiogroup.up('window').down('button[action=micropay]').setHidden(false);
+            radiogroup.up('window').down('button[action=payorder]').setMargin('5 5 5 5');
         } else {
-            radiogroup.up('window').down('button[action=micropay]').hidden = true;
+            radiogroup.up('window').down('button[action=micropay]').setHidden(true);
+            radiogroup.up('window').down('button[action=payorder]').setMargin('5 5 5 101');
         }
     },
     searchUser: function (btn) {
@@ -147,7 +258,7 @@
             return;
         }
         if (payMoney > stillOwedMoney) {
-            Ext.Msg.alert('提示', '结算金额不要大于尚欠金额!');
+            Ext.Msg.alert('提示', '结账金额不能大于尚欠金额!');
             return;
         }
 
@@ -156,7 +267,7 @@
         var store = me.getPickUpOrderList().getStore();
         if (payType.type == 1 || payType.type == 2) {
             var tip = payType.type == 1 ? '微信' : '现金';
-            Ext.Msg.confirm('提示', '确定要<span><font color="red">' + tip + '</font></span>支付吗?', function (opt) {
+            Ext.Msg.confirm('提示', '确定<span><font color="red">' + tip + '</font></span>支付吗?', function (opt) {
                 if (opt === 'yes') {
                     //现金支付
                     var pickUpOrderDetail = {};
@@ -603,6 +714,7 @@
         pickUpOrderItemStore.load();
 
         plateNumber = win.down('textfield[name=PlateNumber]').getValue();
+
         var memberStore = Ext.create('WX.store.BaseData.MemberStore');
         if (record.data.MemberID != null && record.data.MemberID != '' && record.data.MemberID != '00000000-0000-0000-0000-000000000000') {
             memberStore.getMemberByMemberID(record.data.MemberID,
@@ -611,7 +723,7 @@
                     if (ajaxResult.IsSuccessful) {
                         if (ajaxResult.Data != null) {
                             var data = ajaxResult.Data;
-                            win.down("textfield[name=MemberID]").setValue(data.Value);
+                            win.down("textfield[name=MemberID]").setValue(data.ID);
                             win.down("textfield[name=MemberName]").setValue(data.Name);
                             win.down("textfield[name=MemberMobilePhoneNo]").setValue(data.MobilePhoneNo);
                             win.down("textfield[name=CardNumber]").setValue(data.CardNumber);
@@ -650,7 +762,7 @@
                                 Ext.Msg.alert('提示', '该车牌号绑定了多个会员，请联系管理员');
                                 return;
                             }
-                            win.down("textfield[name=MemberID]").setValue(data[0].Value);
+                            win.down("textfield[name=MemberID]").setValue(data[0].ID);
                             win.down("textfield[name=MemberName]").setValue(data[0].Name);
                             win.down("textfield[name=MemberMobilePhoneNo]").setValue(data[0].MobilePhoneNo);
                             win.down("textfield[name=CardNumber]").setValue(data[0].CardNumber);
@@ -750,4 +862,4 @@
         var store = me.getPickUpOrderList().getStore();
         store.load();
     }
-})
+});

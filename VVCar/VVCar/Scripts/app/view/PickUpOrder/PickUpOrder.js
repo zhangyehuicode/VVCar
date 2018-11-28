@@ -12,7 +12,7 @@
             data: [
                 { 'Name': '未付款', 'Value': 0 },
                 { 'Name': '已付款', 'Value': 1 },
-                { 'Name': '收款不足', 'Value': 2 },
+                { 'Name': '收款不足', 'Value': 2 }
             ]
         });
         me.items = [{
@@ -92,11 +92,11 @@
                 {
                     header: '接车单状态', dataIndex: 'Status', width: 100,
                     renderer: function (value) {
-                        if (value == 0)
+                        if (value === 0)
                             return "<span style='color:red;'>未付款</span>";
-                        else if (value == 1)
+                        else if (value === 1)
                             return "<span style='color:green;'>已付款</span>";
-                        else if (value == 2)
+                        else if (value === 2)
                             return "<span style='color:red;'>收款不足</span>";
                     }
                 },
@@ -118,7 +118,7 @@
                         handler: function (grid, rowIndex, colIndex) {
                             var record = grid.getStore().getAt(rowIndex);
                             this.fireEvent('pickuporderdetailsClick', grid, record);
-                        },
+                        }
                     },
                     { scope: this },
                     {
@@ -130,17 +130,17 @@
                         handler: function (grid, rowIndex, colIndex) {
                             var record = grid.getStore().getAt(rowIndex);
                             this.fireEvent('deleteActionClick', grid, record);
-                        },
+                        }
                     }]
-                },
+                }
             ],
             dockedItems: [{
                 xtype: 'pagingtoolbar',
                 store: me.store,
                 dock: 'bottom',
                 displayInfo: true
-            }],
-        }]
+            }]
+        }];
         this.callParent();
-    },
+    }
 });

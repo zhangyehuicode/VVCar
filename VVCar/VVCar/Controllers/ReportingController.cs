@@ -23,5 +23,10 @@ namespace VVCar.Controllers
         {
             return View();
         }
+
+        public ActionResult AnalyseLineChart()
+        {
+            return View();
+        }
     }
 }

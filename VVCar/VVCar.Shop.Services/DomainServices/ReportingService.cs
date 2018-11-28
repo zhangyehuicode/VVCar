@@ -698,11 +698,13 @@ namespace VVCar.Shop.Services.DomainServices
             {
                 result.MemberID = member.ID;
                 result.MemberName = member.Name;
+                result.MemberMobilePhone = member.MobilePhoneNo;
                 result.TotalQuantity = 0;
                 result.TotalMoney = 0;
+                result.RegistDate = member.CreatedDate;
 
                 var orderItemQueryable = OrderItemRepo.GetInclude(t => t.Order, false).Where(t => t.Order.MerchantID == AppContext.CurrentSession.MerchantID);
-                var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetInclude(m => m.Product, false).Where(t => t.PickUpOrder.MerchantID == AppContext.CurrentSession.MerchantID);
+                var pickUpOrderItemQueryable = PickUpOrderItemRepo.GetIncludes(false, "PickUpOrder", "Product").Where(t => t.PickUpOrder.MerchantID == AppContext.CurrentSession.MerchantID);
                 if (startDate.HasValue && endDate.HasValue)
                 {
                     orderItemQueryable = orderItemQueryable.Where(t => t.Order.CreatedDate >= startDate && t.Order.CreatedDate < endDate);
@@ -715,26 +717,28 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     plateList += p.PlateNumber + "|";
                 });
-                pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => plateList.Contains(t.PickUpOrder.PlateNumber));
+                pickUpOrderItemQueryable = pickUpOrderItemQueryable.Where(t => t.PickUpOrder.MemberID == member.ID || plateList.Contains(t.PickUpOrder.PlateNumber));
 
                 var orderItemList = orderItemQueryable.Where(m => m.ProductType != EProductType.MemberCard).ToList();
-                var orderItemGroup = orderItemList.GroupBy(g => g.GoodsID).Select(m => new
+                var orderItemGroup = orderItemList.GroupBy(g =>new { g.Order.Code, g.GoodsID }).Select(m => new
                 {
-                    ProductID = m.Key,
-                    Quantity = m.Sum(s => s.Quantity),
+                    TradeNo = m.Key.Code,
+                    ProductID = m.Key.GoodsID,
                     ProductName = m.FirstOrDefault() != null ? m.FirstOrDefault().ProductName : "",
                     ProductCode = "",
+                    Quantity = m.Sum(s => s.Quantity),
                     ProductType = m.FirstOrDefault() != null ? m.FirstOrDefault().ProductType : EProductType.Goods,
                     Money = m.Sum(s => s.Money),
                 }).ToList();
 
                 var pickUpOrderList = pickUpOrderItemQueryable.ToList();
-                var pickUpOrderGroup = pickUpOrderList.GroupBy(g => g.ProductID).Select(m => new
+                var pickUpOrderGroup = pickUpOrderList.GroupBy(g => new { g.PickUpOrder.Code, g.ProductID }).Select(m => new
                 {
-                    ProductID = m.Key,
-                    Quantity = m.Sum(s => s.Quantity),
+                    TradeNo = m.Key.Code,
+                    m.Key.ProductID,
                     ProductName = m.FirstOrDefault() != null ? m.FirstOrDefault().ProductName : "",
                     ProductCode = m.FirstOrDefault() != null ? m.FirstOrDefault().ProductCode : "",
+                    Quantity = m.Sum(s => s.Quantity),
                     ProductType = m.FirstOrDefault() != null ? m.FirstOrDefault().Product.ProductType : EProductType.Goods,
                     Money = m.Sum(s => s.Money),
                 }).ToList();
@@ -744,6 +748,7 @@ namespace VVCar.Shop.Services.DomainServices
                 orderItemGroup.ForEach(m =>
                 {
                     var dataAnalyseItem = new DataAnalyseItemDto();
+                    dataAnalyseItem.TradeNo = m.TradeNo;
                     dataAnalyseItem.ProductID = m.ProductID;
                     dataAnalyseItem.ProductName = m.ProductName;
                     dataAnalyseItem.TotalQuantity = m.Quantity;
@@ -752,6 +757,7 @@ namespace VVCar.Shop.Services.DomainServices
                     result.TotalMoney += m.Money;
                     result.DataAnalyseItemDtos.Add(dataAnalyseItem);
                 });
+                result.DataAnalyseItemDtos = result.DataAnalyseItemDtos.OrderByDescending(t => t.TradeNo).ToList();
                 return result;
             }
             else
@@ -797,10 +803,12 @@ namespace VVCar.Shop.Services.DomainServices
             var result = new List<DataAnalyseDto>();
             var now = DateTime.Now;
             var yesteday = now.AddDays(-1);
-            var previousOneMonth = now.AddMonths(-1);
-            var previousThreeMonth = now.AddMonths(-3);
-            var previousSixMonth = now.AddMonths(-6);
-            var previousOneYear = now.AddMonths(-12);
+            var currentOneMonthFirstDay = new DateTime(now.Year, now.Month, 1);
+            var currentOneYearFirstMonth = new DateTime(now.Year, 1, 1);
+            var previousOneMonthFirstDay = new DateTime(now.Year, now.Month-1, 1);
+            var previousThreeMonthFirstDay = new DateTime(now.Year, now.Month - 3, 1);
+            var previousSixMonthFirstDay = new DateTime(now.Year, now.Month - 6, 1);
+            var previousOneYearFirstDay = new DateTime(now.Year -1, 1, 1);
 
             //新增会员入口
             if (filter.TimeSelect.HasValue)
@@ -811,7 +819,7 @@ namespace VVCar.Shop.Services.DomainServices
                 }
                 if (filter.TimeSelect == ETimeSelect.ByMonth)
                 {
-                    result.AddRange(NewMemberDataAnalyse(previousOneMonth, now));
+                    result.AddRange(NewMemberDataAnalyse(previousOneMonthFirstDay, now));
                 }
             }
 
@@ -819,7 +827,7 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter.MemberType.HasValue)
             {
 
-                var resulttemp = DataAnalyse(previousOneYear, now);
+                var resulttemp = DataAnalyse(previousOneMonthFirstDay, currentOneMonthFirstDay);
                 if (filter.MemberType.Value == EMemberType.NomalMember)
                 {
                     resulttemp.ForEach(t =>
@@ -865,7 +873,7 @@ namespace VVCar.Shop.Services.DomainServices
             //大客户分析
             if (filter.BigMember.HasValue)
             {
-                var resulttemp = DataAnalyse(previousOneYear, now);
+                var resulttemp = DataAnalyse(previousOneYearFirstDay, currentOneYearFirstMonth);
                 var resulttemp2 = new List<DataAnalyseDto>();
                 if (filter.BigMember == EBigMember.Nomal)
                 {
@@ -909,13 +917,12 @@ namespace VVCar.Shop.Services.DomainServices
                     }
                     result.Add(dataAnalyse);
                 }
-
             }
 
             //会员忠诚度分析
             if (filter.LoyalMember.HasValue)
             {
-                var resulttemp = DataAnalyse(previousOneMonth, now);
+                var resulttemp = DataAnalyse(previousOneMonthFirstDay, now);
                 if (filter.LoyalMember == ELoyalMember.NomalLoyal)
                 {
                     resulttemp.ForEach(t =>
@@ -953,9 +960,9 @@ namespace VVCar.Shop.Services.DomainServices
             {
                 if (filter.LoseMember == ELoseMember.NomalLose)
                 {
-                    var removeMembersIDs = DataAnalyse(previousOneYear, now).Select(t => t.MemberID).Distinct().ToList();
-                    removeMembersIDs.AddRange(DataAnalyse(previousSixMonth, now).Select(t => t.MemberID).Distinct().ToList());
-                    var resulttemp = DataAnalyse(previousThreeMonth, now);
+                    var removeMembersIDs = DataAnalyse(previousOneYearFirstDay, now).Select(t => t.MemberID).Distinct().ToList();
+                    removeMembersIDs.AddRange(DataAnalyse(previousSixMonthFirstDay, now).Select(t => t.MemberID).Distinct().ToList());
+                    var resulttemp = DataAnalyse(previousSixMonthFirstDay, now);
                     resulttemp.ForEach(t =>
                     {
                         if (!removeMembersIDs.Contains(t.MemberID))
@@ -969,8 +976,8 @@ namespace VVCar.Shop.Services.DomainServices
                 }
                 if (filter.LoseMember == ELoseMember.SevereLose)
                 {
-                    var removeMembersIDs = DataAnalyse(previousOneYear, now).Select(t => t.MemberID).Distinct().ToList();
-                    var resulttemp = DataAnalyse(previousSixMonth, now);
+                    var removeMembersIDs = DataAnalyse(previousOneYearFirstDay, now).Select(t => t.MemberID).Distinct().ToList();
+                    var resulttemp = DataAnalyse(previousSixMonthFirstDay, now);
                     resulttemp.ForEach(t =>
                     {
                         if (!removeMembersIDs.Contains(t.MemberID)) {
@@ -983,7 +990,7 @@ namespace VVCar.Shop.Services.DomainServices
                 }
                 if (filter.LoseMember == ELoseMember.AbsoluteLose)
                 {
-                    var resulttemp = DataAnalyse(previousOneYear, now);
+                    var resulttemp = DataAnalyse(previousOneYearFirstDay, now);
                     resulttemp.ForEach(t =>
                     {
                         if (t.TotalQuantity < 1)
@@ -995,7 +1002,7 @@ namespace VVCar.Shop.Services.DomainServices
             }
             totalCount = result.Count();
             if(filter.Start.HasValue && filter.Limit.HasValue)
-                result = result.Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
+                result = result.OrderByDescending(t=>t.TotalMoney).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             return result.OrderByDescending(t => t.TotalMoney).ToList();
         }
 
@@ -1210,6 +1217,22 @@ namespace VVCar.Shop.Services.DomainServices
             if(filter.Start.HasValue && filter.Limit.HasValue)
                 operationStatementDtos = operationStatementDtos.OrderByDescending(t => t.Code).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             return operationStatementDtos.OrderByDescending(t => t.Code);
+        }
+
+        /// <summary>
+        /// 获取会员总数
+        /// </summary>
+        /// <returns></returns>
+        public int GetMemberTotalCount()
+        {
+            var memberList = MemberRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+            if (memberList != null)
+            {
+                return memberList.Count();
+            }
+            else {
+                return 0;
+            }
         }
 
         /// <summary>

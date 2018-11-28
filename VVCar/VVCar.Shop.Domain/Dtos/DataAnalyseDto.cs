@@ -42,6 +42,11 @@ namespace VVCar.Shop.Domain.Dtos
         public decimal TotalMoney { get; set; }
 
         /// <summary>
+        /// 会员注册时间
+        /// </summary>
+        public DateTime? RegistDate { get; set; }
+
+        /// <summary>
         /// 集合
         /// </summary>
         public ICollection<DataAnalyseItemDto> DataAnalyseItemDtos { get; set; }
@@ -53,6 +58,11 @@ namespace VVCar.Shop.Domain.Dtos
     /// </summary>
     public class DataAnalyseItemDto
     {
+        /// <summary>
+        /// 交易单号
+        /// </summary>
+        public string TradeNo { get; set; }
+
         /// <summary>
         /// 产品ID
         /// </summary>
@@ -72,5 +82,10 @@ namespace VVCar.Shop.Domain.Dtos
         /// 消费金额
         /// </summary>
         public decimal TotalMoney { get; set; }
+
+        /// <summary>
+        /// 交易时间
+        /// </summary>
+        public DateTime CreatedDate { get; set; }
     }
 }

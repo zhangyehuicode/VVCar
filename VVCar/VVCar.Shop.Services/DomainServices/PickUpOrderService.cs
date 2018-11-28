@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.BaseData.Domain;
@@ -19,6 +20,8 @@ using VVCar.VIP.Domain.Services;
 using YEF.Core;
 using YEF.Core.Data;
 using YEF.Core.Domain;
+using YEF.Core.Dtos;
+using YEF.Utility;
 
 namespace VVCar.Shop.Services.DomainServices
 {
@@ -729,7 +732,7 @@ namespace VVCar.Shop.Services.DomainServices
                 });
                 UnitOfWork.CommitTransaction();
                 var pickUpOrder = PickUpOrderRepo.GetByKey(param.PickUpOrderID);
-                SendMemberCardUsedNotify(member, param.Code, "接车单", param.PayMoney, memberCard.CardBalance);
+                //SendMemberCardUsedNotify(member, param.Code, "接车单", param.PayMoney, memberCard.CardBalance);
                 return pickUpOrder;
             }
             catch (Exception e)
@@ -1147,6 +1150,35 @@ namespace VVCar.Shop.Services.DomainServices
             message.data.keyword3 = new WeChatTemplateMessageDto.MessageData($"{payMoney.ToString("0.##")}元", "#FF4040");
             message.data.remark = new WeChatTemplateMessageDto.MessageData($"卡内余额:{keepMoney.ToString("0.##")}元,感恩惠顾，期待下次再为您服务");
             WeChatService.SendWeChatNotifyAsync(message);
+        }
+
+        /// <summary>
+        /// 微信刷卡支付（付款码支付）
+        /// </summary>
+        /// <param name="payparams"></param>
+        /// <returns></returns>
+        public bool WeChatMicroPay(WeChatMicroPayParams payparams)
+        {
+            var url = $"{AppContext.Settings.SiteDomain}:8025/pay/MicroPayPage.aspx?mch={AppContext.CurrentSession.MerchantCode}&auth_code={payparams.auth_code}&total_fee={payparams.total_fee}&body=接车单微信付款码支付{payparams.out_trade_no}&out_trade_no={payparams.out_trade_no}&device_info={AppContext.CurrentSession.DepartmentCode}";
+            var httpClient = new HttpClient();
+            var result = httpClient.GetAsync(url).Result;
+            if (!result.IsSuccessStatusCode)
+                throw new DomainException("支付请求失败！");
+            var restr = result.Content.ReadAsStringAsync().Result;
+            AppContext.Logger.Info("接车单刷卡支付返回结果：" + restr);
+            //var res = JsonHelper.DeserializeObject<JsonActionResult<bool>>(restr);
+            //if (res.IsSuccessful)
+            //{
+            //    if (!res.Data)
+            //        throw new DomainException("支付失败！");
+            //}
+            //else
+            //{
+            //    if (string.IsNullOrEmpty(res.ErrorMessage))
+            //        res.ErrorMessage = "支付失败！";
+            //    throw new DomainException(res.ErrorMessage);
+            //}
+            return true;
         }
     }
 }

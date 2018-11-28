@@ -57,13 +57,13 @@ namespace VVCar.Shop.Domain.Enums
         /// <summary>
         /// 微信刷卡支付（微信付款码支付）
         /// </summary>
-        [Description("微信刷卡支付（微信付款码支付）")]
+        [Description("微信付款码支付")]
         WeChatMicroPay = 7,
 
         /// <summary>
         /// 微信JS支付(公众号支付)
         /// </summary>
-        [Description("微信JS支付(公众号支付)")]
+        [Description("公众号支付")]
         WeChatJS = 8,
 
         /// <summary>

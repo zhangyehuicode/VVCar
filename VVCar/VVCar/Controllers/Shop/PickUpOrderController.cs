@@ -143,5 +143,19 @@ namespace VVCar.Controllers.Shop
                 result.Data = PickUpOrderService.GetMemberPickUpOrder(memberId);
             });
         }
+
+        /// <summary>
+        /// 微信刷卡支付（付款码支付）
+        /// </summary>
+        /// <param name="payparams"></param>
+        /// <returns></returns>
+        [HttpGet, Route("WeChatMicroPay")]
+        public JsonActionResult<bool> WeChatMicroPay([FromUri]WeChatMicroPayParams payparams)
+        {
+            return SafeExecute(() =>
+            {
+                return PickUpOrderService.WeChatMicroPay(payparams);
+            });
+        }
     }
 }

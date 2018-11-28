@@ -100,68 +100,7 @@
 			var mch = $.getUrlParam('mch');
 			var _ismaster = sessionStorage.getItem('ismaster');
 			var ismaster = _ismaster == 'true';
-			var user = sessionStorage.getItem('user');
-			if (user == null || user === '') {
-				function getUserByOpenId() {
-					$.ajax({
-						url: 'api/User/GetUserByOpenID',
-						type: 'GET',
-						headers: { 'CompanyCode': mch },
-						data: {
-							OpenID: '@ViewBag.OpenId',
-							IsManager: ismaster,
-						},
-						success: function (res) {
-							if (res.IsSuccessful) {
-								if (res.Data != null) {
-									sessionStorage.setItem('user', JSON.stringify(res.Data));
-								} else {
-									window.location.href = "/Mobile/Merchant?mch=" + mch;
-								}
-							} else {
-								$.alert(res.ErrorMessage);
-								window.location.href = "/Mobile/Merchant?mch=" + mch;
-							}
-						},
-						error: function () {
-							window.location.href = "/Mobile/Merchant?mch=" + mch;
-						}
-					});
-				}
-				getUserByOpenId();
-			}
 
-			function getAllMember() {
-				$.ajax({
-					url: '/api/Member/?All=false',
-					type: 'GET',
-					headers: { 'CompanyCode': mch },
-					beforeSend: function () {
-						$.hideLoading();
-					},
-					success: function (res) {
-						$.hideLoading();
-						if (res.IsSuccessful) {
-							sessionStorage.setItem('allmembercount', res.Data.length);
-						} else {
-							$.alert(res.ErrorMessage);
-						}
-					},
-					error: function () {
-						$.hideLoading();
-					}
-				});
-			}
-
-			getAllMember();
-		});
-	</script>
-	<script type="text/javascript">
-		$(function () {
-			var mch = $.getUrlParam('mch');
-			var user = sessionStorage.getItem('user');
-			var _ismaster = sessionStorage.getItem('ismaster');
-			var ismaster = _ismaster == 'true';
 			_viewModel = new Vue({
 				el: '#analyseindex',
 				methods: {

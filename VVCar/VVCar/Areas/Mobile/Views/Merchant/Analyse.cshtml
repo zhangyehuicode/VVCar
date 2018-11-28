@@ -25,29 +25,29 @@
 				</div>
 			</div>
 			<select class="kcd_input" style="width:95%;" id="membertype" v-on:change="searchMember">
-				<option value="1" selected="selected">消费小于2千</option>
-				<option value="2">年消费2千~5千</option>
-				<option value="3">年消费5千~1万</option>
-				<option value="4">年消费大于1万</option>
+				<option value="1" selected="selected">普通会员（上月消费小于2千）</option>
+				<option value="2">白银会员（上月消费2千~5千）</option>
+				<option value="3">黄金会员（上月消费5千~1万）</option>
+				<option value="4">铂金会员（上月消费大于1万）</option>
 			</select>
 			<select class="kcd_input" style="width:95%;" id="bigmember" v-on:change="searchMember">
-				<option value="1" selected="selected">年消费大于1万</option>
-				<option value="2">年消费大于2万</option>
+				<option value="1" selected="selected">普通大客户(去年消费大于1万)</option>
+				<option value="2">土豪大客户(去年消费大于2万)</option>
 			</select>
 			<select class="kcd_input" style="width:95%;" id="loyalmember" v-on:change="searchMember">
-				<option value="1" selected="selected">月消费1次</option>
-				<option value="2">月消费2次</option>
-				<option value="3">月消费3次以上</option>
+				<option value="1" selected="selected">上月初至今消费1次（一般）</option>
+				<option value="2">上月初至今消费2次（良好）</option>
+				<option value="3">上月初至今消费3次以上（绝对忠诚）</option>
 			</select>
 			<select class="kcd_input" style="width:95%;" id="losemember" v-on:change="searchMember">
-				<option value="1" selected="selected">3个月未消费</option>
-				<option value="2">6个月未消费</option>
-				<option value="3">12个月未消费</option>
+				<option value="1" selected="selected">近3个月未消费</option>
+				<option value="2">近6个月未消费</option>
+				<option value="3">近12个月未消费</option>
 			</select>
 		</form>
 		@*<div class="kcgl_btn"><img src="~/Areas/resource/img/mobile/master/ss2.png" style="width:20px;padding-top:10px;" v-on:click="searchMember" /></div>*@
 		<div class="kcgl_input" style="width:45%;text-align:center;">
-			<span class="gwc_text">数量<br />{{MemberCount}}/{{AllMemberCount}}</span>
+			<span class="gwc_text">数量<br />{{MemberCount}}/{{TotalMemberCount}}</span>
 		</div>
 		<div class="kcgl_input" style="width:45%;text-align:center;">
 			<span class="gwc_text">占比<br />{{Proportion}}</span>
@@ -140,44 +140,6 @@
 	</script>
 	<script type="text/javascript">
 		$(function () {
-			var _ismaster = sessionStorage.getItem('ismaster');
-			var ismaster = _ismaster == 'true';
-			var user = sessionStorage.getItem('user');
-			if (user == null || user === '') {
-				function getUserByOpenId() {
-					$.ajax({
-						url: 'api/User/GetUserByOpenID',
-						type: 'GET',
-						headers: { 'CompanyCode': mch },
-						data: {
-							OpenID: '@ViewBag.OpenId',
-							IsManager: ismaster,
-						},
-						success: function (res) {
-							if (res.IsSuccessful) {
-								if (res.Data != null) {
-									sessionStorage.setItem('user', JSON.stringify(res.Data));
-								} else {
-									window.location.href = "/Mobile/Merchant?mch=" + mch;
-								}
-							} else {
-								$.alert(res.ErrorMessage);
-								window.location.href = "/Mobile/Merchant?mch=" + mch;
-							}
-						},
-						error: function () {
-							window.location.href = "/Mobile/Merchant?mch=" + mch;
-						}
-					});
-				}
-				getUserByOpenId();
-			}
-		});
-
-
-	</script>
-	<script type="text/javascript">
-		$(function () {
 			var mch = $.getUrlParam('mch');
 			var _ismaster = sessionStorage.getItem('ismaster');
 			var ismaster = _ismaster == 'true';
@@ -187,15 +149,14 @@
 					type: '',
 					MemberList: [],
 					MemberCount: 0,
-					AllMemberCount: sessionStorage.getItem('allmembercount'),
+					TotalMemberCount: 0,
 				},
 				computed: {
 					Proportion: function () {
-						if (this.AllMemberCount == 0) {
+						if (this.TotalMemberCount == 0) {
 							return 0;
 						} else {
-							//return Math.round((this.MemberCount / this.AllMemberCount) * 100) + '%';
-							return Number((this.MemberCount / this.AllMemberCount) * 100).toFixed(2) + '%';
+							return Number((this.MemberCount * 1.0 / this.TotalMemberCount) * 100).toFixed(2) + '%';
 						}
 					},
 					classObject: function () {
@@ -299,16 +260,17 @@
 						if (res.IsSuccessful) {
 							_viewModel.MemberList = res.Data;
 							_viewModel.MemberCount = res.Data.length - 1;
+							_viewModel.TotalMemberCount = res.TotalMemberCount;
 							if (sessionStorage.getItem('type') == 'newcustomer') {
-								memberanalysepie('会员基数', '新增会员');
+								memberanalysepie('会员基数', res.TotalMemberCount, '新增会员', res.Data.length - 1);
 							} else if (sessionStorage.getItem('type') == 'membertype') {
-								memberanalysepie('会员基数', $('#membertype').find("option:selected").text() + '会员');
+								memberanalysepie('会员基数', res.TotalMemberCount, '目标会员', res.Data.length - 1);
 							} else if (sessionStorage.getItem('type') == 'bigmember') {
-								memberanalysepie('会员基数', $('#bigmember').find("option:selected").text() + '会员');
+								memberanalysepie('会员基数', res.TotalMemberCount, '目标会员', res.Data.length - 1);
 							} else if (sessionStorage.getItem('type') == 'loyalmember') {
-								memberanalysepie('会员基数', $('#loyalmember').find("option:selected").text() + '会员');
+								memberanalysepie('会员基数', res.TotalMemberCount, '目标会员', res.Data.length - 1);
 							} else if (sessionStorage.getItem('type') == 'losemember') {
-								memberanalysepie('会员基数', $('#losemember').find("option:selected").text() + '会员');
+								memberanalysepie('会员基数', res.TotalMemberCount, '目标会员', res.Data.length - 1);
 							}
 						} else {
 							$.alert(res.ErrorMessage);
@@ -335,7 +297,8 @@
 						if (res.IsSuccessful) {
 							_viewModel.MemberList = res.Data;
 							_viewModel.MemberCount = res.Data.length - 1;
-							memberanalysepie('会员基数', '新增会员');
+							_viewModel.TotalMemberCount = res.TotalMemberCount;
+							memberanalysepie('会员基数', res.TotalMemberCount, '新增会员', res.Data.length - 1);
 						} else {
 							$.alert(res.ErrorMessage);
 						}
@@ -360,7 +323,8 @@
 						if (res.IsSuccessful) {
 							_viewModel.MemberList = res.Data;
 							_viewModel.MemberCount = res.Data.length - 1;
-							memberanalysepie('会员基数', '新增会员');
+							_viewModel.TotalMemberCount = res.TotalMemberCount;
+							memberanalysepie('会员基数', res.TotalMemberCount, '新增会员', res.Data.length - 1);
 						} else {
 							$.alert(res.ErrorMessage);
 						}
@@ -371,7 +335,7 @@
 				});
 			};
 
-			function memberanalysepie(param1, param2) {
+			function memberanalysepie(param1, value1, param2, value2) {
 				var echat = echarts.init(document.getElementById('echart')).setOption({
 					series: {
 						type: 'pie',
@@ -379,12 +343,12 @@
 						center: '50%',
 						labelLine: {
 							normal: {
-								length: -10
+								length: 5
 							}
 						},
 						data: [
-							{ name: param1, value: _viewModel.AllMemberCount },
-							{ name: param2, value: _viewModel.MemberCount },
+							{ name: param1, value: value1 },
+							{ name: param2, value: value2 },
 						]
 					}
 				});

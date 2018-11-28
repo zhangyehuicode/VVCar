@@ -62,5 +62,12 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="memberId"></param>
         /// <returns></returns>
         IEnumerable<PickUpOrderDto> GetMemberPickUpOrder(Guid memberId);
+
+        /// <summary>
+        /// 微信刷卡支付（付款码支付）
+        /// </summary>
+        /// <param name="payparams"></param>
+        /// <returns></returns>
+        bool WeChatMicroPay(WeChatMicroPayParams payparams);
     }
 }

@@ -2,13 +2,16 @@
 	extend: 'Ext.app.Controller',
 	requires: ['WX.store.BaseData.OperationStatementStore', 'WX.store.BaseData.OperationStatementDetailStore'],
 	models: ['BaseData.OperationStatementModel', 'BaseData.OperationStatementDetailModel'],
-	views: ['Report.OperationStatement', 'Report.OperationStatementDetail'],
+	views: ['Report.OperationStatement', 'Report.OperationStatementDetail', 'Report.OperationStatementChart'],
 	refs: [{
 		ref: 'operationStatement',
 		selector: 'OperationStatement',
 	}, {
 		ref: 'operationStatementDetail',
 		selector: 'OperationStatementDetail grid[name=gridOperationStatement]',
+	}, {
+		ref: 'operationStatementChart',
+		selector: 'OperationStatementChart'
 	}],
 	init: function () {
 		var me = this;
@@ -16,8 +19,11 @@
 			'OperationStatement button[action=search]': {
 				click: me.search
 			},
-			'OperationStatement button[action=]' : {
+			'OperationStatement button[action=export]': {
 				click: me.export
+			},
+			'OperationStatement button[action=chart]': {
+				click: me.chart
 			},
 			'OperationStatement': {
 				detailClick: me.detailClick,
@@ -62,6 +68,11 @@
 				Ext.Msg.alert('提示', '网络请求异常:' + res.status);
 			}
 		});
+	},
+	chart: function () {
+		var me = this;
+		var win = Ext.widget('OperationStatementChart');
+		win.show();
 	},
 	searchDetail: function (btn) {
 		var me = this;

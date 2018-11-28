@@ -11,7 +11,7 @@
         var productStore = Ext.create('WX.store.BaseData.ProductStore');
         //productStore.load();
         var treeProductCategoryStore = Ext.create('WX.store.BaseData.ProductCategoryTreeStore');
-        var productTypeStore = Ext.create('WX.store.DataDict.ProductTypeStore');
+		var productTypeStore = Ext.create('WX.store.DataDict.ProductTypeStore');
         me.items = [{
             name: 'treeProductCategory',
             xtype: 'treepanel',

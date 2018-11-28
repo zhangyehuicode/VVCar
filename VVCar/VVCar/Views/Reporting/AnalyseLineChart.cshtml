@@ -1,0 +1,170 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="operationstatement">
+	<span style="font-size:14px; color:red;">营业利润：￥{{Profit}}</span>
+	<center>
+		<input type="date" id="startdate">
+		<input type="date" id="enddate">
+		<button v-on:click="search">搜索</button>
+		<div id="yyze" style="width:100%;height:500px;overflow:auto!important;margin:0 10px;"></div>
+	</center>
+</div>
+
+@section scripts{
+	<style type="text/css">
+		.show {
+			display: inline;
+		}
+
+		.hide {
+			display: none;
+		}
+	</style>
+	<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+	<link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script src="~/Content/js/echarts.js"></script>
+	<script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript">
+		function wxConfig() {
+			var mch = $.getUrlParam('mch');
+			$.ajax({
+				type: "POST",
+				url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+				datatype: "json",
+				success: function (data) {
+					if (data.IsSuccessful) {
+						var temp = data.Data;
+						wx.config({
+							debug: false,
+							appId: temp.appId,
+							timestamp: temp.timestamp,
+							nonceStr: temp.nonceStr,
+							signature: temp.signature,
+							jsApiList: [
+								'checkJsApi',
+								'onMenuShareTimeline',
+								'onMenuShareAppMessage',
+								'onMenuShareQQ',
+								'onMenuShareWeibo',
+								'hideOptionMenu',
+								'hideAllNonBaseMenuItem',
+								'showMenuItems',
+								'closeWindow',
+								'scanQRCode',
+							]
+						});
+						wx.ready(function () {
+							wx.hideAllNonBaseMenuItem();
+						});
+					} else {
+					}
+				},
+				complete: function (xmlHttpRequest, textStatus) {
+				},
+				error: function (xmlHttpRequest, textStatus) {
+				}
+			});
+		};
+		wxConfig();
+	</script>
+	<script type="text/javascript">
+        $(function () {
+			var mch = sessionStorage.getItem('companyCode');
+			var analysetype = $.getUrlParam('AnalyseType');
+			var param = $.getUrlParam('Param');
+			_viewModel = new Vue({
+				el: '#operationstatement',
+				data: {
+					User: {},
+					OperationStatementList: [],
+					Profit: 0,
+				},
+				methods: {
+					search: function (event) {
+						search();
+					},
+				}
+			});
+
+			function search() {
+				var startdate = $('#startdate').val();
+				var enddate = $('#enddate').val();
+				$.ajax({
+					url: '/api/Reporting/GetOperationStatement?All=false&StartDate=' + startdate + '&enddate=' + enddate,
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.showLoading();
+					},
+					success: function (res) {
+						$.hideLoading();
+						if (res.IsSuccessful) {
+							_viewModel.OperationStatementList = res.Data;
+							var lastrecord = res.Data[res.Data.length - 1];
+							_viewModel.Profit = lastrecord.TotalInCome - lastrecord.TotalOutCome;
+							var operationData = getChartOperationData(res.Data);
+							var option = getLineChartOption(operationData);
+							var yyzechart = echarts.init(document.getElementById('yyze'));
+							yyzechart.setOption(option);
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					},
+					error: function () {
+						$.hideLoading();
+					}
+				});
+			}
+			search();
+
+			function getChartOperationData(data) {
+				if (data == null || data == '' || data.length < 1)
+					return null;
+				var result = { xAxisdata: [], seriesdata: [] };
+				for (var i = data.length-2; i >=0; i--) {
+					result.xAxisdata.push(data[i].Code);
+					result.seriesdata.push(data[i].TotalProfit);
+				}
+				return result;
+			}
+
+			function getLineChartOption(data) {
+				if (data == null || data == '')
+					return;
+				var option = {
+					tooltip: {
+						trigger: 'axis',
+						axisPointer: {
+							type: 'cross',
+							crossStyle: {
+								color: '#999',
+							}
+						}
+					},
+					xAxis: {
+						type: 'category',
+						data: data.xAxisdata
+					},
+					yAxis: {
+						type: 'value',
+						name: '营业额/元',
+						axisLabel: {
+							formatter: '{value}'
+						}
+					},
+					series: [{
+						data: data.seriesdata,
+						type: 'line'
+					}]
+				};
+				return option;
+			}
+        });
+	</script>
+}
