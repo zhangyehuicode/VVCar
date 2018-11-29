@@ -61,7 +61,7 @@
                         header: '项目图片', dataIndex: 'ImgUrl', width: 100,
                         renderer: function (value) {
                             if (value != "" && value != null) {
-                                return '<img src="' + value + '" style="width: 50px; height: 20px;" />';
+                                return '<img src="' + value + '" style="width: 60px; height: 40px;" />';
                             }
                         }
                     },

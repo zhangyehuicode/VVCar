@@ -214,7 +214,7 @@ namespace VVCar.Shop.Services.DomainServices
                     entity.OrderItemList.ForEach(t =>
                     {
                         totalMoney += t.Quantity * t.PriceSale;
-                        totalCostMoney += t.Quantity * t.CostMoney;
+                        totalCostMoney += t.CostMoney;
                     });
                     entity.Money = totalMoney;
                     entity.CostMoney = totalCostMoney;

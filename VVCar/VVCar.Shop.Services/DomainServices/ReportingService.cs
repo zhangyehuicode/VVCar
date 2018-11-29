@@ -17,6 +17,7 @@ using VVCar.BaseData.Domain.Services;
 using VVCar.BaseData.Domain;
 using VVCar.VIP.Domain.Services;
 using VVCar.BaseData.Services;
+using VVCar.VIP.Domain.Enums;
 
 namespace VVCar.Shop.Services.DomainServices
 {
@@ -809,7 +810,7 @@ namespace VVCar.Shop.Services.DomainServices
             var previousThreeMonthFirstDay = new DateTime(now.Year, now.Month - 3, 1);
             var previousSixMonthFirstDay = new DateTime(now.Year, now.Month - 6, 1);
             var previousOneYearFirstDay = new DateTime(now.Year -1, 1, 1);
-
+            var previousOneYear = now.AddYears(-1);
             //新增会员入口
             if (filter.TimeSelect.HasValue)
             {
@@ -873,13 +874,13 @@ namespace VVCar.Shop.Services.DomainServices
             //大客户分析
             if (filter.BigMember.HasValue)
             {
-                var resulttemp = DataAnalyse(previousOneYearFirstDay, currentOneYearFirstMonth);
+                var resulttemp = DataAnalyse(previousOneYear, now);
                 var resulttemp2 = new List<DataAnalyseDto>();
                 if (filter.BigMember == EBigMember.Nomal)
                 {
                     resulttemp.ForEach(t =>
                     {
-                        if (t.TotalMoney >= 10000)
+                        if (t.TotalMoney > 10000)
                         {
                             resulttemp2.Add(t);
                         }
@@ -889,7 +890,7 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     resulttemp.ForEach(t =>
                     {
-                        if (t.TotalMoney >= 20000)
+                        if (t.TotalMoney > 20000)
                         {
                             resulttemp2.Add(t);
                         }
@@ -902,22 +903,24 @@ namespace VVCar.Shop.Services.DomainServices
                     dataAnalyseItemList.AddRange(t.DataAnalyseItemDtos);
                 });
                 var ids = dataAnalyseItemList.Select(t => t.ProductID).Distinct();
-                foreach (var id in ids)
+                var productList = ProductRepo.GetQueryable(false).Where(t => ids.Contains(t.ID)).ToList();
+                productList.ForEach(t =>
                 {
-                    var product = ProductRepo.GetByKey(id);
-                    var dataAnalyse = new DataAnalyseDto();
-                    dataAnalyse.MemberName = product.Name;
+                    var dataAnalyse = new DataAnalyseDto
+                    {
+                        MemberName = t.Name
+                    };
                     foreach (var item in dataAnalyseItemList)
                     {
-                        if (item.ProductID == product.ID)
+                        if (item.ProductID == t.ID)
                         {
                             dataAnalyse.TotalQuantity += item.TotalQuantity;
                             dataAnalyse.TotalMoney += item.TotalMoney;
                         }
                     }
                     result.Add(dataAnalyse);
-                }
-            }
+                });
+        }
 
             //会员忠诚度分析
             if (filter.LoyalMember.HasValue)
@@ -1003,7 +1006,8 @@ namespace VVCar.Shop.Services.DomainServices
             totalCount = result.Count();
             if(filter.Start.HasValue && filter.Limit.HasValue)
                 result = result.OrderByDescending(t=>t.TotalMoney).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
-            return result.OrderByDescending(t => t.TotalMoney).ToList();
+            result = result.OrderByDescending(t => t.TotalMoney).ToList();
+            return result;
         }
 
         /// <summary>
@@ -1196,9 +1200,16 @@ namespace VVCar.Shop.Services.DomainServices
             }).ToList();
 
             var codes = operationStatementDtos.Select(t => t.Code).ToList();
-
             var startdate = Convert.ToDateTime(operationStatementDtos.Select(t => t.Code).Min());
             var enddate = DateTime.Now;
+            if (filter.StartDate.HasValue)
+            {
+                startdate = filter.StartDate.Value;
+            }
+            if (filter.EndDate.HasValue)
+            {
+                enddate = filter.EndDate.Value.AddDays(1);
+            }
 
             for (var i = startdate; i < enddate; i = i.AddDays(1)) {
                 var time = i.ToDateString();
@@ -1261,9 +1272,9 @@ namespace VVCar.Shop.Services.DomainServices
         private IEnumerable<OperationStatementDetailDto> GetAllOperationStatementDetail(OperationStatementFilter filter)
         {
             var operationStatementDetailDtoList = new List<OperationStatementDetailDto>();
-            var orderList = OrderRepo.GetInclude(t => t.OrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
-            var pickUpOrderList = PickUpOrderRepo.GetInclude(t => t.PickUpOrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
-            var reimbursementList = ReimbursementRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
+            var orderList = OrderRepo.GetInclude(t => t.OrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Status != EOrderStatus.UnPay).ToList();
+            var pickUpOrderList = PickUpOrderRepo.GetInclude(t => t.PickUpOrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Status != EPickUpOrderStatus.UnPay).ToList();
+            var reimbursementList = ReimbursementRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Status == EReimbursementApproveStatus.Approved).ToList();
             if (filter.StartDate.HasValue)
             {
                 orderList = orderList.Where(t => t.CreatedDate >= filter.StartDate).ToList();
@@ -1280,57 +1291,52 @@ namespace VVCar.Shop.Services.DomainServices
             //商城订单
             orderList.ForEach(t =>
             {
-                t.OrderItemList.ForEach(item =>
+                //收入
+                var operationStatementDetailInCome = new OperationStatementDetailDto
                 {
-                    //收入
-                    var operationStatementDetailInCome = new OperationStatementDetailDto
-                    {
-                        TradeNo = t.Code,
-                        BudgetType = EBudgetType.InCome,
-                        ResourceType = EResourceType.Order,
-                        Money = item.Money,
-                        CreatedDate = t.CreatedDate,
-                    };
-                    operationStatementDetailDtoList.Add(operationStatementDetailInCome);
-                    //支出
-                    var operationStatementDetailOutCome = new OperationStatementDetailDto
-                    {
-                        TradeNo = t.Code,
-                        BudgetType = EBudgetType.OutCome,
-                        ResourceType = EResourceType.Order,
-                        Money = item.CostMoney,
-                        CreatedDate = t.CreatedDate,
-                    };
-                    operationStatementDetailDtoList.Add(operationStatementDetailOutCome);
-                });
+                    TradeNo = t.Code,
+                    BudgetType = EBudgetType.InCome,
+                    ResourceType = EResourceType.Order,
+                    Money = t.ReceivedMoney,
+                    CreatedDate = t.CreatedDate,
+                };
+                operationStatementDetailDtoList.Add(operationStatementDetailInCome);
+
+                //支出
+                var operationStatementDetailOutCome = new OperationStatementDetailDto
+                {
+                    TradeNo = t.Code,
+                    BudgetType = EBudgetType.OutCome,
+                    ResourceType = EResourceType.Order,
+                    Money = t.CostMoney,
+                    CreatedDate = t.CreatedDate,
+                };
+                operationStatementDetailDtoList.Add(operationStatementDetailOutCome);
             });
 
             //接车单
             pickUpOrderList.ForEach(t =>
             {
-                t.PickUpOrderItemList.ForEach(item =>
+                //收入
+                var operationStatementDetailInCome = new OperationStatementDetailDto
                 {
-                    //收入
-                    var operationStatementDetailInCome = new OperationStatementDetailDto
-                    {
-                        TradeNo = t.Code,
-                        BudgetType = EBudgetType.InCome,
-                        ResourceType = EResourceType.PickupOrder,
-                        Money = item.Money,
-                        CreatedDate = t.CreatedDate,
-                    };
-                    operationStatementDetailDtoList.Add(operationStatementDetailInCome);
-                    //支出
-                    var operationStatementDetailOutCome = new OperationStatementDetailDto
-                    {
-                        TradeNo = t.Code,
-                        BudgetType = EBudgetType.OutCome,
-                        ResourceType = EResourceType.PickupOrder,
-                        Money = item.CostMoney,
-                        CreatedDate = t.CreatedDate,
-                    };
-                    operationStatementDetailDtoList.Add(operationStatementDetailOutCome);
-                });
+                    TradeNo = t.Code,
+                    BudgetType = EBudgetType.InCome,
+                    ResourceType = EResourceType.PickupOrder,
+                    Money = t.ReceivedMoney,
+                    CreatedDate = t.CreatedDate,
+                };
+                operationStatementDetailDtoList.Add(operationStatementDetailInCome);
+                //支出
+                var operationStatementDetailOutCome = new OperationStatementDetailDto
+                {
+                    TradeNo = t.Code,
+                    BudgetType = EBudgetType.OutCome,
+                    ResourceType = EResourceType.PickupOrder,
+                    Money = t.CostMoney,
+                    CreatedDate = t.CreatedDate,
+                };
+                operationStatementDetailDtoList.Add(operationStatementDetailOutCome);
             });
 
             //报销单

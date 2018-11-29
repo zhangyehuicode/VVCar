@@ -141,7 +141,7 @@ namespace VVCar.BaseData.Services.DomainServices
             var message = new WeChatTemplateMessageDto
             {
                 touser = "oI4ee0pN20eepDVJHh_UlD_oH_Ew",
-                template_id = "EXPV_lnF6Hxw9G-NJQnIUjTS85iX9uWp2mKCa_it4JE",
+                template_id = SystemSettingService.GetSettingValue(SysSettingTypes.WXMsg_Announcement),
                 data = new System.Dynamic.ExpandoObject(),
             };
 

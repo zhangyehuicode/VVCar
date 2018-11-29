@@ -136,6 +136,9 @@
 			'DataAnalyse grid[name=losemember3]': {
 				afterrender: me.losemember3
 			},
+			'DataAnalyse button[action=all]': {
+				click: me.all
+			},
 			'DataAnalyse button[action=newmember]': {
 				click: me.newmember
 			},
@@ -154,11 +157,12 @@
 		});
 	},
 	afterrender: function () {
+		Ext.getCmp('allbtn').setStyle({ 'background-color': '#E9CA56'});
 		Ext.getCmp('newmemberbtn').setStyle('background-color', '#5FA2DD');
-		Ext.getCmp('membertypebtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('losememberbtn').setStyle('background-color', '#2C3845'); 
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#5FA2DD'); 
 	},
 	newmemberday: function () {
 		var me = this;
@@ -286,6 +290,28 @@
 		});
 		store.load();
 	},
+	all: function () {
+		var me = this;
+		me.getNewMemberGrid().show();
+		me.getNewMemberChart().show();
+		me.getMemberTypeGrid1().show();
+		me.getMemberTypeChart1().show();
+		me.getMemberTypeGrid2().show();
+		me.getMemberTypeChart2().show();
+		me.getBigMemberGrid().show();
+		me.getBigMemberChart().show();
+		me.getLoyalMemberGrid().show();
+		me.getLoyalMemberChart().show();
+		me.getLoseMemberGrid().show();
+		me.getLoseMemberChart().show();
+
+		Ext.getCmp('allbtn').setStyle('background-color', '#E9CA56');
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#5FA2DD'); 
+	},
 	newmember: function () {
 		var me = this;
 		me.getNewMemberGrid().show();
@@ -301,11 +327,12 @@
 		me.getLoseMemberGrid().hide();
 		me.getLoseMemberChart().hide();
 
-		Ext.getCmp('newmemberbtn').setStyle('background-color', '#5FA2DD'); 
-		Ext.getCmp('membertypebtn').setStyle('background-color', '#2C3845'); 
-		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#2C3845'); 
-		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#2C3845'); 
-		Ext.getCmp('losememberbtn').setStyle('background-color', '#2C3845'); 
+		Ext.getCmp('allbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#E9CA56'); 
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#5FA2DD'); 
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#5FA2DD'); 
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#5FA2DD'); 
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#5FA2DD'); 
 	},
 	membertype: function () {
 		var me = this;
@@ -322,11 +349,12 @@
 		me.getLoseMemberGrid().hide();
 		me.getLoseMemberChart().hide();
 
-		Ext.getCmp('newmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('membertypebtn').setStyle('background-color', '#5FA2DD');
-		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('losememberbtn').setStyle('background-color', '#2C3845'); 
+		Ext.getCmp('allbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#E9CA56');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#5FA2DD'); 
 	},
 	bigmember: function () {
 		var me = this;
@@ -343,11 +371,12 @@
 		me.getLoseMemberGrid().hide();
 		me.getLoseMemberChart().hide();
 
-		Ext.getCmp('newmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('membertypebtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#5FA2DD');
-		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('losememberbtn').setStyle('background-color', '#2C3845'); 
+		Ext.getCmp('allbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#E9CA56');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#5FA2DD'); 
 	},
 	loyalmember: function () {
 		var me = this;
@@ -364,11 +393,12 @@
 		me.getLoseMemberGrid().hide();
 		me.getLoseMemberChart().hide();
 
-		Ext.getCmp('newmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('membertypebtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#5FA2DD');
-		Ext.getCmp('losememberbtn').setStyle('background-color', '#2C3845'); 
+		Ext.getCmp('allbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#E9CA56');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#5FA2DD'); 
 	},
 	losemember: function () {
 		var me = this;
@@ -385,10 +415,11 @@
 		me.getLoseMemberGrid().show();
 		me.getLoseMemberChart().show();
 
-		Ext.getCmp('newmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('membertypebtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#2C3845');
-		Ext.getCmp('losememberbtn').setStyle('background-color', '#5FA2DD'); 
+		Ext.getCmp('allbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('newmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('membertypebtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('bigmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('loyalmemberbtn').setStyle('background-color', '#5FA2DD');
+		Ext.getCmp('losememberbtn').setStyle('background-color', '#E9CA56'); 
 	},
 })

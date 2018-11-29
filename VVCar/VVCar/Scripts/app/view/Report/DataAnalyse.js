@@ -28,6 +28,13 @@
 			},
 			items: [{
 				xtype: 'button',
+				action: 'all',
+				id: 'allbtn',
+				text: '全部',
+				cls: 'submitBtn',
+				margin: '0 0 0 5',
+			},{
+				xtype: 'button',
 				action: 'newmember',
 				id: 'newmemberbtn',
 				text: '新增客户',
@@ -66,14 +73,14 @@
 
 		me.newmembergrid = Ext.create('Ext.container.Container', {
 			layout: 'hbox',
-			height: 410,
+			height: 450,
 			name: 'newmembergrid',
 			items: [{
 				name: 'newmemberday',
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '50%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -94,7 +101,7 @@
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '50%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -113,14 +120,14 @@
 
 		me.membertypegrid1 = Ext.create('Ext.container.Container', {
 			layout: 'hbox',
-			height: 410,
+			height: 450,
 			name: 'membertypegrid1',
 			items: [{
 				name: 'membertype1',
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '50%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -140,7 +147,7 @@
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '50%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -158,14 +165,14 @@
 
 		me.membertypegrid2 = Ext.create('Ext.container.Container', {
 			layout: 'hbox',
-			height: 410,
+			height: 450,
 			name: 'membertypegrid2',
 			items: [{
 				name: 'membertype3',
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '50%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -185,7 +192,7 @@
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '50%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -203,14 +210,14 @@
 
 		me.bigmembergrid = Ext.create('Ext.container.Container', {
 			layout: 'hbox',
-			height: 410,
+			height: 450,
 			name: 'bigmembergrid',
 			items: [{
 				name: 'bigmember1',
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '50%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -230,11 +237,10 @@
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '50%',
-				height: 410,
+				height: 450,
 				columns: [
-					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
-					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
-					{ header: '消费项目总数', dataIndex: 'TotalQuantity', flex: 1 },
+					{ header: '项目名称', dataIndex: 'MemberName', flex: 1 },
+					{ header: '消费次数', dataIndex: 'TotalQuantity', flex: 1 },
 					{ header: '消费总额', dataIndex: 'TotalMoney', flex: 1 },
 				],
 				dockedItems: [{
@@ -248,14 +254,14 @@
 
 		me.loyalmembergrid = Ext.create('Ext.container.Container', {
 			layout: 'hbox',
-			height: 410,
+			height: 450,
 			name: 'loyalmembergrid',
 			items: [{
 				name: 'loyalmember1',
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '33%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -275,7 +281,7 @@
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '33%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -295,7 +301,7 @@
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '33%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -313,14 +319,14 @@
 
 		me.losemembergrid = Ext.create('Ext.container.Container', {
 			layout: 'hbox',
-			height: 410,
+			height: 450,
 			name: 'losemembergrid',
 			items: [{
 				name: 'losemember1',
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '33%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -340,7 +346,7 @@
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '33%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -360,7 +366,7 @@
 				xtype: 'grid',
 				store: Ext.create('WX.store.BaseData.DataAnalyseStore'),
 				width: '33%',
-				height: 410,
+				height: 450,
 				columns: [
 					{ header: '会员昵称', dataIndex: 'MemberName', flex: 1 },
 					{ header: '手机号码', dataIndex: 'MemberMobilePhone', flex: 1 },
@@ -475,7 +481,7 @@
 			name: 'bigmemberchart',
 			items: [{
 				xtype: 'fieldset',
-				title: '普通大客户(去年消费大于1万)',
+				title: '普通大客户(近一年消费大于1万)',
 				layout: 'hbox',
 				margin: '10px',
 				width: '50%',
@@ -487,7 +493,7 @@
 				}]
 			}, {
 				xtype: 'fieldset',
-				title: '土豪大客户(去年消费大于2万)',
+				title: '土豪大客户(近一年消费大于2万)',
 				layout: 'hbox',
 				margin: '10px',
 				width: '50%',

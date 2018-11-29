@@ -1161,23 +1161,20 @@ namespace VVCar.Shop.Services.DomainServices
         {
             var url = $"{AppContext.Settings.SiteDomain}:8025/pay/MicroPayPage.aspx?mch={AppContext.CurrentSession.MerchantCode}&auth_code={payparams.auth_code}&total_fee={payparams.total_fee}&body=接车单微信付款码支付{payparams.out_trade_no}&out_trade_no={payparams.out_trade_no}&device_info={AppContext.CurrentSession.DepartmentCode}";
             var httpClient = new HttpClient();
-            var result = httpClient.GetAsync(url).Result;
-            if (!result.IsSuccessStatusCode)
-                throw new DomainException("支付请求失败！");
-            var restr = result.Content.ReadAsStringAsync().Result;
-            AppContext.Logger.Info("接车单刷卡支付返回结果：" + restr);
-            //var res = JsonHelper.DeserializeObject<JsonActionResult<bool>>(restr);
-            //if (res.IsSuccessful)
-            //{
-            //    if (!res.Data)
-            //        throw new DomainException("支付失败！");
-            //}
-            //else
-            //{
-            //    if (string.IsNullOrEmpty(res.ErrorMessage))
-            //        res.ErrorMessage = "支付失败！";
-            //    throw new DomainException(res.ErrorMessage);
-            //}
+            var result = httpClient.GetStringAsync(url).Result;
+            AppContext.Logger.Info("接车单刷卡支付返回结果：" + result);
+            var res = JsonHelper.DeserializeObject<JsonActionResult<bool>>(result);
+            if (res.IsSuccessful)
+            {
+                if (!res.Data)
+                    throw new DomainException("支付失败！");
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(res.ErrorMessage))
+                    res.ErrorMessage = "支付失败！";
+                throw new DomainException(res.ErrorMessage);
+            }
             return true;
         }
     }

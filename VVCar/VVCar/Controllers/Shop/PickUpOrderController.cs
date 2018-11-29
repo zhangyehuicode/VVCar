@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
@@ -153,9 +154,9 @@ namespace VVCar.Controllers.Shop
         public JsonActionResult<bool> WeChatMicroPay([FromUri]WeChatMicroPayParams payparams)
         {
             return SafeExecute(() =>
-            {
-                return PickUpOrderService.WeChatMicroPay(payparams);
-            });
+           {
+               return PickUpOrderService.WeChatMicroPay(payparams);
+           });
         }
     }
 }
