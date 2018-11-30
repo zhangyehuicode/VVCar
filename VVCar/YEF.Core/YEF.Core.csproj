@@ -189,6 +189,7 @@
     <Compile Include="Session\ISession.cs" />
     <Compile Include="Session\ISessionProvider.cs" />
     <Compile Include="Session\SimpleSession.cs" />
+    <Compile Include="TCP\TCPService.cs" />
     <Compile Include="Utils\HashUtil.cs" />
     <Compile Include="Utils\Util.cs" />
     <Compile Include="Wcf\LoggingEndpointBehavior.cs" />

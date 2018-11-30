@@ -14,6 +14,7 @@ using Autofac.Integration.WebApi;
 using VVCar.Providers;
 using System.Net.Http;
 using VVCar.BaseData.Services;
+using YEF.Core.TCP;
 
 namespace VVCar.App_Start
 {
@@ -31,6 +32,7 @@ namespace VVCar.App_Start
             InitConfigData();
             AppContext.Logger.Info("startup app success.");
             DtoMapper.Initialize();
+            //TCPService.Run();
         }
 
         private static void InitConfigData()

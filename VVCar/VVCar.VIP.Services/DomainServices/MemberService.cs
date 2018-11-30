@@ -555,7 +555,7 @@ namespace VVCar.VIP.Services.DomainServices
 
             var exists = this.Repository.Exists(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.MobilePhoneNo == param.MobilePhoneNo);
             if (exists)
-                throw new DomainException("手机号码已绑定会员");
+                throw new DomainException("手机号码：" + param.MobilePhoneNo + "已绑定会员");
 
             UnitOfWork.BeginTransaction();
             try

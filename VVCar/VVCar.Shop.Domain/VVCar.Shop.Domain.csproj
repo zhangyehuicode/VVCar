@@ -91,6 +91,7 @@
     <Compile Include="Entities\CarInspectionReport.cs" />
     <Compile Include="Entities\ComboItem.cs" />
     <Compile Include="Entities\ConsumeHistory.cs" />
+    <Compile Include="Entities\DailyExpense.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderDividend.cs" />
     <Compile Include="Entities\OrderItem.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Filters\CarInspectionReportFilter.cs" />
     <Compile Include="Filters\ComboItemFilter.cs" />
     <Compile Include="Filters\ConsumeHistoryFilter.cs" />
+    <Compile Include="Filters\DailyExpenseFilter.cs" />
     <Compile Include="Filters\DataAnalyseFilter.cs" />
     <Compile Include="Filters\DepartmentPerformanceFilter.cs" />
     <Compile Include="Filters\OperationStatementFilter.cs" />
@@ -158,6 +160,7 @@
     <Compile Include="Filters\UnsaleProductSettingFilter.cs" />
     <Compile Include="Filters\UnsaleProductSettingItemFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IDailyExpenseService.cs" />
     <Compile Include="Services\IAppointmentService.cs" />
     <Compile Include="Services\ICarBitCoinDistributionService.cs" />
     <Compile Include="Services\ICarBitCoinMemberEngineService.cs" />
