@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.BaseData.Domain.Entities;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
@@ -21,6 +22,8 @@ namespace VVCar.Shop.Services.DomainServices
         {
         }
 
+        IRepository<User> UserRepo { get => UnitOfWork.GetRepository<IRepository<User>>(); }
+
         public override DailyExpense Add(DailyExpense entity)
         {
             if (entity == null)
@@ -29,6 +32,8 @@ namespace VVCar.Shop.Services.DomainServices
             if (count > 0)
                 throw new DomainException(entity.ExpenseDate.ToDateString() + "数据已维护");
             entity.ID = Util.NewID();
+            var userCount = UserRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).Count();
+            entity.StaffCount = userCount;
             entity.CreatedDate = DateTime.Now;
             entity.CreatedUser = AppContext.CurrentSession.UserCode;
             entity.CreatedUserID = AppContext.CurrentSession.UserID;
@@ -60,6 +65,31 @@ namespace VVCar.Shop.Services.DomainServices
             return base.Update(entity);
         }
 
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public bool BatchDelete(Guid[] ids)
+        {
+            if (ids == null || ids.Length < 1)
+                throw new DomainException("参数错误");
+            var dailyExpenseList = Repository.GetQueryable(false).Where(t => ids.Contains(t.ID)).ToList();
+            if (dailyExpenseList == null || dailyExpenseList.Count() < 1)
+                throw new DomainException("数据不存在");
+            dailyExpenseList.ForEach(t =>
+            {
+                t.IsDeleted = true;
+            });
+            return Repository.Update(dailyExpenseList) > 0;
+        }
+
+        /// <summary>
+        /// 查询
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
         public IEnumerable<DailyExpense> Search(DailyExpenseFilter filter, out int totalCount)
         {
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);

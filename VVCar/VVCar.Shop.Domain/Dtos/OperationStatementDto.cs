@@ -98,6 +98,12 @@ namespace VVCar.Shop.Domain.Dtos
         /// </summary>
         [Description("接车单")]
         PickupOrder = 2,
+
+        /// <summary>
+        /// 日常支出
+        /// </summary>
+        [Description("日常支出")]
+        DailyExpenseOrder = 3,
     }
 
     /// <summary>

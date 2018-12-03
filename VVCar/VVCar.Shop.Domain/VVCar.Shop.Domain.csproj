@@ -154,6 +154,7 @@
     <Compile Include="Filters\ServicePeriodCouponFilter.cs" />
     <Compile Include="Filters\ServicePeriodFilter.cs" />
     <Compile Include="Filters\ShoppingCartFilter.cs" />
+    <Compile Include="Filters\StaffOutputValueFilter.cs" />
     <Compile Include="Filters\StaffPerformanceFilter.cs" />
     <Compile Include="Filters\StockRecordFilter.cs" />
     <Compile Include="Filters\UnsaleProductHistoryFilter.cs" />

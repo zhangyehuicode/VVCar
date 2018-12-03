@@ -211,6 +211,55 @@ namespace VVCar.Shop.Domain.Dtos
     }
 
     /// <summary>
+    /// 个人产值报表
+    /// </summary>
+    public class StaffOutputValue
+    {
+        public Guid StaffID { get; set; }
+
+        /// <summary>
+        /// 员工姓名
+        /// </summary>
+        public string StaffName { get; set; }
+
+        /// <summary>
+        /// 员工编码
+        /// </summary>
+        public string StaffCode { get; set; }
+
+        /// <summary>
+        /// 总业绩
+        /// </summary>
+        public decimal TotalPerformance { get; set; }
+
+        /// <summary>
+        /// 总成本
+        /// </summary>
+        public decimal TotalCostMoney { get; set; }
+
+        /// <summary>
+        /// 总利润
+        /// </summary>
+        public decimal TotalProfit { get; set; }
+
+        /// <summary>
+        /// 日常开支
+        /// </summary>
+        public decimal DailyExpense { get; set; }
+
+        /// <summary>
+        /// 平摊费用
+        /// </summary>
+        public decimal AverageDailyExpense { get; set; }
+
+        /// <summary>
+        /// 总净利润
+        /// </summary>
+        public decimal TotalRetaainedProfit { get; set; }
+    }
+
+
+    /// <summary>
     /// 门店开发业绩
     /// </summary>
     public class DepartmentPerformance

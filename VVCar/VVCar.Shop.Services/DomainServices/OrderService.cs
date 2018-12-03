@@ -300,6 +300,7 @@ namespace VVCar.Shop.Services.DomainServices
                     orderDividend.CommissionMoney = t.CommissionMoney;
                     orderDividend.Commission = t.Commission;
                     orderDividend.Money = t.Money;
+                    orderDividend.CostMoney = t.CostMoney;
                     orderDividend.MerchantID = t.MerchantID;
                     OrderDividendRepo.Add(orderDividend);
                 });

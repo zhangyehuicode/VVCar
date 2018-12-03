@@ -390,6 +390,7 @@ namespace VVCar.Shop.Services.DomainServices
                         orderDividend.UserName = user.Name;
                         orderDividend.UserID = user.ID;
                         orderDividend.Money = distribution.TotalMoney;
+                        orderDividend.CostMoney = t.CostMoney;
                         orderDividend.MerchantID = AppContext.CurrentSession.MerchantID;
                         orderDividendList.Add(orderDividend);
                     });

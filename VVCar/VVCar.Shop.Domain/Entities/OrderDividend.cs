@@ -81,6 +81,12 @@ namespace VVCar.Shop.Domain.Entities
         public decimal Money { get; set; }
 
         /// <summary>
+        /// 成本
+        /// </summary>
+        [Display(Name = "成本")]
+        public decimal CostMoney { get; set; }
+
+        /// <summary>
         /// 是否按比例抽成
         /// </summary>
         [Display(Name = "是否按比例抽成")]

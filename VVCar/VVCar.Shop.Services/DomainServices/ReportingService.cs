@@ -45,6 +45,8 @@ namespace VVCar.Shop.Services.DomainServices
 
         IRepository<OrderItem> OrderItemRepo { get => ServiceLocator.Instance.GetService<IRepository<OrderItem>>(); }
 
+        IRepository<DailyExpense> DailyExpenseRepo { get => ServiceLocator.Instance.GetService<IRepository<DailyExpense>>(); }
+
         IRepository<Product> ProductRepo { get => ServiceLocator.Instance.GetService<IRepository<Product>>(); }
 
         IRepository<User> UserRepo { get => ServiceLocator.Instance.GetService<IRepository<User>>(); }
@@ -408,7 +410,58 @@ namespace VVCar.Shop.Services.DomainServices
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 result = result.OrderByDescending(t => t.CurrentPerformance).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
             return result.OrderByDescending(t => t.CurrentPerformance).ToList();
+        }
 
+        /// <summary>
+        /// 员工个人产值
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<StaffOutputValue> StaffOutputValueStatistics(StaffOutputValueFilter filter, out int totalCount)
+        {
+            var result = new List<StaffOutputValue>();
+            var userQueryable = UserRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            var dailyExpenseQueryable = DailyExpenseRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (!string.IsNullOrEmpty(filter.StaffName))
+                userQueryable = userQueryable.Where(t => t.Name.Contains(filter.StaffName) || t.Code.Contains(filter.StaffName));
+            var currentOrderDividendQueryable = OrderDividendRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (filter.StartDate.HasValue)
+            {
+                dailyExpenseQueryable = dailyExpenseQueryable.Where(t => t.ExpenseDate >= filter.StartDate.Value);
+                currentOrderDividendQueryable = currentOrderDividendQueryable.Where(t => t.CreatedDate >= filter.StartDate.Value);
+            }
+            if (filter.EndDate.HasValue)
+            {
+                dailyExpenseQueryable = dailyExpenseQueryable.Where(t => t.ExpenseDate < filter.EndDate.Value);
+                currentOrderDividendQueryable = currentOrderDividendQueryable.Where(t => t.CreatedDate < filter.EndDate.Value);
+            }
+            var users = userQueryable.ToList();
+            var dailyExpenseList = dailyExpenseQueryable.ToList();
+            var dailyExpense = dailyExpenseList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Money)).FirstOrDefault();
+            var averageDailyExpense = dailyExpenseList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Money / s.StaffCount)).FirstOrDefault();
+            users.ForEach(t =>
+            {
+                var userCurrentOrderDividendList = currentOrderDividendQueryable.Where(dividend => dividend.UserID == t.ID).ToList();
+
+                var staffOutputValue = new StaffOutputValue();
+                staffOutputValue.TotalPerformance = userCurrentOrderDividendList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Money)).FirstOrDefault();
+                staffOutputValue.TotalCostMoney = userCurrentOrderDividendList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.CostMoney)).FirstOrDefault();
+                staffOutputValue.TotalProfit = staffOutputValue.TotalPerformance - staffOutputValue.TotalCostMoney;
+                staffOutputValue.DailyExpense = dailyExpense;
+                staffOutputValue.AverageDailyExpense = averageDailyExpense;
+                staffOutputValue.TotalRetaainedProfit = staffOutputValue.TotalProfit - staffOutputValue.AverageDailyExpense;
+
+                staffOutputValue.StaffID = t.ID;
+                staffOutputValue.StaffName = t.Name;
+                staffOutputValue.StaffCode = t.Code;
+
+                result.Add(staffOutputValue);
+            });
+            totalCount = result.Count();
+            if (filter.Start.HasValue && filter.Limit.HasValue)
+                result = result.OrderByDescending(t => t.TotalRetaainedProfit).Skip(filter.Start.Value).Take(filter.Limit.Value).ToList();
+            return result.OrderByDescending(t => t.TotalRetaainedProfit).ToList();
         }
 
         /// <summary>
@@ -1275,11 +1328,13 @@ namespace VVCar.Shop.Services.DomainServices
             var orderList = OrderRepo.GetInclude(t => t.OrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Status != EOrderStatus.UnPay).ToList();
             var pickUpOrderList = PickUpOrderRepo.GetInclude(t => t.PickUpOrderItemList, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Status != EPickUpOrderStatus.UnPay).ToList();
             var reimbursementList = ReimbursementRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.Status == EReimbursementApproveStatus.Approved).ToList();
+            var dailyexpenseList = DailyExpenseRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID).ToList();
             if (filter.StartDate.HasValue)
             {
                 orderList = orderList.Where(t => t.CreatedDate >= filter.StartDate).ToList();
                 pickUpOrderList = pickUpOrderList.Where(t => t.CreatedDate >= filter.StartDate).ToList();
                 reimbursementList = reimbursementList.Where(t => t.CreatedDate >= filter.StartDate).ToList();
+                dailyexpenseList = dailyexpenseList.Where(t => t.ExpenseDate >= filter.StartDate).ToList();
             }
             if (filter.EndDate.HasValue)
             {
@@ -1287,7 +1342,9 @@ namespace VVCar.Shop.Services.DomainServices
                 orderList = orderList.Where(t => t.CreatedDate < endDay).ToList();
                 pickUpOrderList = pickUpOrderList.Where(t => t.CreatedDate < endDay).ToList();
                 reimbursementList = reimbursementList.Where(t => t.CreatedDate < endDay).ToList();
+                dailyexpenseList = dailyexpenseList.Where(t => t.ExpenseDate < endDay).ToList();
             }
+
             //商城订单
             orderList.ForEach(t =>
             {
@@ -1352,6 +1409,20 @@ namespace VVCar.Shop.Services.DomainServices
                     CreatedDate = t.CreatedDate,
                 };
                 operationStatementDetailDtoList.Add(operationStatementDetailOutCome);
+            });
+
+            //日常支出
+            dailyexpenseList.ForEach(t =>
+            {
+                var dailyexpenseOutCome = new OperationStatementDetailDto
+                {
+                    TradeNo = t.ExpenseDate.ToDateString(),
+                    BudgetType = EBudgetType.OutCome,
+                    ResourceType = EResourceType.DailyExpenseOrder,
+                    Money = t.Money,
+                    CreatedDate = t.CreatedDate,
+                };
+                operationStatementDetailDtoList.Add(dailyexpenseOutCome);
             });
             return operationStatementDetailDtoList;
         }

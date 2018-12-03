@@ -10,8 +10,18 @@ using YEF.Core.Domain;
 
 namespace VVCar.Shop.Domain.Services
 {
+    /// <summary>
+    /// 日常开支领域服务 
+    /// </summary>
     public interface IDailyExpenseService : IDomainService<IRepository<DailyExpense>, DailyExpense, Guid>
     {
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        bool BatchDelete(Guid[] ids);
+
         /// <summary>
         /// 查询
         /// </summary>

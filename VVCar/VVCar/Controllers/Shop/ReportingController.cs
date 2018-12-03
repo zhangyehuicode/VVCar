@@ -210,6 +210,82 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 员工个人产值报表
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("StaffOutputValueStatistics")]
+        public PagedActionResult<StaffOutputValue> StaffOutputValueStatistics([FromUri]StaffOutputValueFilter filter)
+        {
+            return SafeGetPagedData<StaffOutputValue>((result) =>
+            {
+                var totalCount = 0;
+                var data = ReportingService.StaffOutputValueStatistics(filter, out totalCount);
+                var staffPerformanceStatisticsList = data.ToList();
+                StaffOutputValue staffOutputValue = new StaffOutputValue();
+                staffPerformanceStatisticsList.ForEach(t =>
+                {
+                    staffOutputValue.TotalPerformance += t.TotalPerformance;
+                    staffOutputValue.TotalCostMoney += t.TotalCostMoney;
+                    staffOutputValue.TotalProfit += t.TotalProfit;
+                    staffOutputValue.DailyExpense += t.DailyExpense;
+                    staffOutputValue.AverageDailyExpense += t.AverageDailyExpense;
+                    staffOutputValue.TotalRetaainedProfit += t.TotalRetaainedProfit;
+                });
+                staffOutputValue.StaffName = "合计:";
+                (data as List<StaffOutputValue>).Add(staffOutputValue);
+                result.Data = data;
+                result.TotalCount = totalCount;
+            });
+        }
+
+        /// <summary>
+        /// 员工个人产值报表
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ExportStaffOutputValueStatistics")]
+        public JsonActionResult<string> ExportStaffOutputValueStatistics([FromUri]StaffOutputValueFilter filter)
+        {
+            return SafeExecute(() =>
+            {
+                if (!ModelState.IsValid)
+                {
+                    throw new DomainException("查询参数错误");
+                }
+                var totalCount = 0;
+                filter.Start = null;
+                filter.Limit = null;
+                var data = ReportingService.StaffOutputValueStatistics(filter, out totalCount);
+                var staffOutputValueStatisticsList = data.ToList();
+                StaffOutputValue staffOutputValue = new StaffOutputValue();
+                staffOutputValueStatisticsList.ForEach(t =>
+                {
+                    staffOutputValue.TotalPerformance += t.TotalPerformance;
+                    staffOutputValue.TotalCostMoney += t.TotalCostMoney;
+                    staffOutputValue.TotalProfit += t.TotalProfit;
+                    staffOutputValue.DailyExpense += t.DailyExpense;
+                    staffOutputValue.AverageDailyExpense += t.AverageDailyExpense;
+                    staffOutputValue.TotalRetaainedProfit += t.TotalRetaainedProfit;
+                });
+                staffOutputValue.StaffName = "合计:";
+                var exporter = new ExportHelper(new[]
+                {
+                    new ExportInfo("StaffName", "员工姓名"),
+                    new ExportInfo("StaffCode","员工编码"),
+                    new ExportInfo("TotalPerformance","总业绩"),
+                    new ExportInfo("TotalCostMoney","总成本"),
+                    new ExportInfo("TotalProfit","总利润"),
+                    new ExportInfo("DailyExpense","总日常支出"),
+                    new ExportInfo("AverageDailyExpense","平摊日常支出"),
+                    new ExportInfo("TotalRetaainedProfit","净利润"),
+                });
+                (data as List<StaffOutputValue>).Add(staffOutputValue);
+                return exporter.Export(data.ToList(), "员工个人产值统计");
+            });
+        }
+
+        /// <summary>
         /// 零售产品汇总统计导出
         /// </summary>
         /// <param name="filter"></param>

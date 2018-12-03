@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Http;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
@@ -49,14 +50,14 @@ namespace VVCar.Controllers.Shop
         /// <summary>
         /// 删除
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="parameter"></param>
         /// <returns></returns>
-        [HttpDelete]
-        public JsonActionResult<bool> Delete(Guid id)
+        [HttpDelete, Route("BatchDelete")]
+        public JsonActionResult<bool> BatchDelete(BatchOperationDto parameter)
         {
             return SafeExecute(() =>
             {
-                return DailyExpenseService.Delete(id);
+                return DailyExpenseService.BatchDelete(parameter.IdList.ToArray());
             });
         }
 
