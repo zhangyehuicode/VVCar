@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using YEF.Core.Data;
@@ -28,6 +29,6 @@ namespace VVCar.Shop.Domain.Services
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        IEnumerable<DailyExpense> Search(DailyExpenseFilter filter, out int totalCount);
+        IEnumerable<DailyExpenseDto> Search(DailyExpenseFilter filter, out int totalCount);
     }
 }

@@ -86,8 +86,8 @@
 			{ header: '总成本', dataIndex: 'TotalCostMoney', flex: 1 },
 			{ header: '总利润', dataIndex: 'TotalProfit', flex: 1 },
 			{ header: '总日常支出', dataIndex: 'DailyExpense', flex: 1 },
-			{ header: '平摊日常支出', dataIndex: 'AverageDailyExpense', flex: 1 },
-			{ header: '净利润', dataIndex: 'TotalRetaainedProfit', flex: 1, },
+			{ header: '平摊日常支出', dataIndex: 'AverageDailyExpense', flex: 1, },
+			{ header: '产值(净利润)', dataIndex: 'TotalRetaainedProfit', flex: 1, },
 		];
 		me.dockedItems = [{
 			xtype: 'pagingtoolbar',

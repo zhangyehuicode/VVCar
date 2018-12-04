@@ -36,7 +36,7 @@
 			}, {
 				xtype: 'textfield',
 				name: 'StaffCount',
-				fieldLabel: '工作人员数量',
+				fieldLabel: '员工总数',
 				margin: '5 0 0 5',
 				maxLength: 18,
 				allowBlank: true,

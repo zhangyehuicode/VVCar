@@ -290,7 +290,7 @@ namespace VVCar.Shop.Services.DomainServices
                         if (userMember != null)
                         {
                             var user = UserRepo.GetByKey(userMember.UserID);
-                            orderDividend.UserID = userMember.MemberID;
+                            orderDividend.UserID = user.ID;
                             orderDividend.UserCode = user.Code;
                             orderDividend.UserName = user.Name;
                         }

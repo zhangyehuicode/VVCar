@@ -22,9 +22,12 @@
 			'DailyExpense button[action=delDailyExpense]': {
 				click: me.delDailyExpense
 			},
+			'DailyExpense button[action=search]': {
+				click: me.search
+			},
 			'DailyExpenseEdit button[action=save]': {
 				click: me.save
-			}
+			},
 		});
 	},
 	addDailyExpense: function () {
@@ -49,7 +52,7 @@
 		if (selectedItems.length < 1) {
 			Ext.Msg.alert('提示', '请先选择要删除的任务!');
 			return;
-		} 
+		}
 		Ext.Msg.confirm('提示', '确定要删除任务吗?', function (optional) {
 			if (optional === 'yes') {
 				var ids = [];
@@ -116,6 +119,14 @@
 					}
 				});
 			}
+		}
+	},
+	search: function (btn) {
+		var store = this.getDailyExpense().getStore();
+		var queryValues = btn.up('form').getValues();
+		if (queryValues != null) {
+			queryValues.All = true;
+			store.load({ params: queryValues });
 		}
 	}
 })

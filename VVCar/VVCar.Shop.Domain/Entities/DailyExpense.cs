@@ -41,7 +41,7 @@ namespace VVCar.Shop.Domain.Entities
         /// 创建人ID
         /// </summary>
         [Display(Name = "创建人ID")]
-        public Guid? CreatedUserID { get; set; }
+        public Guid CreatedUserID { get; set; }
 
         /// <summary>
         /// 创建人

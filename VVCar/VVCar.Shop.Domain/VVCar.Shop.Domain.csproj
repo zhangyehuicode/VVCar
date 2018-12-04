@@ -53,6 +53,7 @@
     <Compile Include="Dtos\CarInspectionPartInfo.cs" />
     <Compile Include="Dtos\CarInspectionReportDto.cs" />
     <Compile Include="Dtos\ConsumeHistoryDto.cs" />
+    <Compile Include="Dtos\DailyExpenseDto.cs" />
     <Compile Include="Dtos\DataAnalyseDto.cs" />
     <Compile Include="Dtos\GiveAwayCarBitCoinParam.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisDto.cs" />

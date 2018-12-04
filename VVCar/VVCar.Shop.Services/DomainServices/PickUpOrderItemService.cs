@@ -162,7 +162,8 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     pickUpOrderItem.ReducedPrice = entity.PriceSale;
                     pickUpOrderItem.Money = entity.PriceSale * entity.Quantity;
-                }              
+                }
+                pickUpOrderItem.CostMoney = pickUpOrderItem.CostPrice * entity.Quantity;
                 var pickUpOrder = PickUpOrderRepo.GetByKey(entity.PickUpOrderID);
                 if (pickUpOrder.Status == Domain.Enums.EPickUpOrderStatus.Payed)
                     throw new DomainException("订单已付款");
@@ -204,6 +205,7 @@ namespace VVCar.Shop.Services.DomainServices
                     pickUpOrderItem.ReducedPrice = entity.PriceSale;
                     pickUpOrderItem.Money = entity.PriceSale * entity.Quantity;
                 }
+                pickUpOrderItem.CostMoney = pickUpOrderItem.CostPrice * entity.Quantity;
                 var pickUpOrder = PickUpOrderRepo.GetByKey(entity.PickUpOrderID);
                 if (pickUpOrder.Status == Domain.Enums.EPickUpOrderStatus.Payed)
                     throw new DomainException("订单已付款");

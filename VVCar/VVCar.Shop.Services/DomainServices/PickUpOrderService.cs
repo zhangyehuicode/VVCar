@@ -289,15 +289,8 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     if (t.IsDeleted == false)
                     {
-                        if (t.IsReduce)
-                        {
-                            totalMoney += t.Quantity * t.ReducedPrice;
-                        }
-                        else
-                        {
-                            totalMoney += t.Quantity * t.PriceSale;
-                        }
-                        totalCostMoney += t.Quantity * t.CostMoney;
+                        totalMoney += t.Money;
+                        totalCostMoney += t.CostMoney;
                     }
                 });
                 entity.Money = totalMoney;

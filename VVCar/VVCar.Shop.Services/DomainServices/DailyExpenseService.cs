@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VVCar.BaseData.Domain.Entities;
+using VVCar.BaseData.Services;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
@@ -90,15 +92,22 @@ namespace VVCar.Shop.Services.DomainServices
         /// <param name="filter"></param>
         /// <param name="totalCount"></param>
         /// <returns></returns>
-        public IEnumerable<DailyExpense> Search(DailyExpenseFilter filter, out int totalCount)
+        public IEnumerable<DailyExpenseDto> Search(DailyExpenseFilter filter, out int totalCount)
         {
             var queryable = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
             if (filter.ExpenseDate.HasValue)
                 queryable = queryable.Where(t => t.ExpenseDate == filter.ExpenseDate);
+            if (filter.StartDate.HasValue)
+                queryable = queryable.Where(t => t.ExpenseDate >= filter.StartDate.Value);
+            if (filter.EndDate.HasValue)
+            {
+                var nextday = filter.EndDate.Value.AddDays(1);
+                queryable = queryable.Where(t => t.ExpenseDate < nextday);
+            }
             totalCount = queryable.Count();
             if (filter.Start.HasValue && filter.Limit.HasValue)
                 queryable = queryable.OrderByDescending(t => t.CreatedDate).Skip(filter.Start.Value).Take(filter.Limit.Value);
-            return queryable.OrderByDescending(t => t.ExpenseDate).ToArray();
+            return queryable.MapTo<DailyExpenseDto>().OrderByDescending(t => t.ExpenseDate).ToArray();
         }
     }
 }

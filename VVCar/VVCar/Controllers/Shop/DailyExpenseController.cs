@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Http;
+using VVCar.Shop.Domain.Dtos;
 using VVCar.Shop.Domain.Entities;
 using VVCar.Shop.Domain.Filters;
 using VVCar.Shop.Domain.Services;
@@ -67,13 +68,20 @@ namespace VVCar.Controllers.Shop
         /// <param name="filter"></param>
         /// <returns></returns>
         [HttpGet, AllowAnonymous]
-        public PagedActionResult<DailyExpense> Search([FromUri]DailyExpenseFilter filter)
+        public PagedActionResult<DailyExpenseDto> Search([FromUri]DailyExpenseFilter filter)
         {
-            return SafeGetPagedData<DailyExpense>((result) =>
+            return SafeGetPagedData<DailyExpenseDto>((result) =>
             {
                 var totalCount = 0;
                 var data = DailyExpenseService.Search(filter, out totalCount);
-                result.Data = data;
+                var dailyExpenseList = data.ToList();
+                DailyExpenseDto dailyExpense = new DailyExpenseDto();
+                dailyExpenseList.ForEach(t =>{
+                    dailyExpense.Money += t.Money;
+                });
+                dailyExpense.Remark = "合计:";
+                dailyExpenseList.Add(dailyExpense);
+                result.Data = dailyExpenseList;
                 result.TotalCount = totalCount;
             });
         }

@@ -436,12 +436,16 @@ namespace VVCar.Shop.Services.DomainServices
                 dailyExpenseQueryable = dailyExpenseQueryable.Where(t => t.ExpenseDate < filter.EndDate.Value);
                 currentOrderDividendQueryable = currentOrderDividendQueryable.Where(t => t.CreatedDate < filter.EndDate.Value);
             }
-            var users = userQueryable.ToList();
             var dailyExpenseList = dailyExpenseQueryable.ToList();
             var dailyExpense = dailyExpenseList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Money)).FirstOrDefault();
-            var averageDailyExpense = dailyExpenseList.GroupBy(g => 1).Select(sl => sl.Sum(s => s.Money / s.StaffCount)).FirstOrDefault();
+            var users = userQueryable.ToList();
             users.ForEach(t =>
             {
+                var averageDailyExpense = dailyExpenseList.GroupBy(g => 1).Select(sl => sl.Sum(s => Math.Ceiling((s.Money / s.StaffCount) * 100)) / 100).FirstOrDefault();
+                if (t.DutyTime.HasValue)
+                {
+                    averageDailyExpense = dailyExpenseList.Where(d => d.ExpenseDate >= t.DutyTime.Value).ToList().GroupBy(g => 1).Select(sl => sl.Sum(s => Math.Ceiling((s.Money / s.StaffCount) * 100)) / 100).FirstOrDefault();
+                }
                 var userCurrentOrderDividendList = currentOrderDividendQueryable.Where(dividend => dividend.UserID == t.ID).ToList();
 
                 var staffOutputValue = new StaffOutputValue();
