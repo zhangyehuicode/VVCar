@@ -77,11 +77,25 @@ namespace VVCar.Controllers.VIP
         /// <param name="parameter"></param>
         /// <returns></returns>
         [HttpPost, Route("ImmediatePush"), AllowAnonymous]
-        public JsonActionResult<bool> ImmediatePushAction(ImmediatePushDto parameter)
+        public JsonActionResult<bool> ImmediatePush(ImmediatePushDto parameter)
         {
             return SafeExecute(() =>
             {
-                return CouponPushService.ImmediatePushAction(parameter.CouponTemplateIDs, parameter.MemberIDs);
+                return CouponPushService.ImmediatePushAction(parameter.CouponTemplateIDs.ToArray(), parameter.MemberIDs.ToArray());
+            });
+        }
+
+        /// <summary>
+        /// 分组推送
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        [HttpPost, Route("GroupPush"), AllowAnonymous]
+        public JsonActionResult<bool> GroupPush(BatchOperationDto parameter)
+        {
+            return SafeExecute(() =>
+            {
+                return CouponPushService.GroupPush(parameter.IdList.ToArray());
             });
         }
 

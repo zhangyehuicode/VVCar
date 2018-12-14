@@ -212,6 +212,16 @@ namespace VVCar.Controllers.Api
         }
 
         /// <summary>
+        /// 上传软件使用课程
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost, Route("UploadMaterial")]
+        public UploadFileResult UploadMaterial()
+        {
+            return UploadAction("Video/Material");
+        }
+
+        /// <summary>
         /// 上传商品落地课程
         /// </summary>
         /// <returns></returns>

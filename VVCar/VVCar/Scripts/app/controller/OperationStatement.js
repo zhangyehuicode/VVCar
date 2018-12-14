@@ -25,6 +25,12 @@
 			'OperationStatement button[action=chart]': {
 				click: me.chart
 			},
+			'OperationStatement datefield[name=StartDate]': {
+				select: me.search
+			},
+			'OperationStatement datefield[name=EndDate]': {
+				select: me.search
+			},
 			'OperationStatement': {
 				detailClick: me.detailClick,
 				itemdblclick: me.detailClick,
@@ -72,6 +78,11 @@
 	chart: function () {
 		var me = this;
 		var win = Ext.widget('OperationStatementChart');
+		var queryValues = me.getOperationStatement().down('form').getValues();
+		var startdate = queryValues.StartDate;
+		var enddate = queryValues.EndDate;
+		sessionStorage.setItem('StartDate', startdate);
+		sessionStorage.setItem('EndDate', enddate);
 		win.show();
 	},
 	searchDetail: function (btn) {

@@ -51,7 +51,7 @@ namespace VVCar.Shop.Domain.Filters
         /// 是否上架
         /// </summary>
         [Display(Name = "是否上架")]
-        public bool IsPublish { get; set; }
+        public bool? IsPublish { get; set; }
 
         /// <summary>
         /// 是否套餐

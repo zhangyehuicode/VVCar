@@ -24,16 +24,37 @@
                 {
                     header: '支付类型', dataIndex: 'PayType', flex: 1,
                     renderer: function (value) {
-                        if (value === 1)
-                            return '<span>微信</span>';
-                        else if (value === 2)
-                            return '<span>现金</span>';
-                        else if (value === 6)
-                            return '<span>储值卡</span>';
-                        else if (value === 7)
-                            return '微信付款码支付';
-                        else if (value === 9)
-                            return '微信扫码支付';
+                        switch (value) {
+                            case 1:
+                                return '微信';
+                                break;
+                            case 2:
+                                return '现金';
+                                break;
+                            case 3:
+                                return '会员卡';
+                                break;
+                            case 4:
+                                return '优惠券';
+                                break;
+                            case 5:
+                                return '车比特';
+                                break;
+                            case 6:
+                                return '储值卡';
+                                break;
+                            case 7:
+                                return '微信付款码支付';
+                                break;
+                            case 8:
+                                return '公众号支付';
+                                break;
+                            case 9:
+                                return '微信扫码支付';
+                                break;
+                            default:
+                                return '其他';
+                        }
                     }
                 },
                 { header: '支付信息', dataIndex: 'PayInfo', flex: 1 },

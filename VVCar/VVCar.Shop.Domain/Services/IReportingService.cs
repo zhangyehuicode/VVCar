@@ -45,6 +45,14 @@ namespace VVCar.Shop.Domain.Services
         IEnumerable<ProductRetailStatisticsDto> ProductRetailStatistics(ProductRetailStatisticsFilter filter, ref int totalCount);
 
         /// <summary>
+        /// 零售产品汇总图表统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        IEnumerable<ProductRetailStatisticsChartDataDto> ProductRetailStatisticsChartData(ProductRetailStatisticsChartDataFilter filter, ref int totalCount);
+
+        /// <summary>
         /// 数据分析
         /// </summary>
         /// <param name="filter"></param>

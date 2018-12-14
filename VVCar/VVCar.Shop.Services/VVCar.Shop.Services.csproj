@@ -58,6 +58,9 @@
     <Compile Include="DomainServices\CarInspectionReportService.cs" />
     <Compile Include="DomainServices\ComboItemService.cs" />
     <Compile Include="DomainServices\DailyExpenseService.cs" />
+    <Compile Include="DomainServices\MaterialPublishItemService.cs" />
+    <Compile Include="DomainServices\MaterialPublishService.cs" />
+    <Compile Include="DomainServices\MaterialService.cs" />
     <Compile Include="DomainServices\OrderDividendService.cs" />
     <Compile Include="DomainServices\OrderItemService.cs" />
     <Compile Include="DomainServices\OrderPaymentDetailsService.cs" />

@@ -254,7 +254,9 @@
         }
 
         if (entity.Birthday.length === 10)
-            entity.Birthday += " 00:00:00";
+			entity.Birthday += " 00:00:00";
+		if (entity.InsuranceExpirationDate == 10)
+			entity.InsuranceExpirationDate += " 00:00:00";
         store.manualAddMember(entity, success);
     },
     update: function (btn) {

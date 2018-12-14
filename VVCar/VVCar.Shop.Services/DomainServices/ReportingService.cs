@@ -736,6 +736,91 @@ namespace VVCar.Shop.Services.DomainServices
             return result;
         }
 
+        /// <summary>
+        /// 零售产品汇总图表统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public IEnumerable<ProductRetailStatisticsChartDataDto> ProductRetailStatisticsChartData(ProductRetailStatisticsChartDataFilter filter, ref int totalCount)
+        {
+            var result = new List<ProductRetailStatisticsChartDataDto>();
+            if (!filter.ProductID.HasValue)
+                throw new DomainException("参数错误");
+            var product = ProductRepo.GetByKey(filter.ProductID.Value);
+            var orderDividendQuery = OrderDividendRepo.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && t.GoodsID == product.ID);
+            if (filter.StartDate.HasValue)
+                orderDividendQuery = orderDividendQuery.Where(t => t.CreatedDate >= filter.StartDate);
+            if (filter.EndDate.HasValue)
+                orderDividendQuery = orderDividendQuery.Where(t => t.CreatedDate < filter.EndDate);
+            if (filter.StartDate.HasValue && filter.EndDate.HasValue)
+                orderDividendQuery = orderDividendQuery.Where(t => t.CreatedDate >= filter.StartDate && t.CreatedDate < filter.EndDate);
+            var TradeOrderIDs = orderDividendQuery.Select(t => t.TradeOrderID).Distinct();
+            var orderItemList = OrderItemRepo.GetInclude(t => t.Order, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && TradeOrderIDs.Contains(t.OrderID)).ToList();
+            var pickUpOrderItemList = PickUpOrderItemRepo.GetInclude(t=> t.PickUpOrder, false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID && TradeOrderIDs.Contains(t.PickUpOrderID)).ToList();
+
+            var orderItemGroup = orderItemList.GroupBy(g => g.Order.CreatedDate.ToDateString()).Select(m => new ProductRetailStatisticsChartDataDto
+            {
+                TradeDate = m.Key,
+                Quantity = m.Sum(s => s.Quantity),
+                Money = m.Sum(s => s.Money),
+            }).ToList();
+
+            var pickUpOrderItemGroup = pickUpOrderItemList.GroupBy(g => g.PickUpOrder.CreatedDate.ToDateString()).Select(m => new ProductRetailStatisticsChartDataDto
+            {
+                TradeDate = m.Key,
+                Quantity = m.Sum(s => s.Quantity),
+                Money = m.Sum(s => s.Money),
+            }).ToList();
+
+            orderItemGroup.AddRange(pickUpOrderItemGroup);
+
+            orderItemGroup.GroupBy(g => g.TradeDate).Select(m => new ProductRetailStatisticsChartDataDto
+            {
+                TradeDate = m.Key,
+                Quantity = m.Sum(s=> s.Quantity),
+                Money = m.Sum(s => s.Money),
+            });
+
+            //var orderDividendList = orderDividendQuery.ToList();
+            //result = orderDividendList.GroupBy(t => t.CreatedDate.ToDateString()).Select(m => new ProductRetailStatisticsChartDataDto
+            //{
+            //    TradeDate = m.Key,
+            //    Money = m.Sum(s=> s.Money),
+            //    Quantity = m.Sum(s=> s.Quantity),
+            //}).ToList();
+
+            var tradeDates = orderItemGroup.Select(t => t.TradeDate).ToList();
+            var startdate = Convert.ToDateTime(orderItemGroup.Select(t => t.TradeDate).Min());
+            var enddate = DateTime.Now;
+            if (filter.StartDate.HasValue)
+            {
+                startdate = filter.StartDate.Value;
+            }
+            if (startdate <= new DateTime(1971, 6, 1))
+                startdate = enddate;
+            if (filter.EndDate.HasValue)
+            {
+                enddate = filter.EndDate.Value.AddDays(1);
+            }
+
+            for (var i = startdate; i < enddate; i = i.AddDays(1))
+            {
+                var time = i.ToDateString();
+                if (!tradeDates.Contains(time))
+                {
+                    orderItemGroup.Add(new ProductRetailStatisticsChartDataDto
+                    {
+                        TradeDate = i.ToDateString(),
+                        Money = 0,
+                        Quantity = 0,
+                    });
+                }
+            }
+
+            return orderItemGroup.OrderByDescending(t => t.TradeDate);
+        }
+
         #region private method
 
         private IEnumerable<Member> GetMemberList(DateTime? starDate = null, DateTime? endDate = null)

@@ -53,6 +53,9 @@ namespace VVCar.Shop.Services.DomainServices
         IRepository<MerchantCrowdOrder> MerchantCrowdOrderRepo { get => UnitOfWork.GetRepository<IRepository<MerchantCrowdOrder>>(); }
 
         IRepository<Product> ProductRepo { get => UnitOfWork.GetRepository<IRepository<Product>>(); }
+
+        IRepository<ComboItem> ComboItemRepo { get => UnitOfWork.GetRepository<IRepository<ComboItem>>(); }
+        
         #endregion
 
         protected override bool DoValidate(Product entity)
@@ -183,6 +186,8 @@ namespace VVCar.Shop.Services.DomainServices
                 queryable = queryable.Where(t => t.ProductType == filter.ProductType.Value);
             if (filter.IsCombo.HasValue)
                 queryable = queryable.Where(t => t.IsCombo == filter.IsCombo.Value);
+            if (filter.IsPublish.HasValue)
+                queryable = queryable.Where(t => t.IsPublish == filter.IsPublish.Value);
             if (filter.IsInternaCollection.HasValue)
                 queryable = queryable.Where(t => t.IsInternaCollection == filter.IsInternaCollection.Value);
             if (filter.IsUnsaleProduct.HasValue)
@@ -271,8 +276,10 @@ namespace VVCar.Shop.Services.DomainServices
                 .OrderBy(t => t.ParentId).ThenBy(t => t.Index)
                 .MapTo<ProductCategory, ProductCategoryLiteDto>()
                 .ToList();
+            var comboIDs = ComboItemRepo.GetQueryable(false).Where(t=> t.MerchantID == AppContext.CurrentSession.MerchantID).Select(s=>s.ComboID).Distinct();
             var products = Repository.GetQueryable(false).Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID)
                 .Where(t => t.IsPublish)
+                .Where(t => !t.IsCombo || (t.IsCombo && comboIDs.Contains(t.ID)))
                 .MapTo<Product, ProductLiteDto>()
                 .ToList();
             foreach (var category in categories)

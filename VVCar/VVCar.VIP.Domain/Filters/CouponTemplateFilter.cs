@@ -15,6 +15,12 @@ namespace VVCar.VIP.Domain.Filters
     public class CouponTemplateFilter : BasePageFilter
     {
         /// <summary>
+        /// ID
+        /// </summary>
+        [Display(Name = "ID")]
+        public Guid? ID { get; set; }
+
+        /// <summary>
         ///  类型
         /// </summary>
         [Display(Name = "类型")]

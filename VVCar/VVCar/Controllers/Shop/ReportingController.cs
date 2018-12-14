@@ -108,6 +108,49 @@ namespace VVCar.Controllers.Shop
         }
 
         /// <summary>
+        /// 零售产品汇总图表统计
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        [HttpGet, Route("ProductRetailStatisticsChartData"), AllowAnonymous]
+        public PagedActionResultForProductRetailStatisticsChartData<ProductRetailStatisticsChartDataDto> ProductRetailStatisticsChartData([FromUri]ProductRetailStatisticsChartDataFilter filter)
+        {
+            return SafeGetPagedDataForProductRetailStatisticsChartData<ProductRetailStatisticsChartDataDto>((result) =>
+            {
+                var totalCount = 0;
+                var data = ReportingService.ProductRetailStatisticsChartData(filter, ref totalCount);
+                result.Data = data;
+                result.TotalCount = totalCount;
+                result.TotalQuantity = data.Sum(m => m.Quantity);
+                result.TotalMoney = data.Sum(m => m.Money);
+                filter.StartDate = null;
+                filter.EndDate = null;
+                var basic = ReportingService.ProductRetailStatisticsChartData(filter, ref totalCount);
+                result.TotalBasicQuantity = basic.GroupBy(g => 1).Select(m => m.Sum(t=>t.Quantity)).FirstOrDefault();
+                result.TotalbasicMoney = basic.GroupBy(g => 1).Select(m => m.Sum(t => t.Money)).FirstOrDefault();
+            });
+        }
+
+        private PagedActionResultForProductRetailStatisticsChartData<TResult> SafeGetPagedDataForProductRetailStatisticsChartData<TResult>(Action<PagedActionResultForProductRetailStatisticsChartData<TResult>> execAction)
+        {
+            var result = new PagedActionResultForProductRetailStatisticsChartData<TResult>();
+            try
+            {
+                execAction(result);
+            }
+            catch (Exception ex)
+            {
+                YEF.Core.Logging.LoggerManager.GetLogger().Error(ex.ToString());
+                result.IsSuccessful = false;
+                result.TotalCount = 0;
+                result.TotalbasicMoney = 0;
+                result.TotalBasicQuantity = 0;
+                result.ErrorMessage = ex.Message;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// 数据分析
         /// </summary>
         /// <param name="filter"></param>

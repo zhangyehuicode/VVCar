@@ -58,6 +58,7 @@
     <Compile Include="Dtos\GiveAwayCarBitCoinParam.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisDto.cs" />
     <Compile Include="Dtos\HistoryDataAnalysisParam.cs" />
+    <Compile Include="Dtos\MaterialPublishItemDto.cs" />
     <Compile Include="Dtos\OperationStatementDto.cs" />
     <Compile Include="Dtos\OrderDividendDto.cs" />
     <Compile Include="Dtos\OrderDto.cs" />
@@ -93,6 +94,9 @@
     <Compile Include="Entities\ComboItem.cs" />
     <Compile Include="Entities\ConsumeHistory.cs" />
     <Compile Include="Entities\DailyExpense.cs" />
+    <Compile Include="Entities\Material.cs" />
+    <Compile Include="Entities\MaterialPublish.cs" />
+    <Compile Include="Entities\MaterialPublishItem.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\OrderDividend.cs" />
     <Compile Include="Entities\OrderItem.cs" />
@@ -117,6 +121,7 @@
     <Compile Include="Enums\ECarBitCoinProductType.cs" />
     <Compile Include="Enums\ECarBitCoinDistributionStatus.cs" />
     <Compile Include="Enums\ECarBitCoinRecordType.cs" />
+    <Compile Include="Enums\EMaterialPublishStatus.cs" />
     <Compile Include="Enums\EOrderSource.cs" />
     <Compile Include="Enums\EOrderStatus.cs" />
     <Compile Include="Enums\EPayType.cs" />
@@ -141,6 +146,9 @@
     <Compile Include="Filters\DailyExpenseFilter.cs" />
     <Compile Include="Filters\DataAnalyseFilter.cs" />
     <Compile Include="Filters\DepartmentPerformanceFilter.cs" />
+    <Compile Include="Filters\MaterialFilter.cs" />
+    <Compile Include="Filters\MaterialPublishFilter.cs" />
+    <Compile Include="Filters\MaterialPublishItemFilter.cs" />
     <Compile Include="Filters\OperationStatementFilter.cs" />
     <Compile Include="Filters\OrderDividendFilter.cs" />
     <Compile Include="Filters\OrderFilter.cs" />
@@ -174,6 +182,9 @@
     <Compile Include="Services\ICarBitCoinProductService.cs" />
     <Compile Include="Services\ICarInspectionReportService.cs" />
     <Compile Include="Services\IComboItemService.cs" />
+    <Compile Include="Services\IMaterialPublishItemService.cs" />
+    <Compile Include="Services\IMaterialPublishService.cs" />
+    <Compile Include="Services\IMaterialService.cs" />
     <Compile Include="Services\IOrderDividendService.cs" />
     <Compile Include="Services\IOrderItemService.cs" />
     <Compile Include="Services\IOrderPaymentDetailsService.cs" />

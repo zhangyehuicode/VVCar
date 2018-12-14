@@ -289,7 +289,10 @@ namespace VVCar.Shop.Services.DomainServices
                 {
                     if (t.IsDeleted == false)
                     {
-                        totalMoney += t.Money;
+                        if (t.IsReduce)
+                            totalMoney += t.Quantity * t.ReducedPrice;
+                        else
+                            totalMoney += t.Quantity * t.PriceSale;
                         totalCostMoney += t.CostMoney;
                     }
                 });
@@ -334,7 +337,64 @@ namespace VVCar.Shop.Services.DomainServices
                 pickUpOrder.PickUpOrderItemList.ForEach(t =>
                 {
                     var pickUpOrderTaskDistributionList = PickUpOrderTaskDistributionRepo.GetInclude(m => m.User, false).Where(m => m.PickUpOrderID == pickUpOrder.ID && m.PickUpOrderItemID == t.ID).ToList();
-                    pickUpOrderTaskDistributionList.ForEach(distribution =>
+                    if (pickUpOrderTaskDistributionList.Count > 0)
+                    {
+                        pickUpOrderTaskDistributionList.ForEach(distribution =>
+                        {
+                            var orderDividend = new OrderDividend();
+                            orderDividend.TradeOrderID = pickUpOrder.ID;
+                            orderDividend.TradeNo = pickUpOrder.Code;
+                            orderDividend.PlateNumber = pickUpOrder.PlateNumber;
+                            orderDividend.Code = t.ProductCode;
+                            orderDividend.Name = t.ProductName;
+                            orderDividend.GoodsID = t.ProductID;
+                            orderDividend.OrderType = EShopTradeOrderType.PickupOrder;
+                            orderDividend.CreatedDate = DateTime.Now;
+                            orderDividend.ID = Util.NewID();
+                            orderDividend.PickUpOrderTaskDistributionID = distribution.ID;
+                            if (distribution.PeopleType == ETaskDistributionPeopleType.ConstructionCrew)
+                            {
+                                if (distribution.IsCommissionRate)
+                                {
+                                    orderDividend.IsCommissionRate = true;
+                                    orderDividend.CommissionRate = distribution.CommissionRate;
+                                    orderDividend.Commission = distribution.Commission;
+                                }
+                                else
+                                {
+                                    orderDividend.IsCommissionRate = false;
+                                    orderDividend.CommissionMoney = distribution.CommissionMoney;
+                                    orderDividend.Commission = distribution.Commission;
+                                }
+                            }
+                            if (distribution.PeopleType == ETaskDistributionPeopleType.Salesman)
+                            {
+                                if (distribution.IsSalesmanCommissionRate)
+                                {
+                                    orderDividend.IsCommissionRate = true;
+                                    orderDividend.CommissionRate = distribution.SalesmanCommissionRate;
+                                    orderDividend.Commission = distribution.SalesmanCommission;
+                                }
+                                else
+                                {
+                                    orderDividend.IsCommissionRate = false;
+                                    orderDividend.CommissionMoney = distribution.SalesmanCommissionMoney;
+                                    orderDividend.Commission = distribution.SalesmanCommission;
+                                }
+                            }
+                            orderDividend.PeopleType = distribution.PeopleType;
+                            var user = UserRepo.GetByKey(distribution.UserID);
+                            orderDividend.UserCode = user.Code;
+                            orderDividend.UserName = user.Name;
+                            orderDividend.UserID = user.ID;
+                            orderDividend.Money = distribution.TotalMoney;
+                            orderDividend.CostMoney = t.CostMoney;
+                            orderDividend.Quantity = t.Quantity;
+                            orderDividend.MerchantID = AppContext.CurrentSession.MerchantID;
+                            orderDividendList.Add(orderDividend);
+                        });
+                    }
+                    else
                     {
                         var orderDividend = new OrderDividend();
                         orderDividend.TradeOrderID = pickUpOrder.ID;
@@ -346,47 +406,13 @@ namespace VVCar.Shop.Services.DomainServices
                         orderDividend.OrderType = EShopTradeOrderType.PickupOrder;
                         orderDividend.CreatedDate = DateTime.Now;
                         orderDividend.ID = Util.NewID();
-                        orderDividend.PickUpOrderTaskDistributionID = distribution.ID;
-                        if (distribution.PeopleType == ETaskDistributionPeopleType.ConstructionCrew)
-                        {
-                            if (distribution.IsCommissionRate)
-                            {
-                                orderDividend.IsCommissionRate = true;
-                                orderDividend.CommissionRate = distribution.CommissionRate;
-                                orderDividend.Commission = distribution.Commission;
-                            }
-                            else
-                            {
-                                orderDividend.IsCommissionRate = false;
-                                orderDividend.CommissionMoney = distribution.CommissionMoney;
-                                orderDividend.Commission = distribution.Commission;
-                            }
-                        }
-                        if (distribution.PeopleType == ETaskDistributionPeopleType.Salesman)
-                        {
-                            if (distribution.IsSalesmanCommissionRate)
-                            {
-                                orderDividend.IsCommissionRate = true;
-                                orderDividend.CommissionRate = distribution.SalesmanCommissionRate;
-                                orderDividend.Commission = distribution.SalesmanCommission;
-                            }
-                            else
-                            {
-                                orderDividend.IsCommissionRate = false;
-                                orderDividend.CommissionMoney = distribution.SalesmanCommissionMoney;
-                                orderDividend.Commission = distribution.SalesmanCommission;
-                            }
-                        }
-                        orderDividend.PeopleType = distribution.PeopleType;
-                        var user = UserRepo.GetByKey(distribution.UserID);
-                        orderDividend.UserCode = user.Code;
-                        orderDividend.UserName = user.Name;
-                        orderDividend.UserID = user.ID;
-                        orderDividend.Money = distribution.TotalMoney;
+                        orderDividend.Money = t.Money;
                         orderDividend.CostMoney = t.CostMoney;
+                        orderDividend.Quantity = t.Quantity;
                         orderDividend.MerchantID = AppContext.CurrentSession.MerchantID;
                         orderDividendList.Add(orderDividend);
-                    });
+                    }
+                    
                 });
                 OrderDividendRepo.AddRange(orderDividendList);
             }

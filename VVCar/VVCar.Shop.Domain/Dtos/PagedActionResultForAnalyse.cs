@@ -42,4 +42,56 @@ namespace VVCar.Shop.Domain.Dtos
         /// </summary>
         public String ErrorMessage { get; set; }
     }
+
+    /// <summary>
+    /// 适用于WebApi的统一格式的分页数据结构
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class PagedActionResultForProductRetailStatisticsChartData<T>
+    {
+        private bool _isSuccessful = true;
+        /// <summary>
+        /// 是否执行成功
+        /// </summary>
+        public bool IsSuccessful
+        {
+            get { return this._isSuccessful; }
+            set { this._isSuccessful = value; }
+        }
+
+        /// <summary>
+        /// 返回结果，如果<see cref="IsSuccessful"/>值为<see cref="true"/>时有值
+        /// </summary>
+        public IEnumerable<T> Data { get; set; }
+
+        /// <summary>
+        /// 总记录数
+        /// </summary>
+        public int TotalCount { get; set; }
+
+        /// <summary>
+        /// 销售数量总数
+        /// </summary>
+        public int TotalQuantity { get; set; }
+
+        /// <summary>
+        /// 销售金额总数
+        /// </summary>
+        public decimal TotalMoney { get; set; }
+
+        /// <summary>
+        /// 所有销售数量总数
+        /// </summary>
+        public int TotalBasicQuantity { get; set; }
+
+        /// <summary>
+        /// 所有销售金额总数
+        /// </summary>
+        public decimal TotalbasicMoney { get; set; }
+
+        /// <summary>
+        /// 错误信息，如果<see cref="IsSuccessful"/>值为<see cref="false"/>时有值
+        /// </summary>
+        public String ErrorMessage { get; set; }
+    }
 }

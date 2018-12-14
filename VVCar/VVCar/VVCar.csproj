@@ -323,6 +323,9 @@
     <Compile Include="Controllers\Shop\CarInspectionReportController.cs" />
     <Compile Include="Controllers\Shop\ComboItemController.cs" />
     <Compile Include="Controllers\Shop\DailyExpenseController.cs" />
+    <Compile Include="Controllers\Shop\MaterialController.cs" />
+    <Compile Include="Controllers\Shop\MaterialPublishController.cs" />
+    <Compile Include="Controllers\Shop\MaterialPublishItemController.cs" />
     <Compile Include="Controllers\Shop\OrderController.cs" />
     <Compile Include="Controllers\Shop\OrderDividendController.cs" />
     <Compile Include="Controllers\Shop\OrderItemController.cs" />
@@ -732,6 +735,8 @@
     <Content Include="Scripts\app\controller\DailyExpense.js" />
     <Content Include="Scripts\app\controller\DataAnalyse.js" />
     <Content Include="Scripts\app\controller\Logistics.js" />
+    <Content Include="Scripts\app\controller\Material.js" />
+    <Content Include="Scripts\app\controller\MaterialPublish.js" />
     <Content Include="Scripts\app\controller\MerchantBargainOrder.js" />
     <Content Include="Scripts\app\controller\MerchantCrowdOrder.js" />
     <Content Include="Scripts\app\controller\OperationStatement.js" />
@@ -804,10 +809,14 @@
     <Content Include="Scripts\app\model\BaseData\AnnouncementPushMemberModel.js" />
     <Content Include="Scripts\app\model\BaseData\ArticleItemModel.js" />
     <Content Include="Scripts\app\model\BaseData\ArticleModel.js" />
+    <Content Include="Scripts\app\model\BaseData\CouponModel.js" />
     <Content Include="Scripts\app\model\BaseData\CrowdOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\DailyExpenseModel.js" />
     <Content Include="Scripts\app\model\BaseData\DataAnalyseModel.js" />
     <Content Include="Scripts\app\model\BaseData\LogisticsModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MaterialModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MaterialPublishItemModel.js" />
+    <Content Include="Scripts\app\model\BaseData\MaterialPublishModel.js" />
     <Content Include="Scripts\app\model\BaseData\MemberGroupTreeModel.js" />
     <Content Include="Scripts\app\model\BaseData\MerchantBargainOrderModel.js" />
     <Content Include="Scripts\app\model\BaseData\MerchantCrowdOrderModel.js" />
@@ -904,10 +913,14 @@
     <Content Include="Scripts\app\store\BaseData\AnnouncementStore.js" />
     <Content Include="Scripts\app\store\BaseData\ArticleItemStore.js" />
     <Content Include="Scripts\app\store\BaseData\ArticleStore.js" />
+    <Content Include="Scripts\app\store\BaseData\CouponStore.js" />
     <Content Include="Scripts\app\store\BaseData\CrowdOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\DailyExpenseStore.js" />
     <Content Include="Scripts\app\store\BaseData\DataAnalyseStore.js" />
     <Content Include="Scripts\app\store\BaseData\LogisticsStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MaterialPublishItemStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MaterialPublishStore.js" />
+    <Content Include="Scripts\app\store\BaseData\MaterialStore.js" />
     <Content Include="Scripts\app\store\BaseData\MemberGroupLiteStore.js" />
     <Content Include="Scripts\app\store\BaseData\MerchantBargainOrderStore.js" />
     <Content Include="Scripts\app\store\BaseData\MerchantCrowdOrderStore.js" />
@@ -1041,6 +1054,9 @@
     <Content Include="Scripts\app\view\Combo\ComboEdit.js" />
     <Content Include="Scripts\app\view\Combo\ComboList.js" />
     <Content Include="Scripts\app\view\Combo\ProductSelector.js" />
+    <Content Include="Scripts\app\view\Coupon\CouponGroup.js" />
+    <Content Include="Scripts\app\view\Coupon\CouponPush.js" />
+    <Content Include="Scripts\app\view\Coupon\QRCode.js" />
     <Content Include="Scripts\app\view\CrowdOrder\CrowdOrderEdit.js" />
     <Content Include="Scripts\app\view\CrowdOrder\CrowdOrderList.js" />
     <Content Include="Scripts\app\view\CrowdOrder\CarBitCoinProductSelector.js" />
@@ -1053,6 +1069,11 @@
     <Content Include="Scripts\app\view\Logistics\LogisticsEdit.js" />
     <Content Include="Scripts\app\view\Logistics\Logistics.js" />
     <Content Include="Scripts\app\view\Logistics\SalesmanSelector.js" />
+    <Content Include="Scripts\app\view\MaterialPublish\MaterialPublish.js" />
+    <Content Include="Scripts\app\view\MaterialPublish\MaterialPublishItemEdit.js" />
+    <Content Include="Scripts\app\view\MaterialPublish\MaterialPublishEdit.js" />
+    <Content Include="Scripts\app\view\Material\Material.js" />
+    <Content Include="Scripts\app\view\Material\MaterialEdit.js" />
     <Content Include="Scripts\app\view\Member\MemberDetail.js" />
     <Content Include="Scripts\app\view\MerchantBargainOrder\MerchantBargainOrderEdit.js" />
     <Content Include="Scripts\app\view\MerchantBargainOrder\MerchantBargainOrderList.js" />
@@ -1072,6 +1093,7 @@
     <Content Include="Scripts\app\view\Report\OperationStatement.js" />
     <Content Include="Scripts\app\view\Report\OperationStatementChart.js" />
     <Content Include="Scripts\app\view\Report\OperationStatementDetail.js" />
+    <Content Include="Scripts\app\view\Report\ProductRetailStatisticsChart.js" />
     <Content Include="Scripts\app\view\Report\StaffOutputValueStatisticsList.js" />
     <Content Include="Scripts\app\view\Shop\ChangeServiceCategory.js" />
     <Content Include="Scripts\app\view\SystemSetting\SystemSettingEdit.js" />
@@ -2186,6 +2208,7 @@
     <Content Include="Views\Reporting\AnalyseIndex.cshtml" />
     <Content Include="Views\Reporting\AnalysePieChart.cshtml" />
     <Content Include="Views\Reporting\AnalyseLineChart.cshtml" />
+    <Content Include="Views\Reporting\ProductRetailStatisticsChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

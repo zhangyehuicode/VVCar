@@ -284,5 +284,19 @@ namespace VVCar.VIP.Services.DomainServices
             }
             return true;
         }
+
+        /// <summary>
+        /// 按组推送
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public bool GroupPush(Guid[] ids)
+        {
+            if (ids == null || ids.Length < 1)
+                throw new DomainException("参数错误");
+            var count = 0;
+            //var memberList = MemberRepo.GetQueryable(false).Where(t => t.MerchantID = AppContext.CurrentSession.MerchantID && ids.Contains(t.MemberGroupID));
+            return true;
+        }
     }
 }

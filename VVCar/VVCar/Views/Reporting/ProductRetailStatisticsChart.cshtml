@@ -1,0 +1,289 @@
+﻿
+@{
+	ViewBag.Title = "";
+	Layout = "~/Areas/Mobile/Views/Shared/_Layout.cshtml";
+}
+
+<div id="productretailstatistics">
+	<center>
+		<input type="date" id="startdate"><span>~</span><input type="date" id="enddate">
+		<button v-on:click="search">搜索</button>
+		<button id="chartbutton" v-on:click="change" style="background-color:#5FA2DD;border-bottom-color:#5FA2DD;color:white;">饼状图</button>
+		<div id="pphz" style="width:100%;height:500px;overflow:auto!important;margin:0 10px;" v-if="!ShowPie"></div>
+		<div v-if="ShowPie">
+			<div id="echartmoney" style="width:50%;height:500px;text-align:center;float:left"></div>
+			<div id="echartquantity" style="width:50%;height:500px;text-align:center;float:left"></div>
+		</div>
+	</center>
+</div>
+
+@section scripts{
+	<style type="text/css">
+		.show {
+			display: inline;
+		}
+
+		.hide {
+			display: none;
+		}
+	</style>
+	<link type="text/css" href="~/Areas/resource/css/mobile/master.css" />
+	<link href="~/Areas/resource/css/mobile/master.css" rel="stylesheet" type="text/css" />
+	<script src="//cdn.bootcss.com/vue/2.1.10/vue.min.js"></script>
+	<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+	<script src="~/Content/js/echarts.js"></script>
+	<script src="~/Areas/resource/js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript">
+		function wxConfig() {
+			var mch = $.getUrlParam('mch');
+			$.ajax({
+				type: "POST",
+				url: "http://www.cheyinz.cn/wxis/api/WeChat/JsApiSignature?companyCode=" + mch + "&url=" + document.URL,
+				datatype: "json",
+				success: function (data) {
+					if (data.IsSuccessful) {
+						var temp = data.Data;
+						wx.config({
+							debug: false,
+							appId: temp.appId,
+							timestamp: temp.timestamp,
+							nonceStr: temp.nonceStr,
+							signature: temp.signature,
+							jsApiList: [
+								'checkJsApi',
+								'onMenuShareTimeline',
+								'onMenuShareAppMessage',
+								'onMenuShareQQ',
+								'onMenuShareWeibo',
+								'hideOptionMenu',
+								'hideAllNonBaseMenuItem',
+								'showMenuItems',
+								'closeWindow',
+								'scanQRCode',
+							]
+						});
+						wx.ready(function () {
+							wx.hideAllNonBaseMenuItem();
+						});
+					} else {
+					}
+				},
+				complete: function (xmlHttpRequest, textStatus) {
+				},
+				error: function (xmlHttpRequest, textStatus) {
+				}
+			});
+		};
+		wxConfig();
+	</script>
+	<script type="text/javascript">
+        $(function () {
+			var mch = sessionStorage.getItem('companyCode');
+			var productid = sessionStorage.getItem('ProductID');
+			var productname = sessionStorage.getItem('ProductName');
+			_viewModel = new Vue({
+				el: '#productretailstatistics',
+				data: {
+					ProductRetailStatisticsList: [],
+					ShowPie: false,
+				},
+				computed: {
+
+				},
+				methods: {
+					search: function (event) {
+						search();
+					},
+					change: function (event) {
+						if (this.ShowPie) {
+							this.ShowPie = false;
+							$('#chartbutton').text('饼状图');
+							search();
+						} else {
+							this.ShowPie = true;
+							$('#chartbutton').text('折线图');
+							search();
+						}
+					}
+				}
+			});
+
+			function search() {
+				var startdate = $('#startdate').val();
+				var enddate = $('#enddate').val();
+				$.ajax({
+					url: '/api/Reporting/ProductRetailStatisticsChartData?All=false&ProductID=' + productid + '&StartDate=' + startdate + '&EndDate=' + enddate,
+					type: 'GET',
+					headers: { 'CompanyCode': mch },
+					beforeSend: function () {
+						$.showLoading();
+					},
+					success: function (res) {
+						$.hideLoading();
+						if (res.IsSuccessful) {
+							_viewModel.ProductRetailStatisticsList = res.Data;
+							if (_viewModel.ShowPie) {
+								echartquantitypie('销售数量:' + res.TotalQuantity, res.TotalQuantity, '销售数量基数:' + res.TotalBasicQuantity, res.TotalBasicQuantity);
+								echartmoneypie('销售金额:' + res.TotalMoney, res.TotalMoney, '销售金额基数:' + res.TotalbasicMoney, res.TotalbasicMoney);
+							} else {
+								var operationData = getChartOperationData(res.Data);
+								var option = getLineChartOption(operationData);
+								var pphzchart = echarts.init(document.getElementById('pphz'));
+								pphzchart.setOption(option);
+							}
+						} else {
+							$.alert(res.ErrorMessage);
+						}
+					},
+					error: function () {
+						$.hideLoading();
+					}
+				});
+			}
+			var startdate = sessionStorage.getItem('StartDate');
+			var enddate = sessionStorage.getItem('EndDate');
+			if (startdate != '' || startdate != null) {
+				$('#startdate').val(startdate);
+			}
+			if (enddate != '' || enddate != null) {
+				$('#enddate').val(enddate);
+			}
+			search();
+
+			function getChartOperationData(data) {
+				if (data == null || data == '' || data.length < 1)
+
+					return null;
+				var result = { xAxisdata: [], seriesdataquantity: [], seriesdatamoney: [] };
+				for (var i = data.length-1; i >=0; i--) {
+					result.xAxisdata.push(data[i].TradeDate);
+					result.seriesdataquantity.push(data[i].Quantity);
+					result.seriesdatamoney.push(data[i].Money);
+				}
+				return result;
+			}
+
+			function getLineChartOption(data) {
+				if (data == null || data == '')
+					return;
+				var option = {
+					backgroundColor: '#fff',
+					title: {
+						text: productname + ' 产品销售折线图',
+						left: 'center',
+						top: 20,
+						textStyle: {
+							color: '#ccc'
+						}
+					},
+					//tooltip: {
+					//	trigger: 'axis',
+					//	axisPointer: {
+					//		type: 'cross',
+					//		crossStyle: {
+					//			color: '#999',
+					//		}
+					//	}
+					//},
+					toolbox: {
+						feature: {
+							dataView: { show: true, readOnly: false },
+							restore: { show: true },
+							saveAsImage: { show: true },
+						}
+					},
+					legend: {
+						data: ['销售数量', '销售金额']
+					},
+					xAxis: {
+						type: 'category',
+						data: data.xAxisdata,
+						axisPointer: {
+							type: 'show',
+						}
+					},
+					yAxis: [{
+						type: 'value',
+						name: '销售数量/件',
+						min: 0,
+						axisLabel: {
+							formatter: '{value}'
+						}
+					}, {
+						type: 'value',
+						name: '营业额/元',
+						min: 0,
+						axisLabel: {
+							formatter: '{value}'
+						}
+					}],
+					series: [{
+						name: '销售数量',
+						data: data.seriesdataquantity,
+						type: 'line'
+					}, {
+						name: '销售金额',
+						data: data.seriesdatamoney,
+						yAxisIndex:1,
+						type: 'line',
+					}]
+				};
+				return option;
+			}
+			function echartquantitypie(param1, value1, param2, value2) {
+				var echart = echarts.init(document.getElementById('echartquantity')).setOption({
+					backgroundColor: '#fff',
+					title: {
+						text: productname + '产品销售数量饼状图',
+						left: 'center',
+						top: 20,
+						textStyle: {
+							color: '#ccc'
+						}
+					},
+					series: {
+						type: 'pie',
+						radius: '50%',
+						center: '50%',
+						labelLine: {
+							normal: {
+								length: 5
+							}
+						},
+						data: [
+							{ name: param1, value: value1 },
+							{ name: param2, value: value2 },
+						]
+					}
+				});
+			}
+			function echartmoneypie(param1, value1, param2, value2) {
+				var echart = echarts.init(document.getElementById('echartmoney')).setOption({
+					backgroundColor: '#fff',
+					title: {
+						text: productname + '产品销售金额饼状图',
+						left: 'center',
+						top: 20,
+						textStyle: {
+							color: '#ccc'
+						}
+					},
+					series: {
+						type: 'pie',
+						radius: '50%',
+						center: '50%',
+						labelLine: {
+							normal: {
+								length: 5
+							}
+						},
+						data: [
+							{ name: param1, value: value1 },
+							{ name: param2, value: value2 },
+						]
+					}
+				});
+			}
+        });
+	</script>
+}

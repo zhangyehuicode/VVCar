@@ -71,6 +71,27 @@ namespace VVCar.Shop.Domain.Filters
     }
 
     /// <summary>
+    /// 产品零售汇总统图表数据计过滤器
+    /// </summary>
+    public class ProductRetailStatisticsChartDataFilter : BasePageFilter
+    {
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime? StartDate { get; set; }
+
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime? EndDate { get; set; }
+
+        /// <summary>
+        /// 产品名称/编码
+        /// </summary>
+        public Guid? ProductID { get; set; }
+    }
+
+    /// <summary>
     /// 产品零售汇总统计过滤排序类型
     /// </summary>
     public enum EProductRetailStatisticsFilterOrderType

@@ -90,6 +90,20 @@ namespace VVCar.Controllers.VIP
         }
 
         /// <summary>
+        /// 默认删除卡券
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        public JsonActionResult<bool> DefaultDelete(Guid id)
+        {
+            return SafeExecute(() =>
+            {
+                return this.CouponTemplateService.Delete(id);
+            });
+        }
+
+        /// <summary>
         /// 更改卡券模板投放状态
         /// </summary>
         /// <param name="entity"></param>

@@ -229,7 +229,7 @@
                         xtype: 'datefield',
                         name: 'InsuranceExpirationDate',
                         fieldLabel: '保险到期',
-                        format: "Y-m-d 00:00:00",
+                        format: "Y-m-d",
                         allowBlank: true,
                     }, {
                         xtype: 'textfield',

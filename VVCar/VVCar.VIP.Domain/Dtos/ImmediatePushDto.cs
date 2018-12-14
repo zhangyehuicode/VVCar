@@ -14,11 +14,11 @@ namespace VVCar.VIP.Domain.Dtos
         /// <summary>
         /// 卡券IDs
         /// </summary>
-        public Guid[] CouponTemplateIDs { get; set; }
+        public IEnumerable<Guid> CouponTemplateIDs { get; set; }
 
         /// <summary>
         /// 会员IDs
         /// </summary>
-        public Guid[] MemberIDs { get; set; }
+        public IEnumerable<Guid> MemberIDs { get; set; }
     }
 }

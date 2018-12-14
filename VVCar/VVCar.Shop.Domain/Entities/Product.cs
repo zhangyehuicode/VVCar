@@ -281,6 +281,6 @@ namespace VVCar.Shop.Domain.Entities
         /// <summary>
         /// 套餐子项
         /// </summary>
-        public ICollection<ComboItem> ComboItemList { get; set; }
+        public virtual ICollection<ComboItem> ComboItemList { get; set; }
     }
 }

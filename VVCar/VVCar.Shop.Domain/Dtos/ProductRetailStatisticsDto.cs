@@ -56,4 +56,28 @@ namespace VVCar.Shop.Domain.Dtos
         [Display(Name = "产品类别")]
         public string ProductType { get; set; }
     }
+
+    /// <summary>
+    /// 产品销售汇总图表数据
+    /// </summary>
+    public class ProductRetailStatisticsChartDataDto
+    {
+        /// <summary>
+        /// 交易时间
+        /// </summary>
+        [Display(Name = "交易时间")]
+        public string TradeDate { get; set; }
+
+        /// <summary>
+        /// 交易数量
+        /// </summary>
+        [Display(Name = "交易数量")]
+        public int Quantity { get; set; }
+
+        /// <summary>
+        /// 销售总额
+        /// </summary>
+        [Display(Name = "销售总额")]
+        public decimal Money { get; set; }
+    }
 }

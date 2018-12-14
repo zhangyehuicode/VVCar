@@ -2,7 +2,7 @@
 	extend: 'Ext.app.Controller',
 	requires: ['WX.store.BaseData.ProductRetailStatisticsStore'],
 	models: ['BaseData.ProductRetailStatisticsModel'],
-	views: ['Report.ProductRetailStatisticsList'],
+	views: ['Report.ProductRetailStatisticsList', 'Report.ProductRetailStatisticsChart'],
 	refs: [{
 		ref: 'productRetailStatisticsList',
 		selector: 'ProductRetailStatisticsList',
@@ -28,10 +28,30 @@
 			'ProductRetailStatisticsList button[action=export]': {
 				click: me.export
 			},
+			'ProductRetailStatisticsList button[action=analyse]': {
+				click: me.analyse
+			},
 			'ProductRetailStatisticsList combobox[name=OrderType]': {
 				change: me.ordertype
+			},
+			'ProductRetailStatisticsList datefield[name=StartDate]': {
+				select: me.search
+			},
+			'ProductRetailStatisticsList datefield[name=EndDate]': {
+				select: me.search
+			},
+			'ProductRetailStatisticsList': {
+				itemdblclick: me.productRetailStatisticsChart
 			}
 		});
+	},
+	analyse: function (btn) {
+		var selectedItems = this.getProductRetailStatisticsList().getSelectionModel().getSelection();
+		if (selectedItems.length < 1) {
+			Ext.MessageBox.alert("提示", "请先选中要查看的数据");
+			return;
+		}
+		this.productRetailStatisticsChart(null, selectedItems[0]);
 	},
 	searchSellWell: function (btn) {
 		var me = this;
@@ -135,4 +155,16 @@
 			}
 		});
 	},
+	productRetailStatisticsChart: function (grid, record) {
+		var me = this;
+		var win = Ext.widget('ProductRetailStatisticsChart');
+		var queryValues = me.getProductRetailStatisticsList().down('form').getValues();
+		var startdate = queryValues.StartDate;
+		var enddate = queryValues.EndDate;
+		sessionStorage.setItem('StartDate', startdate);
+		sessionStorage.setItem('EndDate', enddate);
+		sessionStorage.setItem("ProductID", record.data.ProductID);
+		sessionStorage.setItem('ProductName', record.data.ProductName);
+		win.show();
+	}
 });

@@ -7,7 +7,7 @@
 <div id="operationstatement">
 	<span style="font-size:14px; color:red;">营业利润：￥{{Profit}}</span>
 	<center>
-		<input type="date" id="startdate">
+		<input type="date" id="startdate"><span>~</span>
 		<input type="date" id="enddate">
 		<button v-on:click="search">搜索</button>
 		<div id="yyze" style="width:100%;height:500px;overflow:auto!important;margin:0 10px;"></div>
@@ -76,8 +76,6 @@
 	<script type="text/javascript">
         $(function () {
 			var mch = sessionStorage.getItem('companyCode');
-			var analysetype = $.getUrlParam('AnalyseType');
-			var param = $.getUrlParam('Param');
 			_viewModel = new Vue({
 				el: '#operationstatement',
 				data: {
@@ -120,6 +118,14 @@
 						$.hideLoading();
 					}
 				});
+			}
+			var startdate = sessionStorage.getItem('StartDate');
+			var enddate = sessionStorage.getItem('EndDate');
+			if (startdate != '' || startdate != null) {
+				$('#startdate').val(startdate);
+			}
+			if (enddate != '' || enddate != null) {
+				$('#enddate').val(enddate);
 			}
 			search();
 

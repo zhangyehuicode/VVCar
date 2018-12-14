@@ -28,5 +28,10 @@ namespace VVCar.Controllers
         {
             return View();
         }
+
+        public ActionResult ProductRetailStatisticsChart()
+        {
+            return View();
+        }
     }
 }

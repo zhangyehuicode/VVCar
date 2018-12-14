@@ -218,6 +218,10 @@ namespace VVCar.VIP.Services.DomainServices
         public IEnumerable<CouponTemplateDto> CouponTemplateInfo(CouponTemplateFilter filter, out int totalCount)
         {
             var queryable = this.Repository.GetIncludes(false, "Stock", "UseTimeList").Where(t => t.MerchantID == AppContext.CurrentSession.MerchantID);
+            if (filter.ID.HasValue)
+            {
+                queryable = queryable.Where(c => c.ID == filter.ID.Value);
+            }
             if (filter.CouponType != -1)
             {
                 queryable = queryable.Where(c => c.CouponType == (ECouponType)filter.CouponType);

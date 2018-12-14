@@ -126,6 +126,12 @@
 						text: '导出',
 						iconCls: '',
 						margin: '0 0 0 5',
+					}, {
+						xtype: 'button',
+						action: 'analyse',
+						text: '数据分析',
+						iconCls: '',
+						margin: '0 0 0 5',
 					}]
 				}]
 			}]

@@ -214,6 +214,7 @@
 		var queryValues = btn.up('form').getValues();
 		if (queryValues != null) {
 			queryValues.IsCombo = true;
+			queryValues.IsPublish = true;
 			var store = me.getGridCombo().getStore();
 			store.proxy.extraParams = queryValues;
 			store.load();
@@ -236,7 +237,8 @@
 		var me = this;
 		var store = me.getGridCombo().getStore();
 		var params = {
-			IsCombo: true
+			IsCombo: true,
+			IsPublish: true,
 		}
 		Ext.apply(store.proxy.extraParams, params);
 		store.load();

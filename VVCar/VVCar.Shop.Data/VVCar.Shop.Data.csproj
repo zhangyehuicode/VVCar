@@ -65,6 +65,9 @@
     <Compile Include="Mapping\ComboItemMap.cs" />
     <Compile Include="Mapping\ConsumeHistoryMap.cs" />
     <Compile Include="Mapping\DailyExpenseMap.cs" />
+    <Compile Include="Mapping\MaterialMap.cs" />
+    <Compile Include="Mapping\MaterialPublishItemMap.cs" />
+    <Compile Include="Mapping\MaterialPublishMap.cs" />
     <Compile Include="Mapping\OrderDividendMap.cs" />
     <Compile Include="Mapping\OrderItemMap.cs" />
     <Compile Include="Mapping\OrderMap.cs" />
